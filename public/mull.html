@@ -287,6 +287,116 @@
   .cta-secondary:hover { background: var(--ink); color: var(--cream); }
   .ctameta { display: block; margin-top: 14px; color: var(--ink-soft); font-size: 13px; }
 
+  /* ---------- Landing quiz choice ---------- */
+  .quiz-choice {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 32px 0 24px;
+  }
+  .quiz-option {
+    display: block;
+    text-align: left;
+    width: 100%;
+    padding: 22px 26px;
+    background: var(--cream-2);
+    border: 1.5px solid var(--line);
+    border-radius: 14px;
+    cursor: pointer;
+    font-family: inherit;
+    color: var(--ink);
+    transition: all .18s ease;
+    position: relative;
+  }
+  .quiz-option:hover {
+    border-color: var(--ink);
+    background: var(--cream);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(34,30,24,.08);
+  }
+  .quiz-option-deep {
+    background: var(--ink);
+    color: var(--cream);
+    border-color: var(--ink);
+  }
+  .quiz-option-deep:hover {
+    background: var(--acc-deep);
+    border-color: var(--acc-deep);
+    color: var(--cream);
+  }
+  .quiz-option-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .quiz-option-name {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 26px;
+    font-weight: 500;
+    font-style: italic;
+    line-height: 1;
+  }
+  .quiz-option-meta {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    opacity: .7;
+  }
+  .quiz-option-deep .quiz-option-meta { color: var(--acc); opacity: 1; }
+  .quiz-option-desc {
+    margin: 0 0 10px;
+    font-size: 14.5px;
+    line-height: 1.55;
+    opacity: .85;
+  }
+  .quiz-option-arrow {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: .04em;
+  }
+  .quiz-skip {
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 10px 4px;
+    margin-top: 4px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--ink-soft);
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: var(--line);
+    text-underline-offset: 4px;
+    transition: color .15s ease;
+    align-self: flex-start;
+  }
+  .quiz-skip:hover {
+    color: var(--ink);
+    text-decoration-color: var(--acc);
+  }
+
+  .landing-promises {
+    list-style: none;
+    padding: 0;
+    margin: 28px 0;
+    display: grid;
+    gap: 8px;
+  }
+  .landing-promises li {
+    padding: 12px 16px;
+    background: var(--cream-2);
+    border-radius: 8px;
+    border-left: 3px solid var(--acc);
+    font-size: 14.5px;
+    color: var(--ink-soft);
+  }
+  .landing-promises li strong { color: var(--ink); }
+
   /* ---------- Quiz ---------- */
   .progress {
     height: 4px; background: var(--cream-2); border-radius: 2px; overflow: hidden;
@@ -395,16 +505,32 @@
     max-width: 560px; margin: 0 auto;
   }
   .section {
-    margin: 56px 0;
-    padding-top: 40px;
+    margin: 64px 0;
+    padding-top: 48px;
     border-top: 1px solid var(--line);
   }
   .section h2 {
     font-family: "Cormorant Garamond", Georgia, serif;
-    font-weight: 500; font-size: 14px;
-    text-transform: uppercase; letter-spacing: .15em;
+    font-weight: 500; font-size: 36px;
+    letter-spacing: -.01em;
+    color: var(--ink);
+    margin: 0 0 6px;
+    line-height: 1.1;
+  }
+  .section h2 em { color: var(--acc-deep); font-style: italic; font-weight: 500; }
+  .section .section-eyebrow {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .18em;
     color: var(--acc-deep);
-    margin: 0 0 24px;
+    margin: 0 0 12px;
+    display: block;
+  }
+  @media (max-width: 700px) {
+    .section h2 { font-size: 28px; }
+    .section { margin: 48px 0; padding-top: 36px; }
   }
 
   /* ---------- Constellation Map ---------- */
@@ -1068,9 +1194,12 @@
     margin: 0;
   }
   .gallery-soon {
-    font-size: 11px; color: var(--ink-soft); opacity: .55;
-    margin-top: 12px; text-align: center; font-style: italic;
+    font-size: 12px; color: var(--card-color, var(--acc-deep));
+    margin-top: 14px; text-align: right; font-weight: 500;
+    letter-spacing: .02em;
+    transition: transform .15s ease;
   }
+  .gallery-card:hover .gallery-soon { transform: translateX(3px); }
   /* Trigger buttons that open the gallery from landing/results */
   .gallery-link {
     display: inline-flex; align-items: center; gap: 6px;
@@ -1084,6 +1213,223 @@
     padding: 0;
   }
   .gallery-link:hover { color: var(--acc-deep); }
+
+  /* Archetype detail page */
+  .archetype-detail-wrap { padding-bottom: 64px; }
+  .archetype-back {
+    margin-bottom: 24px;
+  }
+  .archetype-hero {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 36px;
+    align-items: center;
+    padding: 32px 36px;
+    background: var(--cream-2);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--acc-deep);
+    border-radius: 16px;
+    margin-bottom: 36px;
+  }
+  .archetype-hero-figure {
+    width: 220px; height: 220px;
+    background: var(--cream);
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .archetype-hero-figure svg { width: 100%; height: 100%; }
+  .archetype-pill {
+    display: inline-block;
+    padding: 4px 12px;
+    background: var(--acc-deep);
+    color: #FAF6EC;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 10.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .18em;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .archetype-name {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 52px; font-weight: 500;
+    margin: 0 0 8px;
+    letter-spacing: -.01em;
+    line-height: 1.05;
+  }
+  .archetype-name em { font-style: italic; color: var(--ink); }
+  .archetype-patron {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 12px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    margin-bottom: 14px;
+  }
+  .archetype-patron strong { color: var(--acc-deep); font-weight: 500; }
+  .archetype-blurb {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--ink);
+    margin: 0;
+    font-style: italic;
+  }
+  @media (max-width: 700px) {
+    .archetype-hero {
+      grid-template-columns: 1fr;
+      text-align: center;
+      padding: 28px 24px;
+    }
+    .archetype-hero-figure {
+      margin: 0 auto;
+      width: 160px; height: 160px;
+    }
+    .archetype-name { font-size: 40px; }
+    .archetype-blurb { font-size: 17px; }
+  }
+
+  .archetype-dim-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+  }
+  .archetype-dim-card {
+    padding: 18px 20px;
+    background: var(--cream-2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    position: relative;
+  }
+  .archetype-dim-rank {
+    position: absolute;
+    top: 14px; right: 16px;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--acc-deep);
+    line-height: 1;
+  }
+  .archetype-dim-rank span {
+    font-size: 11px; color: var(--ink-soft); margin-left: 1px;
+  }
+  .archetype-dim-name {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 19px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 6px;
+    padding-right: 50px;
+  }
+  .archetype-dim-desc {
+    margin: 0;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  .archetype-phils {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+  }
+  .archetype-phil {
+    display: block;
+    padding: 16px 18px;
+    background: var(--cream-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    text-decoration: none;
+    color: inherit;
+    transition: all .15s ease;
+  }
+  .archetype-phil:hover {
+    border-color: var(--acc);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(34,30,24,.06);
+  }
+  .archetype-phil-name {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 19px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 2px;
+    display: flex; align-items: baseline; justify-content: space-between;
+  }
+  .archetype-phil-arrow {
+    font-size: 13px;
+    color: var(--acc-deep);
+    opacity: .6;
+  }
+  .archetype-phil-dates {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 11px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    margin-bottom: 8px;
+  }
+  .archetype-phil-idea {
+    margin: 0;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  .archetype-shadow-card {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 24px;
+    align-items: center;
+    padding: 22px 26px;
+    background: var(--cream-2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all .15s ease;
+  }
+  .archetype-shadow-card:hover {
+    border-color: var(--acc);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(34,30,24,.06);
+  }
+  .archetype-shadow-figure {
+    width: 120px; height: 120px;
+    background: var(--cream);
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .archetype-shadow-figure svg { width: 100%; height: 100%; }
+  .archetype-shadow-name {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .archetype-shadow-body p {
+    margin: 0 0 10px;
+    color: var(--ink-soft);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  .archetype-shadow-link {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 12px;
+    color: var(--acc-deep);
+    font-weight: 500;
+    letter-spacing: .04em;
+  }
+  @media (max-width: 600px) {
+    .archetype-shadow-card { grid-template-columns: 1fr; text-align: center; }
+    .archetype-shadow-figure { margin: 0 auto; }
+  }
+
   .role p { margin: 0; color: var(--ink-soft); font-size: 15px; }
   .role.shadow { background: #FBF1EE; border-color: #E5C9C0; }
   .role.shadow .roletag, .role.shadow h3 .pct { color: #A8451F; }
@@ -1109,6 +1455,107 @@
   .why .scoreline .score {
     font-size: 14px; color: var(--acc-deep);
     font-variant-numeric: tabular-nums;
+  }
+  .why-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 16px;
+    align-items: baseline;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--line);
+  }
+  .why-row:last-of-type { border-bottom: none; }
+  .why-row-label {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--acc-deep);
+    letter-spacing: .02em;
+  }
+  .why-row-body { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .why-row-prose { gap: 0; line-height: 1.6; color: var(--ink); }
+  .why-row-prose strong { color: var(--ink); }
+  .dim-chip {
+    display: inline-flex; align-items: center;
+    padding: 4px 10px;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    cursor: help;
+    transition: all .15s ease;
+  }
+  .dim-chip:hover { border-color: var(--acc); color: var(--ink); }
+  .dim-chip.shared {
+    background: color-mix(in srgb, var(--acc) 18%, var(--cream));
+    border-color: var(--acc-deep);
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .why-key {
+    font-size: 11px;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin-left: 4px;
+    letter-spacing: .02em;
+  }
+  .why-explainer {
+    margin: 14px 0 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    line-height: 1.6;
+  }
+  @media (max-width: 700px) {
+    .why-row { grid-template-columns: 1fr; gap: 6px; }
+  }
+
+  /* Debates section */
+  .section-sub {
+    margin: -8px 0 18px;
+    color: var(--ink-soft);
+    font-size: 14px;
+    line-height: 1.55;
+    max-width: 720px;
+  }
+  .debates {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  @media (max-width: 700px) {
+    .debates { grid-template-columns: 1fr; }
+  }
+  .debate-item {
+    padding: 18px 20px;
+    background: var(--cream-2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    border-left: 3px solid var(--acc);
+  }
+  .debate-name {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: var(--acc-deep);
+    margin-bottom: 6px;
+  }
+  .debate-stance {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.25;
+    margin-bottom: 8px;
+    letter-spacing: -.01em;
+  }
+  .debate-gist {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink-soft);
   }
 
   .profile { display: grid; gap: 8px; }
@@ -1164,7 +1611,83 @@
     align-items: center; gap: 12px;
     padding: 3px 0;
   }
-  .dim-slider .dim-label { font-size: 12.5px; color: var(--ink); }
+  .dim-slider .dim-label {
+    font-size: 12.5px; color: var(--ink);
+    display: flex; align-items: center; gap: 6px;
+    min-width: 0;
+  }
+  .dim-slider .dim-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dim-info {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    cursor: help;
+    flex-shrink: 0;
+  }
+  .dim-info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--cream-2);
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    font-size: 9.5px;
+    font-style: italic;
+    font-family: Georgia, serif;
+    line-height: 1;
+    transition: background .12s ease, color .12s ease, border-color .12s ease;
+  }
+  .dim-info:hover .dim-info-icon,
+  .dim-info:focus .dim-info-icon,
+  .dim-info.open .dim-info-icon {
+    background: var(--acc-deep); color: #FAF6EC; border-color: var(--acc-deep);
+    outline: none;
+  }
+  .dim-info-tooltip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 280px;
+    padding: 11px 13px;
+    background: var(--ink);
+    color: #FAF6EC;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 6px;
+    z-index: 100;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity .15s ease, visibility .15s ease;
+    pointer-events: none;
+    text-align: left;
+    box-shadow: 0 6px 24px rgba(34,30,24,.20);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-style: normal;
+  }
+  .dim-info-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%; left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--ink);
+  }
+  .dim-info:hover .dim-info-tooltip,
+  .dim-info:focus .dim-info-tooltip,
+  .dim-info.open .dim-info-tooltip {
+    visibility: visible; opacity: 1;
+  }
+  @media (max-width: 600px) {
+    .dim-info-tooltip {
+      width: 220px;
+      left: auto; right: -8px;
+      transform: none;
+    }
+    .dim-info-tooltip::after { left: auto; right: 12px; transform: none; }
+  }
   .dim-slider input[type="range"] {
     -webkit-appearance: none;
     appearance: none;
@@ -1314,14 +1837,21 @@
     font-size: 13px; margin-top: 48px;
   }
   .footer-note a { color: var(--acc-deep); }
+  .restart-row {
+    text-align: center;
+    margin-top: 64px;
+    padding-top: 36px;
+    border-top: 1px solid var(--line);
+  }
   .restart {
-    display: block; margin: 24px auto 0;
+    display: inline-block;
     padding: 10px 20px; background: none;
     border: 1px solid var(--line); border-radius: 999px;
     color: var(--ink-soft); cursor: pointer;
     font-family: inherit; font-size: 14px;
   }
   .restart:hover { border-color: var(--acc); color: var(--ink); }
+  .restart-row .footer-note { margin-top: 14px; }
 
   @media (max-width: 600px) {
     .wrap { padding: 32px 18px 64px; }
@@ -1395,12 +1925,16 @@ html.embed-mode #results {
   max-width: none !important;
   height: 100vh !important;
 }
-html.embed-mode #results > *:not(.mapsection):not(#philpopup_res) {
+html.embed-mode #results > *:not(.mapsection-wrap):not(.mapsection):not(#philpopup_res) {
+  display: none !important;
+}
+html.embed-mode .mapsection-wrap > *:not(.mapsection) {
   display: none !important;
 }
 html.embed-mode .mapsection > *:not(.mapwrap) {
   display: none !important;
 }
+html.embed-mode .mapsection-wrap,
 html.embed-mode .mapsection,
 html.embed-mode .mapwrap {
   padding: 0 !important;
@@ -1409,6 +1943,7 @@ html.embed-mode .mapwrap {
   height: 100vh !important;
   max-width: none !important;
   overflow: visible !important;
+  border: none !important;
 }
 html.embed-mode #canvas_res {
   display: block !important;
@@ -1495,12 +2030,32 @@ html.embed-mode #embed-you-hint {
     </div>
 
     <h1>Find your place on the <em>map of how you think.</em></h1>
-    <p class="lede">Twenty questions, no right answers. Some let you pick more than one. All of them you can skip. At the end you'll see where your worldview sits — and which thinkers across history have stood near you.</p>
+    <p class="lede">No right answers. Skip anything. At the end you'll see where your worldview sits — and which thinkers across history have stood near you.</p>
 
-    <ul>
-      <li><strong>About 6 minutes.</strong> Skip any question that doesn't fit you.</li>
-      <li><strong>No accounts, no email required.</strong> Your answers stay in your browser.</li>
-      <li><strong>Built for the curious, not the credentialed.</strong> No prior philosophy needed.</li>
+    <div class="quiz-choice">
+      <button class="quiz-option" onclick="startQuiz('quick')">
+        <div class="quiz-option-head">
+          <span class="quiz-option-name">Quick start</span>
+          <span class="quiz-option-meta">20 questions · ~6 minutes</span>
+        </div>
+        <p class="quiz-option-desc">A broad sketch of where you sit. Best if you're new to Mull or short on time.</p>
+        <span class="quiz-option-arrow">Begin →</span>
+      </button>
+      <button class="quiz-option quiz-option-deep" onclick="startQuiz('detailed')">
+        <div class="quiz-option-head">
+          <span class="quiz-option-name">Detailed diagnosis</span>
+          <span class="quiz-option-meta">50 questions · ~15 minutes</span>
+        </div>
+        <p class="quiz-option-desc">Probes more dimensions, more carefully. The portrait gets sharper. Best if you want a serious read.</p>
+        <span class="quiz-option-arrow">Begin →</span>
+      </button>
+      <button class="quiz-skip" onclick="showMapPreview()">Just show me the map →</button>
+    </div>
+
+    <ul class="landing-promises">
+      <li><strong>Skippable.</strong> Any question that doesn't fit you, skip it.</li>
+      <li><strong>No signup needed.</strong> An optional account saves your map and tracks how it shifts.</li>
+      <li><strong>For the curious, not the credentialed.</strong> No prior philosophy required.</li>
     </ul>
 
     <details class="howworks">
@@ -1513,16 +2068,10 @@ html.embed-mode #embed-you-hint {
       </div>
     </details>
 
-    <div class="ctas">
-      <button class="cta" onclick="startQuiz()">Begin <span aria-hidden="true">→</span></button>
-      <button class="cta cta-secondary" onclick="showMapPreview()">Just show me the map</button>
-    </div>
-    <span class="ctameta">A prototype. Things will move.</span>
-
     <div class="archetype-strip" id="strip_landing">
       <div class="archetype-strip-head">
         <h3 class="archetype-strip-title">The <em>ten archetypes</em> you might match</h3>
-        <p class="archetype-strip-sub">Click any to read more.</p>
+        <p class="archetype-strip-sub">Click any to read its full profile.</p>
       </div>
       <div class="archetype-strip-grid" id="strip-grid_landing"></div>
       <div class="archetype-strip-footer">
@@ -1538,46 +2087,51 @@ html.embed-mode #embed-you-hint {
     <div class="about-hero">
       <h1>Mull is a <em>passion project.</em></h1>
       <p class="lede">Built on nights and weekends. Funded by nothing in particular.</p>
-      <p class="meta">This page exists so the people who use Mull can know what they're using — what it costs to run, who pays, what gets bought and sold here, and what doesn't.</p>
+      <p class="meta">This page exists so anyone using Mull can know what they're using — what it is, what it isn't, what it costs to run, and who pays.</p>
     </div>
 
     <div class="about-section">
       <h2>Why this exists</h2>
       <p>Philosophy is the original tool for examining your own thinking — the discipline that refuses to take its own framing for granted. Most people leave it behind after one survey course because the way it's taught makes it feel like memorizing a museum: dates, names, doctrines, exam.</p>
       <p>Mull inverts that. Instead of teaching you what dead philosophers thought, it asks what <strong>you</strong> think — concretely, on real questions — and shows you where that places you in the long conversation. The map isn't a verdict, it's a mirror. The 166 thinkers in the constellation are there as company, not as curriculum.</p>
-      <p>This started as a weekend project. It is still a weekend project.</p>
     </div>
 
     <div class="about-section">
-      <h2>What Mull is not</h2>
+      <h2>The principles</h2>
+      <p>The values that shape this product. They don't change as Mull grows — that's the whole point of writing them down.</p>
       <ul class="about-promises">
-        <li><strong>Not advertiser-supported.</strong> No banners, no tracking pixels, no sponsored newsletter slot. Your daily dilemma — your written reflections — is between you and the model. Nobody pays us for the privilege of putting an ad next to it.</li>
-        <li><strong>Not data-for-sale.</strong> We hold your account email and the responses you write. Both are yours. One click in your settings deletes everything we have. Your map is private by default — public profiles are opt-in only, opt-out at any time.</li>
-        <li><strong>Not VC-funded.</strong> No investors. No growth quotas. No board demanding a 10× return. The product changes when we decide it should change, not when a quarterly review demands traction.</li>
-        <li><strong>Not an "AI app".</strong> AI is used in two specific places — analyzing your written daily dilemma into dimensional vectors, and generating philosopher dialogues — and that's the entire footprint. The 16-dimensional model, the archetype system, the philosopher positions, the figures — all of that was hand-designed and verified by humans who care about getting philosophy right.</li>
+        <li><strong>No ads, ever.</strong> No banners, no tracking pixels, no sponsored newsletter slot. Your reflections are between you and the model. Nobody pays for the privilege of putting an ad next to them.</li>
+        <li><strong>No selling your data.</strong> If you make an account, we hold your email and your saved quiz attempts — nothing else. A delete-account button is on the roadmap; in the meantime, email <a href="mailto:jimmy.kaian.ji@gmail.com" class="about-mail">jimmy.kaian.ji@gmail.com</a> and your data is wiped the same day. Your map is private by default; future public profiles will be opt-in only.</li>
+        <li><strong>Not VC-funded.</strong> No investors, no growth quotas, no board demanding a 10× return. The product changes when we decide it should change, not when a quarterly review demands traction.</li>
+        <li><strong>Not an "AI app".</strong> AI is used in two specific places — analyzing your written daily dilemma into dimensional vectors, and generating philosopher dialogues. The 16-dimensional model, the archetype system, the philosopher positions, the figures — hand-designed by humans who care about getting philosophy right.</li>
+        <li><strong>The free tier stays generous.</strong> If Mull grows past break-even, every dollar of margin goes back into the product: better LLM analysis, scholars to verify philosopher positions, illustrators to redo the figures properly, content for the learning lab. If it grows past <em>that</em>, none of these principles change.</li>
       </ul>
+    </div>
+
+    <div class="about-section">
+      <h2>Who's behind this</h2>
+      <p>Built by <strong>Jimmy Ji</strong>, a philosophy student at King's College London. Mull is currently a one-person project, though it's young and will grow. If you want to help, push back on a question, suggest a thinker, or report a bug, write to <a href="mailto:jimmy.kaian.ji@gmail.com" class="about-mail">jimmy.kaian.ji@gmail.com</a>.</p>
     </div>
 
     <div class="about-section">
       <h2>How this was built</h2>
-      <p>Mull was built as a conversation between a person and an AI. To be transparent about who did what:</p>
-      <p><strong>The code is Claude's.</strong> Every line of HTML, CSS, and JavaScript on this site — and the database schemas, deployment scripts, and AI integration that come next — was written with Claude (Anthropic's AI) as a pair-programmer. Jimmy isn't a developer. Without Claude, this product wouldn't exist as a working site.</p>
-      <p><strong>The product is Jimmy's.</strong> Every meaningful decision that shaped what Mull <em>is</em> came from the person side of that conversation. Including:</p>
+      <p>Mull is a conversation between a person and an AI. To be transparent about who did what:</p>
+      <p><strong>The code is Claude's.</strong> Every line of HTML, CSS, JavaScript, database schema, and deployment configuration on this site was written with Claude (Anthropic's AI) as a pair-programmer — and the AI integrations that come next will be the same. Jimmy isn't a developer. Without Claude, this product wouldn't exist as a working site.</p>
+      <p><strong>The design is Jimmy's.</strong> Every meaningful decision that shaped what Mull <em>is</em> came from the person side of that conversation:</p>
       <ul class="about-creditslist">
-        <li>The central thesis — that philosophy is learned by examining your own thinking, not by memorizing what dead philosophers thought</li>
-        <li>The choice to use a continuous high-dimensional vector space instead of binary MBTI-style axes</li>
-        <li>The decision to make the map a 3D constellation rather than a flat chart</li>
-        <li>The full feature roadmap: the daily dilemma with prose analysis, the vector-history profile, the two-philosopher debate, the learning lab, and the philosophical forum</li>
-        <li>The values — non-profit, ad-free, no data-selling — and the decision to be transparent about the cost math on this very page</li>
-        <li>The brand, tone, contemplative aesthetic, the call to opt-in publicity, and every direction the product has taken</li>
+        <li>The thesis — that philosophy is learned by examining your own thinking, not by memorizing what dead philosophers thought</li>
+        <li>The choice of a continuous high-dimensional vector space over binary MBTI-style axes</li>
+        <li>The 3D constellation map instead of a flat chart</li>
+        <li>The roadmap: daily dilemma with prose analysis, vector history, two-philosopher debate, learning lab, philosophical forum</li>
+        <li>The values above, and the decision to be transparent about the cost math below</li>
+        <li>The brand, tone, contemplative aesthetic, and every direction Mull has taken</li>
       </ul>
-      <p><strong>Some things were drafted in conversation.</strong> The specific archetype names, the 16 dimensions, the 166-philosopher database, the figure illustrations, the reading list — these were drafts Claude proposed and Jimmy refined, vetoed, or approved. Calling any of that purely one party's work would be dishonest. The shape that emerged is genuinely shared.</p>
-      <p>But every choice — every archetype kept, every feature designed, every direction taken — was made by a person. The tool typed. The person decided.</p>
+      <p><strong>Some things were drafted in conversation.</strong> The archetype names, the 16 dimensions, the 166-philosopher database, the figure illustrations, the reading list — Claude drafted, Jimmy refined or vetoed. The shape that emerged is genuinely shared. But every kept choice was a person's. The tool typed; the person decided.</p>
     </div>
 
     <div class="about-section">
-      <h2>The math, openly</h2>
-      <p>Real products with real databases and AI analysis cost real money. Here's what Mull actually costs us, every month, at different sizes — and what it would earn if 5% of users subscribed to Mull+ at $4.99/month.</p>
+      <h2>The economics, openly</h2>
+      <p>Real products with real databases and AI analysis cost real money. Here's what Mull actually costs us each month at different sizes — and what it would earn if 5% of users subscribed to Mull+ at $4.99/month.</p>
 
       <table class="costs-table">
         <thead>
@@ -1624,19 +2178,14 @@ html.embed-mode #embed-you-hint {
       </div>
     </div>
 
-    <div class="about-section">
-      <h2>The promise</h2>
-      <p>If Mull stays small forever, fine. The site keeps running. Existing features stay maintained. Whoever signed up keeps their account.</p>
-      <p>If Mull grows past break-even, every dollar of margin goes back into the product: better LLM analysis, scholars to verify philosopher positions, illustrators to redo the figures properly, content writers for the learning lab, infrastructure that doesn't fall over.</p>
-      <p>If Mull grows past <em>that</em>, the principles on this page do not change. No ads. No data selling. The free tier stays generous. The map of your thinking belongs to you.</p>
-    </div>
-
-    <div class="about-section">
-      <h2>Who's behind this</h2>
-      <p>Built by <strong>Jimmy Ji</strong>, a student at King's College London. Currently a one-person project — though it's young, and it'll grow. If you want to help, push back on a question, suggest a thinker I missed, or report a bug, write to <a href="mailto:jimmy.kaian.ji@gmail.com" class="about-mail">jimmy.kaian.ji@gmail.com</a>.</p>
-    </div>
-
     <button class="cta cta-secondary about-back" onclick="closeAbout()" style="margin-top:32px;">← Back</button>
+  </section>
+
+  <!-- ARCHETYPE DETAIL (deep page for a single archetype) -->
+  <section id="archetype-detail" hidden class="archetype-detail-wrap">
+    <button class="cta cta-secondary archetype-back" onclick="closeArchetypeDetail()">← Back</button>
+    <div id="archetype-detail-body"></div>
+    <button class="cta cta-secondary archetype-back" onclick="closeArchetypeDetail()" style="margin-top:32px;">← Back</button>
   </section>
 
   <!-- ARCHETYPE GALLERY (lined up view of all 10 archetypes) -->
@@ -1645,7 +2194,7 @@ html.embed-mode #embed-you-hint {
       <button class="cta cta-secondary" onclick="closeGallery()">← Back</button>
       <div>
         <h1 class="gallery-title">All <em>ten archetypes</em></h1>
-        <p class="gallery-sub">Every quiz-taker lands somewhere on this map. Each archetype is a recognizable shape of how a person can think — but most people sit between several. Click any archetype to see a richer page (coming soon).</p>
+        <p class="gallery-sub">Every quiz-taker lands somewhere on this map. Each archetype is a recognizable shape of how a person can think — most people sit between several. Click any to read its full profile.</p>
       </div>
     </div>
     <div id="gallery-grid" class="gallery-grid"></div>
@@ -1718,77 +2267,89 @@ html.embed-mode #embed-you-hint {
     </div> <div id="save-status" style="font-size: 13px; color: var(--acc-deep); margin-top: 8px; opacity: 0.85;"></div>
 
     <div class="section">
-      <h2>Why this archetype</h2>
+      <h2>Why <em>this</em> archetype</h2>
+      <p class="section-sub">Which of your dimensional tendencies pulled you toward this match, and how close the runner-up came.</p>
       <div id="why" class="why"></div>
     </div>
 
     <div class="section">
-      <div class="disclaimer">
-        <div class="disclaimer-icon">✺</div>
-        <div class="disclaimer-body">
-          <h3>Twenty questions can't capture the whole of you.</h3>
-          <p>This is a sketch — a starting point. To go further, continue the practice of organized thought through our <strong>daily dilemma</strong>: one new question every morning that nudges your map over time, and a thought diary that lets you watch your worldview evolve. Sign-up sits at the bottom of the screen.</p>
-        </div>
-      </div>
+      <h2>Where you'd likely <em>stand</em></h2>
+      <p class="section-sub">Your answers project onto eight canonical debates. These are likelihoods from your dimensional pattern, not pronouncements — Mull is a sketch.</p>
+      <div id="debates" class="debates"></div>
     </div>
 
-    <div class="mapsection">
-      <h2 style="font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:14px; text-transform:uppercase; letter-spacing:.15em; color:var(--acc-deep); margin:0 0 24px; padding-left:24px;">Your constellation</h2>
-      <div class="mapwrap" data-mapid="res">
-        <canvas id="canvas_res"></canvas>
-        <div class="map-instructions">drag to orbit · scroll to zoom · click a star to fly there · stars sized by alignment</div>
-        <div id="philpopup_res" class="philpopup" hidden></div>
-        <div class="mapcontrols">
-          <button class="mapcontrol btn-zoomin" title="Zoom in">+</button>
-          <button class="mapcontrol btn-zoomout" title="Zoom out">−</button>
-          <button class="mapcontrol btn-reset" title="Reset view" style="font-size:14px;">⟲</button>
-        </div>
-        <div class="map-axislegend">
-          <div class="row"><span class="swatch" style="background:#A85050"></span> X — Sovereign ↔ Communal</div>
-          <div class="row"><span class="swatch" style="background:#7A8B43"></span> Y — Rationalist ↔ Empiricist</div>
-          <div class="row"><span class="swatch" style="background:#3D7DA8"></span> Z — Mystical ↔ Skeptical</div>
-        </div>
-        <div class="mappanel" id="panel_res">
-          <button class="mappanel-toggle" onclick="togglePanel('res')" title="Toggle panel">≡</button>
-          <div class="mappanel-header">
-            <div class="mappanel-title">Sorted by closeness to you</div>
-            <div class="mappanel-count" id="count_res"></div>
+    <div class="section mapsection-wrap">
+      <h2>Your <em>constellation</em></h2>
+      <p class="section-sub">One hundred and sixty-six thinkers from across cultures and eras, each placed by the positions in their writings. The pulsing gold star is you. Lines connect philosophers in the same neighborhoods of thought.</p>
+      <div class="mapsection">
+        <div class="mapwrap" data-mapid="res">
+          <canvas id="canvas_res"></canvas>
+          <div class="map-instructions">drag to orbit · scroll to zoom · click a star to fly there · stars sized by alignment</div>
+          <div id="philpopup_res" class="philpopup" hidden></div>
+          <div class="mapcontrols">
+            <button class="mapcontrol btn-zoomin" title="Zoom in">+</button>
+            <button class="mapcontrol btn-zoomout" title="Zoom out">−</button>
+            <button class="mapcontrol btn-reset" title="Reset view" style="font-size:14px;">⟲</button>
           </div>
-          <input class="mappanel-search" id="search_res" placeholder="Search philosophers..." />
-          <div class="mappanel-list" id="list_res"></div>
+          <div class="map-axislegend">
+            <div class="row"><span class="swatch" style="background:#A85050"></span> X — Sovereign ↔ Communal</div>
+            <div class="row"><span class="swatch" style="background:#7A8B43"></span> Y — Rationalist ↔ Empiricist</div>
+            <div class="row"><span class="swatch" style="background:#3D7DA8"></span> Z — Mystical ↔ Skeptical</div>
+          </div>
+          <div class="mappanel" id="panel_res">
+            <button class="mappanel-toggle" onclick="togglePanel('res')" title="Toggle panel">≡</button>
+            <div class="mappanel-header">
+              <div class="mappanel-title">Sorted by closeness to you</div>
+              <div class="mappanel-count" id="count_res"></div>
+            </div>
+            <input class="mappanel-search" id="search_res" placeholder="Search philosophers..." />
+            <div class="mappanel-list" id="list_res"></div>
+          </div>
         </div>
       </div>
-      <p class="mapcaption">Each star is one of 166 thinkers, placed by the positions in their actual writings and colored by their closest archetype. Stars near you appear larger; distant ones recede. The pulsing gold star is you. Lines connect philosophers in the same neighborhoods of thought. Click any star to fly there — and for stars near you, click "Compare with you" to see where you align and where you diverge.</p>
     </div>
 
     <div class="section">
-      <h2>Three companions</h2>
+      <h2>Closest <em>companions</em></h2>
+      <p class="section-sub">Three thinkers from the constellation: the patron closest to your worldview, an ally on different ground, and the shadow that pushes back hardest.</p>
       <div id="roles" class="roles"></div>
     </div>
 
     <div class="section">
-      <h2>Your dimensional profile</h2>
+      <h2>Your dimensional <em>profile</em></h2>
+      <p class="section-sub">Sixteen tendencies on a scale. Drag any slider and watch which archetype you would become — the live card on the right updates instantly. Hover the (i) for what each dimension means.</p>
       <div id="profile" class="profile"></div>
     </div>
 
     <div class="section">
-      <h2>Where to go from here</h2>
+      <h2>Where to go <em>from here</em></h2>
+      <p class="section-sub">A doorway, a companion, a primary text, and a counter-voice — calibrated to your archetype. Start anywhere.</p>
       <div id="reading" class="reading"></div>
     </div>
 
-    <div class="archetype-strip" id="strip_results">
-      <div class="archetype-strip-head">
-        <h3 class="archetype-strip-title">All <em>ten archetypes</em> · where else you could land</h3>
-        <p class="archetype-strip-sub">Your match is highlighted. Click any to read more.</p>
-      </div>
+    <div class="section">
+      <h2>The <em>ten archetypes</em></h2>
+      <p class="section-sub">Your match is highlighted. Most people sit between several — click any to read its full profile.</p>
       <div class="archetype-strip-grid" id="strip-grid_results"></div>
       <div class="archetype-strip-footer">
         <button class="gallery-link" onclick="showGallery()">View full gallery →</button>
       </div>
     </div>
 
-    <button class="restart" onclick="restart()">Take it again</button>
-    <p class="footer-note">Mull. A prototype. <a href="#" onclick="restart();return false;">Start over</a>.</p>
+    <div class="section">
+      <div class="disclaimer">
+        <div class="disclaimer-icon">✺</div>
+        <div class="disclaimer-body">
+          <h3>This is a sketch.</h3>
+          <p>A few questions can't capture the whole of you. To go further: the <strong>daily dilemma</strong> ships soon — one new question each morning that nudges your map over time, paired with a thought diary that lets you watch your worldview evolve. Sign-up sits at the bottom of the screen.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="restart-row">
+      <button class="restart" onclick="restart()">Take it again</button>
+      <p class="footer-note">Mull. A prototype. <a href="#" onclick="restart();return false;">Start over</a>.</p>
+    </div>
   </section>
 
   <!-- Sticky daily-dilemma signup footer (visible on results only) -->
@@ -1949,22 +2510,38 @@ function renderAuthNav() {
    ============================================================ */
 
 const DIMS = [
-  { k:"TV", name:"Tragic Vision" },
-  { k:"VA", name:"Vital Affirmation" },
-  { k:"WP", name:"Will to Power" },
-  { k:"TR", name:"Trust in Reason" },
-  { k:"TE", name:"Trust in Experience" },
-  { k:"RT", name:"Reverence for Tradition" },
-  { k:"MR", name:"Mystical Receptivity" },
-  { k:"SR", name:"Skeptical Reflex" },
-  { k:"CE", name:"Communal Embeddedness" },
-  { k:"SS", name:"Sovereign Self" },
-  { k:"PO", name:"Practical Orientation" },
-  { k:"TD", name:"Theoretical Drive" },
-  { k:"AT", name:"Ascetic Tendency" },
-  { k:"ES", name:"Embodied Sensibility" },
-  { k:"UI", name:"Universalist Impulse" },
-  { k:"SI", name:"Self as Illusion" }
+  { k:"TV", name:"Tragic Vision",
+    desc:"Sees suffering and limitation as fundamental to existence. Meaning grows out of how you face them, not by escaping them. Aligns with: Stoics, Camus, the late Tolstoy." },
+  { k:"VA", name:"Vital Affirmation",
+    desc:"Affirms life as it is. Pleasure, beauty, and being alive don't need transcendent justification — they're already enough. Aligns with: Epicurus, Whitman, the early Nietzsche." },
+  { k:"WP", name:"Will to Power",
+    desc:"Believes in shaping rather than accepting. Value comes from effort, mastery, creating one's own path against resistance. Aligns with: Nietzsche, Machiavelli, the existentialists." },
+  { k:"TR", name:"Trust in Reason",
+    desc:"Trusts careful reasoning from clear principles as the most reliable path to truth. Aligns with: Aristotle, Kant, Spinoza, the rationalist tradition." },
+  { k:"TE", name:"Trust in Experience",
+    desc:"Trusts direct observation, evidence, and lived experience over abstract systems. Aligns with: Hume, Locke, the empiricist tradition, the pragmatists." },
+  { k:"RT", name:"Reverence for Tradition",
+    desc:"Sees inherited practices and texts as carrying hidden wisdom. Long survival is itself evidence. Aligns with: Confucius, Burke, MacIntyre, much of religious philosophy." },
+  { k:"MR", name:"Mystical Receptivity",
+    desc:"Senses there are truths beyond what language and reason can reach. Values silence, depth, the apophatic. Aligns with: Meister Eckhart, the Sufis, Wittgenstein's later thought, much of Buddhism." },
+  { k:"SR", name:"Skeptical Reflex",
+    desc:"Habitually questions claims, suspends judgment, prefers humility about what we can really know. Aligns with: Hume, Pyrrho, Montaigne, the analytic tradition." },
+  { k:"CE", name:"Communal Embeddedness",
+    desc:"Locates the self in relationships, communities, traditions. We exist through and for others, not as detached individuals. Aligns with: Confucius, Hegel, MacIntyre, ubuntu philosophy." },
+  { k:"SS", name:"Sovereign Self",
+    desc:"Locates moral authority in the individual. You author your own life and answer for it yourself. Aligns with: Sartre, Nietzsche, Emerson, the existentialists." },
+  { k:"PO", name:"Practical Orientation",
+    desc:"Asks first what helps a life go well. Wisdom is what works under real conditions, not pure theory. Aligns with: William James, Dewey, the late Aristotle, much of Stoicism." },
+  { k:"TD", name:"Theoretical Drive",
+    desc:"Pursues understanding for its own sake. The question matters more than any payoff. Aligns with: Plato, the German idealists, much of academic philosophy." },
+  { k:"AT", name:"Ascetic Tendency",
+    desc:"Values discipline, restraint, simplicity. Meaning is found through what you give up, not what you accumulate. Aligns with: Stoics, Buddhists, monastic traditions." },
+  { k:"ES", name:"Embodied Sensibility",
+    desc:"Trusts the body, the senses, the immediate world. Suspicious of dualisms that put mind above flesh. Aligns with: Nietzsche, Merleau-Ponty, much of feminist philosophy." },
+  { k:"UI", name:"Universalist Impulse",
+    desc:"Holds moral principles that apply to everyone, everywhere — not bounded by culture or contingency. Aligns with: Kant, Mill, the human-rights tradition." },
+  { k:"SI", name:"Self as Illusion",
+    desc:"Suspects the unified 'self' is a story we tell. What's real is processes, patterns, dependent arising — not a fixed essence. Aligns with: Buddha, Hume, Parfit, much of cognitive science." }
 ];
 const DIM_KEYS = DIMS.map(d => d.k);
 
@@ -1975,6 +2552,16 @@ function zeros() { return DIM_KEYS.map(() => 0); }
 function magnitude(a) { return Math.sqrt(a.reduce((s, x) => s + x*x, 0)); }
 function norm(a) { const m = magnitude(a) || 1; return a.map(x => x / m); }
 function cos(a, b) { const an = norm(a), bn = norm(b); return an.reduce((s, x, i) => s + x * bn[i], 0); }
+
+/* Display percentage: most random pairings sit around 0.5–0.7 cosine
+   similarity in 16-D space, which compresses everything to 75–95% under
+   the naive ((sim+1)/2)*100 formula. Real alignment kicks in above 0.55,
+   so we map [0.55, 1.0] linearly to [0, 100] and clamp the rest. This
+   spreads distinctions visibly without distorting ranking. */
+function displayPct(sim) {
+  if (sim == null || isNaN(sim)) return 0;
+  return Math.max(0, Math.min(100, Math.round((sim - 0.55) / 0.45 * 100)));
+}
 
 /* ----- 20 questions, all with universal skip ----- */
 const Q = [
@@ -2156,6 +2743,464 @@ const Q = [
     ]}
 ];
 
+/* ----- 50 questions, deeper diagnosis ----- */
+const Q_DETAILED = [
+  { p:"Think back to a belief you held strongly as a child, then later abandoned. Why did you abandon it?",
+    a:[
+      { t:"It collided with evidence. The world said no.",                           v:v({TE:3,SR:2,TR:1}) },
+      { t:"A teacher or text I trusted argued it down.",                              v:v({TR:2,RT:2,TD:1}) },
+      { t:"I outgrew it — what mattered to me changed.",                              v:v({SS:2,VA:1,SI:1,TV:1}) },
+      { t:"I didn't really abandon it. I just stopped saying it out loud.",          v:v({CE:1,SR:1,TV:2}) },
+      { t:"The community I belonged to changed, and the belief came with it.",        v:v({CE:3,RT:1}) }
+    ]},
+
+  { p:"Someone who has caused you real, irreversible harm asks you for genuine help. Real cost to you. What do you do?",
+    a:[
+      { t:"Help. Cycles of harm break when someone refuses to extend them.",          v:v({UI:2,VA:1,MR:1,CE:1}) },
+      { t:"Help, but only after they acknowledge what they did.",                     v:v({SS:2,UI:1,WP:1,TR:1}) },
+      { t:"Refuse. Forgiveness extended in advance teaches the wrong lesson.",        v:v({SR:1,SS:2,WP:1}) },
+      { t:"Depends entirely on whether they've changed.",                             v:v({PO:3,TE:2,SR:1}) },
+      { t:"Help anonymously, so they don't owe me anything.",                          v:v({AT:3,UI:1,TV:1}) }
+    ]},
+
+  { p:"A close friend lives by a self-image that's clearly false — but it's working for them. They aren't asking. Do you say anything?",
+    a:[
+      { t:"Yes. Friendship is owing each other the truth.",                            v:v({SS:2,UI:2,TR:1}) },
+      { t:"No. People reach truth on their own time, or not at all.",                   v:v({MR:2,RT:1,SR:1,CE:1}) },
+      { t:"Only if asked, even obliquely. Otherwise mind your own life.",              v:v({SS:2,PO:2,RT:1}) },
+      { t:"Quiet questions, never assertions. Plant doubts and step back.",            v:v({TD:2,SR:2,MR:1}) },
+      { t:"Depends on stakes — dangerous lies named, harmless ones left alone.",       v:v({PO:3,UI:1,TR:1}) }
+    ]},
+
+  { p:"A week of complete solitude, by choice. Afterward, what do you typically feel?",
+    a:[
+      { t:"Cleaner. Other people's noise was crowding out something real.",            v:v({SS:3,AT:2,MR:1}) },
+      { t:"Hungry to be back. I think with people, not against them.",                  v:v({CE:3,ES:1,VA:1}) },
+      { t:"Both — clearer in some ways, dimmer in others.",                              v:v({SR:1,TV:1,PO:1}) },
+      { t:"Restless. Solitude shows me thoughts I'd rather not have.",                   v:v({TV:2,SR:1,SI:1}) },
+      { t:"Calmer. Most of what I usually do is performance.",                            v:v({AT:3,SS:2,SI:2}) }
+    ]},
+
+  { p:"Your parents' worldview shaped yours. As an adult, how have you actually treated it?",
+    a:[
+      { t:"Inherited largely intact. The roots were sound.",                             v:v({RT:3,CE:2,TV:1}) },
+      { t:"Rebuilt from scratch — kept what survived examination.",                      v:v({TR:2,SS:3,SR:2}) },
+      { t:"Inverted hard. The reaction was mine, not the inheritance.",                  v:v({SS:3,WP:2,VA:1}) },
+      { t:"Updated piece by piece. No clean break, no clean keep.",                      v:v({PO:3,SR:1,TR:1}) },
+      { t:"Still in motion. I haven't decided yet.",                                      v:v({TD:1,SR:2,MR:1}) }
+    ]},
+
+  { p:"Someone with deep expertise contradicts your moral intuition on something specific. What weighs more?",
+    a:[
+      { t:"Their expertise. Intuitions are often wrong; expertise is calibrated.",       v:v({TR:3,TD:2,RT:1}) },
+      { t:"My intuition. Expertise can launder bad values into the language of evidence.",v:v({SS:3,SR:2,TE:1}) },
+      { t:"Neither alone — I want to understand why we disagree.",                       v:v({TD:3,SR:1,TR:1}) },
+      { t:"The intuition, but I take their argument as data about my blind spots.",      v:v({SS:2,SR:2,PO:1}) },
+      { t:"It depends on the domain. Some intuitions are sacred, others are bias.",      v:v({PO:2,UI:1,TR:1,RT:1}) }
+    ]},
+
+  { p:"Where does the present, the past, and the future feel most real to you?",
+    a:[
+      { t:"The present. The other two are stories told from inside it.",                 v:v({MR:2,SI:2,ES:2}) },
+      { t:"The past. It actually happened. The rest is inference.",                       v:v({TV:2,RT:2,TE:1}) },
+      { t:"The future. The present is just where I work toward it.",                      v:v({WP:3,SS:2,VA:1}) },
+      { t:"All three are equally real and equally constructed.",                          v:v({TD:2,SR:1,SI:1}) },
+      { t:"None of them — what's real is the pattern, not any moment.",                    v:v({SI:3,MR:2,TD:1}) }
+    ]},
+
+  { p:"Someone hurt you in a way you can't repair. What's the right response, eventually?",
+    a:[
+      { t:"Forgiveness. Resentment is a poison you brew for yourself.",                   v:v({MR:2,VA:2,UI:1,AT:1}) },
+      { t:"Naming it clearly, then walking away whole.",                                   v:v({SS:3,TR:2,UI:1}) },
+      { t:"Holding it as a fact about reality, neither hating nor forgiving.",            v:v({TV:3,SI:1,AT:2}) },
+      { t:"Translating it — making something real out of what was done to me.",            v:v({WP:3,VA:1,SS:1}) },
+      { t:"Depends on the harm. Some things can be set down; others define what you trust.", v:v({PO:3,TV:1,SR:1}) }
+    ]},
+
+  { p:"A horse and a person are equally drowning. You can save one. The horse is irreplaceable to its owner, the stranger anonymous. What's the actual answer?",
+    a:[
+      { t:"The person. Always. Across all cases.",                                         v:v({UI:3,TR:2,RT:1}) },
+      { t:"The person, but the gap is smaller than people pretend.",                       v:v({UI:1,ES:2,SR:1,SI:1}) },
+      { t:"Whichever is closer. Distance dictates duty more than species does.",            v:v({CE:2,PO:3,TE:1}) },
+      { t:"The horse, if the owner's life pivots on it. Saving names beats saving abstracts.", v:v({CE:2,RT:1,SR:1}) },
+      { t:"The question deserves the discomfort, not a quick answer.",                      v:v({TD:3,SR:2,TV:1}) }
+    ]},
+
+  { p:"You know something true that would devastate someone. Telling them costs them peace; not telling them costs them autonomy. What do you do?",
+    a:[
+      { t:"Tell them. People deserve to author their own response.",                       v:v({SS:3,UI:2,TR:1}) },
+      { t:"Don't. Truth without context is just damage.",                                  v:v({CE:2,MR:1,RT:1,PO:1}) },
+      { t:"Tell them when they're equipped, not before.",                                  v:v({PO:3,CE:1,TR:1}) },
+      { t:"Live as though they already know, and let them ask.",                           v:v({MR:2,SS:1,SR:1,RT:1}) },
+      { t:"It depends on the stakes. Small truths, less duty. Big ones, more.",             v:v({PO:3,UI:1}) }
+    ]},
+
+  { p:"A practice you'd never personally do has persisted across very different cultures for thousands of years. What's the most likely truth about it?",
+    a:[
+      { t:"It encodes wisdom we've forgotten. Long survival is hard evidence.",            v:v({RT:3,CE:1,SR:1}) },
+      { t:"It exploits something stable about human psychology, for better or worse.",      v:v({SR:3,TE:2,SI:1}) },
+      { t:"It performed a function — but the function is now better met other ways.",       v:v({PO:3,TR:1,WP:1}) },
+      { t:"Both wisdom and cruelty travel through tradition equally well.",                  v:v({TV:3,SR:1,RT:1}) },
+      { t:"There's something the practice knows that I don't, even if I won't adopt it.",   v:v({MR:2,RT:2,TD:1}) }
+    ]},
+
+  { p:"You have legitimate authority over someone — boss, parent, teacher, leader. What's your default stance toward that authority?",
+    a:[
+      { t:"Use it sparingly. Authority that has to be wielded is already broken.",          v:v({MR:2,AT:2,RT:1,CE:1}) },
+      { t:"Use it directly. People deserve the clarity of knowing who's responsible.",      v:v({SS:2,WP:2,UI:1,TR:1}) },
+      { t:"Make myself dispensable. Good authority works toward its own end.",              v:v({SS:3,WP:1,UI:1}) },
+      { t:"Hold it carefully — what's given can be taken back, and should be.",             v:v({CE:2,RT:1,SR:1}) },
+      { t:"Question it constantly. Most hierarchies are bad for both sides.",               v:v({SR:2,SS:2,WP:1}) }
+    ]},
+
+  { p:"Mountains. The sea. A vast forest. They move some people deeply. If they move you — why?",
+    a:[
+      { t:"Scale. They make my life feel proportionate.",                                   v:v({TV:2,MR:2,SI:2}) },
+      { t:"Beauty pointing past itself toward something I can't name.",                     v:v({MR:3,UI:1,TD:1}) },
+      { t:"The body responding. It's older than thought.",                                   v:v({ES:3,TE:2,VA:1}) },
+      { t:"The honest indifference of nature. Nothing about me is required.",               v:v({TV:3,SR:2,SI:1}) },
+      { t:"They don't, particularly. The reverence is more cultural than felt.",             v:v({SR:3,SI:1,TE:1}) }
+    ]},
+
+  { p:"What would actually be worth dying for? Pick what genuinely fits.",
+    multi: { max: 3 },
+    a:[
+      { t:"My children, or whoever has come to depend on me.",                              v:v({CE:3,VA:2,RT:1}) },
+      { t:"A truth I had verified for myself, against the crowd if needed.",                 v:v({SS:3,TR:2,UI:1}) },
+      { t:"A community that shaped me — to defend what made me possible.",                   v:v({CE:3,RT:3,UI:1}) },
+      { t:"Justice, in a specific case, where I was the one positioned to act.",             v:v({UI:3,WP:2,SS:1}) },
+      { t:"Nothing. A life is the precondition for every value, not a price for any.",        v:v({SR:3,VA:2,SI:1}) },
+      { t:"A future I won't see — moral progress for people who don't exist yet.",            v:v({UI:3,TD:1,WP:1}) }
+    ]},
+
+  { p:"Consensus position. You're alone in disagreeing. What happens over time?",
+    a:[
+      { t:"I usually update toward the consensus. They're probably right and I probably missed something.",        v:v({SR:3,RT:2,TR:1}) },
+      { t:"I hold the view. Truth isn't determined by headcount.",                          v:v({SS:3,TR:2,WP:1}) },
+      { t:"I dig in for a while, then quietly give up if no one's been moved.",              v:v({TV:2,SS:1,PO:2}) },
+      { t:"I keep arguing — but I expect to find the gap was in me, not them.",              v:v({TD:3,SR:2,UI:1}) },
+      { t:"I let it be. Most disagreements are about framing, not truth.",                    v:v({MR:2,SR:1,RT:1}) }
+    ]},
+
+  { p:"Memories you can't fully trust but believe anyway. What does that mean about memory?",
+    a:[
+      { t:"Memory was never about accuracy. It's about coherence and identity.",             v:v({SI:2,CE:1,SS:1,MR:1}) },
+      { t:"Belief outruns evidence in most domains. Memory's no different.",                  v:v({SR:3,TE:2,TR:1}) },
+      { t:"Some memories are more like prayer than recording.",                                v:v({MR:3,TV:1,TD:1}) },
+      { t:"It means I should trust other tools — writing, the people who were there.",        v:v({TE:2,SR:2,PO:2,CE:1}) },
+      { t:"It means the self is more porous than we like to admit.",                          v:v({SI:3,MR:2,SS:-1}) }
+    ]},
+
+  { p:"A new way of doing something replaces an old way. The old worked. The new is provably better. Your honest first reaction?",
+    a:[
+      { t:"Excitement. Better is better.",                                                    v:v({WP:2,TR:2,VA:1}) },
+      { t:"Curiosity, paired with suspicion of what 'better' is measuring.",                  v:v({SR:3,TD:2,RT:1}) },
+      { t:"Reluctance. The old way solved problems we didn't know we had.",                   v:v({RT:3,TV:1,CE:1}) },
+      { t:"Adopt it cautiously, watch what breaks.",                                          v:v({TE:3,PO:2,SR:1}) },
+      { t:"Indifference. Most 'progress' is sideways motion.",                                v:v({TV:2,SR:2,SI:1}) }
+    ]},
+
+  { p:"Sitting with a problem instead of solving it. When is that wisdom and when is it cowardice?",
+    a:[
+      { t:"Wisdom when the problem is beyond your reach. Cowardice when it isn't.",           v:v({PO:3,TR:1,SR:1}) },
+      { t:"Wisdom when acting now would foreclose better answers later.",                      v:v({TD:2,SR:2,MR:1}) },
+      { t:"Almost always cowardice. Sitting is what we tell ourselves to feel deep.",          v:v({WP:3,SS:2,SR:1}) },
+      { t:"Almost always wisdom. Most problems resolve themselves once you stop pushing.",     v:v({MR:3,AT:2,SI:1}) },
+      { t:"There's no clean answer. The two states feel identical from the inside.",            v:v({TV:3,SR:1,TR:1}) }
+    ]},
+
+  { p:"Why do dreams matter, if they do?",
+    a:[
+      { t:"They don't. Dreams are noise the brain processes overnight.",                       v:v({SR:3,TE:2,TR:1}) },
+      { t:"They show what the conscious mind has been hiding from itself.",                    v:v({TD:2,SI:2,MR:1}) },
+      { t:"They're a form of attention I can't access awake.",                                  v:v({MR:3,SI:1,ES:1}) },
+      { t:"They're the body talking — pay attention if it's loud.",                             v:v({ES:3,TE:2,MR:1}) },
+      { t:"They matter as art matters. Made of nothing, somehow real.",                         v:v({MR:2,VA:2,TD:1}) }
+    ]},
+
+  { p:"A conversation you should have but keep avoiding. What's actually stopping you?",
+    a:[
+      { t:"Fear of what I'll learn about myself in saying it.",                                  v:v({TV:2,SS:1,SR:1,SI:1}) },
+      { t:"Fear of damaging the relationship — silence preserves more than truth costs.",         v:v({CE:3,RT:1,TV:1}) },
+      { t:"It can't be unsaid. I want to be sure.",                                                v:v({TR:2,SR:2,RT:1,PO:1}) },
+      { t:"Hope it resolves itself. Most unspoken things do.",                                     v:v({MR:2,RT:1,SI:1,PO:1}) },
+      { t:"Inertia. I'd be having the conversation if I were a slightly braver person.",          v:v({TV:2,SR:2,SS:1}) }
+    ]},
+
+  { p:"A hungry person right in front of you. A statistical hungry person at distance. Same response, or different?",
+    a:[
+      { t:"Same. Distance is morally arbitrary; I just feel it more.",                            v:v({UI:3,TR:2,WP:1}) },
+      { t:"Different. The relationship to the person in front of me is real; the statistic isn't.",v:v({CE:3,RT:1,TE:1}) },
+      { t:"Different — but the distant one is the moral test.",                                    v:v({UI:2,AT:2,TR:1}) },
+      { t:"Both equally — and I do roughly the same scattered nothing for both.",                  v:v({TV:3,SR:1,SI:1}) },
+      { t:"Whichever I can actually move the needle on.",                                          v:v({PO:3,WP:2,TE:1}) }
+    ]},
+
+  { p:"Where does conscience come from?",
+    a:[
+      { t:"Evolution shaped it. Reciprocal cooperation is in our wiring.",                         v:v({SR:3,TE:2,SI:1}) },
+      { t:"The voice of internalized community — parents, culture, the eyes you carry.",           v:v({CE:3,RT:2,SI:1}) },
+      { t:"A real sense of moral order, dim but pointing somewhere.",                                v:v({MR:3,UI:2,RT:1}) },
+      { t:"Reason recognizing universal duties.",                                                    v:v({TR:3,UI:2,TD:1}) },
+      { t:"All of those tangled. There isn't one source.",                                            v:v({SR:1,SI:1,PO:1,TD:1}) }
+    ]},
+
+  { p:"A skill you'll never have, no matter how hard you try. Some people have it; you don't. What's the right relationship to that fact?",
+    a:[
+      { t:"Mourn it briefly, then build with what I have.",                                          v:v({SS:2,WP:2,PO:2,TV:1}) },
+      { t:"Accept it. Comparing yourself to others is most of suffering.",                            v:v({AT:3,MR:1,SI:1,TV:1}) },
+      { t:"Refuse to accept. Limits often dissolve when stubbornly questioned.",                      v:v({SS:3,WP:3,VA:1}) },
+      { t:"Grieve it properly. Not every loss should be optimized through.",                          v:v({TV:3,ES:1,VA:1}) },
+      { t:"Notice what compensating around it taught me. The detour usually carried the lesson.",     v:v({TD:2,PO:2,SR:1,VA:1}) }
+    ]},
+
+  { p:"Romantic love between two people, lasting decades. What does its permanence actually depend on?",
+    a:[
+      { t:"Choosing each other again every day. It's a verb, not a state.",                          v:v({SS:3,VA:2,PO:2}) },
+      { t:"Building something together that neither could build alone.",                              v:v({CE:3,WP:2,PO:1}) },
+      { t:"Watching each other change without flinching.",                                            v:v({MR:2,VA:2,CE:1,TV:1}) },
+      { t:"Honesty about what each owes the other. Romance is mostly fairness.",                      v:v({UI:2,TR:2,SS:1}) },
+      { t:"Mostly luck. Compatibility is rarer than we admit.",                                        v:v({TV:3,SR:2,TE:1}) }
+    ]},
+
+  { p:"Do humans get morally better over time? Stay the same? Decay?",
+    a:[
+      { t:"Better, slowly. The circle of moral concern keeps widening.",                              v:v({UI:3,WP:1,TR:1,VA:1}) },
+      { t:"The same. Different vocabulary for the same impulses.",                                     v:v({TV:3,RT:1,SR:2}) },
+      { t:"Worse in the things that matter; better in things easily measured.",                        v:v({RT:3,TV:2,CE:1}) },
+      { t:"Both — better in some places, decaying in others. The trajectory isn't a line.",            v:v({SR:2,PO:2,TR:1}) },
+      { t:"The premise is wrong. Moral 'progress' just means the present's preferences won.",          v:v({SR:3,SI:1,TE:1}) }
+    ]},
+
+  { p:"Without regret entirely, would you be wiser, or hollow?",
+    a:[
+      { t:"Wiser. Regret is a sentimental tax on present action.",                                     v:v({SS:2,WP:2,SR:1,SI:1}) },
+      { t:"Hollow. Regret is what makes the past a teacher.",                                          v:v({TV:3,RT:1,VA:1,CE:1}) },
+      { t:"Both — wiser in some directions, dimmer in others.",                                        v:v({TR:1,PO:1,SR:1}) },
+      { t:"The question is malformed. There's no 'me' that survives the absence of regret.",          v:v({SI:3,MR:2,SS:-1}) },
+      { t:"Hollow. The capacity to regret is the same capacity to love.",                              v:v({MR:2,VA:2,ES:1,TV:1}) }
+    ]},
+
+  { p:"Your body says one thing, your mind another. Which do you usually trust?",
+    a:[
+      { t:"The body. It knows things faster than I do.",                                               v:v({ES:3,TE:2,SI:1}) },
+      { t:"The mind. The body's signal is correlation; thought finds the cause.",                      v:v({TR:3,TD:2,ES:-1}) },
+      { t:"Whichever is louder — and that's information about which has been suppressed.",            v:v({SR:2,ES:2,SI:1}) },
+      { t:"The body for the small decisions, the mind for the large.",                                  v:v({PO:3,ES:1,TR:1}) },
+      { t:"They're never really separate. The split is a confession.",                                  v:v({MR:2,ES:2,SI:2}) }
+    ]},
+
+  { p:"Build a community from scratch. What's the very first principle?",
+    a:[
+      { t:"Honesty. Without it, every other principle drifts.",                                         v:v({TR:2,UI:2,SS:2}) },
+      { t:"Mutual obligation. We owe each other a living.",                                             v:v({CE:3,RT:2,UI:1}) },
+      { t:"Voluntariness. No coercion, ever, by anyone.",                                                v:v({SS:3,WP:2,UI:1}) },
+      { t:"Tradition. New communities fail because they think they can skip the hard-won customs.",     v:v({RT:3,CE:2,SR:1}) },
+      { t:"Care. Every other principle has to bend to whoever is suffering most.",                      v:v({CE:3,ES:2,MR:1}) }
+    ]},
+
+  { p:"Mockery and reverence, applied to the same thing. Which is more honest?",
+    a:[
+      { t:"Reverence — most things deserve more attention than we give them, not less.",                v:v({MR:3,RT:2,UI:1}) },
+      { t:"Mockery — taking things seriously is mostly people performing depth.",                       v:v({SR:3,SS:1,SI:1,WP:1}) },
+      { t:"Both, in turn. Anything precious survives the joke.",                                         v:v({VA:2,SR:1,SS:2,MR:1}) },
+      { t:"Mockery when it punches up, reverence when it punches down.",                                v:v({CE:2,WP:2,UI:1,SR:1}) },
+      { t:"Neither. The honest stance is just attention without commentary.",                           v:v({MR:3,AT:1,SI:1}) }
+    ]},
+
+  { p:"Hardest, dirtiest necessary work. Who should be doing it?",
+    a:[
+      { t:"Whoever is paid fairly to do it. Markets sort this if we let them.",                          v:v({TR:1,SS:2,TE:1,PO:2}) },
+      { t:"Rotated. Citizens do it as a duty for the system that sustains them.",                       v:v({CE:3,UI:2,RT:1}) },
+      { t:"The young, briefly, as part of growing up.",                                                  v:v({RT:3,CE:2,WP:1,AT:1}) },
+      { t:"The people who owe the most to society. A debt-paying obligation.",                          v:v({UI:3,WP:1,TR:1}) },
+      { t:"Whoever it'd damage least. The whole utilitarian frame is broken if we ignore that.",        v:v({UI:1,ES:2,SR:1,PO:2}) }
+    ]},
+
+  { p:"A polished public self, a messy private one. Which is the real you?",
+    a:[
+      { t:"The private one. The public one is a survival costume.",                                     v:v({SS:2,SR:1,TV:2,SI:1}) },
+      { t:"The public one. Discipline is what makes a self real.",                                      v:v({AT:3,WP:2,RT:1}) },
+      { t:"Neither. The real me is what's consistent across both.",                                      v:v({TR:2,SS:2,TD:1}) },
+      { t:"There's no real me underneath, just versions for different rooms.",                           v:v({SI:3,SR:1,CE:1}) },
+      { t:"The private me, but the public me is also me — performance is part of being human.",         v:v({CE:2,VA:2,SI:1,SS:1}) }
+    ]},
+
+  { p:"A child suffers. How much can be prevented and should be?",
+    a:[
+      { t:"Almost all of it. Most childhood suffering is structural and preventable.",                   v:v({UI:3,WP:2,VA:1}) },
+      { t:"Some. The kind that comes from being formed by limit — that's necessary.",                    v:v({RT:2,TV:2,AT:2}) },
+      { t:"Less than we think — protecting children too much makes them less able adults.",              v:v({TV:2,SS:2,RT:2}) },
+      { t:"More than we admit. We've normalized harm we could end.",                                      v:v({UI:3,WP:1,TV:1,VA:1}) },
+      { t:"The question hides a different one: who decides what counts as suffering?",                    v:v({SR:2,TD:2,CE:1}) }
+    ]},
+
+  { p:"Why do people care so much about who wins?",
+    a:[
+      { t:"Belonging. The team is a portable community.",                                                  v:v({CE:3,RT:1,VA:1}) },
+      { t:"Excellence is rare. Watching it is the closest most of us get.",                                v:v({WP:3,VA:2,AT:1}) },
+      { t:"Drama — a story whose ending isn't fixed.",                                                     v:v({VA:2,ES:1,MR:1}) },
+      { t:"It's a mostly-harmless place to put energy that has nowhere else to go.",                      v:v({SR:2,PO:2,SI:1}) },
+      { t:"They shouldn't, particularly. It's borrowed feeling.",                                          v:v({SR:3,AT:1,SI:1,TV:1}) }
+    ]},
+
+  { p:"A book that changed your life. Or one that didn't, when it should have. What does that say?",
+    a:[
+      { t:"Some books only work if you arrive at the right age.",                                          v:v({TV:2,RT:1,PO:2,TE:1}) },
+      { t:"It says I was open to it. Books are mirrors.",                                                  v:v({SS:2,TD:2,MR:1}) },
+      { t:"Books matter less than people. Most real change comes through relationships.",                  v:v({CE:3,ES:1,TE:1}) },
+      { t:"It says the book did the work — some texts have unusual force.",                                v:v({RT:2,TD:2,MR:1}) },
+      { t:"Both — I met it, and it met me.",                                                                v:v({MR:2,VA:1,TD:1,CE:1}) }
+    ]},
+
+  { p:"Quiet competence and loud excellence. Which moves you more?",
+    a:[
+      { t:"Quiet. People who can do the thing without needing to be seen doing it.",                       v:v({AT:3,MR:1,RT:2}) },
+      { t:"Loud. The ones who push through skepticism with sheer force.",                                  v:v({WP:3,VA:2,SS:1}) },
+      { t:"Both, depending on the domain.",                                                                 v:v({PO:2,SR:1}) },
+      { t:"Neither, really. Excellence in itself is overrated.",                                            v:v({MR:2,SI:2,CE:1}) },
+      { t:"Quiet. Loud excellence is usually performance with a real skill underneath.",                    v:v({SR:2,AT:2,TD:1}) }
+    ]},
+
+  { p:"Grief that stays for years, untouched by time. Heal toward it ending, or honor it as part of you?",
+    a:[
+      { t:"Honor. Grief that ends was love that wasn't.",                                                   v:v({TV:3,VA:1,RT:1,CE:1}) },
+      { t:"Heal toward ending. Permanent grief is a refusal to live.",                                     v:v({VA:3,WP:2,SS:1}) },
+      { t:"Both. The pain lessens; the love doesn't.",                                                      v:v({MR:2,VA:2,TV:2,ES:1}) },
+      { t:"Translate it. Grief turned into work is grief that has done something.",                         v:v({WP:3,SS:1,TD:1,VA:1}) },
+      { t:"Sit with it. Healing is mostly something time does, not something you do.",                       v:v({MR:3,AT:2,TV:1}) }
+    ]},
+
+  { p:"Statistical lives versus a single named person. Where does your honest moral attention go?",
+    a:[
+      { t:"To the statistical lives. The named one is a failure of imagination.",                            v:v({UI:3,TR:2,WP:1}) },
+      { t:"To the named one. Concrete is real; abstract is loud.",                                          v:v({CE:3,ES:2,TE:1}) },
+      { t:"Both, but I act on whichever I can actually affect.",                                            v:v({PO:3,UI:1,WP:1}) },
+      { t:"To wherever the press isn't. Attention is its own moral economy.",                                v:v({SR:3,TD:1,UI:1}) },
+      { t:"To neither, much. Most moral attention I claim is performance.",                                  v:v({SR:2,SI:2,TV:1}) }
+    ]},
+
+  { p:"Born family, chosen family. Where does loyalty actually rest?",
+    a:[
+      { t:"Born family, by default. Blood is a real thing.",                                                v:v({RT:3,CE:2}) },
+      { t:"Chosen family. The people who'd choose you back.",                                                v:v({SS:3,VA:2,CE:1}) },
+      { t:"Both equally. Two different kinds of obligation.",                                                v:v({CE:2,UI:1,RT:1,PO:1}) },
+      { t:"Neither — loyalty to the relationship that's working, whichever it is.",                          v:v({SS:2,PO:3,TR:1}) },
+      { t:"Loyalty's the wrong frame for either. People deserve presence, not loyalty.",                     v:v({MR:2,ES:1,SI:1,SR:1}) }
+    ]},
+
+  { p:"You see suffering you could affect, and you look away. What's the moral weight of that, really?",
+    a:[
+      { t:"Heavy. Looking away is the most common kind of harm.",                                           v:v({UI:3,TR:1,WP:1}) },
+      { t:"Modest. Saint-level moral demand isn't reasonable to expect of anyone.",                          v:v({SR:2,PO:2,TE:1}) },
+      { t:"Heavy in aggregate, weightless in any individual case.",                                          v:v({UI:1,SR:2,TR:2}) },
+      { t:"Real, and irreducible by reasoning. The look-away is the tell.",                                  v:v({MR:2,ES:1,TV:1,SI:1}) },
+      { t:"Depends on what you do with the next moment.",                                                    v:v({PO:3,VA:2,SS:1}) }
+    ]},
+
+  { p:"Born too early or too late for your real era. Real perception, or excuse?",
+    a:[
+      { t:"Real. Some sensibilities don't fit the present.",                                                v:v({TV:3,MR:2,SS:1}) },
+      { t:"Excuse. The present is what you make of it.",                                                     v:v({WP:3,VA:2,PO:1}) },
+      { t:"Both — real perception, used as excuse.",                                                          v:v({SR:2,TV:1,SI:1}) },
+      { t:"The premise is wrong. There's no 'real era' anyone fits.",                                         v:v({SR:3,SI:2}) },
+      { t:"Real, but unhelpful. The era is what you have.",                                                  v:v({TV:2,PO:3,AT:1}) }
+    ]},
+
+  { p:"A teacher (broadly defined) who changed you. What did they do that mattered?",
+    a:[
+      { t:"They expected more than I thought I had.",                                                        v:v({WP:3,SS:2,RT:1}) },
+      { t:"They listened, longer than anyone else had.",                                                     v:v({CE:3,VA:1,MR:1}) },
+      { t:"They modeled a kind of attention I didn't know existed.",                                          v:v({MR:3,TD:1,RT:1}) },
+      { t:"They took my own thinking seriously, before it deserved it.",                                      v:v({SS:3,TD:2,UI:1}) },
+      { t:"They gave me a tool I'm still using. Specific, practical, durable.",                               v:v({PO:3,TR:1,RT:1}) }
+    ]},
+
+  { p:"Letting go of a friendship. When is it the right move, and when is it failure?",
+    a:[
+      { t:"Right when it's costing you yourself. Failure when you're tired, not done.",                      v:v({SS:3,VA:1,PO:2}) },
+      { t:"Almost always failure. People drift; they shouldn't be released.",                                 v:v({CE:3,RT:2,VA:1}) },
+      { t:"Right when honesty would require either confrontation or distance.",                              v:v({TR:2,UI:2,SS:1}) },
+      { t:"Right when you've changed in incompatible directions, not when you're temporarily annoyed.",       v:v({TV:2,PO:2,SR:1}) },
+      { t:"There's no right or wrong here. Friendships have their own seasons.",                              v:v({MR:2,SI:1,TV:1,RT:1}) }
+    ]},
+
+  { p:"Public speech and private thought. Should they match?",
+    a:[
+      { t:"Yes. The gap is where corruption lives.",                                                          v:v({SS:3,UI:2,TR:1}) },
+      { t:"No. Public speech is a different genre, with different obligations.",                              v:v({CE:3,RT:2,PO:1}) },
+      { t:"Mostly yes, with allowances for tact.",                                                            v:v({TR:2,UI:1,SS:1,CE:1}) },
+      { t:"The gap is where civilization lives. Total honesty is a hostile demand.",                          v:v({CE:2,RT:2,SR:2,TV:1}) },
+      { t:"They should match in commitments, not in tone.",                                                    v:v({TR:2,PO:2,SS:2}) }
+    ]},
+
+  { p:"Healthy self-regard, vanity. What's the difference?",
+    a:[
+      { t:"Self-regard is calibrated to evidence; vanity isn't.",                                              v:v({TR:3,SR:2,TE:1}) },
+      { t:"Self-regard is private; vanity needs an audience.",                                                  v:v({SS:2,AT:2,SR:1}) },
+      { t:"Self-regard rests in being; vanity is a performance about it.",                                     v:v({MR:2,SI:1,RT:1,SS:1}) },
+      { t:"Vanity is self-regard that's afraid of slipping.",                                                   v:v({TV:2,SR:1,TR:1,VA:1}) },
+      { t:"There's no clean line. Most self-regard contains some vanity.",                                      v:v({SR:3,SI:1,TV:1}) }
+    ]},
+
+  { p:"Ritual — repeating, structured, often pre-rational practices. What's their actual value?",
+    a:[
+      { t:"They make things real. Marriage, mourning, gratitude — without ritual they evaporate.",             v:v({RT:3,CE:2,MR:2}) },
+      { t:"They're scaffolding for emotion that needs structure to land.",                                      v:v({ES:2,RT:2,PO:1,MR:1}) },
+      { t:"Mostly inertia. The good ones could be replaced; we don't because we're attached.",                  v:v({SR:3,TR:2,TE:1}) },
+      { t:"The repetition is the point. It's how depth gets built.",                                             v:v({MR:3,AT:2,RT:1,TD:1}) },
+      { t:"They're how communities remember themselves.",                                                        v:v({CE:3,RT:2,UI:1}) }
+    ]},
+
+  { p:"The animal in us — drives, appetites, instincts. Embrace, manage, or transcend?",
+    a:[
+      { t:"Embrace. The body is older and wiser than thought.",                                                  v:v({ES:3,VA:3,MR:1}) },
+      { t:"Manage. Not because they're bad, but because they're loud.",                                          v:v({TR:2,PO:2,AT:2}) },
+      { t:"Transcend. The wisdom traditions agree on this for a reason.",                                         v:v({AT:3,MR:2,SI:1}) },
+      { t:"Refuse the dichotomy. There's no animal opposite something else.",                                     v:v({ES:3,SI:2,TR:1}) },
+      { t:"Different drives need different stances. There's no one answer.",                                       v:v({PO:3,SR:1,TR:1}) }
+    ]},
+
+  { p:"The future of philosophy as a practice. More people doing it, or fewer?",
+    a:[
+      { t:"More. The world is harder to navigate without it.",                                                    v:v({TD:3,UI:2,SS:1}) },
+      { t:"Fewer, in the academic sense. More, as everyday practice.",                                             v:v({PO:3,SS:2,TR:1}) },
+      { t:"Roughly the same. There's a baseline of philosophical hunger that's stable.",                           v:v({TV:2,RT:1,SR:1}) },
+      { t:"Philosophy will dissolve into other disciplines. That's mostly fine.",                                   v:v({TE:2,SR:2,SI:1}) },
+      { t:"The question matters less than what kind of philosophy.",                                               v:v({TD:3,UI:1,PO:1}) }
+    ]},
+
+  { p:"When you've truly understood something difficult, what was the moment of understanding actually made of?",
+    a:[
+      { t:"A pattern suddenly visible. The pieces snap into a structure.",                                            v:v({TR:3,TD:3,SI:1}) },
+      { t:"An example clicking. The abstract turned concrete.",                                                        v:v({TE:3,ES:2,PO:1}) },
+      { t:"Someone's analogy reframing it. I'd been looking from the wrong angle.",                                   v:v({CE:2,RT:1,TD:2}) },
+      { t:"A long quiet sitting. The understanding arrived when I stopped chasing it.",                                v:v({MR:3,AT:2,SI:1}) },
+      { t:"The body got it before the mind did. I knew, then I understood why.",                                       v:v({ES:3,TE:2,MR:1}) },
+      { t:"Disagreement. Trying to refute it forced the actual structure out.",                                          v:v({SR:3,TR:2,SS:1}) }
+    ]},
+
+  { p:"You give something up for an extended period — fast, screens, alcohol, comfort, stimulation. What does the giving-up actually surface?",
+    a:[
+      { t:"Weight I hadn't noticed I was carrying. The thing was costing more than it gave.",                          v:v({AT:3,SR:2,TV:1}) },
+      { t:"Pleasure I'd underestimated. The frame I had on it was wrong.",                                              v:v({ES:3,VA:3,TE:1}) },
+      { t:"Time. There's an enormous amount of it under what I was filling.",                                           v:v({AT:3,TD:2,SS:1}) },
+      { t:"Distance from people. Most of what I gave up was social, not personal.",                                     v:v({CE:3,RT:1,TV:1}) },
+      { t:"Mostly nothing. The 'discipline' frame is more aesthetic than I'd admitted.",                                v:v({SR:3,SI:2,VA:1}) },
+      { t:"A different texture of attention. The world gets sharper without the buffer.",                                v:v({MR:3,ES:2,AT:1}) }
+    ]},
+
+  { p:"Five words on your tombstone. Pick the closest.",
+    a:[
+      { t:"\"He saw it clearly enough.\"",                                                                              v:v({TR:2,SR:2,TV:1,SS:1}) },
+      { t:"\"She loved who was here.\"",                                                                                v:v({CE:3,VA:2,ES:1}) },
+      { t:"\"They left it slightly better.\"",                                                                          v:v({WP:2,UI:2,PO:2}) },
+      { t:"\"He paid attention.\"",                                                                                      v:v({MR:3,AT:1,VA:1}) },
+      { t:"\"She lived without lying.\"",                                                                                v:v({SS:3,UI:1,TR:1}) },
+      { t:"Leave it blank.",                                                                                              v:v({SI:3,MR:2,AT:1,TV:1}) }
+    ]}
+];
+
 /* ----- 10 archetypes (with color + figure key) ----- */
 const ARCHETYPES = [
   { name:"The Cartographer", patron:"Aristotle", figureKey:"cartographer",
@@ -2209,6 +3254,153 @@ const ARCHETYPES = [
     p: v({TV:5,VA:5,WP:5,TR:9,TE:3,RT:4,MR:6,SR:2,CE:5,SS:5,PO:5,TD:9,AT:6,ES:3,UI:9,SI:3}),
     shadow:"The Garden" }
 ];
+
+/* ----- Canonical debates: project the 16-D vector onto recognizable
+   philosophical positions. Each position is a weighted combination of
+   dimensions (positive = high-score on this dim aligns; negative = low
+   score aligns). For a given user vector we pick the highest-scoring
+   position per debate. Scores are raw dot products, not normalized. */
+const DEBATES = [
+  { name: "Free will & moral responsibility",
+    positions: [
+      { label: "Libertarian free will",
+        gist: "Choices are genuinely yours — not just causal echoes. The wrongdoer is fully accountable.",
+        keys: { SS:+1.0, WP:+1.0, SI:-1.0, RT:+0.3 } },
+      { label: "Compatibilism",
+        gist: "Determinism is probably true, but freedom and responsibility still mean something in human terms.",
+        keys: { TR:+1.0, SS:+0.4, PO:+0.5, SI:-0.4 } },
+      { label: "Hard determinism / no-self",
+        gist: "What looks like choice is patterns producing patterns. Responsibility is a useful social fiction.",
+        keys: { SI:+1.0, SR:+1.0, SS:-1.0, ES:+0.3 } }
+    ]
+  },
+  { name: "Ethics — what makes an act good?",
+    positions: [
+      { label: "Virtue ethics",
+        gist: "Goodness is about what kind of person you become — habits, character, practical wisdom — not rules or outcomes.",
+        keys: { RT:+1.0, CE:+0.7, AT:+0.6, PO:+0.5 } },
+      { label: "Deontology",
+        gist: "Some acts are right or wrong in themselves, regardless of consequences. Some lines you don't cross.",
+        keys: { UI:+1.0, TR:+0.8, RT:+0.3, PO:-0.3 } },
+      { label: "Consequentialism",
+        gist: "An act's morality is determined by what it produces — measured against well-being or another concrete good.",
+        keys: { TR:+0.8, PO:+1.0, WP:+0.4, UI:+0.5 } },
+      { label: "Care / contextual ethics",
+        gist: "Morality starts from particular relationships and contexts, not abstract principles. Listen to who's in front of you.",
+        keys: { CE:+1.0, ES:+0.6, MR:+0.4, UI:-0.3 } }
+    ]
+  },
+  { name: "The sacred",
+    positions: [
+      { label: "Apophatic theist",
+        gist: "Something real points beyond what reason can name. Inherited religious forms preserve a wisdom worth respecting.",
+        keys: { MR:+1.0, RT:+0.8, SR:-0.5 } },
+      { label: "Spiritual but not religious",
+        gist: "Something is there, but not the institutional God of any tradition. The mystery is direct, not mediated.",
+        keys: { MR:+1.0, RT:-0.6, SS:+0.4 } },
+      { label: "Skeptical agnostic",
+        gist: "We don't, and probably can't, know. Suspending judgment is the honest posture.",
+        keys: { SR:+1.0, MR:-0.3, TE:+0.5 } },
+      { label: "Naturalist atheist",
+        gist: "The world makes sense without anything beyond it. Religious experience has natural explanations.",
+        keys: { SR:+1.0, TE:+1.0, MR:-1.0 } }
+    ]
+  },
+  { name: "Mind & body",
+    positions: [
+      { label: "Embodied mind",
+        gist: "Cognition isn't separable from the body and the world. Thinking is something a whole creature does.",
+        keys: { ES:+1.0, TE:+0.7, SI:-0.3 } },
+      { label: "Functionalist materialism",
+        gist: "Mind is what brain does. The same patterns could in principle run on different hardware.",
+        keys: { TR:+1.0, TD:+0.5, ES:-0.6 } },
+      { label: "Idealist or dualist",
+        gist: "Consciousness isn't fully reducible to matter. Either mind is fundamental, or there are two distinct kinds of substance.",
+        keys: { MR:+1.0, TD:+0.7, ES:-0.5 } },
+      { label: "No-self / process view",
+        gist: "There's no fixed mental substance to explain. Mental life is a stream of dependent arising.",
+        keys: { SI:+1.0, MR:+0.5, SS:-0.5 } }
+    ]
+  },
+  { name: "Authority & politics",
+    positions: [
+      { label: "Communitarian / traditionalist",
+        gist: "We become full humans through inherited communities and roles. Liberal individualism dissolves what makes life livable.",
+        keys: { CE:+1.0, RT:+1.0, SS:-0.7 } },
+      { label: "Liberal individualist",
+        gist: "Each person has the right to author their own life. Universal rights protect that against community pressure.",
+        keys: { SS:+1.0, UI:+0.8, TR:+0.4 } },
+      { label: "Anarchist / libertarian",
+        gist: "Hierarchy is presumptively suspect. Voluntary cooperation and self-rule beat top-down authority.",
+        keys: { SS:+1.0, WP:+0.7, RT:-1.0, CE:-0.3 } },
+      { label: "Pragmatic reformist",
+        gist: "Politics is the art of what works. Slow, evidence-driven change against problems we can actually solve.",
+        keys: { PO:+1.0, TE:+0.5, SR:+0.5 } }
+    ]
+  },
+  { name: "Knowledge — how do we know?",
+    positions: [
+      { label: "Rationalist",
+        gist: "Reason can reach truths experience can't — mathematical, ethical, structural — by working from clear principles.",
+        keys: { TR:+1.0, TD:+0.8, TE:-0.5 } },
+      { label: "Empiricist",
+        gist: "All knowledge starts in experience. Claims that can't be checked against the world are usually empty.",
+        keys: { TE:+1.0, SR:+0.7, MR:-0.5 } },
+      { label: "Pragmatist",
+        gist: "Truth is what reliably works under inquiry. Knowing is something we do together over time, not a mind-mirror relation.",
+        keys: { PO:+1.0, TR:+0.4, TE:+0.4 } },
+      { label: "Mystical intuitionist",
+        gist: "The deepest truths are reached by attention beneath language — meditation, contemplation, the apophatic.",
+        keys: { MR:+1.0, SI:+0.5, SR:-0.3 } }
+    ]
+  },
+  { name: "Personal identity",
+    positions: [
+      { label: "Continuous self",
+        gist: "There's a real you that persists through time, even as you change. The self bears memory and responsibility.",
+        keys: { SS:+1.0, RT:+0.4, SI:-1.0 } },
+      { label: "Narrative self",
+        gist: "You're the story you keep telling about yourself, woven from memory and the people you love.",
+        keys: { CE:+0.8, SS:+0.5, RT:+0.3, MR:+0.2 } },
+      { label: "No-self",
+        gist: "What you call 'I' is a flicker of patterns. There's no thing inside doing the experiencing.",
+        keys: { SI:+1.0, MR:+0.5, SS:-0.7 } }
+    ]
+  },
+  { name: "Beauty & aesthetics",
+    positions: [
+      { label: "Aesthetic objectivism",
+        gist: "Beauty is real and points beyond itself, toward something eternal. Some forms of beauty are higher than others.",
+        keys: { MR:+1.0, UI:+0.8, RT:+0.5, TD:+0.4 } },
+      { label: "Hedonic aesthetics",
+        gist: "Beauty is intense, embodied pleasure made permanent. The point is to be alive to the world's loveliness.",
+        keys: { ES:+1.0, VA:+1.0, MR:+0.2 } },
+      { label: "Apophatic — beauty for nothing",
+        gist: "Beauty is for nothing. That's why it matters — it points to the part of being that resists explanation.",
+        keys: { MR:+1.0, TV:+0.5, AT:+0.4, PO:-0.4 } },
+      { label: "Skeptical / evolutionary",
+        gist: "Beauty is mostly biology — a signal evolution selected for. The rest is decoration we add to feel important.",
+        keys: { SR:+1.0, TE:+0.8, SI:+0.4, MR:-0.7 } }
+    ]
+  }
+];
+
+function scoreDebatePosition(vec, keys) {
+  let score = 0;
+  for (const k in keys) {
+    const idx = DIM_KEYS.indexOf(k);
+    if (idx >= 0) score += vec[idx] * keys[k];
+  }
+  return score;
+}
+
+function topDebateStances(vec) {
+  return DEBATES.map(d => {
+    const scored = d.positions.map(p => ({ ...p, score: scoreDebatePosition(vec, p.keys) }))
+      .sort((a, b) => b.score - a.score);
+    return { name: d.name, top: scored[0], all: scored };
+  });
+}
 
 /* ----- 63 philosophers across cultures, with dates + key idea ----- */
 const PHILOSOPHERS = [
@@ -2828,8 +4020,12 @@ let state = {
   idx: 0,
   answers: [],         // index, array of indices, or 'optout'
   vector: zeros(),
-  multiPicks: []
+  multiPicks: [],
+  quizMode: 'quick'    // 'quick' (Q, 20q) or 'detailed' (Q_DETAILED, 50q)
 };
+
+// Pointer to the currently-active quiz array. Set by startQuiz().
+let Q_ACTIVE = (typeof Q !== 'undefined') ? Q : [];
 
 function _hideAllSections() {
   document.getElementById("landing").hidden = true;
@@ -2838,6 +4034,7 @@ function _hideAllSections() {
   document.getElementById("results").hidden = true;
   const g = document.getElementById("gallery"); if (g) g.hidden = true;
   const a = document.getElementById("about"); if (a) a.hidden = true;
+  const ad = document.getElementById("archetype-detail"); if (ad) ad.hidden = true;
   // Hide sticky CTA whenever changing screens; showResults will turn it on again.
   const cta = document.getElementById("sticky-cta"); if (cta) cta.hidden = true;
   document.body.classList.remove("has-sticky-cta");
@@ -2858,6 +4055,7 @@ function showAbout() {
   if (!document.getElementById("results").hidden) _aboutReturnTo = 'results';
   else if (!document.getElementById("mappreview").hidden) _aboutReturnTo = 'mappreview';
   else if (!document.getElementById("gallery").hidden) _aboutReturnTo = 'gallery';
+  else if (!document.getElementById("archetype-detail").hidden) _aboutReturnTo = 'archetype-detail';
   else if (!document.getElementById("quiz").hidden) _aboutReturnTo = 'quiz';
   else _aboutReturnTo = 'landing';
   _hideAllSections();
@@ -2877,6 +4075,9 @@ function closeAbout() {
     document.getElementById("rootwrap").classList.add("wide");
   } else if (_aboutReturnTo === 'gallery') {
     document.getElementById("gallery").hidden = false;
+    document.getElementById("rootwrap").classList.add("wide");
+  } else if (_aboutReturnTo === 'archetype-detail') {
+    document.getElementById("archetype-detail").hidden = false;
     document.getElementById("rootwrap").classList.add("wide");
   } else if (_aboutReturnTo === 'quiz') {
     document.getElementById("quiz").hidden = false;
@@ -2932,12 +4133,13 @@ function renderGallery() {
   grid.innerHTML = ARCHETYPES.map(a => {
     const figure = FIGURES[a.figureKey] || '';
     const color = a.color.primary;
-    return `<div class="gallery-card" style="--card-color:${color}" onclick="showGallery()">
+    const safeName = a.name.replace(/'/g, "\\'");
+    return `<div class="gallery-card" style="--card-color:${color}" onclick="showArchetypeDetail('${safeName}')">
       <div class="gallery-figure">${figure}</div>
       <h3 class="gallery-name"><em>${a.name}</em></h3>
       <div class="gallery-patron">Patron: ${a.patron}</div>
       <p class="gallery-blurb">${a.blurb}</p>
-      <div class="gallery-soon">Custom page coming soon</div>
+      <div class="gallery-soon">Read more →</div>
     </div>`;
   }).join('');
 }
@@ -2952,11 +4154,159 @@ function renderArchetypeStrip(gridId, matchedArchName) {
     const isMatch = matchedArchName && a.name === matchedArchName;
     const cls = 'strip-card' + (isMatch ? ' matched' : '');
     const style = `--strip-color:${a.color.primary}` + (isMatch ? `;background:${a.color.soft};box-shadow:0 0 0 2px ${a.color.primary}` : '');
-    return `<div class="${cls}" style="${style}" onclick="showGallery()">
+    const safeName = a.name.replace(/'/g, "\\'");
+    return `<div class="${cls}" style="${style}" onclick="showArchetypeDetail('${safeName}')">
       <div class="strip-figure">${figure}</div>
       <div class="strip-name">${a.name.replace(/^The /, '')}</div>
     </div>`;
   }).join('');
+}
+
+let _archDetailReturnTo = null;
+function showArchetypeDetail(archName) {
+  const arch = ARCHETYPES.find(a => a.name === archName);
+  if (!arch) return;
+
+  // Remember where we came from — only if we're not already on a detail page
+  // (so clicking a shadow archetype keeps the original return target)
+  if (document.getElementById("archetype-detail").hidden) {
+    if (!document.getElementById("results").hidden) _archDetailReturnTo = 'results';
+    else if (!document.getElementById("gallery").hidden) _archDetailReturnTo = 'gallery';
+    else if (!document.getElementById("mappreview").hidden) _archDetailReturnTo = 'mappreview';
+    else _archDetailReturnTo = 'landing';
+  }
+
+  _hideAllSections();
+  document.getElementById("archetype-detail").hidden = false;
+  document.getElementById("rootwrap").classList.add("wide");
+  applyArchetypeTheme(arch);
+
+  const figure = FIGURES[arch.figureKey] || '';
+
+  // Defining dimensions: the four dims this archetype's prototype scores highest on
+  const archDefining = arch.p
+    .map((val, i) => ({ name: DIMS[i].name, k: DIM_KEYS[i], desc: DIMS[i].desc, v: val, idx: i }))
+    .sort((a, b) => b.v - a.v).slice(0, 4);
+
+  const dimCards = archDefining.map(d => `
+    <div class="archetype-dim-card">
+      <div class="archetype-dim-rank">${d.v.toFixed(0)}<span>/10</span></div>
+      <div class="archetype-dim-name">${d.name}</div>
+      <p class="archetype-dim-desc">${d.desc || ''}</p>
+    </div>
+  `).join('');
+
+  // Likely debate stances for this archetype's prototype vector
+  const stances = topDebateStances(arch.p);
+  const stanceCards = stances.map(s => `
+    <div class="debate-item">
+      <div class="debate-name">${s.name}</div>
+      <div class="debate-stance">${s.top.label}</div>
+      <p class="debate-gist">${s.top.gist}</p>
+    </div>
+  `).join('');
+
+  // Reading list
+  const readingItems = READING[arch.name] || [];
+  const readingHtml = readingItems.map(r => {
+    const url = readingItemUrl(r);
+    return `<a class="read" href="${url}" target="_blank" rel="noopener noreferrer">
+      <div class="kind">${r.kind}</div>
+      <h3>${r.title}<span class="read-arrow">↗</span></h3>
+      <p>${r.note}</p>
+    </a>`;
+  }).join('');
+
+  // Shadow archetype
+  const shadow = ARCHETYPES.find(a => a.name === arch.shadow);
+  const shadowFig = shadow ? (FIGURES[shadow.figureKey] || '') : '';
+  const shadowSafe = shadow ? shadow.name.replace(/'/g, "\\'") : '';
+
+  // Three closest philosophers to this archetype's prototype
+  const closePhils = PHILOSOPHERS
+    .map(p => ({ ...p, sim: cos(arch.p, p.p) }))
+    .sort((a, b) => b.sim - a.sim).slice(0, 3);
+  const philsHtml = closePhils.map(p => `
+    <a class="archetype-phil" href="${wikiUrl(p.name)}" target="_blank" rel="noopener noreferrer">
+      <div class="archetype-phil-name">${p.name}<span class="archetype-phil-arrow">↗</span></div>
+      <div class="archetype-phil-dates">${p.dates || ''}</div>
+      <p class="archetype-phil-idea">${p.keyIdea || ''}</p>
+    </a>
+  `).join('');
+
+  document.getElementById("archetype-detail-body").innerHTML = `
+    <div class="archetype-hero">
+      <div class="archetype-hero-figure">${figure}</div>
+      <div class="archetype-hero-text">
+        <div class="archetype-pill">Archetype</div>
+        <h1 class="archetype-name"><em>${arch.name}</em></h1>
+        <div class="archetype-patron">Patron · <strong>${arch.patron}</strong></div>
+        <p class="archetype-blurb">${arch.blurb}</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>What defines <em>${arch.name}</em></h2>
+      <p class="section-sub">The four dimensions this archetype scores highest on. People who land here tend to be high on each.</p>
+      <div class="archetype-dim-grid">${dimCards}</div>
+    </div>
+
+    <div class="section">
+      <h2>Where <em>${arch.name}</em> typically stands</h2>
+      <p class="section-sub">Likely positions on eight canonical debates, derived from this archetype's dimensional pattern.</p>
+      <div class="debates">${stanceCards}</div>
+    </div>
+
+    <div class="section">
+      <h2>Closest <em>thinkers</em></h2>
+      <p class="section-sub">Three philosophers from the constellation whose recorded positions sit closest to ${arch.name}.</p>
+      <div class="archetype-phils">${philsHtml}</div>
+    </div>
+
+    ${readingItems.length ? `<div class="section">
+      <h2>Where to go <em>from here</em></h2>
+      <div class="reading">${readingHtml}</div>
+    </div>` : ''}
+
+    ${shadow ? `<div class="section archetype-shadow">
+      <h2>Shadow · <em>${shadow.name}</em></h2>
+      <p class="section-sub">The strongest pushback on ${arch.name}'s worldview comes from the archetype that disagrees most.</p>
+      <div class="archetype-shadow-card" onclick="showArchetypeDetail('${shadowSafe}')">
+        <div class="archetype-shadow-figure">${shadowFig}</div>
+        <div class="archetype-shadow-body">
+          <div class="archetype-shadow-name"><em>${shadow.name}</em></div>
+          <p>${shadow.blurb}</p>
+          <div class="archetype-shadow-link">See ${shadow.name} →</div>
+        </div>
+      </div>
+    </div>` : ''}
+  `;
+
+  window.scrollTo({ top: 0 });
+}
+
+function closeArchetypeDetail() {
+  _hideAllSections();
+  if (_archDetailReturnTo === 'results') {
+    document.getElementById("results").hidden = false;
+    document.getElementById("rootwrap").classList.add("wide");
+    const cta = document.getElementById("sticky-cta"); if (cta) cta.hidden = false;
+    document.body.classList.add("has-sticky-cta");
+  } else if (_archDetailReturnTo === 'gallery') {
+    document.getElementById("gallery").hidden = false;
+    document.getElementById("rootwrap").classList.add("wide");
+    renderGallery();
+    resetThemeToDefault();
+  } else if (_archDetailReturnTo === 'mappreview') {
+    document.getElementById("mappreview").hidden = false;
+    document.getElementById("rootwrap").classList.add("wide");
+    resetThemeToDefault();
+  } else {
+    document.getElementById("landing").hidden = false;
+    document.getElementById("rootwrap").classList.remove("wide");
+    resetThemeToDefault();
+  }
+  window.scrollTo({ top: 0 });
 }
 
 function showMapPreview() {
@@ -2967,8 +4317,12 @@ function showMapPreview() {
   window.scrollTo({top:0});
 }
 
-function startQuiz() {
-  state = { idx:0, answers:[], vector: zeros(), multiPicks: [] };
+function startQuiz(mode) {
+  mode = (mode === 'detailed') ? 'detailed' : 'quick';
+  Q_ACTIVE = (mode === 'detailed' && typeof Q_DETAILED !== 'undefined' && Q_DETAILED.length)
+    ? Q_DETAILED
+    : Q;
+  state = { idx:0, answers:[], vector: zeros(), multiPicks: [], quizMode: mode };
   _hideAllSections();
   document.getElementById("quiz").hidden = false;
   document.getElementById("rootwrap").classList.remove("wide");
@@ -2978,8 +4332,8 @@ function startQuiz() {
 }
 
 function renderQuestion() {
-  const q = Q[state.idx];
-  document.getElementById("qcount").textContent = `Question ${state.idx+1} of ${Q.length}`;
+  const q = Q_ACTIVE[state.idx];
+  document.getElementById("qcount").textContent = `Question ${state.idx+1} of ${Q_ACTIVE.length}`;
   document.getElementById("qprompt").textContent = q.p;
 
   const hintEl = document.getElementById("qhint");
@@ -3028,7 +4382,7 @@ function renderQuestion() {
     skipBtn.style.color = "";
   }
 
-  document.getElementById("progressbar").style.width = `${(state.idx / Q.length) * 100}%`;
+  document.getElementById("progressbar").style.width = `${(state.idx / Q_ACTIVE.length) * 100}%`;
   document.getElementById("backbtn").disabled = state.idx === 0;
 
   const contBtn = document.getElementById("continuebtn");
@@ -3044,7 +4398,7 @@ function renderQuestion() {
 }
 
 function toggleMulti(i, btnEl) {
-  const q = Q[state.idx];
+  const q = Q_ACTIVE[state.idx];
   const max = q.multi.max;
   const idx = state.multiPicks.indexOf(i);
   if (idx >= 0) {
@@ -3081,7 +4435,7 @@ function recordAndAdvance(answer) {
   state.answers[state.idx] = answer;
   state.vector = add(state.vector, answerVector(state.idx, answer));
   state.idx++;
-  if (state.idx >= Q.length) {
+  if (state.idx >= Q_ACTIVE.length) {
     showResults();
   } else {
     renderQuestion();
@@ -3090,7 +4444,7 @@ function recordAndAdvance(answer) {
 }
 
 function answerVector(qIdx, answer) {
-  const q = Q[qIdx];
+  const q = Q_ACTIVE[qIdx];
   if (answer === 'optout') return zeros();
   if (Array.isArray(answer)) {
     const vecs = answer.map(i => q.a[i].v);
@@ -3171,6 +4525,7 @@ function showResults() {
   document.getElementById("resBlurb").textContent = top.blurb;
 
   renderWhy(top, arches[1], userVec);
+  renderDebates(userVec);
   renderRoles(userVec, top);
   renderProfile(userVec);
   renderReading(top.name);
@@ -3180,7 +4535,7 @@ function showResults() {
   window.scrollTo({top:0});
 // --- persist to account if signed in ---
   try {
-    const _alignPct = Math.round((top.sim || 0) * 100);
+    const _alignPct = displayPct(top.sim);
     saveAttempt(userVec, top.name, flavor, _alignPct).then(r => {
       const note = document.getElementById('save-status');
       if (!note) return;
@@ -3204,20 +4559,70 @@ function computeFlavor(vec, arch) {
 }
 
 function renderWhy(top, runnerUp, vec) {
-  const pct = Math.round(((top.sim + 1) / 2) * 100);
-  const rPct = Math.round(((runnerUp.sim + 1) / 2) * 100);
-  const topDims = vec.map((val, i) => ({ name: DIMS[i].name, v: val }))
-    .sort((a, b) => b.v - a.v).slice(0, 3);
+  const pct = displayPct(top.sim);
+  const rPct = displayPct(runnerUp.sim);
+
+  // The archetype's own defining dimensions: top 4 entries in its prototype vector
+  const archDefining = top.p
+    .map((val, i) => ({ name: DIMS[i].name, k: DIM_KEYS[i], v: val, idx: i }))
+    .sort((a, b) => b.v - a.v).slice(0, 4);
+
+  // The user's strongest dimensions (top 4)
+  const userTop = vec
+    .map((val, i) => ({ name: DIMS[i].name, k: DIM_KEYS[i], v: val, idx: i }))
+    .sort((a, b) => b.v - a.v).slice(0, 4);
+  const userTopKeys = new Set(userTop.map(d => d.k));
+
+  // Of the archetype's defining dims, which does the user share?
+  const shared = archDefining.filter(d => userTopKeys.has(d.k));
+
+  // Format defining-dim chips
+  const definingChips = archDefining.map(d => {
+    const isShared = userTopKeys.has(d.k);
+    return `<span class="dim-chip${isShared ? ' shared' : ''}" title="${(DIMS[d.idx].desc || '').replace(/"/g, '&quot;')}">${d.name}${isShared ? ' ✓' : ''}</span>`;
+  }).join('');
+
+  const userTopList = userTop.slice(0, 3).map(d =>
+    `<strong title="${(DIMS[d.idx].desc || '').replace(/"/g, '&quot;')}">${d.name}</strong>`
+  ).join(', ');
+
+  const matchSentence = shared.length >= 3
+    ? `You match <strong>${shared.length} of the four</strong> dimensions that define ${top.name} — which is why this archetype came up on top.`
+    : shared.length === 2
+      ? `You match <strong>two of the four</strong> defining dimensions of ${top.name}, with related tendencies on the rest.`
+      : shared.length === 1
+        ? `You only fully share <strong>one</strong> of ${top.name}'s defining dimensions, but your overall pattern is closer to it than to any other archetype.`
+        : `Your pattern is closer to ${top.name} than to any other archetype, even though no single dimension dominates.`;
+
   document.getElementById("why").innerHTML = `
     <div class="scoreline">
       <span class="name">${top.name}</span>
       <span class="score">${pct}% alignment · runner-up: ${runnerUp.name} (${rPct}%)</span>
     </div>
-    <p style="margin:0 0 12px 0;">
-      Your strongest tendencies are <strong>${topDims[0].name}</strong>, <strong>${topDims[1].name}</strong>, and <strong>${topDims[2].name}</strong>. That combination places you closer to <strong>${top.name}</strong> than to any other archetype. Your runner-up was <strong>${runnerUp.name}</strong>; if you'd answered differently on a few questions, you might have landed there instead.
-    </p>
-    <p style="margin:0;font-size:14px;color:var(--ink-soft);">Take the quiz again with different answers and you'll see the map shift. Mull is a mirror, not a verdict.</p>
+    <div class="why-row">
+      <div class="why-row-label">${top.name} is defined by</div>
+      <div class="why-row-body">${definingChips}<span class="why-key">✓ = your strongest tendencies</span></div>
+    </div>
+    <div class="why-row">
+      <div class="why-row-label">Your strongest tendencies</div>
+      <div class="why-row-body why-row-prose">${userTopList}</div>
+    </div>
+    <p class="why-explainer">${matchSentence} Your runner-up was <strong>${runnerUp.name}</strong>; if a few of your answers had landed differently you might have ended up there instead. Take the quiz again with different answers and the map shifts — Mull is a mirror, not a verdict.</p>
   `;
+}
+
+function renderDebates(vec) {
+  const debatesEl = document.getElementById("debates");
+  if (!debatesEl) return;
+  if (magnitude(vec) < 2) { debatesEl.innerHTML = ''; return; }
+  const stances = topDebateStances(vec);
+  debatesEl.innerHTML = stances.map(s => `
+    <div class="debate-item">
+      <div class="debate-name">${s.name}</div>
+      <div class="debate-stance">${s.top.label}</div>
+      <p class="debate-gist">${s.top.gist}</p>
+    </div>
+  `).join('');
 }
 
 function renderRoles(userVec, arch) {
@@ -3236,9 +4641,9 @@ function renderRoles(userVec, arch) {
   });
   const shadow = phils[phils.length - 1];
 
-  const cPct = Math.round(((closest.sim + 1) / 2) * 100);
-  const aPct = Math.round(((ally.sim + 1) / 2) * 100);
-  const sPct = Math.round(((shadow.sim + 1) / 2) * 100);
+  const cPct = displayPct(closest.sim);
+  const aPct = displayPct(ally.sim);
+  const sPct = displayPct(shadow.sim);
 
   const linkName = p => `<a class="role-name-link" href="${wikiUrl(p.name)}" target="_blank" rel="noopener noreferrer">${p.name}</a>`;
   document.getElementById("roles").innerHTML = `
@@ -3285,8 +4690,15 @@ function renderProfile(vec) {
   html += '<div class="profile-layout">';
   html += '<div class="dimension-sliders">';
   sorted.forEach(({ val, i }) => {
+    const desc = (DIMS[i].desc || '').replace(/"/g, '&quot;');
     html += `<div class="dim-slider" data-dim-idx="${i}" id="dim-row-${i}">
-      <div class="dim-label">${DIMS[i].name}</div>
+      <div class="dim-label">
+        <span class="dim-name">${DIMS[i].name}</span>
+        <span class="dim-info" tabindex="0" onclick="this.classList.toggle('open'); event.stopPropagation();" aria-label="${DIMS[i].name} — what is this?">
+          <span class="dim-info-icon">i</span>
+          <span class="dim-info-tooltip">${desc}</span>
+        </span>
+      </div>
       <input type="range" min="0" max="${sliderMax}" step="0.5" value="${val}"
              oninput="onDimChange(${i}, this.value)" />
       <div class="dim-value" id="dimval-${i}">${val.toFixed(1)}</div>
@@ -3343,7 +4755,7 @@ function updateLiveArchetype() {
   // Detect if any slider is meaningfully different from original
   const anyChanged = _liveUserVec.some((v, i) => Math.abs(v - _originalUserVec[i]) > 0.01);
 
-  const pct = Math.round(((top.sim + 1) / 2) * 100);
+  const pct = displayPct(top.sim);
   const figureHtml = FIGURES[top.figureKey] || '';
 
   const tag = !anyChanged
@@ -3936,7 +5348,7 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
     positionPopup(clientX, clientY);
     const p = star.philosopher;
     const simHtml = star.sim !== null
-      ? `<div class="sim">${Math.round(((star.sim + 1) / 2) * 100)}% alignment with you</div>`
+      ? `<div class="sim">${displayPct(star.sim)}% alignment with you</div>`
       : "";
     const compareBtn = userVec
       ? `<button class="compare-btn" onclick="openComparison(${star.index})">Compare with you</button>`
@@ -3955,7 +5367,7 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
         const sims = ARCHETYPES.map(a => ({ name: a.name, sim: cos(userVec, a.p) }))
           .sort((x, y) => y.sim - x.sim);
         archetype = sims[0].name;
-        alignmentPct = Math.round(sims[0].sim * 100);
+        alignmentPct = displayPct(sims[0].sim);
       }
     } catch (e) {}
     const alignHtml = alignmentPct !== null ? `<div class="sim">${alignmentPct}% alignment with ${archetype}</div>` : '';
@@ -4156,7 +5568,7 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
       listEl.innerHTML = matched.map(s => {
         const p = s.philosopher;
         const right = s.sim !== null
-          ? `<span class="pct">${Math.round(((s.sim + 1) / 2) * 100)}%</span>`
+          ? `<span class="pct">${displayPct(s.sim)}%</span>`
           : `<span class="dt">${(p.dates || '').split('–')[0].split('-')[0].trim()}</span>`;
         const wiki = `<a class="wiki-link" href="${wikiUrl(p.name)}" target="_blank" rel="noopener noreferrer" title="Read on Wikipedia">↗</a>`;
         return `<div class="mappanel-item" data-idx="${s.index}"><span class="nm">${p.name}</span><span class="right">${right}${wiki}</span></div>`;
