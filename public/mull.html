@@ -1365,6 +1365,116 @@
   }
   .auth-nav a { padding: 5px 12px; }
 }
+/* Embed mode — used by /account iframe to show only the constellation */
+html.embed-mode,
+html.embed-mode body {
+  background: transparent !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+html.embed-mode #auth-nav {
+  display: none !important;
+}
+html.embed-mode #rootwrap {
+  display: block !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: none !important;
+  width: 100vw !important;
+  height: 100vh !important;
+}
+html.embed-mode #rootwrap > *:not(#results) {
+  display: none !important;
+}
+html.embed-mode #results {
+  display: block !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+  height: 100vh !important;
+}
+html.embed-mode #results > *:not(.mapsection):not(#philpopup_res) {
+  display: none !important;
+}
+html.embed-mode .mapsection > *:not(.mapwrap) {
+  display: none !important;
+}
+html.embed-mode .mapsection,
+html.embed-mode .mapwrap {
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+  height: 100vh !important;
+  max-width: none !important;
+  overflow: visible !important;
+}
+html.embed-mode #canvas_res {
+  display: block !important;
+  width: 100% !important;
+  height: 100vh !important;
+  max-width: none !important;
+}
+html.embed-mode #philpopup_res {
+  z-index: 10000 !important;
+}
+/* Embed mode — "you are here" callout */
+html.embed-mode #embed-you-callout {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 60;
+  pointer-events: none;
+  text-align: center;
+  transition: opacity 0.7s ease;
+}
+html.embed-mode #embed-you-callout.faded {
+  opacity: 0;
+}
+html.embed-mode #embed-you-callout .eyc-pulse {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #B8862F;
+  margin: 0 auto 14px;
+  box-shadow: 0 0 0 0 rgba(184, 134, 47, 0.55);
+  animation: eyc-pulse 1.8s infinite ease-out;
+}
+@keyframes eyc-pulse {
+  0%   { box-shadow: 0 0 0 0   rgba(184, 134, 47, 0.55), 0 0 0 0  rgba(184, 134, 47, 0.35); }
+  70%  { box-shadow: 0 0 0 22px rgba(184, 134, 47, 0),    0 0 0 40px rgba(184, 134, 47, 0); }
+  100% { box-shadow: 0 0 0 0   rgba(184, 134, 47, 0),    0 0 0 0  rgba(184, 134, 47, 0); }
+}
+html.embed-mode #embed-you-callout .eyc-tag {
+  display: inline-block;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  background: rgba(34, 30, 24, 0.92);
+  color: #FAF6EC;
+  padding: 6px 14px;
+  border-radius: 999px;
+  text-shadow: none;
+}
+html.embed-mode #embed-you-hint {
+  position: absolute;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 10.5px;
+  color: #8C6520;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  pointer-events: none;
+  opacity: 0.75;
+  text-shadow: 0 0 10px rgba(250, 246, 236, 0.95), 0 0 4px rgba(250, 246, 236, 0.95);
+  white-space: nowrap;
+}
 </style>
 </head>
 <body> <div id="auth-nav" class="auth-nav" hidden></div>
@@ -1760,8 +1870,60 @@ let CURRENT_USER = null;
     console.log('[mull] auth state:', CURRENT_USER ? 'signed in as ' + CURRENT_USER.email : 'anonymous');renderAuthNav();
   } catch (e) { console.warn('[mull] auth detect failed', e); }
 })();
+// --- Embed mode: render only the constellation for /account iframe ----
+(async function embedMode() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('embed') !== 'map') return;
+  document.documentElement.classList.add('embed-mode');
+  window.__MULL_EMBED__ = true;
+
+  const encoded = params.get('v');
+  if (!encoded) return;
+
+  let vec;
+  try {
+    vec = JSON.parse(atob(decodeURIComponent(encoded)));
+  } catch (e) {
+    console.error('[mull] embed: malformed vector', e);
+    return;
+  }
+  if (!Array.isArray(vec) || vec.length !== 16) {
+    console.error('[mull] embed: vector must be 16-D');
+    return;
+  }
+
+  if (document.readyState === 'loading') {
+    await new Promise(r => document.addEventListener('DOMContentLoaded', r, { once: true }));
+  }
+  await new Promise(r => setTimeout(r, 0));
+
+  if (typeof state !== 'undefined') state.vector = vec;
+  if (typeof showResults === 'function') showResults();
+
+  // Inject "you are here" callout
+  await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+  const wrap = document.querySelector('.mapwrap');
+  if (wrap) {
+    const callout = document.createElement('div');
+    callout.id = 'embed-you-callout';
+    callout.innerHTML = '<div class="eyc-pulse"></div><div class="eyc-tag">YOU ARE HERE</div>';
+    wrap.appendChild(callout);
+
+    const hint = document.createElement('div');
+    hint.id = 'embed-you-hint';
+    hint.textContent = 'Drag · scroll · click any star';
+    wrap.appendChild(hint);
+
+    const fadeCallout = () => callout.classList.add('faded');
+    wrap.addEventListener('pointerdown', fadeCallout, { once: true, passive: true });
+    wrap.addEventListener('wheel', fadeCallout, { once: true, passive: true });
+    setTimeout(fadeCallout, 6000);
+  }
+})();
+// ----------------------------------------------------------------------
 
 async function saveAttempt(vec, archetypeName, flavor, alignmentPct) {
+  if (window.__MULL_EMBED__) return { skipped: true };
   if (!CURRENT_USER) return { skipped: true };
   const { error } = await sb.from('quiz_attempts').insert({
     user_id: CURRENT_USER.id,
@@ -3545,13 +3707,11 @@ function cleanupMap(instance) {
 }
 
 function drawConstellation(userVec, svgIdOld, popupIdOld) {
-  // Translate old-style ids to the v0.5 mapId
   const mapId = (svgIdOld === "mappre" || svgIdOld === "pre") ? "pre" : "res";
   const canvasEl = document.getElementById(`canvas_${mapId}`);
   const popupEl = document.getElementById(`philpopup_${mapId}`);
   if (!canvasEl || !popupEl) return;
 
-  // Three.js loaded?
   if (typeof THREE === 'undefined') {
     canvasEl.style.background = '#0A1018';
     const ctx = canvasEl.getContext && canvasEl.getContext('2d');
@@ -3563,12 +3723,10 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
     return;
   }
 
-  // Cleanup any previous map for this slot
   if (_maps[mapId]) cleanupMap(_maps[mapId]);
 
   const wrap = canvasEl.parentElement;
-  const COLOR_STAR = 0x4A4338;       // legacy (no longer for stars themselves)
-  const COLOR_USER = 0xC9892F;       // deep gold — visible on cream
+  const COLOR_USER = 0xC9892F;
 
   function getSize() {
     const rect = wrap.getBoundingClientRect();
@@ -3583,7 +3741,6 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(50, w / h, 0.1, 300);
 
-  // Orbit state — distances scaled for SPACING=1.6
   const orbit = {
     target: new THREE.Vector3(0, 0, 0),
     azimuth: 0.6,
@@ -3601,7 +3758,7 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
     camera.lookAt(orbit.target);
   }
 
-  // Build philosopher stars — colored by closest archetype, opaque on cream
+  // Build philosopher stars
   const stars = [];
   PHILOSOPHERS.forEach((p, i) => {
     const pos = projectVec3(p.p);
@@ -3627,29 +3784,72 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
     stars.push({ mesh, glow, philosopher: p, position: new THREE.Vector3(pos.x, pos.y, pos.z), sim, index: i, size, color: starColor });
   });
 
-  // User star
-  let userStar = null, userHalo = null;
+  // User star — visually unmistakable: bigger sphere, double halo, "YOU" sprite label
+  let userStar = null, userHalo = null, userOuterHalo = null, userLabel = null;
   if (userVec) {
     const upos = projectVec3(userVec);
-    const userGeo = new THREE.SphereGeometry(0.55, 24, 24);
+    const uposVec = new THREE.Vector3(upos.x, upos.y, upos.z);
+
+    const userGeo = new THREE.SphereGeometry(0.85, 24, 24);
     const userMat = new THREE.MeshBasicMaterial({ color: COLOR_USER });
     userStar = new THREE.Mesh(userGeo, userMat);
-    userStar.position.set(upos.x, upos.y, upos.z);
+    userStar.position.copy(uposVec);
+    userStar.userData = { isUser: true };
     scene.add(userStar);
 
-    const haloGeo = new THREE.SphereGeometry(1.1, 24, 24);
-    const haloMat = new THREE.MeshBasicMaterial({ color: COLOR_USER, transparent: true, opacity: 0.30 });
+    const haloGeo = new THREE.SphereGeometry(1.7, 24, 24);
+    const haloMat = new THREE.MeshBasicMaterial({ color: COLOR_USER, transparent: true, opacity: 0.40 });
     userHalo = new THREE.Mesh(haloGeo, haloMat);
-    userHalo.position.set(upos.x, upos.y, upos.z);
+    userHalo.position.copy(uposVec);
     scene.add(userHalo);
+
+    const outerGeo = new THREE.SphereGeometry(2.8, 24, 24);
+    const outerMat = new THREE.MeshBasicMaterial({ color: COLOR_USER, transparent: true, opacity: 0.16 });
+    userOuterHalo = new THREE.Mesh(outerGeo, outerMat);
+    userOuterHalo.position.copy(uposVec);
+    scene.add(userOuterHalo);
+
+    // "YOU" sprite — always visible, faces camera
+    const labelCanvas = document.createElement('canvas');
+    labelCanvas.width = 256;
+    labelCanvas.height = 96;
+    const lctx = labelCanvas.getContext('2d');
+    const pillW = 110, pillH = 46, pillX = 128 - pillW / 2, pillY = 48 - pillH / 2, pillR = 23;
+    lctx.fillStyle = '#221E18';
+    lctx.beginPath();
+    lctx.moveTo(pillX + pillR, pillY);
+    lctx.arcTo(pillX + pillW, pillY, pillX + pillW, pillY + pillH, pillR);
+    lctx.arcTo(pillX + pillW, pillY + pillH, pillX, pillY + pillH, pillR);
+    lctx.arcTo(pillX, pillY + pillH, pillX, pillY, pillR);
+    lctx.arcTo(pillX, pillY, pillX + pillW, pillY, pillR);
+    lctx.closePath();
+    lctx.fill();
+    lctx.strokeStyle = '#C9892F';
+    lctx.lineWidth = 2.5;
+    lctx.stroke();
+    lctx.fillStyle = '#F1C76A';
+    lctx.font = '700 22px Inter, system-ui, sans-serif';
+    lctx.textAlign = 'center';
+    lctx.textBaseline = 'middle';
+    lctx.fillText('YOU', 128, 50);
+
+    const labelTex = new THREE.CanvasTexture(labelCanvas);
+    labelTex.minFilter = THREE.LinearFilter;
+    labelTex.magFilter = THREE.LinearFilter;
+    const labelMat = new THREE.SpriteMaterial({ map: labelTex, transparent: true, depthTest: false, depthWrite: false });
+    userLabel = new THREE.Sprite(labelMat);
+    userLabel.scale.set(5.0, 1.9, 1);
+    userLabel.position.set(upos.x, upos.y + 3.2, upos.z);
+    userLabel.renderOrder = 999;
+    scene.add(userLabel);
 
     orbit.target.set(upos.x, upos.y, upos.z);
   }
   updateCamera();
 
-  // Constellation lines (philosophers near each other) — dark blue on cream
+  // Constellation lines
   const linePositions = [];
-  const THRESH = 3.6;  // scaled for SPACING=1.6
+  const THRESH = 3.6;
   for (let i = 0; i < stars.length; i++) {
     for (let j = i + 1; j < stars.length; j++) {
       const a = stars[i].position, b = stars[j].position;
@@ -3666,35 +3866,30 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
     scene.add(new THREE.LineSegments(lg, lm));
   }
 
-  // Reference grid + axis lines — give the cream space a sense of dimension
-  const GRID_SIZE = 50;
-  const GRID_DIVS = 10;
+  const GRID_SIZE = 50, GRID_DIVS = 10;
   const grid = new THREE.GridHelper(GRID_SIZE, GRID_DIVS, 0xB8AC8E, 0xD6CDB6);
   grid.material.transparent = true;
   grid.material.opacity = 0.45;
   scene.add(grid);
-  // Add a second grid plane on XY (vertical) for spatial reference
   const gridYZ = new THREE.GridHelper(GRID_SIZE, GRID_DIVS, 0xC9B89B, 0xE0D6BD);
   gridYZ.rotation.x = Math.PI / 2;
   gridYZ.material.transparent = true;
   gridYZ.material.opacity = 0.18;
   scene.add(gridYZ);
-  // Three axis lines (X red-brown, Y olive, Z blue) at origin
   function makeAxisLine(dir, color) {
     const len = GRID_SIZE / 2;
     const pts = [
       new THREE.Vector3(-dir.x * len, -dir.y * len, -dir.z * len),
-      new THREE.Vector3( dir.x * len,  dir.y * len,  dir.z * len),
+      new THREE.Vector3(dir.x * len, dir.y * len, dir.z * len),
     ];
     const g = new THREE.BufferGeometry().setFromPoints(pts);
     const m = new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.55 });
     return new THREE.Line(g, m);
   }
-  scene.add(makeAxisLine(new THREE.Vector3(1, 0, 0), 0xA85050)); // X — Sovereign↔Communal
-  scene.add(makeAxisLine(new THREE.Vector3(0, 1, 0), 0x7A8B43)); // Y — Rationalist↔Empiricist
-  scene.add(makeAxisLine(new THREE.Vector3(0, 0, 1), 0x3D7DA8)); // Z — Mystical↔Skeptical
+  scene.add(makeAxisLine(new THREE.Vector3(1, 0, 0), 0xA85050));
+  scene.add(makeAxisLine(new THREE.Vector3(0, 1, 0), 0x7A8B43));
+  scene.add(makeAxisLine(new THREE.Vector3(0, 0, 1), 0x3D7DA8));
 
-  // Match lines from user → top 3 closest — brighter golden lines
   if (userVec) {
     const sortedSim = [...stars].sort((a, b) => b.sim - a.sim).slice(0, 3);
     const mp = [];
@@ -3709,12 +3904,11 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
     }
   }
 
-  // (Background star field removed in v0.7 — replaced by gridlines + axes for spatial reference.)
-
   // ===== Interaction =====
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
   let hoveredIdx = -1;
+  let isUserHovered = false;
   let dragging = false;
   let pointerDownPos = null;
   let lastPos = null;
@@ -3727,7 +3921,7 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
     };
   }
 
-  function showPopup(star, clientX, clientY) {
+  function positionPopup(clientX, clientY) {
     const wrapRect = wrap.getBoundingClientRect();
     let popupLeft = clientX - wrapRect.left + 18;
     let popupTop = clientY - wrapRect.top - 20;
@@ -3736,6 +3930,10 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
     if (popupTop + 200 > wrapRect.height - 12) popupTop = wrapRect.height - 212;
     popupEl.style.left = `${popupLeft}px`;
     popupEl.style.top = `${popupTop}px`;
+  }
+
+  function showPopup(star, clientX, clientY) {
+    positionPopup(clientX, clientY);
     const p = star.philosopher;
     const simHtml = star.sim !== null
       ? `<div class="sim">${Math.round(((star.sim + 1) / 2) * 100)}% alignment with you</div>`
@@ -3748,6 +3946,23 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
     popupEl.hidden = false;
   }
 
+  function showUserPopup(clientX, clientY) {
+    positionPopup(clientX, clientY);
+    let archetype = 'Your worldview';
+    let alignmentPct = null;
+    try {
+      if (typeof ARCHETYPES !== 'undefined' && Array.isArray(ARCHETYPES)) {
+        const sims = ARCHETYPES.map(a => ({ name: a.name, sim: cos(userVec, a.p) }))
+          .sort((x, y) => y.sim - x.sim);
+        archetype = sims[0].name;
+        alignmentPct = Math.round(sims[0].sim * 100);
+      }
+    } catch (e) {}
+    const alignHtml = alignmentPct !== null ? `<div class="sim">${alignmentPct}% alignment with ${archetype}</div>` : '';
+    popupEl.innerHTML = `<h4 style="color:#B8862F;">★ This is you</h4><div class="dates">${archetype}</div><p>Your worldview based on the answers you gave. The gold lines link you to the three thinkers closest to your stance.</p>${alignHtml}`;
+    popupEl.hidden = false;
+  }
+
   function hidePopup() { popupEl.hidden = true; }
 
   function clearHover() {
@@ -3755,18 +3970,27 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
       stars[hoveredIdx].mesh.scale.set(1, 1, 1);
       hoveredIdx = -1;
     }
+    if (isUserHovered) isUserHovered = false;
     hidePopup();
   }
 
   function setHover(idx, clientX, clientY) {
-    // Once we're already hovering the same star, do NOT reposition the popup —
-    // letting it stay still is what allows the user to move their cursor onto
-    // the popup itself and click the Compare/Wikipedia buttons.
     if (hoveredIdx === idx) return;
     if (hoveredIdx >= 0) stars[hoveredIdx].mesh.scale.set(1, 1, 1);
+    if (isUserHovered) isUserHovered = false;
     hoveredIdx = idx;
     stars[idx].mesh.scale.set(1.6, 1.6, 1.6);
     showPopup(stars[idx], clientX, clientY);
+  }
+
+  function setUserHover(clientX, clientY) {
+    if (isUserHovered) return;
+    if (hoveredIdx >= 0) {
+      stars[hoveredIdx].mesh.scale.set(1, 1, 1);
+      hoveredIdx = -1;
+    }
+    isUserHovered = true;
+    showUserPopup(clientX, clientY);
   }
 
   function onPointerDown(e) {
@@ -3776,17 +4000,12 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
     wrap.classList.add('dragging');
   }
 
-  // Don't change hover state when mouse is currently over the popup or side panel —
-  // this lets the user move from a star to the popup to click the Wikipedia/Compare buttons.
-  // Use bounding-rect check (not e.target) so the empty canvas zone between star and popup
-  // doesn't trigger a clearHover() that hides the popup before the cursor reaches it.
   const panelEl = document.getElementById(`panel_${mapId}`);
   function inRect(e, el) {
     if (!el || el.hidden) return false;
     const r = el.getBoundingClientRect();
     if (r.width === 0 && r.height === 0) return false;
-    return e.clientX >= r.left && e.clientX <= r.right &&
-           e.clientY >= r.top && e.clientY <= r.bottom;
+    return e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
   }
   function isOverPopupOrPanel(e) {
     if (!e) return false;
@@ -3803,14 +4022,21 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
       orbit.polar = Math.max(0.05, Math.min(Math.PI - 0.05, orbit.polar - dy * 0.005));
       lastPos = { x: e.clientX, y: e.clientY };
       updateCamera();
-      if (hoveredIdx >= 0) clearHover();
+      if (hoveredIdx >= 0 || isUserHovered) clearHover();
       return;
     }
     if (isOverPopupOrPanel(e)) return;
-    // Hover detection
     const p = getPointer(e);
     mouse.x = p.x; mouse.y = p.y;
     raycaster.setFromCamera(mouse, camera);
+    if (userStar) {
+      const userHits = raycaster.intersectObject(userStar);
+      if (userHits.length > 0) {
+        setUserHover(e.clientX, e.clientY);
+        canvasEl.style.cursor = 'pointer';
+        return;
+      }
+    }
     const meshes = stars.map(s => s.mesh);
     const intersects = raycaster.intersectObjects(meshes);
     if (intersects.length > 0) {
@@ -3831,10 +4057,16 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
     dragging = false;
     wrap.classList.remove('dragging');
     if (wasClick) {
-      // Treat as click — fly to clicked star
       const p = getPointer(e);
       mouse.x = p.x; mouse.y = p.y;
       raycaster.setFromCamera(mouse, camera);
+      if (userStar) {
+        const userHits = raycaster.intersectObject(userStar);
+        if (userHits.length > 0) {
+          showUserPopup(e.clientX, e.clientY);
+          return;
+        }
+      }
       const meshes = stars.map(s => s.mesh);
       const intersects = raycaster.intersectObjects(meshes);
       if (intersects.length > 0) {
@@ -3851,7 +4083,6 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
     updateCamera();
   }
 
-  // Smooth camera fly-to
   let flyId = null;
   function flyTo(star) {
     if (flyId) cancelAnimationFrame(flyId);
@@ -3864,34 +4095,21 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
     function step() {
       const elapsed = performance.now() - startTime;
       const t = Math.min(1, elapsed / duration);
-      const ease = t < 0.5 ? 2*t*t : -1 + (4 - 2*t) * t;
+      const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
       orbit.target.x = startTarget.x + (targetPos.x - startTarget.x) * ease;
       orbit.target.y = startTarget.y + (targetPos.y - startTarget.y) * ease;
       orbit.target.z = startTarget.z + (targetPos.z - startTarget.z) * ease;
       orbit.distance = startDist + (endDist - startDist) * ease;
       updateCamera();
-      if (t < 1) {
-        flyId = requestAnimationFrame(step);
-      } else {
-        flyId = null;
-      }
+      if (t < 1) flyId = requestAnimationFrame(step);
+      else flyId = null;
     }
     flyId = requestAnimationFrame(step);
   }
 
-  // Touch handlers
-  function onTouchStart(e) {
-    if (e.touches.length === 1) onPointerDown(e.touches[0]);
-  }
-  function onTouchMove(e) {
-    if (dragging && e.touches.length === 1) {
-      onPointerMove(e.touches[0]);
-      e.preventDefault();
-    }
-  }
-  function onTouchEnd(e) {
-    if (e.changedTouches.length) onPointerUp(e.changedTouches[0]);
-  }
+  function onTouchStart(e) { if (e.touches.length === 1) onPointerDown(e.touches[0]); }
+  function onTouchMove(e) { if (dragging && e.touches.length === 1) { onPointerMove(e.touches[0]); e.preventDefault(); } }
+  function onTouchEnd(e) { if (e.changedTouches.length) onPointerUp(e.changedTouches[0]); }
 
   canvasEl.addEventListener('mousedown', onPointerDown);
   document.addEventListener('mousemove', onPointerMove);
@@ -3901,19 +4119,11 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
   canvasEl.addEventListener('touchmove', onTouchMove, { passive: false });
   canvasEl.addEventListener('touchend', onTouchEnd);
 
-  // Map control buttons
   const zinBtn = wrap.querySelector('.btn-zoomin');
   const zoutBtn = wrap.querySelector('.btn-zoomout');
   const resetBtn = wrap.querySelector('.btn-reset');
-
-  function btnZoomIn() {
-    orbit.distance = Math.max(orbit.minDist, orbit.distance * 0.82);
-    updateCamera();
-  }
-  function btnZoomOut() {
-    orbit.distance = Math.min(orbit.maxDist, orbit.distance * 1.22);
-    updateCamera();
-  }
+  function btnZoomIn() { orbit.distance = Math.max(orbit.minDist, orbit.distance * 0.82); updateCamera(); }
+  function btnZoomOut() { orbit.distance = Math.min(orbit.maxDist, orbit.distance * 1.22); updateCamera(); }
   function btnReset() {
     if (flyId) cancelAnimationFrame(flyId);
     orbit.azimuth = 0.6;
@@ -3922,20 +4132,16 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
     if (userVec) {
       const upos = projectVec3(userVec);
       orbit.target.set(upos.x, upos.y, upos.z);
-    } else {
-      orbit.target.set(0, 0, 0);
-    }
+    } else { orbit.target.set(0, 0, 0); }
     updateCamera();
   }
   if (zinBtn) zinBtn.onclick = btnZoomIn;
   if (zoutBtn) zoutBtn.onclick = btnZoomOut;
   if (resetBtn) resetBtn.onclick = btnReset;
 
-  // Side panel
   const listEl = document.getElementById(`list_${mapId}`);
   const searchEl = document.getElementById(`search_${mapId}`);
   const countEl = document.getElementById(`count_${mapId}`);
-
   if (listEl && searchEl && countEl) {
     const sortedStars = [...stars].sort((a, b) => {
       if (userVec && a.sim !== null && b.sim !== null) return b.sim - a.sim;
@@ -3945,9 +4151,7 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
     function renderList(filter) {
       const f = (filter || '').toLowerCase().trim();
       const matched = f
-        ? sortedStars.filter(s =>
-            s.philosopher.name.toLowerCase().includes(f) ||
-            (s.philosopher.keyIdea || '').toLowerCase().includes(f))
+        ? sortedStars.filter(s => s.philosopher.name.toLowerCase().includes(f) || (s.philosopher.keyIdea || '').toLowerCase().includes(f))
         : sortedStars;
       listEl.innerHTML = matched.map(s => {
         const p = s.philosopher;
@@ -3957,10 +4161,9 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
         const wiki = `<a class="wiki-link" href="${wikiUrl(p.name)}" target="_blank" rel="noopener noreferrer" title="Read on Wikipedia">↗</a>`;
         return `<div class="mappanel-item" data-idx="${s.index}"><span class="nm">${p.name}</span><span class="right">${right}${wiki}</span></div>`;
       }).join('');
-      // click on item flies camera; click on wiki link opens (don't trigger fly)
       listEl.querySelectorAll('.mappanel-item').forEach(el => {
         el.addEventListener('click', (e) => {
-          if (e.target.classList.contains('wiki-link')) return; // let link work
+          if (e.target.classList.contains('wiki-link')) return;
           const idx = parseInt(el.dataset.idx, 10);
           const star = stars[idx];
           if (star) flyTo(star);
@@ -3972,7 +4175,6 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
     searchEl.oninput = () => renderList(searchEl.value);
   }
 
-  // Resize
   function onResize() {
     const sz = getSize();
     renderer.setSize(sz.w, sz.h, false);
@@ -3981,16 +4183,16 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
   }
   window.addEventListener('resize', onResize);
 
-  // Animation loop
   let animId = null;
   let pulse = 0;
   function animate() {
     animId = requestAnimationFrame(animate);
     if (userStar) {
-      pulse += 0.03;
-      const s = 1 + Math.sin(pulse) * 0.08;
-      userStar.scale.setScalar(s);
-      if (userHalo) userHalo.scale.setScalar(1 + Math.sin(pulse) * 0.22);
+      pulse += 0.04;
+      const sp = Math.sin(pulse);
+      userStar.scale.setScalar(1 + sp * 0.14);
+      if (userHalo) userHalo.scale.setScalar(1 + sp * 0.32);
+      if (userOuterHalo) userOuterHalo.scale.setScalar(1 + Math.sin(pulse + Math.PI / 2) * 0.45);
     }
     renderer.render(scene, camera);
   }
@@ -4008,13 +4210,20 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
       canvasEl.removeEventListener('touchstart', onTouchStart);
       canvasEl.removeEventListener('touchmove', onTouchMove);
       canvasEl.removeEventListener('touchend', onTouchEnd);
+      [userStar, userHalo, userOuterHalo].forEach(m => {
+        if (m) { m.geometry.dispose(); m.material.dispose(); }
+      });
+      if (userLabel) {
+        if (userLabel.material.map) userLabel.material.map.dispose();
+        userLabel.material.dispose();
+      }
       stars.forEach(s => {
         s.mesh.geometry.dispose();
         s.mesh.material.dispose();
         s.glow.geometry.dispose();
         s.glow.material.dispose();
       });
-      try { renderer.dispose(); } catch(e) {}
+      try { renderer.dispose(); } catch (e) {}
     }
   };
 }

@@ -1,55 +1,168 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { createClient } from "@/utils/supabase/client";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { createClient } from '@/utils/supabase/client';
+
+const serif = "'Cormorant Garamond', Georgia, serif";
+const sans = "'Inter', system-ui, sans-serif";
+
+const inputStyle: React.CSSProperties = {
+  fontFamily: sans,
+  fontSize: 15,
+  padding: '12px 14px',
+  border: '1px solid #D6CDB6',
+  borderRadius: 8,
+  background: '#FFFCF4',
+  color: '#221E18',
+  outline: 'none',
+};
+
+const labelStyle: React.CSSProperties = {
+  fontFamily: sans,
+  fontSize: 13,
+  color: '#4A4338',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 6,
+  letterSpacing: 0.3,
+};
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  async function handleLogin(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
     setError(null);
+    setLoading(true);
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    setLoading(false);
-    if (error) setError(error.message);
-    else { router.push("/account"); router.refresh(); }
+    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+    if (signInError) {
+      setError(signInError.message);
+      setLoading(false);
+      return;
+    }
+    router.push('/account');
+    router.refresh();
   }
 
   return (
-    <div style={s.wrap}>
-      <h1 style={s.h1}>Log in</h1>
-      <p style={s.lede}>Welcome back.</p>
-      <form onSubmit={handleLogin} style={s.form}>
-        <input type="email" placeholder="your@email.com" value={email}
-          onChange={(e) => setEmail(e.target.value)} required style={s.input} />
-        <input type="password" placeholder="password" value={password}
-          onChange={(e) => setPassword(e.target.value)} required style={s.input} />
-        <button type="submit" disabled={loading} style={s.btn}>
-          {loading ? "Signing in…" : "Log in"}
+    <main style={{
+      maxWidth: 420,
+      margin: '0 auto',
+      padding: '60px 24px',
+      minHeight: '100vh',
+    }}>
+      <header style={{ marginBottom: 48 }}>
+        <Link href="/" style={{
+          fontFamily: serif,
+          fontSize: 28,
+          fontWeight: 500,
+          color: '#221E18',
+          textDecoration: 'none',
+          letterSpacing: '-0.5px',
+        }}>
+          Mull<span style={{ color: '#B8862F' }}>.</span>
+        </Link>
+      </header>
+
+      <h1 style={{
+        fontFamily: serif,
+        fontSize: 42,
+        fontWeight: 500,
+        margin: '0 0 8px',
+        letterSpacing: '-0.5px',
+      }}>
+        Welcome back
+      </h1>
+      <p style={{
+        fontFamily: serif,
+        fontStyle: 'italic',
+        fontSize: 18,
+        color: '#4A4338',
+        marginBottom: 36,
+      }}>
+        Sign in to see your saved results.
+      </p>
+
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+        <label style={labelStyle}>
+          Email
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            autoComplete="email"
+            style={inputStyle}
+          />
+        </label>
+
+        <label style={labelStyle}>
+          Password
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            autoComplete="current-password"
+            style={inputStyle}
+          />
+        </label>
+
+        {error && (
+          <div style={{
+            fontFamily: sans,
+            fontSize: 13,
+            color: '#7A2E2E',
+            background: 'rgba(122, 46, 46, 0.08)',
+            border: '1px solid rgba(122, 46, 46, 0.2)',
+            padding: '10px 14px',
+            borderRadius: 6,
+          }}>
+            {error}
+          </div>
+        )}
+
+        <button
+          type="submit"
+          disabled={loading}
+          style={{
+            fontFamily: sans,
+            fontSize: 15,
+            fontWeight: 500,
+            padding: '14px 20px',
+            background: '#221E18',
+            color: '#FAF6EC',
+            border: 'none',
+            borderRadius: 8,
+            cursor: loading ? 'wait' : 'pointer',
+            opacity: loading ? 0.7 : 1,
+            marginTop: 8,
+            letterSpacing: 0.5,
+          }}
+        >
+          {loading ? 'Signing in…' : 'Sign in'}
         </button>
-        {error && <div style={s.err}>{error}</div>}
       </form>
-      <p style={s.alt}>Don't have an account? <Link href="/signup" style={s.link}>Sign up</Link></p>
-    </div>
+
+      <p style={{
+        fontFamily: sans,
+        fontSize: 14,
+        color: '#4A4338',
+        marginTop: 32,
+        textAlign: 'center',
+      }}>
+        Don&apos;t have an account?{' '}
+        <Link href="/signup" style={{ color: '#8C6520', textDecoration: 'underline', textUnderlineOffset: 3 }}>
+          Create one
+        </Link>
+      </p>
+    </main>
   );
 }
-
-const s = {
-  wrap: { maxWidth:"420px", margin:"80px auto", padding:"24px", fontFamily:"ui-sans-serif,-apple-system,sans-serif", color:"#221E18" },
-  h1: { fontFamily:"Cormorant Garamond,Georgia,serif", fontSize:"44px", fontWeight:500, margin:"0 0 12px" },
-  lede: { color:"#4A4338", fontSize:"16px", margin:"0 0 32px" },
-  form: { display:"grid" as const, gap:"12px" },
-  input: { padding:"12px 16px", border:"1px solid #D6CDB6", borderRadius:"10px", fontFamily:"inherit", fontSize:"15px", background:"#fff", outline:"none" },
-  btn: { padding:"14px 18px", border:"none", borderRadius:"999px", background:"#221E18", color:"#FAF6EC", fontFamily:"inherit", fontSize:"15px", fontWeight:500, cursor:"pointer", marginTop:"8px" },
-  err: { padding:"10px 14px", background:"#FBF1EE", border:"1px solid #E5C9C0", borderRadius:"8px", color:"#8C3717", fontSize:"14px" },
-  alt: { marginTop:"24px", fontSize:"14px", color:"#4A4338" },
-  link: { color:"#8C6520", textDecoration:"underline" },
-};

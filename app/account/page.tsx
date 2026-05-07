@@ -3,6 +3,15 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import LogoutButton from './logout-button';
 
+type Attempt = {
+  id: string;
+  archetype: string;
+  flavor: string | null;
+  alignment_pct: number;
+  taken_at: string;
+  vector: number[];
+};
+
 export default async function AccountPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -10,9 +19,10 @@ export default async function AccountPage() {
 
   const { data: attempts } = await supabase
     .from('quiz_attempts')
-    .select('id, archetype, flavor, alignment_pct, taken_at')
+    .select('id, archetype, flavor, alignment_pct, taken_at, vector')
     .order('taken_at', { ascending: false })
-    .limit(20);
+    .limit(20)
+    .returns<Attempt[]>();
 
   const latest = attempts?.[0];
   const older = attempts?.slice(1) ?? [];
@@ -23,8 +33,14 @@ export default async function AccountPage() {
   const serif = "'Cormorant Garamond', Georgia, serif";
   const sans = "'Inter', system-ui, sans-serif";
 
+  // Encode vector for the embed iframe (base64 of JSON, URL-safe)
+  const encodedVec =
+    latest && Array.isArray(latest.vector) && latest.vector.length === 16
+      ? encodeURIComponent(Buffer.from(JSON.stringify(latest.vector)).toString('base64'))
+      : null;
+
   return (
-    <main style={{ maxWidth: 720, margin: '60px auto', padding: '0 24px' }}>
+    <main style={{ maxWidth: 760, margin: '60px auto', padding: '0 24px' }}>
       <header style={{
         display: 'flex',
         justifyContent: 'space-between',
@@ -148,6 +164,49 @@ export default async function AccountPage() {
           </div>
         )}
       </section>
+
+      {encodedVec && (
+        <section style={{ marginBottom: 48 }}>
+          <h2 style={{
+            fontFamily: serif,
+            fontStyle: 'italic',
+            fontSize: 22,
+            fontWeight: 500,
+            color: '#4A4338',
+            marginBottom: 16
+          }}>
+            Your place on the map
+          </h2>
+          <div style={{
+            border: '1px solid #D6CDB6',
+            borderRadius: 12,
+            overflow: 'hidden',
+            background: '#FFFCF4',
+            position: 'relative'
+          }}>
+            <iframe
+              src={`/?embed=map&v=${encodedVec}`}
+              style={{
+                width: '100%',
+                height: 540,
+                border: 'none',
+                display: 'block',
+              }}
+              title="Your position on the philosophical map"
+              loading="lazy"
+            />
+          </div>
+          <p style={{
+            fontFamily: sans,
+            fontSize: 13,
+            color: '#8C6520',
+            marginTop: 12,
+            letterSpacing: 0.3,
+          }}>
+            Click any node for the philosopher's profile.
+          </p>
+        </section>
+      )}
 
       {older.length > 0 && (
         <section>
