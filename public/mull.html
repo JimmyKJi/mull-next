@@ -1331,9 +1331,43 @@
     .dim { grid-template-columns: 130px 1fr 28px; font-size: 13px; }
     .mapsection { margin: 48px -16px; }
   }
+/* Auth nav (top-right) */
+.auth-nav {
+  position: fixed;
+  top: 16px;
+  right: 20px;
+  z-index: 50;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 13px;
+}
+.auth-nav a {
+  color: #4A4338;
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 252, 244, 0.85);
+  border: 1px solid #D6CDB6;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: border-color 0.15s ease, color 0.15s ease;
+  display: inline-block;
+  letter-spacing: 0.3px;
+}
+.auth-nav a:hover {
+  border-color: #B8862F;
+  color: #221E18;
+}
+@media (max-width: 600px) {
+  .auth-nav {
+    top: 10px;
+    right: 12px;
+    font-size: 12px;
+  }
+  .auth-nav a { padding: 5px 12px; }
+}
 </style>
 </head>
-<body>
+<body> <div id="auth-nav" class="auth-nav" hidden></div>
 <div class="wrap" id="rootwrap">
   <div class="brandbar">
     <div class="brand" onclick="showLanding()" style="cursor:pointer;">Mull<span>.</span></div>
@@ -1723,7 +1757,7 @@ let CURRENT_USER = null;
     }
     const { data } = await sb.auth.getSession();
     CURRENT_USER = data?.session?.user || null;
-    console.log('[mull] auth state:', CURRENT_USER ? 'signed in as ' + CURRENT_USER.email : 'anonymous');
+    console.log('[mull] auth state:', CURRENT_USER ? 'signed in as ' + CURRENT_USER.email : 'anonymous');renderAuthNav();
   } catch (e) { console.warn('[mull] auth detect failed', e); }
 })();
 
@@ -1738,6 +1772,14 @@ async function saveAttempt(vec, archetypeName, flavor, alignmentPct) {
   });
   if (error) { console.warn('save failed', error); return { error }; }
   return { saved: true };
+}
+function renderAuthNav() {
+  const nav = document.getElementById('auth-nav');
+  if (!nav) return;
+  nav.innerHTML = CURRENT_USER
+    ? '<a href="/account">Account →</a>'
+    : '<a href="/login">Sign in</a>';
+  nav.hidden = false;
 }
 // --------------------------------------------------------------------
 /* ============================================================
