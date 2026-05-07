@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <title>Mull — Find your place on the map of how you think</title>
 <meta name="description" content="A philosophy app that asks you what you think — concretely, on real questions — and shows you where that places you in the long conversation. 166 thinkers, 16 dimensions, no ads.">
 
@@ -1570,7 +1571,7 @@
       <div class="pill">Your archetype</div>
       <h1 id="resLabel" class="reslabel"></h1>
       <p id="resBlurb" class="resblurb"></p>
-    </div>
+    </div> <div id="save-status" style="font-size: 13px; color: var(--acc-deep); margin-top: 8px; opacity: 0.85;"></div>
 
     <div class="section">
       <h2>Why this archetype</h2>
@@ -1687,6 +1688,58 @@
 </div>
 
 <script>
+  // --- Supabase auth + persistence -------------------------------------
+const SUPABASE_URL = 'https://vthwhbhkoxzngaaagypj.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ0aHdoYmhrb3h6bmdhYWFneXBqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxNjc0OTQsImV4cCI6MjA5Mzc0MzQ5NH0.QPbOLnA4l8QxNG0CTxxzeWv562ypr-Yy1hBpb0VZDXo';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let CURRENT_USER = null;
+
+(async () => {
+  try {
+    const STORAGE_KEY = 'sb-vthwhbhkoxzngaaagypj-auth-token';
+    const cookies = Object.fromEntries(
+      document.cookie.split('; ').filter(Boolean).map(c => {
+        const i = c.indexOf('=');
+        return [c.slice(0, i), decodeURIComponent(c.slice(i + 1))];
+      })
+    );
+    let raw = cookies[STORAGE_KEY];
+    if (!raw) {
+      const chunks = [];
+      for (let i = 0; cookies[STORAGE_KEY + '.' + i] !== undefined; i++) {
+        chunks.push(cookies[STORAGE_KEY + '.' + i]);
+      }
+      if (chunks.length) raw = chunks.join('');
+    }
+    if (raw) {
+      if (raw.startsWith('base64-')) raw = atob(raw.slice(7));
+      const session = JSON.parse(raw);
+      if (session?.access_token && session?.refresh_token) {
+        await sb.auth.setSession({
+          access_token: session.access_token,
+          refresh_token: session.refresh_token
+        });
+      }
+    }
+    const { data } = await sb.auth.getSession();
+    CURRENT_USER = data?.session?.user || null;
+    console.log('[mull] auth state:', CURRENT_USER ? 'signed in as ' + CURRENT_USER.email : 'anonymous');
+  } catch (e) { console.warn('[mull] auth detect failed', e); }
+})();
+
+async function saveAttempt(vec, archetypeName, flavor, alignmentPct) {
+  if (!CURRENT_USER) return { skipped: true };
+  const { error } = await sb.from('quiz_attempts').insert({
+    user_id: CURRENT_USER.id,
+    vector: vec,
+    archetype: archetypeName,
+    flavor: flavor || null,
+    alignment_pct: alignmentPct
+  });
+  if (error) { console.warn('save failed', error); return { error }; }
+  return { saved: true };
+}
+// --------------------------------------------------------------------
 /* ============================================================
    MULL v0.3 — data + logic
    ============================================================ */
@@ -2921,6 +2974,17 @@ function showResults() {
   drawConstellation(userVec, "map", "philpopup_res");
 
   window.scrollTo({top:0});
+// --- persist to account if signed in ---
+  try {
+    const _alignPct = Math.round((top.sim || 0) * 100);
+    saveAttempt(userVec, top.name, flavor, _alignPct).then(r => {
+      const note = document.getElementById('save-status');
+      if (!note) return;
+      if (r.saved) note.textContent = '✓ Saved to your account';
+      else if (r.skipped) note.innerHTML = '<a href="/login" style="color:var(--acc-deep);">Sign in</a> to save this result';
+      else note.textContent = '';
+    });
+  } catch (e) { console.warn(e); }
 }
 
 function computeFlavor(vec, arch) {
