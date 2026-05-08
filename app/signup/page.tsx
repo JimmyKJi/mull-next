@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
+import { t, type Locale, isLocale } from '@/lib/translations';
+import LanguageSwitcher from '@/components/language-switcher';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
@@ -35,7 +37,14 @@ export default function SignupPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [confirmSent, setConfirmSent] = useState(false);
+  const [locale, setLocale] = useState<Locale>('en');
   const router = useRouter();
+
+  useEffect(() => {
+    const m = document.cookie.match(/(?:^|; )mull_locale=([^;]+)/);
+    const v = m?.[1];
+    if (v && isLocale(v)) setLocale(v);
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -70,7 +79,13 @@ export default function SignupPage() {
       padding: '60px 24px',
       minHeight: '100vh',
     }}>
-      <header style={{ marginBottom: 48 }}>
+      <header style={{
+        marginBottom: 48,
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        gap: 12,
+      }}>
         <Link href="/" style={{
           fontFamily: serif,
           fontSize: 28,
@@ -81,6 +96,7 @@ export default function SignupPage() {
         }}>
           Mull<span style={{ color: '#B8862F' }}>.</span>
         </Link>
+        <LanguageSwitcher initial={locale} />
       </header>
 
       {confirmSent ? (
@@ -92,7 +108,7 @@ export default function SignupPage() {
             margin: '0 0 12px',
             letterSpacing: '-0.5px',
           }}>
-            Check your email
+            {t('auth.check_email', locale)}
           </h1>
           <p style={{
             fontFamily: serif,
@@ -101,7 +117,9 @@ export default function SignupPage() {
             color: '#4A4338',
             lineHeight: 1.5,
           }}>
-            We sent a confirmation link to <strong>{email}</strong>. Click it to finish setting up your account.
+            {t('auth.check_email_body', locale, { email: '' }).split('{email}')[0]}
+            <strong>{email}</strong>
+            {t('auth.check_email_body', locale, { email: '' }).split('{email}')[1] || ''}
           </p>
           <p style={{
             fontFamily: sans,
@@ -109,7 +127,7 @@ export default function SignupPage() {
             color: '#8C6520',
             marginTop: 24,
           }}>
-            Didn&apos;t arrive? Check your spam folder, or{' '}
+            {t('auth.didnt_arrive', locale)}{' '}
             <button
               onClick={() => { setConfirmSent(false); setError(null); }}
               style={{
@@ -118,7 +136,7 @@ export default function SignupPage() {
                 font: 'inherit',
               }}
             >
-              try again
+              {t('auth.try_again', locale)}
             </button>.
           </p>
         </>
@@ -131,7 +149,7 @@ export default function SignupPage() {
             margin: '0 0 8px',
             letterSpacing: '-0.5px',
           }}>
-            Create an account
+            {t('auth.create_account', locale)}
           </h1>
           <p style={{
             fontFamily: serif,
@@ -140,12 +158,12 @@ export default function SignupPage() {
             color: '#4A4338',
             marginBottom: 36,
           }}>
-            Save your results. Track how your stances shift over time.
+            {t('auth.signup_subtitle', locale)}
           </p>
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
             <label style={labelStyle}>
-              Email
+              {t('auth.email', locale)}
               <input
                 type="email"
                 value={email}
@@ -157,7 +175,7 @@ export default function SignupPage() {
             </label>
 
             <label style={labelStyle}>
-              Password
+              {t('auth.password', locale)}
               <input
                 type="password"
                 value={password}
@@ -168,7 +186,7 @@ export default function SignupPage() {
                 style={inputStyle}
               />
               <span style={{ fontSize: 12, color: '#8C6520', marginTop: 2, letterSpacing: 0 }}>
-                At least 6 characters
+                {t('auth.password_hint', locale)}
               </span>
             </label>
 
@@ -204,7 +222,7 @@ export default function SignupPage() {
                 letterSpacing: 0.5,
               }}
             >
-              {loading ? 'Creating account…' : 'Create account'}
+              {loading ? t('auth.creating', locale) : t('auth.create_account', locale)}
             </button>
           </form>
 
@@ -215,9 +233,9 @@ export default function SignupPage() {
             marginTop: 32,
             textAlign: 'center',
           }}>
-            Already have an account?{' '}
+            {t('auth.already_account', locale)}{' '}
             <Link href="/login" style={{ color: '#8C6520', textDecoration: 'underline', textUnderlineOffset: 3 }}>
-              Sign in
+              {t('auth.signin', locale)}
             </Link>
           </p>
         </>

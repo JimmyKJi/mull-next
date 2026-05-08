@@ -28,19 +28,28 @@ Core position: ${b.keyIdea}
 
 TOPIC: ${topic}
 
-HOW THE EXCHANGE SHOULD READ:
-- It must feel like two people TALKING TO EACH OTHER. Each turn quotes back, restates, or directly answers what the other just said. Avoid lectures.
-- Use each thinker's own technical vocabulary (e.g. "the categorical imperative" for Kant, "alienation" or "use-value" for Marx, "the Forms" or "anamnesis" for Plato, "ataraxia" for Epicurus, "the will to power" for Nietzsche, "śūnyatā" or "dependent origination" for Buddhist thinkers, etc.). When using a technical term unfamiliar to a modern reader, give a brief gloss in plain language ON THE SAME SENTENCE.
-- Argue from each thinker's actual positions. Real disagreement where they disagree. Real agreement where they agree. No straw men. No flattery.
-- Each turn should DO ONE THING — a counter-move, a probing question, a refinement, a concession, an analogy. Short and sharp beats long and exhaustive.
-- Conversational momentum: A says X → B responds to X specifically and pushes back at the weakest point → A defends or refines → and so on. Build tension and resolution.
+⚠️ THIS IS WRITTEN FOR A GENERAL AUDIENCE, NOT PHILOSOPHERS. The reader has not read these books. Most readers haven't taken a philosophy class. Your job is to make a real philosophical exchange feel READABLE and ALIVE to a smart layperson.
 
-WRITE: 6 to 8 alternating exchanges starting with A (A, B, A, B, ...). Each is one paragraph, 2-4 sentences, under 500 characters. Plain modern English (with technical terms used naturally, not avoided).
+HOW THE EXCHANGE SHOULD READ:
+- TWO PEOPLE TALKING. Each turn directly responds to the specific thing the other just said — quotes a phrase back, restates, pushes on a weak point. No lectures. No "as I have argued elsewhere" preamble.
+- USE TECHNICAL TERMS, BUT EXPLAIN THEM IMMEDIATELY IN PLAIN LANGUAGE. The form should be: "[term] — [plain-language explanation in the same sentence or the next]". Examples:
+   • "the categorical imperative — the rule that you should only act on principles you'd want everyone to follow"
+   • "alienation — that feeling that the work of your hands belongs to someone else"
+   • "the Forms — the idea that beyond particular beautiful things, beauty itself exists somewhere as a perfect template"
+   • "ataraxia — a kind of unbothered peace, where nothing has the power to upset you"
+   • "śūnyatā — emptiness, but not nothing; the way everything depends on everything else, with no fixed essence underneath"
+- Use the term ONCE WITH gloss. After that, you can use it bare or use the gloss. Don't keep over-explaining once you've defined it.
+- Plain modern English elsewhere. No "verily", no "thou", no archaic forms. Conversational rhythm. Contractions are fine.
+- Real disagreement where they disagree. Real agreement where they agree. No straw men. No flattery. No "that's a great point".
+- Each turn does ONE thing — a counter-move, a probing question, a refinement, a concession. 2-4 sentences each. Short and sharp.
+- Conversational momentum: A says X → B targets the weak point of X → A defends or refines → and so on.
+
+WRITE: 6 to 8 alternating exchanges starting with A (A, B, A, B, ...). Each turn under 500 characters. The whole exchange should be readable in under three minutes by someone with no philosophy background.
 
 CRITICAL: Output ONLY valid JSON. No preamble, no markdown code fences, no commentary outside the JSON. Start with { and end with }.
 
 {
-  "setup": "<one sentence framing the exchange — what specifically is at stake between these two on this topic>",
+  "setup": "<one plain-language sentence framing what's specifically at stake between these two on this topic — written so a curious newcomer immediately gets why the disagreement matters>",
   "exchanges": [
     {"speaker": "A", "text": "..."},
     {"speaker": "B", "text": "..."},

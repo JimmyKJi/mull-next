@@ -3,6 +3,9 @@ import { getDailyDilemma } from '@/lib/dilemmas';
 import { topShifts } from '@/lib/dimensions';
 import Link from 'next/link';
 import DilemmaForm from './dilemma-form';
+import { getServerLocale } from '@/lib/locale-server';
+import { t, type Locale } from '@/lib/translations';
+import LanguageSwitcher from '@/components/language-switcher';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
@@ -18,8 +21,12 @@ type ExistingResponse = {
 
 export default async function DilemmaPage() {
   const supabase = await createClient();
+  const locale = await getServerLocale();
   const { data: { user } } = await supabase.auth.getUser();
   const today = getDailyDilemma();
+  // Localize today's dilemma question + hint via the dil.N.* keys
+  const localizedPrompt = t(`dil.${today.index}.prompt`, locale) || today.dilemma.prompt;
+  const localizedHint = t(`dil.${today.index}.hint`, locale) || today.dilemma.hint || '';
 
   let existing: ExistingResponse | null = null;
   if (user) {
@@ -54,11 +61,12 @@ export default async function DilemmaPage() {
         }}>
           Mull<span style={{ color: '#B8862F' }}>.</span>
         </Link>
-        <nav style={{ display: 'flex', gap: 16 }}>
+        <nav style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+          <LanguageSwitcher initial={locale} />
           <Link href="/account" style={{
             fontFamily: sans, fontSize: 13, color: '#4A4338',
             textDecoration: 'none', letterSpacing: 0.3,
-          }}>Your account →</Link>
+          }}>{t('nav.account_arrow', locale)}</Link>
         </nav>
       </header>
 
@@ -71,7 +79,7 @@ export default async function DilemmaPage() {
         letterSpacing: '0.18em',
         marginBottom: 14,
       }}>
-        Daily dilemma · {new Date(today.dateKey).toLocaleDateString('en-GB', {
+        {t('dilemma.eyebrow', locale)} · {new Date(today.dateKey).toLocaleDateString(locale === 'en' ? 'en-GB' : locale, {
           weekday: 'long', day: 'numeric', month: 'long'
         })}
       </div>
@@ -84,10 +92,10 @@ export default async function DilemmaPage() {
         letterSpacing: '-0.01em',
         lineHeight: 1.2,
       }}>
-        {today.dilemma.prompt}
+        {localizedPrompt}
       </h1>
 
-      {today.dilemma.hint && (
+      {localizedHint && (
         <p style={{
           fontFamily: serif,
           fontStyle: 'italic',
@@ -95,7 +103,7 @@ export default async function DilemmaPage() {
           color: '#4A4338',
           marginBottom: 32,
         }}>
-          {today.dilemma.hint}
+          {localizedHint}
         </p>
       )}
 
@@ -114,7 +122,7 @@ export default async function DilemmaPage() {
             color: '#4A4338',
             margin: '0 0 16px',
           }}>
-            The daily dilemma needs an account to track shifts in your worldview.
+            {t('dilemma.account_required_msg', locale)}
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link href="/signup" style={{
@@ -127,7 +135,7 @@ export default async function DilemmaPage() {
               fontSize: 14,
               fontWeight: 500,
             }}>
-              Create an account
+              {t('dilemma.create_account', locale)}
             </Link>
             <Link href="/login" style={{
               padding: '10px 20px',
@@ -138,7 +146,7 @@ export default async function DilemmaPage() {
               fontFamily: sans,
               fontSize: 14,
             }}>
-              Sign in
+              {t('dilemma.sign_in', locale)}
             </Link>
           </div>
         </div>
@@ -159,7 +167,7 @@ export default async function DilemmaPage() {
             letterSpacing: '0.16em',
             marginBottom: 14,
           }}>
-            ✓ You answered today
+            {t('dilemma.you_answered_today', locale)}
           </div>
           <p style={{
             fontFamily: serif,
@@ -187,7 +195,7 @@ export default async function DilemmaPage() {
                 letterSpacing: '0.16em',
                 marginBottom: 6,
               }}>
-                What this revealed
+                {t('dilemma.what_revealed', locale)}
               </div>
               <p style={{
                 fontFamily: serif,
@@ -212,7 +220,7 @@ export default async function DilemmaPage() {
                 letterSpacing: '0.16em',
                 marginBottom: 8,
               }}>
-                Shift this added to your map
+                {t('dilemma.shift_added', locale)}
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14 }}>
                 {shifts.map(s => (
@@ -247,7 +255,7 @@ export default async function DilemmaPage() {
               fontFamily: sans,
               fontSize: 13.5,
             }}>
-              See your trajectory →
+              {t('dilemma.see_trajectory', locale)}
             </Link>
             <span style={{
               fontFamily: sans,
@@ -255,12 +263,12 @@ export default async function DilemmaPage() {
               color: '#8C6520',
               alignSelf: 'center',
             }}>
-              The next dilemma arrives tomorrow.
+              {t('dilemma.next_arrives', locale)}
             </span>
           </div>
         </div>
       ) : (
-        <DilemmaForm questionPrompt={today.dilemma.prompt} />
+        <DilemmaForm questionPrompt={localizedPrompt} locale={locale} />
       )}
 
       <p style={{
@@ -272,7 +280,7 @@ export default async function DilemmaPage() {
         textAlign: 'center',
         letterSpacing: 0.3,
       }}>
-        Each daily dilemma is a single question, the same for everyone today, asked again with a new question tomorrow.
+        {t('dilemma.footer_note', locale)}
       </p>
     </main>
   );

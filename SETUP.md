@@ -23,6 +23,8 @@ Run each in the Supabase SQL editor (or `supabase db push` if using the CLI).
 1. `supabase/migrations/<earlier>_quiz_attempts.sql` — already shipped
 2. `supabase/migrations/20260507_dilemma_responses.sql` — ⚠️ **must run for the daily dilemma feature**
 3. `supabase/migrations/20260508_debate_history.sql` — ⚠️ **must run to save user's last 3 debates**
+4. `supabase/migrations/20260508_diary_entries.sql` — ⚠️ **must run for the diary feature**
+5. `supabase/migrations/20260508_public_profiles.sql` — ⚠️ **must run for public profile pages**
 
 Until #2 is run, `/dilemma` will fail to insert and `/account` trajectory
 will skip dilemma events. Until #3 is run, generated debates won't persist
@@ -35,8 +37,31 @@ between visits (the feature still works; debates are just ephemeral).
 - `/account` — your account dashboard with trajectory map + recent shifts + streak
 - `/dilemma` — today's daily dilemma question + write-in form
 - `/debate` — pick two philosophers + topic → Claude-generated exchange
+- `/diary` — free-form philosophical journal; entries feed into vector space
+- `/diary/[id]` — view a single diary entry
+- `/debate/me` — user-vs-philosopher debate (Mull+ feature, prototype-capped at 3/day)
+- `/account/profile` — manage your opt-in public profile
+- `/u/[handle]` — public profile page (visible to anyone with the link)
 - `/api/dilemma/submit` — POST: saves response, calls Claude, returns vector_delta + analysis
 - `/api/debate/generate` — POST: generates a back-and-forth between two philosophers on a topic
+- `/api/debate/me` — POST: generates user-vs-philosopher exchange
+- `/api/diary/save` — POST: save or update a diary entry, run Claude analysis
+- `/api/diary/delete` — POST: delete an entry
+- `/api/profile/save` — POST/DELETE: opt in/out of public profile
+
+## Internationalization (i18n)
+
+Foundation in place: 8 locales supported via cookie (`mull_locale`), language
+switcher component (`<LanguageSwitcher />`), translations indexed by key in
+`lib/translations.ts`. UI chrome strings (nav, buttons, common labels) are
+translated. **Philosophical content — quiz questions, archetype descriptions,
+philosopher entries, the entire `mull.html` body — remains English-only by
+design**: machine-translating that material risks distorting nuance, and it
+should be done carefully by a human translator.
+
+Currently the language switcher appears on `/account`. Propagating it across
+all Next.js pages, and translating each hardcoded English label to use
+`t('key', locale)`, is incremental work.
 
 ## Daily dilemma flow
 

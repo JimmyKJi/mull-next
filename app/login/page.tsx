@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
+import { t, type Locale, isLocale } from '@/lib/translations';
+import LanguageSwitcher from '@/components/language-switcher';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
@@ -34,7 +36,14 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [locale, setLocale] = useState<Locale>('en');
   const router = useRouter();
+
+  useEffect(() => {
+    const m = document.cookie.match(/(?:^|; )mull_locale=([^;]+)/);
+    const v = m?.[1];
+    if (v && isLocale(v)) setLocale(v);
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -58,7 +67,13 @@ export default function LoginPage() {
       padding: '60px 24px',
       minHeight: '100vh',
     }}>
-      <header style={{ marginBottom: 48 }}>
+      <header style={{
+        marginBottom: 48,
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        gap: 12,
+      }}>
         <Link href="/" style={{
           fontFamily: serif,
           fontSize: 28,
@@ -69,6 +84,7 @@ export default function LoginPage() {
         }}>
           Mull<span style={{ color: '#B8862F' }}>.</span>
         </Link>
+        <LanguageSwitcher initial={locale} />
       </header>
 
       <h1 style={{
@@ -78,7 +94,7 @@ export default function LoginPage() {
         margin: '0 0 8px',
         letterSpacing: '-0.5px',
       }}>
-        Welcome back
+        {t('auth.welcome_back', locale)}
       </h1>
       <p style={{
         fontFamily: serif,
@@ -87,12 +103,12 @@ export default function LoginPage() {
         color: '#4A4338',
         marginBottom: 36,
       }}>
-        Sign in to see your saved results.
+        {t('auth.signin_subtitle', locale)}
       </p>
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
         <label style={labelStyle}>
-          Email
+          {t('auth.email', locale)}
           <input
             type="email"
             value={email}
@@ -104,7 +120,7 @@ export default function LoginPage() {
         </label>
 
         <label style={labelStyle}>
-          Password
+          {t('auth.password', locale)}
           <input
             type="password"
             value={password}
@@ -147,7 +163,7 @@ export default function LoginPage() {
             letterSpacing: 0.5,
           }}
         >
-          {loading ? 'Signing in…' : 'Sign in'}
+          {loading ? t('auth.signing_in', locale) : t('auth.signin', locale)}
         </button>
       </form>
 
@@ -158,9 +174,9 @@ export default function LoginPage() {
         marginTop: 32,
         textAlign: 'center',
       }}>
-        Don&apos;t have an account?{' '}
+        {t('auth.no_account', locale)}{' '}
         <Link href="/signup" style={{ color: '#8C6520', textDecoration: 'underline', textUnderlineOffset: 3 }}>
-          Create one
+          {t('auth.create_one', locale)}
         </Link>
       </p>
     </main>

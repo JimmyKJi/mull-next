@@ -105,6 +105,7 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const responseText: string = (body?.response_text ?? '').toString().trim();
+    const isPublic: boolean = !!body?.is_public;
     if (!responseText || responseText.length < 10) {
       return NextResponse.json({ error: 'Response is too short.' }, { status: 400 });
     }
@@ -160,7 +161,8 @@ export async function POST(req: Request) {
         question_text: today.dilemma.prompt,
         response_text: responseText,
         vector_delta,
-        analysis
+        analysis,
+        is_public: isPublic
       })
       .select('id, vector_delta, analysis')
       .single();

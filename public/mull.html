@@ -105,6 +105,17 @@
   .brandbar-link:hover { color: var(--acc-deep); }
   a.brandbar-link { color: var(--ink); font-weight: 500; }
   a.brandbar-link:hover { color: var(--acc-deep); }
+  .brandbar-lang {
+    font-family: inherit;
+    font-size: 12.5px;
+    padding: 3px 8px;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .brandbar-lang:hover { color: var(--ink); border-color: var(--ink-soft); }
 
   /* ---- About page ---- */
   .about-wrap {
@@ -158,6 +169,16 @@
     line-height: 1.55;
   }
   .about-promises li strong { color: var(--ink); display: block; margin-bottom: 4px; font-size: 16px; }
+  .creator-note {
+    margin-top: 14px !important;
+    padding: 14px 18px;
+    background: #FBF6E8;
+    border-left: 3px solid #B8862F;
+    border-radius: 6px;
+    font-size: 15px !important;
+    line-height: 1.6 !important;
+  }
+  .creator-note strong { color: var(--ink); }
 
   .costs-table {
     width: 100%; margin: 16px 0 4px;
@@ -224,13 +245,34 @@
   }
 
   /* ---------- Landing ---------- */
-  .draftbanner {
+  .versionbanner {
     display: flex; align-items: center; gap: 10px;
-    padding: 12px 16px; margin-bottom: 28px;
-    background: #FBF1EE; border: 1px solid #E5C9C0; border-radius: 10px;
-    color: #8C3717; font-size: 14px;
+    padding: 10px 14px; margin-bottom: 14px;
+    background: #F5EFDC; border: 1px solid #E2D8B6; border-radius: 10px;
+    color: #5C4B1F; font-size: 13.5px;
   }
-  .draftbanner strong { color: #5A1A07; }
+  .versionbanner strong { color: #3D310F; font-weight: 600; letter-spacing: 0.2px; }
+  .constructionbanner {
+    padding: 14px 18px; margin-bottom: 28px;
+    background: #FBF6E8; border-left: 3px solid #B8862F; border-radius: 8px;
+    color: #4A4338; font-size: 14px; line-height: 1.55;
+  }
+  .constructionbanner strong { color: #221E18; display: inline; margin-right: 6px; }
+  .i18n-notice {
+    max-width: 1100px;
+    margin: -20px auto 28px;
+    padding: 9px 14px;
+    background: #F0EAD2;
+    border: 1px dashed #C9BD93;
+    border-radius: 8px;
+    color: #5C4B1F;
+    font-size: 12.5px;
+    line-height: 1.5;
+    text-align: center;
+  }
+  @media (max-width: 540px) {
+    .i18n-notice { font-size: 11.5px; padding: 8px 12px; margin: -10px 0 20px; }
+  }
   .landing h1 {
     font-family: "Cormorant Garamond", Georgia, serif;
     font-weight: 500; font-size: 52px; line-height: 1.05;
@@ -2063,47 +2105,72 @@ html.embed-mode #embed-you-hint {
   <div class="brandbar">
     <div class="brand" onclick="showLanding()" style="cursor:pointer;">Mull<span>.</span></div>
     <div class="brandbar-right">
-      <a class="brandbar-link" href="/dilemma">Today's dilemma</a>
-      <a class="brandbar-link" href="/debate">Simulated debate</a>
-      <button class="brandbar-link" onclick="showAbout()">About</button>
-      <button class="brandbar-link" onclick="showGallery()">Archetypes</button>
-      <span class="pill draft">Rough draft</span>
+      <a class="brandbar-link" href="/dilemma" data-i18n="nav.dilemma">Today's dilemma</a>
+      <a class="brandbar-link" href="/diary" data-i18n="nav.diary">Diary</a>
+      <a class="brandbar-link" href="/debate" data-i18n="nav.debate">Simulated debate</a>
+      <button class="brandbar-link" onclick="showAbout()" data-i18n="nav.about">About</button>
+      <button class="brandbar-link" onclick="showGallery()" data-i18n="nav.archetypes">Archetypes</button>
+      <select id="brandbar-lang" class="brandbar-lang" title="Language" onchange="setMullLocale(this.value)">
+        <option value="en">English</option>
+        <option value="es">Español</option>
+        <option value="fr">Français</option>
+        <option value="pt">Português</option>
+        <option value="ru">Русский</option>
+        <option value="zh">中文</option>
+        <option value="ja">日本語</option>
+        <option value="ko">한국어</option>
+      </select>
+      <span class="pill draft">v0.9</span>
     </div>
+  </div>
+
+  <!-- Translation-in-progress notice. Only visible when mull_locale != 'en'.
+       Sits outside #landing so it persists into the quiz, results, gallery,
+       about page, archetype detail — every part of mull.html where the
+       deeper content is still English. -->
+  <div id="i18n-notice" class="i18n-notice" hidden>
+    <span data-i18n="home.translation_notice">Some pages — the quiz, the archetypes, the philosopher database, and the About page — are still in English. Translation of the deeper content is in progress.</span>
   </div>
 
   <!-- LANDING -->
   <section id="landing" class="landing">
-    <div class="draftbanner">
-      <div><strong>This is a rough draft.</strong> A foundation we'll keep building on. Questions, archetypes, the map — all of it will keep changing.</div>
+    <div class="versionbanner">
+      <div data-i18n-html="home.version_banner"><strong>Mull v0.9</strong> — early build. The map, the questions, the archetypes are all still settling into shape.</div>
+    </div>
+    <div class="constructionbanner">
+      <div data-i18n-html="home.construction_notice">
+        <strong>A note while we're still building.</strong>
+        Mull is currently under construction. The subscription system isn't live yet, so for now Jimmy is personally covering the AI costs that power the daily dilemma, diary, and debates. If the monthly budget runs out before subscriptions launch, those features may pause briefly while he tops it back up — thanks for your patience as the project finds its footing.
+      </div>
     </div>
 
-    <h1>Find your place on the <em>map of how you think.</em></h1>
-    <p class="lede">No right answers. Skip anything. At the end you'll see where your worldview sits — and which thinkers across history have stood near you.</p>
+    <h1 data-i18n-html="home.hero_h1">Find your place on the <em>map of how you think.</em></h1>
+    <p class="lede" data-i18n="home.hero_lede">No right answers. Skip anything. At the end you'll see where your worldview sits — and which thinkers across history have stood near you.</p>
 
     <div class="quiz-choice">
       <button class="quiz-option" onclick="startQuiz('quick')">
         <div class="quiz-option-head">
-          <span class="quiz-option-name">Quick start</span>
-          <span class="quiz-option-meta">20 questions · ~6 minutes</span>
+          <span class="quiz-option-name" data-i18n="home.quick_name">Quick start</span>
+          <span class="quiz-option-meta" data-i18n="home.quick_meta">20 questions · ~6 minutes</span>
         </div>
-        <p class="quiz-option-desc">A broad sketch of where you sit. Best if you're new to Mull or short on time.</p>
-        <span class="quiz-option-arrow">Begin →</span>
+        <p class="quiz-option-desc" data-i18n="home.quick_desc">A broad sketch of where you sit. Best if you're new to Mull or short on time.</p>
+        <span class="quiz-option-arrow" data-i18n="home.begin">Begin →</span>
       </button>
       <button class="quiz-option quiz-option-deep" onclick="startQuiz('detailed')">
         <div class="quiz-option-head">
-          <span class="quiz-option-name">Detailed diagnosis</span>
-          <span class="quiz-option-meta">50 questions · ~15 minutes</span>
+          <span class="quiz-option-name" data-i18n="home.detailed_name">Detailed diagnosis</span>
+          <span class="quiz-option-meta" data-i18n="home.detailed_meta">50 questions · ~15 minutes</span>
         </div>
-        <p class="quiz-option-desc">Probes more dimensions, more carefully. The portrait gets sharper. Best if you want a serious read.</p>
-        <span class="quiz-option-arrow">Begin →</span>
+        <p class="quiz-option-desc" data-i18n="home.detailed_desc">Probes more dimensions, more carefully. The portrait gets sharper. Best if you want a serious read.</p>
+        <span class="quiz-option-arrow" data-i18n="home.begin">Begin →</span>
       </button>
-      <button class="quiz-skip" onclick="showMapPreview()">Just show me the map →</button>
+      <button class="quiz-skip" onclick="showMapPreview()" data-i18n="home.just_map">Just show me the map →</button>
     </div>
 
     <ul class="landing-promises">
-      <li><strong>Skippable.</strong> Any question that doesn't fit you, skip it.</li>
-      <li><strong>No signup needed.</strong> An optional account saves your map and tracks how it shifts.</li>
-      <li><strong>For the curious, not the credentialed.</strong> No prior philosophy required.</li>
+      <li data-i18n-html="home.promise_skip"><strong>Skippable.</strong> Any question that doesn't fit you, skip it.</li>
+      <li data-i18n-html="home.promise_nosignup"><strong>No signup needed.</strong> An optional account saves your map and tracks how it shifts.</li>
+      <li data-i18n-html="home.promise_curious"><strong>For the curious, not the credentialed.</strong> No prior philosophy required.</li>
     </ul>
 
     <details class="howworks">
@@ -2159,6 +2226,7 @@ html.embed-mode #embed-you-hint {
     <div class="about-section">
       <h2>Who's behind this</h2>
       <p>Built by <strong>Jimmy Ji</strong>, a philosophy student at King's College London. Mull is currently a one-person project, though it's young and will grow. If you want to help, push back on a question, suggest a thinker, or report a bug, write to <a href="mailto:jimmy.kaian.ji@gmail.com" class="about-mail">jimmy.kaian.ji@gmail.com</a>.</p>
+      <p class="creator-note"><strong>A short note from Jimmy:</strong> I'm in the middle of exam season right now, so updates will land in bursts rather than steadily for the next few weeks. I'll keep pushing what I can between revision sessions, and the larger features (subscriptions, properly-translated philosophical content, mobile polish) are queued up for the moment things quiet down. Thanks for using Mull while it's still finding its shape.</p>
     </div>
 
     <div class="about-section">
@@ -4110,6 +4178,123 @@ function _hideAllSections() {
      100,000:     $5,000–15,000/mo
    Pricing: Mull+ $4.99/mo or $29/yr. Lifetime "Founding Mind" $49 (first 1,000).
    Break-even at ~5% paid conversion. See the about-section "The math, openly." */
+// ── language switcher + homepage i18n ─────────────────────
+// The homepage (this file) is mostly English by design — the philosophical
+// content (quiz questions, archetype prototypes, philosopher database) needs
+// a careful human pass, queued for after exams. What we DO translate here is
+// the visible UI chrome on first paint: brandbar links, banners, hero,
+// quiz-option cards. Everything below the fold stays English for v0.9.
+const HOME_I18N = {
+  "nav.dilemma":       { en: "Today's dilemma", es: "Dilema de hoy", fr: "Le dilemme du jour", pt: "Dilema de hoje", ru: "Дилемма дня", zh: "今日困境", ja: "今日のジレンマ", ko: "오늘의 딜레마" },
+  "nav.diary":         { en: "Diary", es: "Diario", fr: "Journal", pt: "Diário", ru: "Дневник", zh: "日记", ja: "日記", ko: "일기" },
+  "nav.debate":        { en: "Simulated debate", es: "Debate simulado", fr: "Débat simulé", pt: "Debate simulado", ru: "Симулированный диспут", zh: "模拟辩论", ja: "思考実験的対話", ko: "가상 토론" },
+  "nav.about":         { en: "About", es: "Acerca de", fr: "À propos", pt: "Sobre", ru: "О проекте", zh: "关于", ja: "このアプリについて", ko: "소개" },
+  "nav.archetypes":    { en: "Archetypes", es: "Arquetipos", fr: "Archétypes", pt: "Arquétipos", ru: "Архетипы", zh: "原型", ja: "アーキタイプ", ko: "유형" },
+
+  "home.version_banner": {
+    en: "<strong>Mull v0.9</strong> — early build. The map, the questions, the archetypes are all still settling into shape.",
+    es: "<strong>Mull v0.9</strong> — versión temprana. El mapa, las preguntas y los arquetipos aún se están asentando.",
+    fr: "<strong>Mull v0.9</strong> — version préliminaire. La carte, les questions et les archétypes sont encore en train de prendre forme.",
+    pt: "<strong>Mull v0.9</strong> — versão inicial. O mapa, as perguntas e os arquétipos ainda estão tomando forma.",
+    ru: "<strong>Mull v0.9</strong> — ранняя сборка. Карта, вопросы и архетипы ещё обретают форму.",
+    zh: "<strong>Mull v0.9</strong> — 早期版本。地图、问题、原型都还在不断打磨之中。",
+    ja: "<strong>Mull v0.9</strong> — 早期版。マップ、質問、アーキタイプはまだ形を整えている途中です。",
+    ko: "<strong>Mull v0.9</strong> — 초기 버전. 지도, 질문, 유형은 아직 다듬어지는 중입니다."
+  },
+  "home.construction_notice": {
+    en: "<strong>A note while we're still building.</strong> Mull is currently under construction. The subscription system isn't live yet, so for now Jimmy is personally covering the AI costs that power the daily dilemma, diary, and debates. If the monthly budget runs out before subscriptions launch, those features may pause briefly while he tops it back up — thanks for your patience as the project finds its footing.",
+    es: "<strong>Una nota mientras seguimos construyendo.</strong> Mull aún está en obras. El sistema de suscripción todavía no está activo, así que por ahora Jimmy cubre de su bolsillo los costes de IA que mueven el dilema diario, el diario y los debates. Si el presupuesto mensual se agota antes de lanzar las suscripciones, esas funciones podrían pausarse brevemente mientras él lo recarga — gracias por tu paciencia mientras el proyecto encuentra su ritmo.",
+    fr: "<strong>Un mot pendant que nous construisons encore.</strong> Mull est en travaux. Le système d'abonnement n'est pas encore en ligne, alors pour l'instant Jimmy couvre lui-même les coûts d'IA qui font tourner le dilemme du jour, le journal et les débats. Si le budget mensuel s'épuise avant le lancement des abonnements, ces fonctions peuvent être en pause brièvement le temps qu'il les recharge — merci de ta patience pendant que le projet trouve ses marques.",
+    pt: "<strong>Um aviso enquanto ainda construímos.</strong> Mull está em construção. O sistema de assinatura ainda não foi lançado, então por ora o Jimmy está pagando do próprio bolso os custos de IA que movem o dilema diário, o diário e os debates. Se o orçamento mensal acabar antes do lançamento das assinaturas, essas funções podem pausar brevemente até ele recarregar — obrigado pela paciência enquanto o projeto encontra seu rumo.",
+    ru: "<strong>Небольшая заметка, пока мы всё строим.</strong> Mull ещё в разработке. Система подписки пока не запущена, поэтому Джимми сейчас сам оплачивает расходы на ИИ, который питает ежедневную дилемму, дневник и диспуты. Если месячный бюджет закончится до запуска подписок, эти функции могут ненадолго приостанавливаться, пока он их пополняет — спасибо за терпение, пока проект встаёт на ноги.",
+    zh: "<strong>一则建设期的小提示。</strong>Mull 仍在建设中。订阅系统尚未上线，所以目前每日困境、日记和辩论功能背后的 AI 费用都由 Jimmy 个人承担。如果在订阅功能上线之前月度预算耗尽，这些功能可能会短暂暂停，直到他重新充值——感谢你在项目立足初期给予的耐心。",
+    ja: "<strong>まだ建設中の私たちから一言。</strong>Mull は現在開発中です。サブスクリプション機能はまだ稼働していないため、今のところデイリー・ジレンマ、日記、対話を支える AI のコストは Jimmy が自費で負担しています。サブスク開始前に月の予算が尽きた場合、補充するまでそれらの機能が一時停止することがあります — プロジェクトが軌道に乗るまで、温かく見守っていただけるとうれしいです。",
+    ko: "<strong>아직 만들고 있는 중에 드리는 짧은 안내.</strong> Mull은 현재 제작 중입니다. 구독 시스템이 아직 가동되지 않아서, 지금은 오늘의 딜레마·일기·토론을 움직이는 AI 비용을 Jimmy가 직접 부담하고 있어요. 구독이 출시되기 전에 월 예산이 떨어지면 충전될 때까지 그 기능들이 잠시 멈출 수 있습니다 — 프로젝트가 자리를 잡는 동안 너그러이 기다려 주셔서 감사합니다."
+  },
+  "home.hero_h1": {
+    en: "Find your place on the <em>map of how you think.</em>",
+    es: "Encuentra tu lugar en el <em>mapa de cómo piensas.</em>",
+    fr: "Trouve ta place sur la <em>carte de ta façon de penser.</em>",
+    pt: "Encontre seu lugar no <em>mapa de como você pensa.</em>",
+    ru: "Найдите своё место на <em>карте того, как вы мыслите.</em>",
+    zh: "在<em>你思考方式的地图</em>上找到你的位置。",
+    ja: "<em>あなたの考え方の地図</em>のうえで、自分の位置を見つけよう。",
+    ko: "<em>당신의 사고방식 지도</em> 위에서 자신의 자리를 찾아보세요."
+  },
+  "home.hero_lede": {
+    en: "No right answers. Skip anything. At the end you'll see where your worldview sits — and which thinkers across history have stood near you.",
+    es: "No hay respuestas correctas. Salta lo que quieras. Al final verás dónde se sitúa tu visión del mundo — y qué pensadores a lo largo de la historia han estado cerca de ti.",
+    fr: "Pas de bonnes réponses. Tu peux passer ce que tu veux. À la fin, tu verras où se situe ta vision du monde — et quels penseurs, au fil de l'histoire, ont occupé une place proche de la tienne.",
+    pt: "Não há respostas certas. Pule o que quiser. No final você verá onde sua visão de mundo se situa — e quais pensadores, ao longo da história, estiveram perto de você.",
+    ru: "Здесь нет правильных ответов. Любой вопрос можно пропустить. В конце вы увидите, где находится ваша картина мира — и какие мыслители на протяжении истории стояли близко к вам.",
+    zh: "没有标准答案。任何题目都可以跳过。最后你会看到自己的世界观坐落在何处 —— 以及历史上哪些思想家曾站在你附近。",
+    ja: "正解はありません。気が乗らない問いはスキップして大丈夫。最後に、あなたの世界観がどこに位置するか — そして歴史のなかで誰があなたの近くに立っていたか — が見えてきます。",
+    ko: "정답은 없습니다. 어떤 질문이든 건너뛰어도 좋아요. 끝에 가면 당신의 세계관이 어디쯤 자리하는지 — 그리고 역사 속 어떤 사상가들이 당신 가까이 서 있었는지 보게 될 거예요."
+  },
+  "home.quick_name":   { en: "Quick start", es: "Inicio rápido", fr: "Démarrage rapide", pt: "Início rápido", ru: "Быстрый старт", zh: "快速开始", ja: "クイックスタート", ko: "빠른 시작" },
+  "home.quick_meta":   { en: "20 questions · ~6 minutes", es: "20 preguntas · ~6 minutos", fr: "20 questions · ~6 minutes", pt: "20 perguntas · ~6 minutos", ru: "20 вопросов · ~6 минут", zh: "20 道题 · 约 6 分钟", ja: "20問 ・ 約6分", ko: "20문항 · 약 6분" },
+  "home.quick_desc":   { en: "A broad sketch of where you sit. Best if you're new to Mull or short on time.", es: "Un esbozo amplio de dónde te sitúas. Ideal si llegas nuevo a Mull o vas con poco tiempo.", fr: "Une esquisse large de ta position. Idéal si tu découvres Mull ou si tu as peu de temps.", pt: "Um esboço geral de onde você se encontra. Melhor se você é novo no Mull ou tem pouco tempo.", ru: "Общий набросок того, где вы находитесь. Подходит, если вы только знакомитесь с Mull или у вас мало времени.", zh: "对你所处位置的大致勾勒。如果你刚接触 Mull 或时间有限，最适合从这里开始。", ja: "あなたの立ち位置をざっくり描き出します。Mull が初めての方や、時間が限られているときに。", ko: "당신이 어디쯤 있는지를 큰 그림으로 그려줍니다. Mull이 처음이거나 시간이 부족할 때 좋아요." },
+  "home.detailed_name":{ en: "Detailed diagnosis", es: "Diagnóstico detallado", fr: "Diagnostic détaillé", pt: "Diagnóstico detalhado", ru: "Подробная диагностика", zh: "详细诊断", ja: "詳細診断", ko: "정밀 진단" },
+  "home.detailed_meta":{ en: "50 questions · ~15 minutes", es: "50 preguntas · ~15 minutos", fr: "50 questions · ~15 minutes", pt: "50 perguntas · ~15 minutos", ru: "50 вопросов · ~15 минут", zh: "50 道题 · 约 15 分钟", ja: "50問 ・ 約15分", ko: "50문항 · 약 15분" },
+  "home.detailed_desc":{ en: "Probes more dimensions, more carefully. The portrait gets sharper. Best if you want a serious read.", es: "Sondea más dimensiones, con más cuidado. El retrato se vuelve más nítido. Ideal si quieres una lectura seria.", fr: "Sonde plus de dimensions, plus finement. Le portrait gagne en netteté. Idéal pour une lecture sérieuse.", pt: "Sonda mais dimensões, com mais cuidado. O retrato fica mais nítido. Ideal se você quer uma leitura séria.", ru: "Прорабатывает больше измерений и тоньше. Портрет получается чётче. Подходит, если хотите серьёзный разбор.", zh: "更多维度、更细致的考察。最终的画像也更清晰。如果你想认真做一次解读，最适合。", ja: "より多くの次元を、より丁寧に探ります。あなたの肖像はより鮮明になります。じっくり読みたい方に。", ko: "더 많은 차원을, 더 꼼꼼하게 들여다봅니다. 초상이 한층 또렷해져요. 진지하게 읽어보고 싶을 때 가장 잘 맞습니다." },
+  "home.begin":        { en: "Begin →", es: "Empezar →", fr: "Commencer →", pt: "Começar →", ru: "Начать →", zh: "开始 →", ja: "はじめる →", ko: "시작하기 →" },
+  "home.just_map":     { en: "Just show me the map →", es: "Solo muéstrame el mapa →", fr: "Montre-moi juste la carte →", pt: "Só me mostre o mapa →", ru: "Просто покажи мне карту →", zh: "直接看地图 →", ja: "とりあえずマップを見る →", ko: "지도만 바로 볼래요 →" },
+
+  "home.promise_skip":     { en: "<strong>Skippable.</strong> Any question that doesn't fit you, skip it.", es: "<strong>Saltables.</strong> Cualquier pregunta que no encaje contigo, sáltala.", fr: "<strong>Tu peux passer.</strong> Toute question qui ne te parle pas, passe-la.", pt: "<strong>Pulável.</strong> Qualquer pergunta que não combine com você, pule.", ru: "<strong>Можно пропускать.</strong> Любой вопрос, который вам не подходит, можно пропустить.", zh: "<strong>可跳过。</strong>任何不适合你的题目，都可以跳过。", ja: "<strong>スキップ可。</strong>合わないと感じた問いはどれでも飛ばして大丈夫です。", ko: "<strong>건너뛰기 가능.</strong> 자신과 맞지 않는 질문은 언제든 넘겨도 괜찮습니다." },
+  "home.promise_nosignup": { en: "<strong>No signup needed.</strong> An optional account saves your map and tracks how it shifts.", es: "<strong>Sin registro obligatorio.</strong> Una cuenta opcional guarda tu mapa y registra cómo cambia.", fr: "<strong>Aucune inscription requise.</strong> Un compte optionnel sauvegarde ta carte et suit son évolution.", pt: "<strong>Sem cadastro obrigatório.</strong> Uma conta opcional guarda seu mapa e acompanha como ele muda.", ru: "<strong>Регистрация не нужна.</strong> Необязательный аккаунт сохранит вашу карту и проследит, как она меняется.", zh: "<strong>无需注册。</strong>账户是可选的——注册后会保存你的地图，并记录它的变化。", ja: "<strong>登録は不要。</strong>任意のアカウントを作れば、マップを保存して変化を追えます。", ko: "<strong>가입 필수 아님.</strong> 원하시면 계정을 만들어 지도를 저장하고 변화를 추적할 수 있습니다." },
+  "home.promise_curious":  { en: "<strong>For the curious, not the credentialed.</strong> No prior philosophy required.", es: "<strong>Para curiosos, no para credencialistas.</strong> No hace falta saber filosofía.", fr: "<strong>Pour les curieux, pas pour les diplômés.</strong> Aucune connaissance préalable en philosophie n'est requise.", pt: "<strong>Para os curiosos, não para os credenciados.</strong> Não é preciso saber filosofia antes.", ru: "<strong>Для любопытных, а не для обладателей дипломов.</strong> Никаких предварительных знаний по философии не требуется.", zh: "<strong>给好奇者，而不是给科班出身者。</strong>无需任何哲学背景。", ja: "<strong>資格ではなく、好奇心のための。</strong>哲学の予備知識はいりません。", ko: "<strong>학위가 아니라 호기심을 위한 곳.</strong> 미리 알아둘 철학 지식은 필요하지 않습니다." },
+
+  "home.translation_notice": {
+    en: "Some pages — the quiz, the archetypes, the philosopher database, and the About page — are still in English. Translation of the deeper content is in progress.",
+    es: "Algunas páginas — el cuestionario, los arquetipos, la base de pensadores y la página Acerca de — siguen en inglés. La traducción del contenido más extenso está en curso.",
+    fr: "Certaines pages — le questionnaire, les archétypes, la base des penseurs et la page À propos — sont encore en anglais. La traduction du contenu plus dense est en cours.",
+    pt: "Algumas páginas — o questionário, os arquétipos, o banco de pensadores e a página Sobre — ainda estão em inglês. A tradução do conteúdo mais extenso está em andamento.",
+    ru: "Некоторые страницы — тест, архетипы, база мыслителей и страница «О проекте» — пока на английском. Перевод более объёмного контента уже идёт.",
+    zh: "部分页面 —— 测验、原型、思想家档案以及「关于」页 —— 目前仍为英文。深度内容的翻译正在进行中。",
+    ja: "一部のページ — クイズ、アーキタイプ、思想家データベース、「このアプリについて」 — はまだ英語のままです。より深い内容の翻訳は進行中です。",
+    ko: "일부 페이지 — 퀴즈, 유형 카드, 사상가 데이터베이스, 소개 페이지 — 는 아직 영어로 표시됩니다. 더 깊은 내용의 번역은 진행 중입니다."
+  }
+};
+
+function applyHomeI18n() {
+  try {
+    var m = document.cookie.match(/(?:^|; )mull_locale=([^;]+)/);
+    var loc = (m && m[1] && /^(en|es|fr|pt|ru|zh|ja|ko)$/.test(m[1])) ? m[1] : 'en';
+    document.querySelectorAll('[data-i18n]').forEach(function(el) {
+      var entry = HOME_I18N[el.getAttribute('data-i18n')];
+      if (entry && entry[loc]) el.textContent = entry[loc];
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+      var entry = HOME_I18N[el.getAttribute('data-i18n-html')];
+      if (entry && entry[loc]) el.innerHTML = entry[loc];
+    });
+    // Show the "translation in progress" notice only when the user picked a
+    // non-English locale — English speakers don't need to be told English
+    // pages are in English.
+    var notice = document.getElementById('i18n-notice');
+    if (notice) notice.hidden = (loc === 'en');
+  } catch (e) { /* no-op */ }
+}
+
+function setMullLocale(loc) {
+  const valid = ['en','es','fr','pt','ru','zh','ja','ko'];
+  if (!valid.includes(loc)) return;
+  const oneYear = 60 * 60 * 24 * 365;
+  document.cookie = 'mull_locale=' + loc + '; path=/; max-age=' + oneYear + '; samesite=lax';
+  // Reload so the cookie is picked up by both this page (chrome strings) and
+  // any Next.js routes navigated to next.
+  window.location.reload();
+}
+(function initMullLocaleSelector() {
+  try {
+    var sel = document.getElementById('brandbar-lang');
+    if (!sel) return;
+    var m = document.cookie.match(/(?:^|; )mull_locale=([^;]+)/);
+    if (m && m[1]) sel.value = m[1];
+  } catch (e) { /* no-op */ }
+  applyHomeI18n();
+})();
+
 let _aboutReturnTo = null;
 function showAbout() {
   if (!document.getElementById("about").hidden) return;

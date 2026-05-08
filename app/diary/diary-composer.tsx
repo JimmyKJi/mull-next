@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { t, type Locale } from '@/lib/translations';
@@ -8,14 +8,7 @@ import { t, type Locale } from '@/lib/translations';
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
 
-type SubmitResult = {
-  saved: boolean;
-  vector_delta: number[] | null;
-  analysis: string | null;
-  analyzed: boolean;
-};
-
-type ShiftItem = { key: string; name: string; delta: number };
+const DRAFT_KEY = 'mull.diary.draft';
 
 const DIM_KEYS = ['TV','VA','WP','TR','TE','RT','MR','SR','CE','SS','PO','TD','AT','ES','UI','SI'];
 const DIM_NAMES: Record<string, string> = {
@@ -27,7 +20,15 @@ const DIM_NAMES: Record<string, string> = {
   SI: 'Self as Illusion'
 };
 
-function deltaToShifts(delta: number[] | null): ShiftItem[] {
+type SubmitResult = {
+  saved: boolean;
+  id: string;
+  vector_delta: number[] | null;
+  analysis: string | null;
+  analyzed: boolean;
+};
+
+function deltaToShifts(delta: number[] | null) {
   if (!Array.isArray(delta)) return [];
   return delta
     .map((d, i) => ({ key: DIM_KEYS[i], name: DIM_NAMES[DIM_KEYS[i]], delta: +d.toFixed(2) }))
@@ -36,18 +37,56 @@ function deltaToShifts(delta: number[] | null): ShiftItem[] {
     .slice(0, 4);
 }
 
-export default function DilemmaForm({ questionPrompt, locale = 'en' }: { questionPrompt: string; locale?: Locale }) {
-  const [text, setText] = useState('');
+export default function DiaryComposer({ locale = 'en' }: { locale?: Locale }) {
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [draftSavedAt, setDraftSavedAt] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<SubmitResult | null>(null);
   const [makePublic, setMakePublic] = useState(false);
   const router = useRouter();
+  const draftSaveTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
-  const charCount = text.length;
+  // Load draft on mount
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const raw = localStorage.getItem(DRAFT_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed?.title) setTitle(parsed.title);
+        if (parsed?.content) setContent(parsed.content);
+        if (parsed?.savedAt) setDraftSavedAt(parsed.savedAt);
+      }
+    } catch {}
+  }, []);
+
+  // Autosave draft to localStorage 1 second after typing stops
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (draftSaveTimeout.current) clearTimeout(draftSaveTimeout.current);
+    if (!title && !content) {
+      localStorage.removeItem(DRAFT_KEY);
+      setDraftSavedAt(null);
+      return;
+    }
+    draftSaveTimeout.current = setTimeout(() => {
+      const now = Date.now();
+      try {
+        localStorage.setItem(DRAFT_KEY, JSON.stringify({ title, content, savedAt: now }));
+        setDraftSavedAt(now);
+      } catch {}
+    }, 800);
+    return () => {
+      if (draftSaveTimeout.current) clearTimeout(draftSaveTimeout.current);
+    };
+  }, [title, content]);
+
+  const wordCount = content.trim() ? content.trim().split(/\s+/).filter(Boolean).length : 0;
+  const charCount = content.length;
   const tooShort = charCount > 0 && charCount < 30;
-  const ready = charCount >= 30 && charCount <= 4000;
+  const ready = charCount >= 30 && charCount <= 12000;
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -55,32 +94,46 @@ export default function DilemmaForm({ questionPrompt, locale = 'en' }: { questio
     setSubmitting(true);
     setError(null);
     try {
-      const res = await fetch('/api/dilemma/submit', {
+      const res = await fetch('/api/diary/save', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ response_text: text, is_public: makePublic })
+        body: JSON.stringify({ title, content, is_public: makePublic })
       });
       const json = await res.json();
       if (!res.ok) {
-        setError(json?.error || 'Could not save your response.');
+        setError(json?.error || 'Could not save your entry.');
         setSubmitting(false);
         return;
       }
-      setResult({
-        saved: true,
-        vector_delta: json.vector_delta,
-        analysis: json.analysis,
-        analyzed: !!json.analyzed
-      });
+      setResult(json as SubmitResult);
+      // Clear draft now that it's saved to DB
+      try { localStorage.removeItem(DRAFT_KEY); } catch {}
+      setDraftSavedAt(null);
       router.refresh();
     } catch (err) {
       console.error(err);
       setError('Network error. Try again.');
+    } finally {
       setSubmitting(false);
     }
   }
 
-  if (result?.saved) {
+  function startNew() {
+    setTitle('');
+    setContent('');
+    setResult(null);
+    setError(null);
+  }
+
+  function clearDraft() {
+    if (!window.confirm(t('diary.discard_draft', locale))) return;
+    setTitle('');
+    setContent('');
+    try { localStorage.removeItem(DRAFT_KEY); } catch {}
+    setDraftSavedAt(null);
+  }
+
+  if (result) {
     const shifts = deltaToShifts(result.vector_delta);
     return (
       <div style={{
@@ -99,18 +152,8 @@ export default function DilemmaForm({ questionPrompt, locale = 'en' }: { questio
           letterSpacing: '0.16em',
           marginBottom: 14,
         }}>
-          ✓ Saved
+          {t('diary.saved_label', locale)}
         </div>
-        <p style={{
-          fontFamily: serif,
-          fontSize: 17,
-          color: '#221E18',
-          lineHeight: 1.6,
-          margin: '0 0 18px',
-          whiteSpace: 'pre-wrap',
-        }}>
-          {text}
-        </p>
         {result.analysis ? (
           <div style={{
             padding: '14px 16px',
@@ -135,7 +178,7 @@ export default function DilemmaForm({ questionPrompt, locale = 'en' }: { questio
               fontSize: 16,
               color: '#221E18',
               margin: 0,
-              lineHeight: 1.5,
+              lineHeight: 1.55,
             }}>
               {result.analysis}
             </p>
@@ -148,13 +191,13 @@ export default function DilemmaForm({ questionPrompt, locale = 'en' }: { questio
             marginBottom: 16,
             fontStyle: 'italic',
           }}>
-            Your response was saved. The AI analyzer isn't connected yet — when it is,
-            past responses will be re-analyzed.
+            Saved. The AI analyzer didn't run on this entry — it'll be available when the
+            integration is healthy. Your entry is intact.
           </p>
         ) : null}
 
         {shifts.length > 0 && (
-          <div>
+          <div style={{ marginBottom: 16 }}>
             <div style={{
               fontFamily: sans,
               fontSize: 10,
@@ -184,75 +227,105 @@ export default function DilemmaForm({ questionPrompt, locale = 'en' }: { questio
         )}
 
         <div style={{
-          marginTop: 22,
           paddingTop: 18,
           borderTop: '1px solid #EBE3CA',
           display: 'flex',
           gap: 12,
           flexWrap: 'wrap',
         }}>
+          <button
+            onClick={startNew}
+            style={{
+              padding: '10px 20px',
+              background: '#221E18',
+              color: '#FAF6EC',
+              border: 'none',
+              borderRadius: 6,
+              cursor: 'pointer',
+              fontFamily: sans,
+              fontSize: 14,
+              fontWeight: 500,
+            }}
+          >
+            {t('diary.write_another', locale)}
+          </button>
           <Link href="/account" style={{
-            padding: '9px 18px',
+            padding: '10px 20px',
             border: '1px solid #221E18',
             borderRadius: 6,
             color: '#221E18',
             textDecoration: 'none',
             fontFamily: sans,
-            fontSize: 13.5,
+            fontSize: 14,
           }}>
             {t('dilemma.see_trajectory', locale)}
           </Link>
-          <span style={{
-            fontFamily: sans,
-            fontSize: 12,
-            color: '#8C6520',
-            alignSelf: 'center',
-          }}>
-            {t('dilemma.next_arrives', locale)}
-          </span>
         </div>
       </div>
     );
   }
 
   return (
-    <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-      <textarea
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder={t('dilemma.placeholder', locale)}
-        rows={10}
-        maxLength={4000}
+    <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <input
+        type="text"
+        value={title}
+        onChange={e => setTitle(e.target.value)}
+        placeholder={t('diary.title_placeholder', locale)}
+        maxLength={200}
         style={{
           fontFamily: serif,
-          fontSize: 17,
-          lineHeight: 1.6,
-          padding: '20px 22px',
+          fontStyle: 'italic',
+          fontSize: 22,
+          fontWeight: 500,
+          padding: '10px 14px',
+          border: 'none',
+          borderBottom: '1px solid #EBE3CA',
+          background: 'transparent',
+          color: '#221E18',
+          outline: 'none',
+        }}
+      />
+      <textarea
+        value={content}
+        onChange={e => setContent(e.target.value)}
+        placeholder={t('diary.body_placeholder', locale)}
+        rows={16}
+        maxLength={12000}
+        style={{
+          fontFamily: serif,
+          fontSize: 18,
+          lineHeight: 1.65,
+          padding: '18px 22px',
           border: '1px solid #D6CDB6',
           borderRadius: 12,
           background: '#FFFCF4',
           color: '#221E18',
           outline: 'none',
           resize: 'vertical',
-          minHeight: 200,
+          minHeight: 320,
+        }}
+        onKeyDown={(e) => {
+          // Cmd/Ctrl+Enter submits
+          if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+            (e.currentTarget.form as HTMLFormElement | null)?.requestSubmit();
+          }
         }}
       />
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+      <div style={{
+        height: 3,
+        background: '#EBE3CA',
+        borderRadius: 2,
+        overflow: 'hidden',
+      }}>
         <div style={{
-          height: 3,
-          background: '#EBE3CA',
-          borderRadius: 2,
-          overflow: 'hidden',
-        }}>
-          <div style={{
-            height: '100%',
-            width: `${Math.min(100, (charCount / 4000) * 100)}%`,
-            background: charCount < 30 ? '#D6CDB6'
-                      : charCount > 3700 ? '#C7522A'
-                      : '#B8862F',
-            transition: 'width 0.18s ease, background 0.2s ease',
-          }} />
-        </div>
+          height: '100%',
+          width: `${Math.min(100, (charCount / 12000) * 100)}%`,
+          background: charCount < 30 ? '#D6CDB6'
+                    : charCount > 11000 ? '#C7522A'
+                    : '#2F5D5C',
+          transition: 'width 0.18s ease, background 0.2s ease',
+        }} />
       </div>
       <div style={{
         display: 'flex',
@@ -261,15 +334,47 @@ export default function DilemmaForm({ questionPrompt, locale = 'en' }: { questio
         gap: 12,
         flexWrap: 'wrap',
       }}>
-        <span style={{
-          fontFamily: sans,
-          fontSize: 12,
-          color: tooShort ? '#7A2E2E' : '#8C6520',
-          letterSpacing: 0.3,
-        }}>
-          {wordCount} {t(wordCount === 1 ? 'dilemma.words' : 'dilemma.words_plural', locale)} · {charCount}/4000
-          {tooShort ? ' · ' + t('dilemma.too_short', locale) : charCount > 3700 ? ' · ' + t('dilemma.approaching_limit', locale) : ''}
-        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+          <span style={{
+            fontFamily: sans,
+            fontSize: 12,
+            color: tooShort ? '#7A2E2E' : '#8C6520',
+            letterSpacing: 0.3,
+          }}>
+            {t('diary.entry_words', locale, { n: wordCount })} · {charCount}/12000
+            {tooShort ? ' · ' + t('diary.too_short_hint', locale) : ''}
+          </span>
+          {draftSavedAt && (
+            <span style={{
+              fontFamily: sans,
+              fontSize: 12,
+              color: '#8C6520',
+              opacity: 0.7,
+              fontStyle: 'italic',
+            }}>
+              {t('diary.draft_saved', locale)}
+            </span>
+          )}
+          {(title || content) && (
+            <button
+              type="button"
+              onClick={clearDraft}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#8C6520',
+                fontFamily: sans,
+                fontSize: 12,
+                cursor: 'pointer',
+                padding: 0,
+                textDecoration: 'underline',
+                textUnderlineOffset: 3,
+              }}
+            >
+              {t('diary.clear_draft', locale)}
+            </button>
+          )}
+        </div>
         <button
           type="submit"
           disabled={!ready || submitting}
@@ -287,7 +392,7 @@ export default function DilemmaForm({ questionPrompt, locale = 'en' }: { questio
             letterSpacing: 0.4,
           }}
         >
-          {submitting ? t('dilemma.analyzing', locale) : t('dilemma.submit', locale)}
+          {submitting ? t('dilemma.analyzing', locale) : t('diary.save_entry', locale)}
         </button>
       </div>
       {error && (
@@ -324,9 +429,9 @@ export default function DilemmaForm({ questionPrompt, locale = 'en' }: { questio
           style={{ marginTop: 2, accentColor: '#B8862F', flexShrink: 0 }}
         />
         <span>
-          <strong style={{ color: '#221E18' }}>{t('dilemma.show_on_public', locale)}</strong>{' '}
+          <strong style={{ color: '#221E18' }}>{t('diary.show_on_public', locale)}</strong>{' '}
           <span style={{ fontStyle: locale === 'en' ? 'normal' : 'italic' }}>
-            Your most recent 5 public dilemma responses appear at <code style={{ fontSize: 11.5, background: '#EBE3CA', padding: '1px 5px', borderRadius: 3 }}>mull.world/u/&lt;your-handle&gt;</code> if you've set one up. Private by default.
+            Your most recent 5 public diary entries appear at <code style={{ fontSize: 11.5, background: '#EBE3CA', padding: '1px 5px', borderRadius: 3 }}>mull.world/u/&lt;your-handle&gt;</code> if you've set one up. Private by default.
           </span>
           {locale !== 'en' && (
             <span style={{ display: 'block', marginTop: 4, fontSize: 11.5, opacity: 0.7, fontStyle: 'italic' }}>
@@ -339,13 +444,26 @@ export default function DilemmaForm({ questionPrompt, locale = 'en' }: { questio
         fontFamily: sans,
         fontSize: 12,
         color: '#8C6520',
-        margin: 0,
+        margin: '4px 0 0',
         opacity: 0.75,
         lineHeight: 1.55,
       }}>
         <span style={{ fontStyle: locale === 'en' ? 'normal' : 'italic' }}>
-          Your response is saved to your account, analyzed by Claude into a small shift across the
-          sixteen dimensions, and added to your trajectory. Only one submission per day.
+          Drafts autosave to your browser. Submitted entries save to your account and Claude analyzes the prose into a small map shift. Press <kbd style={{
+            fontFamily: 'inherit',
+            background: '#F5EFDC',
+            border: '1px solid #EBE3CA',
+            borderRadius: 4,
+            padding: '1px 5px',
+            fontSize: 11,
+          }}>⌘</kbd> + <kbd style={{
+            fontFamily: 'inherit',
+            background: '#F5EFDC',
+            border: '1px solid #EBE3CA',
+            borderRadius: 4,
+            padding: '1px 5px',
+            fontSize: 11,
+          }}>↵</kbd> to save.
         </span>
         {locale !== 'en' && (
           <span style={{ display: 'block', marginTop: 4, opacity: 0.85, fontStyle: 'italic' }}>

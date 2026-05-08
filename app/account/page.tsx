@@ -4,6 +4,9 @@ import Link from 'next/link';
 import LogoutButton from './logout-button';
 import { DIM_NAMES, DIM_KEYS, topShifts } from '@/lib/dimensions';
 import { getDailyDilemma } from '@/lib/dilemmas';
+import { getServerLocale } from '@/lib/locale-server';
+import { t } from '@/lib/translations';
+import LanguageSwitcher from '@/components/language-switcher';
 
 type Attempt = {
   id: string;
@@ -21,6 +24,16 @@ type DilemmaResponse = {
   response_text: string;
   vector_delta: number[] | null;
   analysis: string | null;
+  created_at: string;
+};
+
+type DiaryEntryRow = {
+  id: string;
+  title: string | null;
+  content: string;
+  vector_delta: number[] | null;
+  analysis: string | null;
+  word_count: number | null;
   created_at: string;
 };
 
@@ -42,8 +55,19 @@ type EventEntry =
       timestamp: number;
       question_text: string;
       response_text: string;
-      delta: number[];            // 16-D delta from previous position
+      delta: number[];
       analysis: string | null;
+      created_at: string;
+    }
+  | {
+      kind: 'diary';
+      id: string;
+      timestamp: number;
+      title: string | null;
+      content: string;
+      delta: number[];
+      analysis: string | null;
+      word_count: number | null;
       created_at: string;
     };
 
@@ -76,11 +100,12 @@ const sans = "'Inter', system-ui, sans-serif";
 
 export default async function AccountPage() {
   const supabase = await createClient();
+  const locale = await getServerLocale();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
-  // Fetch both event types in parallel
-  const [attemptsRes, dilemmasRes] = await Promise.all([
+  // Fetch all three event types in parallel
+  const [attemptsRes, dilemmasRes, diariesRes] = await Promise.all([
     supabase
       .from('quiz_attempts')
       .select('id, archetype, flavor, alignment_pct, taken_at, vector')
@@ -92,11 +117,18 @@ export default async function AccountPage() {
       .select('id, dilemma_date, question_text, response_text, vector_delta, analysis, created_at')
       .order('created_at', { ascending: false })
       .limit(40)
-      .returns<DilemmaResponse[]>()
+      .returns<DilemmaResponse[]>(),
+    supabase
+      .from('diary_entries')
+      .select('id, title, content, vector_delta, analysis, word_count, created_at')
+      .order('created_at', { ascending: false })
+      .limit(60)
+      .returns<DiaryEntryRow[]>()
   ]);
 
   const attempts = attemptsRes.data ?? [];
   const dilemmas = dilemmasRes.data ?? [];
+  const diaries = diariesRes.data ?? [];
 
   // Build unified event list, oldest → newest
   const events: EventEntry[] = [
@@ -123,6 +155,19 @@ export default async function AccountPage() {
         delta: d.vector_delta!,
         analysis: d.analysis,
         created_at: d.created_at,
+      })),
+    ...diaries
+      .filter(d => Array.isArray(d.vector_delta) && d.vector_delta.length === 16)
+      .map<EventEntry>(d => ({
+        kind: 'diary',
+        id: d.id,
+        timestamp: new Date(d.created_at).getTime(),
+        title: d.title,
+        content: d.content,
+        delta: d.vector_delta!,
+        analysis: d.analysis,
+        word_count: d.word_count,
+        created_at: d.created_at,
       }))
   ].sort((a, b) => a.timestamp - b.timestamp);
 
@@ -137,16 +182,23 @@ export default async function AccountPage() {
   const trajectoryNewestFirst = trajectory.slice().reverse();
 
   const fmt = (s: string) =>
-    new Date(s).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
+    new Date(s).toLocaleString(locale === 'en' ? 'en-GB' : locale, { dateStyle: 'medium', timeStyle: 'short' });
   const fmtRel = (s: string) => {
     const diff = Date.now() - new Date(s).getTime();
     const days = Math.floor(diff / 86400000);
-    if (days < 1) return 'today';
-    if (days === 1) return 'yesterday';
-    if (days < 7) return `${days} days ago`;
-    if (days < 30) return `${Math.floor(days / 7)} weeks ago`;
-    if (days < 365) return `${Math.floor(days / 30)} months ago`;
-    return `${Math.floor(days / 365)} years ago`;
+    if (days < 1) return t('time.today', locale);
+    if (days === 1) return t('time.yesterday', locale);
+    if (days < 7) return t(days === 1 ? 'time.day_ago' : 'time.days_ago', locale, { n: days });
+    if (days < 30) {
+      const w = Math.floor(days / 7);
+      return t(w === 1 ? 'time.week_ago' : 'time.weeks_ago', locale, { n: w });
+    }
+    if (days < 365) {
+      const m = Math.floor(days / 30);
+      return t(m === 1 ? 'time.month_ago' : 'time.months_ago', locale, { n: m });
+    }
+    const y = Math.floor(days / 365);
+    return t(y === 1 ? 'time.year_ago' : 'time.years_ago', locale, { n: y });
   };
 
   // Encode current position + history for the iframe
@@ -186,6 +238,7 @@ export default async function AccountPage() {
   const streak = computeStreak(dilemmas.map(d => d.dilemma_date));
   const dilemmaCount = dilemmas.length;
   const quizCount = attempts.length;
+  const diaryCount = diaries.length;
 
   return (
     <main style={{ maxWidth: 760, margin: '60px auto', padding: '0 24px' }}>
@@ -207,8 +260,27 @@ export default async function AccountPage() {
         }}>
           Mull<span style={{ color: '#B8862F' }}>.</span>
         </Link>
-        <LogoutButton />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <LanguageSwitcher initial={locale} />
+          <LogoutButton locale={locale} />
+        </div>
       </header>
+
+      {locale !== 'en' && (
+        <div style={{
+          padding: '10px 14px',
+          background: '#F5EFDC',
+          borderLeft: '3px solid #B8862F',
+          borderRadius: 6,
+          fontFamily: sans,
+          fontSize: 12.5,
+          color: '#4A4338',
+          marginBottom: 24,
+          lineHeight: 1.55,
+        }}>
+          {t('i18n.content_notice', locale)}
+        </div>
+      )}
 
       <h1 style={{
         fontFamily: serif,
@@ -217,7 +289,7 @@ export default async function AccountPage() {
         margin: '0 0 8px',
         letterSpacing: '-0.5px'
       }}>
-        Your account
+        {t('account.title', locale)}
       </h1>
       <p style={{
         fontFamily: sans,
@@ -225,7 +297,15 @@ export default async function AccountPage() {
         color: '#4A4338',
         marginBottom: 32
       }}>
-        Signed in as <strong>{user.email}</strong>
+        {t('account.signed_in_as', locale)} <strong>{user.email}</strong>
+        {' · '}
+        <Link href="/account/profile" style={{
+          color: '#8C6520',
+          textDecoration: 'underline',
+          textUnderlineOffset: 3,
+        }}>
+          {t('nav.public_profile_settings', locale)}
+        </Link>
       </p>
 
       {(quizCount > 0 || dilemmaCount > 0) && (
@@ -255,7 +335,7 @@ export default async function AccountPage() {
               textTransform: 'uppercase',
               letterSpacing: '0.14em',
               marginTop: 6,
-            }}>Quiz attempt{quizCount === 1 ? '' : 's'}</div>
+            }}>{t(quizCount === 1 ? 'account.stat_quiz_attempt' : 'account.stat_quiz_attempts', locale)}</div>
           </div>
           <div style={{
             padding: '16px 20px',
@@ -277,7 +357,29 @@ export default async function AccountPage() {
               textTransform: 'uppercase',
               letterSpacing: '0.14em',
               marginTop: 6,
-            }}>Dilemma{dilemmaCount === 1 ? '' : 's'} answered</div>
+            }}>{t(dilemmaCount === 1 ? 'account.stat_dilemma_answered' : 'account.stat_dilemmas_answered', locale)}</div>
+          </div>
+          <div style={{
+            padding: '16px 20px',
+            background: '#FFFCF4',
+            border: '1px solid #EBE3CA',
+            borderRadius: 10,
+          }}>
+            <div style={{
+              fontFamily: serif,
+              fontSize: 32,
+              fontWeight: 500,
+              color: '#221E18',
+              lineHeight: 1,
+            }}>{diaryCount}</div>
+            <div style={{
+              fontFamily: sans,
+              fontSize: 11,
+              color: '#8C6520',
+              textTransform: 'uppercase',
+              letterSpacing: '0.14em',
+              marginTop: 6,
+            }}>{t(diaryCount === 1 ? 'account.stat_diary_entry' : 'account.stat_diary_entries', locale)}</div>
           </div>
           {streak > 0 && (
             <div style={{
@@ -292,7 +394,7 @@ export default async function AccountPage() {
                 fontSize: 32,
                 fontWeight: 500,
                 lineHeight: 1,
-              }}>{streak} <span style={{ fontSize: 16, opacity: 0.7 }}>day{streak === 1 ? '' : 's'}</span></div>
+              }}>{streak} <span style={{ fontSize: 16, opacity: 0.7 }}>{t(streak === 1 ? 'account.stat_day' : 'account.stat_days', locale)}</span></div>
               <div style={{
                 fontFamily: sans,
                 fontSize: 11,
@@ -300,7 +402,7 @@ export default async function AccountPage() {
                 textTransform: 'uppercase',
                 letterSpacing: '0.14em',
                 marginTop: 6,
-              }}>Current streak</div>
+              }}>{t('account.stat_current_streak', locale)}</div>
             </div>
           )}
         </div>
@@ -315,7 +417,7 @@ export default async function AccountPage() {
           color: '#4A4338',
           marginBottom: 16
         }}>
-          Latest result
+          {t('account.latest_result', locale)}
         </h2>
 
         {latestQuiz ? (
@@ -343,7 +445,7 @@ export default async function AccountPage() {
               textTransform: 'uppercase',
               marginBottom: 24
             }}>
-              {latestQuiz.alignment_pct}% alignment · {fmt(latestQuiz.taken_at)}
+              {latestQuiz.alignment_pct}{t('account.percent_alignment', locale)} · {fmt(latestQuiz.taken_at)}
             </div>
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
               <Link href="/" style={{
@@ -356,7 +458,7 @@ export default async function AccountPage() {
                 fontFamily: sans,
                 fontSize: 14
               }}>
-                Take it again →
+                {t('account.take_it_again', locale)}
               </Link>
               <Link href="/dilemma" style={{
                 display: 'inline-block',
@@ -369,7 +471,19 @@ export default async function AccountPage() {
                 fontFamily: sans,
                 fontSize: 14
               }}>
-                {respondedToday ? "Today's dilemma — answered ✓" : "Today's dilemma →"}
+                {respondedToday ? t('account.todays_dilemma_answered', locale) : t('account.todays_dilemma_arrow', locale)}
+              </Link>
+              <Link href="/diary" style={{
+                display: 'inline-block',
+                padding: '10px 20px',
+                border: '1px solid #2F5D5C',
+                borderRadius: 6,
+                color: '#2F5D5C',
+                textDecoration: 'none',
+                fontFamily: sans,
+                fontSize: 14
+              }}>
+                {t('account.write_diary', locale)}
               </Link>
             </div>
           </div>
@@ -388,7 +502,7 @@ export default async function AccountPage() {
               fontStyle: 'italic',
               fontSize: 20
             }}>
-              You haven't taken the quiz yet.
+              {t('account.no_quiz_yet', locale)}
             </p>
             <Link href="/" style={{
               display: 'inline-block',
@@ -400,7 +514,7 @@ export default async function AccountPage() {
               fontFamily: sans,
               fontSize: 14
             }}>
-              Take the quiz →
+              {t('account.take_quiz_arrow', locale)}
             </Link>
           </div>
         )}
@@ -416,7 +530,7 @@ export default async function AccountPage() {
             color: '#4A4338',
             marginBottom: 16
           }}>
-            Your trajectory on the map
+            {t('account.your_trajectory', locale)}
           </h2>
           <div style={{
             border: '1px solid #D6CDB6',
@@ -445,8 +559,8 @@ export default async function AccountPage() {
             letterSpacing: 0.3,
           }}>
             {trailVectors.length > 1
-              ? `Pulsing gold star is your current position. Faded dots show your last ${trailVectors.length} positions, threaded by a dashed line — each dot is one quiz attempt or daily dilemma response.`
-              : `Pulsing gold star is you on the map. As you take the quiz again or answer daily dilemmas, your position will shift and a trail of past positions will appear here.`}
+              ? t('account.trajectory_caption_with_trail', locale, { n: trailVectors.length })
+              : t('account.trajectory_caption_no_trail', locale)}
           </p>
           <div style={{
             marginTop: 18,
@@ -459,11 +573,8 @@ export default async function AccountPage() {
             color: '#4A4338',
             lineHeight: 1.55,
           }}>
-            <strong style={{ color: '#221E18' }}>How the trajectory works.</strong>{' '}
-            Each <strong>quiz attempt</strong> is a hard reset — it replaces your current position
-            with the new one (since the quiz is broad and re-orienting). Each{' '}
-            <strong>daily dilemma response</strong> adds a small directional shift to wherever you
-            already were. So the quiz draws the big picture; daily dilemmas refine it.
+            <strong style={{ color: '#221E18' }}>{t('account.trajectory_explainer_title', locale)}</strong>{' '}
+            {t('account.trajectory_explainer_body', locale)}
           </div>
         </section>
       )}
@@ -478,7 +589,7 @@ export default async function AccountPage() {
             color: '#4A4338',
             marginBottom: 8
           }}>
-            Recent shifts
+            {t('account.recent_shifts', locale)}
           </h2>
           <p style={{
             fontFamily: sans,
@@ -487,21 +598,34 @@ export default async function AccountPage() {
             marginBottom: 18,
             letterSpacing: 0.3,
           }}>
-            Every event that moved your position. Quiz attempts replace your absolute position; daily dilemmas add small directional shifts.
+            {t('account.recent_shifts_subtitle', locale)}
           </p>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
             {trajectoryNewestFirst.map(({ event, delta }) => {
               const shifts = topShifts(delta, 0.3, 3);
-              const isQuiz = event.kind === 'quiz';
-              const ts = isQuiz ? (event as Extract<EventEntry, { kind: 'quiz' }>).taken_at
-                                  : (event as Extract<EventEntry, { kind: 'dilemma' }>).created_at;
+              const ts =
+                event.kind === 'quiz' ? event.taken_at :
+                event.kind === 'dilemma' ? event.created_at :
+                event.created_at;
+              const accent =
+                event.kind === 'quiz' ? '#B8862F' :
+                event.kind === 'dilemma' ? '#3D7DA8' :
+                '#2F5D5C';
+              const labelColor =
+                event.kind === 'quiz' ? '#8C6520' :
+                event.kind === 'dilemma' ? '#1F4666' :
+                '#173533';
+              const labelText =
+                event.kind === 'quiz' ? t('account.event_quiz_attempt', locale) :
+                event.kind === 'dilemma' ? t('account.event_daily_dilemma', locale) :
+                t('account.event_diary_entry', locale);
               return (
                 <li key={event.id} style={{
                   padding: '18px 20px',
                   marginBottom: 10,
                   background: '#FFFCF4',
                   border: '1px solid #EBE3CA',
-                  borderLeft: `3px solid ${isQuiz ? '#B8862F' : '#3D7DA8'}`,
+                  borderLeft: `3px solid ${accent}`,
                   borderRadius: 8,
                 }}>
                   <div style={{
@@ -518,9 +642,9 @@ export default async function AccountPage() {
                       fontWeight: 600,
                       textTransform: 'uppercase',
                       letterSpacing: '0.14em',
-                      color: isQuiz ? '#8C6520' : '#1F4666',
+                      color: labelColor,
                     }}>
-                      {isQuiz ? 'Quiz attempt' : 'Daily dilemma'} · {fmtRel(ts)}
+                      {labelText} · {fmtRel(ts)}
                     </span>
                     <span style={{
                       fontFamily: sans,
@@ -531,7 +655,7 @@ export default async function AccountPage() {
                       {fmt(ts)}
                     </span>
                   </div>
-                  {isQuiz ? (
+                  {event.kind === 'quiz' && (
                     <div style={{
                       fontFamily: serif,
                       fontSize: 22,
@@ -540,9 +664,8 @@ export default async function AccountPage() {
                       marginBottom: shifts.length ? 10 : 0,
                       letterSpacing: '-0.01em',
                     }}>
-                      {(event as Extract<EventEntry, { kind: 'quiz' }>).flavor
-                        ? `${(event as Extract<EventEntry, { kind: 'quiz' }>).flavor} ` : ''}
-                      {(event as Extract<EventEntry, { kind: 'quiz' }>).archetype.replace(/^The /, '')}
+                      {event.flavor ? `${event.flavor} ` : ''}
+                      {event.archetype.replace(/^The /, '')}
                       <span style={{
                         fontFamily: sans,
                         fontSize: 13,
@@ -551,10 +674,11 @@ export default async function AccountPage() {
                         letterSpacing: 1,
                         fontWeight: 400,
                       }}>
-                        {(event as Extract<EventEntry, { kind: 'quiz' }>).alignment_pct}%
+                        {event.alignment_pct}%
                       </span>
                     </div>
-                  ) : (
+                  )}
+                  {event.kind === 'dilemma' && (
                     <>
                       <p style={{
                         fontFamily: serif,
@@ -563,9 +687,9 @@ export default async function AccountPage() {
                         color: '#4A4338',
                         margin: '0 0 8px',
                       }}>
-                        "{(event as Extract<EventEntry, { kind: 'dilemma' }>).question_text}"
+                        "{event.question_text}"
                       </p>
-                      {(event as Extract<EventEntry, { kind: 'dilemma' }>).analysis && (
+                      {event.analysis && (
                         <p style={{
                           fontFamily: serif,
                           fontSize: 15,
@@ -573,9 +697,54 @@ export default async function AccountPage() {
                           margin: '0 0 10px',
                           lineHeight: 1.55,
                         }}>
-                          {(event as Extract<EventEntry, { kind: 'dilemma' }>).analysis}
+                          {event.analysis}
                         </p>
                       )}
+                    </>
+                  )}
+                  {event.kind === 'diary' && (
+                    <>
+                      {event.title && (
+                        <div style={{
+                          fontFamily: serif,
+                          fontSize: 19,
+                          fontWeight: 500,
+                          color: '#221E18',
+                          marginBottom: 6,
+                        }}>
+                          {event.title}
+                        </div>
+                      )}
+                      <p style={{
+                        fontFamily: serif,
+                        fontSize: 15.5,
+                        color: '#4A4338',
+                        margin: '0 0 8px',
+                        lineHeight: 1.55,
+                      }}>
+                        {event.content.length > 240 ? event.content.slice(0, 240) + '…' : event.content}
+                      </p>
+                      {event.analysis && (
+                        <p style={{
+                          fontFamily: serif,
+                          fontStyle: 'italic',
+                          fontSize: 14,
+                          color: '#8C6520',
+                          margin: '0 0 10px',
+                          lineHeight: 1.5,
+                        }}>
+                          {event.analysis}
+                        </p>
+                      )}
+                      <a href={`/diary/${event.id}`} style={{
+                        fontFamily: sans,
+                        fontSize: 12,
+                        color: '#2F5D5C',
+                        textDecoration: 'underline',
+                        textUnderlineOffset: 3,
+                      }}>
+                        {t('account.read_full_entry', locale)}
+                      </a>
                     </>
                   )}
                   {shifts.length > 0 ? (
@@ -583,7 +752,7 @@ export default async function AccountPage() {
                       display: 'flex',
                       gap: 14,
                       flexWrap: 'wrap',
-                      marginTop: 4,
+                      marginTop: 10,
                     }}>
                       {shifts.map(s => (
                         <span key={s.key} style={{
@@ -599,7 +768,7 @@ export default async function AccountPage() {
                       ))}
                     </div>
                   ) : (
-                    isQuiz && (
+                    event.kind === 'quiz' && (
                       <div style={{
                         fontFamily: sans,
                         fontSize: 12,
@@ -607,7 +776,7 @@ export default async function AccountPage() {
                         fontStyle: 'italic',
                         opacity: 0.7,
                       }}>
-                        First event — no shifts yet
+                        {t('account.first_event', locale)}
                       </div>
                     )
                   )}

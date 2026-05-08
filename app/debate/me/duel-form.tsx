@@ -5,20 +5,6 @@ import { matchesPhilosopherSearch, type PhilosopherEntry } from '@/lib/philosoph
 import { FIGURES } from '@/lib/figures';
 import { t, type Locale } from '@/lib/translations';
 
-type SavedDebate = {
-  id: string;
-  a_name: string;
-  a_dates: string | null;
-  a_archetype_key: string | null;
-  b_name: string;
-  b_dates: string | null;
-  b_archetype_key: string | null;
-  topic: string;
-  setup: string | null;
-  exchanges: { speaker: 'A' | 'B'; text: string }[];
-  created_at: string;
-};
-
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
 
@@ -27,55 +13,36 @@ const SUGGESTED_TOPICS = [
   'what makes a life worth living',
   'whether the self is an illusion',
   'the source of moral authority',
-  'whether we owe anything to strangers',
-  'the role of suffering in a good life',
   'whether tradition is wisdom or weight',
-  'what beauty is for',
-  'whether reason or experience reveals truth',
   'how to face death well',
+  'what beauty is for',
+  'whether we owe anything to strangers',
 ];
 
 type Exchange = { speaker: 'A' | 'B'; text: string };
-type DebateResult = {
+type DuelResult = {
   ok: boolean;
-  a: { name: string; dates: string; archetypeKey: string };
+  a: { name: string; dates: string; archetypeKey: string | null };
   b: { name: string; dates: string; archetypeKey: string };
   topic: string;
   setup: string;
   exchanges: Exchange[];
 };
 
-export default function DebateForm({
-  philosophers,
-  savedDebates = [],
-  locale = 'en'
-}: {
-  philosophers: PhilosopherEntry[];
-  savedDebates?: SavedDebate[];
-  locale?: Locale;
-}) {
-  const [aName, setAName] = useState('');
-  const [bName, setBName] = useState('');
-  const [aSearch, setASearch] = useState('');
-  const [bSearch, setBSearch] = useState('');
+export default function DuelForm({ philosophers, locale = 'en' }: { philosophers: PhilosopherEntry[]; locale?: Locale }) {
+  const [philName, setPhilName] = useState('');
+  const [search, setSearch] = useState('');
   const [topic, setTopic] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<DebateResult | null>(null);
+  const [result, setResult] = useState<DuelResult | null>(null);
 
-  const filteredA = useMemo(
-    () => philosophers.filter(p => matchesPhilosopherSearch(p, aSearch)),
-    [aSearch, philosophers]
-  );
-  const filteredB = useMemo(
-    () => philosophers.filter(p => matchesPhilosopherSearch(p, bSearch)),
-    [bSearch, philosophers]
+  const filtered = useMemo(
+    () => philosophers.filter(p => matchesPhilosopherSearch(p, search)),
+    [search, philosophers]
   );
 
-  const aPhil = philosophers.find(p => p.name === aName);
-  const bPhil = philosophers.find(p => p.name === bName);
-
-  const ready = aName && bName && aName !== bName && topic.trim().length >= 4;
+  const ready = !!philName && topic.trim().length >= 4;
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -84,48 +51,27 @@ export default function DebateForm({
     setError(null);
     setResult(null);
     try {
-      const res = await fetch('/api/debate/generate', {
+      const res = await fetch('/api/debate/me', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ a_name: aName, b_name: bName, topic: topic.trim() })
+        body: JSON.stringify({ phil_name: philName, topic: topic.trim() })
       });
       const json = await res.json();
       if (!res.ok) {
-        setError(json?.error || 'Could not generate the debate.');
+        setError(json?.error || 'Could not generate.');
         setSubmitting(false);
         return;
       }
-      setResult({
-        ...json,
-        a: { ...json.a, archetypeKey: aPhil?.archetypeKey || 'cartographer' },
-        b: { ...json.b, archetypeKey: bPhil?.archetypeKey || 'hammer' },
-      });
+      setResult(json);
     } catch (err) {
       console.error(err);
-      setError('Network error. Try again.');
+      setError('Network error.');
     } finally {
       setSubmitting(false);
     }
   }
 
-  function reset() {
-    setResult(null);
-    setError(null);
-  }
-
-  function loadSaved(d: SavedDebate) {
-    setResult({
-      ok: true,
-      a: { name: d.a_name, dates: d.a_dates ?? '', archetypeKey: d.a_archetype_key ?? 'cartographer' },
-      b: { name: d.b_name, dates: d.b_dates ?? '', archetypeKey: d.b_archetype_key ?? 'hammer' },
-      topic: d.topic,
-      setup: d.setup ?? '',
-      exchanges: d.exchanges,
-    });
-    if (typeof window !== 'undefined') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }
+  function reset() { setResult(null); setError(null); }
 
   if (result) {
     return (
@@ -139,7 +85,7 @@ export default function DebateForm({
           letterSpacing: '0.18em',
           marginBottom: 14,
         }}>
-          {t('debate.exchange_on', locale, { topic: result.topic })}
+          {t('duel.you_vs', locale, { name: result.b.name, topic: result.topic })}
         </div>
         {result.setup && (
           <p style={{
@@ -159,13 +105,14 @@ export default function DebateForm({
             const isA = ex.speaker === 'A';
             const speaker = isA ? result.a : result.b;
             return (
-              <SpeechBubble
+              <DuelBubble
                 key={i}
-                speakerName={speaker.name}
-                speakerDates={speaker.dates}
+                speakerName={isA ? 'You' : speaker.name}
+                speakerSubtitle={isA ? `as ${speaker.name}` : speaker.dates}
                 archetypeKey={speaker.archetypeKey}
                 text={ex.text}
                 side={isA ? 'left' : 'right'}
+                isUser={isA}
               />
             );
           })}
@@ -186,7 +133,7 @@ export default function DebateForm({
               fontWeight: 500,
             }}
           >
-            {t('debate.different_debate', locale)}
+            {t('duel.different_debate', locale)}
           </button>
         </div>
       </div>
@@ -195,32 +142,14 @@ export default function DebateForm({
 
   return (
     <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: 20,
-      }}>
-        <PhilosopherPicker
-          letter="A"
-          accent="#1E3A5F"
-          search={aSearch}
-          setSearch={setASearch}
-          selected={aName}
-          setSelected={setAName}
-          options={filteredA}
-          excludeName={bName}
-        />
-        <PhilosopherPicker
-          letter="B"
-          accent="#7A2E2E"
-          search={bSearch}
-          setSearch={setBSearch}
-          selected={bName}
-          setSelected={setBName}
-          options={filteredB}
-          excludeName={aName}
-        />
-      </div>
+      <PhilosopherPicker
+        search={search}
+        setSearch={setSearch}
+        selected={philName}
+        setSelected={setPhilName}
+        options={filtered}
+        locale={locale}
+      />
 
       <div>
         <label style={{
@@ -297,12 +226,9 @@ export default function DebateForm({
         >
           {submitting ? t('debate.generating', locale) : t('debate.stage_debate', locale)}
         </button>
-        {!ready && (aName || bName) && (
+        {!ready && (
           <span style={{ fontFamily: sans, fontSize: 12.5, color: '#8C6520' }}>
-            {!aName ? t('debate.pick_a', locale) :
-             !bName ? t('debate.pick_b', locale) :
-             aName === bName ? t('debate.pick_two_diff', locale) :
-             topic.trim().length < 4 ? t('debate.choose_topic', locale) : ''}
+            {!philName ? t('duel.pick_thinker', locale) : topic.trim().length < 4 ? t('debate.choose_topic', locale) : ''}
           </span>
         )}
       </div>
@@ -319,131 +245,21 @@ export default function DebateForm({
           {error}
         </div>
       )}
-
-      {savedDebates.length > 0 && (
-        <SavedDebatesList debates={savedDebates} onPick={loadSaved} locale={locale} />
-      )}
     </form>
   );
 }
 
-const LOCALE_DATE: Record<string, string> = { en: 'en-GB', es: 'es-ES', fr: 'fr-FR', pt: 'pt-BR', ru: 'ru-RU', zh: 'zh-CN', ja: 'ja-JP', ko: 'ko-KR' };
-
-function SavedDebatesList({
-  debates, onPick, locale
-}: {
-  debates: SavedDebate[];
-  onPick: (d: SavedDebate) => void;
-  locale: Locale;
-}) {
-  const fmtRel = (s: string) => {
-    const diff = Date.now() - new Date(s).getTime();
-    const mins = Math.floor(diff / 60000);
-    if (mins < 60) return mins <= 1 ? t('time.just_now', locale) : t('time.min_ago', locale, { n: mins });
-    const hours = Math.floor(mins / 60);
-    if (hours < 24) return t(hours === 1 ? 'time.hr_ago' : 'time.hrs_ago', locale, { n: hours });
-    const days = Math.floor(hours / 24);
-    if (days < 7) return t(days === 1 ? 'time.day_ago' : 'time.days_ago', locale, { n: days });
-    return new Date(s).toLocaleDateString(LOCALE_DATE[locale] || 'en-GB', { day: 'numeric', month: 'short' });
-  };
-
-  return (
-    <div style={{
-      marginTop: 28,
-      paddingTop: 28,
-      borderTop: '1px solid #EBE3CA',
-    }}>
-      <div style={{
-        fontFamily: sans,
-        fontSize: 11,
-        fontWeight: 600,
-        color: '#8C6520',
-        textTransform: 'uppercase',
-        letterSpacing: '0.18em',
-        marginBottom: 14,
-      }}>
-        {t('debate.recent_debates', locale, { n: debates.length })}
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {debates.map(d => (
-          <button
-            key={d.id}
-            type="button"
-            onClick={() => onPick(d)}
-            style={{
-              textAlign: 'left',
-              padding: '14px 18px',
-              background: '#FFFCF4',
-              border: '1px solid #EBE3CA',
-              borderLeft: '3px solid #B8862F',
-              borderRadius: 8,
-              cursor: 'pointer',
-              fontFamily: 'inherit',
-              transition: 'border-color 0.12s ease, background 0.12s ease',
-              width: '100%',
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.borderLeftColor = '#221E18';
-              e.currentTarget.style.background = '#F5EFDC';
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.borderLeftColor = '#B8862F';
-              e.currentTarget.style.background = '#FFFCF4';
-            }}
-          >
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'baseline',
-              flexWrap: 'wrap',
-              gap: 8,
-              marginBottom: 4,
-            }}>
-              <span style={{
-                fontFamily: serif,
-                fontSize: 17,
-                fontWeight: 500,
-                color: '#221E18',
-              }}>
-                <em style={{ fontStyle: 'italic' }}>{d.a_name}</em>
-                <span style={{ color: '#8C6520', margin: '0 8px', fontStyle: 'normal' }}>×</span>
-                <em style={{ fontStyle: 'italic' }}>{d.b_name}</em>
-              </span>
-              <span style={{
-                fontFamily: sans,
-                fontSize: 11,
-                color: '#8C6520',
-                letterSpacing: 0.3,
-              }}>
-                {fmtRel(d.created_at)}
-              </span>
-            </div>
-            <div style={{
-              fontFamily: serif,
-              fontStyle: 'italic',
-              fontSize: 14.5,
-              color: '#4A4338',
-              lineHeight: 1.4,
-            }}>
-              on {d.topic}
-            </div>
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function SpeechBubble({
-  speakerName, speakerDates, archetypeKey, text, side
+function DuelBubble({
+  speakerName, speakerSubtitle, archetypeKey, text, side, isUser
 }: {
   speakerName: string;
-  speakerDates: string;
-  archetypeKey: string;
+  speakerSubtitle: string;
+  archetypeKey: string | null;
   text: string;
   side: 'left' | 'right';
+  isUser: boolean;
 }) {
-  const figureSvg = FIGURES[archetypeKey] || FIGURES['cartographer'] || '';
+  const figureSvg = archetypeKey ? (FIGURES[archetypeKey] || '') : '';
   const isLeft = side === 'left';
 
   const portrait = (
@@ -451,18 +267,29 @@ function SpeechBubble({
       width: 80,
       height: 80,
       borderRadius: '50%',
-      background: '#FFFCF4',
-      border: '2px solid #D6CDB6',
+      background: isUser ? '#221E18' : '#FFFCF4',
+      border: isUser ? '2px solid #B8862F' : '2px solid #D6CDB6',
       flexShrink: 0,
       overflow: 'hidden',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
+      color: '#F1C76A',
     }}>
-      <div
-        style={{ width: '100%', height: '100%' }}
-        dangerouslySetInnerHTML={{ __html: figureSvg }}
-      />
+      {isUser ? (
+        <span style={{
+          fontFamily: serif,
+          fontSize: 24,
+          fontWeight: 500,
+          fontStyle: 'italic',
+          letterSpacing: 1,
+        }}>YOU</span>
+      ) : (
+        <div
+          style={{ width: '100%', height: '100%' }}
+          dangerouslySetInnerHTML={{ __html: figureSvg }}
+        />
+      )}
     </div>
   );
 
@@ -485,7 +312,7 @@ function SpeechBubble({
         letterSpacing: 0.3,
         marginTop: 2,
       }}>
-        {speakerDates}
+        {speakerSubtitle}
       </div>
     </div>
   );
@@ -495,7 +322,7 @@ function SpeechBubble({
       flex: 1,
       minWidth: 0,
       position: 'relative',
-      background: '#FFFCF4',
+      background: isUser ? '#F5EFDC' : '#FFFCF4',
       border: '1px solid #D6CDB6',
       borderRadius: 18,
       padding: '18px 22px',
@@ -505,7 +332,6 @@ function SpeechBubble({
       lineHeight: 1.6,
       boxShadow: '0 2px 8px rgba(34, 30, 24, 0.04)',
     }}>
-      {/* Speech-bubble tail */}
       <span
         aria-hidden="true"
         style={{
@@ -514,11 +340,10 @@ function SpeechBubble({
           [isLeft ? 'left' : 'right']: -8,
           width: 16,
           height: 16,
-          background: '#FFFCF4',
+          background: isUser ? '#F5EFDC' : '#FFFCF4',
           borderTop: '1px solid #D6CDB6',
           borderLeft: isLeft ? '1px solid #D6CDB6' : 'none',
           borderRight: !isLeft ? '1px solid #D6CDB6' : 'none',
-          borderBottom: 'none',
           transform: `rotate(${isLeft ? '-45deg' : '45deg'})`,
           borderTopLeftRadius: 2,
         }}
@@ -556,37 +381,34 @@ function SpeechBubble({
 }
 
 function PhilosopherPicker({
-  letter, accent, search, setSearch, selected, setSelected, options, excludeName
+  search, setSearch, selected, setSelected, options, locale
 }: {
-  letter: string;
-  accent: string;
   search: string;
   setSearch: (s: string) => void;
   selected: string;
   setSelected: (s: string) => void;
   options: PhilosopherEntry[];
-  excludeName: string;
+  locale: Locale;
 }) {
-  const filtered = options.filter(p => p.name !== excludeName);
   return (
     <div>
       <label style={{
         fontFamily: sans,
         fontSize: 11,
         fontWeight: 600,
-        color: accent,
+        color: '#7A2E2E',
         textTransform: 'uppercase',
         letterSpacing: '0.18em',
         display: 'block',
         marginBottom: 10,
       }}>
-        Speaker {letter}
+        {t('duel.opponent_label', locale)}
       </label>
       <input
         type="text"
         value={search}
         onChange={e => setSearch(e.target.value)}
-        placeholder="Search by name, first name, or idea…"
+        placeholder={t('duel.search_placeholder', locale)}
         style={{
           fontFamily: sans,
           fontSize: 14,
@@ -608,7 +430,7 @@ function PhilosopherPicker({
         marginBottom: 6,
         letterSpacing: 0.3,
       }}>
-        {filtered.length} thinker{filtered.length === 1 ? '' : 's'}{search ? ` matching "${search}"` : ''}
+        {search ? t('duel.matching', locale, { count: options.length, s: options.length === 1 ? '' : 's', q: search }) : `${options.length} thinker${options.length === 1 ? '' : 's'}`}
       </div>
       <div style={{
         display: 'flex',
@@ -621,7 +443,7 @@ function PhilosopherPicker({
         borderRadius: 8,
         padding: 6,
       }}>
-        {filtered.length === 0 && (
+        {options.length === 0 && (
           <div style={{
             padding: '12px',
             fontFamily: sans,
@@ -629,10 +451,10 @@ function PhilosopherPicker({
             color: '#8C6520',
             fontStyle: 'italic',
           }}>
-            No matches.
+            {t('duel.no_matches', locale)}
           </div>
         )}
-        {filtered.map(p => {
+        {options.map(p => {
           const isSelected = selected === p.name;
           return (
             <button
@@ -642,7 +464,7 @@ function PhilosopherPicker({
               style={{
                 textAlign: 'left',
                 padding: '8px 12px',
-                background: isSelected ? accent : 'transparent',
+                background: isSelected ? '#7A2E2E' : 'transparent',
                 color: isSelected ? '#FAF6EC' : '#221E18',
                 border: 'none',
                 borderRadius: 6,
