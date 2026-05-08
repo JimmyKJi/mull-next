@@ -43,6 +43,7 @@ export async function POST(req: Request) {
     await wipe('dilemma_responses');
     await wipe('diary_entries');
     await wipe('debate_history');
+    await wipe('exercise_reflections');
     await wipe('public_profiles');
 
     // Now delete the auth row. Any failure here is the only one that's truly

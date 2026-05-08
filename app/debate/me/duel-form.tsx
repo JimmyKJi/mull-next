@@ -430,7 +430,7 @@ function PhilosopherPicker({
         marginBottom: 6,
         letterSpacing: 0.3,
       }}>
-        {search ? t('duel.matching', locale, { count: options.length, s: options.length === 1 ? '' : 's', q: search }) : `${options.length} thinker${options.length === 1 ? '' : 's'}`}
+        {search ? t('duel.matching', locale, { count: options.length, q: search }) : `${options.length} thinker${options.length === 1 ? '' : 's'}`}
       </div>
       <div style={{
         display: 'flex',

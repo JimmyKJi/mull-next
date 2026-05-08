@@ -37,6 +37,16 @@ type DiaryEntryRow = {
   created_at: string;
 };
 
+type ExerciseReflectionRow = {
+  id: string;
+  exercise_slug: string;
+  content: string;
+  vector_delta: number[] | null;
+  analysis: string | null;
+  word_count: number | null;
+  created_at: string;
+};
+
 // Unified event the UI iterates over.
 type EventEntry =
   | {
@@ -64,6 +74,17 @@ type EventEntry =
       id: string;
       timestamp: number;
       title: string | null;
+      content: string;
+      delta: number[];
+      analysis: string | null;
+      word_count: number | null;
+      created_at: string;
+    }
+  | {
+      kind: 'exercise';
+      id: string;
+      timestamp: number;
+      exercise_slug: string;
       content: string;
       delta: number[];
       analysis: string | null;
@@ -104,8 +125,8 @@ export default async function AccountPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
-  // Fetch all three event types in parallel
-  const [attemptsRes, dilemmasRes, diariesRes] = await Promise.all([
+  // Fetch all four event types in parallel
+  const [attemptsRes, dilemmasRes, diariesRes, reflectionsRes] = await Promise.all([
     supabase
       .from('quiz_attempts')
       .select('id, archetype, flavor, alignment_pct, taken_at, vector')
@@ -123,12 +144,19 @@ export default async function AccountPage() {
       .select('id, title, content, vector_delta, analysis, word_count, created_at')
       .order('created_at', { ascending: false })
       .limit(60)
-      .returns<DiaryEntryRow[]>()
+      .returns<DiaryEntryRow[]>(),
+    supabase
+      .from('exercise_reflections')
+      .select('id, exercise_slug, content, vector_delta, analysis, word_count, created_at')
+      .order('created_at', { ascending: false })
+      .limit(60)
+      .returns<ExerciseReflectionRow[]>()
   ]);
 
   const attempts = attemptsRes.data ?? [];
   const dilemmas = dilemmasRes.data ?? [];
   const diaries = diariesRes.data ?? [];
+  const reflections = reflectionsRes.data ?? [];
 
   // Build unified event list, oldest → newest
   const events: EventEntry[] = [
@@ -168,6 +196,19 @@ export default async function AccountPage() {
         analysis: d.analysis,
         word_count: d.word_count,
         created_at: d.created_at,
+      })),
+    ...reflections
+      .filter(r => Array.isArray(r.vector_delta) && r.vector_delta.length === 16)
+      .map<EventEntry>(r => ({
+        kind: 'exercise',
+        id: r.id,
+        timestamp: new Date(r.created_at).getTime(),
+        exercise_slug: r.exercise_slug,
+        content: r.content,
+        delta: r.vector_delta!,
+        analysis: r.analysis,
+        word_count: r.word_count,
+        created_at: r.created_at,
       }))
   ].sort((a, b) => a.timestamp - b.timestamp);
 
@@ -306,7 +347,81 @@ export default async function AccountPage() {
         }}>
           {t('nav.public_profile_settings', locale)}
         </Link>
+        {' · '}
+        <Link href="/account/retrospective" style={{
+          color: '#8C6520',
+          textDecoration: 'underline',
+          textUnderlineOffset: 3,
+        }}>
+          Yearly retrospective
+        </Link>
       </p>
+
+      {/* First-time empty state — shown only before the user has any data
+          to display in the stats / trajectory sections below. Three doors
+          into the product, in the order most people benefit from them. */}
+      {quizCount === 0 && dilemmaCount === 0 && diaryCount === 0 && (
+        <section style={{ marginBottom: 44 }}>
+          <div style={{
+            fontFamily: sans,
+            fontSize: 11,
+            fontWeight: 600,
+            color: '#8C6520',
+            textTransform: 'uppercase',
+            letterSpacing: '0.18em',
+            marginBottom: 14,
+          }}>
+            {t('first.eyebrow', locale)}
+          </div>
+          <h2 style={{
+            fontFamily: serif,
+            fontSize: 30,
+            fontWeight: 500,
+            margin: '0 0 8px',
+            letterSpacing: '-0.3px',
+          }}>
+            {t('first.title', locale)}
+          </h2>
+          <p style={{
+            fontFamily: serif,
+            fontStyle: 'italic',
+            fontSize: 17,
+            color: '#4A4338',
+            margin: '0 0 22px',
+            lineHeight: 1.55,
+          }}>
+            {t('first.subtitle', locale)}
+          </p>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+            gap: 14,
+          }}>
+            <FirstStepCard
+              accent="#221E18"
+              title={t('first.q_title', locale)}
+              body={t('first.q_body', locale)}
+              cta={t('first.cta_q', locale)}
+              href="/"
+              primary
+            />
+            <FirstStepCard
+              accent="#2F5D5C"
+              title={t('first.d_title', locale)}
+              body={t('first.d_body', locale)}
+              cta={t('first.cta_d', locale)}
+              href="/dilemma"
+            />
+            <FirstStepCard
+              accent="#8C6520"
+              title={t('first.j_title', locale)}
+              body={t('first.j_body', locale)}
+              cta={t('first.cta_j', locale)}
+              href="/diary"
+            />
+          </div>
+        </section>
+      )}
 
       {(quizCount > 0 || dilemmaCount > 0) && (
         <div style={{
@@ -605,20 +720,22 @@ export default async function AccountPage() {
               const shifts = topShifts(delta, 0.3, 3);
               const ts =
                 event.kind === 'quiz' ? event.taken_at :
-                event.kind === 'dilemma' ? event.created_at :
                 event.created_at;
               const accent =
                 event.kind === 'quiz' ? '#B8862F' :
                 event.kind === 'dilemma' ? '#3D7DA8' :
-                '#2F5D5C';
+                event.kind === 'diary' ? '#2F5D5C' :
+                '#7A2E2E';
               const labelColor =
                 event.kind === 'quiz' ? '#8C6520' :
                 event.kind === 'dilemma' ? '#1F4666' :
-                '#173533';
+                event.kind === 'diary' ? '#173533' :
+                '#4D1818';
               const labelText =
                 event.kind === 'quiz' ? t('account.event_quiz_attempt', locale) :
                 event.kind === 'dilemma' ? t('account.event_daily_dilemma', locale) :
-                t('account.event_diary_entry', locale);
+                event.kind === 'diary' ? t('account.event_diary_entry', locale) :
+                t('account.event_exercise_reflection', locale);
               return (
                 <li key={event.id} style={{
                   padding: '18px 20px',
@@ -787,5 +904,52 @@ export default async function AccountPage() {
         </section>
       )}
     </main>
+  );
+}
+
+function FirstStepCard({
+  accent, title, body, cta, href, primary = false,
+}: {
+  accent: string; title: string; body: string; cta: string; href: string; primary?: boolean;
+}) {
+  return (
+    <Link href={href} style={{
+      display: 'block',
+      padding: '20px 22px',
+      background: primary ? '#FFFCF4' : 'transparent',
+      border: '1px solid ' + (primary ? '#D6CDB6' : '#EBE3CA'),
+      borderLeft: '3px solid ' + accent,
+      borderRadius: 10,
+      textDecoration: 'none',
+      color: '#221E18',
+    }}>
+      <div style={{
+        fontFamily: serif,
+        fontSize: 21,
+        fontWeight: 500,
+        marginBottom: 6,
+        letterSpacing: '-0.2px',
+        color: '#221E18',
+      }}>
+        {title}
+      </div>
+      <p style={{
+        fontFamily: sans,
+        fontSize: 13.5,
+        color: '#4A4338',
+        margin: '0 0 12px',
+        lineHeight: 1.55,
+      }}>
+        {body}
+      </p>
+      <span style={{
+        fontFamily: sans,
+        fontSize: 13.5,
+        color: accent,
+        fontWeight: 500,
+      }}>
+        {cta}
+      </span>
+    </Link>
   );
 }

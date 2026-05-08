@@ -135,7 +135,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
       .returns<DiaryRow[]>(),
   ]);
 
-  type TrajRow = { kind: 'q' | 'd' | 'j'; ts: string; dilemma_date: string | null; vec: number[] | null; delta: number[] | null };
+  type TrajRow = { kind: 'q' | 'd' | 'j' | 'e'; ts: string; dilemma_date: string | null; vec: number[] | null; delta: number[] | null };
   const trajRows = (trajRes.data ?? []) as TrajRow[];
   const latestArch = (latestArchRes.data?.[0] ?? null) as Attempt | null;
   const publicDilemmas = publicDilemmasRes.data ?? [];

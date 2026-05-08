@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <title>Mull — Find your place on the map of how you think</title>
-<meta name="description" content="A philosophy app that asks you what you think — concretely, on real questions — and shows you where that places you in the long conversation. 166 thinkers, 16 dimensions, no ads.">
+<meta name="description" content="A philosophy app that asks you what you think — concretely, on real questions — and shows you where that places you in the long conversation. over 200 thinkers, 16 dimensions, no ads.">
 
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -15,7 +15,7 @@
 <!-- Open Graph (social previews on iMessage, Discord, Twitter, LinkedIn, Slack, etc.) -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Mull — Find your place on the map of how you think">
-<meta property="og:description" content="A philosophy app that asks you what you think — concretely, on real questions — and shows you where that places you in the long conversation. 166 thinkers, 16 dimensions, no ads.">
+<meta property="og:description" content="A philosophy app that asks you what you think — concretely, on real questions — and shows you where that places you in the long conversation. over 200 thinkers, 16 dimensions, no ads.">
 <meta property="og:url" content="https://mull.world">
 <meta property="og:image" content="https://mull.world/og.png">
 <meta property="og:image:width" content="1200">
@@ -25,7 +25,7 @@
 <!-- Twitter card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Mull — Find your place on the map of how you think">
-<meta name="twitter:description" content="A philosophy app that asks you what you think — concretely, on real questions. 166 thinkers, 16 dimensions, no ads.">
+<meta name="twitter:description" content="A philosophy app that asks you what you think — concretely, on real questions. over 200 thinkers, 16 dimensions, no ads.">
 <meta name="twitter:image" content="https://mull.world/og.png">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -1477,6 +1477,34 @@
     line-height: 1.5;
   }
 
+  .archetype-quotes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+  }
+  .archetype-quote {
+    padding: 18px 20px;
+    background: var(--cream-2);
+    border-left: 3px solid var(--acc);
+    border-radius: 8px;
+    margin: 0;
+  }
+  .archetype-quote p {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic;
+    font-size: 17px;
+    color: var(--ink);
+    margin: 0 0 8px;
+    line-height: 1.55;
+  }
+  .archetype-quote cite {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-style: normal;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    letter-spacing: 0.2px;
+  }
+
   .archetype-shadow-card {
     display: grid;
     grid-template-columns: 120px 1fr;
@@ -2118,6 +2146,8 @@ html.embed-mode #embed-you-hint {
       <a class="brandbar-link" href="/dilemma" data-i18n="nav.dilemma">Today's dilemma</a>
       <a class="brandbar-link brandbar-link-secondary" href="/diary" data-i18n="nav.diary">Diary</a>
       <a class="brandbar-link brandbar-link-secondary" href="/debate" data-i18n="nav.debate">Simulated debate</a>
+      <a class="brandbar-link brandbar-link-secondary" href="/exercises" data-i18n="nav.exercises">Exercises</a>
+      <a class="brandbar-link brandbar-link-secondary" href="/search" data-i18n="nav.search">Search minds</a>
       <button class="brandbar-link" onclick="showAbout()" data-i18n="nav.about">About</button>
       <button class="brandbar-link brandbar-link-secondary" onclick="showGallery()" data-i18n="nav.archetypes">Archetypes</button>
       <select id="brandbar-lang" class="brandbar-lang" title="Language" onchange="setMullLocale(this.value)">
@@ -2218,7 +2248,7 @@ html.embed-mode #embed-you-hint {
     <div class="about-section">
       <h2>Why this exists</h2>
       <p>Philosophy is the original tool for examining your own thinking — the discipline that refuses to take its own framing for granted. Most people leave it behind after one survey course because the way it's taught makes it feel like memorizing a museum: dates, names, doctrines, exam.</p>
-      <p>Mull inverts that. Instead of teaching you what dead philosophers thought, it asks what <strong>you</strong> think — concretely, on real questions — and shows you where that places you in the long conversation. The map isn't a verdict, it's a mirror. The 166 thinkers in the constellation are there as company, not as curriculum.</p>
+      <p>Mull inverts that. Instead of teaching you what dead philosophers thought, it asks what <strong>you</strong> think — concretely, on real questions — and shows you where that places you in the long conversation. The map isn't a verdict, it's a mirror. The over 200 thinkers in the constellation are there as company, not as curriculum.</p>
     </div>
 
     <div class="about-section">
@@ -2252,7 +2282,7 @@ html.embed-mode #embed-you-hint {
         <li>The values above, and the decision to be transparent about the cost math below</li>
         <li>The brand, tone, contemplative aesthetic, and every direction Mull has taken</li>
       </ul>
-      <p><strong>Some things were drafted in conversation.</strong> The archetype names, the 16 dimensions, the 166-philosopher database, the figure illustrations, the reading list — Claude drafted, Jimmy refined or vetoed. The shape that emerged is genuinely shared. But every kept choice was a person's. The tool typed; the person decided.</p>
+      <p><strong>Some things were drafted in conversation.</strong> The archetype names, the 16 dimensions, the 200+ philosopher database, the figure illustrations, the reading list — Claude drafted, Jimmy refined or vetoed. The shape that emerged is genuinely shared. But every kept choice was a person's. The tool typed; the person decided.</p>
     </div>
 
     <div class="about-section">
@@ -2338,10 +2368,10 @@ html.embed-mode #embed-you-hint {
         <div class="map-instructions">drag to orbit · scroll to zoom · click a star to fly there</div>
         <div id="philpopup_pre" class="philpopup" hidden></div>
         <div class="mapcontrols">
-          <button class="mapcontrol btn-zoomin" title="Zoom in">+</button>
-          <button class="mapcontrol btn-zoomout" title="Zoom out">−</button>
-          <button class="mapcontrol btn-reset" title="Reset view" style="font-size:14px;">⟲</button>
-          <button class="mapcontrol btn-hideall" title="Hide all philosophers" style="font-size:13px;">∅</button>
+          <button class="mapcontrol btn-zoomin" title="Zoom in" aria-label="Zoom in">+</button>
+          <button class="mapcontrol btn-zoomout" title="Zoom out" aria-label="Zoom out">−</button>
+          <button class="mapcontrol btn-reset" title="Reset view" aria-label="Reset map view" style="font-size:14px;">⟲</button>
+          <button class="mapcontrol btn-hideall" title="Hide all philosophers" aria-label="Hide all philosophers" style="font-size:13px;">∅</button>
         </div>
         <div class="map-axislegend">
           <div class="row"><span class="swatch" style="background:#A85050"></span> X — Sovereign ↔ Communal</div>
@@ -2414,10 +2444,10 @@ html.embed-mode #embed-you-hint {
           <div class="map-instructions">drag to orbit · scroll to zoom · click a star to fly there · stars sized by alignment</div>
           <div id="philpopup_res" class="philpopup" hidden></div>
           <div class="mapcontrols">
-            <button class="mapcontrol btn-zoomin" title="Zoom in">+</button>
-            <button class="mapcontrol btn-zoomout" title="Zoom out">−</button>
-            <button class="mapcontrol btn-reset" title="Reset view" style="font-size:14px;">⟲</button>
-            <button class="mapcontrol btn-hideall" title="Hide all philosophers" style="font-size:13px;">∅</button>
+            <button class="mapcontrol btn-zoomin" title="Zoom in" aria-label="Zoom in">+</button>
+            <button class="mapcontrol btn-zoomout" title="Zoom out" aria-label="Zoom out">−</button>
+            <button class="mapcontrol btn-reset" title="Reset view" aria-label="Reset map view" style="font-size:14px;">⟲</button>
+            <button class="mapcontrol btn-hideall" title="Hide all philosophers" aria-label="Hide all philosophers" style="font-size:13px;">∅</button>
           </div>
           <div class="map-axislegend">
             <div class="row"><span class="swatch" style="background:#A85050"></span> X — Sovereign ↔ Communal</div>
@@ -3937,10 +3967,166 @@ const PHILOSOPHERS = [
   { name:"Sojourner Truth", dates:"~1797–1883", keyIdea:"Ain't I a woman? The truth burns through silence. Faith and freedom inseparable.",
     p: v({TV:7,VA:8,WP:7,TR:5,TE:9,RT:5,MR:6,SR:5,CE:8,SS:9,PO:8,TD:3,AT:4,ES:6,UI:8,SI:2}) },
   { name:"Albert Schweitzer", dates:"1875–1965", keyIdea:"Reverence for life. Ethics is responsibility without limit. Theology, music, medicine, mission.",
-    p: v({TV:6,VA:8,WP:4,TR:7,TE:7,RT:5,MR:5,SR:4,CE:9,SS:6,PO:9,TD:5,AT:6,ES:4,UI:9,SI:2}) }
+    p: v({TV:6,VA:8,WP:4,TR:7,TE:7,RT:5,MR:5,SR:4,CE:9,SS:6,PO:9,TD:5,AT:6,ES:4,UI:9,SI:2}) },
+
+  // === Diversification pass — extreme/uncommon positions to populate
+  //     vector-space corners that the curated 166 didn't cover. ===
+
+  // ── Earlier women: vitalist, mystic, scientific, political ──────────
+  { name:"Hildegard of Bingen", dates:"~1098–1179", keyIdea:"Greenness (viriditas) is the divine life-force in matter itself. The cosmos is a living breathing body, and the body of the visionary is the instrument God plays.",
+    p: v({TV:5,VA:8,WP:5,TR:5,TE:7,RT:8,MR:10,SR:2,CE:8,SS:5,PO:7,TD:6,AT:6,ES:8,UI:7,SI:3}) },
+  { name:"Marguerite Porete", dates:"~1250–1310", keyIdea:"The annihilated soul becomes nothing and is therefore everything. The Free Soul wills nothing, owns nothing, owes nothing — only Love acts through her. Burned for it.",
+    p: v({TV:7,VA:4,WP:1,TR:3,TE:5,RT:3,MR:10,SR:3,CE:3,SS:3,PO:4,TD:5,AT:9,ES:2,UI:8,SI:9}) },
+  { name:"Anne Conway", dates:"1631–1679", keyIdea:"All substance is one continuous spirit-matter, breathing between living monads. Mechanism is too dead a picture for what's actually here.",
+    p: v({TV:5,VA:7,WP:3,TR:8,TE:6,RT:6,MR:8,SR:3,CE:7,SS:4,PO:5,TD:9,AT:5,ES:6,UI:9,SI:5}) },
+  { name:"Émilie du Châtelet", dates:"1706–1749", keyIdea:"Force is mass times velocity squared, not mass times velocity. Translated and corrected Newton; argued happiness requires study and freedom from illusion.",
+    p: v({TV:3,VA:7,WP:6,TR:9,TE:8,RT:3,MR:2,SR:6,CE:5,SS:7,PO:6,TD:9,AT:3,ES:5,UI:7,SI:3}) },
+  { name:"Olympe de Gouges", dates:"1748–1793", keyIdea:"Declaration of the Rights of Woman: the rights of man are nothing if half of humanity is excluded. Guillotined for it.",
+    p: v({TV:5,VA:7,WP:8,TR:7,TE:6,RT:2,MR:3,SR:6,CE:7,SS:9,PO:8,TD:5,AT:3,ES:5,UI:10,SI:2}) },
+  { name:"Edith Stein", dates:"1891–1942", keyIdea:"Empathy is the structured act by which the consciousness of another becomes real to me. Carmelite nun, Husserl's student, murdered at Auschwitz.",
+    p: v({TV:8,VA:5,WP:3,TR:7,TE:6,RT:8,MR:9,SR:3,CE:9,SS:4,PO:7,TD:8,AT:8,ES:4,UI:9,SI:4}) },
+  { name:"Susanne Langer", dates:"1895–1985", keyIdea:"Humans are the symbol-making animals. The mind doesn't merely receive the world; it transforms it through symbol — myth, art, ritual, language all share one root.",
+    p: v({TV:4,VA:6,WP:4,TR:8,TE:7,RT:4,MR:5,SR:4,CE:6,SS:5,PO:5,TD:9,AT:4,ES:6,UI:7,SI:3}) },
+  { name:"Iris Murdoch", dates:"1919–1999", keyIdea:"Morality begins not in choice but in attention. Looking at the world fairly — past one's own ego — is most of what becoming good is.",
+    p: v({TV:6,VA:5,WP:3,TR:6,TE:7,RT:5,MR:7,SR:4,CE:7,SS:4,PO:7,TD:7,AT:6,ES:4,UI:9,SI:5}) },
+  { name:"Philippa Foot", dates:"1920–2010", keyIdea:"Goodness is a kind of natural normativity, like the goodness of an oak that grows straight. Brought virtue ethics back from the dead in the analytic tradition.",
+    p: v({TV:4,VA:6,WP:4,TR:8,TE:7,RT:6,MR:2,SR:5,CE:7,SS:5,PO:8,TD:7,AT:4,ES:5,UI:7,SI:2}) },
+  { name:"Mary Midgley", dates:"1919–2018", keyIdea:"We are not minds in machines but whole animals — and dismissing other animals' inner lives is just as stupid when scientists do it as when theologians do.",
+    p: v({TV:4,VA:7,WP:4,TR:6,TE:9,RT:5,MR:3,SR:6,CE:8,SS:5,PO:8,TD:6,AT:3,ES:8,UI:7,SI:2}) },
+
+  // ── Contemporary women: critique, neuroscience, theology, borderlands ─
+  { name:"Susan Sontag", dates:"1933–2004", keyIdea:"Against interpretation: art's job isn't to mean, it's to be present. Suffering and pleasure both demand attention without translation.",
+    p: v({TV:6,VA:7,WP:6,TR:7,TE:7,RT:3,MR:3,SR:7,CE:6,SS:8,PO:6,TD:7,AT:3,ES:7,UI:7,SI:3}) },
+  { name:"Patricia Churchland", dates:"b. 1943", keyIdea:"Morality runs on neurochemistry — oxytocin, vasopressin, the social brain. Our values are built out of mammalian care, not metaphysics.",
+    p: v({TV:3,VA:6,WP:4,TR:9,TE:9,RT:2,MR:1,SR:7,CE:5,SS:5,PO:6,TD:8,AT:3,ES:8,UI:6,SI:7}) },
+  { name:"Mary Daly", dates:"1928–2010", keyIdea:"Patriarchy is a metaphysics — God-the-father is the father of all hierarchy. The remedy is not reform but Be-ing-with-women, refusing the entire frame.",
+    p: v({TV:6,VA:7,WP:8,TR:6,TE:6,RT:1,MR:7,SR:8,CE:7,SS:9,PO:6,TD:7,AT:5,ES:6,UI:7,SI:3}) },
+  { name:"Gloria Anzaldúa", dates:"1942–2004", keyIdea:"The borderlands — between cultures, languages, sexualities — are where new consciousness happens. La mestiza tolerates contradiction the way water holds two banks.",
+    p: v({TV:6,VA:7,WP:6,TR:5,TE:8,RT:5,MR:7,SR:5,CE:8,SS:7,PO:6,TD:5,AT:3,ES:8,UI:6,SI:5}) },
+
+  // ── Non-Western, decolonial, Asian schools ──────────────────────────
+  { name:"Kwame Nkrumah", dates:"1909–1972", keyIdea:"Consciencism: a philosophy fitted to African personality, fusing Islamic, Christian, and traditional ethics. Pan-African unity is the only path to real sovereignty.",
+    p: v({TV:5,VA:7,WP:8,TR:7,TE:7,RT:6,MR:3,SR:4,CE:9,SS:7,PO:9,TD:6,AT:3,ES:5,UI:8,SI:2}) },
+  { name:"Léopold Sédar Senghor", dates:"1906–2001", keyIdea:"Négritude: emotion is as African as reason is Hellenic, and rhythm is the African way of knowing. A poet's metaphysics that became a political program.",
+    p: v({TV:5,VA:8,WP:5,TR:5,TE:8,RT:7,MR:6,SR:4,CE:9,SS:6,PO:6,TD:5,AT:3,ES:9,UI:7,SI:3}) },
+  { name:"Vine Deloria Jr.", dates:"1933–2005", keyIdea:"Western philosophy abstracts. Indigenous philosophy is local — tied to a specific land, a specific people, a specific kinship with non-human relatives. God is red.",
+    p: v({TV:5,VA:7,WP:6,TR:4,TE:9,RT:9,MR:8,SR:5,CE:10,SS:6,PO:7,TD:5,AT:4,ES:8,UI:4,SI:3}) },
+  { name:"Enrique Dussel", dates:"1934–2023", keyIdea:"Philosophy from the underside. The Other — the colonized, the poor, the excluded — has the epistemic privilege; modernity's so-called universal is parochial.",
+    p: v({TV:7,VA:6,WP:7,TR:7,TE:7,RT:5,MR:4,SR:6,CE:9,SS:6,PO:8,TD:7,AT:5,ES:5,UI:8,SI:3}) },
+  { name:"Linda Tuhiwai Smith", dates:"b. 1950", keyIdea:"Research itself is a colonial verb. Decolonizing methodology means returning the right to ask, frame, and interpret to the people being studied.",
+    p: v({TV:6,VA:6,WP:6,TR:6,TE:8,RT:7,MR:4,SR:7,CE:9,SS:6,PO:8,TD:5,AT:4,ES:6,UI:5,SI:3}) },
+  { name:"Lewis Gordon", dates:"b. 1962", keyIdea:"Existence is dirty work — for those rendered problems by their society, the basic task is asserting that one is a being at all. Black existentialism reframes the canon.",
+    p: v({TV:7,VA:6,WP:7,TR:6,TE:7,RT:4,MR:4,SR:6,CE:8,SS:8,PO:7,TD:7,AT:4,ES:6,UI:7,SI:3}) },
+  { name:"Nishida Kitarō", dates:"1870–1945", keyIdea:"Pure experience precedes the split between subject and object. Reality is a self-aware basho — a 'place' — in which the One and the many continually generate each other.",
+    p: v({TV:5,VA:6,WP:3,TR:6,TE:8,RT:6,MR:9,SR:4,CE:7,SS:4,PO:5,TD:9,AT:5,ES:7,UI:6,SI:8}) },
+  { name:"Watsuji Tetsurō", dates:"1889–1960", keyIdea:"The self is fūdo — climate, place, between-ness. There is no individual prior to the relations they're embedded in; ethics begins between-people, not within them.",
+    p: v({TV:5,VA:6,WP:4,TR:6,TE:8,RT:7,MR:5,SR:4,CE:10,SS:3,PO:8,TD:6,AT:4,ES:8,UI:5,SI:6}) },
+  { name:"Ram Mohan Roy", dates:"1772–1833", keyIdea:"Reform from within: the Upanishads themselves teach a single God beyond all idols. Founded the Brahmo Samaj, fought sati, modernized Hindu ethics.",
+    p: v({TV:5,VA:7,WP:6,TR:8,TE:7,RT:6,MR:6,SR:6,CE:7,SS:6,PO:8,TD:7,AT:4,ES:5,UI:8,SI:4}) },
+
+  // ── Extreme positions: filling vector-space corners ─────────────────
+  { name:"Max Stirner", dates:"1806–1856", keyIdea:"Every cause but my own is a ghost. Humanity, God, the State, Morality — all are spooks demanding you sacrifice yourself. The Unique owes nothing.",
+    p: v({TV:5,VA:7,WP:10,TR:5,TE:6,RT:1,MR:1,SR:8,CE:1,SS:10,PO:7,TD:5,AT:2,ES:6,UI:1,SI:3}) },
+  { name:"Charles Fourier", dates:"1772–1837", keyIdea:"The passions are not to be repressed but mathematically arranged into harmony. A properly ordered phalanstery would multiply pleasure rather than scarcity.",
+    p: v({TV:3,VA:10,WP:6,TR:6,TE:5,RT:1,MR:4,SR:4,CE:8,SS:5,PO:7,TD:7,AT:1,ES:9,UI:7,SI:2}) },
+  { name:"Joseph de Maistre", dates:"1753–1821", keyIdea:"Counter-Enlightenment. Constitutions are written by tradition and blood, not theorists. The executioner is the keystone of society. Throne and altar restored, or chaos.",
+    p: v({TV:8,VA:3,WP:5,TR:3,TE:4,RT:10,MR:7,SR:1,CE:10,SS:2,PO:7,TD:5,AT:6,ES:3,UI:4,SI:2}) },
+  { name:"Pyotr Kropotkin", dates:"1842–1921", keyIdea:"Mutual aid, not competition, is what made the species. Anarchism is not chaos but the arrangement free communes naturally fall into when nobody owns the land.",
+    p: v({TV:4,VA:7,WP:5,TR:7,TE:9,RT:3,MR:2,SR:5,CE:10,SS:7,PO:9,TD:6,AT:4,ES:6,UI:8,SI:2}) },
+  { name:"Émile Cioran", dates:"1911–1995", keyIdea:"To be born is the original disaster. Lucidity is the gift you'd return if you could. Yet here, in the failure of every consolation, something honest remains.",
+    p: v({TV:10,VA:2,WP:3,TR:5,TE:8,RT:3,MR:4,SR:9,CE:2,SS:7,PO:5,TD:6,AT:5,ES:5,UI:3,SI:6}) },
+  { name:"Sextus Empiricus", dates:"~160–210", keyIdea:"For every argument, an equally compelling counter-argument. Suspending judgment (epoché) brings ataraxia — undisturbedness — by default.",
+    p: v({TV:4,VA:5,WP:2,TR:3,TE:8,RT:4,MR:1,SR:10,CE:5,SS:5,PO:7,TD:5,AT:3,ES:5,UI:3,SI:5}) },
+  { name:"David Lewis", dates:"1941–2001", keyIdea:"Modal realism: every possible world exists, as concretely as ours. Counterfactuals aren't metaphors — they describe other equally real universes.",
+    p: v({TV:3,VA:5,WP:3,TR:9,TE:5,RT:2,MR:3,SR:5,CE:4,SS:5,PO:3,TD:10,AT:4,ES:2,UI:7,SI:4}) },
+  { name:"Saul Kripke", dates:"1940–2022", keyIdea:"Names refer through a chain of borrowing back to an original baptism, not through descriptions. Necessary truths can still be discovered empirically.",
+    p: v({TV:3,VA:5,WP:3,TR:9,TE:5,RT:3,MR:3,SR:4,CE:4,SS:5,PO:3,TD:10,AT:4,ES:2,UI:8,SI:3}) },
+  { name:"Karl Popper", dates:"1902–1994", keyIdea:"A theory that can't be falsified isn't science. The open society is the one that lets its rulers be replaced without bloodshed; closed societies always claim history is on their side.",
+    p: v({TV:5,VA:6,WP:5,TR:8,TE:9,RT:2,MR:1,SR:9,CE:6,SS:7,PO:7,TD:7,AT:3,ES:5,UI:8,SI:2}) },
+  { name:"Simone Weil", dates:"1909–1943", keyIdea:"Affliction is the soul stripped down. Attention is a form of prayer. The just society puts limits on power, not because power is wrong but because it crushes attention.",
+    p: v({TV:9,VA:3,WP:1,TR:5,TE:7,RT:7,MR:10,SR:4,CE:9,SS:4,PO:7,TD:7,AT:10,ES:3,UI:10,SI:6}) },
+  { name:"Rosa Luxemburg", dates:"1871–1919", keyIdea:"Revolution must be democratic in form, not just in name. The mass strike is the spontaneous classroom of a class learning to govern itself. Murdered for refusing the party-line shortcut.",
+    p: v({TV:6,VA:7,WP:8,TR:7,TE:7,RT:2,MR:1,SR:5,CE:10,SS:6,PO:9,TD:6,AT:4,ES:5,UI:9,SI:2}) },
+  { name:"Wilfrid Sellars", dates:"1912–1989", keyIdea:"There is no innocent given — every observation is already conceptual. Empiricism's foundational myth has to be replaced with the space of reasons.",
+    p: v({TV:4,VA:5,WP:3,TR:9,TE:5,RT:3,MR:2,SR:7,CE:5,SS:5,PO:4,TD:9,AT:4,ES:3,UI:7,SI:4}) },
+  { name:"Robert Nozick", dates:"1938–2002", keyIdea:"If you start with self-ownership and voluntary transactions, the only legitimate state is the minimal one. Anything more is forced redistribution.",
+    p: v({TV:4,VA:6,WP:7,TR:8,TE:6,RT:3,MR:2,SR:5,CE:3,SS:9,PO:7,TD:7,AT:3,ES:5,UI:6,SI:2}) },
+  { name:"Mark Fisher", dates:"1968–2017", keyIdea:"Capitalist realism: the inability to imagine any alternative isn't a feature of reality, it's a symptom of late capitalism's cultural enclosure of the future.",
+    p: v({TV:8,VA:5,WP:5,TR:7,TE:7,RT:3,MR:4,SR:7,CE:7,SS:6,PO:7,TD:7,AT:4,ES:6,UI:6,SI:3}) },
+  { name:"Boethius", dates:"~480–524", keyIdea:"Wrote The Consolation of Philosophy in prison awaiting execution. Fortune is a wheel; happiness was never in the things she gave you. Philosophy as Lady-comforter.",
+    p: v({TV:8,VA:5,WP:3,TR:8,TE:5,RT:7,MR:7,SR:4,CE:5,SS:6,PO:7,TD:8,AT:7,ES:3,UI:8,SI:4}) },
+  { name:"Franz Rosenzweig", dates:"1886–1929", keyIdea:"Rejected the Hegelian totality. God, World, Self are three irreducibles, and they relate through Creation, Revelation, Redemption — a Star of David at the center of philosophy.",
+    p: v({TV:7,VA:6,WP:3,TR:6,TE:6,RT:8,MR:8,SR:4,CE:8,SS:5,PO:6,TD:8,AT:5,ES:5,UI:7,SI:3}) },
+  { name:"Gottlob Frege", dates:"1848–1925", keyIdea:"Founded modern logic. Sense and reference: 'morning star' and 'evening star' refer to the same Venus but mean different things. Mathematics is reducible to logic.",
+    p: v({TV:3,VA:5,WP:3,TR:10,TE:4,RT:3,MR:1,SR:5,CE:3,SS:5,PO:3,TD:10,AT:5,ES:1,UI:9,SI:2}) }
 ];
 
 /* ----- Reading list, keyed by archetype name ----- */
+/* ----- Quotes per archetype: 3–4 short quotes that capture the archetype's
+   spirit in voices it would recognize. Hand-picked, not auto-generated. ----- */
+const QUOTES = {
+  "The Cartographer": [
+    { text: "We are what we repeatedly do. Excellence, then, is not an act, but a habit.", source: "Aristotle (paraphrased from Will Durant)" },
+    { text: "It is the mark of an educated mind to be able to entertain a thought without accepting it.", source: "Aristotle, Metaphysics" },
+    { text: "The whole is greater than the sum of its parts.", source: "Aristotle, Metaphysics" },
+    { text: "Knowing yourself is the beginning of all wisdom.", source: "Aristotle" }
+  ],
+  "The Keel": [
+    { text: "You have power over your mind — not outside events. Realize this, and you will find strength.", source: "Marcus Aurelius, Meditations" },
+    { text: "Waste no more time arguing what a good man should be. Be one.", source: "Marcus Aurelius, Meditations" },
+    { text: "It's not what happens to you, but how you react to it that matters.", source: "Epictetus, Enchiridion" },
+    { text: "How long are you going to wait before you demand the best of yourself?", source: "Epictetus, Discourses" }
+  ],
+  "The Threshold": [
+    { text: "Whereof one cannot speak, thereof one must be silent.", source: "Wittgenstein, Tractatus" },
+    { text: "Form is emptiness; emptiness is form.", source: "Heart Sutra" },
+    { text: "Before enlightenment: chop wood, carry water. After enlightenment: chop wood, carry water.", source: "Zen aphorism" },
+    { text: "The eye through which I see God is the same eye through which God sees me.", source: "Meister Eckhart" }
+  ],
+  "The Pilgrim": [
+    { text: "One must imagine Sisyphus happy.", source: "Camus, The Myth of Sisyphus" },
+    { text: "In the depth of winter, I finally learned that within me there lay an invincible summer.", source: "Camus, Return to Tipasa" },
+    { text: "Man is condemned to be free.", source: "Sartre, Being and Nothingness" },
+    { text: "I rebel — therefore we exist.", source: "Camus, The Rebel" }
+  ],
+  "The Touchstone": [
+    { text: "A wise man proportions his belief to the evidence.", source: "Hume, Enquiry Concerning Human Understanding" },
+    { text: "Reason is, and ought only to be, the slave of the passions.", source: "Hume, A Treatise of Human Nature" },
+    { text: "Custom is the great guide of human life.", source: "Hume" },
+    { text: "All knowledge degenerates into probability.", source: "Hume, Treatise" }
+  ],
+  "The Hearth": [
+    { text: "When you know a thing, to hold that you know it; and when you do not know a thing, to allow that you do not know it — this is knowledge.", source: "Confucius, Analects" },
+    { text: "The superior man thinks always of virtue; the common man thinks of comfort.", source: "Confucius, Analects" },
+    { text: "Do not impose on others what you yourself do not desire.", source: "Confucius, Analects" },
+    { text: "I am because we are.", source: "Ubuntu philosophy" }
+  ],
+  "The Forge": [
+    { text: "The only freedom which deserves the name is that of pursuing our own good in our own way.", source: "Mill, On Liberty" },
+    { text: "Better to be a human being dissatisfied than a pig satisfied.", source: "Mill, Utilitarianism" },
+    { text: "If we would understand human action, we must conceive of human beings as authors of their own lives.", source: "Mill" },
+    { text: "He who knows only his own side of the case knows little of that.", source: "Mill, On Liberty" }
+  ],
+  "The Hammer": [
+    { text: "He who has a why to live for can bear almost any how.", source: "Nietzsche, Twilight of the Idols" },
+    { text: "Become who you are.", source: "Nietzsche (after Pindar)" },
+    { text: "And those who were seen dancing were thought to be insane by those who could not hear the music.", source: "attributed to Nietzsche" },
+    { text: "What does not kill me makes me stronger.", source: "Nietzsche, Twilight of the Idols" }
+  ],
+  "The Garden": [
+    { text: "Not what we have, but what we enjoy, constitutes our abundance.", source: "Epicurus" },
+    { text: "It is impossible to live a pleasant life without living wisely and well and justly.", source: "Epicurus, Principal Doctrines" },
+    { text: "Of all the things which wisdom acquires to produce the blessedness of the complete life, by far the greatest is the possession of friendship.", source: "Epicurus" },
+    { text: "Death is nothing to us; for that which has been dissolved into its elements experiences no sensation.", source: "Epicurus, Letter to Menoeceus" }
+  ],
+  "The Lighthouse": [
+    { text: "The unexamined life is not worth living.", source: "Plato, Apology (Socrates)" },
+    { text: "At the touch of love, everyone becomes a poet.", source: "Plato, Symposium" },
+    { text: "Beauty of style and harmony and grace and good rhythm depend on simplicity.", source: "Plato, Republic" },
+    { text: "Wonder is the beginning of wisdom.", source: "Socrates, in Plato's Theaetetus" }
+  ]
+};
+
 const READING = {
   "The Cartographer": [
     { kind:"Doorway · 12 min video", title:"Aristotle on the Good Life", note:"Crash Course Philosophy on virtue ethics and human flourishing." },
@@ -4200,6 +4386,8 @@ const HOME_I18N = {
   "nav.debate":        { en: "Simulated debate", es: "Debate simulado", fr: "Débat simulé", pt: "Debate simulado", ru: "Симулированный диспут", zh: "模拟辩论", ja: "思考実験的対話", ko: "가상 토론" },
   "nav.about":         { en: "About", es: "Acerca de", fr: "À propos", pt: "Sobre", ru: "О проекте", zh: "关于", ja: "このアプリについて", ko: "소개" },
   "nav.archetypes":    { en: "Archetypes", es: "Arquetipos", fr: "Archétypes", pt: "Arquétipos", ru: "Архетипы", zh: "原型", ja: "アーキタイプ", ko: "유형" },
+  "nav.search":        { en: "Search minds", es: "Buscar mentes", fr: "Rechercher des esprits", pt: "Buscar mentes", ru: "Поиск умов", zh: "寻找思想者", ja: "ほかの人を探す", ko: "다른 사람 찾기" },
+  "nav.exercises":     { en: "Exercises", es: "Ejercicios", fr: "Exercices", pt: "Exercícios", ru: "Упражнения", zh: "练习", ja: "エクササイズ", ko: "수련" },
 
   "home.version_banner": {
     en: "<strong>Mull v0.9</strong> — early build. The map, the questions, the archetypes are all still settling into shape.",
@@ -4254,22 +4442,62 @@ const HOME_I18N = {
   "home.promise_nosignup": { en: "<strong>No signup needed.</strong> An optional account saves your map and tracks how it shifts.", es: "<strong>Sin registro obligatorio.</strong> Una cuenta opcional guarda tu mapa y registra cómo cambia.", fr: "<strong>Aucune inscription requise.</strong> Un compte optionnel sauvegarde ta carte et suit son évolution.", pt: "<strong>Sem cadastro obrigatório.</strong> Uma conta opcional guarda seu mapa e acompanha como ele muda.", ru: "<strong>Регистрация не нужна.</strong> Необязательный аккаунт сохранит вашу карту и проследит, как она меняется.", zh: "<strong>无需注册。</strong>账户是可选的——注册后会保存你的地图，并记录它的变化。", ja: "<strong>登録は不要。</strong>任意のアカウントを作れば、マップを保存して変化を追えます。", ko: "<strong>가입 필수 아님.</strong> 원하시면 계정을 만들어 지도를 저장하고 변화를 추적할 수 있습니다." },
   "home.promise_curious":  { en: "<strong>For the curious, not the credentialed.</strong> No prior philosophy required.", es: "<strong>Para curiosos, no para credencialistas.</strong> No hace falta saber filosofía.", fr: "<strong>Pour les curieux, pas pour les diplômés.</strong> Aucune connaissance préalable en philosophie n'est requise.", pt: "<strong>Para os curiosos, não para os credenciados.</strong> Não é preciso saber filosofia antes.", ru: "<strong>Для любопытных, а не для обладателей дипломов.</strong> Никаких предварительных знаний по философии не требуется.", zh: "<strong>给好奇者，而不是给科班出身者。</strong>无需任何哲学背景。", ja: "<strong>資格ではなく、好奇心のための。</strong>哲学の予備知識はいりません。", ko: "<strong>학위가 아니라 호기심을 위한 곳.</strong> 미리 알아둘 철학 지식은 필요하지 않습니다." },
 
+  // Archetype names + blurbs — short labels seen across the gallery,
+  // archetype detail page, and results page. Worth careful translation.
+  "arch.cartographer.name": { en: "The Cartographer", es: "El Cartógrafo", fr: "Le Cartographe", pt: "O Cartógrafo", ru: "Картограф", zh: "制图师", ja: "地図描き", ko: "지도 만드는 사람" },
+  "arch.cartographer.blurb": { en: "The patient mapper of how things fit together. You trust that careful, systematic thinking reaches lasting truth — and that the world rewards the people willing to do the work.", es: "El cartógrafo paciente del modo en que las cosas encajan. Confías en que el pensamiento cuidadoso y sistemático alcanza una verdad duradera — y en que el mundo recompensa a quienes hacen el trabajo.", fr: "Le cartographe patient de la manière dont les choses s'imbriquent. Tu fais confiance à une pensée soignée et systématique pour atteindre une vérité durable — et tu crois que le monde récompense ceux qui font le travail.", pt: "O cartógrafo paciente de como as coisas se encaixam. Você confia que o pensamento cuidadoso e sistemático alcança uma verdade duradoura — e que o mundo recompensa quem faz o trabalho.", ru: "Терпеливый картограф того, как всё связано. Вы верите, что внимательное, системное мышление приводит к устойчивой истине — и что мир вознаграждает тех, кто готов работать.", zh: "耐心地把万事万物彼此勾连起来的制图者。你相信细致、有系统的思考能抵达持久的真理 —— 也相信世界会回馈那些愿意做功夫的人。", ja: "ものごとが互いにどう噛み合うかを、辛抱強く描き出す人。丁寧で体系的な思考が長持ちする真理に届くこと、そして世界はその労を惜しまぬ人に応えること、を信頼している。", ko: "사물들이 어떻게 맞물려 있는지를 끈기 있게 지도화하는 사람. 세심하고 체계적인 사고가 오래가는 진리에 닿는다고 믿고, 세상은 그 수고를 기꺼이 하는 사람에게 응답한다고 믿습니다." },
+  "arch.keel.name": { en: "The Keel", es: "La Quilla", fr: "La Quille", pt: "A Quilha", ru: "Киль", zh: "龙骨", ja: "竜骨", ko: "용골" },
+  "arch.keel.blurb": { en: "What keeps the boat upright in any storm. You meet hardship without flinching, value discipline over indulgence, and trust that the work is in how you face what happens — not in escaping it.", es: "Lo que mantiene el barco erguido en cualquier tormenta. Enfrentas la dificultad sin pestañear, valoras la disciplina sobre la indulgencia, y confías en que la tarea está en cómo afrontas lo que ocurre — no en escapar de ello.", fr: "Ce qui tient le bateau droit dans toutes les tempêtes. Tu affrontes l'épreuve sans broncher, tu privilégies la discipline à l'indulgence, et tu fais confiance au fait que le travail est dans ta manière de tenir face à ce qui arrive — pas dans la fuite.", pt: "O que mantém o barco em pé em qualquer tempestade. Você encara a adversidade sem recuar, valoriza a disciplina mais que a indulgência, e confia que o trabalho está em como você enfrenta o que acontece — não em escapar.", ru: "То, что держит лодку прямо в любую бурю. Вы встречаете тяготы не дрогнув, цените дисциплину выше потакания, верите, что суть — в том, как держаться, а не в том, чтобы бежать.", zh: "在任何风暴中都让船保持挺立的那块龙骨。你面对艰难不退缩，看重纪律胜过放纵，相信功夫不在逃避，而在如何承受眼前发生的事。", ja: "どんな嵐のなかでも船を直立させておくもの。困難から目をそらさず、放縦より規律を重んじ、起きたことから逃げるのではなく、それにどう向き合うかにこそ仕事があると信じている。", ko: "어떤 폭풍에서도 배를 똑바로 세워두는 부분. 어려움을 마주하기를 피하지 않고, 방종보다 규율을 중히 여기며, 일은 일어난 일에서 도망치는 데 있지 않고 그것을 어떻게 마주하느냐에 있다고 믿습니다." },
+  "arch.threshold.name": { en: "The Threshold", es: "El Umbral", fr: "Le Seuil", pt: "O Limiar", ru: "Порог", zh: "门槛", ja: "閾", ko: "문턱" },
+  "arch.threshold.blurb": { en: "You stand at the edge of what language can hold. You sense that the surface of things isn't the whole story — and that there's freedom in seeing through what most people clutch tightly.", es: "Te paras en el borde de lo que el lenguaje puede contener. Intuyes que la superficie de las cosas no es toda la historia — y que hay libertad en ver a través de aquello a lo que la mayoría se aferra.", fr: "Tu te tiens au bord de ce que le langage peut contenir. Tu pressens que la surface des choses n'est pas toute l'histoire — et qu'il y a une liberté à voir à travers ce que la plupart serrent fort.", pt: "Você fica na beira do que a linguagem consegue conter. Você pressente que a superfície das coisas não é a história inteira — e que há liberdade em ver através daquilo que a maioria agarra com força.", ru: "Вы стоите на краю того, что способен удержать язык. Вы чуете, что поверхность вещей — не вся история, и что есть свобода в том, чтобы видеть сквозь то, за что большинство держится крепко.", zh: "你站在语言所能容纳之物的边缘。你感到事物的表层并非全部 —— 而看穿大多数人紧握之物，本身就是一种自由。", ja: "ことばが抱えうるものの縁に立っている。ものごとの表層が全てではないと感じ、多くの人が握りしめているものを透かして見ることに、自由があると知っている。", ko: "언어가 담을 수 있는 것의 가장자리에 서 있는 사람. 사물의 표면이 전부가 아님을 직감하고, 사람들 대부분이 꼭 쥐고 있는 것을 꿰뚫어 보는 데에 자유가 있다고 느낍니다." },
+  "arch.pilgrim.name": { en: "The Pilgrim", es: "El Peregrino", fr: "Le Pèlerin", pt: "O Peregrino", ru: "Паломник", zh: "朝圣者", ja: "巡礼者", ko: "순례자" },
+  "arch.pilgrim.blurb": { en: "You walk alone, carrying your own meaning across uncertain ground. You're honest about absurdity but you keep moving anyway. Belonging matters less to you than the integrity of the journey.", es: "Caminas solo, cargando tu propio sentido por terreno incierto. Eres honesto sobre lo absurdo, pero sigues avanzando. Pertenecer te importa menos que la integridad del camino.", fr: "Tu marches seul, portant ton propre sens sur un terrain incertain. Tu es honnête face à l'absurde mais tu avances quand même. L'appartenance compte moins, pour toi, que l'intégrité du chemin.", pt: "Você caminha sozinho, carregando seu próprio sentido por um terreno incerto. É honesto sobre o absurdo, mas continua andando. Pertencer importa menos do que a integridade da jornada.", ru: "Вы идёте один, неся свой смысл по неровной земле. Честны с абсурдом — и всё равно идёте. Принадлежность для вас важит меньше, чем целостность пути.", zh: "你独自前行，把自己的意义带过一片不可靠的土地。你诚实地面对荒谬，却依旧继续走。归属感对你而言，比不上旅途的完整。", ja: "ひとりで歩き、自分自身の意味を不確かな土地のうえで運んでいく。不条理に正直でありながら、それでも進み続ける。あなたにとっては、所属より旅の誠実さのほうが重い。", ko: "홀로 걷는다. 불확실한 땅 위에 자신의 의미를 짊어진 채. 부조리에 대해 정직하지만, 어쨌든 계속 간다. 어딘가에 속하는 것보다 여정의 진실됨이 더 중요합니다." },
+  "arch.touchstone.name": { en: "The Touchstone", es: "La Piedra de Toque", fr: "La Pierre de Touche", pt: "A Pedra de Toque", ru: "Пробирный камень", zh: "试金石", ja: "試金石", ko: "시금석" },
+  "arch.touchstone.blurb": { en: "The old testing-stone for gold. You separate what's true from what's merely claimed. You're suspicious of grand systems and trust what you can actually see, hold, and verify.", es: "La antigua piedra para probar el oro. Separas lo verdadero de lo meramente afirmado. Desconfías de los grandes sistemas y confías en lo que de verdad puedes ver, sostener y verificar.", fr: "La vieille pierre pour tester l'or. Tu sépares le vrai du simplement déclaré. Tu te méfies des grands systèmes et tu fais confiance à ce que tu peux réellement voir, tenir, vérifier.", pt: "A velha pedra de teste do ouro. Você separa o que é verdadeiro do que é apenas alegado. Desconfia de grandes sistemas e confia no que você pode de fato ver, segurar e verificar.", ru: "Старый камень для проверки золота. Вы отделяете истинное от лишь заявленного. С подозрением относитесь к великим системам и доверяете тому, что можно увидеть, потрогать, проверить.", zh: "古时辨金的试金石。你把真实从仅仅被声称的东西里挑出来。你对宏大体系心存戒备，更信任那些你能亲眼看到、亲手把握、亲自验证的东西。", ja: "金を試すための古い石。語られていることと、ほんとうにそうであることとを切り分ける。大きな体系には用心深く、自分で見て、触れて、確かめられるものを信頼する。", ko: "금을 가려내던 옛 시금석. 진짜와 그저 주장된 것을 가려냅니다. 거대한 체계에 의심을 두고, 직접 보고 만지고 확인할 수 있는 것을 신뢰합니다." },
+  "arch.hearth.name": { en: "The Hearth", es: "El Hogar", fr: "Le Foyer", pt: "A Lareira", ru: "Очаг", zh: "炉灶", ja: "かまど", ko: "화로" },
+  "arch.hearth.blurb": { en: "The warm gathering-place. You're the holder of what binds people across generations. You believe roots matter, that we owe something to those who came before — and to those who will come after.", es: "El lugar cálido donde la gente se reúne. Eres quien guarda lo que ata a las personas a través de las generaciones. Crees que las raíces importan, que debemos algo a quienes nos precedieron — y a quienes vendrán después.", fr: "Le foyer chaud où l'on se rassemble. Tu portes ce qui relie les gens à travers les générations. Tu crois que les racines comptent, que nous devons quelque chose à ceux qui sont venus avant — et à ceux qui viendront.", pt: "O lugar quente onde as pessoas se reúnem. Você guarda o que une as pessoas através das gerações. Acredita que raízes importam, que devemos algo a quem veio antes — e a quem virá depois.", ru: "Тёплое место, у которого собираются. Вы — хранитель того, что связывает людей через поколения. Вы верите, что корни важны, что мы должны что-то тем, кто был до нас, — и тем, кто будет после.", zh: "温暖的聚处。你是那种把人世代相连的事物的守护者。你相信根脉重要 —— 我们对来时之人有所亏欠，对将来之人也是。", ja: "人が集まる、温かい場所。世代を越えて人をつなぐものを抱えている。根は大切で、先に来た人にも、これから来る人にも、私たちは何かを負っている、と信じている。", ko: "사람이 모이는 따뜻한 자리. 세대를 가로질러 사람을 잇는 것을 지켜내는 사람. 뿌리는 중요하다고 믿고, 우리에게는 앞서 산 이들에게도, 뒤에 올 이들에게도 갚을 것이 있다고 여깁니다." },
+  "arch.forge.name": { en: "The Forge", es: "La Fragua", fr: "La Forge", pt: "A Forja", ru: "Кузница", zh: "锻炉", ja: "鍛冶場", ko: "대장간" },
+  "arch.forge.blurb": { en: "You shape what comes next from raw material. You build better worlds — usually for others as much as yourself. Where others see the way things are, you see what they could become.", es: "Das forma a lo que viene a partir de la materia bruta. Construyes mundos mejores — normalmente tanto para otros como para ti. Donde otros ven cómo son las cosas, tú ves en qué podrían convertirse.", fr: "Tu mets en forme ce qui vient à partir de la matière brute. Tu bâtis des mondes meilleurs — souvent autant pour les autres que pour toi. Là où d'autres voient les choses telles qu'elles sont, tu vois ce qu'elles pourraient devenir.", pt: "Você dá forma ao que vem a seguir a partir da matéria bruta. Constrói mundos melhores — geralmente tanto para os outros quanto para si mesmo. Onde outros veem como as coisas são, você vê o que elas poderiam se tornar.", ru: "Вы лепите то, что наступает следом, из исходного материала. Строите лучшие миры — обычно столько же для других, сколько для себя. Там, где другие видят «как есть», вы видите «чем это могло бы стать».", zh: "你从原料中塑造出未来。你为他人和自己一道，建造更好的世界。别人看到的是事情现在的样子，你看到的是它们可能成为的样子。", ja: "原料から、これからのかたちを打ち出していく人。多くの場合、自分のためと同じくらい他者のために、より良い世界を建てる。他の人がものごとを「いまある姿」で見るところを、あなたは「なりうる姿」で見ている。", ko: "원재료에서 다음에 올 것을 빚어내는 사람. 더 나은 세계를 짓는다 — 자신을 위해서만큼 남을 위해서도. 남들이 사물의 현재 모습을 볼 때, 당신은 그것이 무엇이 될 수 있는지를 봅니다." },
+  "arch.hammer.name": { en: "The Hammer", es: "El Martillo", fr: "Le Marteau", pt: "O Martelo", ru: "Молот", zh: "锤子", ja: "槌", ko: "망치" },
+  "arch.hammer.blurb": { en: "Nietzsche's own self-description: \"philosophizing with a hammer.\" You break what no longer serves. You're suspicious of inherited frames and trust your own judgment over the crowd's.", es: "La autodescripción del propio Nietzsche: «filosofar con el martillo». Quiebras lo que ya no sirve. Desconfías de los marcos heredados y confías en tu propio juicio antes que en el de la multitud.", fr: "Auto-portrait nietzschéen : « philosopher au marteau ». Tu brises ce qui ne sert plus. Tu te méfies des cadres hérités et tu fais confiance à ton jugement avant celui de la foule.", pt: "A autodescrição do próprio Nietzsche: «filosofar a marteladas». Você quebra o que já não serve. Desconfia de molduras herdadas e confia mais no próprio julgamento do que no da multidão.", ru: "Автопортрет самого Ницше: «философствовать молотом». Вы разбиваете то, что уже не служит. Подозрительны к унаследованным рамкам и доверяете своему суждению больше, чем суждению толпы.", zh: "尼采自己的说法：「用锤子从事哲学」。你打碎那些已不再合用的东西。对祖传的框架心存戒备，相信自己的判断胜过众人的判断。", ja: "ニーチェの自己描写、「ハンマーで哲学する」。役目を終えたものを壊していく人。受け継いだ枠組みを疑い、群衆の判断より自分の判断を信頼する。", ko: "니체 자신의 표현, \"망치로 철학하기\". 더는 쓸모없는 것을 부숩니다. 물려받은 틀을 의심하고, 군중의 판단보다 자신의 판단을 더 신뢰합니다." },
+  "arch.garden.name": { en: "The Garden", es: "El Jardín", fr: "Le Jardin", pt: "O Jardim", ru: "Сад", zh: "园圃", ja: "庭", ko: "정원" },
+  "arch.garden.blurb": { en: "Epicurus literally taught in his garden. You tend the embodied, sensory, vital world. You trust pleasure as a guide and don't apologize for valuing the good things this life offers.", es: "Epicuro enseñaba literalmente en su jardín. Cuidas el mundo encarnado, sensorial y vital. Confías en el placer como guía y no te disculpas por valorar las cosas buenas que ofrece esta vida.", fr: "Épicure enseignait littéralement dans son jardin. Tu prends soin du monde incarné, sensoriel, vivant. Tu fais confiance au plaisir comme guide et tu ne t'excuses pas d'apprécier les bonnes choses que cette vie offre.", pt: "Epicuro ensinava literalmente em seu jardim. Você cuida do mundo encarnado, sensorial, vital. Confia no prazer como guia e não pede desculpas por valorizar as coisas boas que esta vida oferece.", ru: "Эпикур буквально учил в своём саду. Вы заботитесь о телесном, чувственном, живом мире. Доверяете удовольствию как ориентиру и не извиняетесь за то, что цените хорошие вещи этой жизни.", zh: "伊壁鸠鲁实实在在地在他的花园里授课。你照看那有形、感性、富有生命气息的世界。你以快乐为指引，并不为珍视此生的好东西而道歉。", ja: "エピクロスは文字どおり自分の庭で教えていた。身体・感覚・生の世界を耕す人。喜びを導き手として信頼し、この人生が差し出す善きものを大切にすることに、いい訳をしない。", ko: "에피쿠로스는 문자 그대로 자신의 정원에서 가르쳤습니다. 몸과 감각과 생기 있는 세계를 보살핍니다. 즐거움을 안내자로 신뢰하고, 이 삶이 주는 좋은 것들을 소중히 여기는 일에 변명하지 않습니다." },
+  "arch.lighthouse.name": { en: "The Lighthouse", es: "El Faro", fr: "Le Phare", pt: "O Farol", ru: "Маяк", zh: "灯塔", ja: "灯台", ko: "등대" },
+  "arch.lighthouse.blurb": { en: "You see the eternal pattern beyond the immediate surface. You're a lover of forms — of justice itself, beauty itself, truth itself. The visible world is only the entry point.", es: "Ves el patrón eterno más allá de la superficie inmediata. Eres amante de las formas — de la justicia misma, la belleza misma, la verdad misma. El mundo visible es solo el punto de entrada.", fr: "Tu vois le motif éternel au-delà de la surface immédiate. Tu es amoureux des formes — de la justice elle-même, de la beauté elle-même, de la vérité elle-même. Le monde visible n'est qu'une porte d'entrée.", pt: "Você vê o padrão eterno para além da superfície imediata. É amante das formas — da justiça em si, da beleza em si, da verdade em si. O mundo visível é apenas a porta de entrada.", ru: "Вы видите вечный узор за непосредственной поверхностью. Вы любите формы — саму справедливость, саму красоту, саму истину. Видимый мир — лишь вход.", zh: "你看见眼前表层之外那永恒的图样。你爱「形相」 —— 正义本身、美本身、真理本身。可见的世界，只是入口。", ja: "目の前の表層の向こうにある永遠のパターンを見る人。形相を愛する者 — 正義そのもの、美そのもの、真理そのもの。見える世界はその入口にすぎない。", ko: "당장의 표면 너머에 있는 영원한 패턴을 봅니다. 형상을 사랑하는 사람 — 정의 그 자체, 아름다움 그 자체, 진리 그 자체. 보이는 세계는 입구일 뿐입니다." },
+
+  // Dimension names — visible in the trajectory + results sections
+  "dim.TV.name": { en: "Tragic Vision", es: "Visión trágica", fr: "Vision tragique", pt: "Visão trágica", ru: "Трагическое видение", zh: "悲剧视域", ja: "悲劇的視座", ko: "비극적 시선" },
+  "dim.VA.name": { en: "Vital Affirmation", es: "Afirmación vital", fr: "Affirmation vitale", pt: "Afirmação vital", ru: "Жизнеутверждение", zh: "生命肯定", ja: "生命の肯定", ko: "생명의 긍정" },
+  "dim.WP.name": { en: "Will to Power", es: "Voluntad de poder", fr: "Volonté de puissance", pt: "Vontade de potência", ru: "Воля к власти", zh: "权力意志", ja: "力への意志", ko: "권력에의 의지" },
+  "dim.TR.name": { en: "Trust in Reason", es: "Confianza en la razón", fr: "Confiance en la raison", pt: "Confiança na razão", ru: "Доверие к разуму", zh: "对理性的信任", ja: "理性への信頼", ko: "이성에 대한 신뢰" },
+  "dim.TE.name": { en: "Trust in Experience", es: "Confianza en la experiencia", fr: "Confiance en l'expérience", pt: "Confiança na experiência", ru: "Доверие к опыту", zh: "对经验的信任", ja: "経験への信頼", ko: "경험에 대한 신뢰" },
+  "dim.RT.name": { en: "Reverence for Tradition", es: "Reverencia por la tradición", fr: "Respect de la tradition", pt: "Reverência pela tradição", ru: "Почтение к традиции", zh: "对传统的敬重", ja: "伝統への敬意", ko: "전통에 대한 경의" },
+  "dim.MR.name": { en: "Mystical Receptivity", es: "Receptividad mística", fr: "Réceptivité mystique", pt: "Receptividade mística", ru: "Мистическая восприимчивость", zh: "神秘感受力", ja: "神秘への感受性", ko: "신비에 대한 수용성" },
+  "dim.SR.name": { en: "Skeptical Reflex", es: "Reflejo escéptico", fr: "Réflexe sceptique", pt: "Reflexo cético", ru: "Скептический рефлекс", zh: "怀疑反射", ja: "懐疑の反射", ko: "회의의 반사" },
+  "dim.CE.name": { en: "Communal Embeddedness", es: "Arraigo comunitario", fr: "Enracinement communautaire", pt: "Enraizamento comunitário", ru: "Укоренённость в общине", zh: "群体嵌入", ja: "共同体への根づき", ko: "공동체에의 뿌리내림" },
+  "dim.SS.name": { en: "Sovereign Self", es: "Yo soberano", fr: "Soi souverain", pt: "Eu soberano", ru: "Суверенное я", zh: "自主的自我", ja: "主権ある自己", ko: "주권적 자기" },
+  "dim.PO.name": { en: "Practical Orientation", es: "Orientación práctica", fr: "Orientation pratique", pt: "Orientação prática", ru: "Практическая ориентация", zh: "实践取向", ja: "実践への向き", ko: "실천적 지향" },
+  "dim.TD.name": { en: "Theoretical Drive", es: "Impulso teórico", fr: "Élan théorique", pt: "Impulso teórico", ru: "Теоретическое влечение", zh: "理论驱动", ja: "理論への衝動", ko: "이론적 추동" },
+  "dim.AT.name": { en: "Ascetic Tendency", es: "Tendencia ascética", fr: "Tendance ascétique", pt: "Tendência ascética", ru: "Аскетическая склонность", zh: "禁欲倾向", ja: "禁欲への傾き", ko: "금욕적 경향" },
+  "dim.ES.name": { en: "Embodied Sensibility", es: "Sensibilidad encarnada", fr: "Sensibilité incarnée", pt: "Sensibilidade encarnada", ru: "Воплощённая чувствительность", zh: "具身感受", ja: "身体に宿る感受性", ko: "몸에 깃든 감수성" },
+  "dim.UI.name": { en: "Universalist Impulse", es: "Impulso universalista", fr: "Impulsion universaliste", pt: "Impulso universalista", ru: "Универсалистский порыв", zh: "普遍主义冲动", ja: "普遍主義への衝動", ko: "보편주의의 충동" },
+  "dim.SI.name": { en: "Self as Illusion", es: "El yo como ilusión", fr: "Le moi comme illusion", pt: "O eu como ilusão", ru: "«Я» как иллюзия", zh: "自我即幻象", ja: "自己は幻", ko: "자아는 환상" },
+
   "home.translation_notice": {
-    en: "Some pages — the quiz, the archetypes, the philosopher database, and the About page — are still in English. Translation of the deeper content is in progress.",
-    es: "Algunas páginas — el cuestionario, los arquetipos, la base de pensadores y la página Acerca de — siguen en inglés. La traducción del contenido más extenso está en curso.",
-    fr: "Certaines pages — le questionnaire, les archétypes, la base des penseurs et la page À propos — sont encore en anglais. La traduction du contenu plus dense est en cours.",
-    pt: "Algumas páginas — o questionário, os arquétipos, o banco de pensadores e a página Sobre — ainda estão em inglês. A tradução do conteúdo mais extenso está em andamento.",
-    ru: "Некоторые страницы — тест, архетипы, база мыслителей и страница «О проекте» — пока на английском. Перевод более объёмного контента уже идёт.",
-    zh: "部分页面 —— 测验、原型、思想家档案以及「关于」页 —— 目前仍为英文。深度内容的翻译正在进行中。",
-    ja: "一部のページ — クイズ、アーキタイプ、思想家データベース、「このアプリについて」 — はまだ英語のままです。より深い内容の翻訳は進行中です。",
-    ko: "일부 페이지 — 퀴즈, 유형 카드, 사상가 데이터베이스, 소개 페이지 — 는 아직 영어로 표시됩니다. 더 깊은 내용의 번역은 진행 중입니다."
+    en: "Translations on Mull are currently a machine-generated prototype — readable but not yet polished. A careful pass with native speakers is in progress and will replace these as it lands.",
+    es: "Las traducciones de Mull son actualmente un prototipo generado por máquina — legibles pero aún sin pulir. Una revisión cuidadosa con hablantes nativos está en curso y las irá reemplazando.",
+    fr: "Les traductions de Mull sont actuellement un prototype généré par machine — lisibles, mais pas encore polies. Une relecture soignée par des locutrices et locuteurs natifs est en cours et les remplacera progressivement.",
+    pt: "As traduções do Mull são, no momento, um protótipo gerado por máquina — legíveis, mas ainda não refinadas. Uma revisão cuidadosa com falantes nativos está em andamento e as substituirá conforme avança.",
+    ru: "Переводы на Mull — пока машинный прототип: читабельно, но ещё не отшлифовано. Тщательная редактура с носителями языка уже идёт и будет постепенно заменять текст.",
+    zh: "Mull 当前的翻译是机器生成的原型 —— 能读懂，但尚未打磨。母语者参与的精细校对正在进行中，会陆续替换上去。",
+    ja: "Mull の翻訳は現在、機械生成のプロトタイプです — 読めますが、まだ磨き切れていません。母語話者による丁寧な見直しが進行中で、順次置き換わっていきます。",
+    ko: "현재 Mull의 번역은 기계가 만든 프로토타입입니다 — 읽을 수는 있지만 아직 다듬어지지 않았습니다. 모국어 사용자와 함께하는 정밀한 교정이 진행 중이며, 점차 교체됩니다."
   }
 };
 
 function applyHomeI18n() {
   try {
-    var m = document.cookie.match(/(?:^|; )mull_locale=([^;]+)/);
-    var loc = (m && m[1] && /^(en|es|fr|pt|ru|zh|ja|ko)$/.test(m[1])) ? m[1] : 'en';
+    var loc = _currentLocale();
     document.querySelectorAll('[data-i18n]').forEach(function(el) {
       var entry = HOME_I18N[el.getAttribute('data-i18n')];
       if (entry && entry[loc]) el.textContent = entry[loc];
@@ -4284,6 +4512,51 @@ function applyHomeI18n() {
     var notice = document.getElementById('i18n-notice');
     if (notice) notice.hidden = (loc === 'en');
   } catch (e) { /* no-op */ }
+}
+
+// Locale helpers used by dynamically-rendered HTML (gallery, archetype
+// detail, results, etc.). They read the cookie each call — cheap, and means
+// nothing has to be wired into a reactive store.
+function _currentLocale() {
+  var m = document.cookie.match(/(?:^|; )mull_locale=([^;]+)/);
+  return (m && m[1] && /^(en|es|fr|pt|ru|zh|ja|ko)$/.test(m[1])) ? m[1] : 'en';
+}
+function _i18nLookup(key) {
+  var loc = _currentLocale();
+  var entry = HOME_I18N[key];
+  if (entry && entry[loc]) return entry[loc];
+  if (entry && entry.en) return entry.en;
+  return null;
+}
+// Map canonical English archetype name → its i18n key prefix (lower kebab).
+var _ARCH_I18N_KEYS = {
+  "The Cartographer": "arch.cartographer",
+  "The Keel":         "arch.keel",
+  "The Threshold":    "arch.threshold",
+  "The Pilgrim":      "arch.pilgrim",
+  "The Touchstone":   "arch.touchstone",
+  "The Hearth":       "arch.hearth",
+  "The Forge":        "arch.forge",
+  "The Hammer":       "arch.hammer",
+  "The Garden":       "arch.garden",
+  "The Lighthouse":   "arch.lighthouse"
+};
+function localArchName(name) {
+  var k = _ARCH_I18N_KEYS[name];
+  if (!k) return name;
+  return _i18nLookup(k + '.name') || name;
+}
+function localArchBlurb(name, fallback) {
+  var k = _ARCH_I18N_KEYS[name];
+  if (!k) return fallback;
+  return _i18nLookup(k + '.blurb') || fallback;
+}
+function localDimName(canonName, key) {
+  // key is the 2-letter dim code (TV, VA, …); canonName the English label.
+  if (!key) return canonName;
+  var loc = _currentLocale();
+  if (loc === 'en') return canonName;
+  return _i18nLookup('dim.' + key + '.name') || canonName;
 }
 
 function setMullLocale(loc) {
@@ -4392,9 +4665,9 @@ function renderGallery() {
     const safeName = a.name.replace(/'/g, "\\'");
     return `<div class="gallery-card" style="--card-color:${color}" onclick="showArchetypeDetail('${safeName}')">
       <div class="gallery-figure">${figure}</div>
-      <h3 class="gallery-name"><em>${a.name}</em></h3>
+      <h3 class="gallery-name"><em>${localArchName(a.name)}</em></h3>
       <div class="gallery-patron">Patron: ${a.patron}</div>
-      <p class="gallery-blurb">${a.blurb}</p>
+      <p class="gallery-blurb">${localArchBlurb(a.name, a.blurb)}</p>
       <div class="gallery-soon">Read more →</div>
     </div>`;
   }).join('');
@@ -4413,7 +4686,7 @@ function renderArchetypeStrip(gridId, matchedArchName) {
     const safeName = a.name.replace(/'/g, "\\'");
     return `<div class="${cls}" style="${style}" onclick="showArchetypeDetail('${safeName}')">
       <div class="strip-figure">${figure}</div>
-      <div class="strip-name">${a.name.replace(/^The /, '')}</div>
+      <div class="strip-name">${localArchName(a.name).replace(/^The /, '')}</div>
     </div>`;
   }).join('');
 }
@@ -4447,7 +4720,7 @@ function showArchetypeDetail(archName) {
   const dimCards = archDefining.map(d => `
     <div class="archetype-dim-card">
       <div class="archetype-dim-rank">${d.v.toFixed(0)}<span>/10</span></div>
-      <div class="archetype-dim-name">${d.name}</div>
+      <div class="archetype-dim-name">${localDimName(d.name, d.k)}</div>
       <p class="archetype-dim-desc">${d.desc || ''}</p>
     </div>
   `).join('');
@@ -4460,6 +4733,15 @@ function showArchetypeDetail(archName) {
       <div class="debate-stance">${s.top.label}</div>
       <p class="debate-gist">${s.top.gist}</p>
     </div>
+  `).join('');
+
+  // Quotes that capture the archetype's spirit
+  const quoteItems = QUOTES[arch.name] || [];
+  const quotesHtml = quoteItems.map(q => `
+    <blockquote class="archetype-quote">
+      <p>&ldquo;${q.text}&rdquo;</p>
+      <cite>— ${q.source}</cite>
+    </blockquote>
   `).join('');
 
   // Reading list
@@ -4495,27 +4777,33 @@ function showArchetypeDetail(archName) {
       <div class="archetype-hero-figure">${figure}</div>
       <div class="archetype-hero-text">
         <div class="archetype-pill">Archetype</div>
-        <h1 class="archetype-name"><em>${arch.name}</em></h1>
+        <h1 class="archetype-name"><em>${localArchName(arch.name)}</em></h1>
         <div class="archetype-patron">Patron · <strong>${arch.patron}</strong></div>
-        <p class="archetype-blurb">${arch.blurb}</p>
+        <p class="archetype-blurb">${localArchBlurb(arch.name, arch.blurb)}</p>
       </div>
     </div>
 
     <div class="section">
-      <h2>What defines <em>${arch.name}</em></h2>
+      <h2>What defines <em>${localArchName(arch.name)}</em></h2>
       <p class="section-sub">The four dimensions this archetype scores highest on. People who land here tend to be high on each.</p>
       <div class="archetype-dim-grid">${dimCards}</div>
     </div>
 
     <div class="section">
-      <h2>Where <em>${arch.name}</em> typically stands</h2>
+      <h2>Where <em>${localArchName(arch.name)}</em> typically stands</h2>
       <p class="section-sub">Likely positions on eight canonical debates, derived from this archetype's dimensional pattern.</p>
       <div class="debates">${stanceCards}</div>
     </div>
 
+    ${quoteItems.length ? `<div class="section">
+      <h2>In <em>their own words</em></h2>
+      <p class="section-sub">A few short quotes that capture this archetype's voice.</p>
+      <div class="archetype-quotes">${quotesHtml}</div>
+    </div>` : ''}
+
     <div class="section">
       <h2>Closest <em>thinkers</em></h2>
-      <p class="section-sub">Three philosophers from the constellation whose recorded positions sit closest to ${arch.name}.</p>
+      <p class="section-sub">Three philosophers from the constellation whose recorded positions sit closest to ${localArchName(arch.name)}.</p>
       <div class="archetype-phils">${philsHtml}</div>
     </div>
 
@@ -4525,14 +4813,14 @@ function showArchetypeDetail(archName) {
     </div>` : ''}
 
     ${shadow ? `<div class="section archetype-shadow">
-      <h2>Shadow · <em>${shadow.name}</em></h2>
-      <p class="section-sub">The strongest pushback on ${arch.name}'s worldview comes from the archetype that disagrees most.</p>
+      <h2>Shadow · <em>${localArchName(shadow.name)}</em></h2>
+      <p class="section-sub">The strongest pushback on ${localArchName(arch.name)}'s worldview comes from the archetype that disagrees most.</p>
       <div class="archetype-shadow-card" onclick="showArchetypeDetail('${shadowSafe}')">
         <div class="archetype-shadow-figure">${shadowFig}</div>
         <div class="archetype-shadow-body">
-          <div class="archetype-shadow-name"><em>${shadow.name}</em></div>
-          <p>${shadow.blurb}</p>
-          <div class="archetype-shadow-link">See ${shadow.name} →</div>
+          <div class="archetype-shadow-name"><em>${localArchName(shadow.name)}</em></div>
+          <p>${localArchBlurb(shadow.name, shadow.blurb)}</p>
+          <div class="archetype-shadow-link">See ${localArchName(shadow.name)} →</div>
         </div>
       </div>
     </div>` : ''}
@@ -5580,7 +5868,32 @@ function drawConstellation(userVec, svgIdOld, popupIdOld, userVecHistory) {
   }
 
   // Visibility state — explicit per-star, so hide-all + selective re-show works.
-  const _visibleStar = stars.map(() => true);
+  // With 200+ thinkers in the constellation, showing all of them at once
+  // makes the map a soup. Default to the N most relevant: if the user has
+  // a vector, the top-N by cosine similarity; otherwise the N most-recognizable
+  // figures (we treat earlier indices in the array as proxy — the curated
+  // pre-diversification list, which is roughly canon-weighted).
+  const DEFAULT_VISIBLE_COUNT = 60;
+  const _visibleStar = (() => {
+    if (stars.length <= DEFAULT_VISIBLE_COUNT) {
+      return stars.map(() => true);
+    }
+    let rankedIndices;
+    if (userVec) {
+      // Most-similar to the user, by sim already attached to each star.
+      rankedIndices = stars
+        .map((s, i) => ({ i, sim: s.sim ?? -1 }))
+        .sort((a, b) => b.sim - a.sim)
+        .slice(0, DEFAULT_VISIBLE_COUNT)
+        .map(x => x.i);
+    } else {
+      // No user vector yet — show the first DEFAULT_VISIBLE_COUNT in array
+      // order (which is the older curated set, roughly canon-weighted).
+      rankedIndices = Array.from({ length: DEFAULT_VISIBLE_COUNT }, (_, i) => i);
+    }
+    const visibleSet = new Set(rankedIndices);
+    return stars.map((_, i) => visibleSet.has(i));
+  })();
   function _applyStarVisibility(starIdx) {
     const s = stars[starIdx];
     if (!s) return;
@@ -5596,6 +5909,8 @@ function drawConstellation(userVec, svgIdOld, popupIdOld, userVecHistory) {
     }
   }
   function _allHidden() { return _visibleStar.every(v => !v); }
+  // Re-bound below once countEl exists; set here so outer-scope callers don't crash.
+  let _refreshCount = function() {};
 
   const GRID_SIZE = 50, GRID_DIVS = 10;
   const grid = new THREE.GridHelper(GRID_SIZE, GRID_DIVS, 0xB8AC8E, 0xD6CDB6);
@@ -5919,7 +6234,11 @@ function drawConstellation(userVec, svgIdOld, popupIdOld, userVecHistory) {
         cb.checked = _visibleStar[idx];
       });
     }
+    if (typeof _refreshCount === 'function') _refreshCount();
   }
+  // Apply the initial top-N visibility filter immediately, otherwise the
+  // map flashes all-visible for a frame before the panel renders.
+  _applyAllVisibility();
   if (zinBtn) zinBtn.onclick = btnZoomIn;
   if (zoutBtn) zoutBtn.onclick = btnZoomOut;
   if (resetBtn) resetBtn.onclick = btnReset;
@@ -5933,7 +6252,13 @@ function drawConstellation(userVec, svgIdOld, popupIdOld, userVecHistory) {
       if (userVec && a.sim !== null && b.sim !== null) return b.sim - a.sim;
       return a.philosopher.name.localeCompare(b.philosopher.name);
     });
-    countEl.textContent = `${stars.length} thinkers`;
+    _refreshCount = function() {
+      const visibleCount = _visibleStar.filter(Boolean).length;
+      countEl.textContent = visibleCount === stars.length
+        ? `${stars.length} thinkers`
+        : `${visibleCount} of ${stars.length} thinkers shown`;
+    };
+    _refreshCount();
     function renderList(filter) {
       const f = (filter || '').toLowerCase().trim();
       const matched = f
@@ -5972,6 +6297,7 @@ function drawConstellation(userVec, svgIdOld, popupIdOld, userVecHistory) {
           if (hideAllBtn) {
             hideAllBtn.classList.toggle('active', _allHidden());
           }
+          _refreshCount();
         });
       });
     }

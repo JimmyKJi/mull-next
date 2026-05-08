@@ -19,6 +19,18 @@ ANTHROPIC_API_KEY=sk-ant-api03-...
 # leaves the sign-in record, and the user gets a friendly "email Jimmy"
 # error message at the end. NEVER expose this key client-side.
 SUPABASE_SERVICE_ROLE_KEY=<service-role-jwt>
+
+# Random string used to authenticate the daily-dilemma email reminder cron.
+# Set this to anything secret (e.g. `openssl rand -hex 32`); the same value
+# must be added to the Authorization header in vercel.json's cron config.
+# Optional until you turn email reminders on.
+CRON_SECRET=<random-string>
+
+# Stripe keys (optional until billing goes live). Without these, /billing
+# runs in dry-run mode — UI flow works end-to-end but no real charges.
+# STRIPE_SECRET_KEY=sk_test_…  (or sk_live_…)
+# STRIPE_WEBHOOK_SECRET=whsec_…
+# NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_…  (or pk_live_…)
 ```
 
 Get the Anthropic key at https://console.anthropic.com/settings/keys. Get
@@ -34,6 +46,11 @@ Run each in the Supabase SQL editor (or `supabase db push` if using the CLI).
 4. `supabase/migrations/20260508_diary_entries.sql` — ⚠️ **must run for the diary feature**
 5. `supabase/migrations/20260508_public_profiles.sql` — ⚠️ **must run for public profile pages**
 6. `supabase/migrations/20260509_public_per_entry.sql` — ⚠️ **must run for per-entry visibility on public profiles + trail/archetype access**
+7. `supabase/migrations/20260510_search_privacy.sql` — adds `is_searchable` toggle on profiles
+8. `supabase/migrations/20260510_notification_prefs.sql` — adds the per-user reminder time + TZ table (run this before turning on email reminders)
+9. `supabase/migrations/20260510_subscriptions.sql` — adds the local subscription cache (run this before flipping Stripe live)
+10. `supabase/migrations/20260510_mo_foundation.sql` — adds Mo's diary embedding / cluster / chat tables (no rush; only when Mo work begins)
+11. `supabase/migrations/20260511_exercise_reflections.sql` — ⚠️ **must run for the exercise-reflection feature to save reflections + add them to the trajectory**. Also extends the public-trajectory function to surface reflections on public profiles.
 
 Until #2 is run, `/dilemma` will fail to insert and `/account` trajectory
 will skip dilemma events. Until #3 is run, generated debates won't persist

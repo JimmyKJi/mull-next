@@ -13,6 +13,8 @@ export async function POST(req: Request) {
     const showDimensions = !!body?.show_dimensions;
     const showMap = !!body?.show_map;
     const showStreak = !!body?.show_streak;
+    // Default true if not present (existing clients won't break).
+    const isSearchable = body?.is_searchable === undefined ? true : !!body.is_searchable;
 
     if (!handle) {
       return NextResponse.json({ error: 'Handle is required.' }, { status: 400 });
@@ -45,6 +47,7 @@ export async function POST(req: Request) {
         show_dimensions: showDimensions,
         show_map: showMap,
         show_streak: showStreak,
+        is_searchable: isSearchable,
         updated_at: new Date().toISOString(),
       }, { onConflict: 'user_id' })
       .select('handle')

@@ -16,6 +16,7 @@ type ProfileInitial = {
   show_dimensions: boolean;
   show_map: boolean;
   show_streak: boolean;
+  is_searchable?: boolean;
 } | null;
 
 const HANDLE_RE = /^[a-z0-9_-]{3,32}$/;
@@ -28,6 +29,7 @@ export default function ProfileForm({ initial, userEmail, locale = 'en' }: { ini
   const [showDimensions, setShowDimensions] = useState(initial?.show_dimensions ?? true);
   const [showMap, setShowMap] = useState(initial?.show_map ?? true);
   const [showStreak, setShowStreak] = useState(initial?.show_streak ?? false);
+  const [isSearchable, setIsSearchable] = useState(initial?.is_searchable ?? true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [savedUrl, setSavedUrl] = useState<string | null>(null);
@@ -55,6 +57,7 @@ export default function ProfileForm({ initial, userEmail, locale = 'en' }: { ini
           show_dimensions: showDimensions,
           show_map: showMap,
           show_streak: showStreak,
+          is_searchable: isSearchable,
         })
       });
       const json = await res.json();
@@ -180,6 +183,25 @@ export default function ProfileForm({ initial, userEmail, locale = 'en' }: { ini
           <Checkbox label={t('profile.show_map', locale)} checked={showMap} onChange={setShowMap} />
           <Checkbox label={t('profile.show_streak', locale)} checked={showStreak} onChange={setShowStreak} />
         </div>
+      </div>
+
+      <div>
+        <label style={labelStyle}>{t('profile.discovery_label', locale)}</label>
+        <Checkbox
+          label={t('profile.is_searchable', locale)}
+          checked={isSearchable}
+          onChange={setIsSearchable}
+        />
+        <p style={{
+          fontFamily: sans,
+          fontSize: 12,
+          color: '#8C6520',
+          margin: '8px 0 0',
+          opacity: 0.85,
+          lineHeight: 1.55,
+        }}>
+          {t('profile.is_searchable_help', locale)}
+        </p>
       </div>
 
       <div style={{

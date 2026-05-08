@@ -25,7 +25,7 @@ The site chrome (navigation, banners, hero, form labels, buttons, account-area c
 
 - Quiz questions (both 20-question quick start and 50-question detailed diagnosis).
 - Archetype names and prototype descriptions (16 archetypes × multiple sections each).
-- Philosopher database (166 entries × name + dates + ideas + position).
+- Philosopher database (now 206 entries × name + dates + ideas + position) — disclaimer notices already in place across the chrome (`i18n.content_notice` on Next.js pages, `home.translation_notice` on mull.html). Bulk translation should run via `scripts/translate-i18n.js` with the API key.
 - About page body (the principles, the economics-openly section, the build-credits).
 - Reading list / learning lab content.
 - A handful of small help-text paragraphs in the diary composer and dilemma form (currently flagged inline with an "in progress" tag when the user is on a non-English locale).
@@ -66,7 +66,7 @@ Pricing decision deferred until we have real usage data on the daily dilemma / d
 
 ## Done (v0.9)
 - Quiz (quick + detailed) + 16-dim vector model + archetype assignment
-- 3D constellation map with 166 philosophers
+- 3D constellation map with over 200 philosophers
 - Account / save attempts / trajectory trail
 - Daily dilemma (Claude prose-to-vector)
 - Two-philosopher simulated debate

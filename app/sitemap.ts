@@ -12,10 +12,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
   return [
     { url: `${SITE}/`,         lastModified: now, changeFrequency: 'weekly',  priority: 1.0 },
+    { url: `${SITE}/about`,    lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${SITE}/billing`,  lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${SITE}/search`,   lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${SITE}/login`,    lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${SITE}/signup`,   lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${SITE}/dilemma`,  lastModified: now, changeFrequency: 'daily',   priority: 0.8 },
     { url: `${SITE}/diary`,    lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${SITE}/debate`,   lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${SITE}/exercises`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
+    ...[
+      'premortem','negative-visualization','socratic-self-questioning','view-from-above','memento-mori','examen',
+      'fallacy-hunt','steelmanning','counterexample-drill','argument-map','reductio',
+      'sixty-second-case','anticipating-objections','translation-under-constraint','dialectical-loop','switch-sides',
+    ].map(slug => ({ url: `${SITE}/exercises/${slug}`, lastModified: now, changeFrequency: 'monthly' as const, priority: 0.5 })),
   ];
 }

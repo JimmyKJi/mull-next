@@ -31,6 +31,7 @@ export default function LanguageSwitcher({ initial = 'en' }: { initial?: Locale 
       value={locale}
       onChange={onChange}
       title="Language"
+      aria-label="Choose language"
       style={{
         fontFamily: sans,
         fontSize: 12,

@@ -21,12 +21,13 @@ export async function GET() {
 
     // Fan out — these tables are all user-scoped via RLS, so the simple
     // SELECTs return only this user's rows.
-    const [quiz, dilemmas, diary, debates, profile] = await Promise.all([
+    const [quiz, dilemmas, diary, debates, profile, reflections] = await Promise.all([
       supabase.from('quiz_attempts').select('*').eq('user_id', user.id),
       supabase.from('dilemma_responses').select('*').eq('user_id', user.id),
       supabase.from('diary_entries').select('*').eq('user_id', user.id),
       supabase.from('debate_history').select('*').eq('user_id', user.id),
       supabase.from('public_profiles').select('*').eq('user_id', user.id).maybeSingle(),
+      supabase.from('exercise_reflections').select('*').eq('user_id', user.id),
     ]);
 
     const payload = {
@@ -41,6 +42,7 @@ export async function GET() {
       dilemma_responses: dilemmas.data ?? [],
       diary_entries: diary.data ?? [],
       debate_history: debates.data ?? [],
+      exercise_reflections: reflections.data ?? [],
       public_profile: profile.data ?? null,
       // Tables that returned errors are surfaced so the user knows something
       // didn't make it into the export rather than silently missing.
@@ -49,6 +51,7 @@ export async function GET() {
         dilemmas.error && { table: 'dilemma_responses', code: dilemmas.error.code, message: dilemmas.error.message },
         diary.error && { table: 'diary_entries', code: diary.error.code, message: diary.error.message },
         debates.error && { table: 'debate_history', code: debates.error.code, message: debates.error.message },
+        reflections.error && { table: 'exercise_reflections', code: reflections.error.code, message: reflections.error.message },
         profile.error && { table: 'public_profiles', code: profile.error.code, message: profile.error.message },
       ].filter(Boolean),
     };

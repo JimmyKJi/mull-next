@@ -1,45 +1,30 @@
-import { createClient } from '@/utils/supabase/server';
+// /account/retrospective — generates and displays the user's yearly
+// retrospective essay. Mull+ feature, but currently open while we dogfood.
+
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import ProfileForm from './profile-form';
-import DataControls from './data-controls';
+import { createClient } from '@/utils/supabase/server';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
+import RetrospectivePanel from './retrospective-panel';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
 
-type ProfileRow = {
-  handle: string;
-  display_name: string | null;
-  bio: string | null;
-  show_archetype: boolean;
-  show_dimensions: boolean;
-  show_map: boolean;
-  show_streak: boolean;
-  is_searchable: boolean;
-};
-
-export default async function ProfileSettingsPage() {
+export default async function RetrospectivePage() {
   const supabase = await createClient();
   const locale = await getServerLocale();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
-  const { data: profile } = await supabase
-    .from('public_profiles')
-    .select('handle, display_name, bio, show_archetype, show_dimensions, show_map, show_streak, is_searchable')
-    .eq('user_id', user.id)
-    .maybeSingle<ProfileRow>();
-
   return (
-    <main style={{ maxWidth: 640, margin: '0 auto', padding: '60px 24px 120px' }}>
+    <main style={{ maxWidth: 720, margin: '0 auto', padding: '60px 24px 120px' }}>
       <header style={{
-        marginBottom: 36,
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
+        marginBottom: 36,
         flexWrap: 'wrap',
         gap: 12,
       }}>
@@ -49,7 +34,7 @@ export default async function ProfileSettingsPage() {
           color: '#4A4338',
           textDecoration: 'none',
         }}>
-          ← {t('nav.account', locale)}
+          ← Account
         </Link>
         <LanguageSwitcher initial={locale} />
       </header>
@@ -63,47 +48,40 @@ export default async function ProfileSettingsPage() {
         letterSpacing: '0.18em',
         marginBottom: 14,
       }}>
-        {t('profile.eyebrow', locale)}
+        {t('retro.eyebrow', locale)}
       </div>
       <h1 style={{
         fontFamily: serif,
-        fontSize: 38,
+        fontSize: 42,
         fontWeight: 500,
         margin: '0 0 12px',
-        letterSpacing: '-0.01em',
-        lineHeight: 1.1,
+        letterSpacing: '-0.5px',
       }}>
-        {t('profile.title_html', locale).split('{em_map}').map((part, i, arr) => (
-          <span key={i}>{part}{i < arr.length - 1 && <em style={{ color: '#8C6520' }}>{t('profile.map_em', locale)}</em>}</span>
-        ))}
+        {t('retro.title', locale)}
       </h1>
       <p style={{
         fontFamily: serif,
         fontStyle: 'italic',
-        fontSize: 17,
+        fontSize: 18,
         color: '#4A4338',
-        marginBottom: 30,
+        margin: '0 0 36px',
         lineHeight: 1.55,
       }}>
-        {t('profile.subtitle_html', locale, {
-          code: 'mull.world/u/<your-handle>'
-        })}
+        {t('retro.subtitle', locale)}
       </p>
 
-      <ProfileForm initial={profile} userEmail={user.email || ''} locale={locale} />
+      <RetrospectivePanel locale={locale} />
 
       <p style={{
+        marginTop: 56,
         fontFamily: sans,
         fontSize: 12,
         color: '#8C6520',
-        marginTop: 36,
         opacity: 0.75,
-        lineHeight: 1.55,
+        lineHeight: 1.6,
       }}>
-        {t('profile.privacy_footer', locale)}
+        {t('retro.dogfood_note', locale)}
       </p>
-
-      <DataControls locale={locale} />
     </main>
   );
 }
