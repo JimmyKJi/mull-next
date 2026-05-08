@@ -85,6 +85,13 @@
   .pill.draft { background: #FBF1EE; color: #A8451F; border-color: #E5C9C0; }
   .brandbar-right {
     display: flex; align-items: center; gap: 14px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  @media (max-width: 540px) {
+    .brandbar-right { gap: 8px; }
+    .brandbar-link { font-size: 12.5px; padding: 3px 0; }
+    .pill.draft { display: none; }
   }
   .brandbar-link {
     background: none; border: none;
@@ -93,8 +100,11 @@
     cursor: pointer;
     padding: 4px 2px;
     transition: color .15s ease;
+    text-decoration: none;
   }
   .brandbar-link:hover { color: var(--acc-deep); }
+  a.brandbar-link { color: var(--ink); font-weight: 500; }
+  a.brandbar-link:hover { color: var(--acc-deep); }
 
   /* ---- About page ---- */
   .about-wrap {
@@ -579,6 +589,16 @@
   }
   .mapcontrol:hover { background: var(--cream); border-color: var(--acc-deep); color: var(--acc-deep); transform: scale(1.05); }
   .mapcontrol:active { transform: scale(0.95); }
+  .mapcontrol.active {
+    background: var(--ink);
+    color: var(--cream);
+    border-color: var(--ink);
+  }
+  .mapcontrol.active:hover {
+    background: var(--acc-deep);
+    border-color: var(--acc-deep);
+    color: var(--cream);
+  }
   .map-instructions {
     position: absolute;
     bottom: 16px; left: 50%; transform: translateX(-50%);
@@ -684,6 +704,17 @@
     border-radius: 3px;
   }
   .mappanel-item .wiki-link:hover { opacity: 1; color: var(--acc-deep); background: var(--cream); }
+  .mappanel-item .phil-vis {
+    width: 13px; height: 13px;
+    margin: 0;
+    cursor: pointer;
+    flex-shrink: 0;
+    accent-color: var(--acc-deep);
+  }
+  .mappanel-item .phil-vis:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
   @media (max-width: 760px) {
     .mappanel { width: 220px; }
     .mappanel.collapsed { transform: translateX(192px); }
@@ -932,6 +963,21 @@
   }
   .sticky-cta-form button:hover { background: var(--acc-deep); color: var(--cream); }
   .sticky-cta-form button:disabled { opacity: .8; cursor: default; }
+  .sticky-cta-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 9px 18px;
+    background: var(--acc);
+    color: var(--ink);
+    border-radius: 999px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: 0.4px;
+    transition: background 0.15s ease, transform 0.15s ease;
+    flex-shrink: 0;
+  }
+  .sticky-cta-link:hover { background: #FFD580; transform: translateY(-1px); }
   .sticky-cta-close {
     position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
     width: 28px; height: 28px;
@@ -2017,6 +2063,8 @@ html.embed-mode #embed-you-hint {
   <div class="brandbar">
     <div class="brand" onclick="showLanding()" style="cursor:pointer;">Mull<span>.</span></div>
     <div class="brandbar-right">
+      <a class="brandbar-link" href="/dilemma">Today's dilemma</a>
+      <a class="brandbar-link" href="/debate">Simulated debate</a>
       <button class="brandbar-link" onclick="showAbout()">About</button>
       <button class="brandbar-link" onclick="showGallery()">Archetypes</button>
       <span class="pill draft">Rough draft</span>
@@ -2215,6 +2263,7 @@ html.embed-mode #embed-you-hint {
           <button class="mapcontrol btn-zoomin" title="Zoom in">+</button>
           <button class="mapcontrol btn-zoomout" title="Zoom out">−</button>
           <button class="mapcontrol btn-reset" title="Reset view" style="font-size:14px;">⟲</button>
+          <button class="mapcontrol btn-hideall" title="Hide all philosophers" style="font-size:13px;">∅</button>
         </div>
         <div class="map-axislegend">
           <div class="row"><span class="swatch" style="background:#A85050"></span> X — Sovereign ↔ Communal</div>
@@ -2290,6 +2339,7 @@ html.embed-mode #embed-you-hint {
             <button class="mapcontrol btn-zoomin" title="Zoom in">+</button>
             <button class="mapcontrol btn-zoomout" title="Zoom out">−</button>
             <button class="mapcontrol btn-reset" title="Reset view" style="font-size:14px;">⟲</button>
+            <button class="mapcontrol btn-hideall" title="Hide all philosophers" style="font-size:13px;">∅</button>
           </div>
           <div class="map-axislegend">
             <div class="row"><span class="swatch" style="background:#A85050"></span> X — Sovereign ↔ Communal</div>
@@ -2341,7 +2391,7 @@ html.embed-mode #embed-you-hint {
         <div class="disclaimer-icon">✺</div>
         <div class="disclaimer-body">
           <h3>This is a sketch.</h3>
-          <p>A few questions can't capture the whole of you. To go further: the <strong>daily dilemma</strong> ships soon — one new question each morning that nudges your map over time, paired with a thought diary that lets you watch your worldview evolve. Sign-up sits at the bottom of the screen.</p>
+          <p>A few questions can't capture the whole of you. To go further: the <strong><a href="/dilemma" style="color:var(--acc-deep);text-decoration:underline;text-underline-offset:3px;">daily dilemma</a></strong> is live — one new reflective question each morning, written by you, analyzed into a small shift on your map. Pairs with a trajectory of how your worldview evolves over time, visible on your <a href="/account" style="color:var(--acc-deep);text-decoration:underline;text-underline-offset:3px;">account page</a>.</p>
         </div>
       </div>
     </div>
@@ -2352,17 +2402,14 @@ html.embed-mode #embed-you-hint {
     </div>
   </section>
 
-  <!-- Sticky daily-dilemma signup footer (visible on results only) -->
+  <!-- Sticky daily-dilemma footer (visible on results only) -->
   <div id="sticky-cta" class="sticky-cta" hidden>
     <div class="sticky-cta-inner">
       <div class="sticky-cta-text">
-        <strong>Daily dilemma launches soon.</strong>
-        <span>One new question each morning · your map evolves with you.</span>
+        <strong>Today's dilemma is live.</strong>
+        <span>One reflective question · a small shift on your map.</span>
       </div>
-      <form class="sticky-cta-form" onsubmit="event.preventDefault();this.querySelector('button').textContent='Thanks ✓';this.querySelector('button').disabled=true;">
-        <input type="email" placeholder="your@email.com" required />
-        <button type="submit">Notify me</button>
-      </form>
+      <a class="sticky-cta-link" href="/dilemma">Answer today's →</a>
       <button class="sticky-cta-close" onclick="document.getElementById('sticky-cta').hidden = true;" title="Dismiss">×</button>
     </div>
   </div>
@@ -2451,6 +2498,20 @@ let CURRENT_USER = null;
   if (!Array.isArray(vec) || vec.length !== 16) {
     console.error('[mull] embed: vector must be 16-D');
     return;
+  }
+
+  // Optional history param: array of 16-D vectors (oldest → newest), base64 JSON.
+  // The trail is rendered by drawConstellation when window.__MULL_EMBED_HISTORY__ is set.
+  const histEncoded = params.get('h');
+  if (histEncoded) {
+    try {
+      const hist = JSON.parse(atob(decodeURIComponent(histEncoded)));
+      if (Array.isArray(hist) && hist.every(v => Array.isArray(v) && v.length === 16)) {
+        window.__MULL_EMBED_HISTORY__ = hist;
+      }
+    } catch (e) {
+      console.warn('[mull] embed: history parse failed', e);
+    }
   }
 
   if (document.readyState === 'loading') {
@@ -5118,7 +5179,11 @@ function cleanupMap(instance) {
   }
 }
 
-function drawConstellation(userVec, svgIdOld, popupIdOld) {
+function drawConstellation(userVec, svgIdOld, popupIdOld, userVecHistory) {
+  // Fallback to window-stashed history (used by embed mode that pipes through showResults)
+  if (!userVecHistory && typeof window !== 'undefined' && window.__MULL_EMBED_HISTORY__) {
+    userVecHistory = window.__MULL_EMBED_HISTORY__;
+  }
   const mapId = (svgIdOld === "mappre" || svgIdOld === "pre") ? "pre" : "res";
   const canvasEl = document.getElementById(`canvas_${mapId}`);
   const popupEl = document.getElementById(`philpopup_${mapId}`);
@@ -5259,7 +5324,47 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
   }
   updateCamera();
 
+  // ===== Trajectory trail (last N historical positions) =====
+  // userVecHistory is an array of vectors ordered oldest → newest.
+  // The most recent entry should be the same as userVec (the current you).
+  // We render breadcrumbs for older positions, fading with age, and a dashed
+  // line connecting them through to the present.
+  const trailMeshes = [];
+  let trailLine = null;
+  if (userVec && Array.isArray(userVecHistory) && userVecHistory.length > 1) {
+    const trail = userVecHistory.slice(-10); // up to last 10
+    const positions = trail.map(v => projectVec3(v));
+    // Render older points only (skip the last one — that's the user star)
+    for (let i = 0; i < positions.length - 1; i++) {
+      const ageRatio = i / (positions.length - 1); // 0 = oldest, ~1 = nearly now
+      const opacity = 0.18 + ageRatio * 0.42;
+      const size = 0.22 + ageRatio * 0.20;
+      const dotGeo = new THREE.SphereGeometry(size, 12, 12);
+      const dotMat = new THREE.MeshBasicMaterial({ color: COLOR_USER, transparent: true, opacity });
+      const dot = new THREE.Mesh(dotGeo, dotMat);
+      dot.position.set(positions[i].x, positions[i].y, positions[i].z);
+      scene.add(dot);
+      trailMeshes.push(dot);
+    }
+    // Dashed line from oldest → newest, threaded through every point
+    const linePts = [];
+    positions.forEach(p => linePts.push(p.x, p.y, p.z));
+    const lineGeo = new THREE.BufferGeometry();
+    lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(linePts, 3));
+    const lineMat = new THREE.LineDashedMaterial({
+      color: COLOR_USER,
+      transparent: true,
+      opacity: 0.45,
+      dashSize: 0.6,
+      gapSize: 0.4
+    });
+    trailLine = new THREE.Line(lineGeo, lineMat);
+    trailLine.computeLineDistances();
+    scene.add(trailLine);
+  }
+
   // Constellation lines
+  let constellationLines = null;
   const linePositions = [];
   const THRESH = 3.6;
   for (let i = 0; i < stars.length; i++) {
@@ -5275,8 +5380,27 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
     const lg = new THREE.BufferGeometry();
     lg.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
     const lm = new THREE.LineBasicMaterial({ color: 0x2D4358, transparent: true, opacity: 0.22 });
-    scene.add(new THREE.LineSegments(lg, lm));
+    constellationLines = new THREE.LineSegments(lg, lm);
+    scene.add(constellationLines);
   }
+
+  // Visibility state — explicit per-star, so hide-all + selective re-show works.
+  const _visibleStar = stars.map(() => true);
+  function _applyStarVisibility(starIdx) {
+    const s = stars[starIdx];
+    if (!s) return;
+    const visible = _visibleStar[starIdx];
+    s.mesh.visible = visible;
+    s.glow.visible = visible;
+  }
+  function _applyAllVisibility() {
+    stars.forEach((_, i) => _applyStarVisibility(i));
+    if (constellationLines) {
+      // Lines are visible if at least one star is visible
+      constellationLines.visible = _visibleStar.some(v => v);
+    }
+  }
+  function _allHidden() { return _visibleStar.every(v => !v); }
 
   const GRID_SIZE = 50, GRID_DIVS = 10;
   const grid = new THREE.GridHelper(GRID_SIZE, GRID_DIVS, 0xB8AC8E, 0xD6CDB6);
@@ -5534,6 +5658,7 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
   const zinBtn = wrap.querySelector('.btn-zoomin');
   const zoutBtn = wrap.querySelector('.btn-zoomout');
   const resetBtn = wrap.querySelector('.btn-reset');
+  const hideAllBtn = wrap.querySelector('.btn-hideall');
   function btnZoomIn() { orbit.distance = Math.max(orbit.minDist, orbit.distance * 0.82); updateCamera(); }
   function btnZoomOut() { orbit.distance = Math.min(orbit.maxDist, orbit.distance * 1.22); updateCamera(); }
   function btnReset() {
@@ -5547,9 +5672,27 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
     } else { orbit.target.set(0, 0, 0); }
     updateCamera();
   }
+  function btnHideAll() {
+    // If anything is currently visible, hide all. Otherwise show all.
+    const anyVisible = _visibleStar.some(v => v);
+    _visibleStar.fill(!anyVisible);
+    _applyAllVisibility();
+    if (hideAllBtn) {
+      hideAllBtn.classList.toggle('active', _allHidden());
+      hideAllBtn.title = _allHidden() ? 'Show all philosophers' : 'Hide all philosophers';
+    }
+    // Sync checkboxes in panel
+    if (listEl) {
+      listEl.querySelectorAll('.phil-vis').forEach(cb => {
+        const idx = parseInt(cb.dataset.idx, 10);
+        cb.checked = _visibleStar[idx];
+      });
+    }
+  }
   if (zinBtn) zinBtn.onclick = btnZoomIn;
   if (zoutBtn) zoutBtn.onclick = btnZoomOut;
   if (resetBtn) resetBtn.onclick = btnReset;
+  if (hideAllBtn) hideAllBtn.onclick = btnHideAll;
 
   const listEl = document.getElementById(`list_${mapId}`);
   const searchEl = document.getElementById(`search_${mapId}`);
@@ -5571,14 +5714,33 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
           ? `<span class="pct">${displayPct(s.sim)}%</span>`
           : `<span class="dt">${(p.dates || '').split('–')[0].split('-')[0].trim()}</span>`;
         const wiki = `<a class="wiki-link" href="${wikiUrl(p.name)}" target="_blank" rel="noopener noreferrer" title="Read on Wikipedia">↗</a>`;
-        return `<div class="mappanel-item" data-idx="${s.index}"><span class="nm">${p.name}</span><span class="right">${right}${wiki}</span></div>`;
+        const visible = _visibleStar[s.index];
+        const cb = `<input type="checkbox" class="phil-vis" data-idx="${s.index}" ${visible ? 'checked' : ''} title="Show this philosopher on the map" />`;
+        return `<div class="mappanel-item" data-idx="${s.index}">${cb}<span class="nm">${p.name}</span><span class="right">${right}${wiki}</span></div>`;
       }).join('');
       listEl.querySelectorAll('.mappanel-item').forEach(el => {
         el.addEventListener('click', (e) => {
           if (e.target.classList.contains('wiki-link')) return;
+          if (e.target.classList.contains('phil-vis')) return;
           const idx = parseInt(el.dataset.idx, 10);
           const star = stars[idx];
           if (star) flyTo(star);
+        });
+      });
+      listEl.querySelectorAll('.phil-vis').forEach(cb => {
+        cb.addEventListener('click', e => e.stopPropagation());
+        cb.addEventListener('change', e => {
+          const idx = parseInt(cb.dataset.idx, 10);
+          _visibleStar[idx] = cb.checked;
+          _applyStarVisibility(idx);
+          // Constellation lines should hide once everything's hidden
+          if (constellationLines) {
+            constellationLines.visible = _visibleStar.some(v => v);
+          }
+          // Hide-all button reflects current state
+          if (hideAllBtn) {
+            hideAllBtn.classList.toggle('active', _allHidden());
+          }
         });
       });
     }
@@ -5629,6 +5791,8 @@ function drawConstellation(userVec, svgIdOld, popupIdOld) {
         if (userLabel.material.map) userLabel.material.map.dispose();
         userLabel.material.dispose();
       }
+      trailMeshes.forEach(m => { m.geometry.dispose(); m.material.dispose(); });
+      if (trailLine) { trailLine.geometry.dispose(); trailLine.material.dispose(); }
       stars.forEach(s => {
         s.mesh.geometry.dispose();
         s.mesh.material.dispose();
