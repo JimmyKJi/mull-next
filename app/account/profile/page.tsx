@@ -2,6 +2,7 @@ import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import ProfileForm from './profile-form';
+import DataControls from './data-controls';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
@@ -100,6 +101,8 @@ export default async function ProfileSettingsPage() {
       }}>
         {t('profile.privacy_footer', locale)}
       </p>
+
+      <DataControls locale={locale} />
     </main>
   );
 }

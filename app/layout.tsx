@@ -2,8 +2,23 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Mull",
+  title: {
+    default: "Mull",
+    template: "%s — Mull",
+  },
   description: "Find your place on the map of how you think.",
+  openGraph: {
+    title: "Mull",
+    description: "Find your place on the map of how you think.",
+    siteName: "Mull",
+    type: "website",
+    url: "https://mull.world",
+  },
+  twitter: {
+    card: "summary",
+    title: "Mull",
+    description: "Find your place on the map of how you think.",
+  },
 };
 
 export default function RootLayout({

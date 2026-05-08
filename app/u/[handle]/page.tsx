@@ -5,6 +5,7 @@ import { DIM_KEYS, DIM_NAMES, topShifts } from '@/lib/dimensions';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
+import type { Metadata } from 'next';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
@@ -49,6 +50,51 @@ type DiaryRow = {
 
 function vecAdd(a: number[], b: number[]): number[] {
   return a.map((v, i) => v + (b[i] || 0));
+}
+
+// Generate per-profile share-preview metadata. Renders nicely on Twitter,
+// Slack, iMessage, etc. Falls back to generic Mull description when the
+// profile is missing or has chosen a low-disclosure setup.
+export async function generateMetadata({ params }: { params: Promise<{ handle: string }> }): Promise<Metadata> {
+  const { handle } = await params;
+  const supabase = await createClient();
+  const { data: profile } = await supabase
+    .from('public_profiles')
+    .select('user_id, handle, display_name, bio, show_archetype')
+    .eq('handle', handle.toLowerCase())
+    .maybeSingle<{ user_id: string; handle: string; display_name: string | null; bio: string | null; show_archetype: boolean }>();
+  if (!profile) {
+    return { title: 'Not found', description: 'No public profile at this handle.' };
+  }
+  const name = profile.display_name || profile.handle;
+  let description = profile.bio || '';
+  if (!description && profile.show_archetype) {
+    const { data: latest } = await supabase
+      .rpc('get_public_latest_archetype', { p_user_id: profile.user_id });
+    const arch = (latest?.[0]?.archetype as string | undefined);
+    const flavor = (latest?.[0]?.flavor as string | undefined);
+    if (arch) description = `${flavor ? flavor + ' ' : ''}${arch} on Mull — find your place on the map of how you think.`;
+  }
+  if (!description) description = `${name} on Mull — find your place on the map of how you think.`;
+  const title = `${name} on Mull`;
+  const url = `https://mull.world/u/${profile.handle}`;
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: 'Mull',
+      type: 'profile',
+    },
+    twitter: {
+      card: 'summary',
+      title,
+      description,
+    },
+    alternates: { canonical: url },
+  };
 }
 
 export default async function PublicProfilePage({ params }: { params: Promise<{ handle: string }> }) {

@@ -12,9 +12,17 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=<jwt-format-anon-key>
 # saves the user's response to the database, just without an AI-derived
 # vector_delta or analysis (graceful degradation).
 ANTHROPIC_API_KEY=sk-ant-api03-...
+
+# Service-role key for the very small number of operations that need to
+# bypass RLS — currently just /api/account/delete (which has to remove the
+# auth.users row). Without this, account deletion wipes user data but
+# leaves the sign-in record, and the user gets a friendly "email Jimmy"
+# error message at the end. NEVER expose this key client-side.
+SUPABASE_SERVICE_ROLE_KEY=<service-role-jwt>
 ```
 
-Get the Anthropic key at https://console.anthropic.com/settings/keys.
+Get the Anthropic key at https://console.anthropic.com/settings/keys. Get
+the Supabase service-role key at Supabase → Project Settings → API → "service_role secret".
 
 ## Required SQL migrations
 
@@ -25,6 +33,7 @@ Run each in the Supabase SQL editor (or `supabase db push` if using the CLI).
 3. `supabase/migrations/20260508_debate_history.sql` — ⚠️ **must run to save user's last 3 debates**
 4. `supabase/migrations/20260508_diary_entries.sql` — ⚠️ **must run for the diary feature**
 5. `supabase/migrations/20260508_public_profiles.sql` — ⚠️ **must run for public profile pages**
+6. `supabase/migrations/20260509_public_per_entry.sql` — ⚠️ **must run for per-entry visibility on public profiles + trail/archetype access**
 
 Until #2 is run, `/dilemma` will fail to insert and `/account` trajectory
 will skip dilemma events. Until #3 is run, generated debates won't persist

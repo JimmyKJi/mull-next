@@ -93,6 +93,12 @@
     .brandbar-link { font-size: 12.5px; padding: 3px 0; }
     .pill.draft { display: none; }
   }
+  /* Tight phones: drop the secondary nav links to keep the bar from
+     wrapping into two rows. The hidden routes (Diary, Simulated debate,
+     Archetypes) stay reachable from /account and from inside the quiz. */
+  @media (max-width: 460px) {
+    .brandbar-link.brandbar-link-secondary { display: none; }
+  }
   .brandbar-link {
     background: none; border: none;
     font-family: inherit; font-size: 14px;
@@ -258,6 +264,10 @@
     color: #4A4338; font-size: 14px; line-height: 1.55;
   }
   .constructionbanner strong { color: #221E18; display: inline; margin-right: 6px; }
+  @media (max-width: 540px) {
+    .versionbanner { font-size: 12.5px; padding: 9px 12px; margin-bottom: 12px; }
+    .constructionbanner { font-size: 13px; padding: 12px 14px; margin-bottom: 22px; line-height: 1.5; }
+  }
   .i18n-notice {
     max-width: 1100px;
     margin: -20px auto 28px;
@@ -2106,10 +2116,10 @@ html.embed-mode #embed-you-hint {
     <div class="brand" onclick="showLanding()" style="cursor:pointer;">Mull<span>.</span></div>
     <div class="brandbar-right">
       <a class="brandbar-link" href="/dilemma" data-i18n="nav.dilemma">Today's dilemma</a>
-      <a class="brandbar-link" href="/diary" data-i18n="nav.diary">Diary</a>
-      <a class="brandbar-link" href="/debate" data-i18n="nav.debate">Simulated debate</a>
+      <a class="brandbar-link brandbar-link-secondary" href="/diary" data-i18n="nav.diary">Diary</a>
+      <a class="brandbar-link brandbar-link-secondary" href="/debate" data-i18n="nav.debate">Simulated debate</a>
       <button class="brandbar-link" onclick="showAbout()" data-i18n="nav.about">About</button>
-      <button class="brandbar-link" onclick="showGallery()" data-i18n="nav.archetypes">Archetypes</button>
+      <button class="brandbar-link brandbar-link-secondary" onclick="showGallery()" data-i18n="nav.archetypes">Archetypes</button>
       <select id="brandbar-lang" class="brandbar-lang" title="Language" onchange="setMullLocale(this.value)">
         <option value="en">English</option>
         <option value="es">Español</option>
@@ -2216,7 +2226,7 @@ html.embed-mode #embed-you-hint {
       <p>The values that shape this product. They don't change as Mull grows — that's the whole point of writing them down.</p>
       <ul class="about-promises">
         <li><strong>No ads, ever.</strong> No banners, no tracking pixels, no sponsored newsletter slot. Your reflections are between you and the model. Nobody pays for the privilege of putting an ad next to them.</li>
-        <li><strong>No selling your data.</strong> If you make an account, we hold your email and your saved quiz attempts — nothing else. A delete-account button is on the roadmap; in the meantime, email <a href="mailto:jimmy.kaian.ji@gmail.com" class="about-mail">jimmy.kaian.ji@gmail.com</a> and your data is wiped the same day. Your map is private by default; future public profiles will be opt-in only.</li>
+        <li><strong>No selling your data.</strong> If you make an account, we hold your email and your saved quiz attempts — nothing else. You can download everything we have on you as JSON, or delete your account outright, from the public-profile settings page (sign in, then visit <em>Account → Public profile settings</em>). Your map is private by default; public profiles are opt-in only.</li>
         <li><strong>Not VC-funded.</strong> No investors, no growth quotas, no board demanding a 10× return. The product changes when we decide it should change, not when a quarterly review demands traction.</li>
         <li><strong>Not an "AI app".</strong> AI is used in two specific places — analyzing your written daily dilemma into dimensional vectors, and generating philosopher dialogues. The 16-dimensional model, the archetype system, the philosopher positions, the figures — hand-designed by humans who care about getting philosophy right.</li>
         <li><strong>The free tier stays generous.</strong> If Mull grows past break-even, every dollar of margin goes back into the product: better LLM analysis, scholars to verify philosopher positions, illustrators to redo the figures properly, content for the learning lab. If it grows past <em>that</em>, none of these principles change.</li>
@@ -5828,9 +5838,45 @@ function drawConstellation(userVec, svgIdOld, popupIdOld, userVecHistory) {
     flyId = requestAnimationFrame(step);
   }
 
-  function onTouchStart(e) { if (e.touches.length === 1) onPointerDown(e.touches[0]); }
-  function onTouchMove(e) { if (dragging && e.touches.length === 1) { onPointerMove(e.touches[0]); e.preventDefault(); } }
-  function onTouchEnd(e) { if (e.changedTouches.length) onPointerUp(e.changedTouches[0]); }
+  // Touch handlers — single-finger drag rotates the orbit (same as mouse),
+  // two-finger pinch zooms in/out, two-finger pan shifts the orbit target.
+  let pinchStartDist = null;
+  let pinchStartCameraDist = null;
+  function touchDistance(t1, t2) {
+    const dx = t1.clientX - t2.clientX;
+    const dy = t1.clientY - t2.clientY;
+    return Math.hypot(dx, dy);
+  }
+  function onTouchStart(e) {
+    if (e.touches.length === 1) {
+      onPointerDown(e.touches[0]);
+    } else if (e.touches.length === 2) {
+      // Cancel any in-progress single-finger drag and start pinch.
+      dragging = false;
+      pinchStartDist = touchDistance(e.touches[0], e.touches[1]);
+      pinchStartCameraDist = orbit.distance;
+    }
+  }
+  function onTouchMove(e) {
+    if (e.touches.length === 1 && dragging) {
+      onPointerMove(e.touches[0]);
+      e.preventDefault();
+    } else if (e.touches.length === 2 && pinchStartDist !== null) {
+      const newDist = touchDistance(e.touches[0], e.touches[1]);
+      // Smaller pinch => bigger orbit.distance => zoomed out. Inverse.
+      const ratio = pinchStartDist / Math.max(1, newDist);
+      orbit.distance = Math.max(orbit.minDist, Math.min(orbit.maxDist, pinchStartCameraDist * ratio));
+      updateCamera();
+      e.preventDefault();
+    }
+  }
+  function onTouchEnd(e) {
+    if (e.touches.length < 2) {
+      pinchStartDist = null;
+      pinchStartCameraDist = null;
+    }
+    if (e.changedTouches.length && e.touches.length === 0) onPointerUp(e.changedTouches[0]);
+  }
 
   canvasEl.addEventListener('mousedown', onPointerDown);
   document.addEventListener('mousemove', onPointerMove);

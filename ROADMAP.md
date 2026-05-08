@@ -2,6 +2,22 @@
 
 Notes on features queued up but not yet built. Source-of-truth lives here so future builds can pick up where we left off.
 
+## What landed this session (autonomous, while Jimmy was revising)
+
+- **Mobile responsiveness pass**: brandbar's secondary links (Diary, Simulated debate, Archetypes) hide on viewports ≤460px so the bar doesn't wrap into two rows; version + construction banners scale; pinch-to-zoom now works on the 3D constellation map (two-finger pinch, in addition to single-finger drag-to-rotate that was already there).
+- **Open Graph meta tags**: layout-level defaults plus per-profile `generateMetadata` for `/u/[handle]`. Sharing a profile URL on Twitter, Slack, iMessage, etc. now previews with the user's display name + bio (or archetype if no bio).
+- **Data export** (`GET /api/account/export`): downloads a single JSON file with everything we hold on the user — quiz attempts, dilemma responses, diary entries, debates, profile settings, plus the auth.users id/email/created_at. Surfaced as "Download my data (JSON)" on `/account/profile`.
+- **Account deletion** (`POST /api/account/delete`): two-step UI gate (type "DELETE MY ACCOUNT" + click). Wipes every user-scoped table then removes the auth.users row via service-role admin client. About page copy updated to remove the "email Jimmy to delete" caveat.
+- **Sitemap + robots**: `app/sitemap.ts` and `app/robots.ts`. Sitemap lists static public routes; `/u/<handle>` is allowed for crawling but not enumerated (privacy). API + private user routes disallowed.
+
+### What Jimmy needs to do post-merge
+
+1. Add `SUPABASE_SERVICE_ROLE_KEY` to `.env.local` and to Vercel project settings. Get it from Supabase → Project Settings → API → "service_role secret". Without this, `/api/account/delete` will wipe user data but error out before removing the auth row.
+2. If `20260509_public_per_entry.sql` hasn't been run yet, run it. (See SETUP.md migration list.)
+3. Test the account deletion flow with a throwaway account before relying on it — destructive operation, can't be tested non-destructively.
+4. Test the public profile share preview by sharing a `/u/<handle>` URL.
+5. Test the map's pinch-to-zoom on a real phone.
+
 ## Near term — finish before/around v1.0
 
 ### Translation of philosophical content

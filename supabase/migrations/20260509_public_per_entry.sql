@@ -9,10 +9,15 @@ ALTER TABLE diary_entries
   ADD COLUMN IF NOT EXISTS is_public boolean NOT NULL DEFAULT false;
 
 -- Public read policies: anyone can read entries the user explicitly marked public.
+-- Drop-then-create pattern keeps this script idempotent (re-runnable without
+-- crashing on "policy already exists"). Postgres 16 has CREATE POLICY IF NOT
+-- EXISTS but Supabase isn't reliably on 16+ yet, so we do it the portable way.
+DROP POLICY IF EXISTS "Anyone reads public dilemma responses" ON dilemma_responses;
 CREATE POLICY "Anyone reads public dilemma responses"
   ON dilemma_responses FOR SELECT
   USING (is_public = true);
 
+DROP POLICY IF EXISTS "Anyone reads public diary entries" ON diary_entries;
 CREATE POLICY "Anyone reads public diary entries"
   ON diary_entries FOR SELECT
   USING (is_public = true);
