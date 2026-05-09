@@ -15,7 +15,7 @@ const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
 
 type Pick = {
-  position: number;
+  slot: number;
   source_type: 'dilemma' | 'diary' | 'exercise';
   source_id: string;
   entry_text: string | null;
@@ -88,7 +88,7 @@ export default async function EditorPicks({ locale = 'en' }: { locale?: string }
           display: 'grid', gap: 14,
         }}>
           {picks.map(p => (
-            <li key={`${p.position}-${p.source_id}`} style={{
+            <li key={`${p.slot}-${p.source_id}`} style={{
               padding: '18px 22px',
               background: '#FFFCF4',
               border: '1px solid #EBE3CA',
@@ -122,7 +122,7 @@ export default async function EditorPicks({ locale = 'en' }: { locale?: string }
                   fontFamily: serif, fontSize: 18, fontWeight: 500,
                   color: '#B8862F', fontVariantNumeric: 'tabular-nums',
                 }}>
-                  {p.position}
+                  {p.slot}
                 </span>
               </div>
 

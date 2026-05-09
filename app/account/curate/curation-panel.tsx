@@ -30,7 +30,7 @@ type Candidate = {
 };
 
 type CurrentPick = {
-  position: number;
+  slot: number;
   source_type: 'dilemma' | 'diary' | 'exercise';
   source_id: string;
   entry_text: string;
@@ -80,10 +80,10 @@ export default function CurationPanel() {
 
   useEffect(() => { load(); /* eslint-disable-next-line */ }, [filter, days]);
 
-  async function pickIntoSlot(position: 1 | 2 | 3, c: Candidate) {
+  async function pickIntoSlot(slot: 1 | 2 | 3, c: Candidate) {
     const draftKey = `${c.source_type}:${c.source_id}`;
     const note = noteDrafts[draftKey] || '';
-    setBusy(draftKey + ':' + position);
+    setBusy(draftKey + ':' + slot);
     setError(null);
     try {
       const res = await fetch('/api/admin/curate', {
@@ -91,7 +91,7 @@ export default function CurationPanel() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           week,
-          position,
+          slot,
           source_type: c.source_type,
           source_id: c.source_id,
           curator_note: note,
@@ -107,12 +107,12 @@ export default function CurationPanel() {
     }
   }
 
-  async function clearSlot(position: number) {
-    if (!confirm(`Clear slot ${position}?`)) return;
-    setBusy('clear:' + position);
+  async function clearSlot(slot: number) {
+    if (!confirm(`Clear slot ${slot}?`)) return;
+    setBusy('clear:' + slot);
     setError(null);
     try {
-      const res = await fetch(`/api/admin/curate?position=${position}&week=${encodeURIComponent(week)}`, {
+      const res = await fetch(`/api/admin/curate?slot=${slot}&week=${encodeURIComponent(week)}`, {
         method: 'DELETE',
       });
       const json = await res.json();
@@ -135,7 +135,7 @@ export default function CurationPanel() {
         marginBottom: 28,
       }}>
         {[1, 2, 3].map(slot => {
-          const pick = picks.find(p => p.position === slot);
+          const pick = picks.find(p => p.slot === slot);
           return (
             <div key={slot} style={{
               padding: '14px 16px',

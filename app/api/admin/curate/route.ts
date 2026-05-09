@@ -6,11 +6,11 @@
 //     - currentPicks: the three slots for the requested week (or
 //       this week if none specified), with full entry content
 //
-// POST { week: 'YYYY-MM-DD', position: 1|2|3, source_type, source_id, curator_note }
+// POST { week: 'YYYY-MM-DD', slot: 1|2|3, source_type, source_id, curator_note }
 //   Upserts a pick into the given slot for the given week. Replaces
 //   whatever was previously in that slot.
 //
-// DELETE ?week=YYYY-MM-DD&position=1
+// DELETE ?week=YYYY-MM-DD&slot=1
 //   Clears one slot.
 //
 // All three operations gated by isAdminUserId(user.id) — the
@@ -80,7 +80,7 @@ export async function POST(req: Request) {
 
   let body: {
     week?: string;
-    position?: number;
+    slot?: number;
     source_type?: string;
     source_id?: string;
     curator_note?: string;
@@ -89,13 +89,13 @@ export async function POST(req: Request) {
   catch { return NextResponse.json({ error: 'Invalid JSON.' }, { status: 400 }); }
 
   const week = body.week || weekKey();
-  const position = Number(body.position);
+  const slot = Number(body.slot);
   const sourceType = body.source_type;
   const sourceId = body.source_id;
   const note = (body.curator_note || '').slice(0, 500);
 
-  if (![1, 2, 3].includes(position)) {
-    return NextResponse.json({ error: 'position must be 1, 2, or 3.' }, { status: 400 });
+  if (![1, 2, 3].includes(slot)) {
+    return NextResponse.json({ error: 'slot must be 1, 2, or 3.' }, { status: 400 });
   }
   if (!sourceType || !['dilemma', 'diary', 'exercise'].includes(sourceType)) {
     return NextResponse.json({ error: 'source_type must be dilemma | diary | exercise.' }, { status: 400 });
@@ -112,14 +112,14 @@ export async function POST(req: Request) {
     .from('editor_picks')
     .upsert({
       week_start: week,
-      position,
+      slot,
       source_type: sourceType,
       source_id: sourceId,
       curator_note: note,
       picked_by: gate.user.id,
       updated_at: new Date().toISOString(),
     }, {
-      onConflict: 'week_start,position',
+      onConflict: 'week_start,slot',
     });
 
   if (error) {
@@ -127,7 +127,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Could not save pick.' }, { status: 500 });
   }
 
-  return NextResponse.json({ ok: true, week, position });
+  return NextResponse.json({ ok: true, week, slot });
 }
 
 export async function DELETE(req: Request) {
@@ -136,9 +136,9 @@ export async function DELETE(req: Request) {
 
   const url = new URL(req.url);
   const week = url.searchParams.get('week') || weekKey();
-  const position = Number(url.searchParams.get('position'));
-  if (![1, 2, 3].includes(position)) {
-    return NextResponse.json({ error: 'position must be 1, 2, or 3.' }, { status: 400 });
+  const slot = Number(url.searchParams.get('slot'));
+  if (![1, 2, 3].includes(slot)) {
+    return NextResponse.json({ error: 'slot must be 1, 2, or 3.' }, { status: 400 });
   }
 
   const admin = createAdminClient();
@@ -146,7 +146,7 @@ export async function DELETE(req: Request) {
     .from('editor_picks')
     .delete()
     .eq('week_start', week)
-    .eq('position', position);
+    .eq('slot', slot);
 
   if (error) {
     console.error('[admin/curate DELETE] failed', error);

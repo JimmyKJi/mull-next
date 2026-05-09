@@ -7,8 +7,8 @@
 -- Schema notes:
 --   - week_start is a date set to the Monday of the pick's week
 --     (UTC). The UI computes this from the pick's creation moment.
---   - position is 1, 2, or 3 — the slot the pick occupies in that
---     week's display. UNIQUE (week_start, position) means each slot
+--   - slot is 1, 2, or 3 — the slot the pick occupies in that
+--     week's display. UNIQUE (week_start, slot) means each slot
 --     can hold only one pick at a time; replacing is "upsert".
 --   - source_type discriminates which table source_id refers to.
 --     We can't FK across multiple tables, so we enforce referential
@@ -26,18 +26,18 @@
 CREATE TABLE IF NOT EXISTS public.editor_picks (
   id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   week_start   date NOT NULL,
-  position     int  NOT NULL CHECK (position BETWEEN 1 AND 3),
+  slot     int  NOT NULL CHECK (slot BETWEEN 1 AND 3),
   source_type  text NOT NULL CHECK (source_type IN ('dilemma','diary','exercise')),
   source_id    uuid NOT NULL,
   curator_note text,
   picked_by    uuid REFERENCES auth.users(id) ON DELETE SET NULL,
   created_at   timestamptz NOT NULL DEFAULT now(),
   updated_at   timestamptz NOT NULL DEFAULT now(),
-  UNIQUE (week_start, position)
+  UNIQUE (week_start, slot)
 );
 
 CREATE INDEX IF NOT EXISTS editor_picks_week_idx
-  ON public.editor_picks (week_start DESC, position);
+  ON public.editor_picks (week_start DESC, slot);
 
 ALTER TABLE public.editor_picks ENABLE ROW LEVEL SECURITY;
 
@@ -58,7 +58,7 @@ CREATE POLICY "Anyone reads picks" ON public.editor_picks
 -- author info in one round trip.
 --
 -- Defaults to the current week if no arg given. Returns rows in
--- position order (1, 2, 3); missing positions are simply absent.
+-- slot order (1, 2, 3); missing slots are simply absent.
 --
 -- SECURITY DEFINER so it can read across tables without RLS
 -- friction; we only return is_public = true entries to be safe even
@@ -67,7 +67,7 @@ CREATE OR REPLACE FUNCTION public.get_editor_picks_for_week(
   in_week_start date DEFAULT date_trunc('week', current_date)::date
 )
 RETURNS TABLE (
-  position           int,
+  slot           int,
   source_type        text,
   source_id          uuid,
   entry_text         text,
@@ -87,10 +87,10 @@ AS $body$
   WITH picks AS (
     SELECT * FROM public.editor_picks
     WHERE week_start = in_week_start
-    ORDER BY position
+    ORDER BY slot
   )
   SELECT
-    p.position,
+    p.slot,
     p.source_type,
     p.source_id,
     CASE p.source_type
@@ -125,7 +125,7 @@ AS $body$
     (p.source_type <> 'dilemma'  OR d.id  IS NOT NULL)
     AND (p.source_type <> 'diary'    OR dy.id IS NOT NULL)
     AND (p.source_type <> 'exercise' OR ex.id IS NOT NULL)
-  ORDER BY p.position;
+  ORDER BY p.slot;
 $body$;
 
 GRANT EXECUTE ON FUNCTION public.get_editor_picks_for_week(date) TO anon, authenticated;
