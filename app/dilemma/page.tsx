@@ -28,16 +28,41 @@ type ExistingResponse = {
   created_at: string;
 };
 
+type RecentResponse = {
+  id: string;
+  dilemma_date: string;
+  question_text: string;
+  response_text: string;
+  analysis: string | null;
+  created_at: string;
+};
+
 export default async function DilemmaPage() {
   const supabase = await createClient();
   const locale = await getServerLocale();
   const { data: { user } } = await supabase.auth.getUser();
   const today = getDailyDilemma();
-  // Localize today's dilemma question + hint via the dil.N.* keys
-  const localizedPrompt = t(`dil.${today.index}.prompt`, locale) || today.dilemma.prompt;
-  const localizedHint = t(`dil.${today.index}.hint`, locale) || today.dilemma.hint || '';
+  // Localize today's dilemma question + hint via the dil.N.* keys.
+  // t() returns the key itself when no entry exists (so it's always
+  // truthy — `||` fallback won't trigger). We expanded DILEMMAS to 379
+  // but the dil.N.* translation keys only cover the original ~90, so
+  // for any newer index we need to fall through to the English source
+  // string explicitly. Detect "no translation" by comparing against the
+  // key string.
+  const promptKey = `dil.${today.index}.prompt`;
+  const hintKey = `dil.${today.index}.hint`;
+  const promptLookup = t(promptKey, locale);
+  const hintLookup = t(hintKey, locale);
+  const localizedPrompt = (promptLookup && promptLookup !== promptKey)
+    ? promptLookup
+    : today.dilemma.prompt;
+  const localizedHint = (hintLookup && hintLookup !== hintKey)
+    ? hintLookup
+    : (today.dilemma.hint || '');
 
   let existing: ExistingResponse | null = null;
+  let streak = 0;
+  let recent: RecentResponse[] = [];
   if (user) {
     const { data } = await supabase
       .from('dilemma_responses')
@@ -46,6 +71,39 @@ export default async function DilemmaPage() {
       .eq('dilemma_date', today.dateKey)
       .maybeSingle<ExistingResponse>();
     existing = data;
+
+    // Fetch the user's 3 most recent past responses (excluding today's), so
+    // they can re-read what they've been thinking about over the past week or
+    // so. Helps surface continuity without dragging them all the way to /account.
+    const { data: recentRows } = await supabase
+      .from('dilemma_responses')
+      .select('id, dilemma_date, question_text, response_text, analysis, created_at')
+      .eq('user_id', user.id)
+      .neq('dilemma_date', today.dateKey)
+      .order('dilemma_date', { ascending: false })
+      .limit(3);
+    recent = (recentRows as RecentResponse[] | null) || [];
+
+    // Compute current streak: walk backward from today (or yesterday if not
+    // yet answered today), counting consecutive days with a saved response.
+    const { data: dateRows } = await supabase
+      .from('dilemma_responses')
+      .select('dilemma_date')
+      .eq('user_id', user.id)
+      .order('dilemma_date', { ascending: false })
+      .limit(400);
+    if (dateRows) {
+      const dateSet = new Set(dateRows.map(r => r.dilemma_date as string));
+      const cursor = new Date(today.dateKey);
+      // If today isn't done yet, the streak is whatever ran up to yesterday.
+      if (!dateSet.has(cursor.toISOString().slice(0, 10))) {
+        cursor.setUTCDate(cursor.getUTCDate() - 1);
+      }
+      while (dateSet.has(cursor.toISOString().slice(0, 10))) {
+        streak++;
+        cursor.setUTCDate(cursor.getUTCDate() - 1);
+      }
+    }
   }
 
   const shifts = existing?.vector_delta ? topShifts(existing.vector_delta) : [];
@@ -91,6 +149,21 @@ export default async function DilemmaPage() {
         {t('dilemma.eyebrow', locale)} · {new Date(today.dateKey).toLocaleDateString(locale === 'en' ? 'en-GB' : locale, {
           weekday: 'long', day: 'numeric', month: 'long'
         })}
+        {streak > 1 && (
+          <span style={{ marginLeft: 14, color: '#2F5D5C' }}>
+            · {t('dilemma.streak', locale, { n: streak })}
+          </span>
+        )}
+        {user && (
+          <Link href="/dilemma/archive" style={{
+            marginLeft: 14, color: '#8C6520',
+            textDecoration: 'none', fontWeight: 500,
+            borderBottom: '1px solid rgba(140, 101, 32, 0.4)',
+            paddingBottom: 1,
+          }}>
+            {t('dilemma.see_archive', locale)}
+          </Link>
+        )}
       </div>
 
       <h1 style={{
@@ -278,6 +351,93 @@ export default async function DilemmaPage() {
         </div>
       ) : (
         <DilemmaForm questionPrompt={localizedPrompt} locale={locale} />
+      )}
+
+      {user && existing && recent.length > 0 && (
+        <section style={{ marginTop: 48 }}>
+          <div style={{
+            fontFamily: sans,
+            fontSize: 11,
+            fontWeight: 600,
+            color: '#8C6520',
+            textTransform: 'uppercase',
+            letterSpacing: '0.18em',
+            marginBottom: 6,
+          }}>
+            {t('dilemma.recent_eyebrow', locale)}
+          </div>
+          <p style={{
+            fontFamily: serif,
+            fontStyle: 'italic',
+            fontSize: 15,
+            color: '#4A4338',
+            margin: '0 0 18px',
+          }}>
+            {t('dilemma.recent_helper', locale)}
+          </p>
+          <div style={{ display: 'grid', gap: 14 }}>
+            {recent.map(r => (
+              <details
+                key={r.id}
+                style={{
+                  background: '#FFFCF4',
+                  border: '1px solid #EBE3CA',
+                  borderRadius: 8,
+                  padding: '14px 18px',
+                }}
+              >
+                <summary style={{
+                  cursor: 'pointer',
+                  listStyle: 'none',
+                  fontFamily: serif,
+                  fontSize: 16,
+                  color: '#221E18',
+                  lineHeight: 1.4,
+                }}>
+                  <span style={{
+                    display: 'block',
+                    fontFamily: sans,
+                    fontSize: 10,
+                    fontWeight: 600,
+                    color: '#8C6520',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.16em',
+                    marginBottom: 6,
+                  }}>
+                    {new Date(r.dilemma_date).toLocaleDateString(locale === 'en' ? 'en-GB' : locale, {
+                      weekday: 'short', day: 'numeric', month: 'short'
+                    })}
+                  </span>
+                  {r.question_text}
+                </summary>
+                <p style={{
+                  fontFamily: serif,
+                  fontSize: 15.5,
+                  color: '#221E18',
+                  lineHeight: 1.6,
+                  margin: '12px 0 0',
+                  whiteSpace: 'pre-wrap',
+                }}>
+                  {r.response_text}
+                </p>
+                {r.analysis && (
+                  <p style={{
+                    fontFamily: serif,
+                    fontStyle: 'italic',
+                    fontSize: 14.5,
+                    color: '#4A4338',
+                    lineHeight: 1.55,
+                    margin: '10px 0 0',
+                    paddingLeft: 12,
+                    borderLeft: '2px solid #D6CDB6',
+                  }}>
+                    {r.analysis}
+                  </p>
+                )}
+              </details>
+            ))}
+          </div>
+        </section>
       )}
 
       <p style={{

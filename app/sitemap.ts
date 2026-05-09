@@ -13,6 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: `${SITE}/`,         lastModified: now, changeFrequency: 'weekly',  priority: 1.0 },
     { url: `${SITE}/about`,    lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${SITE}/methodology`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${SITE}/billing`,  lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${SITE}/search`,   lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${SITE}/login`,    lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
@@ -26,5 +27,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
       'fallacy-hunt','steelmanning','counterexample-drill','argument-map','reductio',
       'sixty-second-case','anticipating-objections','translation-under-constraint','dialectical-loop','switch-sides',
     ].map(slug => ({ url: `${SITE}/exercises/${slug}`, lastModified: now, changeFrequency: 'monthly' as const, priority: 0.5 })),
+    { url: `${SITE}/archetype`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    ...[
+      'cartographer','keel','threshold','pilgrim','touchstone',
+      'hearth','forge','hammer','garden','lighthouse',
+    ].map(slug => ({ url: `${SITE}/archetype/${slug}`, lastModified: now, changeFrequency: 'monthly' as const, priority: 0.6 })),
   ];
 }

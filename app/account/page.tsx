@@ -8,6 +8,8 @@ import { getDailyDilemma } from '@/lib/dilemmas';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
+import ProgressionPanel from '@/components/progression-panel';
+import { computeUserStats } from '@/lib/profile-progression';
 
 // Account pages should never be indexed by search engines — belt and braces
 // alongside the disallow directive in app/robots.ts.
@@ -287,6 +289,12 @@ export default async function AccountPage() {
   const dilemmaCount = dilemmas.length;
   const quizCount = attempts.length;
   const diaryCount = diaries.length;
+
+  // Milestones + badges. Computed independently from the trajectory data
+  // because progression needs unlimited counts (the trajectory queries
+  // above limit to 40/60/60 for the visualization), and a couple extra
+  // tables (debate_history, public_profiles) the trajectory doesn't.
+  const stats = await computeUserStats(supabase, user.id);
 
   return (
     <main style={{ maxWidth: 760, margin: '60px auto', padding: '0 24px' }}>
@@ -910,6 +918,11 @@ export default async function AccountPage() {
           </ul>
         </section>
       )}
+
+      {/* Milestones + badges. Always renders, even for brand-new users —
+          their progress bars start at zero and the unearned-badges
+          preview shows what's coming. */}
+      <ProgressionPanel stats={stats} locale={locale} />
     </main>
   );
 }

@@ -66,14 +66,39 @@
   .wrap.wide { max-width: 1040px; }
   body.has-sticky-cta { padding-bottom: 90px; }
   @media (max-width: 600px) { body.has-sticky-cta { padding-bottom: 130px; } }
+  /* Full-width shell: spans the viewport edge-to-edge so brandbar items
+     don't get jammed into the 720px content column. */
+  .brandbar-shell {
+    width: 100%;
+    background: var(--cream);
+    padding: 24px 28px 0;
+    box-sizing: border-box;
+  }
+  .brandbar-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
   .brandbar {
     display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 48px;
+    margin-bottom: 36px;
+    gap: 20px;
   }
   .brand {
     font-family: "Cormorant Garamond", Georgia, serif;
-    font-weight: 600; font-size: 28px; letter-spacing: .5px;
+    font-weight: 600;
+    /* Step the logo up two sizes on desktop so it lands as the visual
+       anchor of the page; mobile stays modest so it doesn't dominate. */
+    font-size: 38px;
+    letter-spacing: .5px;
     color: var(--ink);
+    cursor: pointer;
+    line-height: 1;
+  }
+  @media (min-width: 700px) {
+    .brand { font-size: 44px; }
+  }
+  @media (max-width: 540px) {
+    .brand { font-size: 30px; }
   }
   .brand span { color: var(--acc); }
   .pill {
@@ -84,13 +109,24 @@
   }
   .pill.draft { background: #FBF1EE; color: #A8451F; border-color: #E5C9C0; }
   .brandbar-right {
-    display: flex; align-items: center; gap: 14px;
-    flex-wrap: wrap;
+    display: flex; align-items: center; gap: 18px;
+    flex-wrap: nowrap;
     justify-content: flex-end;
+    /* Allow the row to overflow gracefully on absurdly narrow screens
+       rather than wrap into two rows; tablet+desktop have plenty of
+       room thanks to .brandbar-shell going edge-to-edge. */
+    min-width: 0;
+  }
+  @media (max-width: 900px) {
+    .brandbar-right { gap: 12px; }
+  }
+  @media (max-width: 700px) {
+    .brandbar-right { gap: 10px; flex-wrap: wrap; }
+    .brandbar-link { font-size: 13px; padding: 3px 0; }
+    .brandbar { margin-bottom: 28px; gap: 12px; }
+    .brandbar-shell { padding: 18px 18px 0; }
   }
   @media (max-width: 540px) {
-    .brandbar-right { gap: 8px; }
-    .brandbar-link { font-size: 12.5px; padding: 3px 0; }
     .pill.draft { display: none; }
   }
   /* Tight phones: drop the secondary nav links to keep the bar from
@@ -111,15 +147,35 @@
   .brandbar-link:hover { color: var(--acc-deep); }
   a.brandbar-link { color: var(--ink); font-weight: 500; }
   a.brandbar-link:hover { color: var(--acc-deep); }
+  /* Progressive disclosure — authed-only nav links are hidden for visitors
+     who aren't signed in, since those features all require an account anyway.
+     JS adds `is-authed` to <body> after detecting CURRENT_USER, which flips
+     them on. Composes with `brandbar-link-secondary` (hidden on narrow vps). */
+  .brandbar-link-authed { display: none; }
+  body.is-authed .brandbar-link-authed { display: inline-block; }
+  /* Account link gets a small visual emphasis so it's findable at a glance.
+     Visible only when authed (composes with .brandbar-link-authed above). */
+  a.brandbar-link.brandbar-account {
+    padding: 5px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--cream-2);
+    font-size: 13px;
+  }
+  a.brandbar-link.brandbar-account:hover {
+    border-color: var(--acc); color: var(--acc-deep);
+  }
   .brandbar-lang {
     font-family: inherit;
     font-size: 12.5px;
-    padding: 3px 8px;
+    padding: 5px 10px;
     background: transparent;
     border: 1px solid var(--line);
-    border-radius: 6px;
+    border-radius: 999px;
     color: var(--ink-soft);
     cursor: pointer;
+    /* Push slightly left of the auth chip so they read as a settings group */
+    margin-left: 6px;
   }
   .brandbar-lang:hover { color: var(--ink); border-color: var(--ink-soft); }
 
@@ -225,6 +281,70 @@
     line-height: 1.55;
   }
   .pricing-callout strong { color: var(--acc-deep); }
+  .about-revised {
+    margin-top: 36px;
+    padding: 14px 18px;
+    background: #FBF6E8;
+    border-left: 3px solid #B8862F;
+    border-radius: 6px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+  .about-revised strong { color: var(--ink); }
+  .whatsnext {
+    margin: 28px 0 36px;
+    padding: 22px 24px 24px;
+    background: #FBF6E8;
+    border: 1px solid #E2D8B6;
+    border-radius: 12px;
+  }
+  .whatsnext-eyebrow {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: #8C6520;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin-bottom: 14px;
+  }
+  .whatsnext-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+  }
+  .whatsnext-card {
+    display: block;
+    padding: 16px 18px;
+    background: #FFFCF4;
+    border: 1px solid #E2D8B6;
+    border-left: 3px solid var(--acc);
+    border-radius: 8px;
+    color: var(--ink);
+    text-decoration: none;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+  .whatsnext-card:hover {
+    transform: translateY(-1px);
+    border-color: var(--acc-deep);
+    border-left-color: var(--acc-deep);
+  }
+  .whatsnext-h {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 19px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 4px;
+    letter-spacing: -0.2px;
+  }
+  .whatsnext-card p {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin: 0;
+    line-height: 1.55;
+  }
   .about-mail {
     color: var(--acc-deep);
     text-decoration: underline;
@@ -1376,6 +1496,19 @@
     margin: 0;
     font-style: italic;
   }
+  .archetype-longform-link {
+    display: inline-block;
+    margin-top: 16px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13.5px;
+    color: var(--accent, #8C6520);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 1px;
+    letter-spacing: 0.2px;
+    transition: opacity 0.18s;
+  }
+  .archetype-longform-link:hover { opacity: 0.7; }
   @media (max-width: 700px) {
     .archetype-hero {
       grid-template-columns: 1fr;
@@ -2051,6 +2184,20 @@ html.embed-mode #results {
   max-width: none !important;
   height: 100vh !important;
 }
+/* Hide everything outside #results in embed mode. The brandbar-shell
+   and #i18n-notice now sit OUTSIDE .wrap, so the previous "hide
+   children of #results" rules left them visible — fixing here. */
+html.embed-mode .brandbar-shell,
+html.embed-mode #i18n-notice,
+html.embed-mode #landing,
+html.embed-mode #quiz,
+html.embed-mode #gallery,
+html.embed-mode #archetype-detail,
+html.embed-mode #about-section,
+html.embed-mode #mappreview,
+html.embed-mode #i18n-notice-banner {
+  display: none !important;
+}
 html.embed-mode #results > *:not(.mapsection-wrap):not(.mapsection):not(#philpopup_res) {
   display: none !important;
 }
@@ -2139,17 +2286,32 @@ html.embed-mode #embed-you-hint {
 </style>
 </head>
 <body> <div id="auth-nav" class="auth-nav" hidden></div>
-<div class="wrap" id="rootwrap">
-  <div class="brandbar">
+<!-- Brandbar lives OUTSIDE .wrap so it can span the full viewport width on
+     desktop and stop forcing nav items onto a second row. .brandbar-shell
+     handles its own horizontal padding; .brandbar-inner caps the width at
+     a sensible maximum so nav doesn't fly to opposite ends of a 1920px
+     monitor. -->
+<div class="brandbar-shell">
+  <div class="brandbar-inner brandbar">
     <div class="brand" onclick="showLanding()" style="cursor:pointer;">Mull<span>.</span></div>
     <div class="brandbar-right">
       <a class="brandbar-link" href="/dilemma" data-i18n="nav.dilemma">Today's dilemma</a>
-      <a class="brandbar-link brandbar-link-secondary" href="/diary" data-i18n="nav.diary">Diary</a>
-      <a class="brandbar-link brandbar-link-secondary" href="/debate" data-i18n="nav.debate">Simulated debate</a>
       <a class="brandbar-link brandbar-link-secondary" href="/exercises" data-i18n="nav.exercises">Exercises</a>
-      <a class="brandbar-link brandbar-link-secondary" href="/search" data-i18n="nav.search">Search minds</a>
-      <button class="brandbar-link" onclick="showAbout()" data-i18n="nav.about">About</button>
       <button class="brandbar-link brandbar-link-secondary" onclick="showGallery()" data-i18n="nav.archetypes">Archetypes</button>
+      <button class="brandbar-link" onclick="showAbout()" data-i18n="nav.about">About</button>
+      <!-- Authed-only: these features all require an account, so we hide them
+           until the user is signed in. JS sets body.is-authed when the auth
+           callback runs. -->
+      <a class="brandbar-link brandbar-link-secondary brandbar-link-authed" href="/diary" data-i18n="nav.diary">Diary</a>
+      <a class="brandbar-link brandbar-link-secondary brandbar-link-authed" href="/debate" data-i18n="nav.debate">Simulated debate</a>
+      <!-- Leaderboard is visible to everyone — public profiles are world-readable
+           and the leaderboard is the most useful "what is this place" surface
+           after the quiz. Sign-in flow runs from the page itself. -->
+      <a class="brandbar-link brandbar-link-secondary" href="/search" data-i18n="nav.search_leaderboard">Leaderboard</a>
+      <!-- Auth chip is always visible. JS swaps text + destination based on
+           CURRENT_USER (see renderAuthNav). Default text covers signed-out
+           visitors so the link is never blank during initial render. -->
+      <a class="brandbar-link brandbar-account brandbar-auth-chip" href="/login" data-i18n="nav.signin" title="Sign in or create an account">Sign in</a>
       <select id="brandbar-lang" class="brandbar-lang" title="Language" onchange="setMullLocale(this.value)">
         <option value="en">English</option>
         <option value="es">Español</option>
@@ -2160,9 +2322,11 @@ html.embed-mode #embed-you-hint {
         <option value="ja">日本語</option>
         <option value="ko">한국어</option>
       </select>
-      <span class="pill draft">v0.9</span>
     </div>
   </div>
+</div>
+<!-- Page content lives inside .wrap (max-width 720, .wide opens to 1040). -->
+<div class="wrap" id="rootwrap">
 
   <!-- Translation-in-progress notice. Only visible when mull_locale != 'en'.
        Sits outside #landing so it persists into the quiz, results, gallery,
@@ -2179,8 +2343,7 @@ html.embed-mode #embed-you-hint {
     </div>
     <div class="constructionbanner">
       <div data-i18n-html="home.construction_notice">
-        <strong>A note while we're still building.</strong>
-        Mull is currently under construction. The subscription system isn't live yet, so for now Jimmy is personally covering the AI costs that power the daily dilemma, diary, and debates. If the monthly budget runs out before subscriptions launch, those features may pause briefly while he tops it back up — thanks for your patience as the project finds its footing.
+        <strong>Early build.</strong> Subscriptions aren't live yet, so AI features are paid out of pocket and may pause briefly if the budget runs out. Thanks for your patience.
       </div>
     </div>
 
@@ -2258,7 +2421,7 @@ html.embed-mode #embed-you-hint {
         <li><strong>No ads, ever.</strong> No banners, no tracking pixels, no sponsored newsletter slot. Your reflections are between you and the model. Nobody pays for the privilege of putting an ad next to them.</li>
         <li><strong>No selling your data.</strong> If you make an account, we hold your email and your saved quiz attempts — nothing else. You can download everything we have on you as JSON, or delete your account outright, from the public-profile settings page (sign in, then visit <em>Account → Public profile settings</em>). Your map is private by default; public profiles are opt-in only.</li>
         <li><strong>Not VC-funded.</strong> No investors, no growth quotas, no board demanding a 10× return. The product changes when we decide it should change, not when a quarterly review demands traction.</li>
-        <li><strong>Not an "AI app".</strong> AI is used in a few specific, bounded places — turning your written daily dilemma, diary entry, or exercise reflection into a small dimensional shift on your map; generating the back-and-forth in simulated philosopher debates; and (Mull+) writing your end-of-year retrospective from your own data. The 16-dimensional model, the archetype system, the philosopher positions, the figures, the quiz questions — all hand-designed by humans who care about getting philosophy right.</li>
+        <li><strong>Not an "AI app".</strong> AI is used in a few specific, bounded places — turning your written daily dilemma, diary entry, or exercise reflection into a small dimensional shift on your map; generating the back-and-forth in simulated philosopher debates; and (Mull+) writing your end-of-year retrospective from your own data. The 16-dimensional model, the archetype system, the philosopher positions, the figures, the quiz questions — all hand-designed by humans who care about getting philosophy right. The full list, with prompts and data flows, is on the <a href="/methodology" class="about-mail">methodology page</a>.</li>
         <li><strong>The free tier stays generous.</strong> If Mull grows past break-even, every dollar of margin goes back into the product: better LLM analysis, scholars to verify philosopher positions, illustrators to redo the figures properly, content for the learning lab. If it grows past <em>that</em>, none of these principles change.</li>
       </ul>
     </div>
@@ -2333,6 +2496,19 @@ html.embed-mode #embed-you-hint {
         For early supporters who want to lock things in: a <strong>Founding Mind lifetime pass at $49</strong> — capped at the first 1,000. This funds roughly the first year of infrastructure outright, in exchange for never paying again.
       </div>
     </div>
+
+    <div class="about-section">
+      <h2>What we actually store, and the cookies</h2>
+      <p>Concretely, what ends up on our server when you use Mull:</p>
+      <ul class="about-promises">
+        <li><strong>Auth.</strong> Your email and a hashed password (we never see plaintext), plus Supabase session metadata. Standard auth, nothing custom.</li>
+        <li><strong>Your data.</strong> Quiz attempts (with the resulting 16-D vector + chosen archetype), dilemma responses, diary entries, exercise reflections, debate history, and your public-profile settings if you opted in. Each row is tagged with your user ID; row-level security in the database enforces that only you (and, if you opted in, the public for explicitly-marked-public rows) can read them.</li>
+        <li><strong>Cookies.</strong> Two: <code>mull_locale</code> (your language preference) and your Supabase auth session token. Both are strictly necessary for the site to work. We do not set any analytics, advertising, or tracking cookies — there is no third-party telemetry on Mull.</li>
+      </ul>
+      <p>You can <a href="/account/profile" class="about-mail">download all of this as a single JSON file or delete your account outright</a> from the public-profile settings page. The full technical detail (which AI model, which prompts, what data flows where) is on the <a href="/methodology" class="about-mail">methodology page</a>.</p>
+    </div>
+
+    <p class="about-revised">These principles were last reviewed in <strong>May 2026</strong>. They get a quarterly audit against what we&apos;re actually doing. If something on this page contradicts what the product does, please tell us — that&apos;s a bug, not a feature.</p>
 
     <button class="cta cta-secondary about-back" onclick="closeAbout()" style="margin-top:32px;">← Back</button>
   </section>
@@ -2422,6 +2598,27 @@ html.embed-mode #embed-you-hint {
       <h1 id="resLabel" class="reslabel"></h1>
       <p id="resBlurb" class="resblurb"></p>
     </div> <div id="save-status" style="font-size: 13px; color: var(--acc-deep); margin-top: 8px; opacity: 0.85;"></div>
+
+    <!-- WHAT'S NEXT — three small doors users can take from results.
+         The third one swaps between "save your map" (signed-out) and
+         "your account" (signed-in) via JS in showResults(). -->
+    <div class="whatsnext">
+      <div class="whatsnext-eyebrow">What's next</div>
+      <div class="whatsnext-grid">
+        <a class="whatsnext-card" href="#" onclick="event.preventDefault(); showArchetypeDetail(window.MULL_LAST_ARCH_NAME); return false;">
+          <div class="whatsnext-h">Read your archetype in depth</div>
+          <p>Defining dimensions, where you'd stand on canonical debates, the closest thinkers, a starter reading list.</p>
+        </a>
+        <a class="whatsnext-card" href="/dilemma">
+          <div class="whatsnext-h">Try today's dilemma</div>
+          <p>One open-ended question, written by you in your own words. Adds a small shift to your map.</p>
+        </a>
+        <a class="whatsnext-card" id="whatsnext-save" href="/signup">
+          <div class="whatsnext-h">Save your map</div>
+          <p>Free account. Tracks how your position shifts over time. Diary, debate, exercises unlock too.</p>
+        </a>
+      </div>
+    </div>
 
     <div class="section">
       <h2>Why <em>this</em> archetype</h2>
@@ -2667,11 +2864,30 @@ async function saveAttempt(vec, archetypeName, flavor, alignmentPct) {
 }
 function renderAuthNav() {
   const nav = document.getElementById('auth-nav');
-  if (!nav) return;
-  nav.innerHTML = CURRENT_USER
-    ? '<a href="/account">Account →</a>'
-    : '<a href="/login">Sign in</a>';
-  nav.hidden = false;
+  if (nav) {
+    nav.innerHTML = CURRENT_USER
+      ? '<a href="/account">Account →</a>'
+      : '<a href="/login">Sign in</a>';
+    nav.hidden = false;
+  }
+  // Toggle the `is-authed` body class — the brandbar uses it to reveal
+  // authed-only nav links (Diary, Simulated debate).
+  document.body.classList.toggle('is-authed', !!CURRENT_USER);
+  // Brandbar Account/Sign-in chip: same chip, swap text + destination
+  // based on auth state. Keeps the chip visible to everyone so the
+  // sign-in path is never hidden behind progressive disclosure.
+  const chip = document.querySelector('.brandbar-auth-chip');
+  if (chip) {
+    if (CURRENT_USER) {
+      chip.setAttribute('href', '/account');
+      chip.textContent = 'Account →';
+      chip.setAttribute('title', 'Your account');
+    } else {
+      chip.setAttribute('href', '/login');
+      chip.textContent = 'Sign in';
+      chip.setAttribute('title', 'Sign in or create an account');
+    }
+  }
 }
 // --------------------------------------------------------------------
 /* ============================================================
@@ -4362,56 +4578,6 @@ const QUICK_I18N = {
     ]},
   }
 };
-    fr: { p:"Face à une décision difficile, quel est ton vrai premier geste ?", a:[
-      "Lister les options et leurs conséquences probables.",
-      "Écouter mon corps — qu'est-ce qu'il veut ?",
-      "Demander ce que ferait la personne que je veux devenir.",
-      "Parler avec ceux que j'aime.",
-      "Dormir dessus. La réponse vient quand je cesse de tendre la main.",
-      "Chercher le choix que j'évite. C'est souvent le bon."
-    ]},
-    pt: { p:"Diante de uma decisão difícil, qual é seu primeiro movimento de verdade?", a:[
-      "Listar as opções e suas consequências prováveis.",
-      "Notar o corpo — o que ele quer?",
-      "Perguntar o que faria a pessoa que eu quero me tornar.",
-      "Falar com as pessoas que amo.",
-      "Dormir sobre isso. A resposta vem quando paro de buscar.",
-      "Procurar a escolha que estou evitando. Costuma ser a certa."
-    ]},
-    ru: { p:"Когда перед вами трудное решение, каков ваш реальный первый ход?", a:[
-      "Перечислить варианты и их вероятные последствия.",
-      "Прислушаться к телу — чего оно хочет?",
-      "Спросить, что сделал бы тот, кем я хочу стать.",
-      "Поговорить с теми, кого люблю.",
-      "Поспать на этом. Ответ приходит, когда перестаёшь тянуться к нему.",
-      "Найти выбор, которого я избегаю. Обычно он и есть верный."
-    ]},
-    zh: { p:"面对一个艰难的决定，你真正的第一步是什么？", a:[
-      "把选项和它们可能的后果列出来。",
-      "留意身体 —— 它想要什么？",
-      "问：我想成为的那个人会怎么做？",
-      "和我爱的人聊聊。",
-      "把它放过夜。当我不再去够，答案自己会来。",
-      "去找那个我在回避的选项。它常常就是对的。"
-    ]},
-    ja: { p:"難しい決断を前にしたとき、あなたの本当の最初の一手は？", a:[
-      "選択肢とそれぞれの予想される結果を書き出す。",
-      "身体に気づく — それは何を望んでいるか。",
-      "自分がなりたい人なら何をするかを問う。",
-      "愛する人たちと話す。",
-      "ひと晩寝かせる。手を伸ばすのをやめたとき、答えが来る。",
-      "自分が避けている選択肢を探す。たいてい、それが正解。"
-    ]},
-    ko: { p:"어려운 결정 앞에서, 당신의 실제 첫 동작은?", a:[
-      "선택지와 가능한 결과들을 적어 본다.",
-      "몸을 살핀다 — 몸은 무엇을 원하는가?",
-      "내가 되고 싶은 사람이라면 어떻게 할지를 묻는다.",
-      "사랑하는 사람들과 이야기한다.",
-      "하룻밤 묵힌다. 손을 뻗지 않을 때 답이 온다.",
-      "내가 피하고 있는 선택지를 찾는다. 보통 그것이 맞는 답이다."
-    ]},
-  }
-};
 const DETAILED_I18N = {};
 function _localQuiz(idx, mode) {
   const loc = (typeof _currentLocale === 'function') ? _currentLocale() : 'en';
@@ -5114,6 +5280,64 @@ const PHILOSOPHERS = [
 ];
 
 /* ----- Reading list, keyed by archetype name ----- */
+/* ----- Per-philosopher source citations: a short quote + reference + a
+   line on how the position vector reads from it. Editorial work — only a
+   handful are filled in for now; the popup falls back to "coming soon"
+   for the rest. Add new entries by name (must match PHILOSOPHERS exactly).
+   ---------------------------------------------------------------- */
+const WHY_POSITIONS = {
+  "Plato": {
+    quote: "The unexamined life is not worth living.",
+    source: "Apology, 38a (Socrates' defense)",
+    reading: "Scores high on Theoretical Drive and Universalist Impulse: the assertion that some lives are worth more than others, by a single criterion (examination), is exactly the move Plato makes throughout."
+  },
+  "Aristotle": {
+    quote: "The good for man is an activity of the soul in accordance with virtue, and if there are several virtues, in accordance with the best and most perfect.",
+    source: "Nicomachean Ethics, I.7",
+    reading: "Trust in Reason + Practical Orientation top out: the good is identifiable through reasoning, but only as enacted in habit. Theoretical Drive present but bounded by practice."
+  },
+  "Marcus Aurelius": {
+    quote: "You have power over your mind — not outside events. Realize this, and you will find strength.",
+    source: "Meditations, Book IV",
+    reading: "Maximum Practical Orientation paired with Tragic Vision and Ascetic Tendency. The quote names exactly the Stoic move: locating freedom in response, not in circumstance."
+  },
+  "Hume": {
+    quote: "Reason is, and ought only to be, the slave of the passions, and can never pretend to any other office than to serve and obey them.",
+    source: "A Treatise of Human Nature, Book II",
+    reading: "Top scores on Skeptical Reflex and Trust in Experience; very low on Mystical Receptivity. The position is sharp: reason has no independent throne."
+  },
+  "Nietzsche": {
+    quote: "He who has a why to live for can bear almost any how.",
+    source: "Twilight of the Idols (often misattributed; appears across his corpus)",
+    reading: "Will to Power and Sovereign Self both at the top of the scale; Communal Embeddedness near the bottom. The why is yours to forge — community can't manufacture it for you."
+  },
+  "Buddha": {
+    quote: "All conditioned things are impermanent. When one sees this with insight, one turns away from suffering.",
+    source: "Dhammapada, verse 277",
+    reading: "Self as Illusion at maximum, paired with Mystical Receptivity and Ascetic Tendency. The vector reads as the central Buddhist move: stop clinging to what was never solid."
+  },
+  "Confucius": {
+    quote: "When you know a thing, to hold that you know it; and when you do not know a thing, to allow that you do not know it — this is knowledge.",
+    source: "Analects, II.17",
+    reading: "Communal Embeddedness, Reverence for Tradition, and Practical Orientation all very high. Knowledge here is virtue-shaped — humility woven into the ritual practice of admission."
+  },
+  "Camus": {
+    quote: "One must imagine Sisyphus happy.",
+    source: "The Myth of Sisyphus, closing line",
+    reading: "Tragic Vision and Sovereign Self both high; the vector captures the absurd-but-affirmed posture. Vital Affirmation present too — Camus is not a nihilist."
+  },
+  "Wittgenstein": {
+    quote: "Whereof one cannot speak, thereof one must be silent.",
+    source: "Tractatus Logico-Philosophicus, §7",
+    reading: "Mystical Receptivity surprisingly high for an analytic philosopher — the famous closing line is the textual evidence. Trust in Reason also very high; the silence is reasoned, not arbitrary."
+  },
+  "Simone Weil": {
+    quote: "Attention is the rarest and purest form of generosity.",
+    source: "Letter to Joë Bousquet, April 1942",
+    reading: "Maximum Ascetic Tendency, Mystical Receptivity, and Universalist Impulse. The whole vector reads as a stripping-away — generosity, attention, and self-erasure all named in a single sentence."
+  }
+};
+
 /* ----- Quotes per archetype: 3–4 short quotes that capture the archetype's
    spirit in voices it would recognize. Hand-picked, not auto-generated. ----- */
 const QUOTES = {
@@ -5457,14 +5681,14 @@ const HOME_I18N = {
     ko: "<strong>Mull v0.9</strong> — 초기 버전. 지도, 질문, 유형은 아직 다듬어지는 중입니다."
   },
   "home.construction_notice": {
-    en: "<strong>A note while we're still building.</strong> Mull is currently under construction. The subscription system isn't live yet, so for now Jimmy is personally covering the AI costs that power the daily dilemma, diary, and debates. If the monthly budget runs out before subscriptions launch, those features may pause briefly while he tops it back up — thanks for your patience as the project finds its footing.",
-    es: "<strong>Una nota mientras seguimos construyendo.</strong> Mull aún está en obras. El sistema de suscripción todavía no está activo, así que por ahora Jimmy cubre de su bolsillo los costes de IA que mueven el dilema diario, el diario y los debates. Si el presupuesto mensual se agota antes de lanzar las suscripciones, esas funciones podrían pausarse brevemente mientras él lo recarga — gracias por tu paciencia mientras el proyecto encuentra su ritmo.",
-    fr: "<strong>Un mot pendant que nous construisons encore.</strong> Mull est en travaux. Le système d'abonnement n'est pas encore en ligne, alors pour l'instant Jimmy couvre lui-même les coûts d'IA qui font tourner le dilemme du jour, le journal et les débats. Si le budget mensuel s'épuise avant le lancement des abonnements, ces fonctions peuvent être en pause brièvement le temps qu'il les recharge — merci de ta patience pendant que le projet trouve ses marques.",
-    pt: "<strong>Um aviso enquanto ainda construímos.</strong> Mull está em construção. O sistema de assinatura ainda não foi lançado, então por ora o Jimmy está pagando do próprio bolso os custos de IA que movem o dilema diário, o diário e os debates. Se o orçamento mensal acabar antes do lançamento das assinaturas, essas funções podem pausar brevemente até ele recarregar — obrigado pela paciência enquanto o projeto encontra seu rumo.",
-    ru: "<strong>Небольшая заметка, пока мы всё строим.</strong> Mull ещё в разработке. Система подписки пока не запущена, поэтому Джимми сейчас сам оплачивает расходы на ИИ, который питает ежедневную дилемму, дневник и диспуты. Если месячный бюджет закончится до запуска подписок, эти функции могут ненадолго приостанавливаться, пока он их пополняет — спасибо за терпение, пока проект встаёт на ноги.",
-    zh: "<strong>一则建设期的小提示。</strong>Mull 仍在建设中。订阅系统尚未上线，所以目前每日困境、日记和辩论功能背后的 AI 费用都由 Jimmy 个人承担。如果在订阅功能上线之前月度预算耗尽，这些功能可能会短暂暂停，直到他重新充值——感谢你在项目立足初期给予的耐心。",
-    ja: "<strong>まだ建設中の私たちから一言。</strong>Mull は現在開発中です。サブスクリプション機能はまだ稼働していないため、今のところデイリー・ジレンマ、日記、対話を支える AI のコストは Jimmy が自費で負担しています。サブスク開始前に月の予算が尽きた場合、補充するまでそれらの機能が一時停止することがあります — プロジェクトが軌道に乗るまで、温かく見守っていただけるとうれしいです。",
-    ko: "<strong>아직 만들고 있는 중에 드리는 짧은 안내.</strong> Mull은 현재 제작 중입니다. 구독 시스템이 아직 가동되지 않아서, 지금은 오늘의 딜레마·일기·토론을 움직이는 AI 비용을 Jimmy가 직접 부담하고 있어요. 구독이 출시되기 전에 월 예산이 떨어지면 충전될 때까지 그 기능들이 잠시 멈출 수 있습니다 — 프로젝트가 자리를 잡는 동안 너그러이 기다려 주셔서 감사합니다."
+    en: "<strong>Early build.</strong> Subscriptions aren't live yet, so AI features are paid out of pocket and may pause briefly if the budget runs out. Thanks for your patience.",
+    es: "<strong>Versión temprana.</strong> Las suscripciones aún no están activas, así que las funciones de IA salen del bolsillo y pueden pausarse brevemente si se agota el presupuesto. Gracias por la paciencia.",
+    fr: "<strong>Version préliminaire.</strong> Les abonnements ne sont pas encore actifs, donc les fonctions d'IA sont payées de la poche et peuvent s'interrompre brièvement si le budget est épuisé. Merci de ta patience.",
+    pt: "<strong>Versão inicial.</strong> As assinaturas ainda não estão ativas, então as funções de IA saem do bolso e podem pausar brevemente se o orçamento acabar. Obrigado pela paciência.",
+    ru: "<strong>Ранняя сборка.</strong> Подписки пока не активны — функции с ИИ оплачиваются из кармана и могут ненадолго приостанавливаться, если бюджет исчерпается. Спасибо за терпение.",
+    zh: "<strong>早期版本。</strong>订阅尚未上线，AI 功能由个人承担费用，预算用尽时可能短暂暂停。感谢理解。",
+    ja: "<strong>早期版です。</strong>サブスクリプションはまだ稼働しておらず、AI 機能は自費で運用しています。予算が尽きると一時的に停止することがあります。ご理解に感謝します。",
+    ko: "<strong>초기 버전입니다.</strong> 구독이 아직 가동되지 않아 AI 기능은 자비로 운영하고 있습니다. 예산이 바닥나면 잠시 멈출 수 있습니다. 너그러이 양해해 주세요."
   },
   "home.hero_h1": {
     en: "Find your place on the <em>map of how you think.</em>",
@@ -5837,6 +6061,9 @@ function showArchetypeDetail(archName) {
         <h1 class="archetype-name"><em>${localArchName(arch.name)}</em></h1>
         <div class="archetype-patron">Patron · <strong>${arch.patron}</strong></div>
         <p class="archetype-blurb">${localArchBlurb(arch.name, arch.blurb)}</p>
+        <a class="archetype-longform-link" href="/archetype/${arch.figureKey}">
+          Read the long-form essay →
+        </a>
       </div>
     </div>
 
@@ -6129,6 +6356,22 @@ function showResults() {
   document.getElementById("resLabel").innerHTML =
     `You are <em>${flavor ? flavor + " " : ""}${top.name.replace(/^The /, "")}</em>.`;
   document.getElementById("resBlurb").textContent = top.blurb;
+
+  // Wire the "What's next" card: name the archetype for the in-depth link,
+  // and swap the third card based on auth state.
+  window.MULL_LAST_ARCH_NAME = top.name;
+  const wnSave = document.getElementById('whatsnext-save');
+  if (wnSave) {
+    if (CURRENT_USER) {
+      wnSave.href = '/account';
+      wnSave.querySelector('.whatsnext-h').textContent = 'Your account';
+      wnSave.querySelector('p').textContent = 'See your trajectory, the recent shifts, and your saved attempts side by side.';
+    } else {
+      wnSave.href = '/signup';
+      wnSave.querySelector('.whatsnext-h').textContent = 'Save your map';
+      wnSave.querySelector('p').textContent = 'Free account. Tracks how your position shifts over time. Diary, debate, exercises unlock too.';
+    }
+  }
 
   renderWhy(top, arches[1], userVec);
   renderDebates(userVec);
@@ -7050,7 +7293,14 @@ function drawConstellation(userVec, svgIdOld, popupIdOld, userVecHistory) {
       ? `<button class="compare-btn" onclick="openComparison(${star.index})">Compare with you</button>`
       : '';
     const wikiHtml = `<a class="wiki-link-btn" href="${wikiUrl(p.name)}" target="_blank" rel="noopener noreferrer">Wikipedia →</a>`;
-    popupEl.innerHTML = `<h4>${p.name}</h4><div class="dates">${p.dates}</div><p>${p.keyIdea}</p>${simHtml}<div style="margin-top:6px;">${compareBtn}${wikiHtml}</div>`;
+    // Optional source-quote citation: shown for the philosophers we have
+    // editorial entries for; falls back gracefully for the rest.
+    const why = (typeof WHY_POSITIONS !== 'undefined') ? WHY_POSITIONS[p.name] : null;
+    const whyId = `why_${star.index}`;
+    const whyHtml = why
+      ? `<details class="philpopup-why" style="margin-top:8px;font-size:12.5px;line-height:1.5;color:var(--ink-soft);"><summary style="cursor:pointer;color:var(--acc-deep);font-size:11.5px;letter-spacing:0.05em;">Why this position?</summary><blockquote style="margin:8px 0 6px;padding-left:10px;border-left:2px solid var(--acc);font-style:italic;color:var(--ink);">&ldquo;${why.quote}&rdquo;<div style="font-style:normal;font-size:11px;color:var(--ink-soft);margin-top:3px;opacity:0.85;">— ${why.source}</div></blockquote><p style="margin:6px 0 0;">${why.reading}</p></details>`
+      : '';
+    popupEl.innerHTML = `<h4>${p.name}</h4><div class="dates">${p.dates}</div><p>${p.keyIdea}</p>${simHtml}${whyHtml}<div style="margin-top:6px;">${compareBtn}${wikiHtml}</div>`;
     popupEl.hidden = false;
   }
 

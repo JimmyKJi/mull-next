@@ -5,6 +5,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { findExercise, EXERCISES } from '@/lib/exercises';
+import { EXERCISE_EXTRAS } from '@/lib/exercises-extras';
 import { localizeExercise } from '@/lib/exercises-i18n';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
@@ -195,6 +196,13 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
 
       <ReflectionForm slug={ex.slug} isAuthed={isAuthed} locale={locale} />
 
+      {/* Deeper content — only renders when present in EXERCISE_EXTRAS.
+          English-only for now (matches the policy for archetype detail
+          pages and philosopher entries). */}
+      {EXERCISE_EXTRAS[slug] && (
+        <ExerciseExtrasSection slug={slug} extras={EXERCISE_EXTRAS[slug]} locale={locale} />
+      )}
+
       <p style={{
         textAlign: 'center',
         marginTop: 48,
@@ -207,6 +215,148 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
       </p>
     </main>
   );
+}
+
+import type { ExerciseExtras } from '@/lib/exercises-extras';
+import type { Locale } from '@/lib/translations';
+
+function ExerciseExtrasSection({
+  slug, extras, locale,
+}: {
+  slug: string;
+  extras: ExerciseExtras;
+  locale: Locale;
+}) {
+  const sibs = (extras.relatedExercises || [])
+    .map(s => EXERCISES.find(e => e.slug === s))
+    .filter((x): x is NonNullable<typeof x> => !!x);
+
+  return (
+    <div style={{ marginTop: 48 }}>
+      {locale !== 'en' && (
+        <p style={{
+          fontFamily: sans, fontSize: 12.5, color: '#8C6520',
+          fontStyle: 'italic', opacity: 0.85, marginBottom: 18,
+          padding: '10px 14px', background: '#F5EFDC',
+          borderLeft: '3px solid #B8862F', borderRadius: 6,
+        }}>
+          {t('i18n.untranslated_short', locale)}
+        </p>
+      )}
+
+      {extras.longerAbout && (
+        <Section title={t('exercises.deeper', locale)}>
+          {extras.longerAbout.split('\n\n').map((p, i) => (
+            <p key={i} style={{ margin: '0 0 14px' }}>{p}</p>
+          ))}
+        </Section>
+      )}
+
+      {extras.commonPitfalls && extras.commonPitfalls.length > 0 && (
+        <Section title={t('exercises.pitfalls', locale)}>
+          <ul style={{ margin: 0, padding: '0 0 0 20px', display: 'grid', gap: 10 }}>
+            {extras.commonPitfalls.map((p, i) => (
+              <li key={i} style={{ lineHeight: 1.6 }}>{p}</li>
+            ))}
+          </ul>
+        </Section>
+      )}
+
+      {extras.workedExample && (
+        <Section title={t('exercises.example', locale)}>
+          <p style={{
+            margin: 0, fontStyle: 'italic',
+            padding: '14px 18px', background: '#FBFAF2',
+            borderLeft: '3px solid #2F5D5C', borderRadius: 6,
+            lineHeight: 1.7,
+          }}>
+            {extras.workedExample}
+          </p>
+        </Section>
+      )}
+
+      {extras.relatedThinkers && extras.relatedThinkers.length > 0 && (
+        <Section title={t('exercises.thinkers', locale)}>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 10 }}>
+            {extras.relatedThinkers.map((thinker, i) => (
+              <li key={i} style={{
+                padding: '10px 14px', background: '#FFFCF4',
+                border: '1px solid #EBE3CA', borderRadius: 6,
+              }}>
+                <strong style={{ color: '#221E18' }}>{thinker.name}</strong>
+                <span style={{ color: '#4A4338' }}> — {thinker.note}</span>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
+
+      {extras.furtherReading && extras.furtherReading.length > 0 && (
+        <Section title={t('exercises.further_reading', locale)}>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 12 }}>
+            {extras.furtherReading.map((book, i) => (
+              <li key={i} style={{
+                padding: '12px 16px', background: '#FFFCF4',
+                border: '1px solid #EBE3CA', borderRadius: 8,
+              }}>
+                <div style={{
+                  fontFamily: serif, fontSize: 17, color: '#221E18',
+                  marginBottom: 2, lineHeight: 1.3,
+                }}>
+                  {book.title}
+                </div>
+                <div style={{
+                  fontFamily: sans, fontSize: 12,
+                  color: '#8C6520', marginBottom: 6, letterSpacing: 0.2,
+                }}>
+                  {book.author}{book.year ? ` · ${book.year}` : ''}
+                </div>
+                <p style={{ margin: 0, fontSize: 14, color: '#4A4338', lineHeight: 1.55 }}>{book.note}</p>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
+
+      {sibs.length > 0 && (
+        <Section title={t('exercises.related', locale)}>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 10 }}>
+            {sibs.map(rex => (
+              <li key={rex.slug}>
+                <Link
+                  href={`/exercises/${rex.slug}`}
+                  style={{
+                    display: 'block', padding: '12px 16px',
+                    background: '#FFFCF4', border: '1px solid #EBE3CA',
+                    borderRadius: 8, textDecoration: 'none', color: 'inherit',
+                  }}
+                >
+                  <div style={{ fontFamily: serif, fontSize: 17, color: '#221E18' }}>
+                    {rex.name} →
+                  </div>
+                  <p style={{ margin: '2px 0 0', fontSize: 13.5, color: '#4A4338' }}>{rex.summary}</p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
+
+      {extras.kindredPractices && extras.kindredPractices.length > 0 && (
+        <Section title={t('exercises.kindred', locale)}>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 8 }}>
+            {extras.kindredPractices.map((kp, i) => (
+              <li key={i} style={{ padding: '8px 0', borderBottom: '1px solid #EBE3CA' }}>
+                <strong style={{ color: '#221E18' }}>{kp.name}</strong>
+                <span style={{ color: '#4A4338' }}> — {kp.note}</span>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
+    </div>
+  );
+  void slug;
 }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
