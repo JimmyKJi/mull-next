@@ -6462,12 +6462,18 @@ function renderQuestion() {
   const contBtn = document.getElementById("continuebtn");
   if (q.multi) {
     contBtn.hidden = false;
+    contBtn.style.display = '';      // restore default display
     contBtn.disabled = state.multiPicks.length === 0;
     contBtn.textContent = state.multiPicks.length
       ? `Continue (${state.multiPicks.length} selected) →`
       : `Pick at least one →`;
   } else {
+    // .cta has display:inline-flex which overrides [hidden]; force the
+    // hide via inline style. Also clear the stale "(N selected)" text so
+    // it doesn't leak through if a re-render briefly shows the button.
     contBtn.hidden = true;
+    contBtn.style.display = 'none';
+    contBtn.textContent = '';
   }
 }
 
