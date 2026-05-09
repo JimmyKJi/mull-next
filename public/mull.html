@@ -787,6 +787,19 @@
     color: var(--acc-deep);
     background: var(--acc-soft);
   }
+  .share-toast {
+    margin: 12px auto 0;
+    max-width: 460px;
+    padding: 8px 14px;
+    background: #EFF5F1;
+    border: 1px solid #C9DBCB;
+    border-radius: 6px;
+    color: #2F5D5C;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 12.5px;
+    line-height: 1.5;
+    text-align: left;
+  }
   @media (max-width: 540px) {
     .share-buttons { gap: 6px; }
     .share-btn { padding: 8px 12px; font-size: 12.5px; }
@@ -2789,6 +2802,12 @@ html.embed-mode #embed-you-hint {
         <a id="share-twitter" class="share-btn share-btn-x" href="#" target="_blank" rel="noopener noreferrer">
           <span aria-hidden="true">𝕏</span> <span>Post on X</span>
         </a>
+        <button id="share-instagram" class="share-btn share-btn-ig" type="button">
+          <span aria-hidden="true">◎</span> <span>Post on Instagram</span>
+        </button>
+        <button id="share-tiktok" class="share-btn share-btn-tt" type="button">
+          <span aria-hidden="true">♪</span> <span>Post on TikTok</span>
+        </button>
         <button id="share-copy" class="share-btn share-btn-copy" type="button">
           <span aria-hidden="true">↗</span> <span>Copy link</span>
         </button>
@@ -2796,6 +2815,7 @@ html.embed-mode #embed-you-hint {
           <span aria-hidden="true">↗</span> <span>Share…</span>
         </button>
       </div>
+      <p id="share-toast" class="share-toast" hidden></p>
     </div>
     <div id="save-status" style="font-size: 13px; color: var(--acc-deep); margin-top: 8px; opacity: 0.85;"></div>
 
@@ -6763,6 +6783,59 @@ function setupShareRow(top, flavor) {
     xBtn.addEventListener('click', () => {
       track('share_clicked', { platform: 'x', archetype: archName });
     });
+  }
+
+  // Captions for Instagram and TikTok. Neither platform exposes a
+  // web composer URL, so the click handler copies a ready-to-paste
+  // caption to the clipboard, deep-links the app on mobile, and
+  // shows a toast explaining the next step.
+  const igCaption =
+    `Just found my philosophical archetype on Mull:\n\n` +
+    `✦ The ${flavorLabel} ✦\n\n` +
+    `Take the quiz at mull.world to find yours.\n\n` +
+    `#philosophy #worldview #mull`;
+  const tiktokCaption =
+    `Found my philosophical archetype on Mull: The ${flavorLabel} 🌌 ` +
+    `Take the quiz at mull.world ` +
+    `#philosophy #philosophytok #mull #worldview #thinking`;
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+
+  function showShareToast(text) {
+    const toast = document.getElementById('share-toast');
+    if (!toast) return;
+    toast.textContent = text;
+    toast.hidden = false;
+    setTimeout(() => { toast.hidden = true; }, 4000);
+  }
+
+  async function copyToClipboard(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch (e) {
+      window.prompt('Copy this:', text);
+      return false;
+    }
+  }
+
+  const igBtn = document.getElementById('share-instagram');
+  if (igBtn) {
+    igBtn.onclick = async () => {
+      track('share_clicked', { platform: 'instagram', archetype: archName });
+      const ok = await copyToClipboard(igCaption);
+      if (ok) showShareToast('Caption copied — open Instagram and paste it in your story or post.');
+      if (isMobile) setTimeout(() => { window.location.href = 'instagram://camera'; }, 300);
+    };
+  }
+
+  const ttBtn = document.getElementById('share-tiktok');
+  if (ttBtn) {
+    ttBtn.onclick = async () => {
+      track('share_clicked', { platform: 'tiktok', archetype: archName });
+      const ok = await copyToClipboard(tiktokCaption);
+      if (ok) showShareToast('Caption copied — open TikTok and paste it in your post.');
+      if (isMobile) setTimeout(() => { window.location.href = 'snssdk1233://'; }, 300);
+    };
   }
 
   const copyBtn = document.getElementById('share-copy');
