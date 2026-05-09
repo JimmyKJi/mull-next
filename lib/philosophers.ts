@@ -4475,3 +4475,72 @@ export function matchesPhilosopherSearch(p: PhilosopherEntry, q: string): boolea
   }
   return false;
 }
+
+// URL slug for a philosopher name. Diacritic-stripped, kebab-cased,
+// alpha-numeric only. Examples: "Plato" → "plato", "Søren Kierkegaard"
+// → "soren-kierkegaard", "Ibn Sīnā (Avicenna)" → "ibn-sina-avicenna".
+// Stable identifier suitable for /philosopher/[slug] routes.
+export function philosopherSlug(name: string): string {
+  return name
+    .normalize('NFKD')
+    .replace(/[̀-ͯ]/g, '')   // strip diacritics
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')        // collapse to hyphens
+    .replace(/^-+|-+$/g, '');           // trim hyphens
+}
+
+// All slugs (for generateStaticParams + sitemap).
+export function philosopherSlugs(): string[] {
+  return PHILOSOPHERS.map(p => philosopherSlug(p.name));
+}
+
+// Lookup by slug. Returns undefined if no match. Built once + cached
+// because /philosopher/[slug] hits this on every static-render.
+let _slugIndex: Map<string, PhilosopherEntry> | null = null;
+function buildSlugIndex(): Map<string, PhilosopherEntry> {
+  if (_slugIndex) return _slugIndex;
+  const m = new Map<string, PhilosopherEntry>();
+  for (const p of PHILOSOPHERS) {
+    m.set(philosopherSlug(p.name), p);
+  }
+  _slugIndex = m;
+  return m;
+}
+export function getPhilosopherBySlug(slug: string): PhilosopherEntry | undefined {
+  return buildSlugIndex().get(slug);
+}
+
+// Cosine similarity between two equal-length vectors. Used to find
+// philosophers nearest to a given philosopher in the constellation.
+function cosineSim(a: number[], b: number[]): number {
+  let dot = 0, na = 0, nb = 0;
+  const len = Math.min(a.length, b.length);
+  for (let i = 0; i < len; i++) {
+    dot += a[i] * b[i];
+    na += a[i] * a[i];
+    nb += b[i] * b[i];
+  }
+  if (na === 0 || nb === 0) return 0;
+  return dot / Math.sqrt(na * nb);
+}
+
+// Top-N other philosophers closest to the given one in vector space.
+// Used on the /philosopher/[slug] page to surface kindred minds —
+// purely vector-based, doesn't require any human-curated relationships.
+export function nearestPhilosophers(target: PhilosopherEntry, n = 6): PhilosopherEntry[] {
+  return PHILOSOPHERS
+    .filter(p => p.name !== target.name)
+    .map(p => ({ p, sim: cosineSim(target.vector, p.vector) }))
+    .sort((a, b) => b.sim - a.sim)
+    .slice(0, n)
+    .map(x => x.p);
+}
+
+// Top dimensions the philosopher leans into — used to render a small
+// "what makes them them" snapshot on their detail page.
+export function topDimensions(p: PhilosopherEntry, n = 4): { idx: number; value: number }[] {
+  return p.vector
+    .map((value, idx) => ({ idx, value }))
+    .sort((a, b) => b.value - a.value)
+    .slice(0, n);
+}

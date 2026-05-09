@@ -13,6 +13,7 @@ import { ARCHETYPES, archetypeKeys, getArchetypeByKey } from '@/lib/archetypes';
 import { FIGURES } from '@/lib/figures';
 import { DIM_NAMES } from '@/lib/dimensions';
 import { EXERCISES } from '@/lib/exercises';
+import { PHILOSOPHERS, philosopherSlug } from '@/lib/philosophers';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
@@ -31,6 +32,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   // Use the English name for SEO predictability.
   const enName = a.key.charAt(0).toUpperCase() + a.key.slice(1);
+  // Built dynamically by app/archetype/[slug]/opengraph-image.tsx and
+  // routed by Next as /archetype/<slug>/opengraph-image. Twitter wants
+  // the large-image card; Facebook/LinkedIn pick this up automatically
+  // from the openGraph.images entry.
+  const ogImage = `https://mull.world/archetype/${slug}/opengraph-image`;
   return {
     title: `The ${enName}`,
     description: a.spirit,
@@ -40,6 +46,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       url: `https://mull.world/archetype/${slug}`,
       siteName: 'Mull',
       type: 'article',
+      images: [{ url: ogImage, width: 1200, height: 630, alt: `The ${enName} — Mull` }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `The ${enName} — Mull`,
+      description: a.spirit,
+      images: [ogImage],
     },
     alternates: { canonical: `https://mull.world/archetype/${slug}` },
   };
@@ -207,18 +220,42 @@ export default async function ArchetypeDetailPage({ params }: { params: Promise<
           {t('arch_detail.kindred_helper', locale)}
         </p>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-          {archetype.kindredThinkers.map((thinker, i) => (
-            <span key={i} style={{
+          {archetype.kindredThinkers.map((thinker, i) => {
+            // If this kindred-thinker name matches a philosopher in the
+            // constellation, link the chip to their /philosopher/[slug]
+            // page. Otherwise render as a static chip (for thinkers
+            // who're listed by category, e.g. "the Hebrew prophets").
+            const matched = PHILOSOPHERS.find(p =>
+              p.name.toLowerCase() === thinker.toLowerCase() ||
+              p.aliases.some(a => a.toLowerCase() === thinker.toLowerCase())
+            );
+            const chipStyle: React.CSSProperties = {
               padding: '6px 12px',
               background: '#F5EFDC',
               border: '1px solid #E2D8B6',
               borderRadius: 999,
               fontFamily: sans, fontSize: 13.5, color: '#221E18',
               letterSpacing: 0.2,
-            }}>
-              {thinker}
-            </span>
-          ))}
+              textDecoration: 'none',
+              display: 'inline-block',
+            };
+            if (matched) {
+              return (
+                <Link
+                  key={i}
+                  href={`/philosopher/${philosopherSlug(matched.name)}`}
+                  style={chipStyle}
+                >
+                  {thinker} →
+                </Link>
+              );
+            }
+            return (
+              <span key={i} style={chipStyle}>
+                {thinker}
+              </span>
+            );
+          })}
         </div>
       </Section>
 

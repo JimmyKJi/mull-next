@@ -117,29 +117,50 @@ export async function GET(req: Request) {
   const sent: string[] = [];
   const failed: Array<{ email: string; reason: string }> = [];
 
+  // Live mode if both env vars are set, otherwise dry-run with logging.
+  // Wired via Resend's REST API (no SDK install required) — POST to
+  // https://api.resend.com/emails with a Bearer key.
+  const apiKey = process.env.EMAIL_PROVIDER_API_KEY;
+  const fromAddr = process.env.EMAIL_FROM;
+  const liveMode = !!(apiKey && fromAddr);
+
   for (const cand of candidates) {
     const email = emailById.get(cand.user_id);
     if (!email) continue;
     const body = composeBody({ email, dilemmaPrompt: dilemma.prompt });
     try {
-      // ───── PLACEHOLDER: actual send goes here ─────────────────────────
-      // await sendEmail({
-      //   to: email,
-      //   from: process.env.EMAIL_FROM!,
-      //   subject: "Today's dilemma · Mull",
-      //   html: body.html,
-      //   text: body.text,
-      // });
-      console.log(`[cron/dilemma-reminders] (DRY RUN) would email ${email} (their local ${cand.reminder_local_hour}:00 in ${cand.reminder_tz})`);
+      if (liveMode) {
+        const res = await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            from: fromAddr,
+            to: email,
+            subject: "Today's dilemma · Mull",
+            html: body.html,
+            text: body.text,
+          }),
+        });
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(`Resend ${res.status}: ${text.slice(0, 200)}`);
+        }
+      } else {
+        console.log(`[cron/dilemma-reminders] (DRY RUN) would email ${email} (their local ${cand.reminder_local_hour}:00 in ${cand.reminder_tz})`);
+      }
       sent.push(email);
     } catch (e) {
+      console.error(`[cron/dilemma-reminders] send failed for ${email}:`, e);
       failed.push({ email, reason: (e as Error).message });
     }
   }
 
   return NextResponse.json({
     ok: true,
-    dryRun: true,
+    dryRun: !liveMode,
     optedInCount: prefs?.length ?? 0,
     candidateCount: candidates.length,
     sentCount: sent.length,

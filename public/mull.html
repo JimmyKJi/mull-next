@@ -28,6 +28,44 @@
 <meta name="twitter:description" content="A philosophy app that asks you what you think — concretely, on real questions. over 200 thinkers, 16 dimensions, no ads.">
 <meta name="twitter:image" content="https://mull.world/og.png">
 
+<!-- JSON-LD structured data so Google knows what this site is. The
+     SearchAction enables a sitelinks search box on the SERP if the
+     domain has enough trust signals. WebApplication is the closest
+     fit for an interactive philosophy quiz. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://mull.world/#website",
+      "name": "Mull",
+      "alternateName": "Mull · Find your place on the map of how you think",
+      "url": "https://mull.world",
+      "description": "A philosophy mapping tool — take the quiz, find your archetype across 200+ thinkers, write daily dilemmas, practice contemplative exercises.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://mull.world/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "WebApplication",
+      "name": "Mull",
+      "url": "https://mull.world",
+      "applicationCategory": "EducationApplication",
+      "operatingSystem": "Web",
+      "description": "Take a philosophical quiz that places you among 200+ thinkers across 16 dimensions of worldview. Daily dilemmas, contemplative exercises, simulated debates between philosophers.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+  ]
+}
+</script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
   :root {
@@ -686,6 +724,167 @@
     font-size: 18px; color: var(--ink-soft);
     max-width: 560px; margin: 0 auto;
   }
+  /* Share row — shown directly under the result header to catch the
+     peak emotional moment ("oh, I'm a Pilgrim!") and convert it into
+     organic distribution. */
+  .share-row {
+    margin: 16px auto 24px;
+    text-align: center;
+  }
+  .share-eyebrow {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin-bottom: 10px;
+  }
+  .share-buttons {
+    display: inline-flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color .15s, background .15s, color .15s;
+  }
+  .share-btn:hover {
+    border-color: var(--acc);
+    color: var(--acc-deep);
+  }
+  .share-btn.copied {
+    border-color: var(--acc-deep);
+    color: var(--acc-deep);
+    background: var(--acc-soft);
+  }
+  @media (max-width: 540px) {
+    .share-buttons { gap: 6px; }
+    .share-btn { padding: 8px 12px; font-size: 12.5px; }
+  }
+
+  /* Onboarding overlay — appears once, after the user's first quiz
+     completion. Click outside the card or the × to dismiss. Sets a
+     localStorage flag so it only ever shows once per browser. */
+  .onboard-modal {
+    position: fixed; inset: 0;
+    background: rgba(34, 30, 24, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000; padding: 24px;
+    animation: onboard-fade .25s ease-out;
+  }
+  .onboard-modal[hidden] { display: none !important; }
+  @keyframes onboard-fade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  .onboard-card {
+    position: relative;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 36px 38px 28px;
+    max-width: 520px; width: 100%;
+    box-shadow: 0 20px 60px rgba(34, 30, 24, 0.18);
+  }
+  .onboard-close {
+    position: absolute; top: 14px; right: 16px;
+    background: none; border: none; cursor: pointer;
+    font-size: 24px; line-height: 1; color: var(--ink-soft);
+    padding: 4px 8px; border-radius: 6px;
+    transition: color .15s, background .15s;
+  }
+  .onboard-close:hover { color: var(--ink); background: var(--cream-2); }
+  .onboard-eyebrow {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 11px; font-weight: 600;
+    color: var(--acc-deep);
+    text-transform: uppercase; letter-spacing: 0.18em;
+    margin-bottom: 12px;
+  }
+  .onboard-step h2 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 28px; font-weight: 500;
+    color: var(--ink); line-height: 1.2;
+    margin: 0 0 14px; letter-spacing: -0.3px;
+  }
+  .onboard-step h2 em { font-style: italic; color: var(--acc-deep); }
+  .onboard-step p {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 17px; line-height: 1.55; color: var(--ink-soft);
+    margin: 0 0 12px;
+  }
+  .onboard-quiet {
+    font-style: italic;
+    font-size: 15px !important;
+    color: var(--ink-soft) !important;
+    opacity: 0.85;
+  }
+  .onboard-list {
+    margin: 0 0 8px; padding: 0; list-style: none;
+    display: grid; gap: 10px;
+  }
+  .onboard-list li {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 16px; line-height: 1.55; color: var(--ink-soft);
+    padding: 10px 14px;
+    background: var(--cream-2);
+    border-left: 3px solid var(--acc);
+    border-radius: 6px;
+  }
+  .onboard-list li strong { color: var(--ink); font-weight: 500; }
+  .onboard-nav {
+    margin-top: 26px; padding-top: 18px;
+    border-top: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+  }
+  .onboard-dots { display: flex; gap: 8px; }
+  .onboard-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--line); cursor: pointer;
+    transition: background .15s;
+  }
+  .onboard-dot.active { background: var(--acc-deep); }
+  .onboard-dot:hover { background: var(--acc); }
+  .onboard-actions { display: flex; gap: 10px; align-items: center; }
+  .onboard-skip {
+    background: none; border: none; cursor: pointer;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px; color: var(--ink-soft);
+    padding: 8px 4px;
+  }
+  .onboard-skip:hover { color: var(--ink); }
+  .onboard-next {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px; font-weight: 500;
+    padding: 10px 20px;
+    background: var(--ink); color: var(--cream);
+    border: none; border-radius: 8px; cursor: pointer;
+    letter-spacing: 0.3px;
+  }
+  .onboard-next:hover { background: var(--acc-deep); }
+  @media (max-width: 540px) {
+    .onboard-card { padding: 28px 24px 22px; }
+    .onboard-step h2 { font-size: 24px; }
+    .onboard-step p, .onboard-list li { font-size: 15px; }
+  }
+
   .section {
     margin: 64px 0;
     padding-top: 48px;
@@ -2597,7 +2796,69 @@ html.embed-mode #embed-you-hint {
       <div class="pill">Your archetype</div>
       <h1 id="resLabel" class="reslabel"></h1>
       <p id="resBlurb" class="resblurb"></p>
-    </div> <div id="save-status" style="font-size: 13px; color: var(--acc-deep); margin-top: 8px; opacity: 0.85;"></div>
+    </div>
+    <!-- Share row: gives users a clean way to share their result. The
+         actual button labels and href targets are wired in showResults()
+         once we know the archetype. The native-share button hides
+         itself when navigator.share isn't available. -->
+    <div id="share-row" class="share-row" hidden>
+      <div class="share-eyebrow">Share your result</div>
+      <div class="share-buttons">
+        <a id="share-twitter" class="share-btn share-btn-x" href="#" target="_blank" rel="noopener noreferrer">
+          <span aria-hidden="true">𝕏</span> <span>Post on X</span>
+        </a>
+        <button id="share-copy" class="share-btn share-btn-copy" type="button">
+          <span aria-hidden="true">↗</span> <span>Copy link</span>
+        </button>
+        <button id="share-native" class="share-btn share-btn-native" type="button" hidden>
+          <span aria-hidden="true">↗</span> <span>Share…</span>
+        </button>
+      </div>
+    </div>
+    <div id="save-status" style="font-size: 13px; color: var(--acc-deep); margin-top: 8px; opacity: 0.85;"></div>
+
+    <!-- ONBOARDING OVERLAY — shown once, after the user's first quiz.
+         localStorage flag: mull_seen_results_onboard. The user can skip
+         at any step. Mirrors the .compare-modal pattern (hidden attr
+         toggle + click-outside-to-close). Content is hand-rolled rather
+         than data-driven so it can be tuned freely. -->
+    <div id="onboard-modal" class="onboard-modal" hidden onclick="if(event.target===this)closeOnboard()">
+      <div class="onboard-card">
+        <button class="onboard-close" type="button" onclick="closeOnboard()" aria-label="Close">×</button>
+        <div class="onboard-step" data-step="1">
+          <div class="onboard-eyebrow">Step 1 of 3 · What you're looking at</div>
+          <h2>This is a <em>mirror</em>, not a verdict.</h2>
+          <p>Your archetype is the orientation your answers most often pointed toward. It's a useful label — but the real result is the 16-dimensional position underneath, which moves over time as you keep using Mull.</p>
+          <p class="onboard-quiet">Don't be married to the label. Watch how it shifts.</p>
+        </div>
+        <div class="onboard-step" data-step="2" hidden>
+          <div class="onboard-eyebrow">Step 2 of 3 · Three things to try first</div>
+          <h2>Don't just <em>read about</em> philosophy. <em>Practice</em> it.</h2>
+          <ul class="onboard-list">
+            <li><strong>Today's dilemma</strong> — one open-ended question, written by you, every day. Five minutes. The hardest of the three.</li>
+            <li><strong>An exercise</strong> — Stoic, Socratic, Epicurean. Short, structured, deliberately quiet.</li>
+            <li><strong>A simulated debate</strong> — pick two thinkers, watch them argue. Hosted by Claude.</li>
+          </ul>
+        </div>
+        <div class="onboard-step" data-step="3" hidden>
+          <div class="onboard-eyebrow">Step 3 of 3 · Make it a daily thing</div>
+          <h2>One short prompt, in your inbox, at the time <em>you</em> choose.</h2>
+          <p>Habits change thinking more than insight does. The daily dilemma email is opt-in, sent in your time zone, and you can turn it off any time from your account.</p>
+          <p class="onboard-quiet">If you're signed up: turn it on under <a href="/account" style="color: var(--acc-deep); text-decoration: underline;">Your account</a>. If you're not: save your map first (the third card below).</p>
+        </div>
+        <div class="onboard-nav">
+          <div class="onboard-dots">
+            <span class="onboard-dot active" data-go="1"></span>
+            <span class="onboard-dot" data-go="2"></span>
+            <span class="onboard-dot" data-go="3"></span>
+          </div>
+          <div class="onboard-actions">
+            <button class="onboard-skip" type="button" onclick="closeOnboard()">Skip</button>
+            <button class="onboard-next" type="button" onclick="onboardNext()">Next →</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- WHAT'S NEXT — three small doors users can take from results.
          The third one swaps between "save your map" (signed-out) and
@@ -6381,6 +6642,16 @@ function showResults() {
   renderArchetypeStrip('strip-grid_results', top.name);
   drawConstellation(userVec, "map", "philpopup_res");
 
+  // Wire share buttons. URL points at the long-form archetype page —
+  // when clicked from a share, the visitor lands on a beautiful detail
+  // page with its own OG image, plus a CTA to take the quiz themselves.
+  // figureKey is the archetype slug used in lib/archetypes.ts.
+  setupShareRow(top, flavor);
+
+  // First-time onboarding overlay (3 brief steps explaining what to do
+  // with the result). No-op if the user has already dismissed it.
+  maybeShowOnboard();
+
   window.scrollTo({top:0});
 // --- persist to account if signed in ---
   try {
@@ -6393,6 +6664,129 @@ function showResults() {
       else note.textContent = '';
     });
   } catch (e) { console.warn(e); }
+}
+
+// Onboarding overlay — appears once, after the user's first quiz
+// completion. Three steps + skip. localStorage flag prevents repeats.
+let _onboardStep = 1;
+function maybeShowOnboard() {
+  try {
+    if (localStorage.getItem('mull_seen_results_onboard')) return;
+  } catch { /* private mode etc. — show anyway, the worst case is a tiny re-prompt */ }
+
+  // Defer briefly so the user has a moment to register the result page
+  // before the modal pops up. Feels less aggressive than instant.
+  setTimeout(() => {
+    const modal = document.getElementById('onboard-modal');
+    if (!modal) return;
+    _onboardStep = 1;
+    _renderOnboardStep();
+    modal.hidden = false;
+    // Wire dots → step jump
+    modal.querySelectorAll('.onboard-dot').forEach(dot => {
+      dot.addEventListener('click', () => {
+        const n = parseInt(dot.getAttribute('data-go') || '1', 10);
+        if (n >= 1 && n <= 3) { _onboardStep = n; _renderOnboardStep(); }
+      });
+    });
+  }, 1100);
+}
+
+function _renderOnboardStep() {
+  const modal = document.getElementById('onboard-modal');
+  if (!modal) return;
+  modal.querySelectorAll('.onboard-step').forEach(el => {
+    const n = parseInt(el.getAttribute('data-step') || '0', 10);
+    el.hidden = n !== _onboardStep;
+  });
+  modal.querySelectorAll('.onboard-dot').forEach(dot => {
+    const n = parseInt(dot.getAttribute('data-go') || '0', 10);
+    dot.classList.toggle('active', n === _onboardStep);
+  });
+  const next = modal.querySelector('.onboard-next');
+  if (next) next.textContent = _onboardStep < 3 ? 'Next →' : 'Got it';
+}
+
+function onboardNext() {
+  if (_onboardStep < 3) {
+    _onboardStep++;
+    _renderOnboardStep();
+  } else {
+    closeOnboard();
+  }
+}
+
+function closeOnboard() {
+  const modal = document.getElementById('onboard-modal');
+  if (modal) modal.hidden = true;
+  try { localStorage.setItem('mull_seen_results_onboard', '1'); } catch {}
+}
+
+// Wires up the share row under the result. Called from showResults()
+// once the archetype has been computed. The X (Twitter) button uses the
+// web intent URL; copy-link uses navigator.clipboard with a tiny
+// confirmation; native-share appears only on platforms that support
+// navigator.share (mostly mobile).
+function setupShareRow(top, flavor) {
+  const row = document.getElementById('share-row');
+  if (!row) return;
+  row.hidden = false;
+
+  const slug = top.figureKey;
+  const archName = top.name;  // e.g. "The Pilgrim"
+  const cleanArch = archName.replace(/^The\s+/i, '');
+  const flavorLabel = flavor ? `${flavor} ${cleanArch}` : cleanArch;
+  const url = `https://mull.world/archetype/${slug}`;
+  const tweet =
+    `I just took the Mull quiz and landed at the ${flavorLabel}. ` +
+    `Find out where you sit on the map of how you think — `;
+
+  const xBtn = document.getElementById('share-twitter');
+  if (xBtn) {
+    const intent = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent(url)}`;
+    xBtn.href = intent;
+  }
+
+  const copyBtn = document.getElementById('share-copy');
+  if (copyBtn) {
+    copyBtn.onclick = async () => {
+      try {
+        await navigator.clipboard.writeText(url);
+        const original = copyBtn.querySelector('span:last-child').textContent;
+        copyBtn.classList.add('copied');
+        copyBtn.querySelector('span:last-child').textContent = 'Copied!';
+        setTimeout(() => {
+          copyBtn.classList.remove('copied');
+          copyBtn.querySelector('span:last-child').textContent = original;
+        }, 1800);
+      } catch (e) {
+        console.warn('[share] clipboard failed', e);
+        // Fallback: prompt the URL so the user can copy manually.
+        window.prompt('Copy this link:', url);
+      }
+    };
+  }
+
+  const nativeBtn = document.getElementById('share-native');
+  if (nativeBtn) {
+    if (typeof navigator.share === 'function') {
+      nativeBtn.hidden = false;
+      nativeBtn.onclick = async () => {
+        try {
+          await navigator.share({
+            title: `Mull — ${flavorLabel}`,
+            text: tweet,
+            url,
+          });
+        } catch (e) {
+          // User cancelled, or share API unavailable; quietly ignore.
+          if (e && e.name !== 'AbortError') console.warn('[share] native failed', e);
+        }
+      };
+    } else {
+      nativeBtn.hidden = true;
+    }
+  }
 }
 
 function computeFlavor(vec, arch) {

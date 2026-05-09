@@ -5,6 +5,7 @@
 // The homepage at / is served from public/mull.html via a rewrite, but
 // search engines should still find it through this sitemap entry.
 import type { MetadataRoute } from 'next';
+import { philosopherSlugs } from '@/lib/philosophers';
 
 const SITE = 'https://mull.world';
 
@@ -32,5 +33,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       'cartographer','keel','threshold','pilgrim','touchstone',
       'hearth','forge','hammer','garden','lighthouse',
     ].map(slug => ({ url: `${SITE}/archetype/${slug}`, lastModified: now, changeFrequency: 'monthly' as const, priority: 0.6 })),
+    // 166 philosopher pages — the bulk of the SEO surface. Long-form
+    // content per thinker so a search like "Marcus Aurelius philosophy"
+    // can land here.
+    ...philosopherSlugs().map(slug => ({
+      url: `${SITE}/philosopher/${slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.5,
+    })),
   ];
 }

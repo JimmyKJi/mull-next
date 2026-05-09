@@ -10,6 +10,7 @@ import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
 import ProgressionPanel from '@/components/progression-panel';
 import { computeUserStats } from '@/lib/profile-progression';
+import DilemmaReminderCard from '@/components/dilemma-reminder-card';
 
 // Account pages should never be indexed by search engines — belt and braces
 // alongside the disallow directive in app/robots.ts.
@@ -923,6 +924,11 @@ export default async function AccountPage() {
           their progress bars start at zero and the unearned-badges
           preview shows what's coming. */}
       <ProgressionPanel stats={stats} locale={locale} />
+
+      {/* Daily-dilemma email reminder card — opt-in, time-zone aware.
+          Sits inside /account so the privacy-respecting opt-in is the
+          first place a user encounters it. */}
+      <DilemmaReminderCard locale={locale} />
     </main>
   );
 }
