@@ -1,0 +1,54 @@
+# Hourly trigger for the daily-dilemma email reminder cron.
+#
+# Why GitHub Actions instead of Vercel Cron: Vercel's Hobby tier only
+# permits one cron run per day, which defeats the per-user time-zone
+# design (we need hourly so we can catch each user's local 9am). GitHub
+# Actions cron is free and reliable for this.
+#
+# How it works:
+#   - Workflow fires every hour on the hour (UTC).
+#   - Curls the Mull endpoint /api/cron/dilemma-reminders.
+#   - Auth header carries the CRON_SECRET stored as a GitHub repo
+#     secret (same value as the CRON_SECRET env var in Vercel).
+#   - The endpoint computes which opted-in users are due THIS local
+#     hour and sends to them via Resend.
+#
+# Setup once in GitHub:
+#   Repo → Settings → Secrets and variables → Actions → New
+#   repository secret. Name: CRON_SECRET. Value: same long random
+#   string you put in Vercel.
+#
+# GitHub Actions cron is best-effort — runs may be delayed by a few
+# minutes during heavy load. That's fine: the endpoint is idempotent
+# per (user, day) thanks to the candidate match on local-hour-equals-
+# preference. A late run just means the next hour's batch.
+
+name: Hourly dilemma reminder
+
+on:
+  schedule:
+    - cron: '0 * * * *'   # top of every hour, UTC
+  workflow_dispatch: {}    # allow manual trigger from GH UI for testing
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Mull reminder cron
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          if [ -z "$CRON_SECRET" ]; then
+            echo "::error::CRON_SECRET secret is missing. Add it under Repo Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+          response=$(curl -sS -w '\n%{http_code}' \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            https://mull.world/api/cron/dilemma-reminders)
+          body=$(echo "$response" | sed '$d')
+          status=$(echo "$response" | tail -n1)
+          echo "HTTP $status"
+          echo "$body"
+          if [ "$status" -ge 400 ]; then
+            exit 1
+          fi
