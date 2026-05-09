@@ -2319,50 +2319,14 @@
     .dim { grid-template-columns: 130px 1fr 28px; font-size: 13px; }
     .mapsection { margin: 48px -16px; }
   }
-/* Auth nav (top-right) */
-.auth-nav {
-  position: fixed;
-  top: 16px;
-  right: 20px;
-  z-index: 50;
-  font-family: 'Inter', system-ui, sans-serif;
-  font-size: 13px;
-}
-.auth-nav a {
-  color: #4A4338;
-  text-decoration: none;
-  padding: 6px 14px;
-  border-radius: 999px;
-  background: rgba(255, 252, 244, 0.85);
-  border: 1px solid #D6CDB6;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  transition: border-color 0.15s ease, color 0.15s ease;
-  display: inline-block;
-  letter-spacing: 0.3px;
-}
-.auth-nav a:hover {
-  border-color: #B8862F;
-  color: #221E18;
-}
-@media (max-width: 600px) {
-  .auth-nav {
-    top: 10px;
-    right: 12px;
-    font-size: 12px;
-  }
-  .auth-nav a { padding: 5px 12px; }
-}
-/* Embed mode — used by /account iframe to show only the constellation */
+/* Embed mode — used by /account iframe to show only the constellation.
+   Legacy .auth-nav styles removed; brandbar handles auth chip now. */
 html.embed-mode,
 html.embed-mode body {
   background: transparent !important;
   margin: 0 !important;
   padding: 0 !important;
   overflow: hidden !important;
-}
-html.embed-mode #auth-nav {
-  display: none !important;
 }
 html.embed-mode #rootwrap {
   display: block !important;
@@ -2484,7 +2448,8 @@ html.embed-mode #embed-you-hint {
 }
 </style>
 </head>
-<body> <div id="auth-nav" class="auth-nav" hidden></div>
+<body><!-- The legacy fixed-position #auth-nav was removed; the brandbar
+       has its own .brandbar-auth-chip that handles Account/Sign-in. -->
 <!-- Brandbar lives OUTSIDE .wrap so it can span the full viewport width on
      desktop and stop forcing nav items onto a second row. .brandbar-shell
      handles its own horizontal padding; .brandbar-inner caps the width at
@@ -3124,15 +3089,10 @@ async function saveAttempt(vec, archetypeName, flavor, alignmentPct) {
   return { saved: true };
 }
 function renderAuthNav() {
-  const nav = document.getElementById('auth-nav');
-  if (nav) {
-    nav.innerHTML = CURRENT_USER
-      ? '<a href="/account">Account →</a>'
-      : '<a href="/login">Sign in</a>';
-    nav.hidden = false;
-  }
   // Toggle the `is-authed` body class — the brandbar uses it to reveal
-  // authed-only nav links (Diary, Simulated debate).
+  // authed-only nav links (Diary, Simulated debate). The legacy
+  // #auth-nav floating element was removed; the brandbar's own
+  // .brandbar-auth-chip is the only auth surface now.
   document.body.classList.toggle('is-authed', !!CURRENT_USER);
   // Brandbar Account/Sign-in chip: same chip, swap text + destination
   // based on auth state. Keeps the chip visible to everyone so the
