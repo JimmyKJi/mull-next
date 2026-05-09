@@ -12,6 +12,7 @@ import ProgressionPanel from '@/components/progression-panel';
 import { computeUserStats } from '@/lib/profile-progression';
 import DilemmaReminderCard from '@/components/dilemma-reminder-card';
 import ShareResultCard from '@/components/share-result-card';
+import { FIGURES } from '@/lib/figures';
 import { isAdminUserId } from '@/lib/admin';
 
 // Account pages should never be indexed by search engines — belt and braces
@@ -574,26 +575,71 @@ export default async function AccountPage() {
             padding: '28px 32px',
             background: '#FFFCF4'
           }}>
+            {/* Figure + name row. Figure links to the long-form archetype
+                essay; on phones it sits above the name (flex-wrap) so the
+                name remains readable instead of squeezing next to a 120px
+                tile in 320px of width. */}
             <div style={{
-              fontFamily: serif,
-              fontSize: 36,
-              fontWeight: 500,
-              letterSpacing: '-0.5px',
-              marginBottom: 10
+              display: 'flex',
+              alignItems: 'center',
+              gap: 20,
+              marginBottom: 16,
+              flexWrap: 'wrap',
             }}>
-              {latestQuiz.flavor ? `${latestQuiz.flavor} ` : ''}
-              {latestQuiz.archetype.replace(/^The /, '')}
+              {(() => {
+                const archSlug = latestQuiz.archetype
+                  .replace(/^The\s+/i, '')
+                  .toLowerCase()
+                  .replace(/[^a-z0-9]+/g, '-')
+                  .replace(/^-+|-+$/g, '');
+                const figure = FIGURES[archSlug] || '';
+                if (!figure) return null;
+                return (
+                  <Link href={`/archetype/${archSlug}`} style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: 100,
+                    height: 100,
+                    flexShrink: 0,
+                    background: '#F1EAD8',
+                    borderRadius: '50%',
+                    border: '2px solid #B8862F',
+                    padding: 12,
+                    textDecoration: 'none',
+                  }}>
+                    <span
+                      aria-hidden
+                      style={{ width: '100%', height: '100%', display: 'block' }}
+                      dangerouslySetInnerHTML={{ __html: figure }}
+                    />
+                  </Link>
+                );
+              })()}
+              <div style={{ minWidth: 0, flex: '1 1 280px' }}>
+                <div style={{
+                  fontFamily: serif,
+                  fontSize: 36,
+                  fontWeight: 500,
+                  letterSpacing: '-0.5px',
+                  lineHeight: 1.1,
+                  marginBottom: 8,
+                }}>
+                  {latestQuiz.flavor ? `${latestQuiz.flavor} ` : ''}
+                  {latestQuiz.archetype.replace(/^The /, '')}
+                </div>
+                <div style={{
+                  fontFamily: sans,
+                  fontSize: 13,
+                  color: '#8C6520',
+                  letterSpacing: 1,
+                  textTransform: 'uppercase',
+                }}>
+                  {latestQuiz.alignment_pct}{t('account.percent_alignment', locale)} · {fmt(latestQuiz.taken_at)}
+                </div>
+              </div>
             </div>
-            <div style={{
-              fontFamily: sans,
-              fontSize: 13,
-              color: '#8C6520',
-              letterSpacing: 1,
-              textTransform: 'uppercase',
-              marginBottom: 24
-            }}>
-              {latestQuiz.alignment_pct}{t('account.percent_alignment', locale)} · {fmt(latestQuiz.taken_at)}
-            </div>
+            <div style={{ marginBottom: 24 }} />
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
               <Link href="/" style={{
                 display: 'inline-block',
