@@ -1,11 +1,18 @@
-// Per-archetype OG card. 1200×630 PNG via Satori (next/og).
-// System fonts only (Georgia for serif, system-ui for sans) — runtime
-// Google Fonts fetching was 500'ing on Vercel. Visual aesthetic is
-// nearly identical at OG dimensions; the fancy-font upgrade can come
-// later via bundled .ttf files in /public if we want it.
+// Per-archetype OG card. Two-column book-jacket layout:
+//   - Top: gold rule, Mull. wordmark, ARCHETYPE label
+//   - Left column (~340px): the archetype's hand-drawn figure SVG
+//     in a circular cream tile, plus a subtle constellation of dots
+//   - Right column: italic 'The', huge serif name, italic spirit
+//   - Bottom: quote with attribution + MULL.WORLD signature, gold rule
+//
+// Cormorant Garamond (medium + italic) + Inter (regular + semibold)
+// loaded from /public/fonts at module load — no runtime network
+// dependency, so this can't 500 from font fetch failures.
 
 import { ImageResponse } from 'next/og';
 import { getArchetypeByKey } from '@/lib/archetypes';
+import { FIGURES } from '@/lib/figures';
+import { loadOGFonts, svgToDataUri } from '@/lib/og-fonts';
 
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
@@ -27,6 +34,10 @@ export default async function ArchetypeOGImage({
     ? quoteText.slice(0, 127).trimEnd() + '…'
     : quoteText;
   const quoteAttribution = a?.quotes?.[0]?.attribution ?? '';
+  const figureSvg = a ? FIGURES[a.key] : null;
+  const figureDataUri = figureSvg ? svgToDataUri(figureSvg) : null;
+
+  const fonts = await loadOGFonts();
 
   const CREAM = '#FAF6EC';
   const CREAM_2 = '#F1EAD8';
@@ -44,11 +55,13 @@ export default async function ArchetypeOGImage({
           display: 'flex',
           flexDirection: 'column',
           background: CREAM,
-          padding: '54px 72px 48px',
+          padding: '50px 64px 44px',
           color: INK,
           position: 'relative',
+          fontFamily: 'Inter, sans-serif',
         }}
       >
+        {/* Gold accent rule top — visual anchor */}
         <div style={{
           display: 'flex',
           position: 'absolute',
@@ -57,19 +70,34 @@ export default async function ArchetypeOGImage({
           background: ACC,
         }} />
 
+        {/* Decorative corner ornament — three small dots like a constellation */}
+        <div style={{
+          display: 'flex',
+          position: 'absolute',
+          top: 30, right: 38,
+          flexDirection: 'row',
+          gap: 5,
+        }}>
+          <div style={{ display: 'flex', width: 4, height: 4, borderRadius: '50%', background: ACC, opacity: 0.55 }} />
+          <div style={{ display: 'flex', width: 4, height: 4, borderRadius: '50%', background: ACC, opacity: 0.35 }} />
+          <div style={{ display: 'flex', width: 4, height: 4, borderRadius: '50%', background: ACC, opacity: 0.2 }} />
+        </div>
+
+        {/* TOP ROW: Mull. wordmark + ARCHETYPE label */}
         <div style={{
           display: 'flex',
           alignItems: 'flex-end',
           justifyContent: 'space-between',
+          marginBottom: 12,
         }}>
           <div style={{
             display: 'flex',
             alignItems: 'baseline',
-            fontFamily: 'Georgia, serif',
-            fontSize: 56,
-            fontWeight: 600,
+            fontFamily: 'Cormorant',
+            fontSize: 48,
+            fontWeight: 500,
             color: INK,
-            letterSpacing: -1,
+            letterSpacing: -0.5,
             lineHeight: 1,
           }}>
             <div style={{ display: 'flex' }}>Mull</div>
@@ -77,72 +105,106 @@ export default async function ArchetypeOGImage({
           </div>
           <div style={{
             display: 'flex',
-            fontFamily: 'system-ui, sans-serif',
-            fontSize: 16,
+            fontFamily: 'Inter',
+            fontSize: 14,
             fontWeight: 600,
             color: ACC_DEEP,
             letterSpacing: 5,
-            paddingBottom: 8,
+            paddingBottom: 6,
           }}>
             ARCHETYPE
           </div>
         </div>
 
-        <div
-          style={{
+        {/* MAIN — two columns: figure left, hero text right */}
+        <div style={{
+          display: 'flex',
+          flexDirection: 'row',
+          flex: 1,
+          alignItems: 'center',
+          gap: 36,
+          marginTop: 8,
+        }}>
+          {/* Figure column */}
+          {figureDataUri ? (
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 320,
+              height: 320,
+              flexShrink: 0,
+              background: CREAM_2,
+              borderRadius: '50%',
+              border: `2px solid ${ACC}`,
+              padding: 28,
+            }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={figureDataUri}
+                alt=""
+                width={250}
+                height={250}
+              />
+            </div>
+          ) : null}
+
+          {/* Hero text column */}
+          <div style={{
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center',
             flex: 1,
-            marginTop: 20,
-          }}
-        >
-          <div style={{
-            display: 'flex',
-            fontFamily: 'Georgia, serif',
-            fontStyle: 'italic',
-            color: ACC_DEEP,
-            fontSize: 56,
-            fontWeight: 400,
-            lineHeight: 1,
+            minWidth: 0,
           }}>
-            The
-          </div>
-          <div style={{
-            display: 'flex',
-            fontFamily: 'Georgia, serif',
-            fontSize: 156,
-            fontWeight: 600,
-            lineHeight: 1.0,
-            letterSpacing: -3,
-            color: INK,
-            marginTop: 4,
-          }}>
-            {name}
-          </div>
-          <div style={{
-            display: 'flex',
-            fontFamily: 'Georgia, serif',
-            fontStyle: 'italic',
-            fontSize: 36,
-            color: INK_SOFT,
-            marginTop: 20,
-            lineHeight: 1.3,
-            maxWidth: 1000,
-          }}>
-            {spirit}
+            <div style={{
+              display: 'flex',
+              fontFamily: 'Cormorant',
+              fontStyle: 'italic',
+              color: ACC_DEEP,
+              fontSize: 52,
+              fontWeight: 500,
+              lineHeight: 0.95,
+            }}>
+              The
+            </div>
+            <div style={{
+              display: 'flex',
+              fontFamily: 'Cormorant',
+              fontSize: 132,
+              fontWeight: 500,
+              lineHeight: 0.95,
+              letterSpacing: -3,
+              color: INK,
+              marginTop: 2,
+            }}>
+              {name}
+            </div>
+            <div style={{
+              display: 'flex',
+              fontFamily: 'Cormorant',
+              fontStyle: 'italic',
+              fontSize: 30,
+              color: INK_SOFT,
+              marginTop: 18,
+              lineHeight: 1.3,
+              maxWidth: 580,
+            }}>
+              {spirit}
+            </div>
           </div>
         </div>
 
-        {shortQuote ? (
-          <div style={{
-            display: 'flex',
-            alignItems: 'flex-end',
-            justifyContent: 'space-between',
-            gap: 32,
-            paddingTop: 22,
-            borderTop: `1px solid ${CREAM_2}`,
-          }}>
+        {/* BOTTOM — quote epigraph + signature, divided by hairline */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'flex-end',
+          justifyContent: 'space-between',
+          gap: 32,
+          paddingTop: 18,
+          marginTop: 8,
+          borderTop: `1px solid ${CREAM_2}`,
+        }}>
+          {shortQuote ? (
             <div style={{
               display: 'flex',
               flexDirection: 'column',
@@ -150,9 +212,9 @@ export default async function ArchetypeOGImage({
             }}>
               <div style={{
                 display: 'flex',
-                fontFamily: 'Georgia, serif',
+                fontFamily: 'Cormorant',
                 fontStyle: 'italic',
-                fontSize: 22,
+                fontSize: 21,
                 color: INK,
                 lineHeight: 1.4,
               }}>
@@ -161,59 +223,42 @@ export default async function ArchetypeOGImage({
               {quoteAttribution ? (
                 <div style={{
                   display: 'flex',
-                  fontFamily: 'system-ui, sans-serif',
-                  fontSize: 14,
+                  fontFamily: 'Inter',
+                  fontSize: 13,
                   color: ACC_DEEP,
-                  marginTop: 6,
+                  marginTop: 5,
                   letterSpacing: 1,
                 }}>
                   — {quoteAttribution}
                 </div>
               ) : null}
             </div>
+          ) : (
             <div style={{
               display: 'flex',
-              fontFamily: 'system-ui, sans-serif',
-              fontSize: 13,
-              color: ACC_DEEP,
-              letterSpacing: 4,
-              fontWeight: 600,
-              paddingBottom: 4,
-            }}>
-              MULL.WORLD
-            </div>
-          </div>
-        ) : (
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            paddingTop: 22,
-            borderTop: `1px solid ${CREAM_2}`,
-          }}>
-            <div style={{
-              display: 'flex',
-              fontFamily: 'Georgia, serif',
+              fontFamily: 'Cormorant',
               fontStyle: 'italic',
               fontSize: 22,
               color: ACC_DEEP,
             }}>
               Find your place on the map of how you think.
             </div>
-            <div style={{
-              display: 'flex',
-              fontFamily: 'system-ui, sans-serif',
-              fontSize: 13,
-              color: ACC_DEEP,
-              letterSpacing: 4,
-              fontWeight: 600,
-            }}>
-              MULL.WORLD
-            </div>
+          )}
+          <div style={{
+            display: 'flex',
+            fontFamily: 'Inter',
+            fontSize: 12,
+            color: ACC_DEEP,
+            letterSpacing: 4,
+            fontWeight: 600,
+            paddingBottom: 4,
+            flexShrink: 0,
+          }}>
+            MULL.WORLD
           </div>
-        )}
+        </div>
       </div>
     ),
-    { ...size }
+    { ...size, fonts }
   );
 }
