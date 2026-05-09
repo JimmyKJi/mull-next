@@ -11,6 +11,7 @@ import LanguageSwitcher from '@/components/language-switcher';
 import ProgressionPanel from '@/components/progression-panel';
 import { computeUserStats } from '@/lib/profile-progression';
 import DilemmaReminderCard from '@/components/dilemma-reminder-card';
+import ShareResultCard from '@/components/share-result-card';
 import { isAdminUserId } from '@/lib/admin';
 
 // Account pages should never be indexed by search engines — belt and braces
@@ -632,6 +633,14 @@ export default async function AccountPage() {
                 {t('account.write_diary', locale)}
               </Link>
             </div>
+            {/* Share row — same X intent / copy link / native share that
+                appears on the immediate quiz result, surfaced again here
+                so users who come back later still have a way to share. */}
+            <ShareResultCard
+              archetype={latestQuiz.archetype}
+              flavor={latestQuiz.flavor}
+              alignmentPct={latestQuiz.alignment_pct}
+            />
           </div>
         ) : (
           <div style={{
