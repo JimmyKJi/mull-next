@@ -1,17 +1,10 @@
-// Per-philosopher OG image, 1200×630, served at
-// /philosopher/[slug]/opengraph-image. Generated on the edge.
-//
-// Layout: name + dates + key idea, with a small "MULL · Constellation"
-// eyebrow and the archetype label as a footer signature. Designed to
-// look like a clean book-jacket card so the share looks substantial.
+// Per-philosopher OG image. 1200×630 PNG via Satori.
+// Strict Satori-friendly: every <div> has explicit display, no
+// mixed text + element children inside the same div.
 
 import { ImageResponse } from 'next/og';
 import { getPhilosopherBySlug } from '@/lib/philosophers';
 
-// Node runtime (default). One image per route (no
-// generateImageMetadata) so the URL stays /philosopher/<slug>/
-// opengraph-image. Static generation comes from the parent route's
-// generateStaticParams.
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 export const alt = 'Mull · Philosopher';
@@ -25,7 +18,6 @@ export default async function PhilosopherOGImage({
   const p = getPhilosopherBySlug(slug);
   if (!p) return genericCard();
 
-  // Trim aggressively for the visible area.
   const idea = p.keyIdea.length > 180
     ? p.keyIdea.slice(0, 177).trimEnd() + '…'
     : p.keyIdea;
@@ -41,7 +33,7 @@ export default async function PhilosopherOGImage({
           background: '#FAF6EC',
           padding: '64px 72px',
           color: '#221E18',
-          fontFamily: 'Georgia, "Cormorant Garamond", serif',
+          fontFamily: 'Georgia, serif',
         }}
       >
         <div
@@ -53,14 +45,11 @@ export default async function PhilosopherOGImage({
             color: '#8C6520',
             letterSpacing: 6,
             textTransform: 'uppercase',
-            fontFamily: '"Helvetica Neue", Arial, sans-serif',
             fontWeight: 600,
           }}
         >
-          <div>Mull · Constellation</div>
-          <div style={{ color: '#221E18', letterSpacing: 0 }}>
-            mull<span style={{ color: '#B8862F' }}>.</span>world
-          </div>
+          <div style={{ display: 'flex' }}>MULL · CONSTELLATION</div>
+          <div style={{ display: 'flex', color: '#221E18', letterSpacing: 0 }}>MULL.WORLD</div>
         </div>
 
         <div
@@ -72,54 +61,47 @@ export default async function PhilosopherOGImage({
             marginTop: 28,
           }}
         >
-          <div
-            style={{
-              fontSize: 100,
-              fontWeight: 500,
-              lineHeight: 1.0,
-              letterSpacing: -1.5,
-              color: '#221E18',
-            }}
-          >
+          <div style={{
+            display: 'flex',
+            fontSize: 100,
+            fontWeight: 500,
+            lineHeight: 1.0,
+            letterSpacing: -1.5,
+            color: '#221E18',
+          }}>
             {p.name}
           </div>
-          <div
-            style={{
-              fontSize: 24,
-              color: '#8C6520',
-              fontFamily: '"Helvetica Neue", Arial, sans-serif',
-              letterSpacing: 1,
-              marginTop: 10,
-            }}
-          >
+          <div style={{
+            display: 'flex',
+            fontSize: 24,
+            color: '#8C6520',
+            letterSpacing: 1,
+            marginTop: 10,
+          }}>
             {p.dates}
           </div>
-          <div
-            style={{
-              marginTop: 36,
-              fontSize: 30,
-              fontStyle: 'italic',
-              color: '#221E18',
-              lineHeight: 1.4,
-              borderLeft: '4px solid #B8862F',
-              paddingLeft: 22,
-              maxWidth: 1000,
-            }}
-          >
+          <div style={{
+            display: 'flex',
+            marginTop: 36,
+            fontSize: 30,
+            fontStyle: 'italic',
+            color: '#221E18',
+            lineHeight: 1.4,
+            borderLeft: '4px solid #B8862F',
+            paddingLeft: 22,
+            maxWidth: 1000,
+          }}>
             {idea}
           </div>
         </div>
 
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            fontSize: 20,
-            color: '#8C6520',
-            fontFamily: '"Helvetica Neue", Arial, sans-serif',
-            letterSpacing: 1,
-          }}
-        >
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          fontSize: 20,
+          color: '#8C6520',
+          letterSpacing: 1,
+        }}>
           {p.archetypeName}
         </div>
       </div>
@@ -144,10 +126,16 @@ function genericCard() {
           fontFamily: 'Georgia, serif',
         }}
       >
-        <div style={{ fontSize: 140, fontWeight: 600, letterSpacing: -3 }}>
-          Mull<span style={{ color: '#B8862F' }}>.</span>
+        <div style={{ display: 'flex', fontSize: 140, fontWeight: 600, letterSpacing: -3 }}>
+          Mull.
         </div>
-        <div style={{ fontSize: 32, fontStyle: 'italic', color: '#4A4338', marginTop: 18 }}>
+        <div style={{
+          display: 'flex',
+          fontSize: 32,
+          fontStyle: 'italic',
+          color: '#4A4338',
+          marginTop: 18,
+        }}>
           Find your place on the map of how you think.
         </div>
       </div>

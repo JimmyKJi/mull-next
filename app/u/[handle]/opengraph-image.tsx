@@ -1,14 +1,11 @@
-// Per-user OG image. Renders a personal "card" showing the user's
-// handle, display name, and (if they've opted to show their archetype
-// publicly) their current archetype. Generated on the edge so a viral
-// share doesn't pile up server load.
+// Per-user OG image. 1200×630 PNG via Satori.
+// Strict Satori-friendly: every <div> has explicit display, no
+// mixed text + element children inside the same div.
 //
 // Privacy: respects show_archetype just like the page itself. If the
-// user opted out, the card just says their name + "on Mull" with the
-// site tagline.
+// user opted out, the card just shows their name + tagline.
 //
-// Falls back to a generic Mull card if the handle doesn't resolve, so
-// scrapers don't break.
+// Falls back to a generic Mull card if the handle doesn't resolve.
 
 import { ImageResponse } from 'next/og';
 import { createClient } from '@/utils/supabase/server';
@@ -16,7 +13,6 @@ import { createClient } from '@/utils/supabase/server';
 export const runtime = 'nodejs';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
-
 export const alt = 'Public profile on Mull';
 
 export default async function ProfileOGImage({
@@ -33,10 +29,7 @@ export default async function ProfileOGImage({
     .eq('handle', handle.toLowerCase())
     .maybeSingle<{ user_id: string; handle: string; display_name: string | null; show_archetype: boolean }>();
 
-  // Guard: missing profile → generic Mull card.
-  if (!profile) {
-    return genericCard();
-  }
+  if (!profile) return genericCard();
 
   const name = profile.display_name || profile.handle;
 
@@ -60,7 +53,7 @@ export default async function ProfileOGImage({
           background: '#FAF6EC',
           padding: '64px 72px',
           color: '#221E18',
-          fontFamily: 'Georgia, "Cormorant Garamond", serif',
+          fontFamily: 'Georgia, serif',
         }}
       >
         <div
@@ -72,14 +65,11 @@ export default async function ProfileOGImage({
             color: '#8C6520',
             letterSpacing: 6,
             textTransform: 'uppercase',
-            fontFamily: '"Helvetica Neue", Arial, sans-serif',
             fontWeight: 600,
           }}
         >
-          <div>Mull · Profile</div>
-          <div style={{ color: '#221E18', letterSpacing: 0 }}>
-            mull<span style={{ color: '#B8862F' }}>.</span>world
-          </div>
+          <div style={{ display: 'flex' }}>MULL · PROFILE</div>
+          <div style={{ display: 'flex', color: '#221E18', letterSpacing: 0 }}>MULL.WORLD</div>
         </div>
 
         <div
@@ -91,76 +81,67 @@ export default async function ProfileOGImage({
             marginTop: 32,
           }}
         >
-          <div
-            style={{
-              fontSize: 110,
-              fontWeight: 500,
-              lineHeight: 1.0,
-              letterSpacing: -2,
-              color: '#221E18',
-              maxWidth: 1056,
-              overflow: 'hidden',
-            }}
-          >
+          <div style={{
+            display: 'flex',
+            fontSize: 110,
+            fontWeight: 500,
+            lineHeight: 1.0,
+            letterSpacing: -2,
+            color: '#221E18',
+            maxWidth: 1056,
+          }}>
             {name}
           </div>
-          <div
-            style={{
-              fontSize: 30,
-              color: '#8C6520',
-              marginTop: 14,
-              fontFamily: '"Helvetica Neue", Arial, sans-serif',
-              letterSpacing: 1,
-            }}
-          >
+          <div style={{
+            display: 'flex',
+            fontSize: 30,
+            color: '#8C6520',
+            marginTop: 14,
+            letterSpacing: 1,
+          }}>
             @{profile.handle}
           </div>
 
-          {archetype && (
+          {archetype ? (
             <div
               style={{
-                marginTop: 40,
                 display: 'flex',
                 flexDirection: 'column',
+                marginTop: 40,
                 borderLeft: '4px solid #B8862F',
                 paddingLeft: 22,
               }}
             >
-              <div
-                style={{
-                  fontSize: 18,
-                  color: '#8C6520',
-                  letterSpacing: 4,
-                  textTransform: 'uppercase',
-                  fontFamily: '"Helvetica Neue", Arial, sans-serif',
-                  fontWeight: 600,
-                  marginBottom: 6,
-                }}
-              >
-                Currently
+              <div style={{
+                display: 'flex',
+                fontSize: 18,
+                color: '#8C6520',
+                letterSpacing: 4,
+                textTransform: 'uppercase',
+                fontWeight: 600,
+                marginBottom: 6,
+              }}>
+                CURRENTLY
               </div>
-              <div
-                style={{
-                  fontSize: 56,
-                  fontStyle: 'italic',
-                  color: '#221E18',
-                  lineHeight: 1.1,
-                }}
-              >
+              <div style={{
+                display: 'flex',
+                fontSize: 56,
+                fontStyle: 'italic',
+                color: '#221E18',
+                lineHeight: 1.1,
+              }}>
                 {flavor ? `${flavor} ${archetype}` : archetype}
               </div>
             </div>
-          )}
+          ) : null}
         </div>
 
-        <div
-          style={{
-            fontSize: 22,
-            color: '#8C6520',
-            fontFamily: '"Helvetica Neue", Arial, sans-serif',
-            fontStyle: 'italic',
-          }}
-        >
+        <div style={{
+          display: 'flex',
+          fontSize: 22,
+          color: '#8C6520',
+          fontStyle: 'italic',
+        }}>
           Find your place on the map of how you think.
         </div>
       </div>
@@ -185,10 +166,16 @@ function genericCard() {
           fontFamily: 'Georgia, serif',
         }}
       >
-        <div style={{ fontSize: 140, fontWeight: 600, letterSpacing: -3 }}>
-          Mull<span style={{ color: '#B8862F' }}>.</span>
+        <div style={{ display: 'flex', fontSize: 140, fontWeight: 600, letterSpacing: -3 }}>
+          Mull.
         </div>
-        <div style={{ fontSize: 32, fontStyle: 'italic', color: '#4A4338', marginTop: 18 }}>
+        <div style={{
+          display: 'flex',
+          fontSize: 32,
+          fontStyle: 'italic',
+          color: '#4A4338',
+          marginTop: 18,
+        }}>
           Find your place on the map of how you think.
         </div>
       </div>
