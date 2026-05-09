@@ -260,7 +260,11 @@ export default async function ArchetypeDetailPage({ params }: { params: Promise<
       </Section>
 
       <div style={{
-        display: 'grid', gap: 18, gridTemplateColumns: '1fr 1fr',
+        display: 'grid', gap: 18,
+        // auto-fit minmax so the pair collapses to one column on
+        // narrow screens; otherwise the two paragraphs become
+        // ~140px wide on a phone and unreadable.
+        gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
         marginBottom: 32,
       }}>
         <SidedSection

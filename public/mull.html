@@ -701,7 +701,10 @@
     margin-top: 28px; gap: 16px;
   }
   .back {
-    background: none; border: none; padding: 8px 12px;
+    background: none; border: none;
+    /* Bumped padding so the tap target is comfortably above the
+       44px iOS Human Interface Guidelines floor. Was 8 12. */
+    padding: 12px 16px;
     font-size: 14px; color: var(--ink-soft); cursor: pointer;
     font-family: inherit;
   }
@@ -1347,7 +1350,11 @@
     border-radius: 999px; border: 1px solid rgba(250,246,236,.18);
     background: rgba(250,246,236,.06);
     color: var(--cream);
-    font-family: inherit; font-size: 13px;
+    font-family: inherit;
+    /* 16px so iOS Safari doesn't auto-zoom on focus, even though
+       the visual rhythm of the dark sticky CTA wants something
+       smaller. The size difference at this scale is negligible. */
+    font-size: 16px;
     width: 200px;
   }
   .sticky-cta-form input::placeholder { color: rgba(250,246,236,.4); }
@@ -2311,7 +2318,7 @@
   .emailbox input {
     flex: 1; padding: 12px 16px; border-radius: 999px;
     border: none; background: rgba(250,246,236,.1); color: var(--cream);
-    font-family: inherit; font-size: 15px;
+    font-family: inherit; font-size: 16px; /* iOS no-zoom threshold */
   }
   .emailbox input::placeholder { color: rgba(250,246,236,.5); }
   .emailbox button {

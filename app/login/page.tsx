@@ -12,7 +12,10 @@ const sans = "'Inter', system-ui, sans-serif";
 
 const inputStyle: React.CSSProperties = {
   fontFamily: sans,
-  fontSize: 15,
+  // 16px so iOS Safari doesn't auto-zoom on focus (anything <16
+  // triggers the zoom + layout shift, especially noticeable inside
+  // Instagram/TikTok in-app browsers).
+  fontSize: 16,
   padding: '12px 14px',
   border: '1px solid #D6CDB6',
   borderRadius: 8,

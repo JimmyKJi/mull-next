@@ -197,7 +197,9 @@ export default function DebateForm({
     <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
       <div style={{
         display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
+        // Two pickers (philosopher A vs B) — collapse to one column
+        // on phones so each picker has comfortable width.
+        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
         gap: 20,
       }}>
         <PhilosopherPicker

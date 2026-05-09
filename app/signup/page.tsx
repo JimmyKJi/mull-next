@@ -12,7 +12,7 @@ const sans = "'Inter', system-ui, sans-serif";
 
 const inputStyle: React.CSSProperties = {
   fontFamily: sans,
-  fontSize: 15,
+  fontSize: 16,  // ≥16 prevents iOS Safari focus-zoom
   padding: '12px 14px',
   border: '1px solid #D6CDB6',
   borderRadius: 8,

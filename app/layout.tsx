@@ -1,9 +1,18 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import GlobalTopBar from "@/components/global-topbar";
 import TopBarMount from "@/components/topbar-mount";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+
+// Critical for mobile — without this iOS Safari renders at desktop
+// scale and the layout looks zoomed-out and broken. mull.html has
+// the meta tag inline; this covers every Next.js route.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  // Don't lock max-scale; users zooming for accessibility is fine.
+};
 
 export const metadata: Metadata = {
   title: {
