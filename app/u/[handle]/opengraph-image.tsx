@@ -22,9 +22,9 @@ export const alt = 'Public profile on Mull';
 export default async function ProfileOGImage({
   params,
 }: {
-  params: { handle: string };
+  params: Promise<{ handle: string }>;
 }) {
-  const { handle } = params;
+  const { handle } = await params;
   const supabase = await createClient();
 
   const { data: profile } = await supabase

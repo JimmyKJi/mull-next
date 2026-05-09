@@ -17,7 +17,8 @@
 import { ImageResponse } from 'next/og';
 import { getArchetypeByKey, archetypeKeys } from '@/lib/archetypes';
 
-export const runtime = 'edge';
+// Node runtime (default) — Next 16 doesn't allow `runtime = 'edge'`
+// alongside generateImageMetadata.
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -33,9 +34,10 @@ export function generateImageMetadata() {
 export default async function ArchetypeOGImage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const a = getArchetypeByKey(params.slug);
+  const { slug } = await params;
+  const a = getArchetypeByKey(slug);
   // Fallback for invalid slug — render a generic Mull card so the page
   // doesn't 404 on the OG fetch.
   const name = a

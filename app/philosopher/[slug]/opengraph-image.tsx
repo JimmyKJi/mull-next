@@ -8,7 +8,10 @@
 import { ImageResponse } from 'next/og';
 import { getPhilosopherBySlug, philosopherSlugs } from '@/lib/philosophers';
 
-export const runtime = 'edge';
+// Node runtime (default) — Next 16 doesn't allow `runtime = 'edge'`
+// alongside generateImageMetadata, and we want the OG images
+// statically prerendered so crawlers fetching share previews don't
+// pay Satori cold-start latency.
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -24,9 +27,10 @@ export function generateImageMetadata() {
 export default async function PhilosopherOGImage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const p = getPhilosopherBySlug(params.slug);
+  const { slug } = await params;
+  const p = getPhilosopherBySlug(slug);
   if (!p) return genericCard();
 
   // Trim aggressively for the visible area.
