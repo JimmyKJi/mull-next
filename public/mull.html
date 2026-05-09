@@ -82,7 +82,13 @@
 }
 </script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- Three.js (~600KB minified). Deferred so it doesn't block the
+     initial HTML parse — the constellation is rendered later, only
+     after the user finishes the quiz or opens the map preview, so
+     downloading three.js in parallel with the page is safe and
+     measurably faster on mobile (4G in IG/TikTok in-app browsers
+     was the worst case). -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
   :root {
     --cream: #FAF6EC;
@@ -805,7 +811,9 @@
   }
   @media (max-width: 540px) {
     .share-buttons { gap: 6px; }
-    .share-btn { padding: 8px 12px; font-size: 12.5px; }
+    /* Bumped from 8 12 to 10 14 so the share buttons clear the iOS
+       44px tap-target floor when font shrinks for narrow screens. */
+    .share-btn { padding: 10px 14px; font-size: 12.5px; }
   }
 
   /* Onboarding overlay — appears once, after the user's first quiz
@@ -1398,6 +1406,9 @@
     .sticky-cta-inner { padding: 10px 44px 10px 16px; gap: 10px; }
     .sticky-cta-form input { width: 100%; flex: 1; }
     .sticky-cta-text strong { font-size: 13px; }
+    /* Override the desktop min-width so the inner items can shrink
+       on narrow viewports without forcing horizontal overflow. */
+    .sticky-cta-text { min-width: 0; }
   }
 
   /* ---- Comparison modal: you vs philosopher ---- */
@@ -2074,7 +2085,11 @@
     gap: 16px; margin-bottom: 18px; flex-wrap: wrap;
   }
   .profile-intro p {
-    margin: 0; color: var(--ink-soft); font-size: 13px; flex: 1; min-width: 240px;
+    margin: 0; color: var(--ink-soft); font-size: 13px; flex: 1;
+    /* min-width: 240px on tiny phones forces overflow; clamp via min().
+       Keeps the readable target on tablet/desktop while letting the
+       paragraph shrink to fit a 320px viewport. */
+    min-width: min(240px, 100%);
   }
   .reset-profile {
     padding: 7px 14px;

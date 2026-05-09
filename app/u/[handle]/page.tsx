@@ -361,21 +361,28 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           </h2>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
             {topDims.map(d => (
+              // Switched from a fixed 180px / 1fr / 50px grid to a
+              // flex-wrap layout: on wide screens the name + bar +
+              // value sit on one row; on phones (~320px viewport)
+              // the name wraps to its own line above a full-width
+              // bar, instead of being crushed into a 30px-wide bar.
               <li key={d.key} style={{
-                display: 'grid',
-                gridTemplateColumns: '180px 1fr 50px',
+                display: 'flex',
+                flexWrap: 'wrap',
                 gap: 12,
                 alignItems: 'center',
                 fontFamily: sans,
                 fontSize: 14,
                 color: '#221E18',
               }}>
-                <span>{d.name}</span>
+                <span style={{ minWidth: 140 }}>{d.name}</span>
                 <div style={{
                   height: 6,
                   background: '#EBE3CA',
                   borderRadius: 3,
                   overflow: 'hidden',
+                  flex: 1,
+                  minWidth: 120,
                 }}>
                   <div style={{
                     height: '100%',
@@ -387,6 +394,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                   fontVariantNumeric: 'tabular-nums',
                   color: '#8C6520',
                   textAlign: 'right',
+                  minWidth: 50,
                 }}>
                   {d.v.toFixed(1)}
                 </span>
