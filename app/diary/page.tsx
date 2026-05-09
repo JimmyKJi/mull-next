@@ -1,10 +1,16 @@
 import { createClient } from '@/utils/supabase/server';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import DiaryComposer from './diary-composer';
 import { topShifts } from '@/lib/dimensions';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
+
+// Personal page; never index. Belt and braces alongside robots.ts.
+export const metadata: Metadata = {
+  robots: { index: false, follow: false, nocache: true },
+};
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";

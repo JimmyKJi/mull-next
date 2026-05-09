@@ -1,12 +1,19 @@
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import LogoutButton from './logout-button';
 import { DIM_NAMES, DIM_KEYS, topShifts } from '@/lib/dimensions';
 import { getDailyDilemma } from '@/lib/dilemmas';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
+
+// Account pages should never be indexed by search engines — belt and braces
+// alongside the disallow directive in app/robots.ts.
+export const metadata: Metadata = {
+  robots: { index: false, follow: false, nocache: true },
+};
 
 type Attempt = {
   id: string;

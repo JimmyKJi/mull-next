@@ -202,6 +202,17 @@ export default function DilemmaForm({ questionPrompt, locale = 'en' }: { questio
           }}>
             {t('dilemma.see_trajectory', locale)}
           </Link>
+          <Link href="/diary" style={{
+            padding: '9px 18px',
+            background: 'transparent',
+            color: '#2F5D5C',
+            textDecoration: 'underline',
+            textUnderlineOffset: 3,
+            fontFamily: sans,
+            fontSize: 13.5,
+          }}>
+            {t('dilemma.to_diary', locale)}
+          </Link>
           <span style={{
             fontFamily: sans,
             fontSize: 12,

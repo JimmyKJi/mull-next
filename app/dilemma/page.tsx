@@ -2,10 +2,19 @@ import { createClient } from '@/utils/supabase/server';
 import { getDailyDilemma } from '@/lib/dilemmas';
 import { topShifts } from '@/lib/dimensions';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import DilemmaForm from './dilemma-form';
 import { getServerLocale } from '@/lib/locale-server';
 import { t, type Locale } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
+
+// Daily dilemma page is OK to index (the question itself is shareable),
+// but the user's response is private — only meta is open. Index allowed,
+// but the dynamic content the user types into is never persisted in the DOM
+// for crawlers to see, so this is fine.
+export const metadata: Metadata = {
+  // intentionally not setting noindex here — daily prompt is public-facing
+};
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";

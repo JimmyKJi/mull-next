@@ -2258,7 +2258,7 @@ html.embed-mode #embed-you-hint {
         <li><strong>No ads, ever.</strong> No banners, no tracking pixels, no sponsored newsletter slot. Your reflections are between you and the model. Nobody pays for the privilege of putting an ad next to them.</li>
         <li><strong>No selling your data.</strong> If you make an account, we hold your email and your saved quiz attempts — nothing else. You can download everything we have on you as JSON, or delete your account outright, from the public-profile settings page (sign in, then visit <em>Account → Public profile settings</em>). Your map is private by default; public profiles are opt-in only.</li>
         <li><strong>Not VC-funded.</strong> No investors, no growth quotas, no board demanding a 10× return. The product changes when we decide it should change, not when a quarterly review demands traction.</li>
-        <li><strong>Not an "AI app".</strong> AI is used in two specific places — analyzing your written daily dilemma into dimensional vectors, and generating philosopher dialogues. The 16-dimensional model, the archetype system, the philosopher positions, the figures — hand-designed by humans who care about getting philosophy right.</li>
+        <li><strong>Not an "AI app".</strong> AI is used in a few specific, bounded places — turning your written daily dilemma, diary entry, or exercise reflection into a small dimensional shift on your map; generating the back-and-forth in simulated philosopher debates; and (Mull+) writing your end-of-year retrospective from your own data. The 16-dimensional model, the archetype system, the philosopher positions, the figures, the quiz questions — all hand-designed by humans who care about getting philosophy right.</li>
         <li><strong>The free tier stays generous.</strong> If Mull grows past break-even, every dollar of margin goes back into the product: better LLM analysis, scholars to verify philosopher positions, illustrators to redo the figures properly, content for the learning lab. If it grows past <em>that</em>, none of these principles change.</li>
       </ul>
     </div>
@@ -2406,11 +2406,11 @@ html.embed-mode #embed-you-hint {
     <p id="qhint" class="qhint" hidden></p>
     <div id="answers" class="answers"></div>
     <div class="skip-row">
-      <button class="skip-btn" id="skipbtn" onclick="selectOptout()">Skip — none of these fit me</button>
+      <button class="skip-btn" id="skipbtn" onclick="selectOptout()" data-i18n="quiz.skip">Skip — none of these fit me</button>
     </div>
     <div class="qnav">
-      <button class="back" id="backbtn" onclick="goBack()">← Back</button>
-      <button class="cta" id="continuebtn" onclick="continueMulti()" hidden>Continue →</button>
+      <button class="back" id="backbtn" onclick="goBack()" data-i18n="quiz.back">← Back</button>
+      <button class="cta" id="continuebtn" onclick="continueMulti()" hidden data-i18n="quiz.continue">Continue →</button>
     </div>
   </section>
 
@@ -2437,7 +2437,7 @@ html.embed-mode #embed-you-hint {
 
     <div class="section mapsection-wrap">
       <h2>Your <em>constellation</em></h2>
-      <p class="section-sub">One hundred and sixty-six thinkers from across cultures and eras, each placed by the positions in their writings. The pulsing gold star is you. Lines connect philosophers in the same neighborhoods of thought.</p>
+      <p class="section-sub">Over two hundred thinkers from across cultures and eras, each placed by the positions in their writings. The pulsing gold star is you. Lines connect philosophers in the same neighborhoods of thought.</p>
       <div class="mapsection">
         <div class="mapwrap" data-mapid="res">
           <canvas id="canvas_res"></canvas>
@@ -5442,6 +5442,9 @@ const HOME_I18N = {
   "nav.exercises":     { en: "Exercises", es: "Ejercicios", fr: "Exercices", pt: "Exercícios", ru: "Упражнения", zh: "练习", ja: "エクササイズ", ko: "수련" },
   "quiz.question_count": { en: "Question {n} of {m}", es: "Pregunta {n} de {m}", fr: "Question {n} sur {m}", pt: "Pergunta {n} de {m}", ru: "Вопрос {n} из {m}", zh: "第 {n} 题 / 共 {m} 题", ja: "問 {n} / {m}", ko: "질문 {n} / {m}" },
   "quiz.multi_hint":     { en: "Pick up to {max} that genuinely fit.", es: "Elige hasta {max} que de verdad encajen.", fr: "Choisis jusqu'à {max} qui te correspondent vraiment.", pt: "Escolha até {max} que realmente se encaixem.", ru: "Выберите до {max}, которые вам по-настоящему подходят.", zh: "最多选 {max} 项 —— 选真正贴近你的。", ja: "本当に当てはまるものを最大 {max} つ選ぶ。", ko: "정말로 맞는 것 최대 {max}개를 고르세요." },
+  "quiz.skip":           { en: "Skip — none of these fit me", es: "Saltar — ninguna me encaja", fr: "Passer — aucune ne me correspond", pt: "Pular — nenhuma se encaixa em mim", ru: "Пропустить — ни одна не подходит", zh: "跳过 —— 都不太像我", ja: "スキップ — どれもしっくり来ない", ko: "건너뛰기 — 어느 것도 나와 맞지 않는다" },
+  "quiz.back":           { en: "← Back", es: "← Atrás", fr: "← Retour", pt: "← Voltar", ru: "← Назад", zh: "← 返回", ja: "← 戻る", ko: "← 뒤로" },
+  "quiz.continue":       { en: "Continue →", es: "Continuar →", fr: "Continuer →", pt: "Continuar →", ru: "Продолжить →", zh: "继续 →", ja: "次へ →", ko: "계속 →" },
 
   "home.version_banner": {
     en: "<strong>Mull v0.9</strong> — early build. The map, the questions, the archetypes are all still settling into shape.",
