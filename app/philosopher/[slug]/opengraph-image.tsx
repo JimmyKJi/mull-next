@@ -1,10 +1,7 @@
-// Per-philosopher OG card. Same book-jacket aesthetic as the
-// archetype card: brand wordmark top-left, section label top-right,
-// huge serif name, dates in muted gold, key idea as the epigraph.
+// Per-philosopher OG card. System fonts for reliability.
 
 import { ImageResponse } from 'next/og';
 import { getPhilosopherBySlug } from '@/lib/philosophers';
-import { loadOGFonts } from '@/lib/og-fonts';
 
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
@@ -17,9 +14,7 @@ export default async function PhilosopherOGImage({
 }) {
   const { slug } = await params;
   const p = getPhilosopherBySlug(slug);
-  const fonts = await loadOGFonts();
-
-  if (!p) return genericCard(fonts);
+  if (!p) return genericCard();
 
   const idea = p.keyIdea.length > 200
     ? p.keyIdea.slice(0, 197).trimEnd() + '…'
@@ -43,7 +38,6 @@ export default async function PhilosopherOGImage({
           background: CREAM,
           padding: '54px 72px 48px',
           color: INK,
-          fontFamily: 'Inter, sans-serif',
           position: 'relative',
         }}
       >
@@ -55,7 +49,6 @@ export default async function PhilosopherOGImage({
           background: ACC,
         }} />
 
-        {/* Top: Mull. wordmark + section label */}
         <div style={{
           display: 'flex',
           alignItems: 'flex-end',
@@ -64,9 +57,9 @@ export default async function PhilosopherOGImage({
           <div style={{
             display: 'flex',
             alignItems: 'baseline',
-            fontFamily: 'Cormorant, Georgia, serif',
+            fontFamily: 'Georgia, serif',
             fontSize: 56,
-            fontWeight: 500,
+            fontWeight: 600,
             color: INK,
             letterSpacing: -1,
             lineHeight: 1,
@@ -76,7 +69,7 @@ export default async function PhilosopherOGImage({
           </div>
           <div style={{
             display: 'flex',
-            fontFamily: 'Inter, sans-serif',
+            fontFamily: 'system-ui, sans-serif',
             fontSize: 16,
             fontWeight: 600,
             color: ACC_DEEP,
@@ -87,7 +80,6 @@ export default async function PhilosopherOGImage({
           </div>
         </div>
 
-        {/* Center: name + dates + key idea */}
         <div
           style={{
             display: 'flex',
@@ -99,9 +91,9 @@ export default async function PhilosopherOGImage({
         >
           <div style={{
             display: 'flex',
-            fontFamily: 'Cormorant, Georgia, serif',
+            fontFamily: 'Georgia, serif',
             fontSize: 116,
-            fontWeight: 500,
+            fontWeight: 600,
             lineHeight: 1.0,
             letterSpacing: -2,
             color: INK,
@@ -110,7 +102,7 @@ export default async function PhilosopherOGImage({
           </div>
           <div style={{
             display: 'flex',
-            fontFamily: 'Inter, sans-serif',
+            fontFamily: 'system-ui, sans-serif',
             fontSize: 22,
             color: ACC_DEEP,
             marginTop: 14,
@@ -120,7 +112,7 @@ export default async function PhilosopherOGImage({
           </div>
           <div style={{
             display: 'flex',
-            fontFamily: 'Cormorant, Georgia, serif',
+            fontFamily: 'Georgia, serif',
             fontStyle: 'italic',
             marginTop: 32,
             fontSize: 30,
@@ -134,7 +126,6 @@ export default async function PhilosopherOGImage({
           </div>
         </div>
 
-        {/* Bottom: archetype attribution + mull.world signature */}
         <div style={{
           display: 'flex',
           justifyContent: 'space-between',
@@ -144,7 +135,7 @@ export default async function PhilosopherOGImage({
         }}>
           <div style={{
             display: 'flex',
-            fontFamily: 'Cormorant, Georgia, serif',
+            fontFamily: 'Georgia, serif',
             fontStyle: 'italic',
             fontSize: 22,
             color: ACC_DEEP,
@@ -153,7 +144,7 @@ export default async function PhilosopherOGImage({
           </div>
           <div style={{
             display: 'flex',
-            fontFamily: 'Inter, sans-serif',
+            fontFamily: 'system-ui, sans-serif',
             fontSize: 13,
             color: ACC_DEEP,
             letterSpacing: 4,
@@ -164,11 +155,11 @@ export default async function PhilosopherOGImage({
         </div>
       </div>
     ),
-    { ...size, fonts }
+    { ...size }
   );
 }
 
-function genericCard(fonts: Awaited<ReturnType<typeof loadOGFonts>>) {
+function genericCard() {
   const CREAM = '#FAF6EC';
   const INK = '#221E18';
   const ACC = '#B8862F';
@@ -186,14 +177,14 @@ function genericCard(fonts: Awaited<ReturnType<typeof loadOGFonts>>) {
           justifyContent: 'center',
           background: CREAM,
           color: INK,
-          fontFamily: 'Cormorant, Georgia, serif',
         }}
       >
         <div style={{
           display: 'flex',
           alignItems: 'baseline',
+          fontFamily: 'Georgia, serif',
           fontSize: 160,
-          fontWeight: 500,
+          fontWeight: 600,
           letterSpacing: -3,
         }}>
           <div style={{ display: 'flex' }}>Mull</div>
@@ -201,6 +192,7 @@ function genericCard(fonts: Awaited<ReturnType<typeof loadOGFonts>>) {
         </div>
         <div style={{
           display: 'flex',
+          fontFamily: 'Georgia, serif',
           fontStyle: 'italic',
           fontSize: 32,
           color: INK_SOFT,
@@ -210,6 +202,6 @@ function genericCard(fonts: Awaited<ReturnType<typeof loadOGFonts>>) {
         </div>
       </div>
     ),
-    { ...size, fonts }
+    { ...size }
   );
 }

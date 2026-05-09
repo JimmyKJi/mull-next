@@ -1,9 +1,7 @@
-// Per-user OG card. Same book-jacket aesthetic as the archetype +
-// philosopher cards. Privacy: respects show_archetype.
+// Per-user OG card. System fonts for reliability. Privacy: respects show_archetype.
 
 import { ImageResponse } from 'next/og';
 import { createClient } from '@/utils/supabase/server';
-import { loadOGFonts } from '@/lib/og-fonts';
 
 export const runtime = 'nodejs';
 export const size = { width: 1200, height: 630 };
@@ -17,7 +15,6 @@ export default async function ProfileOGImage({
 }) {
   const { handle } = await params;
   const supabase = await createClient();
-  const fonts = await loadOGFonts();
 
   const { data: profile } = await supabase
     .from('public_profiles')
@@ -25,7 +22,7 @@ export default async function ProfileOGImage({
     .eq('handle', handle.toLowerCase())
     .maybeSingle<{ user_id: string; handle: string; display_name: string | null; show_archetype: boolean }>();
 
-  if (!profile) return genericCard(fonts);
+  if (!profile) return genericCard();
 
   const name = profile.display_name || profile.handle;
 
@@ -56,7 +53,6 @@ export default async function ProfileOGImage({
           background: CREAM,
           padding: '54px 72px 48px',
           color: INK,
-          fontFamily: 'Inter, sans-serif',
           position: 'relative',
         }}
       >
@@ -76,9 +72,9 @@ export default async function ProfileOGImage({
           <div style={{
             display: 'flex',
             alignItems: 'baseline',
-            fontFamily: 'Cormorant, Georgia, serif',
+            fontFamily: 'Georgia, serif',
             fontSize: 56,
-            fontWeight: 500,
+            fontWeight: 600,
             color: INK,
             letterSpacing: -1,
             lineHeight: 1,
@@ -88,7 +84,7 @@ export default async function ProfileOGImage({
           </div>
           <div style={{
             display: 'flex',
-            fontFamily: 'Inter, sans-serif',
+            fontFamily: 'system-ui, sans-serif',
             fontSize: 16,
             fontWeight: 600,
             color: ACC_DEEP,
@@ -110,9 +106,9 @@ export default async function ProfileOGImage({
         >
           <div style={{
             display: 'flex',
-            fontFamily: 'Cormorant, Georgia, serif',
+            fontFamily: 'Georgia, serif',
             fontSize: 116,
-            fontWeight: 500,
+            fontWeight: 600,
             lineHeight: 1.0,
             letterSpacing: -2,
             color: INK,
@@ -122,7 +118,7 @@ export default async function ProfileOGImage({
           </div>
           <div style={{
             display: 'flex',
-            fontFamily: 'Inter, sans-serif',
+            fontFamily: 'system-ui, sans-serif',
             fontSize: 24,
             color: ACC_DEEP,
             marginTop: 10,
@@ -141,7 +137,7 @@ export default async function ProfileOGImage({
             }}>
               <div style={{
                 display: 'flex',
-                fontFamily: 'Inter, sans-serif',
+                fontFamily: 'system-ui, sans-serif',
                 fontSize: 14,
                 color: ACC_DEEP,
                 letterSpacing: 4,
@@ -152,7 +148,7 @@ export default async function ProfileOGImage({
               </div>
               <div style={{
                 display: 'flex',
-                fontFamily: 'Cormorant, Georgia, serif',
+                fontFamily: 'Georgia, serif',
                 fontStyle: 'italic',
                 fontSize: 56,
                 color: INK,
@@ -173,7 +169,7 @@ export default async function ProfileOGImage({
         }}>
           <div style={{
             display: 'flex',
-            fontFamily: 'Cormorant, Georgia, serif',
+            fontFamily: 'Georgia, serif',
             fontStyle: 'italic',
             fontSize: 22,
             color: INK_SOFT,
@@ -182,7 +178,7 @@ export default async function ProfileOGImage({
           </div>
           <div style={{
             display: 'flex',
-            fontFamily: 'Inter, sans-serif',
+            fontFamily: 'system-ui, sans-serif',
             fontSize: 13,
             color: ACC_DEEP,
             letterSpacing: 4,
@@ -193,11 +189,11 @@ export default async function ProfileOGImage({
         </div>
       </div>
     ),
-    { ...size, fonts }
+    { ...size }
   );
 }
 
-function genericCard(fonts: Awaited<ReturnType<typeof loadOGFonts>>) {
+function genericCard() {
   const CREAM = '#FAF6EC';
   const INK = '#221E18';
   const ACC = '#B8862F';
@@ -215,14 +211,14 @@ function genericCard(fonts: Awaited<ReturnType<typeof loadOGFonts>>) {
           justifyContent: 'center',
           background: CREAM,
           color: INK,
-          fontFamily: 'Cormorant, Georgia, serif',
         }}
       >
         <div style={{
           display: 'flex',
           alignItems: 'baseline',
+          fontFamily: 'Georgia, serif',
           fontSize: 160,
-          fontWeight: 500,
+          fontWeight: 600,
           letterSpacing: -3,
         }}>
           <div style={{ display: 'flex' }}>Mull</div>
@@ -230,6 +226,7 @@ function genericCard(fonts: Awaited<ReturnType<typeof loadOGFonts>>) {
         </div>
         <div style={{
           display: 'flex',
+          fontFamily: 'Georgia, serif',
           fontStyle: 'italic',
           fontSize: 32,
           color: INK_SOFT,
@@ -239,6 +236,6 @@ function genericCard(fonts: Awaited<ReturnType<typeof loadOGFonts>>) {
         </div>
       </div>
     ),
-    { ...size, fonts }
+    { ...size }
   );
 }
