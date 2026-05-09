@@ -28,6 +28,22 @@
 <meta name="twitter:description" content="A philosophy app that asks you what you think — concretely, on real questions. over 200 thinkers, 16 dimensions, no ads.">
 <meta name="twitter:image" content="https://mull.world/og.png">
 
+<!-- Vercel Web Analytics — pageview + custom event tracking.
+     window.va is the global helper; window.va('event', ...) sends
+     custom events. Vercel auto-injects the rest of the runtime when
+     the project's Web Analytics is enabled in the dashboard.
+     Privacy-respecting: no cookies, no PII. -->
+<script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<!-- Speed Insights for the static home page too — same script
+     pattern as Web Analytics. -->
+<script>
+  window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
+
 <!-- JSON-LD structured data so Google knows what this site is. The
      SearchAction enables a sitelinks search box on the SERP if the
      domain has enough trust signals. WebApplication is the closest
@@ -6369,6 +6385,9 @@ function showMapPreview() {
 
 function startQuiz(mode) {
   mode = (mode === 'detailed') ? 'detailed' : 'quick';
+  // Top-of-funnel event — tells us how many landing visitors actually
+  // start. Pair with quiz_completed downstream to compute completion %.
+  track('quiz_started', { mode: mode });
   Q_ACTIVE = (mode === 'detailed' && typeof Q_DETAILED !== 'undefined' && Q_DETAILED.length)
     ? Q_DETAILED
     : Q;
@@ -6613,6 +6632,18 @@ function showResults() {
   // with the result). No-op if the user has already dismissed it.
   maybeShowOnboard();
 
+  // Analytics — quiz completion is the most important conversion event.
+  // We pass archetype + flavor + alignment + quiz mode so the dashboard
+  // shows distribution of results (which archetypes friends got, which
+  // mode they used, etc.).
+  track('quiz_completed', {
+    archetype: top.name,
+    flavor: flavor || '',
+    alignment_pct: displayPct(top.sim),
+    mode: (state && state.quizMode) || 'quick',
+    authed: CURRENT_USER ? 'yes' : 'no',
+  });
+
   window.scrollTo({top:0});
 // --- persist to account if signed in ---
   try {
@@ -6625,6 +6656,17 @@ function showResults() {
       else note.textContent = '';
     });
   } catch (e) { console.warn(e); }
+}
+
+// Tiny safe wrapper around Vercel Analytics' window.va custom-event
+// helper. Never throws — if analytics is missing or blocked, the
+// call is a no-op so the page logic is unaffected.
+function track(name, data) {
+  try {
+    if (typeof window !== 'undefined' && typeof window.va === 'function') {
+      window.va('event', { name: name, data: data || {} });
+    }
+  } catch (e) { /* swallow — analytics must never break user flow */ }
 }
 
 // Onboarding overlay — appears once, after the user's first quiz
@@ -6706,11 +6748,15 @@ function setupShareRow(top, flavor) {
   if (xBtn) {
     const intent = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent(url)}`;
     xBtn.href = intent;
+    xBtn.addEventListener('click', () => {
+      track('share_clicked', { platform: 'x', archetype: archName });
+    });
   }
 
   const copyBtn = document.getElementById('share-copy');
   if (copyBtn) {
     copyBtn.onclick = async () => {
+      track('share_clicked', { platform: 'copy', archetype: archName });
       try {
         await navigator.clipboard.writeText(url);
         const original = copyBtn.querySelector('span:last-child').textContent;
@@ -6722,7 +6768,6 @@ function setupShareRow(top, flavor) {
         }, 1800);
       } catch (e) {
         console.warn('[share] clipboard failed', e);
-        // Fallback: prompt the URL so the user can copy manually.
         window.prompt('Copy this link:', url);
       }
     };
@@ -6733,6 +6778,7 @@ function setupShareRow(top, flavor) {
     if (typeof navigator.share === 'function') {
       nativeBtn.hidden = false;
       nativeBtn.onclick = async () => {
+        track('share_clicked', { platform: 'native', archetype: archName });
         try {
           await navigator.share({
             title: `Mull — ${flavorLabel}`,
@@ -6740,7 +6786,6 @@ function setupShareRow(top, flavor) {
             url,
           });
         } catch (e) {
-          // User cancelled, or share API unavailable; quietly ignore.
           if (e && e.name !== 'AbortError') console.warn('[share] native failed', e);
         }
       };

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import GlobalTopBar from "@/components/global-topbar";
 import TopBarMount from "@/components/topbar-mount";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   title: {
@@ -49,6 +51,14 @@ export default function RootLayout({
           <GlobalTopBar />
         </TopBarMount>
         {children}
+        {/* Vercel Web Analytics — page views, referrers, locations.
+            Custom events fire from individual pages via the `track()`
+            helper from @vercel/analytics. Privacy-respecting (no
+            cookies, no PII, GDPR-compliant). */}
+        <Analytics />
+        {/* Speed Insights — Core Web Vitals + page load times. Free
+            on Hobby tier up to 10k data points/month. */}
+        <SpeedInsights />
       </body>
     </html>
   );
