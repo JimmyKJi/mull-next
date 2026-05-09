@@ -11,6 +11,7 @@ import LanguageSwitcher from '@/components/language-switcher';
 import ProgressionPanel from '@/components/progression-panel';
 import { computeUserStats } from '@/lib/profile-progression';
 import DilemmaReminderCard from '@/components/dilemma-reminder-card';
+import { isAdminUserId } from '@/lib/admin';
 
 // Account pages should never be indexed by search engines — belt and braces
 // alongside the disallow directive in app/robots.ts.
@@ -371,6 +372,20 @@ export default async function AccountPage() {
         }}>
           Yearly retrospective
         </Link>
+        {/* Admin-only: link to the editor's-picks curation UI. Only renders
+            for users whose UUID is in ADMIN_USER_IDS env var. */}
+        {isAdminUserId(user.id) && (
+          <>
+            {' · '}
+            <Link href="/account/curate" style={{
+              color: '#8C6520',
+              textDecoration: 'underline',
+              textUnderlineOffset: 3,
+            }}>
+              Curate picks
+            </Link>
+          </>
+        )}
       </p>
 
       {/* First-time empty state — shown only before the user has any data

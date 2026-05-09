@@ -2524,7 +2524,7 @@ html.embed-mode #embed-you-hint {
     </div>
     <div class="constructionbanner">
       <div data-i18n-html="home.construction_notice">
-        <strong>Early build.</strong> Subscriptions aren't live yet, so AI features are paid out of pocket and may pause briefly if the budget runs out. Thanks for your patience.
+        <strong>Early build.</strong> The quiz is in demo stage — calibration is actively being tuned, so your placement may shift as the model improves over the next few weeks. Subscriptions aren't live yet either, so AI features run on the maintainer's pocket and may pause briefly if the budget runs out. Thanks for your patience while this finds its shape.
       </div>
     </div>
 
@@ -3176,14 +3176,20 @@ function magnitude(a) { return Math.sqrt(a.reduce((s, x) => s + x*x, 0)); }
 function norm(a) { const m = magnitude(a) || 1; return a.map(x => x / m); }
 function cos(a, b) { const an = norm(a), bn = norm(b); return an.reduce((s, x, i) => s + x * bn[i], 0); }
 
-/* Display percentage: most random pairings sit around 0.5–0.7 cosine
-   similarity in 16-D space, which compresses everything to 75–95% under
-   the naive ((sim+1)/2)*100 formula. Real alignment kicks in above 0.55,
-   so we map [0.55, 1.0] linearly to [0, 100] and clamp the rest. This
-   spreads distinctions visibly without distorting ranking. */
+/* Display percentage. Tightened so the spread between primary and
+   shadow archetype reads honestly. Empirically:
+     - cos 0.96+ → 100% (essentially this archetype)
+     - cos 0.91  → ~80% (primary archetype, strong)
+     - cos 0.85  → ~58% (close runner-up)
+     - cos 0.78  → ~31% (typical shadow on the opposite pole)
+     - cos 0.70  → 0% (orthogonal-ish; not aligned)
+   The previous mapping ([0.55, 1.0] → [0, 100]) made shadows read as
+   ~50%, which felt absurd given they're literally the opposite end of
+   the 16-D model. New mapping squashes the high end where most
+   archetype distances naturally cluster, expanding distinctions. */
 function displayPct(sim) {
   if (sim == null || isNaN(sim)) return 0;
-  return Math.max(0, Math.min(100, Math.round((sim - 0.55) / 0.45 * 100)));
+  return Math.max(0, Math.min(100, Math.round((sim - 0.70) / 0.26 * 100)));
 }
 
 /* ----- 20 questions, all with universal skip ----- */
@@ -5919,7 +5925,7 @@ const HOME_I18N = {
     ko: "<strong>Mull v0.9</strong> — 초기 버전. 지도, 질문, 유형은 아직 다듬어지는 중입니다."
   },
   "home.construction_notice": {
-    en: "<strong>Early build.</strong> Subscriptions aren't live yet, so AI features are paid out of pocket and may pause briefly if the budget runs out. Thanks for your patience.",
+    en: "<strong>Early build.</strong> The quiz is in demo stage — calibration is actively being tuned, so your placement may shift as the model improves over the next few weeks. Subscriptions aren't live yet either, so AI features run on the maintainer's pocket and may pause briefly if the budget runs out. Thanks for your patience while this finds its shape.",
     es: "<strong>Versión temprana.</strong> Las suscripciones aún no están activas, así que las funciones de IA salen del bolsillo y pueden pausarse brevemente si se agota el presupuesto. Gracias por la paciencia.",
     fr: "<strong>Version préliminaire.</strong> Les abonnements ne sont pas encore actifs, donc les fonctions d'IA sont payées de la poche et peuvent s'interrompre brièvement si le budget est épuisé. Merci de ta patience.",
     pt: "<strong>Versão inicial.</strong> As assinaturas ainda não estão ativas, então as funções de IA saem do bolso e podem pausar brevemente se o orçamento acabar. Obrigado pela paciência.",

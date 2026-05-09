@@ -13,6 +13,8 @@ import LanguageSwitcher from '@/components/language-switcher';
 import Link from 'next/link';
 import SearchPanel from './search-panel';
 import Leaderboard from './leaderboard';
+import EditorPicks from './editor-picks';
+import LeaderboardTabs, { type TabKey } from './leaderboard-tabs';
 import type { Metadata } from 'next';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
@@ -24,8 +26,14 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://mull.world/search' },
 };
 
-export default async function SearchPage() {
+export default async function SearchPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tab?: string }>;
+}) {
   const locale = await getServerLocale();
+  const sp = await searchParams;
+  const activeTab: TabKey = sp.tab === 'picks' ? 'picks' : 'activity';
 
   return (
     <main style={{ maxWidth: 760, margin: '60px auto', padding: '0 24px 120px' }}>
@@ -86,7 +94,12 @@ export default async function SearchPage() {
         {t('search.h1_subtitle', locale)}
       </p>
 
-      <Leaderboard locale={locale} />
+      <LeaderboardTabs active={activeTab} />
+      {activeTab === 'activity' ? (
+        <Leaderboard locale={locale} />
+      ) : (
+        <EditorPicks locale={locale} />
+      )}
 
       <section>
         <h2 style={{
