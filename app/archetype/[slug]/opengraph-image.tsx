@@ -15,21 +15,17 @@
 // system serif is close enough at thumbnail size.
 
 import { ImageResponse } from 'next/og';
-import { getArchetypeByKey, archetypeKeys } from '@/lib/archetypes';
+import { getArchetypeByKey } from '@/lib/archetypes';
 
-// Node runtime (default) — Next 16 doesn't allow `runtime = 'edge'`
-// alongside generateImageMetadata.
+// Node runtime (default). One image per route (no
+// generateImageMetadata) so the URL stays the simple
+// /archetype/<slug>/opengraph-image — what social-media scrapers
+// expect when they read the openGraph.images entry from the page's
+// metadata. Static generation still happens via the parent route's
+// generateStaticParams.
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
-
-export function generateImageMetadata() {
-  return archetypeKeys().map(slug => ({
-    id: slug,
-    contentType: 'image/png',
-    size: { width: 1200, height: 630 },
-    alt: `The ${slug.charAt(0).toUpperCase() + slug.slice(1)} — Mull`,
-  }));
-}
+export const alt = 'Mull · Archetype';
 
 export default async function ArchetypeOGImage({
   params,

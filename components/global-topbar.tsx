@@ -118,6 +118,9 @@ export default async function GlobalTopBar() {
             <Link href="/archetype" className="mull-topbar-link mull-topbar-link-secondary">
               {t('nav.archetypes', locale)}
             </Link>
+            <Link href="/philosopher" className="mull-topbar-link mull-topbar-link-secondary">
+              {t('nav.philosophers', locale)}
+            </Link>
             <Link href="/about" className="mull-topbar-link">
               {t('nav.about', locale)}
             </Link>

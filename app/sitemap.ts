@@ -33,9 +33,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       'cartographer','keel','threshold','pilgrim','touchstone',
       'hearth','forge','hammer','garden','lighthouse',
     ].map(slug => ({ url: `${SITE}/archetype/${slug}`, lastModified: now, changeFrequency: 'monthly' as const, priority: 0.6 })),
-    // 166 philosopher pages — the bulk of the SEO surface. Long-form
-    // content per thinker so a search like "Marcus Aurelius philosophy"
-    // can land here.
+    // Philosopher index page (the hub) + 166 detail pages — the bulk
+    // of the SEO surface.
+    { url: `${SITE}/philosopher`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     ...philosopherSlugs().map(slug => ({
       url: `${SITE}/philosopher/${slug}`,
       lastModified: now,

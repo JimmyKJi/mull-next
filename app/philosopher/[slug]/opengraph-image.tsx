@@ -6,23 +6,15 @@
 // look like a clean book-jacket card so the share looks substantial.
 
 import { ImageResponse } from 'next/og';
-import { getPhilosopherBySlug, philosopherSlugs } from '@/lib/philosophers';
+import { getPhilosopherBySlug } from '@/lib/philosophers';
 
-// Node runtime (default) — Next 16 doesn't allow `runtime = 'edge'`
-// alongside generateImageMetadata, and we want the OG images
-// statically prerendered so crawlers fetching share previews don't
-// pay Satori cold-start latency.
+// Node runtime (default). One image per route (no
+// generateImageMetadata) so the URL stays /philosopher/<slug>/
+// opengraph-image. Static generation comes from the parent route's
+// generateStaticParams.
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
-
-export function generateImageMetadata() {
-  return philosopherSlugs().map(slug => ({
-    id: slug,
-    contentType: 'image/png',
-    size: { width: 1200, height: 630 },
-    alt: `${slug} — Mull`,
-  }));
-}
+export const alt = 'Mull · Philosopher';
 
 export default async function PhilosopherOGImage({
   params,
