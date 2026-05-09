@@ -1,13 +1,16 @@
-// Dynamic OG image for each archetype detail page. Renders to a
-// 1200×630 PNG via Satori (next/og).
+// Per-archetype OG card. 1200×630 PNG via Satori (next/og).
+// Layout is a book-jacket style: brand wordmark top-left, archetype
+// label top-right, big serif name center, italic spirit phrase below,
+// a quote with attribution, and a small mull.world signature bottom.
 //
-// Satori is strict: every <div> must have explicit `display`, can't
-// mix text + element children inside the same div, doesn't support
-// CSS grid, etc. The JSX below is deliberately flat to satisfy those
-// constraints — flexbox + atomic elements only.
+// Cormorant Garamond + Inter loaded via lib/og-fonts so the rendered
+// type matches the on-site typography. First render warm-up loads the
+// fonts (~300ms); subsequent renders on the same warm instance reuse
+// the cached bytes.
 
 import { ImageResponse } from 'next/og';
 import { getArchetypeByKey } from '@/lib/archetypes';
+import { loadOGFonts } from '@/lib/og-fonts';
 
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
@@ -25,10 +28,21 @@ export default async function ArchetypeOGImage({
     : 'Mull';
   const spirit = a?.spirit ?? 'Find your place on the map of how you think.';
   const quoteText = a?.quotes?.[0]?.text ?? '';
-  const shortQuote = quoteText.length > 110
-    ? quoteText.slice(0, 107).trimEnd() + '…'
+  const shortQuote = quoteText.length > 130
+    ? quoteText.slice(0, 127).trimEnd() + '…'
     : quoteText;
   const quoteAttribution = a?.quotes?.[0]?.attribution ?? '';
+
+  const fonts = await loadOGFonts();
+
+  // Brand color palette — matches the live site's --cream, --ink,
+  // --acc, --acc-deep CSS variables.
+  const CREAM = '#FAF6EC';
+  const CREAM_2 = '#F1EAD8';
+  const INK = '#221E18';
+  const INK_SOFT = '#4A4338';
+  const ACC = '#B8862F';
+  const ACC_DEEP = '#8C6520';
 
   return new ImageResponse(
     (
@@ -38,116 +52,184 @@ export default async function ArchetypeOGImage({
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          background: '#FAF6EC',
-          padding: '64px 72px',
-          color: '#221E18',
-          fontFamily: 'Georgia, serif',
+          background: CREAM,
+          padding: '54px 72px 48px',
+          color: INK,
+          fontFamily: 'Inter, sans-serif',
+          position: 'relative',
         }}
       >
-        {/* Top eyebrow row */}
-        <div
-          style={{
+        {/* Decorative gold rule across the very top */}
+        <div style={{
+          display: 'flex',
+          position: 'absolute',
+          top: 0, left: 0, right: 0,
+          height: 6,
+          background: ACC,
+        }} />
+
+        {/* Top row: brand wordmark + archetype label */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'flex-end',
+          justifyContent: 'space-between',
+        }}>
+          {/* Mull. wordmark — proper serif, big enough to be brand-anchoring */}
+          <div style={{
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            fontSize: 22,
-            color: '#8C6520',
-            letterSpacing: 6,
-            textTransform: 'uppercase',
+            alignItems: 'baseline',
+            fontFamily: 'Cormorant, Georgia, serif',
+            fontSize: 56,
+            fontWeight: 500,
+            color: INK,
+            letterSpacing: -1,
+            lineHeight: 1,
+          }}>
+            <div style={{ display: 'flex' }}>Mull</div>
+            <div style={{ display: 'flex', color: ACC }}>.</div>
+          </div>
+          {/* Section label */}
+          <div style={{
+            display: 'flex',
+            fontFamily: 'Inter, sans-serif',
+            fontSize: 16,
             fontWeight: 600,
-          }}
-        >
-          <div style={{ display: 'flex' }}>MULL · ARCHETYPE</div>
-          <div style={{ display: 'flex', color: '#221E18', letterSpacing: 0 }}>MULL.WORLD</div>
+            color: ACC_DEEP,
+            letterSpacing: 5,
+            paddingBottom: 8,
+          }}>
+            ARCHETYPE
+          </div>
         </div>
 
-        {/* Main name + spirit */}
+        {/* Center hero: italic 'The' + giant name + spirit */}
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
             flex: 1,
-            marginTop: 40,
+            marginTop: 20,
           }}
         >
           <div style={{
             display: 'flex',
+            fontFamily: 'Cormorant, Georgia, serif',
             fontStyle: 'italic',
-            color: '#8C6520',
-            fontSize: 64,
-            fontWeight: 400,
-            marginBottom: 8,
+            color: ACC_DEEP,
+            fontSize: 56,
+            fontWeight: 500,
+            lineHeight: 1,
           }}>
             The
           </div>
           <div style={{
             display: 'flex',
-            fontSize: 124,
+            fontFamily: 'Cormorant, Georgia, serif',
+            fontSize: 156,
             fontWeight: 500,
             lineHeight: 1.0,
-            letterSpacing: -2,
-            color: '#221E18',
+            letterSpacing: -3,
+            color: INK,
+            marginTop: 4,
           }}>
             {name}
           </div>
           <div style={{
             display: 'flex',
-            fontSize: 38,
+            fontFamily: 'Cormorant, Georgia, serif',
             fontStyle: 'italic',
-            color: '#4A4338',
-            marginTop: 28,
+            fontSize: 36,
+            color: INK_SOFT,
+            marginTop: 20,
             lineHeight: 1.3,
-            maxWidth: 980,
+            maxWidth: 1000,
           }}>
             {spirit}
           </div>
         </div>
 
-        {/* Bottom quote OR fallback */}
+        {/* Quote block — designed like a small footer epigraph */}
         {shortQuote ? (
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              borderLeft: '4px solid #B8862F',
-              paddingLeft: 20,
-              marginTop: 20,
-            }}
-          >
+          <div style={{
+            display: 'flex',
+            alignItems: 'flex-end',
+            justifyContent: 'space-between',
+            gap: 32,
+            paddingTop: 22,
+            borderTop: `1px solid ${CREAM_2}`,
+          }}>
             <div style={{
               display: 'flex',
-              fontSize: 22,
-              fontStyle: 'italic',
-              color: '#221E18',
-              lineHeight: 1.4,
+              flexDirection: 'column',
+              maxWidth: 820,
             }}>
-              {`“${shortQuote}”`}
-            </div>
-            {quoteAttribution ? (
               <div style={{
                 display: 'flex',
-                fontSize: 16,
-                color: '#8C6520',
-                marginTop: 6,
-                letterSpacing: 1,
+                fontFamily: 'Cormorant, Georgia, serif',
+                fontStyle: 'italic',
+                fontSize: 22,
+                color: INK,
+                lineHeight: 1.4,
               }}>
-                — {quoteAttribution}
+                {`“${shortQuote}”`}
               </div>
-            ) : null}
+              {quoteAttribution ? (
+                <div style={{
+                  display: 'flex',
+                  fontFamily: 'Inter, sans-serif',
+                  fontSize: 14,
+                  color: ACC_DEEP,
+                  marginTop: 6,
+                  letterSpacing: 1,
+                }}>
+                  — {quoteAttribution}
+                </div>
+              ) : null}
+            </div>
+            <div style={{
+              display: 'flex',
+              fontFamily: 'Inter, sans-serif',
+              fontSize: 13,
+              color: ACC_DEEP,
+              letterSpacing: 4,
+              fontWeight: 600,
+              paddingBottom: 4,
+            }}>
+              MULL.WORLD
+            </div>
           </div>
         ) : (
           <div style={{
             display: 'flex',
-            fontSize: 22,
-            color: '#8C6520',
-            fontStyle: 'italic',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingTop: 22,
+            borderTop: `1px solid ${CREAM_2}`,
           }}>
-            Find your place on the map of how you think.
+            <div style={{
+              display: 'flex',
+              fontFamily: 'Cormorant, Georgia, serif',
+              fontStyle: 'italic',
+              fontSize: 22,
+              color: ACC_DEEP,
+            }}>
+              Find your place on the map of how you think.
+            </div>
+            <div style={{
+              display: 'flex',
+              fontFamily: 'Inter, sans-serif',
+              fontSize: 13,
+              color: ACC_DEEP,
+              letterSpacing: 4,
+              fontWeight: 600,
+            }}>
+              MULL.WORLD
+            </div>
           </div>
         )}
       </div>
     ),
-    { ...size }
+    { ...size, fonts }
   );
 }
