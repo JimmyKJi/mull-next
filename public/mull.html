@@ -3273,7 +3273,7 @@ const Q = [
     a:[
       { t:"They could have chosen differently. They're responsible.",                                v:v({SS:3,UI:1,RT:1}) },
       { t:"Given who they were and what they'd been through, this was always going to happen.",     v:v({TR:1,SI:2,SR:1,TV:2}) },
-      { t:"Both — they're responsible AND it was always going to happen.",                          v:v({TR:2,MR:1,PO:1}) },
+      { t:"Both — they're responsible AND it was always going to happen.",                          v:v({TR:1,MR:2,SR:1,PO:1}) },
       { t:"Neither. Life is mostly accidents we narrate after the fact.",                            v:v({TV:1,SR:3,SI:2}) }
     ]},
 
@@ -3290,7 +3290,7 @@ const Q = [
     a:[
       { t:"Adopt the new way. Efficiency wins.",                                            v:v({TR:1,SR:1,WP:2,SS:1}) },
       { t:"Stick with tradition. Long survival is evidence of hidden wisdom.",              v:v({RT:3,CE:1,SR:1}) },
-      { t:"Investigate why the old way persisted before changing anything.",                 v:v({RT:2,TR:1,PO:2}) },
+      { t:"Investigate why the old way persisted before changing anything.",                 v:v({RT:2,TE:2,PO:2,SR:1}) },
       { t:"Try both for a season. Watch what actually happens.",                            v:v({TE:3,PO:2,SR:1}) },
       { t:"Wait. Sometimes the natural way reveals itself when you stop forcing.",          v:v({MR:2,AT:1,RT:1,SI:1}) }
     ]},
@@ -3310,12 +3310,12 @@ const Q = [
       { t:"Direct experience and observation.",                             v:v({TE:3,ES:1,SR:1}) },
       { t:"Traditions and texts that have endured generations.",            v:v({RT:3,CE:1}) },
       { t:"Quiet attention to what's beneath words.",                       v:v({MR:3,SI:1,AT:1}) },
-      { t:"None of these alone — all of them, weighed against each other.", v:v({SR:2,TR:1,TE:1,RT:1}) }
+      { t:"None of these alone — all of them, weighed against each other.", v:v({SR:3,TE:2,RT:1}) }
     ]},
 
   { p:"When you face a hard decision, what's your actual first move?",
     a:[
-      { t:"List the options and their likely consequences.",            v:v({TR:3,TD:1,PO:1}) },
+      { t:"List the options and their likely consequences.",            v:v({PO:3,TR:1,TE:1}) },
       { t:"Notice my body — what does it want?",                        v:v({ES:3,TE:2}) },
       { t:"Ask what the person I want to become would do.",             v:v({SS:3,AT:1,VA:1}) },
       { t:"Talk to the people I love.",                                 v:v({CE:3,RT:1}) },
@@ -3326,7 +3326,7 @@ const Q = [
   { p:"On the question of God, or the sacred, or whatever you'd call it:",
     a:[
       { t:"Something is there, even if we can't name it.",                              v:v({MR:3,SI:1,RT:1}) },
-      { t:"Probably not. The world makes sense without it.",                            v:v({SR:2,TE:2,TR:1}) },
+      { t:"Probably not. The world makes sense without it.",                            v:v({SR:3,TE:2}) },
       { t:"The question itself matters more than any answer.",                          v:v({TD:2,SS:2,MR:1}) },
       { t:"Whatever I think personally, I respect what people have built around it.",   v:v({CE:2,RT:3,PO:1}) }
     ]},
@@ -3335,7 +3335,7 @@ const Q = [
     a:[
       { t:"Yes. There's a continuous self, even though I've changed.",                  v:v({SS:3,RT:1}) },
       { t:"No. I'm a different person who shares memories with that one.",              v:v({SI:3,TE:1,MR:1}) },
-      { t:"The question is malformed — there's no fixed \"self\" to compare.",         v:v({SI:3,MR:2,TR:1}) },
+      { t:"The question is malformed — there's no fixed \"self\" to compare.",         v:v({SI:3,MR:2,SR:1}) },
       { t:"Mostly yes, but a stranger would barely recognize me.",                       v:v({TR:1,TE:2,SR:1}) },
       { t:"I don't think about it. It doesn't help me live.",                            v:v({PO:3,SR:1}) }
     ]},
@@ -3389,7 +3389,7 @@ const Q = [
 
   { p:"If you could upload your mind to a perfect digital substrate — same memories, same patterns of thought, but no body and no death — would you?",
     a:[
-      { t:"Yes. The body is hardware. The mind is what matters.",                          v:v({SS:2,TR:2,WP:2,SI:1}) },
+      { t:"Yes. The body is hardware. The mind is what matters.",                          v:v({SS:2,TR:1,WP:2,SI:2}) },
       { t:"Yes, eventually. But not until we understand what we'd lose.",                  v:v({SR:2,TR:1,PO:2}) },
       { t:"No. The body isn't separate from who I am.",                                    v:v({ES:3,MR:1,CE:1}) },
       { t:"No. Death gives life its shape.",                                               v:v({TV:3,MR:1,AT:2,VA:1}) },
@@ -3463,7 +3463,7 @@ const Q_DETAILED = [
 
   { p:"Someone with deep expertise contradicts your moral intuition on something specific. What weighs more?",
     a:[
-      { t:"Their expertise. Intuitions are often wrong; expertise is calibrated.",       v:v({TR:3,TD:2,RT:1}) },
+      { t:"Their expertise. Intuitions are often wrong; expertise is calibrated.",       v:v({TE:3,TD:1,RT:1,SR:1}) },
       { t:"My intuition. Expertise can launder bad values into the language of evidence.",v:v({SS:3,SR:2,TE:1}) },
       { t:"Neither alone — I want to understand why we disagree.",                       v:v({TD:3,SR:1,TR:1}) },
       { t:"The intuition, but I take their argument as data about my blind spots.",      v:v({SS:2,SR:2,PO:1}) },
@@ -3636,7 +3636,7 @@ const Q_DETAILED = [
 
   { p:"Do humans get morally better over time? Stay the same? Decay?",
     a:[
-      { t:"Better, slowly. The circle of moral concern keeps widening.",                              v:v({UI:3,WP:1,TR:1,VA:1}) },
+      { t:"Better, slowly. The circle of moral concern keeps widening.",                              v:v({UI:3,WP:1,VA:2}) },
       { t:"The same. Different vocabulary for the same impulses.",                                     v:v({TV:3,RT:1,SR:2}) },
       { t:"Worse in the things that matter; better in things easily measured.",                        v:v({RT:3,TV:2,CE:1}) },
       { t:"Both — better in some places, decaying in others. The trajectory isn't a line.",            v:v({SR:2,PO:2,TR:1}) },
@@ -3663,7 +3663,7 @@ const Q_DETAILED = [
 
   { p:"Build a community from scratch. What's the very first principle?",
     a:[
-      { t:"Honesty. Without it, every other principle drifts.",                                         v:v({TR:2,UI:2,SS:2}) },
+      { t:"Honesty. Without it, every other principle drifts.",                                         v:v({UI:2,SS:2,VA:1}) },
       { t:"Mutual obligation. We owe each other a living.",                                             v:v({CE:3,RT:2,UI:1}) },
       { t:"Voluntariness. No coercion, ever, by anyone.",                                                v:v({SS:3,WP:2,UI:1}) },
       { t:"Tradition. New communities fail because they think they can skip the hard-won customs.",     v:v({RT:3,CE:2,SR:1}) },
@@ -3791,14 +3791,14 @@ const Q_DETAILED = [
     a:[
       { t:"Right when it's costing you yourself. Failure when you're tired, not done.",                      v:v({SS:3,VA:1,PO:2}) },
       { t:"Almost always failure. People drift; they shouldn't be released.",                                 v:v({CE:3,RT:2,VA:1}) },
-      { t:"Right when honesty would require either confrontation or distance.",                              v:v({TR:2,UI:2,SS:1}) },
+      { t:"Right when honesty would require either confrontation or distance.",                              v:v({UI:2,SS:2,SR:1}) },
       { t:"Right when you've changed in incompatible directions, not when you're temporarily annoyed.",       v:v({TV:2,PO:2,SR:1}) },
       { t:"There's no right or wrong here. Friendships have their own seasons.",                              v:v({MR:2,SI:1,TV:1,RT:1}) }
     ]},
 
   { p:"Public speech and private thought. Should they match?",
     a:[
-      { t:"Yes. The gap is where corruption lives.",                                                          v:v({SS:3,UI:2,TR:1}) },
+      { t:"Yes. The gap is where corruption lives.",                                                          v:v({SS:3,UI:2,VA:1}) },
       { t:"No. Public speech is a different genre, with different obligations.",                              v:v({CE:3,RT:2,PO:1}) },
       { t:"Mostly yes, with allowances for tact.",                                                            v:v({TR:2,UI:1,SS:1,CE:1}) },
       { t:"The gap is where civilization lives. Total honesty is a hostile demand.",                          v:v({CE:2,RT:2,SR:2,TV:1}) },
@@ -3807,7 +3807,7 @@ const Q_DETAILED = [
 
   { p:"Healthy self-regard, vanity. What's the difference?",
     a:[
-      { t:"Self-regard is calibrated to evidence; vanity isn't.",                                              v:v({TR:3,SR:2,TE:1}) },
+      { t:"Self-regard is calibrated to evidence; vanity isn't.",                                              v:v({TE:3,SR:2,TR:1}) },
       { t:"Self-regard is private; vanity needs an audience.",                                                  v:v({SS:2,AT:2,SR:1}) },
       { t:"Self-regard rests in being; vanity is a performance about it.",                                     v:v({MR:2,SI:1,RT:1,SS:1}) },
       { t:"Vanity is self-regard that's afraid of slipping.",                                                   v:v({TV:2,SR:1,TR:1,VA:1}) },
@@ -3848,7 +3848,7 @@ const Q_DETAILED = [
       { t:"Someone's analogy reframing it. I'd been looking from the wrong angle.",                                   v:v({CE:2,RT:1,TD:2}) },
       { t:"A long quiet sitting. The understanding arrived when I stopped chasing it.",                                v:v({MR:3,AT:2,SI:1}) },
       { t:"The body got it before the mind did. I knew, then I understood why.",                                       v:v({ES:3,TE:2,MR:1}) },
-      { t:"Disagreement. Trying to refute it forced the actual structure out.",                                          v:v({SR:3,TR:2,SS:1}) }
+      { t:"Disagreement. Trying to refute it forced the actual structure out.",                                          v:v({SR:3,TE:2,SS:1}) }
     ]},
 
   { p:"You give something up for an extended period — fast, screens, alcohol, comfort, stimulation. What does the giving-up actually surface?",

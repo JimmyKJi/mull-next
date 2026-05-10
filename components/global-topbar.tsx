@@ -127,6 +127,9 @@ export default async function GlobalTopBar() {
             <Link href="/search" className="mull-topbar-link mull-topbar-link-secondary">
               {t('nav.search_leaderboard', locale)}
             </Link>
+            <Link href="/compare" className="mull-topbar-link mull-topbar-link-secondary">
+              Compare
+            </Link>
             {user && (
               <>
                 <Link href="/diary" className="mull-topbar-link mull-topbar-link-secondary">

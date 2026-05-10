@@ -23,6 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE}/diary`,    lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${SITE}/debate`,   lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${SITE}/exercises`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
+    { url: `${SITE}/compare`,   lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     ...[
       'premortem','negative-visualization','socratic-self-questioning','view-from-above','memento-mori','examen',
       'fallacy-hunt','steelmanning','counterexample-drill','argument-map','reductio',

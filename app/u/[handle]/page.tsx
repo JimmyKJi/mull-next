@@ -232,8 +232,14 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
         }}>
           Mull<span style={{ color: '#B8862F' }}>.</span>
         </Link>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
           <LanguageSwitcher initial={locale} />
+          <Link href={`/compare?them=${profile.handle}`} style={{
+            fontFamily: sans, fontSize: 13, color: '#8C6520',
+            textDecoration: 'underline', textUnderlineOffset: 3,
+          }}>
+            Compare with me →
+          </Link>
           <Link href="/" style={{ fontFamily: sans, fontSize: 13, color: '#4A4338', textDecoration: 'none' }}>
             {t('nav.find_your_place', locale)}
           </Link>
