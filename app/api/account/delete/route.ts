@@ -58,6 +58,12 @@ export async function POST(req: Request) {
     await wipe('welcome_emails');
     await wipe('error_log');
     await wipe('streak_break_emails');
+    // Referrals: we wipe the user's OWN code + their referrer-record.
+    // Other users' referral rows pointing to this user are kept but
+    // get NULLed via ON DELETE SET NULL on the FK — anonymous trail
+    // remains, but their identifier disappears.
+    await wipe('referral_codes');
+    await wipe('referrals');
     // Note: `feedback` rows are kept (with user_id NULLed via FK
     // ON DELETE SET NULL) because the body text is the maintainer's
     // research record, not personal data. The user's identifier

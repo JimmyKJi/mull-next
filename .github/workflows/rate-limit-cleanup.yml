@@ -1,0 +1,38 @@
+# Daily cleanup of the rate_limit_events table — fires at 03:00 UTC
+# every day and pings /api/cron/rate-limit-cleanup, which deletes
+# rows older than 24 hours. Prevents unbounded table growth.
+#
+# 03:00 UTC = 03:00 GMT / 04:00 BST in London — middle of the night
+# in every relevant timezone, so no traffic interference.
+#
+# Setup: same as other crons — CRON_SECRET as a repo secret.
+
+name: Daily rate-limit cleanup
+
+on:
+  schedule:
+    - cron: '0 3 * * *'    # daily at 03:00 UTC
+  workflow_dispatch: {}     # manual trigger for testing
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Mull rate-limit cleanup cron
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          if [ -z "$CRON_SECRET" ]; then
+            echo "::error::CRON_SECRET secret is missing. Add it under Repo Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+          response=$(curl -sS -w '\n%{http_code}' \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            https://mull.world/api/cron/rate-limit-cleanup)
+          body=$(echo "$response" | sed '$d')
+          status=$(echo "$response" | tail -n1)
+          echo "HTTP $status"
+          echo "$body"
+          if [ "$status" -ge 400 ]; then
+            exit 1
+          fi

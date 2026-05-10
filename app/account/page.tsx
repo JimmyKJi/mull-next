@@ -15,6 +15,7 @@ import ShareResultCard from '@/components/share-result-card';
 import ReflectionCard from '@/components/reflection-card';
 import WelcomePinger from '@/components/welcome-pinger';
 import NextActionCard from '@/components/next-action-card';
+import ReferralCard from '@/components/referral-card';
 import { FIGURES } from '@/lib/figures';
 import { isAdminUserId } from '@/lib/admin';
 
@@ -313,6 +314,17 @@ export default async function AccountPage() {
   // above limit to 40/60/60 for the visualization), and a couple extra
   // tables (debate_history, public_profiles) the trajectory doesn't.
   const stats = await computeUserStats(supabase, user.id);
+
+  // Referral data — preload code + count so the card can render in
+  // the first paint without waiting on /api/referral/save. The API
+  // route still runs on the client to attribute any pending /r/<code>
+  // cookie + lazily insert the code if missing.
+  const [referralCodeRes, referralCountRes] = await Promise.all([
+    supabase.from('referral_codes').select('code').eq('user_id', user.id).maybeSingle(),
+    supabase.from('referrals').select('user_id', { count: 'exact', head: true }).eq('referrer_user_id', user.id),
+  ]);
+  const referralCode: string | null = (referralCodeRes.data?.code as string | undefined) ?? null;
+  const referralCount: number = referralCountRes.count ?? 0;
 
   return (
     <main style={{ maxWidth: 760, margin: '60px auto', padding: '0 24px' }}>
@@ -1038,6 +1050,12 @@ export default async function AccountPage() {
           nothing visible. Idempotent — the endpoint checks whether
           we've already sent before firing. */}
       <WelcomePinger />
+
+      {/* Friend referral card — generates the user's invite link
+          (lazily, via /api/referral/save) and shows a count of
+          friends who've joined. Renders nothing until the API
+          responds with a code. */}
+      <ReferralCard initialCode={referralCode} initialCount={referralCount} />
 
       {/* Daily-dilemma email reminder card — opt-in, time-zone aware.
           Sits inside /account so the privacy-respecting opt-in is the
