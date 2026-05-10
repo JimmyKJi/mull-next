@@ -6807,56 +6807,29 @@ function setupShareRow(top, flavor) {
     });
   }
 
-  // Captions for Instagram and TikTok. Neither platform exposes a
-  // web composer URL, so the click handler copies a ready-to-paste
-  // caption to the clipboard, deep-links the app on mobile, and
-  // shows a toast explaining the next step.
-  const igCaption =
-    `Just found my philosophical archetype on Mull:\n\n` +
-    `✦ The ${flavorLabel} ✦\n\n` +
-    `Take the quiz at mull.world to find yours.\n\n` +
-    `#philosophy #worldview #mull`;
-  const tiktokCaption =
-    `Found my philosophical archetype on Mull: The ${flavorLabel} 🌌 ` +
-    `Take the quiz at mull.world ` +
-    `#philosophy #philosophytok #mull #worldview #thinking`;
-  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-
-  function showShareToast(text) {
-    const toast = document.getElementById('share-toast');
-    if (!toast) return;
-    toast.textContent = text;
-    toast.hidden = false;
-    setTimeout(() => { toast.hidden = true; }, 4000);
-  }
-
-  async function copyToClipboard(text) {
-    try {
-      await navigator.clipboard.writeText(text);
-      return true;
-    } catch (e) {
-      window.prompt('Copy this:', text);
-      return false;
-    }
-  }
+  // Instagram and TikTok don't have web compose URLs, and a copy-
+  // paste caption flow felt fiddly. Better UX: open a designed
+  // /share/<slug> page the user can screenshot and post manually —
+  // the screenshot itself becomes the visual asset.
+  const shareCardParams = new URLSearchParams();
+  if (flavor) shareCardParams.set('flavor', flavor);
+  const _alignPct = displayPct(top.sim);
+  if (_alignPct) shareCardParams.set('pct', String(_alignPct));
+  const shareCardUrl = `/share/${slug}?${shareCardParams.toString()}`;
 
   const igBtn = document.getElementById('share-instagram');
   if (igBtn) {
-    igBtn.onclick = async () => {
+    igBtn.onclick = () => {
       track('share_clicked', { platform: 'instagram', archetype: archName });
-      const ok = await copyToClipboard(igCaption);
-      if (ok) showShareToast('Caption copied — open Instagram and paste it in your story or post.');
-      if (isMobile) setTimeout(() => { window.location.href = 'instagram://camera'; }, 300);
+      window.open(shareCardUrl, '_blank', 'noopener,noreferrer');
     };
   }
 
   const ttBtn = document.getElementById('share-tiktok');
   if (ttBtn) {
-    ttBtn.onclick = async () => {
+    ttBtn.onclick = () => {
       track('share_clicked', { platform: 'tiktok', archetype: archName });
-      const ok = await copyToClipboard(tiktokCaption);
-      if (ok) showShareToast('Caption copied — open TikTok and paste it in your post.');
-      if (isMobile) setTimeout(() => { window.location.href = 'snssdk1233://'; }, 300);
+      window.open(shareCardUrl, '_blank', 'noopener,noreferrer');
     };
   }
 
