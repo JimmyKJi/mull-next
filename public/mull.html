@@ -444,13 +444,25 @@
   }
 
   /* ---------- Landing ---------- */
+  /* Hero rhythm: version chip → H1 → lede → daily wisdom → quiz
+     options. All aligned left, with chip + lede + daily wisdom
+     sharing the same max-width so the rag-right edge is consistent
+     under the H1. Spacing is uniform so the eye doesn't catch on
+     gaps. */
   .versionbanner {
-    display: flex; align-items: center; gap: 10px;
-    padding: 10px 14px; margin-bottom: 14px;
-    background: #F5EFDC; border: 1px solid #E2D8B6; border-radius: 10px;
-    color: #5C4B1F; font-size: 13.5px;
+    display: inline-flex;             /* shrink to content, not full column */
+    align-items: center; gap: 10px;
+    padding: 7px 14px;
+    margin: 0 0 24px;
+    background: #F5EFDC;
+    border: 1px solid #E2D8B6;
+    border-radius: 999px;             /* pill, not card — less visual weight */
+    color: #5C4B1F; font-size: 12.5px;
+    line-height: 1.4;
   }
   .versionbanner strong { color: #3D310F; font-weight: 600; letter-spacing: 0.2px; }
+  /* constructionbanner is no longer rendered; kept for safety in
+     case anything still references the class. */
   .constructionbanner {
     padding: 14px 18px; margin-bottom: 28px;
     background: #FBF6E8; border-left: 3px solid #B8862F; border-radius: 8px;
@@ -458,18 +470,20 @@
   }
   .constructionbanner strong { color: #221E18; display: inline; margin-right: 6px; }
   @media (max-width: 540px) {
-    .versionbanner { font-size: 12.5px; padding: 9px 12px; margin-bottom: 12px; }
+    .versionbanner { font-size: 12px; padding: 6px 12px; margin-bottom: 20px; }
     .constructionbanner { font-size: 13px; padding: 12px 14px; margin-bottom: 22px; line-height: 1.5; }
   }
   /* Daily wisdom — small literary block under the hero. Same quote
-     for everyone on a given day; rotates daily. Populated by JS. */
+     for everyone on a given day; rotates daily. Populated by JS.
+     Width matches the .lede so the hero column has a single
+     rag-right edge instead of three different ones. */
   .daily-wisdom {
     margin: 28px 0 32px;
     padding: 18px 22px 16px;
     background: var(--cream-2);
     border-left: 3px solid var(--acc);
     border-radius: 8px;
-    max-width: 620px;
+    max-width: 560px;
   }
   .daily-wisdom-eyebrow {
     font-family: 'Inter', system-ui, sans-serif;
@@ -2658,12 +2672,12 @@ html.embed-mode #embed-you-hint {
 
   <!-- LANDING -->
   <section id="landing" class="landing">
-    <!-- One tiny banner instead of two — keeps the caveats honest
-         without burying the headline. Construction-stage detail and
-         subscription notes live on the About page where the curious
+    <!-- Compact version pill — short enough to stay one line on
+         desktop and not overflow on mobile. Longer construction-
+         stage caveats live on the About page where the curious
          can find them. -->
     <div class="versionbanner">
-      <div data-i18n-html="home.version_banner"><strong>Mull v0.9</strong> — an early, hand-built passion project. Some rough edges; thanks for kicking the tires.</div>
+      <div data-i18n-html="home.version_banner"><strong>Mull v0.9</strong> · early build · hand-built</div>
     </div>
 
     <h1 data-i18n-html="home.hero_h1">Find your place on the <em>map of how you think.</em></h1>
@@ -6084,14 +6098,14 @@ const HOME_I18N = {
   "quiz.continue":       { en: "Continue →", es: "Continuar →", fr: "Continuer →", pt: "Continuar →", ru: "Продолжить →", zh: "继续 →", ja: "次へ →", ko: "계속 →" },
 
   "home.version_banner": {
-    en: "<strong>Mull v0.9</strong> — early build. The map, the questions, the archetypes are all still settling into shape.",
-    es: "<strong>Mull v0.9</strong> — versión temprana. El mapa, las preguntas y los arquetipos aún se están asentando.",
-    fr: "<strong>Mull v0.9</strong> — version préliminaire. La carte, les questions et les archétypes sont encore en train de prendre forme.",
-    pt: "<strong>Mull v0.9</strong> — versão inicial. O mapa, as perguntas e os arquétipos ainda estão tomando forma.",
-    ru: "<strong>Mull v0.9</strong> — ранняя сборка. Карта, вопросы и архетипы ещё обретают форму.",
-    zh: "<strong>Mull v0.9</strong> — 早期版本。地图、问题、原型都还在不断打磨之中。",
-    ja: "<strong>Mull v0.9</strong> — 早期版。マップ、質問、アーキタイプはまだ形を整えている途中です。",
-    ko: "<strong>Mull v0.9</strong> — 초기 버전. 지도, 질문, 유형은 아직 다듬어지는 중입니다."
+    en: "<strong>Mull v0.9</strong> · early build · hand-built",
+    es: "<strong>Mull v0.9</strong> · versión inicial · hecho a mano",
+    fr: "<strong>Mull v0.9</strong> · version préliminaire · fait main",
+    pt: "<strong>Mull v0.9</strong> · versão inicial · feito à mão",
+    ru: "<strong>Mull v0.9</strong> · ранняя сборка · сделано вручную",
+    zh: "<strong>Mull v0.9</strong> · 早期版本 · 手工打造",
+    ja: "<strong>Mull v0.9</strong> · 早期版 · 手作り",
+    ko: "<strong>Mull v0.9</strong> · 초기 버전 · 수작업"
   },
   "home.construction_notice": {
     en: "<strong>Early build.</strong> The quiz is in demo stage — calibration is actively being tuned, so your placement may shift as the model improves over the next few weeks. Subscriptions aren't live yet either, so AI features run on the maintainer's pocket and may pause briefly if the budget runs out. Thanks for your patience while this finds its shape.",
