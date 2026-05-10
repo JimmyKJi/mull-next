@@ -168,18 +168,28 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   }
   const trailVectors = trailPositions.slice(-10);
 
+  // Streak with one-day grace — single missed day forgiven.
   function computeStreak(dates: string[]): number {
     if (!dates.length) return 0;
     const set = new Set(dates);
     const today = new Date(); today.setUTCHours(0, 0, 0, 0);
-    let streak = 0;
     const cursor = new Date(today);
     if (!set.has(cursor.toISOString().slice(0, 10))) {
       cursor.setUTCDate(cursor.getUTCDate() - 1);
     }
-    while (set.has(cursor.toISOString().slice(0, 10))) {
-      streak++;
-      cursor.setUTCDate(cursor.getUTCDate() - 1);
+    let streak = 0;
+    let graceUsed = false;
+    for (let i = 0; i < 1825; i++) {
+      const k = cursor.toISOString().slice(0, 10);
+      if (set.has(k)) {
+        streak++;
+        cursor.setUTCDate(cursor.getUTCDate() - 1);
+      } else if (!graceUsed) {
+        graceUsed = true;
+        cursor.setUTCDate(cursor.getUTCDate() - 1);
+      } else {
+        break;
+      }
     }
     return streak;
   }

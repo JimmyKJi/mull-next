@@ -450,6 +450,43 @@
     .versionbanner { font-size: 12.5px; padding: 9px 12px; margin-bottom: 12px; }
     .constructionbanner { font-size: 13px; padding: 12px 14px; margin-bottom: 22px; line-height: 1.5; }
   }
+  /* Daily wisdom — small literary block under the hero. Same quote
+     for everyone on a given day; rotates daily. Populated by JS. */
+  .daily-wisdom {
+    margin: 28px 0 32px;
+    padding: 18px 22px 16px;
+    background: var(--cream-2);
+    border-left: 3px solid var(--acc);
+    border-radius: 8px;
+    max-width: 620px;
+  }
+  .daily-wisdom-eyebrow {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--acc-deep);
+    margin-bottom: 8px;
+  }
+  .daily-wisdom-quote {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic;
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--ink);
+    margin: 0 0 8px;
+  }
+  .daily-wisdom-attr {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 12px;
+    color: var(--ink-soft);
+    letter-spacing: 0.3px;
+  }
+  @media (max-width: 540px) {
+    .daily-wisdom { padding: 14px 16px 12px; margin: 22px 0 26px; }
+    .daily-wisdom-quote { font-size: 16px; }
+  }
   .i18n-notice {
     max-width: 1100px;
     margin: -20px auto 28px;
@@ -2568,6 +2605,16 @@ html.embed-mode #embed-you-hint {
     <h1 data-i18n-html="home.hero_h1">Find your place on the <em>map of how you think.</em></h1>
     <p class="lede" data-i18n="home.hero_lede">No right answers. Skip anything. At the end you'll see where your worldview sits — and which thinkers across history have stood near you.</p>
 
+    <!-- Daily wisdom — a deterministic-by-date philosopher key idea
+         drawn from the constellation. Same quote for every visitor on
+         a given day; rotates each morning. Populated by JS in a
+         later <script> block (function below: renderDailyWisdom). -->
+    <div id="daily-wisdom" class="daily-wisdom" hidden>
+      <div class="daily-wisdom-eyebrow">Today's thinker</div>
+      <p class="daily-wisdom-quote" id="daily-wisdom-quote"></p>
+      <div class="daily-wisdom-attr" id="daily-wisdom-attr"></div>
+    </div>
+
     <div class="quiz-choice">
       <button class="quiz-option" onclick="startQuiz('quick')">
         <div class="quiz-option-head">
@@ -3067,7 +3114,7 @@ let CURRENT_USER = null;
     }
     const { data } = await sb.auth.getSession();
     CURRENT_USER = data?.session?.user || null;
-    console.log('[mull] auth state:', CURRENT_USER ? 'signed in as ' + CURRENT_USER.email : 'anonymous');renderAuthNav();
+    console.log('[mull] auth state:', CURRENT_USER ? 'signed in' : 'anonymous');renderAuthNav();
   } catch (e) { console.warn('[mull] auth detect failed', e); }
 })();
 // --- Embed mode: render only the constellation for /account iframe ----
@@ -8171,8 +8218,31 @@ function restart() {
   startQuiz();
 }
 
+/* Daily wisdom — same quote everywhere for a given UTC day, rotates
+   each morning. Index derived from day-of-year + year so the same
+   calendar date doesn't recycle the same quote year-over-year. */
+function renderDailyWisdom() {
+  const node = document.getElementById('daily-wisdom');
+  const qNode = document.getElementById('daily-wisdom-quote');
+  const aNode = document.getElementById('daily-wisdom-attr');
+  if (!node || !qNode || !aNode) return;
+  if (typeof PHILOSOPHERS === 'undefined' || !PHILOSOPHERS.length) return;
+  const now = new Date();
+  const yyyy = now.getUTCFullYear();
+  const start = Date.UTC(yyyy, 0, 0);
+  const today = Date.UTC(yyyy, now.getUTCMonth(), now.getUTCDate());
+  const dayOfYear = Math.floor((today - start) / 86400000);
+  const idx = (dayOfYear + yyyy * 7) % PHILOSOPHERS.length;
+  const p = PHILOSOPHERS[idx];
+  if (!p || !p.keyIdea) return;
+  qNode.textContent = '“' + p.keyIdea + '”';
+  aNode.textContent = '— ' + p.name + (p.dates ? ', ' + p.dates : '');
+  node.hidden = false;
+}
+
 /* ===== Boot ===== */
 renderArchetypeStrip('strip-grid_landing', null);
+renderDailyWisdom();
 showLanding();
 </script>
 </body>

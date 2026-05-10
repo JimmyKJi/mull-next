@@ -39,12 +39,26 @@ export async function POST(req: Request) {
       const { error } = await supabase.from(table).delete().eq('user_id', user.id);
       if (error) tableErrors.push({ table, code: error.code, message: error.message });
     };
+    // Explicitly wipe every user-scoped table. Most have ON DELETE
+    // CASCADE on auth.users, but listing them here makes the data
+    // promise auditable + survives any FK config drift.
     await wipe('quiz_attempts');
     await wipe('dilemma_responses');
     await wipe('diary_entries');
     await wipe('debate_history');
     await wipe('exercise_reflections');
     await wipe('public_profiles');
+    await wipe('notification_preferences');
+    await wipe('subscriptions');
+    await wipe('mo_messages');
+    await wipe('mo_conversations');
+    await wipe('diary_embeddings');
+    await wipe('diary_clusters');
+    await wipe('diary_entry_clusters');
+    // Note: `feedback` rows are kept (with user_id NULLed via FK
+    // ON DELETE SET NULL) because the body text is the maintainer's
+    // research record, not personal data. The user's identifier
+    // disappears; the words remain anonymous.
 
     // Now delete the auth row. Any failure here is the only one that's truly
     // fatal — without removing auth.users, the user could log back in.

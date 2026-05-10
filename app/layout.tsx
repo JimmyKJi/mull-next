@@ -4,6 +4,7 @@ import GlobalTopBar from "@/components/global-topbar";
 import TopBarMount from "@/components/topbar-mount";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import FeedbackButton from "@/components/feedback-button";
 
 // Critical for mobile — without this iOS Safari renders at desktop
 // scale and the layout looks zoomed-out and broken. mull.html has
@@ -68,6 +69,11 @@ export default function RootLayout({
         {/* Speed Insights — Core Web Vitals + page load times. Free
             on Hobby tier up to 10k data points/month. */}
         <SpeedInsights />
+        {/* Feedback button — floating bottom-right on every Next.js
+            route. Submissions land in the Supabase 'feedback' table
+            (admin-readable only). Critical for capturing launch
+            sentiment from friends in the first 48 hours. */}
+        <FeedbackButton />
       </body>
     </html>
   );

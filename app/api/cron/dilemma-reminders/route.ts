@@ -41,6 +41,17 @@ type Pref = {
   reminder_tz: string;
 };
 
+// Mask an email for log output: keep first char + domain. e.g.
+// "alice@example.com" → "a***@example.com". Vercel logs are
+// queryable, so the full user roster shouldn't sit in plain text.
+function maskEmail(email: string): string {
+  const at = email.indexOf('@');
+  if (at <= 0) return '***';
+  const local = email.slice(0, at);
+  const domain = email.slice(at);
+  return local[0] + '***' + domain;
+}
+
 // Returns the current hour (0–23) in the given IANA time zone.
 // Returns null if the time zone is invalid (we just skip those users).
 function localHourIn(tz: string, when: Date = new Date()): number | null {
@@ -149,11 +160,14 @@ export async function GET(req: Request) {
           throw new Error(`Resend ${res.status}: ${text.slice(0, 200)}`);
         }
       } else {
-        console.log(`[cron/dilemma-reminders] (DRY RUN) would email ${email} (their local ${cand.reminder_local_hour}:00 in ${cand.reminder_tz})`);
+        // Mask email in logs — Vercel logs are queryable; full
+        // addresses there leak the user roster. Show only first
+        // char + domain.
+        console.log(`[cron/dilemma-reminders] (DRY RUN) would email ${maskEmail(email)} (their local ${cand.reminder_local_hour}:00 in ${cand.reminder_tz})`);
       }
       sent.push(email);
     } catch (e) {
-      console.error(`[cron/dilemma-reminders] send failed for ${email}:`, e);
+      console.error(`[cron/dilemma-reminders] send failed for ${maskEmail(email)}:`, e);
       failed.push({ email, reason: (e as Error).message });
     }
   }

@@ -20,18 +20,27 @@ export async function GET() {
     if (!user) return NextResponse.json({ error: 'Not signed in.' }, { status: 401 });
 
     // Fan out — these tables are all user-scoped via RLS, so the simple
-    // SELECTs return only this user's rows.
-    const [quiz, dilemmas, diary, debates, profile, reflections] = await Promise.all([
+    // SELECTs return only this user's rows. We export every user-
+    // scoped table, including notification prefs, subscription state,
+    // any Mo conversations, and the diary cluster derived data.
+    const [
+      quiz, dilemmas, diary, debates, profile, reflections,
+      notifPrefs, subscription, moConvos, moMessages,
+    ] = await Promise.all([
       supabase.from('quiz_attempts').select('*').eq('user_id', user.id),
       supabase.from('dilemma_responses').select('*').eq('user_id', user.id),
       supabase.from('diary_entries').select('*').eq('user_id', user.id),
       supabase.from('debate_history').select('*').eq('user_id', user.id),
       supabase.from('public_profiles').select('*').eq('user_id', user.id).maybeSingle(),
       supabase.from('exercise_reflections').select('*').eq('user_id', user.id),
+      supabase.from('notification_preferences').select('*').eq('user_id', user.id).maybeSingle(),
+      supabase.from('subscriptions').select('*').eq('user_id', user.id).maybeSingle(),
+      supabase.from('mo_conversations').select('*').eq('user_id', user.id),
+      supabase.from('mo_messages').select('*').eq('user_id', user.id),
     ]);
 
     const payload = {
-      schema: 'mull/account-export@v1',
+      schema: 'mull/account-export@v2',
       exported_at: new Date().toISOString(),
       account: {
         id: user.id,
@@ -44,6 +53,10 @@ export async function GET() {
       debate_history: debates.data ?? [],
       exercise_reflections: reflections.data ?? [],
       public_profile: profile.data ?? null,
+      notification_preferences: notifPrefs.data ?? null,
+      subscription: subscription.data ?? null,
+      mo_conversations: moConvos.data ?? [],
+      mo_messages: moMessages.data ?? [],
       // Tables that returned errors are surfaced so the user knows something
       // didn't make it into the export rather than silently missing.
       _errors: [
@@ -52,6 +65,10 @@ export async function GET() {
         diary.error && { table: 'diary_entries', code: diary.error.code, message: diary.error.message },
         debates.error && { table: 'debate_history', code: debates.error.code, message: debates.error.message },
         reflections.error && { table: 'exercise_reflections', code: reflections.error.code, message: reflections.error.message },
+        notifPrefs.error && { table: 'notification_preferences', code: notifPrefs.error.code, message: notifPrefs.error.message },
+        subscription.error && { table: 'subscriptions', code: subscription.error.code, message: subscription.error.message },
+        moConvos.error && { table: 'mo_conversations', code: moConvos.error.code, message: moConvos.error.message },
+        moMessages.error && { table: 'mo_messages', code: moMessages.error.code, message: moMessages.error.message },
         profile.error && { table: 'public_profiles', code: profile.error.code, message: profile.error.message },
       ].filter(Boolean),
     };

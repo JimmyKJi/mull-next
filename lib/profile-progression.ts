@@ -69,18 +69,31 @@ function toDateKey(d: Date): string {
 }
 
 // Walk backward from today (or yesterday if today not answered) counting
-// consecutive days the user has a saved dilemma_response. Mirrors the SQL
-// compute_dilemma_streak function and the JS version on /dilemma.
+// consecutive days the user has a saved dilemma_response. Allows ONE
+// missed day in the streak — humane policy so a single forgotten day
+// doesn't reset hard-won progress to zero.
+//
+// Algorithm: walk back, count present days, allow exactly one absent
+// day to be skipped (grace), then any second absent day breaks. This
+// way a user who writes Mon/Tue/Wed, skips Thu, writes Fri/Sat/Sun
+// shows a streak of 6 (Mon-Wed + grace + Fri-Sun) instead of 3.
 function computeStreakFromDates(dateKeys: Set<string>): number {
   const cursor = new Date();
   if (!dateKeys.has(toDateKey(cursor))) {
     cursor.setUTCDate(cursor.getUTCDate() - 1);
   }
   let streak = 0;
-  while (dateKeys.has(toDateKey(cursor))) {
-    streak++;
-    cursor.setUTCDate(cursor.getUTCDate() - 1);
-    if (streak >= 1825) break;  // safety
+  let graceUsed = false;
+  for (let i = 0; i < 1825; i++) { // 5y safety bound
+    if (dateKeys.has(toDateKey(cursor))) {
+      streak++;
+      cursor.setUTCDate(cursor.getUTCDate() - 1);
+    } else if (!graceUsed) {
+      graceUsed = true; // skip exactly one missed day
+      cursor.setUTCDate(cursor.getUTCDate() - 1);
+    } else {
+      break; // second missed day → end of streak
+    }
   }
   return streak;
 }

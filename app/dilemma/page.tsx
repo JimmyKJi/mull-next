@@ -95,13 +95,23 @@ export default async function DilemmaPage() {
     if (dateRows) {
       const dateSet = new Set(dateRows.map(r => r.dilemma_date as string));
       const cursor = new Date(today.dateKey);
-      // If today isn't done yet, the streak is whatever ran up to yesterday.
+      // Grace policy: one missed day is forgiven so a single forgotten
+      // morning doesn't reset hard-won progress. Two missed days break.
       if (!dateSet.has(cursor.toISOString().slice(0, 10))) {
         cursor.setUTCDate(cursor.getUTCDate() - 1);
       }
-      while (dateSet.has(cursor.toISOString().slice(0, 10))) {
-        streak++;
-        cursor.setUTCDate(cursor.getUTCDate() - 1);
+      let graceUsed = false;
+      for (let i = 0; i < 1825; i++) {
+        const k = cursor.toISOString().slice(0, 10);
+        if (dateSet.has(k)) {
+          streak++;
+          cursor.setUTCDate(cursor.getUTCDate() - 1);
+        } else if (!graceUsed) {
+          graceUsed = true;
+          cursor.setUTCDate(cursor.getUTCDate() - 1);
+        } else {
+          break;
+        }
       }
     }
   }

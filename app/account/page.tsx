@@ -12,6 +12,7 @@ import ProgressionPanel from '@/components/progression-panel';
 import { computeUserStats } from '@/lib/profile-progression';
 import DilemmaReminderCard from '@/components/dilemma-reminder-card';
 import ShareResultCard from '@/components/share-result-card';
+import ReflectionCard from '@/components/reflection-card';
 import { FIGURES } from '@/lib/figures';
 import { isAdminUserId } from '@/lib/admin';
 
@@ -272,20 +273,31 @@ export default async function AccountPage() {
 
   // Streak: number of consecutive days ending today (or yesterday if not done today)
   // on which the user submitted a dilemma response.
+  // Streak with one-day grace: a single missed day is forgiven so
+  // users who forget once don't lose hard-won progress. Two
+  // consecutive missed days break the streak.
   function computeStreak(dates: string[]): number {
     if (!dates.length) return 0;
     const set = new Set(dates);
     const today = new Date();
     today.setUTCHours(0, 0, 0, 0);
-    let streak = 0;
     const cursor = new Date(today);
-    // If they didn't answer today, start counting from yesterday
     if (!set.has(cursor.toISOString().slice(0, 10))) {
       cursor.setUTCDate(cursor.getUTCDate() - 1);
     }
-    while (set.has(cursor.toISOString().slice(0, 10))) {
-      streak++;
-      cursor.setUTCDate(cursor.getUTCDate() - 1);
+    let streak = 0;
+    let graceUsed = false;
+    for (let i = 0; i < 1825; i++) {
+      const k = cursor.toISOString().slice(0, 10);
+      if (set.has(k)) {
+        streak++;
+        cursor.setUTCDate(cursor.getUTCDate() - 1);
+      } else if (!graceUsed) {
+        graceUsed = true;
+        cursor.setUTCDate(cursor.getUTCDate() - 1);
+      } else {
+        break;
+      }
     }
     return streak;
   }
@@ -994,6 +1006,13 @@ export default async function AccountPage() {
           their progress bars start at zero and the unearned-badges
           preview shows what's coming. */}
       <ProgressionPanel stats={stats} locale={locale} />
+
+      {/* Reflection card — surfaces an 8+ week old dilemma response
+          back to the user with a follow-up textarea. Returns null
+          when there's nothing to surface (most users for the first
+          8 weeks). The single highest-impact transformation feature
+          we ship. */}
+      <ReflectionCard />
 
       {/* Daily-dilemma email reminder card — opt-in, time-zone aware.
           Sits inside /account so the privacy-respecting opt-in is the
