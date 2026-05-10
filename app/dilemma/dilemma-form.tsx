@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { t, type Locale } from '@/lib/translations';
+import DiagnosisCard from '@/components/diagnosis-card';
+import type { Kinship } from '@/lib/kinship';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
@@ -12,6 +14,9 @@ type SubmitResult = {
   saved: boolean;
   vector_delta: number[] | null;
   analysis: string | null;
+  diagnosis: string | null;
+  kinship: Kinship | null;
+  is_novel: boolean | null;
   analyzed: boolean;
 };
 
@@ -70,6 +75,9 @@ export default function DilemmaForm({ questionPrompt, locale = 'en' }: { questio
         saved: true,
         vector_delta: json.vector_delta,
         analysis: json.analysis,
+        diagnosis: json.diagnosis ?? null,
+        kinship: json.kinship ?? null,
+        is_novel: json.is_novel ?? null,
         analyzed: !!json.analyzed
       });
       router.refresh();
@@ -152,6 +160,15 @@ export default function DilemmaForm({ questionPrompt, locale = 'en' }: { questio
             past responses will be re-analyzed.
           </p>
         ) : null}
+
+        {/* Diagnosis: which philosophical move did this response make,
+            who else thought this way, what tradition does it sit in
+            (or is it novel). Renders nothing when all empty. */}
+        <DiagnosisCard
+          diagnosis={result.diagnosis}
+          kinship={result.kinship}
+          is_novel={result.is_novel}
+        />
 
         {shifts.length > 0 && (
           <div>

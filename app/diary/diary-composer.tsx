@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { t, type Locale } from '@/lib/translations';
+import DiagnosisCard from '@/components/diagnosis-card';
+import type { Kinship } from '@/lib/kinship';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
@@ -25,6 +27,9 @@ type SubmitResult = {
   id: string;
   vector_delta: number[] | null;
   analysis: string | null;
+  diagnosis: string | null;
+  kinship: Kinship | null;
+  is_novel: boolean | null;
   analyzed: boolean;
 };
 
@@ -195,6 +200,15 @@ export default function DiaryComposer({ locale = 'en' }: { locale?: Locale }) {
             integration is healthy. Your entry is intact.
           </p>
         ) : null}
+
+        {/* Diagnosis: which philosophical move did the entry make, who else
+            thought this way, what tradition does it sit in (or is it novel).
+            Renders nothing when all three fields are null/empty. */}
+        <DiagnosisCard
+          diagnosis={result.diagnosis}
+          kinship={result.kinship}
+          is_novel={result.is_novel}
+        />
 
         {shifts.length > 0 && (
           <div style={{ marginBottom: 16 }}>

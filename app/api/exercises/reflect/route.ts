@@ -17,28 +17,35 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { DIM_KEYS, DIM_NAMES, DIM_DESCRIPTIONS } from '@/lib/dimensions';
 import { findExercise } from '@/lib/exercises';
+import {
+  buildKinshipPromptFragment,
+  parseAndValidateDiagnosis,
+  type Kinship,
+} from '@/lib/kinship';
 
 function buildSystemPrompt(): string {
   const dimList = DIM_KEYS.map(k =>
     `- ${k} (${DIM_NAMES[k]}): ${DIM_DESCRIPTIONS[k]}`
   ).join('\n');
 
-  return `You are an analyst for Mull, a philosophy mapping tool. The user has just completed a structured philosophical exercise — a contemplative practice, a logic drill, or an argument-formation exercise — and written a short reflection on what came out of it. Your job is to read that reflection and produce a small vector delta indicating which philosophical dimensions their thinking momentarily leans toward.
+  return `You are an analyst for Mull, a philosophy mapping tool. The user has just completed a structured philosophical exercise — a contemplative practice, a logic drill, or an argument-formation exercise — and written a short reflection on what came out of it. Your job is to read that reflection and produce a small vector delta indicating which philosophical dimensions their thinking momentarily leans toward, plus a deeper diagnosis of the shape of the thinking, the closest historical kin, the traditions it echoes, and a judgement of whether the reflection says something genuinely novel.
 
 THE 16 DIMENSIONS (in fixed order):
 ${dimList}
 
-OUTPUT FORMAT — strict JSON only, no prose around it:
+OUTPUT FORMAT — strict JSON only, no prose around it. The JSON has these fields:
 {
   "vector_delta": [<16 numbers>],
   "analysis": "<one sentence>"
 }
+(plus the additional diagnosis fields specified below)
 
 Each value is a small signed number, typically in [-1.5, +1.5]. The values represent the lean of THIS specific reflection, not a wholesale identity claim. Most positions should be near zero. Move only on dimensions the reflection actually surfaces.
 
 The analysis is one sentence describing what the reflection revealed about how the person is currently thinking. Plain prose, no formatting.
 
-Do not over-attribute. Do not flatter. Reflections done well often surface contradictions or shifts — name those when you see them.`;
+Do not over-attribute. Do not flatter. Reflections done well often surface contradictions or shifts — name those when you see them.`
++ buildKinshipPromptFragment();
 }
 
 type ClaudeResponse = {
@@ -46,11 +53,19 @@ type ClaudeResponse = {
   error?: { message?: string; type?: string };
 };
 
+type ExerciseClaudeResult = {
+  vector_delta: number[];
+  analysis: string;
+  diagnosis: string;
+  kinship: Kinship;
+  is_novel: boolean;
+};
+
 async function callClaude(
   exerciseContext: string,
   reflection: string,
   apiKey: string
-): Promise<{ vector_delta: number[]; analysis: string } | null> {
+): Promise<ExerciseClaudeResult | null> {
   const userMessage = `Exercise context:\n${exerciseContext}\n\nThe person's reflection:\n${reflection.trim()}`;
 
   const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -62,7 +77,7 @@ async function callClaude(
     },
     body: JSON.stringify({
       model: 'claude-sonnet-4-6',
-      max_tokens: 600,
+      max_tokens: 1400,
       system: buildSystemPrompt(),
       messages: [{ role: 'user', content: userMessage }]
     })
@@ -92,7 +107,10 @@ async function callClaude(
     console.error('[exercises/reflect] no JSON in response:', text);
     return null;
   }
-  let parsed: { vector_delta?: unknown; analysis?: unknown };
+  let parsed: {
+    vector_delta?: unknown; analysis?: unknown;
+    diagnosis?: unknown; kinship?: unknown; is_novel?: unknown;
+  };
   try {
     parsed = JSON.parse(text.slice(start, end + 1));
   } catch (e) {
@@ -108,7 +126,8 @@ async function callClaude(
     return Number.isFinite(n) ? +n.toFixed(3) : 0;
   });
   const analysis = typeof parsed.analysis === 'string' ? parsed.analysis.trim() : '';
-  return { vector_delta: vec, analysis };
+  const { diagnosis, kinship, is_novel } = parseAndValidateDiagnosis(parsed, vec);
+  return { vector_delta: vec, analysis, diagnosis, kinship, is_novel };
 }
 
 export async function POST(req: Request) {
@@ -147,6 +166,9 @@ export async function POST(req: Request) {
     const apiKey = process.env.ANTHROPIC_API_KEY;
     let vectorDelta: number[] | null = null;
     let analysis: string | null = null;
+    let diagnosis: string | null = null;
+    let kinship: Kinship | null = null;
+    let is_novel = false;
     let analyzed = false;
 
     if (apiKey) {
@@ -154,6 +176,9 @@ export async function POST(req: Request) {
       if (claude) {
         vectorDelta = claude.vector_delta;
         analysis = claude.analysis;
+        diagnosis = claude.diagnosis;
+        kinship = claude.kinship;
+        is_novel = claude.is_novel;
         analyzed = true;
       }
     }
@@ -168,6 +193,9 @@ export async function POST(req: Request) {
         content,
         vector_delta: vectorDelta,
         analysis,
+        diagnosis,
+        kinship: kinship as unknown as object | null,
+        is_novel,
         word_count: wordCount,
         is_public: isPublic,
       })
@@ -184,6 +212,9 @@ export async function POST(req: Request) {
       id: row.id,
       vector_delta: vectorDelta,
       analysis,
+      diagnosis,
+      kinship,
+      is_novel,
       analyzed,
     });
   } catch (e) {

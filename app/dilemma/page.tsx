@@ -7,6 +7,8 @@ import DilemmaForm from './dilemma-form';
 import { getServerLocale } from '@/lib/locale-server';
 import { t, type Locale } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
+import DiagnosisCard from '@/components/diagnosis-card';
+import type { Kinship } from '@/lib/kinship';
 
 // Daily dilemma page is OK to index (the question itself is shareable),
 // but the user's response is private — only meta is open. Index allowed,
@@ -25,6 +27,9 @@ type ExistingResponse = {
   response_text: string;
   vector_delta: number[] | null;
   analysis: string | null;
+  diagnosis: string | null;
+  kinship: Kinship | null;
+  is_novel: boolean | null;
   created_at: string;
 };
 
@@ -66,7 +71,7 @@ export default async function DilemmaPage() {
   if (user) {
     const { data } = await supabase
       .from('dilemma_responses')
-      .select('id, question_text, response_text, vector_delta, analysis, created_at')
+      .select('id, question_text, response_text, vector_delta, analysis, diagnosis, kinship, is_novel, created_at')
       .eq('user_id', user.id)
       .eq('dilemma_date', today.dateKey)
       .maybeSingle<ExistingResponse>();
@@ -301,6 +306,12 @@ export default async function DilemmaPage() {
               </p>
             </div>
           )}
+          {/* Diagnosis card for the already-answered-today response. */}
+          <DiagnosisCard
+            diagnosis={existing.diagnosis}
+            kinship={existing.kinship}
+            is_novel={existing.is_novel}
+          />
           {shifts.length > 0 && (
             <div>
               <div style={{
