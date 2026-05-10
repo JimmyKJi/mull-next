@@ -14,6 +14,7 @@ import Link from 'next/link';
 import SearchPanel from './search-panel';
 import Leaderboard from './leaderboard';
 import EditorPicks from './editor-picks';
+import OriginalThinking from './original-thinking';
 import LeaderboardTabs, { type TabKey } from './leaderboard-tabs';
 import type { Metadata } from 'next';
 
@@ -33,7 +34,10 @@ export default async function SearchPage({
 }) {
   const locale = await getServerLocale();
   const sp = await searchParams;
-  const activeTab: TabKey = sp.tab === 'picks' ? 'picks' : 'activity';
+  const activeTab: TabKey =
+    sp.tab === 'picks' ? 'picks' :
+    sp.tab === 'original' ? 'original' :
+    'activity';
 
   return (
     <main style={{ maxWidth: 760, margin: '60px auto', padding: '0 24px 120px' }}>
@@ -95,11 +99,9 @@ export default async function SearchPage({
       </p>
 
       <LeaderboardTabs active={activeTab} />
-      {activeTab === 'activity' ? (
-        <Leaderboard locale={locale} />
-      ) : (
-        <EditorPicks locale={locale} />
-      )}
+      {activeTab === 'activity' && <Leaderboard locale={locale} />}
+      {activeTab === 'picks' && <EditorPicks locale={locale} />}
+      {activeTab === 'original' && <OriginalThinking />}
 
       <section>
         <h2 style={{

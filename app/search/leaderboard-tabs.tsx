@@ -15,17 +15,20 @@ import { useSearchParams } from 'next/navigation';
 
 const sans = "'Inter', system-ui, sans-serif";
 
-export type TabKey = 'activity' | 'picks';
+export type TabKey = 'activity' | 'picks' | 'original';
 
 const TABS: Array<{ key: TabKey; label: string }> = [
   { key: 'activity', label: 'Activity' },
-  { key: 'picks', label: "Editor's picks" },
+  { key: 'picks',    label: "Editor's picks" },
+  { key: 'original', label: 'Original thinking' },
 ];
 
 export function useActiveTab(): TabKey {
   const params = useSearchParams();
   const t = params.get('tab');
-  return t === 'picks' ? 'picks' : 'activity';
+  if (t === 'picks') return 'picks';
+  if (t === 'original') return 'original';
+  return 'activity';
 }
 
 export default function LeaderboardTabs({ active }: { active: TabKey }) {
@@ -35,6 +38,7 @@ export default function LeaderboardTabs({ active }: { active: TabKey }) {
       gap: 6,
       marginBottom: 18,
       borderBottom: '1px solid #EBE3CA',
+      flexWrap: 'wrap',
     }}>
       {TABS.map(tab => {
         const isActive = active === tab.key;
