@@ -8,6 +8,8 @@
 
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
+import { rateLimit } from '@/lib/rate-limit';
+import { logError } from '@/lib/error-log';
 
 export const runtime = 'nodejs';
 
@@ -30,6 +32,20 @@ export async function POST(req: Request) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
+  // Rate limit: 5 feedback notes per IP per 5 minutes. A real human
+  // typing 5+ separate notes in 5 minutes is implausible; bots get
+  // 429s. Authenticated users still go through this — friends pile-
+  // submitting at launch is unlikely past the 5/window threshold.
+  const limit = await rateLimit(req, {
+    bucket: 'feedback',
+    max: 5,
+    windowSec: 300,
+    userId: user?.id,
+  });
+  if (!limit.ok) {
+    return NextResponse.json({ error: limit.message }, { status: 429 });
+  }
+
   const { error } = await supabase
     .from('feedback')
     .insert({
@@ -41,6 +57,12 @@ export async function POST(req: Request) {
 
   if (error) {
     console.error('[feedback] insert failed', error);
+    await logError({
+      source: 'api:/feedback',
+      error: new Error(`feedback insert: ${error.message}`),
+      req,
+      userId: user?.id ?? null,
+    });
     return NextResponse.json({ error: 'Could not save feedback.' }, { status: 500 });
   }
 

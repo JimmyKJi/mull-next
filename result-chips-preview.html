@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Result chips — preview</title>
+<style>
+  :root {
+    --cream: #FAF6EC;
+    --cream-2: #FFFCF4;
+    --cream-line: #EBE3CA;
+    --ink: #221E18;
+    --ink-soft: #4A4338;
+    --acc: #B8862F;
+    --acc-deep: #8C6520;
+    --acc-soft: #F1EAD8;
+  }
+  body {
+    margin: 0; padding: 40px 20px 80px;
+    background: var(--cream);
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--ink);
+  }
+  .lab-eyebrow {
+    font-size: 11px; font-weight: 600;
+    color: var(--acc-deep); text-transform: uppercase;
+    letter-spacing: 0.18em; margin-bottom: 8px;
+  }
+  .lab-h1 {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 36px; font-weight: 500;
+    margin: 0 0 32px; letter-spacing: -0.5px;
+  }
+  .scenario {
+    max-width: 700px; margin: 0 auto 40px;
+    padding-bottom: 28px;
+    border-bottom: 1px dashed var(--cream-line);
+  }
+  .scenario-title {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px; font-weight: 600;
+    color: var(--acc-deep); margin-bottom: 4px;
+    letter-spacing: 0.04em;
+  }
+  .scenario-meta {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic; color: var(--ink-soft);
+    margin: 0 0 20px;
+  }
+
+  /* The actual production CSS — copied verbatim. */
+  .res-context {
+    max-width: 640px; margin: 0 auto 28px; padding: 0 16px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .res-context-card {
+    padding: 16px 20px;
+    background: var(--cream-2);
+    border: 1px solid var(--cream-line);
+    border-radius: 12px;
+    text-align: left;
+  }
+  .res-context-card.tight   { border-left: 3px solid var(--acc-deep); }
+  .res-context-card.tension { border-left: 3px solid #2F5D5C; }
+  .res-context-eyebrow {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 11px; font-weight: 600;
+    color: var(--acc-deep);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin-bottom: 8px;
+  }
+  .res-context-card.tension .res-context-eyebrow { color: #2F5D5C; }
+  .res-context-body {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 16px; line-height: 1.55;
+    color: var(--ink); margin: 0 0 8px;
+  }
+  .res-context-body em { color: var(--acc-deep); font-style: italic; font-weight: 500; }
+  .res-context-body strong { color: var(--ink); font-weight: 600; }
+  .res-context-cta {
+    display: inline-block;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px; font-weight: 500;
+    color: #2F5D5C;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    margin-top: 4px;
+  }
+  @media (max-width: 540px) {
+    .res-context { padding: 0 12px; }
+    .res-context-card { padding: 14px 16px; }
+    .res-context-body { font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="scenario">
+  <div class="lab-eyebrow">Preview · result-context chips</div>
+  <h1 class="lab-h1">How the post-quiz chips look</h1>
+</div>
+
+<div class="scenario">
+  <div class="scenario-title">SCENARIO 1 · CLOSE CALL ONLY</div>
+  <p class="scenario-meta">Camille the canonical Absurdist · top 49% Pilgrim, runner 37% Hammer · margin 0.032 cosine.</p>
+  <div class="res-context">
+    <div class="res-context-card tight">
+      <div class="res-context-eyebrow">A close call</div>
+      <p class="res-context-body">
+        You're <strong>49%</strong> aligned with <em>The Pilgrim</em>
+        and <strong>37%</strong> with <em>The Hammer</em>.
+        You're a hybrid — and the 16-dimensional position below is the more honest portrait.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="scenario">
+  <div class="scenario-title">SCENARIO 2 · TENSION ONLY</div>
+  <p class="scenario-meta">Pascal-style Romantic Rationalist · loves reason AND deeply mystical.</p>
+  <div class="res-context">
+    <div class="res-context-card tension">
+      <div class="res-context-eyebrow">A productive tension</div>
+      <p class="res-context-body">
+        Your answers hold a tension between <em>Trust in Reason</em>
+        and <em>Mystical Receptivity</em>. You trust careful reasoning AND you sense there are truths language can&#39;t reach. Reason as path AND as wall.
+        <br><span style="color:var(--ink-soft); font-size:14.5px;">Visible in your answers to Q3, Q8 (TR) and Q1, Q11 (MR).</span>
+      </p>
+      <p class="res-context-body" style="margin: 4px 0 6px;">
+        Not a contradiction — many of the deepest thinkers worked here. Company: Pascal, Wittgenstein, Spinoza.
+      </p>
+      <a class="res-context-cta" href="/diary">Explore this in your diary →</a>
+    </div>
+  </div>
+</div>
+
+<div class="scenario">
+  <div class="scenario-title">SCENARIO 3 · BOTH CHIPS</div>
+  <p class="scenario-meta">Spinoza-style Materialist Mystic · top 57% Touchstone / 56% Cartographer · TE+MR fires.</p>
+  <div class="res-context">
+    <div class="res-context-card tight">
+      <div class="res-context-eyebrow">A close call</div>
+      <p class="res-context-body">
+        You're <strong>57%</strong> aligned with <em>The Touchstone</em>
+        and <strong>56%</strong> with <em>The Cartographer</em>.
+        You're a hybrid — and the 16-dimensional position below is the more honest portrait.
+      </p>
+    </div>
+    <div class="res-context-card tension">
+      <div class="res-context-eyebrow">A productive tension</div>
+      <p class="res-context-body">
+        Your answers hold a tension between <em>Trust in Experience</em>
+        and <em>Mystical Receptivity</em>. You trust the empirical AND the apophatic. Evidence-first AND aware that some things slip through the net of words.
+        <br><span style="color:var(--ink-soft); font-size:14.5px;">Visible in your answers to Q5, Q9 (TE) and Q1, Q15 (MR).</span>
+      </p>
+      <p class="res-context-body" style="margin: 4px 0 6px;">
+        Not a contradiction — many of the deepest thinkers worked here. Company: Spinoza, William James, the later Wittgenstein.
+      </p>
+      <a class="res-context-cta" href="/diary">Explore this in your diary →</a>
+    </div>
+  </div>
+</div>
+
+<div class="scenario">
+  <div class="scenario-title">SCENARIO 4 · CLEAN WIN (NO CHIPS)</div>
+  <p class="scenario-meta">Lin the Buddhist contemplative · clean Threshold win, sim 0.744, runner 0.503. Chips suppressed entirely.</p>
+  <div class="res-context" style="display: none;"></div>
+  <p style="font-family: Cormorant Garamond, Georgia, serif; font-style: italic; color: var(--ink-soft); text-align: center;">
+    (Result section continues directly to the share row — no extra chips render.)
+  </p>
+</div>
+
+</body>
+</html>

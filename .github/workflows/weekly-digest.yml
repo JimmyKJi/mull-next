@@ -1,0 +1,44 @@
+# Weekly Sunday digest cron — fires once per week (Sunday 09:00 UTC)
+# and pings /api/cron/weekly-digest on Mull. The endpoint sends each
+# opted-in user a recap of their last 7 days.
+#
+# Schedule: 09:00 UTC = 10am London (BST), 9am London (GMT). Close
+# enough to "Sunday morning" for the audience.
+#
+# Setup: same as the hourly reminder — add CRON_SECRET as a repo
+# secret under Settings → Secrets and variables → Actions.
+#
+# The endpoint is idempotent at the user level (it only sends to
+# users who actually wrote something this week + are opted in). Late
+# runs are fine; double runs would double-send the digest, but
+# GitHub Actions doesn't normally double-fire scheduled workflows.
+
+name: Weekly digest
+
+on:
+  schedule:
+    - cron: '0 9 * * 0'     # Sundays at 09:00 UTC
+  workflow_dispatch: {}      # manual trigger for testing
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Mull weekly digest cron
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          if [ -z "$CRON_SECRET" ]; then
+            echo "::error::CRON_SECRET secret is missing. Add it under Repo Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+          response=$(curl -sS -w '\n%{http_code}' \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            https://mull.world/api/cron/weekly-digest)
+          body=$(echo "$response" | sed '$d')
+          status=$(echo "$response" | tail -n1)
+          echo "HTTP $status"
+          echo "$body"
+          if [ "$status" -ge 400 ]; then
+            exit 1
+          fi

@@ -14,6 +14,7 @@ import DilemmaReminderCard from '@/components/dilemma-reminder-card';
 import ShareResultCard from '@/components/share-result-card';
 import ReflectionCard from '@/components/reflection-card';
 import WelcomePinger from '@/components/welcome-pinger';
+import NextActionCard from '@/components/next-action-card';
 import { FIGURES } from '@/lib/figures';
 import { isAdminUserId } from '@/lib/admin';
 
@@ -468,6 +469,24 @@ export default async function AccountPage() {
           </div>
         </section>
       )}
+
+      {/* Adaptive next-action prompt — shows a single high-value
+          suggestion based on user state. Renders nothing for
+          brand-new users (the FirstStepCard grid above already covers
+          the "do anything" case), so the two don't fight. */}
+      <NextActionCard
+        quizCount={quizCount}
+        respondedToday={respondedToday}
+        streak={streak}
+        hasShareable={!!latestQuiz}
+        topArchetypeKey={latestQuiz?.archetype
+          ? latestQuiz.archetype
+              .replace(/^The\s+/i, '')
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, '-')
+              .replace(/^-+|-+$/g, '')
+          : undefined}
+      />
 
       {(quizCount > 0 || dilemmaCount > 0) && (
         <div style={{

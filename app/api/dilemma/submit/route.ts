@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { DIM_KEYS, DIM_NAMES, DIM_DESCRIPTIONS } from '@/lib/dimensions';
 import { DILEMMAS, getDailyDilemma } from '@/lib/dilemmas';
+import { rateLimit } from '@/lib/rate-limit';
+import { logError } from '@/lib/error-log';
 
 // Build the system prompt from the dimension table — one place to edit.
 function buildSystemPrompt(): string {
@@ -119,6 +121,20 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Not signed in.' }, { status: 401 });
     }
 
+    // Rate limit: 3 submissions per IP per 60 seconds. Anyone hitting
+    // this is a bot (or an over-eager double-clicker — same response).
+    // The submit endpoint also costs us a Claude call, so abuse here
+    // hurts the budget directly.
+    const limit = await rateLimit(req, {
+      bucket: 'dilemma_submit',
+      max: 3,
+      windowSec: 60,
+      userId: user.id,
+    });
+    if (!limit.ok) {
+      return NextResponse.json({ error: limit.message }, { status: 429 });
+    }
+
     const today = getDailyDilemma();
     const dateKey = today.dateKey;
 
@@ -182,6 +198,7 @@ export async function POST(req: Request) {
     });
   } catch (e) {
     console.error('[dilemma] unexpected error', e);
+    await logError({ source: 'api:/dilemma/submit', error: e, req });
     return NextResponse.json({ error: 'Server error.' }, { status: 500 });
   }
 }

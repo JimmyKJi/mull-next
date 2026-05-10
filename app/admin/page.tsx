@@ -17,6 +17,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/utils/supabase/server';
 import { createAdminClient } from '@/utils/supabase/admin';
 import { isAdminUserId } from '@/lib/admin';
+import { runHealthChecks } from '@/lib/service-health';
 import AdminAutoRefresh from './auto-refresh';
 import type { Metadata } from 'next';
 
@@ -40,6 +41,14 @@ type FeedbackRow = {
   created_at: string;
 };
 
+type ErrorRow = {
+  id: number;
+  source: string;
+  message: string;
+  url: string | null;
+  created_at: string;
+};
+
 type ArchetypeRow = { archetype: string };
 
 async function loadStats() {
@@ -54,6 +63,7 @@ async function loadStats() {
     dilemmaTotal, dilemmaToday, dilemmaDay,
     feedbackTotal, feedbackRecent,
     diaryTotal, exerciseTotal, debatesTotal,
+    errorsHour, errorsRecent,
   ] = await Promise.all([
     admin.auth.admin.listUsers({ page: 1, perPage: 1000 }),
     admin.from('quiz_attempts').select('*', { count: 'exact', head: true }),
@@ -68,6 +78,8 @@ async function loadStats() {
     admin.from('diary_entries').select('*', { count: 'exact', head: true }),
     admin.from('exercise_reflections').select('*', { count: 'exact', head: true }),
     admin.from('debate_history').select('*', { count: 'exact', head: true }),
+    admin.from('error_log').select('*', { count: 'exact', head: true }).gte('created_at', oneHourAgo),
+    admin.from('error_log').select('id, source, message, url, created_at').order('created_at', { ascending: false }).limit(8),
   ]);
 
   // Archetype distribution: tally the most-recent attempts.
@@ -109,6 +121,10 @@ async function loadStats() {
       debate: debatesTotal.count ?? 0,
     },
     archDistribution,
+    errors: {
+      hour: errorsHour.count ?? 0,
+      recent: (errorsRecent.data as ErrorRow[] | null) ?? [],
+    },
     fetchedAt: new Date().toISOString(),
   };
 }
@@ -119,7 +135,7 @@ export default async function AdminPage() {
   if (!user) redirect('/login?next=/admin');
   if (!isAdminUserId(user.id)) redirect('/account');
 
-  const stats = await loadStats();
+  const [stats, health] = await Promise.all([loadStats(), runHealthChecks()]);
 
   return (
     <main style={{ maxWidth: 920, margin: '0 auto', padding: '40px 24px 120px' }}>
@@ -156,6 +172,37 @@ export default async function AdminPage() {
           {new Date(stats.fetchedAt).toLocaleTimeString('en-GB')}
         </div>
       </header>
+
+      {/* Service health — green/amber/red chips. Render-fast. */}
+      <div style={{
+        display: 'flex',
+        gap: 10,
+        flexWrap: 'wrap',
+        marginBottom: 18,
+      }}>
+        {health.map(h => (
+          <div key={h.name} style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            padding: '7px 12px',
+            background: h.ok ? '#EFF5F1' : '#FBEEEA',
+            border: `1px solid ${h.ok ? '#C9DBCB' : '#E0BFB6'}`,
+            borderRadius: 999,
+            fontFamily: sans,
+            fontSize: 12,
+            color: h.ok ? '#2F5D5C' : '#7A2E2E',
+          }}>
+            <span style={{
+              width: 8, height: 8, borderRadius: 4,
+              background: h.ok ? '#3D8C7A' : '#7A2E2E',
+              display: 'inline-block',
+            }} />
+            <strong style={{ fontWeight: 600 }}>{h.name}</strong>
+            <span style={{ opacity: 0.75 }}>· {h.latencyMs}ms{h.note ? ` · ${h.note}` : ''}</span>
+          </div>
+        ))}
+      </div>
 
       {/* Top row: signups + quiz + dilemma — the launch-night vitals */}
       <div style={{
@@ -225,6 +272,52 @@ export default async function AdminPage() {
           </div>
         </section>
       )}
+
+      {/* Recent errors — surfaced first because they're actionable */}
+      <section style={{
+        ...cardStyle,
+        borderLeft: stats.errors.hour > 0 ? '3px solid #7A2E2E' : '1px solid #EBE3CA',
+      }}>
+        <h2 style={sectionTitle}>
+          Errors {stats.errors.hour > 0 && (
+            <span style={{ color: '#7A2E2E', fontSize: 16, marginLeft: 10 }}>
+              · {stats.errors.hour} in the last hour
+            </span>
+          )}
+        </h2>
+        <p style={sectionSub}>API and client errors — most recent 8.</p>
+        {stats.errors.recent.length === 0 ? (
+          <p style={{
+            fontFamily: serif, fontStyle: 'italic',
+            color: '#2F5D5C', margin: '14px 0 0',
+          }}>
+            No errors logged. Things are quiet.
+          </p>
+        ) : (
+          <ul style={{ listStyle: 'none', padding: 0, margin: '14px 0 0' }}>
+            {stats.errors.recent.map(e => (
+              <li key={e.id} style={{
+                padding: '12px 0',
+                borderBottom: '1px solid #EBE3CA',
+              }}>
+                <div style={{
+                  fontFamily: sans, fontSize: 11, color: '#7A2E2E',
+                  marginBottom: 4, letterSpacing: 0.3,
+                }}>
+                  {new Date(e.created_at).toLocaleString('en-GB')} · {e.source}
+                  {e.url && ` · ${e.url}`}
+                </div>
+                <p style={{
+                  fontFamily: 'ui-monospace, Menlo, monospace',
+                  fontSize: 13, color: '#221E18',
+                  margin: 0, lineHeight: 1.5, whiteSpace: 'pre-wrap',
+                  wordBreak: 'break-word',
+                }}>{e.message}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
 
       {/* Recent feedback */}
       <section style={cardStyle}>

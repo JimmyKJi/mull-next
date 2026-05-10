@@ -3,6 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Preconnect/DNS-prefetch to the third-party origins we hit during
+     boot. Saves a round-trip on first paint. -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://vthwhbhkoxzngaaagypj.supabase.co" crossorigin>
+<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+<!-- Supabase JS — must load before the inline init script in the body
+     that reads window.supabase synchronously. Tried `defer` but the
+     inline script's createClient() runs during parse and would race;
+     keeping this synchronous is the safe path. The preconnect above
+     means the request is in flight earlier so the parse-blocking
+     hit is still small. -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <title>Mull — Find your place on the map of how you think</title>
 <meta name="description" content="A philosophy app that asks you what you think — concretely, on real questions — and shows you where that places you in the long conversation. over 200 thinkers, 16 dimensions, no ads.">
@@ -787,6 +798,60 @@
   .resblurb {
     font-size: 18px; color: var(--ink-soft);
     max-width: 560px; margin: 0 auto;
+  }
+  /* Result context — shown when the user's profile is genuinely
+     hybrid (tight margin to runner-up) or when their answers
+     contain a productive philosophical tension between two
+     dimensions. Both situations are honest signals that "your
+     archetype is a starting point, not a verdict" applies more
+     than usual to this respondent. */
+  .res-context {
+    max-width: 640px;
+    margin: 0 auto 28px;
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .res-context-card {
+    padding: 16px 20px;
+    background: var(--cream-2, #FFFCF4);
+    border: 1px solid var(--cream-line, #EBE3CA);
+    border-radius: 12px;
+    text-align: left;
+  }
+  .res-context-card.tight   { border-left: 3px solid var(--acc-deep, #8C6520); }
+  .res-context-card.tension { border-left: 3px solid #2F5D5C; }
+  .res-context-eyebrow {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 11px; font-weight: 600;
+    color: var(--acc-deep, #8C6520);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin-bottom: 8px;
+  }
+  .res-context-card.tension .res-context-eyebrow { color: #2F5D5C; }
+  .res-context-body {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 16px; line-height: 1.55;
+    color: var(--ink, #221E18);
+    margin: 0 0 8px;
+  }
+  .res-context-body em { color: var(--acc-deep, #8C6520); font-style: italic; font-weight: 500; }
+  .res-context-body strong { color: var(--ink, #221E18); font-weight: 600; }
+  .res-context-cta {
+    display: inline-block;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px; font-weight: 500;
+    color: #2F5D5C;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    margin-top: 4px;
+  }
+  @media (max-width: 540px) {
+    .res-context { padding: 0 12px; }
+    .res-context-card { padding: 14px 16px; }
+    .res-context-body { font-size: 15px; }
   }
   /* Share row — shown directly under the result header to catch the
      peak emotional moment ("oh, I'm a Pilgrim!") and convert it into
@@ -2862,6 +2927,16 @@ html.embed-mode #embed-you-hint {
       <h1 id="resLabel" class="reslabel"></h1>
       <p id="resBlurb" class="resblurb"></p>
     </div>
+
+    <!-- Result context — populated by renderResultContext() in showResults().
+         Shows up to two chips:
+           1. "Tight call" chip when runner-up is within 0.05 sim of top.
+           2. "Productive tension" chip when two opposing dimensions both
+              register strongly in the user's vector.
+         Both are hidden by default and only render when their condition
+         applies; an entirely-clean result hides this whole region. -->
+    <div id="res-context" class="res-context" hidden></div>
+
     <!-- Share row: gives users a clean way to share their result. The
          actual button labels and href targets are wired in showResults()
          once we know the archetype. The native-share button hides
@@ -4927,7 +5002,11 @@ const ARCHETYPES = [
   { name:"The Cartographer", patron:"Aristotle", figureKey:"cartographer",
     color: { primary:"#1E3A5F", deep:"#0F2236", soft:"#E0E8F0", accent:"#3D6FA5" },
     blurb:"The patient mapper of how things fit together. You trust that careful, systematic thinking reaches lasting truth — and that the world rewards the people willing to do the work.",
-    p: v({TV:4,VA:6,WP:3,TR:9,TE:7,RT:6,MR:2,SR:3,CE:5,SS:5,PO:6,TD:9,AT:5,ES:5,UI:7,SI:3}),
+    // Aristotelian: phronesis (practical wisdom) = TR + TD + PO together.
+    // Bumped PO 6→8 so Aristotelian respondents who naturally hit PO
+    // heavy via Q9 ("list options"), Q16 ("slow change"), Q5 ("redefine
+    // the work") don't drift into Keel territory.
+    p: v({TV:4,VA:6,WP:3,TR:9,TE:7,RT:6,MR:2,SR:3,CE:5,SS:5,PO:8,TD:9,AT:5,ES:5,UI:7,SI:3}),
     shadow:"The Hammer" },
   { name:"The Keel", patron:"Marcus Aurelius", figureKey:"keel",
     color: { primary:"#8B5A2B", deep:"#5C3D1E", soft:"#F0E5D2", accent:"#B07A45" },
@@ -6661,6 +6740,198 @@ function resetThemeToDefault() {
   root.style.setProperty("--acc-bg", "#F8EDC8");
 }
 
+// Six canonical philosophical tensions — pairs of dimensions that
+// pull in opposite directions when held simultaneously. When a user
+// scores high on BOTH dimensions of a pair, surface it as a
+// "productive tension" rather than treating it as a contradiction:
+// many of the deepest thinkers held these together (Spinoza,
+// Wittgenstein, Pascal, Confucian-Daoists, Kierkegaard).
+//
+// Each entry has:
+//   keys:   the two dimension keys involved (order doesn't matter)
+//   label:  display copy describing the tension
+//   why:    one-sentence explanation that leaves the user feeling
+//           understood rather than judged
+//   peers:  thinkers who held this tension productively, used in
+//           the prompt copy to make it feel like company, not a flaw
+const TENSIONS = [
+  {
+    keys: ['TR', 'MR'],
+    label: 'Trust in Reason · Mystical Receptivity',
+    why: 'You trust careful reasoning AND you sense there are truths language can\'t reach. Reason as path AND as wall.',
+    peers: 'Pascal, Wittgenstein, Spinoza',
+  },
+  {
+    keys: ['AT', 'VA'],
+    label: 'Ascetic Tendency · Vital Affirmation',
+    why: 'You value restraint AND life as already-enough. Discipline as freedom AND pleasure as sufficient ground.',
+    peers: 'the late Hellenistic Stoics, Thoreau, the Zen poets',
+  },
+  {
+    keys: ['SS', 'CE'],
+    label: 'Sovereign Self · Communal Embeddedness',
+    why: 'You author your own life AND you exist through others. Your own person AND deeply of a place and people.',
+    peers: 'Confucius read against Mencius, Hegel, Charles Taylor',
+  },
+  {
+    keys: ['RT', 'SS'],
+    label: 'Reverence for Tradition · Sovereign Self',
+    why: 'You respect what came before AND you reserve the right to choose differently. Inheriting AND inventing in the same gesture.',
+    peers: 'Burke, Confucius, the conservative-libertarian tradition',
+  },
+  {
+    keys: ['TE', 'MR'],
+    label: 'Trust in Experience · Mystical Receptivity',
+    why: 'You trust the empirical AND the apophatic. Evidence-first AND aware that some things slip through the net of words.',
+    peers: 'Spinoza, William James, the later Wittgenstein',
+  },
+  {
+    keys: ['SI', 'SS'],
+    label: 'Self as Illusion · Sovereign Self',
+    why: 'You suspect the unified self is a story AND you live as the author of your life. The self is a fiction AND someone is writing it.',
+    peers: 'Buddhists who act, Parfit, the existentialist Buddhists',
+  },
+];
+
+// Detect the strongest active tension in the user's vector.
+// "Active" = both dim values are at least 60% of the user's max
+// dim value AND at least 30% of the sum of all dims (so we don't
+// flag tensions for sparse vectors). Returns the strongest one
+// (sum of the two dim values), or null if none qualify.
+function detectTension(userVec, DIM_KEYS_LOCAL) {
+  const max = Math.max(...userVec);
+  if (max < 4) return null; // not enough signal
+  const total = userVec.reduce((s, x) => s + x, 0);
+  if (total < 30) return null;
+  const minDim = Math.max(max * 0.6, 4);
+  const minRel = total * 0.05;
+  let best = null;
+  for (const t of TENSIONS) {
+    const i = DIM_KEYS_LOCAL.indexOf(t.keys[0]);
+    const j = DIM_KEYS_LOCAL.indexOf(t.keys[1]);
+    const a = userVec[i] || 0;
+    const b = userVec[j] || 0;
+    if (a < minDim || b < minDim) continue;
+    if (a < minRel || b < minRel) continue;
+    const score = a + b;
+    if (!best || score > best.score) best = { ...t, score, valA: a, valB: b };
+  }
+  return best;
+}
+
+function renderResultContext(userVec, sortedArches) {
+  const host = document.getElementById('res-context');
+  if (!host) return;
+  host.innerHTML = '';
+
+  let cards = 0;
+
+  // 1) Tight runner-up chip. Margin in cosine-sim space; 0.04 captures
+  //    "two-archetype tie" without false-positive on clean wins.
+  //    Suppressed when displayPct would render as 0 for the top
+  //    archetype — that means the user's vector landed below our
+  //    confidence floor, so showing "0% / 0%" reads as broken UI
+  //    rather than honest signal. The user already gets the "not yet
+  //    placed" message in that path.
+  const top = sortedArches[0];
+  const second = sortedArches[1];
+  if (top && second) {
+    const margin = top.sim - second.sim;
+    const topPct = displayPct(top.sim);
+    const secondPct = displayPct(second.sim);
+    if (margin < 0.04 && topPct > 0) {
+      const card = document.createElement('div');
+      card.className = 'res-context-card tight';
+      card.innerHTML = `
+        <div class="res-context-eyebrow">A close call</div>
+        <p class="res-context-body">
+          You're <strong>${topPct}%</strong> aligned with <em>${_escHtml(top.name)}</em>
+          and <strong>${secondPct}%</strong> with <em>${_escHtml(second.name)}</em>.
+          You're a hybrid — and the 16-dimensional position below is the more honest portrait.
+        </p>
+      `;
+      host.appendChild(card);
+      cards++;
+    }
+  }
+
+  // 2) Productive-tension chip. Reads the user's vector for a pair
+  //    of opposing dims that both fired strongly. If found, names
+  //    the tension and invites diary exploration.
+  const tension = detectTension(userVec, DIM_KEYS);
+  if (tension) {
+    const card = document.createElement('div');
+    card.className = 'res-context-card tension';
+    // We surface the SPECIFIC questions where each side likely fired,
+    // by scanning the active answer set. This makes the tension feel
+    // observed, not auto-generated.
+    const evidence = describeTensionEvidence(tension);
+    card.innerHTML = `
+      <div class="res-context-eyebrow">A productive tension</div>
+      <p class="res-context-body">
+        Your answers hold a tension between <em>${_escHtml(tension.label.split(' · ')[0])}</em>
+        and <em>${_escHtml(tension.label.split(' · ')[1])}</em>. ${_escHtml(tension.why)}
+        ${evidence ? '<br><span style="color:var(--ink-soft); font-size:14.5px;">' + _escHtml(evidence) + '</span>' : ''}
+      </p>
+      <p class="res-context-body" style="margin: 4px 0 6px;">
+        Not a contradiction — many of the deepest thinkers worked here. Company: ${_escHtml(tension.peers)}.
+      </p>
+      <a class="res-context-cta" href="/diary">Explore this in your diary →</a>
+    `;
+    host.appendChild(card);
+    cards++;
+  }
+
+  host.hidden = cards === 0;
+}
+
+// Tiny escape — just enough for the strings we drop into innerHTML
+// here (peer names, dim labels). Standalone because mull.html doesn't
+// already have one.
+function _escHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// Describe which questions contributed to each side of the tension.
+// state.answers is shaped as: index → number (single pick) | array
+// (multi pick) | 'optout' (skipped) | undefined (unanswered).
+// Returns a short phrase or '' if no per-question evidence found.
+function describeTensionEvidence(tension) {
+  try {
+    if (!state || !Array.isArray(state.answers)) return '';
+    const quiz = (typeof Q_ACTIVE !== 'undefined' && Q_ACTIVE) ? Q_ACTIVE : Q;
+    const idxA = DIM_KEYS.indexOf(tension.keys[0]);
+    const idxB = DIM_KEYS.indexOf(tension.keys[1]);
+    if (idxA < 0 || idxB < 0) return '';
+    const sideA = [];
+    const sideB = [];
+    state.answers.forEach((rec, qi) => {
+      if (rec === undefined || rec === 'optout') return;
+      const ans = (quiz[qi] || {}).a;
+      if (!ans) return;
+      const picks = Array.isArray(rec) ? rec : [rec];
+      for (const ci of picks) {
+        const a = ans[ci];
+        if (!a || !a.v) continue;
+        const va = a.v[idxA] || 0;
+        const vb = a.v[idxB] || 0;
+        if (va > 0) sideA.push(qi + 1);
+        if (vb > 0) sideB.push(qi + 1);
+      }
+    });
+    if (sideA.length === 0 || sideB.length === 0) return '';
+    const aTxt = 'Q' + sideA.slice(0, 2).join(', Q');
+    const bTxt = 'Q' + sideB.slice(0, 2).join(', Q');
+    return `Visible in your answers to ${aTxt} (${tension.keys[0]}) and ${bTxt} (${tension.keys[1]}).`;
+  } catch (e) {
+    console.warn('[mull] tension-evidence failed', e);
+    return '';
+  }
+}
+
 function showResults() {
   _hideAllSections();
   document.getElementById("results").hidden = false;
@@ -6716,6 +6987,7 @@ function showResults() {
     }
   }
 
+  renderResultContext(userVec, arches);
   renderWhy(top, arches[1], userVec);
   renderDebates(userVec);
   renderRoles(userVec, top);
