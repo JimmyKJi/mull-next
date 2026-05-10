@@ -16,6 +16,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://mull.world"),
   title: {
     default: "Mull",
     template: "%s — Mull",
@@ -27,11 +28,13 @@ export const metadata: Metadata = {
     siteName: "Mull",
     type: "website",
     url: "https://mull.world",
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Mull — find your place on the map of how you think." }],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Mull",
     description: "Find your place on the map of how you think.",
+    images: ["/og.png"],
   },
 };
 

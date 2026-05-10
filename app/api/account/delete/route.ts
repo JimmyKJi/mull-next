@@ -55,6 +55,7 @@ export async function POST(req: Request) {
     await wipe('diary_embeddings');
     await wipe('diary_clusters');
     await wipe('diary_entry_clusters');
+    await wipe('welcome_emails');
     // Note: `feedback` rows are kept (with user_id NULLed via FK
     // ON DELETE SET NULL) because the body text is the maintainer's
     // research record, not personal data. The user's identifier

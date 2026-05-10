@@ -13,6 +13,7 @@ import { computeUserStats } from '@/lib/profile-progression';
 import DilemmaReminderCard from '@/components/dilemma-reminder-card';
 import ShareResultCard from '@/components/share-result-card';
 import ReflectionCard from '@/components/reflection-card';
+import WelcomePinger from '@/components/welcome-pinger';
 import { FIGURES } from '@/lib/figures';
 import { isAdminUserId } from '@/lib/admin';
 
@@ -1013,6 +1014,11 @@ export default async function AccountPage() {
           8 weeks). The single highest-impact transformation feature
           we ship. */}
       <ReflectionCard />
+
+      {/* Fires the one-time welcome email on first /account view. Renders
+          nothing visible. Idempotent — the endpoint checks whether
+          we've already sent before firing. */}
+      <WelcomePinger />
 
       {/* Daily-dilemma email reminder card — opt-in, time-zone aware.
           Sits inside /account so the privacy-respecting opt-in is the
