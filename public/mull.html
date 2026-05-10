@@ -189,11 +189,13 @@
   @media (max-width: 540px) {
     .pill.draft { display: none; }
   }
-  /* Tight phones: drop the secondary nav links to keep the bar from
-     wrapping into two rows. The hidden routes (Diary, Simulated debate,
-     Archetypes) stay reachable from /account and from inside the quiz. */
+  /* On phones the brandbar is allowed to wrap to multiple rows
+     rather than hiding routes — every feature should be reachable
+     from the front page navigation, especially since users
+     arriving from social media will land here first. */
   @media (max-width: 460px) {
-    .brandbar-link.brandbar-link-secondary { display: none; }
+    .brandbar-link { font-size: 12.5px; }
+    .brandbar-right { gap: 10px 12px; }
   }
   .brandbar-link {
     background: none; border: none;

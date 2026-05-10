@@ -96,10 +96,17 @@ export default async function GlobalTopBar() {
         }
         @media (max-width: 700px) {
           .mull-topbar-shell { padding: 18px 18px 0; }
-          .mull-topbar-inner { margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
-          .mull-topbar-right { gap: 10px; flex-wrap: wrap; }
+          .mull-topbar-inner { margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+          .mull-topbar-right {
+            gap: 10px;
+            flex-wrap: wrap;
+            /* On mobile the nav row wraps to fit everything — no
+               links are hidden so every feature stays reachable.
+               Slightly smaller font keeps it from dominating. */
+            font-size: 13px;
+          }
+          .mull-topbar-link { font-size: 13px; padding: 3px 0; }
           .mull-topbar-brand { font-size: 32px; }
-          .mull-topbar-link-secondary { display: none; }
         }
       `}</style>
 
