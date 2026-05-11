@@ -102,46 +102,115 @@ export const DIM_NARRATIONS: Record<string, DimNarration> = {
   },
 };
 
-// Compute the top N most-divergent dimensions between two 16-D
-// vectors. Returns each as { key, label, diff, aText, bText }
-// where aText/bText are the appropriate pole sentence for each user.
-export function topDivergences(
-  vecA: number[],
-  vecB: number[],
-  n = 3,
-): Array<{
+// Scale midpoint for high/low — vectors range roughly [0, 12].
+const MIDPOINT = 6;
+
+export type CompareLine = {
   key: string;
   label: string;
   aValue: number;
   bValue: number;
   diff: number;
+  poleFlip: boolean;       // true when users sit on opposite sides of the midpoint
   aText: string;
   bText: string;
-}> {
+};
+
+// Render one user's stance on a dimension as a degree-qualified
+// sentence. "strongly", "moderately", "leans" gives us same-side
+// gradation so two users who both score "high" on Practical Orientation
+// but with different magnitudes (9 vs 7) read as DIFFERENT sentences.
+function poleSentence(value: number, narration: DimNarration): string {
+  const high = value >= MIDPOINT;
+  const pole = high ? narration.high : narration.low;
+  // Distance from the midpoint, capped at 6 (the max it can be on
+  // either side). Buckets: 0-1 "leans", 1-3 "moderately", 3+ "strongly".
+  const dist = Math.abs(value - MIDPOINT);
+  let qualifier: string;
+  if (dist >= 3) qualifier = 'strongly';
+  else if (dist >= 1) qualifier = 'moderately';
+  else qualifier = 'just barely';
+  // Splice the qualifier in: "is grounded" → "is strongly grounded".
+  // For pole sentences starting with "is/sees/trusts/affirms/..." we
+  // inject after the verb. Otherwise we prefix.
+  const m = pole.match(/^(is|sees|trusts|affirms|values|treats|takes|looks|shapes|distrusts|demands|experiences|finds|mistrusts|thinks|weights|is open|is willing|is rooted|is suspicious|is drawn|is pulled|is grounded)\b\s*/i);
+  if (m) {
+    return `${m[0]}${qualifier} ${pole.slice(m[0].length)}`;
+  }
+  return `${qualifier} ${pole}`;
+}
+
+function buildLine(
+  key: string,
+  aValue: number,
+  bValue: number,
+): CompareLine {
+  const meta = DIM_NARRATIONS[key];
+  const diff = Math.abs(aValue - bValue);
+  const aHigh = aValue >= MIDPOINT;
+  const bHigh = bValue >= MIDPOINT;
+  return {
+    key,
+    label: meta?.label ?? key,
+    aValue,
+    bValue,
+    diff,
+    poleFlip: aHigh !== bHigh,
+    aText: meta ? poleSentence(aValue, meta) : '',
+    bText: meta ? poleSentence(bValue, meta) : '',
+  };
+}
+
+// Compute the top N most-divergent dimensions between two 16-D
+// vectors. Pole-flips (users on opposite sides of the midpoint) are
+// promoted above same-side gaps of equal magnitude — they're the
+// most legible divergences and should lead the list. Ties on
+// pole-flip status are broken by raw |a-b|.
+export function topDivergences(
+  vecA: number[],
+  vecB: number[],
+  n = 3,
+): CompareLine[] {
   if (!Array.isArray(vecA) || !Array.isArray(vecB) || vecA.length !== 16 || vecB.length !== 16) {
     return [];
   }
-  const rows = DIM_KEYS.map((key, i) => ({
-    key,
-    aValue: vecA[i],
-    bValue: vecB[i],
-    diff: Math.abs(vecA[i] - vecB[i]),
-  }));
-  rows.sort((a, b) => b.diff - a.diff);
-  return rows.slice(0, n).map(r => {
-    const meta = DIM_NARRATIONS[r.key];
-    // Normalize to scale-pole — vectors range roughly [0, 12] in this
-    // model. "High" if you score above 6; otherwise low.
-    const aHigh = r.aValue >= 6;
-    const bHigh = r.bValue >= 6;
-    return {
-      key: r.key,
-      label: meta?.label ?? r.key,
-      aValue: r.aValue,
-      bValue: r.bValue,
-      diff: r.diff,
-      aText: meta ? (aHigh ? meta.high : meta.low) : '',
-      bText: meta ? (bHigh ? meta.high : meta.low) : '',
-    };
+  const rows = DIM_KEYS.map((key, i) => buildLine(key, vecA[i], vecB[i]));
+  rows.sort((a, b) => {
+    // Pole-flips first (a divergence across the midpoint reads as a
+    // real disagreement, not just a magnitude gap).
+    if (a.poleFlip !== b.poleFlip) return a.poleFlip ? -1 : 1;
+    // Then by absolute magnitude difference.
+    return b.diff - a.diff;
   });
+  return rows.slice(0, n);
+}
+
+// Counterpart to topDivergences — the dimensions where the two users
+// land MOST closely. Returns lines where both users sit at very
+// similar values; the sentences will read near-identically, and that
+// proximity is exactly the point.
+export function topConvergences(
+  vecA: number[],
+  vecB: number[],
+  n = 3,
+): CompareLine[] {
+  if (!Array.isArray(vecA) || !Array.isArray(vecB) || vecA.length !== 16 || vecB.length !== 16) {
+    return [];
+  }
+  const rows = DIM_KEYS.map((key, i) => buildLine(key, vecA[i], vecB[i]));
+  rows.sort((a, b) => {
+    // Same-pole first (real convergence puts you on the same side of
+    // the midpoint), then by smallest |a-b|.
+    if (a.poleFlip !== b.poleFlip) return a.poleFlip ? 1 : -1;
+    return a.diff - b.diff;
+  });
+  // Filter: only count it as a convergence if both users actually
+  // have signal on that dimension (one of them at least 1 away from
+  // midpoint). Two users both scoring exactly 6 isn't a real
+  // convergence, it's a shared lack of opinion.
+  const filtered = rows.filter(r => {
+    if (r.poleFlip) return false;
+    return Math.abs(r.aValue - MIDPOINT) >= 1 || Math.abs(r.bValue - MIDPOINT) >= 1;
+  });
+  return filtered.slice(0, n);
 }

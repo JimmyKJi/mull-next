@@ -17,7 +17,7 @@ import type { Metadata } from 'next';
 import { DIM_KEYS, DIM_NAMES } from '@/lib/dimensions';
 import { ARCHETYPES } from '@/lib/archetypes';
 import { FIGURES } from '@/lib/figures';
-import { topDivergences } from '@/lib/dim-narration';
+import { topDivergences, topConvergences } from '@/lib/dim-narration';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
@@ -128,6 +128,7 @@ export default async function ComparePage({
   }
 
   const divergences = topDivergences(you.position, them.position, 3);
+  const convergences = topConvergences(you.position, them.position, 3);
   const youName = you.profile.display_name || `@${you.profile.handle}`;
   const themName = them.profile.display_name || `@${them.profile.handle}`;
   const youSlug = archetypeKey(you.archetype?.archetype);
@@ -202,6 +203,14 @@ export default async function ComparePage({
                 letterSpacing: '0.16em', marginBottom: 6,
               }}>
                 {i === 0 ? 'Biggest divergence' : `#${i + 1}`} · {d.label}
+                {d.poleFlip && (
+                  <span style={{
+                    marginLeft: 8,
+                    color: '#7A2E2E',
+                    fontSize: 9.5,
+                    letterSpacing: '0.18em',
+                  }}>↔ opposite poles</span>
+                )}
               </div>
               <p style={{
                 fontFamily: serif, fontSize: 16, color: '#221E18',
@@ -215,6 +224,47 @@ export default async function ComparePage({
           ))}
         </ul>
       </section>
+
+      {/* Top convergences — counterpart section. Only renders when
+          there are dimensions where both users have real signal AND
+          land on the same side; pure 0/0 ties (shared lack of
+          opinion) are filtered out by topConvergences(). */}
+      {convergences.length > 0 && (
+        <section style={{
+          marginBottom: 36,
+          padding: '24px 26px',
+          background: '#FFFCF4',
+          border: '1px solid #EBE3CA',
+          borderLeft: '3px solid #2F5D5C',
+          borderRadius: 8,
+        }}>
+          <div style={{
+            ...eyebrow,
+            color: '#2F5D5C',
+          }}>Where you converge most</div>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 16 }}>
+            {convergences.map((c, i) => (
+              <li key={c.key}>
+                <div style={{
+                  fontFamily: sans, fontSize: 11, fontWeight: 600,
+                  color: '#2F5D5C', textTransform: 'uppercase',
+                  letterSpacing: '0.16em', marginBottom: 6,
+                }}>
+                  {i === 0 ? 'Strongest agreement' : `#${i + 1}`} · {c.label}
+                </div>
+                <p style={{
+                  fontFamily: serif, fontSize: 16, color: '#221E18',
+                  margin: 0, lineHeight: 1.55,
+                }}>
+                  <strong style={{ fontWeight: 500 }}>{youName}</strong> {c.aText}.
+                  <br />
+                  <strong style={{ fontWeight: 500 }}>{themName}</strong> {c.bText}.
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {/* Full 16-dim side-by-side table */}
       <section style={{ marginBottom: 36 }}>
