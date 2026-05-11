@@ -211,14 +211,19 @@
   .brandbar-link {
     background: none; border: none;
     font-family: inherit; font-size: 14px;
+    font-weight: 400;          /* uniform regular weight across the bar */
     color: var(--ink-soft);
     cursor: pointer;
     padding: 4px 2px;
     transition: color .15s ease;
     text-decoration: none;
+    letter-spacing: 0.1px;
   }
   .brandbar-link:hover { color: var(--acc-deep); }
-  a.brandbar-link { color: var(--ink); font-weight: 500; }
+  /* Anchors and buttons render identically — same weight, same color,
+     same hover. Previously anchors were bolded which made them visually
+     compete with the brand wordmark. */
+  a.brandbar-link { color: var(--ink-soft); font-weight: 400; }
   a.brandbar-link:hover { color: var(--acc-deep); }
   /* Progressive disclosure — authed-only nav links are hidden for visitors
      who aren't signed in, since those features all require an account anyway.
@@ -2635,20 +2640,24 @@ html.embed-mode #embed-you-hint {
   <div class="brandbar-inner brandbar">
     <div class="brand" onclick="showLanding()" style="cursor:pointer;">Mull<span>.</span></div>
     <div class="brandbar-right">
+      <!-- Daily practice surfaces (signed-in-or-out). Order: dilemma
+           first (the daily ritual), then explorable content, then
+           tools, then about. -->
       <a class="brandbar-link" href="/dilemma" data-i18n="nav.dilemma">Today's dilemma</a>
       <a class="brandbar-link brandbar-link-secondary" href="/exercises" data-i18n="nav.exercises">Exercises</a>
       <button class="brandbar-link brandbar-link-secondary" onclick="showGallery()" data-i18n="nav.archetypes">Archetypes</button>
       <a class="brandbar-link brandbar-link-secondary" href="/philosopher" data-i18n="nav.philosophers">Thinkers</a>
-      <button class="brandbar-link" onclick="showAbout()" data-i18n="nav.about">About</button>
+      <!-- Compare lives alongside Leaderboard — both are "look at other
+           people's maps" surfaces. Visible to everyone since the
+           compare page handles its own auth + handle entry. -->
+      <a class="brandbar-link brandbar-link-secondary" href="/compare" data-i18n="nav.compare">Compare</a>
+      <a class="brandbar-link brandbar-link-secondary" href="/search" data-i18n="nav.search_leaderboard">Leaderboard</a>
       <!-- Authed-only: these features all require an account, so we hide them
            until the user is signed in. JS sets body.is-authed when the auth
            callback runs. -->
       <a class="brandbar-link brandbar-link-secondary brandbar-link-authed" href="/diary" data-i18n="nav.diary">Diary</a>
       <a class="brandbar-link brandbar-link-secondary brandbar-link-authed" href="/debate" data-i18n="nav.debate">Simulated debate</a>
-      <!-- Leaderboard is visible to everyone — public profiles are world-readable
-           and the leaderboard is the most useful "what is this place" surface
-           after the quiz. Sign-in flow runs from the page itself. -->
-      <a class="brandbar-link brandbar-link-secondary" href="/search" data-i18n="nav.search_leaderboard">Leaderboard</a>
+      <button class="brandbar-link" onclick="showAbout()" data-i18n="nav.about">About</button>
       <!-- Auth chip is always visible. JS swaps text + destination based on
            CURRENT_USER (see renderAuthNav). Default text covers signed-out
            visitors so the link is never blank during initial render. -->
@@ -6099,6 +6108,8 @@ const HOME_I18N = {
   "nav.archetypes":    { en: "Archetypes", es: "Arquetipos", fr: "Archétypes", pt: "Arquétipos", ru: "Архетипы", zh: "原型", ja: "アーキタイプ", ko: "유형" },
   "nav.search":        { en: "Search minds", es: "Buscar mentes", fr: "Rechercher des esprits", pt: "Buscar mentes", ru: "Поиск умов", zh: "寻找思想者", ja: "ほかの人を探す", ko: "다른 사람 찾기" },
   "nav.exercises":     { en: "Exercises", es: "Ejercicios", fr: "Exercices", pt: "Exercícios", ru: "Упражнения", zh: "练习", ja: "エクササイズ", ko: "수련" },
+  "nav.compare":       { en: "Compare", es: "Comparar", fr: "Comparer", pt: "Comparar", ru: "Сравнить", zh: "对比", ja: "比較", ko: "비교" },
+  "nav.search_leaderboard": { en: "Leaderboard", es: "Clasificación", fr: "Classement", pt: "Ranking", ru: "Рейтинг", zh: "排行榜", ja: "ランキング", ko: "리더보드" },
   "quiz.question_count": { en: "Question {n} of {m}", es: "Pregunta {n} de {m}", fr: "Question {n} sur {m}", pt: "Pergunta {n} de {m}", ru: "Вопрос {n} из {m}", zh: "第 {n} 题 / 共 {m} 题", ja: "問 {n} / {m}", ko: "질문 {n} / {m}" },
   "quiz.multi_hint":     { en: "Pick up to {max} that genuinely fit.", es: "Elige hasta {max} que de verdad encajen.", fr: "Choisis jusqu'à {max} qui te correspondent vraiment.", pt: "Escolha até {max} que realmente se encaixem.", ru: "Выберите до {max}, которые вам по-настоящему подходят.", zh: "最多选 {max} 项 —— 选真正贴近你的。", ja: "本当に当てはまるものを最大 {max} つ選ぶ。", ko: "정말로 맞는 것 최대 {max}개를 고르세요." },
   "quiz.skip":           { en: "Skip — none of these fit me", es: "Saltar — ninguna me encaja", fr: "Passer — aucune ne me correspond", pt: "Pular — nenhuma se encaixa em mim", ru: "Пропустить — ни одна не подходит", zh: "跳过 —— 都不太像我", ja: "スキップ — どれもしっくり来ない", ko: "건너뛰기 — 어느 것도 나와 맞지 않는다" },

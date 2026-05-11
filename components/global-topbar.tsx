@@ -69,7 +69,10 @@ export default async function GlobalTopBar() {
           font-family: ${sans};
           font-size: 14px;
           color: #4A4338;
-          font-weight: 500;
+          /* Uniform regular weight — matches mull.html's brandbar so
+             the chrome reads as one continuous bar across surfaces. */
+          font-weight: 400;
+          letter-spacing: 0.1px;
           cursor: pointer;
           padding: 4px 2px;
           text-decoration: none;
@@ -82,7 +85,7 @@ export default async function GlobalTopBar() {
           border-radius: 999px;
           background: #FFFCF4;
           font-size: 13.5px;
-          font-weight: 500;
+          font-weight: 400;
           color: #221E18;
           text-decoration: none;
         }
@@ -116,6 +119,9 @@ export default async function GlobalTopBar() {
             Mull<span>.</span>
           </Link>
           <nav className="mull-topbar-right" aria-label="Primary">
+            {/* Order mirrors mull.html: daily ritual → explorable
+                content → "look at other people's maps" → authed-only
+                practices → About → auth chip. */}
             <Link href="/dilemma" className="mull-topbar-link">
               {t('nav.dilemma', locale)}
             </Link>
@@ -128,14 +134,11 @@ export default async function GlobalTopBar() {
             <Link href="/philosopher" className="mull-topbar-link mull-topbar-link-secondary">
               {t('nav.philosophers', locale)}
             </Link>
-            <Link href="/about" className="mull-topbar-link">
-              {t('nav.about', locale)}
+            <Link href="/compare" className="mull-topbar-link mull-topbar-link-secondary">
+              {t('nav.compare', locale)}
             </Link>
             <Link href="/search" className="mull-topbar-link mull-topbar-link-secondary">
               {t('nav.search_leaderboard', locale)}
-            </Link>
-            <Link href="/compare" className="mull-topbar-link mull-topbar-link-secondary">
-              Compare
             </Link>
             {user && (
               <>
@@ -147,6 +150,9 @@ export default async function GlobalTopBar() {
                 </Link>
               </>
             )}
+            <Link href="/about" className="mull-topbar-link">
+              {t('nav.about', locale)}
+            </Link>
             <Link
               href={user ? '/account' : '/login'}
               className="mull-topbar-link mull-topbar-chip"
