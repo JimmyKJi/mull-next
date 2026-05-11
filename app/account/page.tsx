@@ -16,6 +16,7 @@ import ReflectionCard from '@/components/reflection-card';
 import WelcomePinger from '@/components/welcome-pinger';
 import NextActionCard from '@/components/next-action-card';
 import ReferralCard from '@/components/referral-card';
+import PendingAttemptClaimer from '@/components/pending-attempt-claimer';
 import { FIGURES } from '@/lib/figures';
 import { isAdminUserId } from '@/lib/admin';
 
@@ -1050,6 +1051,12 @@ export default async function AccountPage() {
           nothing visible. Idempotent — the endpoint checks whether
           we've already sent before firing. */}
       <WelcomePinger />
+
+      {/* Reads localStorage for a quiz result completed by an
+          anonymous visitor before signup and claims it to this
+          account. Renders nothing; refreshes the page on success
+          so the trajectory rerenders with the new attempt. */}
+      <PendingAttemptClaimer />
 
       {/* Friend referral card — generates the user's invite link
           (lazily, via /api/referral/save) and shows a count of

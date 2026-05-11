@@ -3288,9 +3288,40 @@ let CURRENT_USER = null;
 })();
 // ----------------------------------------------------------------------
 
+// localStorage key for a quiz result completed by an anonymous
+// visitor — survives across the signup → email-confirm → /account
+// redirect so the result claims itself once they're signed in.
+// See components/pending-attempt-claimer.tsx for the consumer.
+const PENDING_ATTEMPT_KEY = 'mull.pending_quiz_attempt';
+
+function stashPendingAttempt(vec, archetypeName, flavor, alignmentPct) {
+  try {
+    const payload = {
+      vector: vec,
+      archetype: archetypeName,
+      flavor: flavor || null,
+      alignment_pct: alignmentPct,
+      taken_at: new Date().toISOString(),
+      version: 1,
+    };
+    localStorage.setItem(PENDING_ATTEMPT_KEY, JSON.stringify(payload));
+  } catch (e) {
+    // Storage quota / privacy mode — non-fatal. The user just loses
+    // the auto-claim convenience; they can retake the quiz after
+    // signing up.
+    console.warn('[mull] could not stash pending attempt', e);
+  }
+}
+
 async function saveAttempt(vec, archetypeName, flavor, alignmentPct) {
   if (window.__MULL_EMBED__) return { skipped: true };
-  if (!CURRENT_USER) return { skipped: true };
+  if (!CURRENT_USER) {
+    // Stash for post-signup claim. Even though the user is "skipped"
+    // right now, the result is preserved so they don't have to
+    // retake the quiz after creating their account.
+    stashPendingAttempt(vec, archetypeName, flavor, alignmentPct);
+    return { skipped: true, stashed: true };
+  }
   const { error } = await sb.from('quiz_attempts').insert({
     user_id: CURRENT_USER.id,
     vector: vec,
@@ -3299,6 +3330,9 @@ async function saveAttempt(vec, archetypeName, flavor, alignmentPct) {
     alignment_pct: alignmentPct
   });
   if (error) { console.warn('save failed', error); return { error }; }
+  // Successful save by an authed user — clear any leftover stash
+  // from a prior anonymous session on the same device.
+  try { localStorage.removeItem(PENDING_ATTEMPT_KEY); } catch {}
   return { saved: true };
 }
 function renderAuthNav() {
@@ -7059,8 +7093,13 @@ function showResults() {
       const note = document.getElementById('save-status');
       if (!note) return;
       if (r.saved) note.textContent = '✓ Saved to your account';
-      else if (r.skipped) note.innerHTML = '<a href="/login" style="color:var(--acc-deep);">Sign in</a> to save this result';
-      else note.textContent = '';
+      else if (r.skipped && r.stashed) {
+        // Guest result was stashed in localStorage; once they sign
+        // up or sign in on this device the result auto-claims.
+        note.innerHTML = 'Your result is held on this device. <a href="/signup" style="color:var(--acc-deep);">Create an account</a> to keep it and track how it shifts.';
+      } else if (r.skipped) {
+        note.innerHTML = '<a href="/login" style="color:var(--acc-deep);">Sign in</a> to save this result';
+      } else note.textContent = '';
     });
   } catch (e) { console.warn(e); }
 }
