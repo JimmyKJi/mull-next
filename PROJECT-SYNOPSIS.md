@@ -6,7 +6,7 @@ A handoff briefing for a fresh Claude chat. Read this top-to-bottom before touch
 
 ## What Mull is
 
-Mull (mull.world) is a philosophy app, not a personality test. The core insight: instead of teaching you what dead philosophers thought, ask what *you* think on real questions, then show you where your worldview sits among ~200 historical thinkers.
+Mull (mull.world) is a philosophy app, not a personality test. The core insight: instead of teaching you what dead philosophers thought, ask what *you* think on real questions, then show you where your worldview sits among ~500 historical thinkers.
 
 The maintainer is **Jimmy** (jimmy.kaian.ji@gmail.com). It's a passion project, hand-built nights-and-weekends, no investors, no ads. Currently v0.9 — soft-launching to ~30–50 friends from Instagram + TikTok on **Tuesday May 12 2026 at 7pm London**.
 
@@ -18,7 +18,7 @@ The product is built around four ideas:
 
 3. **A daily dilemma** — one new philosophical question each morning. The user writes a free-text response; Claude analyzes it into a small dimensional shift, which moves the user's vector over time. The trail of shifts is visible on /account.
 
-4. **A constellation of ~200 philosophers** with hand-tuned 16-D positions, browsable on /philosopher and visible as nearby stars on the user's map.
+4. **A constellation of ~500 philosophers** with hand-tuned 16-D positions, browsable on /philosopher and visible as nearby stars on the user's map.
 
 Other surfaces: diary (long-form journaling that also shifts the vector), exercises (Stoic / Socratic / Buddhist practices like premortem, steelmanning, view-from-above), debate (simulated philosopher debates via Claude), compare (side-by-side maps of two users), share (screenshot-friendly result card), leaderboard (public profiles ranked by activity).
 
@@ -130,7 +130,7 @@ lib/
   dimensions.ts            ← DIM_KEYS, DIM_NAMES, topShifts(). 16 dims.
   archetypes.ts            ← 10 archetype definitions (also embedded in mull.html)
   figures.ts               ← SVG art for each archetype
-  philosophers.ts          ← 200+ philosopher data
+  philosophers.ts          ← 500+ philosopher data
   exercises.ts             ← 16 exercises + categories
   dilemmas.ts              ← getDailyDilemma(), 379-question pool
   translations.ts          ← 8-language i18n table (EN, ES, FR, PT, RU, ZH, JA, KO)

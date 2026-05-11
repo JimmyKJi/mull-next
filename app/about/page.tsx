@@ -92,7 +92,7 @@ export default async function AboutPage() {
 
       <Section title="Why this exists">
         <p>Philosophy is the original tool for examining your own thinking — the discipline that refuses to take its own framing for granted. Most people leave it behind after one survey course because the way it&apos;s taught makes it feel like memorizing a museum: dates, names, doctrines, exam.</p>
-        <p>Mull inverts that. Instead of teaching you what dead philosophers thought, it asks what <strong>you</strong> think — concretely, on real questions — and shows you where that places you in the long conversation. The map isn&apos;t a verdict, it&apos;s a mirror. The over 200 thinkers in the constellation are there as company, not as curriculum.</p>
+        <p>Mull inverts that. Instead of teaching you what dead philosophers thought, it asks what <strong>you</strong> think — concretely, on real questions — and shows you where that places you in the long conversation. The map isn&apos;t a verdict, it&apos;s a mirror. The over 500 thinkers in the constellation are there as company, not as curriculum.</p>
       </Section>
 
       <Section title="The principles">
