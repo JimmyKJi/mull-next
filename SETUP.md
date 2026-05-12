@@ -36,6 +36,20 @@ CRON_SECRET=<random-string>
 Get the Anthropic key at https://console.anthropic.com/settings/keys. Get
 the Supabase service-role key at Supabase → Project Settings → API → "service_role secret".
 
+### Worktrees and `.env.local`
+
+`.env.local` is gitignored, so a fresh git worktree starts without
+keys and the dev server crashes in middleware trying to construct a
+Supabase client. To copy `.env.local` from the main checkout into
+every active worktree under `.claude/worktrees/`, run:
+
+```
+./scripts/sync-env-to-worktrees.sh
+```
+
+Run this once after creating a new worktree (or after rotating keys
+in the main `.env.local`).
+
 ## Required SQL migrations
 
 Run each in the Supabase SQL editor (or `supabase db push` if using the CLI).
