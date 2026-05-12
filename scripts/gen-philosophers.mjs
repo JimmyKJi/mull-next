@@ -22,9 +22,203 @@ const ARCHETYPES = [
   { key:'lighthouse',   name:'The Lighthouse',   p:{TV:5,VA:5,WP:5,TR:9,TE:3,RT:4,MR:6,SR:2,CE:5,SS:5,PO:5,TD:9,AT:6,ES:3,UI:9,SI:3} },
 ];
 
-function expand(dimObj) {
-  return DIMS.map(d => dimObj[d] !== undefined ? dimObj[d] : 5);
+// Tradition baselines — characteristic 16-D dim signatures inherited
+// by all philosophers in that tradition. Entry-level v: overrides
+// these on a per-dim basis. Unset dims (after both layers) default
+// to 5. This lets us hand-calibrate by tradition once, then nudge
+// per philosopher rather than restating all 16 dims each time.
+const TRADITION_BASELINES = {
+  'pre-socratic':    { TV:5, VA:6, WP:5, TR:7, TE:6, RT:4, MR:4, SR:5, CE:4, SS:5, PO:5, TD:8, AT:4, ES:5, UI:5, SI:5 },
+  'sophist':         { TV:5, VA:6, WP:6, TR:6, TE:7, RT:3, MR:2, SR:8, CE:5, SS:7, PO:7, TD:5, AT:3, ES:6, UI:3, SI:5 },
+  'stoic':           { TV:7, VA:6, WP:3, TR:8, TE:6, RT:6, MR:3, SR:4, CE:6, SS:5, PO:9, TD:5, AT:8, ES:3, UI:7, SI:4 },
+  'skeptic':         { TV:5, VA:6, WP:3, TR:5, TE:7, RT:3, MR:2, SR:10,CE:4, SS:6, PO:6, TD:5, AT:4, ES:5, UI:3, SI:5 },
+  'epicurean':       { TV:3, VA:8, WP:4, TR:6, TE:8, RT:3, MR:1, SR:6, CE:6, SS:6, PO:8, TD:5, AT:3, ES:9, UI:4, SI:4 },
+  'cynic':           { TV:5, VA:6, WP:7, TR:4, TE:7, RT:1, MR:2, SR:8, CE:2, SS:10,PO:8, TD:3, AT:8, ES:5, UI:5, SI:4 },
+  'aristotelian':    { TV:4, VA:7, WP:4, TR:8, TE:8, RT:6, MR:2, SR:4, CE:7, SS:5, PO:8, TD:8, AT:5, ES:6, UI:6, SI:2 },
+  'platonist':       { TV:5, VA:5, WP:5, TR:9, TE:3, RT:5, MR:6, SR:2, CE:5, SS:5, PO:5, TD:10,AT:6, ES:2, UI:9, SI:3 },
+  'neoplatonist':    { TV:5, VA:5, WP:4, TR:8, TE:4, RT:7, MR:9, SR:3, CE:5, SS:5, PO:5, TD:9, AT:7, ES:3, UI:7, SI:6 },
+  'patristic':       { TV:7, VA:5, WP:4, TR:7, TE:5, RT:8, MR:8, SR:3, CE:7, SS:4, PO:6, TD:7, AT:7, ES:3, UI:7, SI:4 },
+  'scholastic':      { TV:5, VA:5, WP:4, TR:9, TE:6, RT:8, MR:5, SR:3, CE:6, SS:5, PO:6, TD:9, AT:6, ES:4, UI:7, SI:3 },
+  'mystic-christian':{ TV:7, VA:6, WP:3, TR:5, TE:5, RT:7, MR:10,SR:3, CE:6, SS:5, PO:5, TD:6, AT:8, ES:4, UI:5, SI:6 },
+  'kabbalist':       { TV:6, VA:6, WP:4, TR:6, TE:4, RT:8, MR:9, SR:3, CE:7, SS:4, PO:5, TD:8, AT:6, ES:4, UI:6, SI:5 },
+  'sufi':            { TV:6, VA:7, WP:3, TR:5, TE:5, RT:7, MR:10,SR:3, CE:6, SS:5, PO:5, TD:6, AT:8, ES:4, UI:5, SI:6 },
+  'islamic-falsafa': { TV:5, VA:6, WP:4, TR:8, TE:6, RT:7, MR:5, SR:4, CE:6, SS:5, PO:6, TD:9, AT:5, ES:4, UI:7, SI:3 },
+  'vedanta-advaita': { TV:6, VA:5, WP:3, TR:6, TE:4, RT:7, MR:10,SR:4, CE:5, SS:5, PO:5, TD:8, AT:8, ES:3, UI:8, SI:9 },
+  'vedanta-bhakti':  { TV:5, VA:8, WP:3, TR:4, TE:5, RT:8, MR:9, SR:3, CE:7, SS:5, PO:6, TD:5, AT:6, ES:6, UI:5, SI:5 },
+  'buddhist-theravada':{ TV:8, VA:4, WP:2, TR:6, TE:7, RT:7, MR:7, SR:6, CE:5, SS:4, PO:7, TD:5, AT:9, ES:3, UI:7, SI:9 },
+  'buddhist-mahayana': { TV:7, VA:5, WP:3, TR:5, TE:6, RT:6, MR:9, SR:5, CE:7, SS:3, PO:6, TD:6, AT:7, ES:3, UI:8, SI:9 },
+  'buddhist-zen':    { TV:5, VA:7, WP:4, TR:3, TE:7, RT:4, MR:9, SR:7, CE:5, SS:7, PO:7, TD:3, AT:6, ES:6, UI:5, SI:9 },
+  'buddhist-tibetan':{ TV:7, VA:5, WP:3, TR:5, TE:6, RT:8, MR:10,SR:4, CE:6, SS:4, PO:5, TD:7, AT:8, ES:4, UI:7, SI:9 },
+  'jain':            { TV:7, VA:4, WP:2, TR:6, TE:6, RT:8, MR:7, SR:5, CE:5, SS:5, PO:5, TD:7, AT:10,ES:3, UI:8, SI:5 },
+  'tantric':         { TV:5, VA:8, WP:5, TR:4, TE:6, RT:6, MR:9, SR:5, CE:5, SS:7, PO:5, TD:5, AT:5, ES:8, UI:5, SI:8 },
+  'confucian':       { TV:4, VA:6, WP:3, TR:6, TE:7, RT:10,MR:3, SR:3, CE:10,SS:2, PO:9, TD:5, AT:6, ES:5, UI:5, SI:2 },
+  'neo-confucian':   { TV:5, VA:6, WP:4, TR:8, TE:7, RT:8, MR:6, SR:4, CE:8, SS:3, PO:7, TD:8, AT:7, ES:4, UI:6, SI:4 },
+  'daoist':          { TV:5, VA:7, WP:3, TR:3, TE:6, RT:5, MR:8, SR:6, CE:4, SS:6, PO:6, TD:4, AT:5, ES:6, UI:4, SI:7 },
+  'legalist':        { TV:6, VA:5, WP:9, TR:7, TE:7, RT:5, MR:1, SR:6, CE:5, SS:4, PO:9, TD:4, AT:5, ES:5, UI:6, SI:3 },
+  'mohist':          { TV:5, VA:5, WP:5, TR:7, TE:7, RT:4, MR:2, SR:5, CE:7, SS:4, PO:8, TD:5, AT:6, ES:4, UI:9, SI:3 },
+  'rationalist':     { TV:4, VA:5, WP:5, TR:10,TE:3, RT:4, MR:3, SR:3, CE:4, SS:6, PO:5, TD:9, AT:5, ES:3, UI:7, SI:3 },
+  'empiricist':      { TV:4, VA:6, WP:4, TR:5, TE:10,RT:4, MR:1, SR:8, CE:5, SS:6, PO:7, TD:5, AT:3, ES:7, UI:4, SI:5 },
+  'idealist':        { TV:6, VA:5, WP:5, TR:8, TE:4, RT:6, MR:7, SR:3, CE:6, SS:6, PO:5, TD:10,AT:5, ES:3, UI:7, SI:4 },
+  'utilitarian':     { TV:5, VA:6, WP:6, TR:7, TE:8, RT:3, MR:1, SR:6, CE:6, SS:6, PO:9, TD:6, AT:3, ES:5, UI:9, SI:3 },
+  'social-contract': { TV:5, VA:6, WP:5, TR:7, TE:6, RT:5, MR:2, SR:5, CE:6, SS:6, PO:7, TD:6, AT:4, ES:4, UI:7, SI:3 },
+  'romantic':        { TV:6, VA:8, WP:6, TR:4, TE:5, RT:5, MR:7, SR:4, CE:5, SS:8, PO:5, TD:6, AT:3, ES:7, UI:5, SI:4 },
+  'transcendentalist':{TV:5, VA:7, WP:6, TR:5, TE:6, RT:3, MR:7, SR:5, CE:4, SS:9, PO:6, TD:6, AT:5, ES:6, UI:5, SI:4 },
+  'existentialist':  { TV:8, VA:6, WP:5, TR:4, TE:6, RT:3, MR:4, SR:6, CE:4, SS:9, PO:6, TD:6, AT:4, ES:6, UI:4, SI:5 },
+  'phenomenologist': { TV:5, VA:6, WP:4, TR:6, TE:7, RT:5, MR:5, SR:5, CE:6, SS:6, PO:6, TD:7, AT:4, ES:8, UI:5, SI:5 },
+  'pragmatist':      { TV:4, VA:7, WP:5, TR:6, TE:8, RT:4, MR:3, SR:6, CE:6, SS:6, PO:9, TD:5, AT:3, ES:6, UI:5, SI:4 },
+  'analytic':        { TV:4, VA:5, WP:4, TR:9, TE:7, RT:4, MR:2, SR:7, CE:4, SS:5, PO:6, TD:8, AT:4, ES:4, UI:6, SI:4 },
+  'positivist':      { TV:3, VA:6, WP:5, TR:7, TE:9, RT:3, MR:1, SR:8, CE:5, SS:5, PO:8, TD:6, AT:3, ES:5, UI:6, SI:4 },
+  'marxist':         { TV:6, VA:6, WP:8, TR:7, TE:7, RT:3, MR:1, SR:7, CE:7, SS:5, PO:7, TD:7, AT:4, ES:5, UI:6, SI:3 },
+  'critical-theory': { TV:7, VA:5, WP:6, TR:7, TE:6, RT:3, MR:2, SR:8, CE:6, SS:5, PO:6, TD:8, AT:4, ES:5, UI:5, SI:4 },
+  'anarchist':       { TV:6, VA:7, WP:7, TR:5, TE:6, RT:1, MR:3, SR:7, CE:5, SS:9, PO:6, TD:5, AT:4, ES:5, UI:5, SI:4 },
+  'feminist':        { TV:6, VA:6, WP:6, TR:6, TE:6, RT:3, MR:3, SR:7, CE:6, SS:7, PO:6, TD:6, AT:4, ES:6, UI:6, SI:4 },
+  'postmodern':      { TV:6, VA:6, WP:5, TR:4, TE:6, RT:2, MR:4, SR:9, CE:5, SS:6, PO:5, TD:6, AT:3, ES:6, UI:3, SI:7 },
+  'process':         { TV:5, VA:7, WP:5, TR:7, TE:7, RT:5, MR:7, SR:5, CE:6, SS:5, PO:5, TD:8, AT:4, ES:5, UI:6, SI:5 },
+  'african-ubuntu':  { TV:5, VA:6, WP:5, TR:5, TE:6, RT:7, MR:5, SR:5, CE:9, SS:3, PO:7, TD:5, AT:5, ES:6, UI:5, SI:3 },
+  'indigenous':      { TV:5, VA:7, WP:4, TR:4, TE:7, RT:8, MR:6, SR:4, CE:8, SS:4, PO:7, TD:4, AT:5, ES:7, UI:4, SI:4 },
+  'postcolonial':    { TV:7, VA:5, WP:6, TR:6, TE:7, RT:4, MR:3, SR:8, CE:7, SS:5, PO:6, TD:6, AT:4, ES:5, UI:5, SI:4 },
+  'liberation':      { TV:6, VA:6, WP:7, TR:6, TE:7, RT:4, MR:3, SR:7, CE:7, SS:5, PO:7, TD:5, AT:4, ES:5, UI:6, SI:3 },
+  'natural-philosophy':{ TV:4, VA:6, WP:5, TR:9, TE:9, RT:4, MR:3, SR:5, CE:4, SS:5, PO:6, TD:8, AT:4, ES:4, UI:6, SI:3 },
+  'cognitive-science':{ TV:4, VA:5, WP:4, TR:7, TE:9, RT:3, MR:3, SR:6, CE:5, SS:5, PO:6, TD:7, AT:3, ES:6, UI:5, SI:6 },
+  'longtermist':     { TV:5, VA:5, WP:5, TR:8, TE:7, RT:4, MR:2, SR:6, CE:6, SS:5, PO:6, TD:7, AT:5, ES:4, UI:8, SI:4 },
+  'virtue-ethics':   { TV:5, VA:6, WP:4, TR:7, TE:7, RT:8, MR:3, SR:4, CE:7, SS:5, PO:7, TD:7, AT:6, ES:5, UI:6, SI:3 },
+  'kantian':         { TV:4, VA:5, WP:4, TR:10,TE:5, RT:5, MR:3, SR:4, CE:5, SS:7, PO:6, TD:8, AT:5, ES:3, UI:10,SI:3 },
+  'mystical-cross-tradition': { TV:6, VA:6, WP:3, TR:5, TE:5, RT:6, MR:10,SR:4, CE:5, SS:5, PO:5, TD:6, AT:7, ES:5, UI:6, SI:6 },
+  'naturalist':      { TV:4, VA:6, WP:5, TR:7, TE:9, RT:4, MR:2, SR:7, CE:5, SS:5, PO:7, TD:7, AT:4, ES:6, UI:5, SI:5 },
+};
+
+// Keyword-driven tradition inference. Checked in order; first match wins.
+const TRADITION_PATTERNS = [
+  ['buddhist-zen',   /\bzen\b|rinzai|\bs[ōo]t[ōo]\b|koan|d[oō]gen|hakuin|bankei|ikkyu|linji|wonhyo|jinul|chinul|aitken|shunryu|toni packer|pema|joanna macy/i],
+  ['buddhist-tibetan',/\btibetan\b|dzogchen|milarepa|atisha|longchenpa|tsongkhapa|padmasambhava|dalai lama|patrul/i],
+  ['buddhist-mahayana',/\b(huayan|tiantai|yog[āa]c[āa]ra|madhyamaka|m[āa]dhyamaka|emptiness|n[āa]g[āa]rjuna|asanga|vasubandhu|dharmakirti|dignaga)/i],
+  ['buddhist-theravada',/\b(theravada|abhidhamma|visuddhimagga|buddhaghosa)/i],
+  ['vedanta-advaita',/\b(advaita|non-?dual|atman is brahman|sa[ṅn]kara|adi shankara|ramana|nisargadatta|ramakrishna|vivekananda|sri aurobindo)/i],
+  ['vedanta-bhakti', /\b(bhakti|krishna|mirabai|chaitanya|ramanuja|madhva|kabir|lal[ -]?ded|lalleshwari)/i],
+  ['jain',           /\b(jain|mahavira|anekantavada)/i],
+  ['tantric',        /\btantra|kashmiri shaivite|sahaja|tantric/i],
+  ['sufi',           /\bsufi|rumi|hallaj|rabia|junayd|ibn arabi|sufism/i],
+  ['kabbalist',      /\bkabbal|luria|sefirot|ein sof|hasid|baal shem|heschel/i],
+  ['islamic-falsafa',/\bibn (sina|rushd|tufayl|bajja|khaldun|gabirol)|al-(farabi|ghazali|kindi|razi|biruni|jahiz)|mulla sadra|suhrawardi|iqbal|nasr|shariati/i],
+  ['mystic-christian',/\b(meister eckhart|hildegard|julian of norwich|catherine of siena|teresa|john of the cross|porete|hadewijch|mechthild|bonaventure|bernard of clairvaux|nicholas of cusa|cusanus|pseudo-?dionysius)/i],
+  ['scholastic',     /\b(aquinas|anselm|abelard|albertus|duns scotus|ockham|maimonides|scholastic)/i],
+  ['patristic',      /\b(origen|gregory of nyssa|maximus the confessor|eriugena|augustin|macrina)/i],
+  ['neoplatonist',   /\b(plotinus|porphyry|iamblichus|proclus|hypatia|damascius|ficino|neoplaton)/i],
+  ['platonist',      /\b(form of beauty|form of the good|forms[, ]|platonic|plato'?s)/i],
+  ['stoic',          /\b(stoic|epictetus|marcus aurelius|seneca|chrysippus|cleanthes|musonius|posidonius|hierocles)/i],
+  ['epicurean',      /\b(epicur|lucretius|pleasure as|pleasure of)/i],
+  ['cynic',          /\b(cynic|diogenes of sinope|antisthenes)/i],
+  ['skeptic',        /\b(skeptic|skeptical|pyrrho|sextus|carneades|arcesilaus|aenesidemus|montaigne)/i],
+  ['sophist',        /\bsophist|gorgias|protagoras|prodicus|hippias/i],
+  ['aristotelian',   /\baristot|peripatetic|hylomorph|phronesis/i],
+  ['neo-confucian',  /\b(neo-?confuc|zhu xi|wang yangming|cheng yi|cheng hao|wang fuzhi|dai zhen|mou zongsan|tu weiming|liang shuming|kang youwei|li zehou|new confuc|investigation of things)/i],
+  ['confucian',      /\b(confuc|mencius|xunzi|filial|ban zhao|han yu|ren \(humaneness\))/i],
+  ['daoist',         /\b(daoist|taoist|laozi|zhuangzi|liezi|wang bi|guo xiang|ziran|wu wei|naturalness)/i],
+  ['legalist',       /\b(legalist|han fei|shang yang)/i],
+  ['mohist',         /\b(mohist|mozi|impartial care)/i],
+  ['pre-socratic',   /\b(pre-?socratic|heraclit|parmenid|anaxim|empedocles|anaxagoras|democrit|leucippus|xenophanes|zeno of elea|atomis|boundless|apeiron)/i],
+  ['kantian',        /\b(kant\b|categorical imperative|noumen|transcendental idealism)/i],
+  ['rationalist',    /\b(rationalist|descartes|spinoza|leibniz|geometric (?:method|order))/i],
+  ['empiricist',     /\b(empiric|locke|hume|berkeley|bacon|induction)/i],
+  ['idealist',       /\b(idealis|hegel|fichte|schelling|absolute spirit|bradley|t\.h\. green|hartshorne)/i],
+  ['utilitarian',    /\b(utilitarian|bentham|greatest happiness|consequential|peter singer|effective altruism)/i],
+  ['longtermist',    /\b(longtermism|existential risk|bostrom|toby ord|macaskill|future of humanity|precipice)/i],
+  ['social-contract',/\b(social contract|state of nature|leviathan|veil of ignorance|rawls|grotius|pufendorf|nozick)/i],
+  ['romantic',       /\b(romantic|schlegel|novalis|sta[ëe]l|m[üu]ller|hymns to the night|fragment as freedom)/i],
+  ['transcendentalist',/\b(transcendentalist|emerson|thoreau|self-reliance|walden|margaret fuller)/i],
+  ['existentialist', /\b(existentialis|sartre|de beauvoir|jaspers|berdyaev|absurd|radical freedom|kierkegaard|shestov)/i],
+  ['phenomenologist',/\b(phenomenolog|husserl|merleau-?ponty|heidegger|levinas|edith stein|enactivis|embodied perception)/i],
+  ['pragmatist',     /\b(pragmatis|dewey|peirce|william james|rorty|putnam|mead)/i],
+  ['analytic',       /\b(analytic|frege|russell|wittgenstein|quine|davidson|kripke|lewis|williamson|dummett|sellars|brandom|mcdowell|kit fine|ramsey)/i],
+  ['positivist',     /\b(positivis|vienna circle|carnap|schlick|ayer|neurath|verification)/i],
+  ['marxist',        /\bmarx|capital|class struggle|luxemburg|gramsci|labour theory|alienation/i],
+  ['critical-theory',/\b(adorno|horkheimer|frankfurt school|habermas|critical theory|benjamin|marcuse|negative dialectic)/i],
+  ['anarchist',      /\banarch|bakunin|kropotkin|stirner|godwin|emma goldman/i],
+  ['feminist',       /\bfemin|wollstonecraft|olympe de gouges|harriet taylor|catharine|gender|patriarchy|second sex|differen(?:t|ce) voice/i],
+  ['postcolonial',   /\b(postcolon|fanon|césaire|cesaire|c[ée]saire|c\.l\.r\.|edward said|orientalis|gilroy|spivak|biko|rodney|achille mbembe)/i],
+  ['liberation',     /\b(liberation|dussel|mariátegui|mariategui|paulo freire|las casas|enrique dussel|vine deloria|kimmerer|leanne|coulthard|simpson)/i],
+  ['african-ubuntu', /\bubuntu|mbiti|wiredu|hountondji|ramose|menkiti|som[éa]|sobonfu|malidoma|oy[ěe]w[uù]m[íi]|nzegwu/i],
+  ['postmodern',     /\b(postmodern|foucault|derrida|deleuze|lyotard|baudrillard|kristeva|cixous|irigaray|butler|haraway|sedgwick|berlant|mu[ñn]oz)/i],
+  ['indigenous',     /\b(indigenous|amerindian|nishnaabeg|m[āa]ori|aboriginal|first nations|kimmerer|coulthard|simpson)/i],
+  ['mystical-cross-tradition',/\b(perennial|guénon|guenon|schuon|coomaraswamy|krishnamurti|nasr|simone weil)/i],
+  ['process',        /\b(whitehead|process (?:theology|philosophy)|hartshorne|prigogine|stuart kauffman)/i],
+  ['virtue-ethics',  /\b(virtue ethic|anscombe|foot|murdoch|macintyre|after virtue|hursthouse)/i],
+  ['cognitive-science',/\b(neurophilosoph|cognitive science|free energy|predictive coding|extended mind|enactivism|panpsych|hard problem|consciousness explained|damasio|seth)/i],
+  ['natural-philosophy',/\b(natural philosoph|newton|galile|kepler|boyle|laplace|gauss|riemann|darwin|wallace|mendel|huygens|lavoisier|einstein|bohr|heisenberg|schr[öo]dinger|pauli|g[öo]del|turing|shannon|wiener|prigogine|margulis|fris[t]?on)/i],
+  ['naturalist',     /\b(naturali[zs]ed|biosemantics|millikan|haack|flanagan|de waal|edward o\. wilson|s\.j\. gould|d\.s\. wilson)/i],
+
+  // Long-tail patterns — catch the historical figures whose key-idea
+  // text doesn't carry a thick tradition keyword. Order still matters.
+  ['pre-socratic',   /\b(atomism|apeiron|leucippus|democritus|anaximander|anaximenes|empedocles|cheerful tranquility)/i],
+  ['neoplatonist',   /\b(cambridge platonist|cudworth|henry more|spirit of nature|plastic nature|christian platonism)/i],
+  ['scholastic',     /\b(victorine|hugh of saint|ramon llull|ars magna|peter abelard|conceptualism|allegorical reading|allegorical exegesis|consolation of philosophy|albertus magnus|grammar of assent|newman)/i],
+  ['kabbalist',      /\b(duties of the heart|kuzari|jewish particularity|isaac luria|bahya|judah halevi|baruch|hasdai crescas)/i],
+  ['mystic-christian',/\b(macrina|hilda|hugh of st|hugh of saint|simone weil|edith wyschogrod)/i],
+  ['romantic',       /\b(goethe|schleiermacher|alexander von humboldt|wilhelm von humboldt|adam m[üu]ller|polarity and intensification|enthusiasm as|tropic|bildung)/i],
+  ['existentialist', /\b(tolstoy|dostoevsky|solovyov|berdyaev|shestov|florensky|bulgakov|bakhtin|russian religious|absurd faith|grand inquisitor|sergei bulgakov|pavel florensky|mikhail bakhtin)/i],
+  ['utilitarian',    /\b(jeremy bentham|moral sense|francis hutcheson|shaftesbury|adam smith|impartial spectator|theory of moral sentiments|moral sentiments)/i],
+  ['empiricist',     /\b(common sense school|thomas reid|dugald stewart|scottish enlightenment|mandeville|fable of the bees|joseph butler|maine de biran|conscience as|effort and willing)/i],
+  ['liberation',     /\b(condorcet|tom paine|rights of man|joseph priestley|godwin|political justice|abolition|popular lectures|frances wright|sojourner truth|abolitionist|harriet martineau|illustrations of political economy|olympe de gouges|charlotte perkins gilman|emma goldman|rosa mayreder|catharine macaulay|ida b\. wells|anna julia cooper|edith stein|sora juana|sor juana)/i],
+  ['analytic',       /\b(stuart hampshire|cora diamond|talbot brewer|sarah buss|tamar schapiro|talia mae|jeff mcmahan|helen frowe|david velleman|owen flanagan|ruth millikan|jenann ismael|frank jackson|crispin wright|timothy williamson|kit fine|david lewis|saul kripke|hilary putnam|wilfrid sellars|robert brandom|john mcdowell|jaakko hintikka|frank ramsey|bernard bolzano|gottlob frege|kurt g[öo]del|alfred tarski|alonzo church|alan turing|norbert wiener|claude shannon|otto neurath|rudolf carnap|moritz schlick|a\.j\. ayer|gilbert ryle|p\.f\. strawson|michael dummett|donald davidson|peter singer|derek parfit|david chalmers|galen strawson|agnes callard|kieran setiya|susan wolf|cheshire calhoun|miranda fricker|rae langton|linda zagzebski|sally haslanger|charles mills|tommie shelby|adrian piper)/i],
+  ['critical-theory',/\b(walter benjamin|alain badiou|jacques ranci[èe]re|étienne balibar|catherine malabou|bernard stiegler|jean-luc nancy|quentin meillassoux|after finitude|technics and time|max weber|émile durkheim|vilfredo pareto|disenchant|protestant ethic|sociology of)/i],
+  ['postmodern',     /\b(roland barthes|maurice blanchot|jab[èe]s|julia kristeva|hélène cixous|luce irigaray|sara ahmed|lauren berlant|eve kosofsky|sedgwick|jos[ée] esteban|abjection|écriture|trans philosophy)/i],
+  ['cognitive-science',/\b(andy clark|alva no[ëe]|evan thompson|francisco varela|nick bostrom|toby ord|macaskill|hilary greaves|jay garfield|owen flanagan|ruth millikan|jenann ismael|antonio damasio|anil seth|karl friston|patricia churchland|extended mind|enactivis|panpsychism|hard problem)/i],
+  ['natural-philosophy',/\b(isaac newton|robert boyle|christiaan huygens|antoine lavoisier|pierre-simon laplace|carl friedrich gauss|bernhard riemann|charles darwin|alfred russel wallace|gregor mendel|henri poincar[ée]|pierre duhem|albert einstein|niels bohr|werner heisenberg|erwin schr[öo]dinger|wolfgang pauli|sigmund freud|wilhelm wundt|edward o\.? wilson|stephen jay gould|lynn margulis|stuart kauffman|ilya prigogine|frans de waal|iain mcgilchrist)/i],
+  ['process',        /\b(charles hartshorne|process theology|alfred north whitehead|david bohm|wholeness and the implicate|david ray griffin)/i],
+  ['feminist',       /\b(sappho|aspasia|diotima|themistoclea|macrina|hadewijch|mechthild|christine de pizan|sor juana|wollstonecraft|harriet|charlotte perkins|anna julia|sojourner|emma goldman|edith stein|rachel bespaloff|gertrude stein|susanne langer|mary calkins|l\.? susan stebbing|ruth barcan|philippa foot|iris murdoch|anscombe|mary midgley|mary warnock|christine korsgaard|carol gilligan|nel noddings|annette baier|onora|hilde lindemann|sara ruddick|gloria anzald[uú]a|maria lugones|linda mart[íi]n|catharine mackinnon|drucilla cornell|julia kristeva|hélène cixous|luce irigaray|sara ahmed|lauren berlant|eve kosofsky|sedgwick|donna haraway|martha nussbaum|judith butler|isabelle stengers|karen barad|anna tsing|edith wyschogrod)/i],
+  ['liberation',     /\b(c\.l\.r\. james|aim[ée] c[ée]saire|suzanne c[ée]saire|cheikh anta|enrique dussel|mariátegui|mariategui|paulo freire|w\.e\.b\. du bois|cornel west|kwame anthony appiah|fanon|biko|walter rodney|bell hooks|audre lorde|angela davis|stuart hall|sylvia wynter|gayatri spivak|edward said|aníbal quijano|walter mignolo|paul gilroy|achille mbembe|charles mills|tommie shelby|adrian piper|anna julia|bartolomé de las casas|las casas)/i],
+  ['indigenous',     /\b(linda tuhiwai|robin wall kimmerer|leanne|coulthard|simpson|nishnaabeg|vine deloria|braiding sweetgrass|red skin)/i],
+  ['neo-confucian',  /\b(dai zhen|wang fuzhi|kang youwei|liang shuming|tu weiming|li zehou|wang hui)/i],
+  ['islamic-falsafa',/\b(muhammad iqbal|reconstruction of religious thought|tariq ramadan|seyyed hossein nasr|fazlur rahman|al-razi|rhazes|al-biruni|al-jahiz)/i],
+  ['daoist',         /\bwang bi|guo xiang|liezi|tao\b/i],
+  ['anarchist',      /\b(blanqui|revolutionary by trade|wright \(political|emma goldman)/i],
+];
+
+function inferTradition(entry) {
+  const text = `${entry.n} | ${entry.i || ''} | ${entry.d || ''}`;
+  for (const [tag, re] of TRADITION_PATTERNS) {
+    if (re.test(text)) return tag;
+  }
+  return null;
 }
+
+function expand(dimObj, traditionTag) {
+  const base = traditionTag ? TRADITION_BASELINES[traditionTag] : null;
+  return DIMS.map(d => {
+    if (dimObj[d] !== undefined) return dimObj[d];
+    if (base && base[d] !== undefined) return base[d];
+    return 5;
+  });
+}
+
+// Auto-aliases from name parsing: first word, last word (skipping
+// trailing particles), parenthetical aliases ("Ibn Rushd (Averroes)"
+// → "Averroes"), and "X of Y" → "X". Skips honorifics like Sri / Saint.
+function genAliases(name) {
+  const aliases = new Set();
+  const trimmed = name.trim();
+  const paren = trimmed.match(/\(([^)]+)\)/);
+  if (paren) aliases.add(paren[1].trim());
+  const cleaned = trimmed.replace(/\s*\([^)]*\)/g, '').trim();
+  const ofMatch = cleaned.match(/^(.+?)\s+of\s+(.+)$/i);
+  if (ofMatch) aliases.add(ofMatch[1].trim());
+  const PARTICLES = new Set(['of','the','de','la','le','von','van','der','den','di','da','ibn','ben','al','el','bin']);
+  const HONORIFICS = new Set(['sri','saint','st','st.','dom','sister','brother','rabbi','sheikh','imam','swami','lama','rev','reverend','sor','madame','sir','dame']);
+  const words = cleaned.replace(/[,.]/g, '').split(/\s+/).filter(Boolean);
+  if (words.length > 1) {
+    let firstIdx = 0;
+    while (firstIdx < words.length && HONORIFICS.has(words[firstIdx].toLowerCase())) firstIdx++;
+    if (firstIdx < words.length) aliases.add(words[firstIdx]);
+    let lastIdx = words.length - 1;
+    while (lastIdx > firstIdx && PARTICLES.has(words[lastIdx].toLowerCase())) lastIdx--;
+    while (lastIdx > firstIdx && /^(jr\.?|sr\.?|i{1,3}|iv|v|vi)$/i.test(words[lastIdx])) lastIdx--;
+    if (lastIdx > firstIdx) aliases.add(words[lastIdx]);
+  }
+  return [...aliases]
+    .map(s => s.trim())
+    .filter(s => s && s.toLowerCase() !== trimmed.toLowerCase());
+}
+
 function cos(a, b) {
   let dot = 0, na = 0, nb = 0;
   for (let i = 0; i < 16; i++) { dot += a[i]*b[i]; na += a[i]*a[i]; nb += b[i]*b[i]; }
@@ -69,10 +263,10 @@ const ENTRIES = [
   { n:`Hypatia`, d:`~360–415`, i:`Alexandrian mathematician and Neoplatonist; pagan martyr at Christian hands.`, v:{TR:9,TD:9,UI:7,MR:6,SS:7,AT:6} },
   { n:`Damascius`, d:`~458–538`, i:`Last head of the Athenian Academy — the Ineffable beyond even the One.`, v:{MR:10,TD:9,SI:7,AT:7,UI:6} },
   { n:`Boethius`, d:`~480–524`, i:`Consolation of Philosophy — fortune's wheel turned in a death cell.`, v:{TV:8,RT:7,TR:7,MR:6,AT:7,UI:7} },
-  { n:`Cicero`, d:`106–43 BCE`, i:`Eclectic synthesizer — duty, friendship, and the just commonwealth.`, v:{TR:7,PO:8,UI:7,RT:7,CE:6,WP:5} },
-  { n:`Plutarch`, d:`~46–119`, i:`Lives in parallel — character revealed through moral comparison.`, v:{RT:7,CE:6,PO:7,VA:6,MR:5} },
-  { n:`Lucian of Samosata`, d:`~125–180`, i:`Satirist of dogma — laughter as a corrosive on pretension.`, v:{SR:9,VA:6,SS:7,SI:5} },
-  { n:`Marcus Tullius Varro`, d:`116–27 BCE`, i:`Encyclopedist — three hundred theologies catalogued before judgment.`, v:{TR:6,RT:7,SR:6,TD:7} },
+  { n:`Cicero`, d:`106–43 BCE`, tr:'stoic', i:`Eclectic synthesizer — duty, friendship, and the just commonwealth.`, v:{TR:7,PO:8,UI:7,RT:7,CE:6,WP:5} },
+  { n:`Plutarch`, d:`~46–119`, tr:'stoic', i:`Lives in parallel — character revealed through moral comparison.`, v:{RT:7,CE:6,PO:7,VA:6,MR:5} },
+  { n:`Lucian of Samosata`, d:`~125–180`, tr:'skeptic', i:`Satirist of dogma — laughter as a corrosive on pretension.`, v:{SR:9,VA:6,SS:7,SI:5} },
+  { n:`Marcus Tullius Varro`, d:`116–27 BCE`, tr:'stoic', i:`Encyclopedist — three hundred theologies catalogued before judgment.`, v:{TR:6,RT:7,SR:6,TD:7} },
   { n:`Sextus Empiricus the Younger`, d:`2nd–3rd c.`, i:`Outlines of Pyrrhonism — full inventory of the skeptical method.`, v:{SR:10,TE:7,SI:5,MR:2} },
 
   // ─── PATRISTIC & MEDIEVAL ────────────────────────────────────────
@@ -92,15 +286,15 @@ const ENTRIES = [
   { n:`Julian of Norwich`, d:`~1342–1416`, i:`All shall be well — Showings of divine love beyond suffering.`, v:{MR:9,VA:7,TV:7,RT:7,CE:5} },
   { n:`Marguerite Porete`, d:`~1250–1310`, i:`Mirror of Simple Souls — the soul annihilated into divine love.`, v:{MR:10,SI:8,AT:8,SS:7,VA:5} },
   { n:`Christine de Pizan`, d:`1364–1430`, i:`City of Ladies — virtue is not gendered; reason is the common ground.`, v:{UI:8,WP:6,TR:7,CE:6,SS:6} },
-  { n:`Marsilius of Padua`, d:`~1275–1342`, i:`Defender of the Peace — secular sovereignty over spiritual authority.`, v:{WP:7,UI:7,PO:7,SR:6,TR:6} },
+  { n:`Marsilius of Padua`, d:`~1275–1342`, tr:'social-contract', i:`Defender of the Peace — secular sovereignty over spiritual authority.`, v:{WP:7,UI:7,PO:7,SR:6,TR:6} },
   { n:`Nicholas of Cusa`, d:`1401–1464`, i:`Learned ignorance — the coincidence of opposites in the infinite.`, v:{MR:8,TD:9,TR:7,SI:6,UI:7} },
   { n:`Marsilio Ficino`, d:`1433–1499`, i:`Renaissance Neoplatonism — soul as the bond between God and matter.`, v:{MR:8,TD:8,RT:6,UI:6,ES:4} },
-  { n:`Pico della Mirandola`, d:`1463–1494`, i:`Oration on the Dignity of Man — self-fashioning as the human birthright.`, v:{SS:8,WP:7,TR:7,UI:7,VA:6} },
-  { n:`Pietro Pomponazzi`, d:`1462–1525`, i:`Mortality of the soul — virtue worth pursuing for its own sake.`, v:{TR:6,TE:7,SR:7,SS:6,AT:5} },
-  { n:`Giordano Bruno`, d:`1548–1600`, i:`Infinite worlds; the cosmos as living unity — burned for it.`, v:{MR:7,WP:7,SS:8,TD:8,TV:6} },
-  { n:`Tommaso Campanella`, d:`1568–1639`, i:`City of the Sun — utopian republic governed by knowledge.`, v:{TR:6,UI:7,CE:7,WP:6,TD:6} },
-  { n:`Lorenzo Valla`, d:`~1407–1457`, i:`Philological criticism — the Donation of Constantine exposed as forgery.`, v:{SR:8,TR:7,SS:6,RT:3} },
-  { n:`Erasmus of Rotterdam`, d:`~1466–1536`, i:`Praise of Folly — Christian humanism, free will against Luther.`, v:{SR:7,RT:6,CE:6,UI:6,SS:5} },
+  { n:`Pico della Mirandola`, d:`1463–1494`, tr:'platonist', i:`Oration on the Dignity of Man — self-fashioning as the human birthright.`, v:{SS:8,WP:7,TR:7,UI:7,VA:6} },
+  { n:`Pietro Pomponazzi`, d:`1462–1525`, tr:'aristotelian', i:`Mortality of the soul — virtue worth pursuing for its own sake.`, v:{TR:6,TE:7,SR:7,SS:6,AT:5} },
+  { n:`Giordano Bruno`, d:`1548–1600`, tr:'neoplatonist', i:`Infinite worlds; the cosmos as living unity — burned for it.`, v:{MR:7,WP:7,SS:8,TD:8,TV:6} },
+  { n:`Tommaso Campanella`, d:`1568–1639`, tr:'platonist', i:`City of the Sun — utopian republic governed by knowledge.`, v:{TR:6,UI:7,CE:7,WP:6,TD:6} },
+  { n:`Lorenzo Valla`, d:`~1407–1457`, tr:'skeptic', i:`Philological criticism — the Donation of Constantine exposed as forgery.`, v:{SR:8,TR:7,SS:6,RT:3} },
+  { n:`Erasmus of Rotterdam`, d:`~1466–1536`, tr:'scholastic', i:`Praise of Folly — Christian humanism, free will against Luther.`, v:{SR:7,RT:6,CE:6,UI:6,SS:5} },
   { n:`Hadewijch of Antwerp`, d:`~13th c.`, i:`Beguine mystic — the storm of love (minne) as God's own life.`, v:{MR:9,VA:6,ES:5,SS:6,AT:6} },
   { n:`Mechthild of Magdeburg`, d:`~1207–1282`, i:`Flowing Light of the Godhead — bridal mysticism in vernacular German.`, v:{MR:9,ES:5,VA:6,RT:6} },
   { n:`Hugh of Saint Victor`, d:`~1096–1141`, i:`Three eyes — flesh, reason, and contemplation each seeing differently.`, v:{MR:7,TR:7,RT:7,TD:6,AT:6} },
@@ -122,7 +316,7 @@ const ENTRIES = [
   { n:`Hasdai Crescas`, d:`~1340–1410`, i:`Critique of Aristotle — divine love as primary, the will as free.`, v:{TR:6,MR:7,RT:7,VA:6} },
   { n:`Isaac Luria`, d:`1534–1572`, i:`Lurianic Kabbalah — divine contraction, the shattering, and repair (tikkun).`, v:{MR:10,TD:8,RT:8,UI:6,SI:6} },
   { n:`Mulla Sadra`, d:`~1571–1640`, i:`Transcendent Theosophy — existence precedes essence; reality moves.`, v:{MR:9,TR:7,TD:9,UI:6,SI:5} },
-  { n:`Bhartrihari`, d:`~5th c.`, i:`Sphota theory — meaning flashes whole; language as world-disclosing.`, v:{MR:7,TD:8,SI:7,TR:6,UI:5} },
+  { n:`Bhartrihari`, d:`~5th c.`, tr:'vedanta-advaita', i:`Sphota theory — meaning flashes whole; language as world-disclosing.`, v:{MR:7,TD:8,SI:7,TR:6,UI:5} },
   { n:`Dharmakirti`, d:`~600–660`, i:`Buddhist logic and epistemology — perception and inference rebuilt.`, v:{TR:9,TE:8,SR:8,SI:7,TD:8} },
   { n:`Dignaga`, d:`~480–540`, i:`Pramanasamuccaya — the founder of Buddhist epistemology.`, v:{TR:8,TE:7,TD:8,SR:7,SI:6} },
   { n:`Asanga`, d:`~4th c.`, i:`Yogācāra — mind-only; consciousness constructs the world it perceives.`, v:{MR:8,SI:9,TR:7,AT:7,TD:7} },
@@ -133,7 +327,7 @@ const ENTRIES = [
   { n:`Milarepa`, d:`~1052–1135`, i:`Tibetan yogi-poet — songs from the caves; murder atoned through liberation.`, v:{MR:9,AT:9,TV:8,VA:6,SS:7,ES:5} },
   { n:`Longchenpa`, d:`1308–1364`, i:`Dzogchen master — primordial purity beyond all training.`, v:{MR:10,SI:8,AT:7,TD:7,VA:5} },
   { n:`Patrul Rinpoche`, d:`1808–1887`, i:`Words of My Perfect Teacher — the preliminary practices made plain.`, v:{MR:8,AT:8,CE:6,RT:7,SS:4} },
-  { n:`Kumarajila`, d:`344–413`, i:`Translator of the Lotus and Diamond sutras — Chinese Buddhism's spine.`, v:{MR:8,RT:7,TR:6,UI:6} },
+  { n:`Kumarajila`, d:`344–413`, tr:'buddhist-mahayana', i:`Translator of the Lotus and Diamond sutras — Chinese Buddhism's spine.`, v:{MR:8,RT:7,TR:6,UI:6} },
   { n:`Zhiyi`, d:`538–597`, i:`Tiantai founder — three truths held in mutual containment.`, v:{MR:9,TD:7,RT:7,UI:6,SI:6} },
   { n:`Fazang`, d:`643–712`, i:`Huayan — Indra's net; each part contains the whole.`, v:{MR:9,TD:8,UI:7,SI:7,CE:5} },
   { n:`Linji Yixuan`, d:`~810–866`, i:`Rinzai Zen — kill the Buddha if you meet him; nothing to find.`, v:{WP:7,SS:9,SR:7,MR:7,SI:7,RT:2} },
@@ -163,7 +357,7 @@ const ENTRIES = [
   { n:`Hugo Grotius`, d:`1583–1645`, i:`Natural law and international right — peace built on shared reason.`, v:{TR:7,UI:8,RT:6,PO:7,CE:6} },
   { n:`Hobbes`, d:`1588–1679`, i:`Leviathan — war of all against all averted only by absolute sovereignty.`, v:{TV:8,TE:7,WP:7,SR:6,UI:5,CE:5} },
   { n:`Mary Astell`, d:`1666-1731`, i:`(already in db — skip)`, v:{} }, // mark to skip
-  { n:`Margaret Cavendish`, d:`1623–1673`, i:`Vitalist materialism — matter perceives and reasons throughout.`, v:{TE:7,ES:7,SS:7,MR:5,SR:6} },
+  { n:`Margaret Cavendish`, d:`1623–1673`, tr:'empiricist', i:`Vitalist materialism — matter perceives and reasons throughout.`, v:{TE:7,ES:7,SS:7,MR:5,SR:6} },
   { n:`Anne Conway`, d:`1631–1679`, i:`Principles — one substance with infinite gradations; influenced Leibniz.`, v:{MR:7,TR:7,TD:7,UI:6,SI:5} },
   { n:`Émilie du Châtelet`, d:`1706–1749`, i:`Newton in French — energy as mv²; the rights of women in thinking.`, v:{TR:8,TE:8,UI:7,WP:7,SS:6} },
   { n:`Cudworth`, d:`1617–1688`, i:`Cambridge Platonist — eternal moral truths, plastic nature.`, v:{TR:8,MR:7,RT:6,TD:7,UI:6} },
@@ -180,8 +374,8 @@ const ENTRIES = [
   { n:`Thomas Reid`, d:`1710–1796`, i:`Common sense — the principles every philosophy must already presume.`, v:{TE:8,RT:7,SR:5,TR:6,CE:6} },
   { n:`Dugald Stewart`, d:`1753–1828`, i:`Scottish common sense made systematic — philosophy of the mind.`, v:{TE:7,TR:6,RT:6,CE:5} },
   { n:`Maine de Biran`, d:`1766–1824`, i:`Effort and willing as the felt origin of the self.`, v:{TE:7,ES:7,SS:7,SR:5} },
-  { n:`Joseph de Maistre`, d:`1753–1821`, i:`Reactionary throne-and-altar — providence in violent history.`, v:{RT:10,TV:8,SR:6,CE:6,UI:3} },
-  { n:`Edmund Burke`, d:`1729–1797`, i:`Reflections on the Revolution — tradition as compressed wisdom.`, v:{RT:9,CE:7,SR:6,TV:6,UI:4} },
+  { n:`Joseph de Maistre`, d:`1753–1821`, tr:'patristic', i:`Reactionary throne-and-altar — providence in violent history.`, v:{RT:10,TV:8,SR:6,CE:6,UI:3} },
+  { n:`Edmund Burke`, d:`1729–1797`, tr:'scholastic', i:`Reflections on the Revolution — tradition as compressed wisdom.`, v:{RT:9,CE:7,SR:6,TV:6,UI:4} },
   { n:`Tom Paine`, d:`1737–1809`, i:`Rights of Man — common sense against monarchy and dogma.`, v:{WP:7,UI:8,SS:7,RT:2,TR:6} },
   { n:`Mary Wollstonecraft (re-noted)`, d:`1759–1797`, i:`(already in db — skip)`, v:{} },
   { n:`William Godwin`, d:`1756–1836`, i:`Political Justice — anarchism by reason; truth dissolves coercion.`, v:{TR:8,SS:7,UI:7,WP:5,RT:2} },
@@ -202,9 +396,9 @@ const ENTRIES = [
   { n:`Ralph Waldo Emerson`, d:`1803–1882`, i:`Self-Reliance — the soul resists every membership but its own.`, v:{SS:9,VA:7,MR:6,WP:6,RT:3} },
   { n:`Henry David Thoreau`, d:`1817–1862`, i:`Walden — simplify, simplify; conscience over civil law.`, v:{AT:7,SS:8,ES:6,VA:7,RT:3} },
   { n:`Margaret Fuller`, d:`1810–1850`, i:`Woman in the Nineteenth Century — every soul self-developing.`, v:{SS:7,VA:7,MR:6,WP:6,UI:6} },
-  { n:`Alexis de Tocqueville`, d:`1805–1859`, i:`Democracy in America — equality\'s seductions and its soft despotisms.`, v:{TE:7,SR:7,CE:6,RT:6,UI:5} },
+  { n:`Alexis de Tocqueville`, d:`1805–1859`, tr:'social-contract', i:`Democracy in America — equality\'s seductions and its soft despotisms.`, v:{TE:7,SR:7,CE:6,RT:6,UI:5} },
   { n:`John Henry Newman`, d:`1801–1890`, i:`Grammar of assent — real conviction belongs to whole persons, not to propositions.`, v:{RT:9,MR:7,TR:6,CE:6,UI:5} },
-  { n:`Walter Pater`, d:`1839–1894`, i:`Burn always with a hard, gemlike flame — aesthetic life as ethics.`, v:{VA:9,ES:8,SS:7,AT:2} },
+  { n:`Walter Pater`, d:`1839–1894`, tr:'romantic', i:`Burn always with a hard, gemlike flame — aesthetic life as ethics.`, v:{VA:9,ES:8,SS:7,AT:2} },
   { n:`F.H. Bradley`, d:`1846–1924`, i:`Appearance and Reality — relations contradict; the Absolute alone is real.`, v:{MR:7,TD:9,TR:7,SI:6} },
   { n:`T.H. Green`, d:`1836–1882`, i:`Idealist ethics — the common good as the proper end of state action.`, v:{UI:7,CE:7,TR:7,WP:5} },
   { n:`Henry Sidgwick`, d:`1838–1900`, i:`Methods of Ethics — utilitarianism, egoism, intuitionism scrupulously compared.`, v:{TR:8,UI:7,SR:7,TD:7} },
@@ -260,7 +454,7 @@ const ENTRIES = [
   { n:`Nel Noddings`, d:`1929–2022`, i:`Caring — relational ethics centered on the encounter between persons.`, v:{CE:8,VA:6,ES:5,UI:4} },
   { n:`Annette Baier`, d:`1929–2012`, i:`Trust as the precondition of moral life; Hume re-read for the feminine.`, v:{CE:7,TE:6,VA:6,UI:5} },
   { n:`Onora O\'Neill`, d:`b. 1941`, i:`Constructive Kantianism; trust and accountability in modern institutions.`, v:{TR:8,UI:7,PO:6} },
-  { n:`Susan Sontag`, d:`1933–2004`, i:`Against Interpretation — the erotics of art beats hermeneutics.`, v:{ES:7,VA:7,SS:7,SR:6,VA:7} },
+  { n:`Susan Sontag`, d:`1933–2004`, tr:'postmodern', i:`Against Interpretation — the erotics of art beats hermeneutics.`, v:{ES:7,VA:7,SS:7,SR:6,VA:7} },
   { n:`Catharine MacKinnon`, d:`b. 1946`, i:`Toward a Feminist Theory of the State — sexual hierarchy as the deepest politics.`, v:{SR:7,WP:7,UI:6,CE:6,SS:6} },
   { n:`Drucilla Cornell`, d:`1950–2022`, i:`The imaginary domain — equality requires room to imagine oneself otherwise.`, v:{SS:6,UI:7,VA:6,WP:5} },
   { n:`Julia Kristeva`, d:`b. 1941`, i:`Abjection — the borders the self draws to remain itself.`, v:{SI:7,ES:6,SR:6,SS:6} },
@@ -282,13 +476,13 @@ const ENTRIES = [
   { n:`Adrian Piper`, d:`b. 1948`, i:`Rationality and the Structure of the Self — Kant and Black conceptual art.`, v:{TR:7,UI:6,SS:6,SR:6} },
 
   // ─── 20TH C. CONTINENTAL + ANALYTIC ──────────────────────────────
-  { n:`Karl Popper`, d:`1902–1994`, i:`Falsifiability — open society defended by fallible knowledge.`, v:{TR:8,SR:7,UI:7,WP:6,RT:3} },
-  { n:`Imre Lakatos`, d:`1922–1974`, i:`Research programs — science between Popper's edge and Kuhn's communities.`, v:{TR:7,SR:6,CE:6,TE:6,TD:6} },
-  { n:`Thomas Kuhn`, d:`1922–1996`, i:`Structure of Scientific Revolutions — paradigms shift, not data.`, v:{CE:7,TE:6,SR:6,RT:5,SI:5} },
+  { n:`Karl Popper`, d:`1902–1994`, tr:'analytic', i:`Falsifiability — open society defended by fallible knowledge.`, v:{TR:8,SR:7,UI:7,WP:6,RT:3} },
+  { n:`Imre Lakatos`, d:`1922–1974`, tr:'analytic', i:`Research programs — science between Popper's edge and Kuhn's communities.`, v:{TR:7,SR:6,CE:6,TE:6,TD:6} },
+  { n:`Thomas Kuhn`, d:`1922–1996`, tr:'analytic', i:`Structure of Scientific Revolutions — paradigms shift, not data.`, v:{CE:7,TE:6,SR:6,RT:5,SI:5} },
   { n:`Paul Feyerabend`, d:`1924–1994`, i:`Against Method — anything goes; epistemological anarchism.`, v:{SR:9,SS:8,WP:6,RT:1,UI:3} },
-  { n:`Ian Hacking`, d:`1936–2023`, i:`Representing and Intervening — making up people; styles of reasoning.`, v:{SR:7,TE:7,SI:6,TR:6} },
+  { n:`Ian Hacking`, d:`1936–2023`, tr:'analytic', i:`Representing and Intervening — making up people; styles of reasoning.`, v:{SR:7,TE:7,SI:6,TR:6} },
   { n:`Bas van Fraassen`, d:`b. 1941`, i:`Constructive empiricism — accept what is observable, suspend on the rest.`, v:{TE:8,SR:8,TR:6,UI:5} },
-  { n:`Nelson Goodman`, d:`1906–1998`, i:`Fact, Fiction, and Forecast — grue, and ways of worldmaking.`, v:{SR:7,TD:7,TR:6,SI:6} },
+  { n:`Nelson Goodman`, d:`1906–1998`, tr:'analytic', i:`Fact, Fiction, and Forecast — grue, and ways of worldmaking.`, v:{SR:7,TD:7,TR:6,SI:6} },
   { n:`Donald Davidson`, d:`1917–2003`, i:`Anomalous monism; radical interpretation as the test of meaning.`, v:{TR:8,TE:7,UI:6,TD:7} },
   { n:`Wilfrid Sellars`, d:`1912–1989`, i:`Myth of the Given — manifest and scientific images side by side.`, v:{TR:8,SR:6,TD:7,UI:6} },
   { n:`Robert Brandom`, d:`b. 1950`, i:`Making It Explicit — meaning as inferential commitment in social space.`, v:{TR:8,CE:6,TD:8,UI:6} },
@@ -315,7 +509,7 @@ const ENTRIES = [
   { n:`David Lewis`, d:`1941–2001`, i:`On the Plurality of Worlds — every possibility is a real world.`, v:{TR:9,TD:9,SI:5,UI:6} },
   { n:`Saul Kripke (re-noted)`, d:`1940–2022`, i:`(already in db — skip)`, v:{} },
   { n:`Hilary Putnam (re-noted)`, d:`1926–2016`, i:`(already in db — skip)`, v:{} },
-  { n:`Bernard Lonergan`, d:`1904–1984`, i:`Insight — the structure of intentional consciousness as cognitive method.`, v:{TR:8,RT:7,TD:8,UI:6,MR:6} },
+  { n:`Bernard Lonergan`, d:`1904–1984`, tr:'scholastic', i:`Insight — the structure of intentional consciousness as cognitive method.`, v:{TR:8,RT:7,TD:8,UI:6,MR:6} },
   { n:`Vladimir Solovyov`, d:`1853–1900`, i:`Russian religious philosophy — total-unity and the wisdom of God.`, v:{MR:9,RT:7,UI:7,TD:7,TV:6} },
   { n:`Nikolai Berdyaev`, d:`1874–1948`, i:`Freedom and creativity as the divine in the human person.`, v:{SS:8,VA:6,MR:7,TV:6,WP:6,RT:3} },
   { n:`Lev Tolstoy`, d:`1828–1910`, i:`My Confession — anarchism, vegetarianism, the kingdom of God within.`, v:{MR:7,TV:7,AT:7,CE:6,RT:5,WP:5} },
@@ -327,38 +521,38 @@ const ENTRIES = [
   { n:`Maurice Blanchot`, d:`1907–2003`, i:`The space of literature — writing as the disappearance of the writer.`, v:{MR:8,SI:8,TV:6,SS:5} },
   { n:`Edmond Jabès`, d:`1912–1991`, i:`The Book of Questions — the question outliving every answer.`, v:{MR:7,SR:7,RT:5,SI:5} },
   { n:`Jean-Luc Nancy`, d:`1940–2021`, i:`Being singular plural — existence is already with.`, v:{CE:7,SS:6,MR:6,SI:5} },
-  { n:`Étienne Balibar`, d:`b. 1942`, i:`Citizen subject — equality and liberty as inseparable political invention.`, v:{UI:7,WP:6,CE:6,TR:6} },
+  { n:`Étienne Balibar`, d:`b. 1942`, tr:'critical-theory', i:`Citizen subject — equality and liberty as inseparable political invention.`, v:{UI:7,WP:6,CE:6,TR:6} },
   { n:`Alain Badiou`, d:`b. 1937`, i:`Being and Event — truth procedures issuing from singular fidelity.`, v:{TD:8,WP:7,SS:7,TR:7,UI:6} },
   { n:`Jacques Rancière`, d:`b. 1940`, i:`The distribution of the sensible — politics as redistribution of who counts.`, v:{WP:6,UI:7,CE:6,SR:6} },
   { n:`Bernard Stiegler`, d:`1952–2020`, i:`Technics and time — exteriorization of memory shapes the human.`, v:{TR:7,TE:7,TD:7,CE:6,TV:6} },
   { n:`Quentin Meillassoux`, d:`b. 1967`, i:`After Finitude — the absolute returns through speculative reason.`, v:{TR:8,TD:9,SR:6,SI:5} },
   { n:`Catherine Malabou`, d:`b. 1959`, i:`Plasticity — the brain as the form that gives and takes form.`, v:{TE:7,ES:6,WP:6,SR:5,SI:5} },
   { n:`Achille Mbembe (re-noted)`, d:`b. 1957`, i:`(already in db — skip)`, v:{} },
-  { n:`Bruno Latour`, d:`1947–2022`, i:`Actor-network theory — humans and nonhumans entangled in collectives.`, v:{TE:8,CE:7,SR:7,SI:5,RT:5} },
+  { n:`Bruno Latour`, d:`1947–2022`, tr:'postmodern', i:`Actor-network theory — humans and nonhumans entangled in collectives.`, v:{TE:8,CE:7,SR:7,SI:5,RT:5} },
   { n:`Donna Haraway (re-noted)`, d:`b. 1944`, i:`(already in db — skip)`, v:{} },
   { n:`Isabelle Stengers`, d:`b. 1949`, i:`Cosmopolitics — sciences as practices, slow and risky.`, v:{TE:7,CE:6,SR:7} },
   { n:`Karen Barad`, d:`b. 1956`, i:`Agential realism — phenomena, not objects, as the units of reality.`, v:{TE:7,TD:7,SR:6,SI:6,ES:5} },
   { n:`Eduardo Viveiros de Castro`, d:`b. 1951`, i:`Amerindian perspectivism — bodies vary, points of view multiply.`, v:{CE:6,SR:6,TE:6,UI:4,MR:6} },
-  { n:`Philippe Descola`, d:`b. 1949`, i:`Beyond Nature and Culture — four ontologies organizing how peoples live.`, v:{CE:7,TE:7,RT:6,UI:5} },
-  { n:`Eduardo Kohn`, d:`b. 1968`, i:`How Forests Think — semiosis beyond the human in the forest's logic.`, v:{ES:7,MR:6,SR:6,SI:5} },
+  { n:`Philippe Descola`, d:`b. 1949`, tr:'indigenous', i:`Beyond Nature and Culture — four ontologies organizing how peoples live.`, v:{CE:7,TE:7,RT:6,UI:5} },
+  { n:`Eduardo Kohn`, d:`b. 1968`, tr:'indigenous', i:`How Forests Think — semiosis beyond the human in the forest's logic.`, v:{ES:7,MR:6,SR:6,SI:5} },
   { n:`Anna Tsing`, d:`b. 1952`, i:`The Mushroom at the End of the World — life in capitalist ruins.`, v:{TV:7,ES:7,CE:6,TE:6} },
-  { n:`Karen Armstrong`, d:`b. 1944`, i:`The Case for God — religion as practice that re-trains attention.`, v:{MR:7,RT:7,UI:6,PO:6} },
+  { n:`Karen Armstrong`, d:`b. 1944`, tr:'mystical-cross-tradition', i:`The Case for God — religion as practice that re-trains attention.`, v:{MR:7,RT:7,UI:6,PO:6} },
   { n:`Charles Hartshorne`, d:`1897–2000`, i:`Process theology — God dipolar, suffering with creation.`, v:{MR:7,TR:7,VA:6,RT:6,UI:6} },
   { n:`Alfred North Whitehead (re-noted)`, d:`1861–1947`, i:`(already in db — skip)`, v:{} },
 
   // ─── 20TH C. NON-WESTERN & POSTCOLONIAL ──────────────────────────
   { n:`Sri Aurobindo (re-noted)`, d:`1872–1950`, i:`(already in db — skip)`, v:{} },
   { n:`Ramana Maharshi (re-noted)`, d:`1879–1950`, i:`(already in db — skip)`, v:{} },
-  { n:`Anandamayi Ma`, d:`1896–1982`, i:`Bhairavi mother — silence as her clearest teaching.`, v:{MR:10,VA:6,SI:6,AT:6} },
-  { n:`Sarvepalli Radhakrishnan`, d:`1888–1975`, i:`Hindu View of Life — religion as experience, philosophy as its grammar.`, v:{MR:7,RT:7,TR:7,UI:7} },
-  { n:`Bhimrao Ambedkar`, d:`1891–1956`, i:`Annihilation of Caste — conversion to Buddhism as moral rebellion.`, v:{WP:8,UI:7,SR:7,SS:7,RT:2} },
+  { n:`Anandamayi Ma`, d:`1896–1982`, tr:'vedanta-bhakti', i:`Bhairavi mother — silence as her clearest teaching.`, v:{MR:10,VA:6,SI:6,AT:6} },
+  { n:`Sarvepalli Radhakrishnan`, d:`1888–1975`, tr:'vedanta-advaita', i:`Hindu View of Life — religion as experience, philosophy as its grammar.`, v:{MR:7,RT:7,TR:7,UI:7} },
+  { n:`Bhimrao Ambedkar`, d:`1891–1956`, tr:'liberation', i:`Annihilation of Caste — conversion to Buddhism as moral rebellion.`, v:{WP:8,UI:7,SR:7,SS:7,RT:2} },
   { n:`Mohandas Gandhi (re-noted)`, d:`1869–1948`, i:`(already in db — skip)`, v:{} },
-  { n:`Vinoba Bhave`, d:`1895–1982`, i:`Bhoodan — land gift as Gandhian revolution by walking.`, v:{AT:7,CE:7,UI:6,WP:5,RT:5} },
+  { n:`Vinoba Bhave`, d:`1895–1982`, tr:'liberation', i:`Bhoodan — land gift as Gandhian revolution by walking.`, v:{AT:7,CE:7,UI:6,WP:5,RT:5} },
   { n:`Jiddu Krishnamurti (re-noted)`, d:`1895–1986`, i:`(already in db — skip)`, v:{} },
   { n:`U.G. Krishnamurti`, d:`1918–2007`, i:`Anti-guru guru — the natural state has nothing to teach.`, v:{SS:8,SR:8,SI:7,MR:6,RT:1} },
-  { n:`Osho (Rajneesh)`, d:`1931–1990`, i:`Dynamic meditation — sannyas remade for the modern hedonist.`, v:{VA:7,SS:7,MR:6,ES:7,RT:2} },
-  { n:`B.K.S. Iyengar`, d:`1918–2014`, i:`Light on Yoga — alignment as the embodied form of intelligence.`, v:{ES:9,AT:6,RT:6,PO:7,MR:5} },
-  { n:`Daisaku Ikeda`, d:`1928–2023`, i:`Soka Gakkai humanism — the practitioner's revolution from the inside.`, v:{VA:7,CE:7,UI:6,MR:5,RT:5} },
+  { n:`Osho (Rajneesh)`, d:`1931–1990`, tr:'tantric', i:`Dynamic meditation — sannyas remade for the modern hedonist.`, v:{VA:7,SS:7,MR:6,ES:7,RT:2} },
+  { n:`B.K.S. Iyengar`, d:`1918–2014`, tr:'vedanta-bhakti', i:`Light on Yoga — alignment as the embodied form of intelligence.`, v:{ES:9,AT:6,RT:6,PO:7,MR:5} },
+  { n:`Daisaku Ikeda`, d:`1928–2023`, tr:'buddhist-mahayana', i:`Soka Gakkai humanism — the practitioner's revolution from the inside.`, v:{VA:7,CE:7,UI:6,MR:5,RT:5} },
   { n:`Shunryu Suzuki`, d:`1904–1971`, i:`Zen Mind, Beginner\'s Mind — the original empty mind always available.`, v:{MR:8,AT:7,VA:5,SI:6} },
   { n:`Robert Aitken`, d:`1917–2010`, i:`American Zen with social engagement — koan and conscience.`, v:{MR:8,AT:6,UI:6,CE:6} },
   { n:`Toni Packer`, d:`1927–2013`, i:`Awakening without authority — inquiry without lineage.`, v:{MR:7,SS:7,SR:6,RT:3} },
@@ -376,15 +570,15 @@ const ENTRIES = [
   { n:`Wang Hui`, d:`b. 1959`, i:`Rise of modern Chinese thought — modernity reread from inside the tradition.`, v:{TE:7,RT:6,CE:6,TD:6,SR:6} },
   { n:`Li Zehou`, d:`1930–2021`, i:`Sedimentation theory — accumulated practice forms aesthetic-moral sense.`, v:{TE:7,CE:6,RT:5,VA:6,UI:5} },
   { n:`Karatani Kojin`, d:`b. 1941`, i:`Modes of exchange — capital and the gift as paired political histories.`, v:{TR:7,UI:6,CE:6,WP:5,TD:6} },
-  { n:`Maruyama Masao`, d:`1914–1996`, i:`From feudal to modern — Japanese political thought\'s genealogy.`, v:{TR:7,TE:6,SR:6,UI:5,CE:5} },
+  { n:`Maruyama Masao`, d:`1914–1996`, tr:'analytic', i:`From feudal to modern — Japanese political thought\'s genealogy.`, v:{TR:7,TE:6,SR:6,UI:5,CE:5} },
   { n:`Tetsuro Watsuji (re-noted)`, d:`1889–1960`, i:`(already in db — skip)`, v:{} },
-  { n:`Chen Duxiu`, d:`1879–1942`, i:`Founder of Chinese Communism — New Youth\'s call to science and democracy.`, v:{WP:7,UI:7,SR:6,RT:2} },
-  { n:`Tan Sitong`, d:`1865–1898`, i:`Renxue — humaneness as universal ether; martyr of the Hundred Days Reform.`, v:{MR:7,UI:7,CE:6,WP:6} },
+  { n:`Chen Duxiu`, d:`1879–1942`, tr:'marxist', i:`Founder of Chinese Communism — New Youth\'s call to science and democracy.`, v:{WP:7,UI:7,SR:6,RT:2} },
+  { n:`Tan Sitong`, d:`1865–1898`, tr:'liberation', i:`Renxue — humaneness as universal ether; martyr of the Hundred Days Reform.`, v:{MR:7,UI:7,CE:6,WP:6} },
   { n:`Helio Oiticica`, d:`1937–1980`, i:`Tropicália aesthetics — the parangolé as a wearable proposition.`, v:{VA:7,ES:7,SS:6,UI:5} },
   { n:`Paulo Freire`, d:`1921–1997`, i:`Pedagogy of the Oppressed — education as the practice of freedom.`, v:{WP:7,CE:7,UI:7,VA:6} },
   { n:`Enrique Dussel`, d:`1934–2023`, i:`Philosophy of Liberation — the colonial Other as ethical first.`, v:{UI:6,CE:7,WP:6,TV:6,SR:5} },
   { n:`José Carlos Mariátegui`, d:`1894–1930`, i:`Seven Essays — indigenous communism rooted in the ayllu.`, v:{WP:7,UI:6,CE:8,RT:5,VA:5} },
-  { n:`Octavio Paz`, d:`1914–1998`, i:`The Labyrinth of Solitude — masks, otherness, the Mexican condition.`, v:{ES:6,VA:7,CE:5,TV:5,MR:5} },
+  { n:`Octavio Paz`, d:`1914–1998`, tr:'postcolonial', i:`The Labyrinth of Solitude — masks, otherness, the Mexican condition.`, v:{ES:6,VA:7,CE:5,TV:5,MR:5} },
   { n:`Bartolomé de Las Casas`, d:`1484–1566`, i:`Defender of the Indies — humanity of indigenous peoples insisted upon.`, v:{UI:8,RT:6,VA:6,CE:6,SR:5} },
   { n:`Vine Deloria Jr. (re-noted)`, d:`1933–2005`, i:`(already in db — skip)`, v:{} },
   { n:`Robin Wall Kimmerer`, d:`b. 1953`, i:`Braiding Sweetgrass — botany held in the grammar of animacy.`, v:{ES:7,RT:7,CE:7,VA:6,MR:6} },
@@ -438,7 +632,7 @@ const ENTRIES = [
   { n:`Nkiru Nzegwu`, d:`b. 1953`, i:`African gender, motherhood, and the dual-sex Igbo polity.`, v:{CE:7,RT:6,UI:5} },
   { n:`Oyèrónkẹ́ Oyěwùmí`, d:`b. 1957`, i:`The Invention of Women — Yoruba society without the gender category.`, v:{CE:7,SR:6,UI:5,RT:5} },
   { n:`Sylvia Wynter (re-noted)`, d:`b. 1928`, i:`(already in db — skip)`, v:{} },
-  { n:`Édouard Glissant`, d:`1928–2011`, i:`Poetics of Relation — opacity and the archipelagic right to be unknown.`, v:{CE:7,ES:6,VA:6,SR:6,SS:5} },
+  { n:`Édouard Glissant`, d:`1928–2011`, tr:'postcolonial', i:`Poetics of Relation — opacity and the archipelagic right to be unknown.`, v:{CE:7,ES:6,VA:6,SR:6,SS:5} },
   { n:`Suzanne Césaire`, d:`1915–1966`, i:`Tropiques — surrealism and decolonial imagination from Martinique.`, v:{VA:7,ES:6,WP:6,SS:6} },
   { n:`C.L.R. James`, d:`1901–1989`, i:`The Black Jacobins — slaves who made themselves a republic.`, v:{WP:7,UI:7,CE:6,TV:6} },
   { n:`Walter Rodney`, d:`1942–1980`, i:`How Europe Underdeveloped Africa — political economy of empire.`, v:{TE:7,WP:6,UI:6,CE:6,SR:6} },
@@ -452,9 +646,9 @@ const ENTRIES = [
   { n:`José Esteban Muñoz`, d:`1967–2013`, i:`Cruising Utopia — queerness as the not-yet-here.`, v:{VA:7,SS:6,ES:6,UI:5,TV:5} },
   { n:`Achille Mbembe (re-listed already)`, d:`b. 1957`, i:`(see above)`, v:{} },
   { n:`Achille Mbembe — Critique of Black Reason`, d:`b. 1957`, i:`(see Mbembe above)`, v:{} },
-  { n:`Boaventura de Sousa Santos`, d:`b. 1940`, i:`Epistemologies of the South — knowledge born of struggle.`, v:{CE:7,UI:5,SR:6,WP:5} },
+  { n:`Boaventura de Sousa Santos`, d:`b. 1940`, tr:'liberation', i:`Epistemologies of the South — knowledge born of struggle.`, v:{CE:7,UI:5,SR:6,WP:5} },
   { n:`Linda Tuhiwai Smith`, d:`b. 1950`, i:`Decolonizing Methodologies — research from the position of the researched.`, v:{CE:7,RT:6,SR:6} },
-  { n:`Mariana Ortega`, d:`b. 1965`, i:`In-Between — multiplicitous selves of Latina lives.`, v:{ES:6,SS:5,CE:6,SR:5} },
+  { n:`Mariana Ortega`, d:`b. 1965`, tr:'liberation', i:`In-Between — multiplicitous selves of Latina lives.`, v:{ES:6,SS:5,CE:6,SR:5} },
   { n:`Aníbal Quijano`, d:`1928–2018`, i:`Coloniality of power — race as the deepest axis of modern domination.`, v:{SR:7,UI:6,CE:6,WP:5} },
   { n:`Walter Mignolo`, d:`b. 1941`, i:`Local histories/global designs — pluri-versality against the universal.`, v:{SR:7,CE:6,UI:4} },
 
@@ -498,13 +692,18 @@ const ENTRIES = [
 // Dedup by name (case-insensitive). Skip stub "re-noted" duplicates.
 const seen = new Set();
 const out = [];
+const traditionStats = {};
+let withoutTradition = 0;
 for (const e of ENTRIES) {
   const key = e.n.toLowerCase().trim();
   if (seen.has(key)) continue;
   if (e.i && e.i.startsWith('(already in db') || e.i && e.i.startsWith('(see ')) continue;
   if (!e.i) continue;
   seen.add(key);
-  const vec = expand(e.v || {});
+  const tradition = e.tr || inferTradition(e);
+  if (tradition) traditionStats[tradition] = (traditionStats[tradition] || 0) + 1;
+  else withoutTradition++;
+  const vec = expand(e.v || {}, tradition);
   const arch = nearestArchetype(vec);
   out.push({
     name: e.n,
@@ -513,12 +712,14 @@ for (const e of ENTRIES) {
     vector: vec,
     archetypeKey: arch.key,
     archetypeName: arch.name,
-    aliases: [],
+    aliases: genAliases(e.n),
   });
 }
 
 if (!process.argv[2]) console.log(JSON.stringify(out, null, 2));
 console.error(`Generated ${out.length} entries.`);
+console.error(`Without inferred tradition: ${withoutTradition}`);
+console.error(`Top traditions: ${Object.entries(traditionStats).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([k,v])=>`${k}=${v}`).join(', ')}`);
 
 // ─── Format variants ───
 function jsonEscape(s) {
@@ -529,6 +730,9 @@ function jsonEscape(s) {
 function emitLibFormat(rows) {
   return rows.map(r => {
     const dimVals = r.vector.join(',\n      ');
+    const aliasArr = r.aliases.length
+      ? r.aliases.map(a => `"${jsonEscape(a)}"`).join(', ')
+      : '';
     return `  {
     "name": "${jsonEscape(r.name)}",
     "dates": "${jsonEscape(r.dates)}",
@@ -538,7 +742,7 @@ function emitLibFormat(rows) {
     ],
     "archetypeKey": "${r.archetypeKey}",
     "archetypeName": "${jsonEscape(r.archetypeName)}",
-    "aliases": []
+    "aliases": [${aliasArr}]
   }`;
   }).join(',\n');
 }
@@ -558,4 +762,13 @@ if (mode === 'lib') {
   console.log(emitLibFormat(out));
 } else if (mode === 'html') {
   console.log(emitHtmlFormat(out));
+}
+
+if (process.argv[2] === 'untagged') {
+  for (const e of ENTRIES) {
+    if (e.i && (e.i.startsWith('(already in db') || e.i.startsWith('(see '))) continue;
+    if (!e.i) continue;
+    const t = e.tr || inferTradition(e);
+    if (!t) console.log(e.n + '  |  ' + e.i.slice(0, 80));
+  }
 }
