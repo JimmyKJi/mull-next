@@ -2,25 +2,36 @@
 // shorthand entries with a partial dim signature, expands to a full
 // 16-D vector (defaulting unspecified dims to 5), computes nearest
 // archetype via cosine similarity against the canonical archetype
-// targets, and emits formatted TS array entries.
+// targets, and emits formatted entries.
 //
-// To run: node scripts/gen-philosophers.mjs > /tmp/extra.json
-// Then splice the array into lib/philosophers.ts and public/mull.html.
+// Two output paths:
+//
+//   `--apply` (recommended)
+//     Reads lib/philosophers.ts and public/mull.html, finds the
+//     `BEGIN gen-philosophers Wave 2` / `END gen-philosophers Wave 2`
+//     markers in each, and writes the new entries in place. One
+//     command keeps both files in sync — no more Python splice
+//     dance. Errors out if either file is missing its sentinels.
+//
+//   Legacy stdout modes (kept for ad-hoc inspection)
+//     `node scripts/gen-philosophers.mjs`          → JSON to stdout
+//     `node scripts/gen-philosophers.mjs lib`      → lib/philosophers.ts entries
+//     `node scripts/gen-philosophers.mjs html`     → mull.html entries
+//     `node scripts/gen-philosophers.mjs untagged` → tag-debug helper
+//
+// To add new philosophers: append to the ENTRIES array below, tag
+// the tradition explicitly with `tr:` if the keyword inference would
+// miss it, then run `node scripts/gen-philosophers.mjs --apply`.
+
+import { loadArchetypeTargets } from './_load-archetype-targets.mjs';
 
 const DIMS = ['TV','VA','WP','TR','TE','RT','MR','SR','CE','SS','PO','TD','AT','ES','UI','SI'];
 
-const ARCHETYPES = [
-  { key:'cartographer', name:'The Cartographer', p:{TV:4,VA:6,WP:3,TR:9,TE:7,RT:6,MR:2,SR:3,CE:5,SS:5,PO:8,TD:9,AT:5,ES:5,UI:7,SI:3} },
-  { key:'keel',         name:'The Keel',         p:{TV:7,VA:6,WP:2,TR:8,TE:6,RT:6,MR:3,SR:4,CE:6,SS:5,PO:9,TD:5,AT:8,ES:3,UI:7,SI:3} },
-  { key:'threshold',    name:'The Threshold',    p:{TV:9,VA:4,WP:2,TR:4,TE:7,RT:5,MR:9,SR:5,CE:6,SS:3,PO:8,TD:4,AT:8,ES:2,UI:7,SI:9} },
-  { key:'pilgrim',      name:'The Pilgrim',      p:{TV:8,VA:6,WP:5,TR:5,TE:6,RT:2,MR:3,SR:7,CE:3,SS:9,PO:7,TD:6,AT:3,ES:5,UI:4,SI:4} },
-  { key:'touchstone',   name:'The Touchstone',   p:{TV:4,VA:6,WP:3,TR:4,TE:9,RT:4,MR:1,SR:9,CE:4,SS:6,PO:7,TD:7,AT:3,ES:6,UI:3,SI:5} },
-  { key:'hearth',       name:'The Hearth',       p:{TV:4,VA:6,WP:3,TR:6,TE:7,RT:9,MR:3,SR:3,CE:9,SS:2,PO:9,TD:4,AT:5,ES:5,UI:6,SI:2} },
-  { key:'forge',        name:'The Forge',        p:{TV:5,VA:7,WP:8,TR:7,TE:7,RT:2,MR:1,SR:5,CE:8,SS:5,PO:8,TD:6,AT:3,ES:5,UI:8,SI:3} },
-  { key:'hammer',       name:'The Hammer',       p:{TV:7,VA:8,WP:9,TR:4,TE:6,RT:1,MR:3,SR:7,CE:2,SS:9,PO:6,TD:6,AT:4,ES:6,UI:3,SI:4} },
-  { key:'garden',       name:'The Garden',       p:{TV:3,VA:8,WP:4,TR:5,TE:8,RT:4,MR:1,SR:5,CE:5,SS:6,PO:8,TD:5,AT:2,ES:9,UI:4,SI:3} },
-  { key:'lighthouse',   name:'The Lighthouse',   p:{TV:5,VA:5,WP:5,TR:9,TE:3,RT:4,MR:6,SR:2,CE:5,SS:5,PO:5,TD:9,AT:6,ES:3,UI:9,SI:3} },
-];
+// Pulled from lib/archetype-targets.ts via the shared loader. The
+// canonical targets live there so they don't drift across the three
+// places that need them (this script, the calibration sanity check,
+// and the inline copy in public/mull.html).
+const ARCHETYPES = await loadArchetypeTargets();
 
 // Tradition baselines — characteristic 16-D dim signatures inherited
 // by all philosophers in that tradition. Entry-level v: overrides
@@ -207,7 +218,14 @@ function genAliases(name) {
   const words = cleaned.replace(/[,.]/g, '').split(/\s+/).filter(Boolean);
   if (words.length > 1) {
     let firstIdx = 0;
-    while (firstIdx < words.length && HONORIFICS.has(words[firstIdx].toLowerCase())) firstIdx++;
+    // Skip honorifics AND particles. Honorifics are titles ("Sri",
+    // "Saint"); particles are connective words like "Ibn" or "de"
+    // that aren't real first names — adding them as standalone
+    // aliases creates noisy search collisions (typing "Ibn" would
+    // match every Ibn___ entry without helping disambiguate).
+    while (firstIdx < words.length &&
+           (HONORIFICS.has(words[firstIdx].toLowerCase()) ||
+            PARTICLES.has(words[firstIdx].toLowerCase()))) firstIdx++;
     if (firstIdx < words.length) aliases.add(words[firstIdx]);
     let lastIdx = words.length - 1;
     while (lastIdx > firstIdx && PARTICLES.has(words[lastIdx].toLowerCase())) lastIdx--;
@@ -757,6 +775,71 @@ function emitHtmlFormat(rows) {
   }).join(',\n');
 }
 
+// ─── Apply mode: write both files in place ────────────────────────────
+//
+// Splices new entries between the BEGIN/END sentinels in
+// lib/philosophers.ts and public/mull.html. The sentinels are
+// one-line comments specifically formatted to be unambiguous and
+// grep-able; if either file is missing them, we bail loudly rather
+// than guess at where to insert.
+
+const APPLY = process.argv.includes('--apply');
+if (APPLY) {
+  const { readFile, writeFile } = await import('node:fs/promises');
+  const { fileURLToPath } = await import('node:url');
+  const { dirname, join } = await import('node:path');
+  const __dirname = dirname(fileURLToPath(import.meta.url));
+  const REPO = join(__dirname, '..');
+
+  // Splice helper: replace everything between the two sentinel lines
+  // with the new body. Throws if either marker is missing. Preserves
+  // the END sentinel's full line (including its leading indent) by
+  // slicing from the start of the END line, not from the END text
+  // itself.
+  function spliceBetweenSentinels({ src, begin, end, body, file }) {
+    const beginIdx = src.indexOf(begin);
+    const endIdx = src.indexOf(end);
+    if (beginIdx < 0) throw new Error(`Missing BEGIN sentinel in ${file}: "${begin}"`);
+    if (endIdx < 0) throw new Error(`Missing END sentinel in ${file}: "${end}"`);
+    if (endIdx < beginIdx) throw new Error(`Sentinels out of order in ${file}`);
+    const beginEol = src.indexOf('\n', beginIdx);
+    const endLineStart = src.lastIndexOf('\n', endIdx) + 1;
+    return src.slice(0, beginEol + 1) + body + '\n' + src.slice(endLineStart);
+  }
+
+  const BEGIN = '// ─── BEGIN gen-philosophers Wave 2 ───';
+  const END   = '// ─── END gen-philosophers Wave 2 ───';
+
+  // ── lib/philosophers.ts ──
+  const libPath = join(REPO, 'lib', 'philosophers.ts');
+  const libSrc = await readFile(libPath, 'utf8');
+  // Output is "  { … },\n  { … },\n  { … }" — emit*Format joins with
+  // `,\n` so there's no trailing comma on the last entry, matching the
+  // existing file's style.
+  const libBody = emitLibFormat(out);
+  const newLib = spliceBetweenSentinels({
+    src: libSrc, begin: BEGIN, end: END, body: libBody, file: 'lib/philosophers.ts',
+  });
+  await writeFile(libPath, newLib);
+  console.error(`Wrote lib/philosophers.ts (${out.length} Wave 2 entries between sentinels).`);
+
+  // ── public/mull.html ──
+  const mullPath = join(REPO, 'public', 'mull.html');
+  const mullSrc = await readFile(mullPath, 'utf8');
+  // The HTML format has no aliases — mull.html's PHILOSOPHERS table
+  // is name-only and doesn't search by alias. emitHtmlFormat reflects
+  // that (just name/dates/keyIdea/p).
+  const mullBody = emitHtmlFormat(out);
+  const newMull = spliceBetweenSentinels({
+    src: mullSrc, begin: BEGIN, end: END, body: mullBody, file: 'public/mull.html',
+  });
+  await writeFile(mullPath, newMull);
+  console.error(`Wrote public/mull.html (${out.length} Wave 2 entries between sentinels).`);
+
+  console.error(`\nDone. Both files updated. To verify: \`git diff lib/philosophers.ts public/mull.html\``);
+}
+
+// ─── Legacy stdout modes (kept for backwards compat) ──────────────────
 const mode = process.argv[2] || 'json';
 if (mode === 'lib') {
   console.log(emitLibFormat(out));

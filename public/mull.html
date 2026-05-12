@@ -5756,7 +5756,11 @@ const PHILOSOPHERS = [
   { name:"Gottlob Frege", dates:"1848–1925", keyIdea:"Founded modern logic. Sense and reference: 'morning star' and 'evening star' refer to the same Venus but mean different things. Mathematics is reducible to logic.",
     p: v({TV:3,VA:5,WP:3,TR:10,TE:4,RT:3,MR:1,SR:5,CE:3,SS:5,PO:3,TD:10,AT:5,ES:1,UI:9,SI:2}) },
 
-  // === Wave 2 corpus: 394 additional philosophers (calibrated) ===
+  // === Wave 2 corpus: managed by scripts/gen-philosophers.mjs ===
+  // To regenerate: `node scripts/gen-philosophers.mjs --apply`
+  // Everything between the BEGIN and END markers is owned by the
+  // generator; hand-edits inside there will be wiped on the next run.
+  // ─── BEGIN gen-philosophers Wave 2 ───
   { name:"Anaximander", dates:"~610–546 BCE", keyIdea:"The boundless (apeiron) is the source of all things — pre-Socratic first physics.",
     p: v({TV:5,VA:6,WP:5,TR:7,TE:6,RT:4,MR:5,SR:5,CE:4,SS:5,PO:5,TD:8,AT:4,ES:5,UI:5,SI:4}) },
   { name:"Anaximenes", dates:"~586–526 BCE", keyIdea:"Air is the underlying substance, condensing and rarefying into all phenomena.",
@@ -6545,6 +6549,7 @@ const PHILOSOPHERS = [
     p: v({TV:4,VA:5,WP:4,TR:6,TE:7,RT:3,MR:3,SR:6,CE:5,SS:5,PO:6,TD:7,AT:3,ES:6,UI:5,SI:6}) },
   { name:"Karl Friston", dates:"b. 1959", keyIdea:"Free energy principle — minds as inference engines minimizing surprise.",
     p: v({TV:4,VA:5,WP:4,TR:8,TE:7,RT:3,MR:3,SR:6,CE:5,SS:5,PO:6,TD:8,AT:3,ES:6,UI:5,SI:5}) }
+  // ─── END gen-philosophers Wave 2 ───
 ];
 
 /* ----- Reading list, keyed by archetype name ----- */

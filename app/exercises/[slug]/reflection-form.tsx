@@ -15,15 +15,25 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { t, type Locale } from '@/lib/translations';
 import { DIM_KEYS, DIM_NAMES } from '@/lib/dimensions';
+import DiagnosisCard from '@/components/diagnosis-card';
+import type { Kinship } from '@/lib/kinship';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
 
+// Server returns these alongside the vector_delta + analysis. The
+// schema, the API route, and the database all carry diagnosis/kinship/
+// is_novel since the exercise_diagnosis migration; this form just
+// needs to render them. See app/diary/diary-composer.tsx for the
+// matching shape on the diary side.
 type SubmitResult = {
   saved: boolean;
   id: string;
   vector_delta: number[] | null;
   analysis: string | null;
+  diagnosis: string | null;
+  kinship: Kinship | null;
+  is_novel: boolean | null;
   analyzed: boolean;
 };
 
@@ -196,6 +206,16 @@ export default function ReflectionForm({
             {t('reflect.unanalyzed', locale)}
           </p>
         ) : null}
+
+        {/* Diagnosis: which philosophical move the reflection made,
+            kindred thinkers, traditions, novel-flag. Renders nothing
+            when all four fields are absent (e.g. when ANTHROPIC_API_KEY
+            was missing and the analysis pipeline degraded). */}
+        <DiagnosisCard
+          diagnosis={result.diagnosis}
+          kinship={result.kinship}
+          is_novel={result.is_novel}
+        />
 
         {shifts.length > 0 && (
           <div style={{ marginBottom: 16 }}>

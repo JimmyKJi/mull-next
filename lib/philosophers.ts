@@ -283,7 +283,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "cartographer",
     "archetypeName": "The Cartographer",
-    "aliases": []
+    "aliases": [
+      "Thomas",
+      "Aquinas"
+    ]
   },
   {
     "name": "Meister Eckhart",
@@ -309,7 +312,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "threshold",
     "archetypeName": "The Threshold",
-    "aliases": []
+    "aliases": [
+      "Meister",
+      "Eckhart"
+    ]
   },
   {
     "name": "Maimonides",
@@ -393,7 +399,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "forge",
     "archetypeName": "The Forge",
-    "aliases": []
+    "aliases": [
+      "Mary",
+      "Wollstonecraft"
+    ]
   },
   {
     "name": "Al-Farabi",
@@ -445,7 +454,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "cartographer",
     "archetypeName": "The Cartographer",
-    "aliases": []
+    "aliases": [
+      "Avicenna",
+      "Sina"
+    ]
   },
   {
     "name": "Al-Ghazali",
@@ -499,7 +511,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "cartographer",
     "archetypeName": "The Cartographer",
-    "aliases": []
+    "aliases": [
+      "Averroes",
+      "Rushd"
+    ]
   },
   {
     "name": "Ibn Arabi",
@@ -525,7 +540,9 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "lighthouse",
     "archetypeName": "The Lighthouse",
-    "aliases": []
+    "aliases": [
+      "Arabi"
+    ]
   },
   {
     "name": "Rumi",
@@ -606,7 +623,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "threshold",
     "archetypeName": "The Threshold",
-    "aliases": []
+    "aliases": [
+      "Adi",
+      "Shankara"
+    ]
   },
   {
     "name": "Ramanuja",
@@ -1048,7 +1068,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "lighthouse",
     "archetypeName": "The Lighthouse",
-    "aliases": []
+    "aliases": [
+      "Nishida",
+      "Kitarō"
+    ]
   },
   {
     "name": "Anton Wilhelm Amo",
@@ -1074,7 +1097,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "cartographer",
     "archetypeName": "The Cartographer",
-    "aliases": []
+    "aliases": [
+      "Anton",
+      "Amo"
+    ]
   },
   {
     "name": "W.E.B. Du Bois",
@@ -1100,7 +1126,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "forge",
     "archetypeName": "The Forge",
-    "aliases": []
+    "aliases": [
+      "Du Bois",
+      "W.E.B."
+    ]
   },
   {
     "name": "Frantz Fanon",
@@ -1126,7 +1155,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "forge",
     "archetypeName": "The Forge",
-    "aliases": []
+    "aliases": [
+      "Frantz",
+      "Fanon"
+    ]
   },
   {
     "name": "Kwasi Wiredu",
@@ -1152,7 +1184,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "hearth",
     "archetypeName": "The Hearth",
-    "aliases": []
+    "aliases": [
+      "Kwasi",
+      "Wiredu"
+    ]
   },
   {
     "name": "Audre Lorde",
@@ -1178,7 +1213,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "forge",
     "archetypeName": "The Forge",
-    "aliases": []
+    "aliases": [
+      "Audre",
+      "Lorde"
+    ]
   },
   {
     "name": "bell hooks",
@@ -1204,7 +1242,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "forge",
     "archetypeName": "The Forge",
-    "aliases": []
+    "aliases": [
+      "bell",
+      "hooks"
+    ]
   },
   {
     "name": "Hume",
@@ -1458,7 +1499,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "pilgrim",
     "archetypeName": "The Pilgrim",
-    "aliases": []
+    "aliases": [
+      "William",
+      "James"
+    ]
   },
   {
     "name": "John Dewey",
@@ -1484,7 +1528,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "forge",
     "archetypeName": "The Forge",
-    "aliases": []
+    "aliases": [
+      "John",
+      "Dewey"
+    ]
   },
   {
     "name": "Husserl",
@@ -1623,7 +1670,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "forge",
     "archetypeName": "The Forge",
-    "aliases": []
+    "aliases": [
+      "Hannah",
+      "Arendt"
+    ]
   },
   {
     "name": "Levinas",
@@ -1677,7 +1727,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "forge",
     "archetypeName": "The Forge",
-    "aliases": []
+    "aliases": [
+      "Simone",
+      "Beauvoir"
+    ]
   },
   {
     "name": "G.E.M. Anscombe",
@@ -1703,7 +1756,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "keel",
     "archetypeName": "The Keel",
-    "aliases": []
+    "aliases": [
+      "Anscombe",
+      "G.E.M."
+    ]
   },
   {
     "name": "John Rawls",
@@ -1729,7 +1785,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "forge",
     "archetypeName": "The Forge",
-    "aliases": []
+    "aliases": [
+      "John",
+      "Rawls"
+    ]
   },
   {
     "name": "Foucault",
@@ -1783,7 +1842,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "hammer",
     "archetypeName": "The Hammer",
-    "aliases": []
+    "aliases": [
+      "Ayn",
+      "Rand"
+    ]
   },
   {
     "name": "Derek Parfit",
@@ -1809,7 +1871,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "cartographer",
     "archetypeName": "The Cartographer",
-    "aliases": []
+    "aliases": [
+      "Derek",
+      "Parfit"
+    ]
   },
   {
     "name": "Pythagoras",
@@ -1965,7 +2030,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "touchstone",
     "archetypeName": "The Touchstone",
-    "aliases": []
+    "aliases": [
+      "Sextus",
+      "Empiricus"
+    ]
   },
   {
     "name": "Seneca",
@@ -2099,7 +2167,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "cartographer",
     "archetypeName": "The Cartographer",
-    "aliases": []
+    "aliases": [
+      "William",
+      "Ockham"
+    ]
   },
   {
     "name": "Hildegard of Bingen",
@@ -2125,7 +2196,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "lighthouse",
     "archetypeName": "The Lighthouse",
-    "aliases": []
+    "aliases": [
+      "Hildegard",
+      "Bingen"
+    ]
   },
   {
     "name": "Catherine of Siena",
@@ -2151,7 +2225,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "keel",
     "archetypeName": "The Keel",
-    "aliases": []
+    "aliases": [
+      "Catherine",
+      "Siena"
+    ]
   },
   {
     "name": "Nicholas of Cusa",
@@ -2177,7 +2254,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "lighthouse",
     "archetypeName": "The Lighthouse",
-    "aliases": []
+    "aliases": [
+      "Nicholas",
+      "Cusa"
+    ]
   },
   {
     "name": "Teresa of Ávila",
@@ -2203,7 +2283,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "threshold",
     "archetypeName": "The Threshold",
-    "aliases": []
+    "aliases": [
+      "Teresa",
+      "Ávila"
+    ]
   },
   {
     "name": "John of the Cross",
@@ -2229,7 +2312,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "threshold",
     "archetypeName": "The Threshold",
-    "aliases": []
+    "aliases": [
+      "John",
+      "Cross"
+    ]
   },
   {
     "name": "Julian of Norwich",
@@ -2255,7 +2341,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "threshold",
     "archetypeName": "The Threshold",
-    "aliases": []
+    "aliases": [
+      "Julian",
+      "Norwich"
+    ]
   },
   {
     "name": "Erasmus",
@@ -2385,7 +2474,9 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "lighthouse",
     "archetypeName": "The Lighthouse",
-    "aliases": []
+    "aliases": [
+      "Tufayl"
+    ]
   },
   {
     "name": "Mulla Sadra",
@@ -2411,7 +2502,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "lighthouse",
     "archetypeName": "The Lighthouse",
-    "aliases": []
+    "aliases": [
+      "Mulla",
+      "Sadra"
+    ]
   },
   {
     "name": "Madhva",
@@ -2489,7 +2583,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "threshold",
     "archetypeName": "The Threshold",
-    "aliases": []
+    "aliases": [
+      "Ramana",
+      "Maharshi"
+    ]
   },
   {
     "name": "Nisargadatta Maharaj",
@@ -2515,7 +2612,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "threshold",
     "archetypeName": "The Threshold",
-    "aliases": []
+    "aliases": [
+      "Nisargadatta",
+      "Maharaj"
+    ]
   },
   {
     "name": "Bodhidharma",
@@ -2567,7 +2667,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "threshold",
     "archetypeName": "The Threshold",
-    "aliases": []
+    "aliases": [
+      "Huineng",
+      "Hui Neng"
+    ]
   },
   {
     "name": "Tsongkhapa",
@@ -2619,7 +2722,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "threshold",
     "archetypeName": "The Threshold",
-    "aliases": []
+    "aliases": [
+      "Nhat Hanh",
+      "Hanh"
+    ]
   },
   {
     "name": "Dalai Lama (14th)",
@@ -2645,7 +2751,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "hearth",
     "archetypeName": "The Hearth",
-    "aliases": []
+    "aliases": [
+      "Dalai Lama",
+      "Tenzin Gyatso"
+    ]
   },
   {
     "name": "Han Feizi",
@@ -2671,7 +2780,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "forge",
     "archetypeName": "The Forge",
-    "aliases": []
+    "aliases": [
+      "Han",
+      "Feizi"
+    ]
   },
   {
     "name": "Wang Yangming",
@@ -2725,7 +2837,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "hearth",
     "archetypeName": "The Hearth",
-    "aliases": []
+    "aliases": [
+      "Zhu",
+      "Xi"
+    ]
   },
   {
     "name": "Kūkai",
@@ -2803,7 +2918,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "hearth",
     "archetypeName": "The Hearth",
-    "aliases": []
+    "aliases": [
+      "Watsuji",
+      "Tetsurō"
+    ]
   },
   {
     "name": "Hillel",
@@ -2857,7 +2975,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "hearth",
     "archetypeName": "The Hearth",
-    "aliases": []
+    "aliases": [
+      "Martin",
+      "Buber"
+    ]
   },
   {
     "name": "Abraham Heschel",
@@ -2883,7 +3004,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "keel",
     "archetypeName": "The Keel",
-    "aliases": []
+    "aliases": [
+      "Abraham",
+      "Heschel"
+    ]
   },
   {
     "name": "Baal Shem Tov",
@@ -2909,7 +3033,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "hearth",
     "archetypeName": "The Hearth",
-    "aliases": []
+    "aliases": [
+      "Baal Shem Tov",
+      "Besht"
+    ]
   },
   {
     "name": "Cheikh Anta Diop",
@@ -2935,7 +3062,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "forge",
     "archetypeName": "The Forge",
-    "aliases": []
+    "aliases": [
+      "Diop",
+      "Anta Diop"
+    ]
   },
   {
     "name": "Achille Mbembe",
@@ -2961,7 +3091,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "pilgrim",
     "archetypeName": "The Pilgrim",
-    "aliases": []
+    "aliases": [
+      "Achille",
+      "Mbembe"
+    ]
   },
   {
     "name": "Kwame Anthony Appiah",
@@ -2987,7 +3120,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "forge",
     "archetypeName": "The Forge",
-    "aliases": []
+    "aliases": [
+      "Kwame",
+      "Appiah"
+    ]
   },
   {
     "name": "Vine Deloria Jr.",
@@ -3243,7 +3379,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "forge",
     "archetypeName": "The Forge",
-    "aliases": []
+    "aliases": [
+      "Francis",
+      "Bacon"
+    ]
   },
   {
     "name": "Fichte",
@@ -3485,7 +3624,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "pilgrim",
     "archetypeName": "The Pilgrim",
-    "aliases": []
+    "aliases": [
+      "Karl",
+      "Jaspers"
+    ]
   },
   {
     "name": "Paul Ricoeur",
@@ -3511,7 +3653,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "cartographer",
     "archetypeName": "The Cartographer",
-    "aliases": []
+    "aliases": [
+      "Paul",
+      "Ricoeur"
+    ]
   },
   {
     "name": "Hans-Georg Gadamer",
@@ -3537,7 +3682,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "cartographer",
     "archetypeName": "The Cartographer",
-    "aliases": []
+    "aliases": [
+      "Hans-Georg",
+      "Gadamer"
+    ]
   },
   {
     "name": "Habermas",
@@ -3620,7 +3768,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "pilgrim",
     "archetypeName": "The Pilgrim",
-    "aliases": []
+    "aliases": [
+      "Walter",
+      "Benjamin"
+    ]
   },
   {
     "name": "Deleuze",
@@ -3782,7 +3933,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "cartographer",
     "archetypeName": "The Cartographer",
-    "aliases": []
+    "aliases": [
+      "Bertrand",
+      "Russell"
+    ]
   },
   {
     "name": "Quine",
@@ -3837,7 +3991,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "cartographer",
     "archetypeName": "The Cartographer",
-    "aliases": []
+    "aliases": [
+      "John",
+      "Searle"
+    ]
   },
   {
     "name": "Daniel Dennett",
@@ -3863,7 +4020,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "touchstone",
     "archetypeName": "The Touchstone",
-    "aliases": []
+    "aliases": [
+      "Daniel",
+      "Dennett"
+    ]
   },
   {
     "name": "David Chalmers",
@@ -3889,7 +4049,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "cartographer",
     "archetypeName": "The Cartographer",
-    "aliases": []
+    "aliases": [
+      "David",
+      "Chalmers"
+    ]
   },
   {
     "name": "Bernard Williams",
@@ -3915,7 +4078,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "cartographer",
     "archetypeName": "The Cartographer",
-    "aliases": []
+    "aliases": [
+      "Bernard",
+      "Williams"
+    ]
   },
   {
     "name": "Alasdair MacIntyre",
@@ -3941,7 +4107,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "hearth",
     "archetypeName": "The Hearth",
-    "aliases": []
+    "aliases": [
+      "Alasdair",
+      "MacIntyre"
+    ]
   },
   {
     "name": "Charles Taylor",
@@ -3967,7 +4136,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "cartographer",
     "archetypeName": "The Cartographer",
-    "aliases": []
+    "aliases": [
+      "Charles",
+      "Taylor"
+    ]
   },
   {
     "name": "Martha Nussbaum",
@@ -3993,7 +4165,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "forge",
     "archetypeName": "The Forge",
-    "aliases": []
+    "aliases": [
+      "Martha",
+      "Nussbaum"
+    ]
   },
   {
     "name": "Michael Sandel",
@@ -4019,7 +4194,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "cartographer",
     "archetypeName": "The Cartographer",
-    "aliases": []
+    "aliases": [
+      "Michael",
+      "Sandel"
+    ]
   },
   {
     "name": "Peter Singer",
@@ -4045,7 +4223,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "forge",
     "archetypeName": "The Forge",
-    "aliases": []
+    "aliases": [
+      "Peter",
+      "Singer"
+    ]
   },
   {
     "name": "Christine Korsgaard",
@@ -4071,7 +4252,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "cartographer",
     "archetypeName": "The Cartographer",
-    "aliases": []
+    "aliases": [
+      "Christine",
+      "Korsgaard"
+    ]
   },
   {
     "name": "Harry Frankfurt",
@@ -4097,7 +4281,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "cartographer",
     "archetypeName": "The Cartographer",
-    "aliases": []
+    "aliases": [
+      "Harry",
+      "Frankfurt"
+    ]
   },
   {
     "name": "Richard Rorty",
@@ -4123,7 +4310,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "touchstone",
     "archetypeName": "The Touchstone",
-    "aliases": []
+    "aliases": [
+      "Richard",
+      "Rorty"
+    ]
   },
   {
     "name": "George Herbert Mead",
@@ -4149,7 +4339,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "forge",
     "archetypeName": "The Forge",
-    "aliases": []
+    "aliases": [
+      "George",
+      "Mead"
+    ]
   },
   {
     "name": "Judith Butler",
@@ -4175,7 +4368,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "touchstone",
     "archetypeName": "The Touchstone",
-    "aliases": []
+    "aliases": [
+      "Judith",
+      "Butler"
+    ]
   },
   {
     "name": "Donna Haraway",
@@ -4201,7 +4397,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "forge",
     "archetypeName": "The Forge",
-    "aliases": []
+    "aliases": [
+      "Donna",
+      "Haraway"
+    ]
   },
   {
     "name": "Angela Davis",
@@ -4227,7 +4426,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "forge",
     "archetypeName": "The Forge",
-    "aliases": []
+    "aliases": [
+      "Angela",
+      "Davis"
+    ]
   },
   {
     "name": "Gayatri Spivak",
@@ -4253,7 +4455,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "touchstone",
     "archetypeName": "The Touchstone",
-    "aliases": []
+    "aliases": [
+      "Gayatri",
+      "Spivak"
+    ]
   },
   {
     "name": "Sylvia Wynter",
@@ -4279,7 +4484,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "forge",
     "archetypeName": "The Forge",
-    "aliases": []
+    "aliases": [
+      "Sylvia",
+      "Wynter"
+    ]
   },
   {
     "name": "Cornel West",
@@ -4305,7 +4513,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "forge",
     "archetypeName": "The Forge",
-    "aliases": []
+    "aliases": [
+      "Cornel",
+      "West"
+    ]
   },
   {
     "name": "Stuart Hall",
@@ -4331,7 +4542,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "forge",
     "archetypeName": "The Forge",
-    "aliases": []
+    "aliases": [
+      "Stuart",
+      "Hall"
+    ]
   },
   {
     "name": "D.T. Suzuki",
@@ -4357,7 +4571,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "threshold",
     "archetypeName": "The Threshold",
-    "aliases": []
+    "aliases": [
+      "D.T. Suzuki",
+      "Suzuki"
+    ]
   },
   {
     "name": "Carl Jung",
@@ -4383,7 +4600,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "pilgrim",
     "archetypeName": "The Pilgrim",
-    "aliases": []
+    "aliases": [
+      "Carl",
+      "Jung"
+    ]
   },
   {
     "name": "Mary Astell",
@@ -4409,7 +4629,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "cartographer",
     "archetypeName": "The Cartographer",
-    "aliases": []
+    "aliases": [
+      "Mary",
+      "Astell"
+    ]
   },
   {
     "name": "Sojourner Truth",
@@ -4435,7 +4658,10 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "forge",
     "archetypeName": "The Forge",
-    "aliases": []
+    "aliases": [
+      "Sojourner",
+      "Truth"
+    ]
   },
   {
     "name": "Albert Schweitzer",
@@ -4461,13 +4687,21 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "keel",
     "archetypeName": "The Keel",
-    "aliases": []
+    "aliases": [
+      "Albert",
+      "Schweitzer"
+    ]
   },
 
-  // ─── Wave 2 corpus: 394 additional philosophers ─────
-  // Generated by scripts/gen-philosophers.mjs. Each entry tagged with
-  // a tradition that seeds the 16-D vector; per-entry overrides refine.
-  // Aliases auto-generated from name parsing.
+  // ─── Wave 2 corpus: managed by scripts/gen-philosophers.mjs ──────────
+  // Each entry is generated from the ENTRIES array in the script: a
+  // tradition seeds the 16-D vector and per-entry overrides refine it,
+  // then aliases are auto-generated from name parsing.
+  //
+  // To regenerate after editing ENTRIES: `node scripts/gen-philosophers.mjs --apply`
+  // Everything between the BEGIN and END markers below is owned by the
+  // generator — hand-edits inside there will be wiped on the next run.
+  // ─── BEGIN gen-philosophers Wave 2 ───
   {
     "name": "Anaximander",
     "dates": "~610–546 BCE",
@@ -6104,7 +6338,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "cartographer",
     "archetypeName": "The Cartographer",
-    "aliases": ["Avempace", "Ibn", "Bajja"]
+    "aliases": ["Avempace", "Bajja"]
   },
   {
     "name": "Ibn Khaldun",
@@ -6130,7 +6364,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "cartographer",
     "archetypeName": "The Cartographer",
-    "aliases": ["Ibn", "Khaldun"]
+    "aliases": ["Khaldun"]
   },
   {
     "name": "Suhrawardi",
@@ -8106,7 +8340,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "pilgrim",
     "archetypeName": "The Pilgrim",
-    "aliases": ["de", "Staël"]
+    "aliases": ["Staël"]
   },
   {
     "name": "Adam Müller",
@@ -14712,6 +14946,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     "archetypeName": "The Cartographer",
     "aliases": ["Karl", "Friston"]
   }
+  // ─── END gen-philosophers Wave 2 ───
 ];
 
 export function matchesPhilosopherSearch(p: PhilosopherEntry, q: string): boolean {

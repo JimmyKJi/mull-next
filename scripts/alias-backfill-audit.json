@@ -1,0 +1,862 @@
+{
+  "mode": "apply",
+  "ranAt": "2026-05-12T16:17:40.994Z",
+  "stats": {
+    "mononymCount": 89,
+    "autoCount": 69,
+    "overrideCount": 8,
+    "preservedCount": 394,
+    "totalChanges": 77
+  },
+  "changes": [
+    {
+      "name": "Thomas Aquinas",
+      "dates": "1225–1274",
+      "archetype": "The Cartographer",
+      "before": [],
+      "after": [
+        "Thomas",
+        "Aquinas"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Meister Eckhart",
+      "dates": "~1260–1328",
+      "archetype": "The Threshold",
+      "before": [],
+      "after": [
+        "Meister",
+        "Eckhart"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Mary Wollstonecraft",
+      "dates": "1759–1797",
+      "archetype": "The Forge",
+      "before": [],
+      "after": [
+        "Mary",
+        "Wollstonecraft"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Ibn Sina (Avicenna)",
+      "dates": "980–1037",
+      "archetype": "The Cartographer",
+      "before": [],
+      "after": [
+        "Avicenna",
+        "Ibn",
+        "Sina"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Ibn Rushd (Averroes)",
+      "dates": "1126–1198",
+      "archetype": "The Cartographer",
+      "before": [],
+      "after": [
+        "Averroes",
+        "Ibn",
+        "Rushd"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Ibn Arabi",
+      "dates": "1165–1240",
+      "archetype": "The Lighthouse",
+      "before": [],
+      "after": [
+        "Ibn",
+        "Arabi"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Adi Shankara",
+      "dates": "~788–820",
+      "archetype": "The Threshold",
+      "before": [],
+      "after": [
+        "Adi",
+        "Shankara"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Nishida Kitarō",
+      "dates": "1870–1945",
+      "archetype": "The Lighthouse",
+      "before": [],
+      "after": [
+        "Nishida",
+        "Kitarō"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Anton Wilhelm Amo",
+      "dates": "1703–1759",
+      "archetype": "The Cartographer",
+      "before": [],
+      "after": [
+        "Anton",
+        "Amo"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "W.E.B. Du Bois",
+      "dates": "1868–1963",
+      "archetype": "The Forge",
+      "before": [],
+      "after": [
+        "Du Bois",
+        "W.E.B."
+      ],
+      "source": "manual_override"
+    },
+    {
+      "name": "Frantz Fanon",
+      "dates": "1925–1961",
+      "archetype": "The Forge",
+      "before": [],
+      "after": [
+        "Frantz",
+        "Fanon"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Kwasi Wiredu",
+      "dates": "1931–2022",
+      "archetype": "The Hearth",
+      "before": [],
+      "after": [
+        "Kwasi",
+        "Wiredu"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Audre Lorde",
+      "dates": "1934–1992",
+      "archetype": "The Forge",
+      "before": [],
+      "after": [
+        "Audre",
+        "Lorde"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "bell hooks",
+      "dates": "1952–2021",
+      "archetype": "The Forge",
+      "before": [],
+      "after": [
+        "bell",
+        "hooks"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "William James",
+      "dates": "1842–1910",
+      "archetype": "The Pilgrim",
+      "before": [],
+      "after": [
+        "William",
+        "James"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "John Dewey",
+      "dates": "1859–1952",
+      "archetype": "The Forge",
+      "before": [],
+      "after": [
+        "John",
+        "Dewey"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Hannah Arendt",
+      "dates": "1906–1975",
+      "archetype": "The Forge",
+      "before": [],
+      "after": [
+        "Hannah",
+        "Arendt"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Simone de Beauvoir",
+      "dates": "1908–1986",
+      "archetype": "The Forge",
+      "before": [],
+      "after": [
+        "Simone",
+        "Beauvoir"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "G.E.M. Anscombe",
+      "dates": "1919–2001",
+      "archetype": "The Keel",
+      "before": [],
+      "after": [
+        "Anscombe",
+        "G.E.M."
+      ],
+      "source": "manual_override"
+    },
+    {
+      "name": "John Rawls",
+      "dates": "1921–2002",
+      "archetype": "The Forge",
+      "before": [],
+      "after": [
+        "John",
+        "Rawls"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Ayn Rand",
+      "dates": "1905–1982",
+      "archetype": "The Hammer",
+      "before": [],
+      "after": [
+        "Ayn",
+        "Rand"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Derek Parfit",
+      "dates": "1942–2017",
+      "archetype": "The Cartographer",
+      "before": [],
+      "after": [
+        "Derek",
+        "Parfit"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Sextus Empiricus",
+      "dates": "~160–210 CE",
+      "archetype": "The Touchstone",
+      "before": [],
+      "after": [
+        "Sextus",
+        "Empiricus"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "William of Ockham",
+      "dates": "~1287–1347",
+      "archetype": "The Cartographer",
+      "before": [],
+      "after": [
+        "William",
+        "Ockham"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Hildegard of Bingen",
+      "dates": "1098–1179",
+      "archetype": "The Lighthouse",
+      "before": [],
+      "after": [
+        "Hildegard",
+        "Bingen"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Catherine of Siena",
+      "dates": "1347–1380",
+      "archetype": "The Keel",
+      "before": [],
+      "after": [
+        "Catherine",
+        "Siena"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Nicholas of Cusa",
+      "dates": "1401–1464",
+      "archetype": "The Lighthouse",
+      "before": [],
+      "after": [
+        "Nicholas",
+        "Cusa"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Teresa of Ávila",
+      "dates": "1515–1582",
+      "archetype": "The Threshold",
+      "before": [],
+      "after": [
+        "Teresa",
+        "Ávila"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "John of the Cross",
+      "dates": "1542–1591",
+      "archetype": "The Threshold",
+      "before": [],
+      "after": [
+        "John",
+        "Cross"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Julian of Norwich",
+      "dates": "~1342–1416",
+      "archetype": "The Threshold",
+      "before": [],
+      "after": [
+        "Julian",
+        "Norwich"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Ibn Tufayl",
+      "dates": "~1105–1185",
+      "archetype": "The Lighthouse",
+      "before": [],
+      "after": [
+        "Ibn",
+        "Tufayl"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Mulla Sadra",
+      "dates": "1571–1640",
+      "archetype": "The Lighthouse",
+      "before": [],
+      "after": [
+        "Mulla",
+        "Sadra"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Ramana Maharshi",
+      "dates": "1879–1950",
+      "archetype": "The Threshold",
+      "before": [],
+      "after": [
+        "Ramana",
+        "Maharshi"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Nisargadatta Maharaj",
+      "dates": "1897–1981",
+      "archetype": "The Threshold",
+      "before": [],
+      "after": [
+        "Nisargadatta",
+        "Maharaj"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Hui Neng",
+      "dates": "638–713",
+      "archetype": "The Threshold",
+      "before": [],
+      "after": [
+        "Huineng",
+        "Hui Neng"
+      ],
+      "source": "manual_override"
+    },
+    {
+      "name": "Thich Nhat Hanh",
+      "dates": "1926–2022",
+      "archetype": "The Threshold",
+      "before": [],
+      "after": [
+        "Nhat Hanh",
+        "Hanh"
+      ],
+      "source": "manual_override"
+    },
+    {
+      "name": "Dalai Lama (14th)",
+      "dates": "b. 1935",
+      "archetype": "The Hearth",
+      "before": [],
+      "after": [
+        "Dalai Lama",
+        "Tenzin Gyatso"
+      ],
+      "source": "manual_override"
+    },
+    {
+      "name": "Han Feizi",
+      "dates": "~280–233 BCE",
+      "archetype": "The Forge",
+      "before": [],
+      "after": [
+        "Han",
+        "Feizi"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Zhu Xi",
+      "dates": "1130–1200",
+      "archetype": "The Hearth",
+      "before": [],
+      "after": [
+        "Zhu",
+        "Xi"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Watsuji Tetsurō",
+      "dates": "1889–1960",
+      "archetype": "The Hearth",
+      "before": [],
+      "after": [
+        "Watsuji",
+        "Tetsurō"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Martin Buber",
+      "dates": "1878–1965",
+      "archetype": "The Hearth",
+      "before": [],
+      "after": [
+        "Martin",
+        "Buber"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Abraham Heschel",
+      "dates": "1907–1972",
+      "archetype": "The Keel",
+      "before": [],
+      "after": [
+        "Abraham",
+        "Heschel"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Baal Shem Tov",
+      "dates": "~1698–1760",
+      "archetype": "The Hearth",
+      "before": [],
+      "after": [
+        "Baal Shem Tov",
+        "Besht"
+      ],
+      "source": "manual_override"
+    },
+    {
+      "name": "Cheikh Anta Diop",
+      "dates": "1923–1986",
+      "archetype": "The Forge",
+      "before": [],
+      "after": [
+        "Diop",
+        "Anta Diop"
+      ],
+      "source": "manual_override"
+    },
+    {
+      "name": "Achille Mbembe",
+      "dates": "b. 1957",
+      "archetype": "The Pilgrim",
+      "before": [],
+      "after": [
+        "Achille",
+        "Mbembe"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Kwame Anthony Appiah",
+      "dates": "b. 1954",
+      "archetype": "The Forge",
+      "before": [],
+      "after": [
+        "Kwame",
+        "Appiah"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Francis Bacon",
+      "dates": "1561–1626",
+      "archetype": "The Forge",
+      "before": [],
+      "after": [
+        "Francis",
+        "Bacon"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Karl Jaspers",
+      "dates": "1883–1969",
+      "archetype": "The Pilgrim",
+      "before": [],
+      "after": [
+        "Karl",
+        "Jaspers"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Paul Ricoeur",
+      "dates": "1913–2005",
+      "archetype": "The Cartographer",
+      "before": [],
+      "after": [
+        "Paul",
+        "Ricoeur"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Hans-Georg Gadamer",
+      "dates": "1900–2002",
+      "archetype": "The Cartographer",
+      "before": [],
+      "after": [
+        "Hans-Georg",
+        "Gadamer"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Walter Benjamin",
+      "dates": "1892–1940",
+      "archetype": "The Pilgrim",
+      "before": [],
+      "after": [
+        "Walter",
+        "Benjamin"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Bertrand Russell",
+      "dates": "1872–1970",
+      "archetype": "The Cartographer",
+      "before": [],
+      "after": [
+        "Bertrand",
+        "Russell"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "John Searle",
+      "dates": "1932–2025",
+      "archetype": "The Cartographer",
+      "before": [],
+      "after": [
+        "John",
+        "Searle"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Daniel Dennett",
+      "dates": "1942–2024",
+      "archetype": "The Touchstone",
+      "before": [],
+      "after": [
+        "Daniel",
+        "Dennett"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "David Chalmers",
+      "dates": "b. 1966",
+      "archetype": "The Cartographer",
+      "before": [],
+      "after": [
+        "David",
+        "Chalmers"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Bernard Williams",
+      "dates": "1929–2003",
+      "archetype": "The Cartographer",
+      "before": [],
+      "after": [
+        "Bernard",
+        "Williams"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Alasdair MacIntyre",
+      "dates": "1929–2025",
+      "archetype": "The Hearth",
+      "before": [],
+      "after": [
+        "Alasdair",
+        "MacIntyre"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Charles Taylor",
+      "dates": "b. 1931",
+      "archetype": "The Cartographer",
+      "before": [],
+      "after": [
+        "Charles",
+        "Taylor"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Martha Nussbaum",
+      "dates": "b. 1947",
+      "archetype": "The Forge",
+      "before": [],
+      "after": [
+        "Martha",
+        "Nussbaum"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Michael Sandel",
+      "dates": "b. 1953",
+      "archetype": "The Cartographer",
+      "before": [],
+      "after": [
+        "Michael",
+        "Sandel"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Peter Singer",
+      "dates": "b. 1946",
+      "archetype": "The Forge",
+      "before": [],
+      "after": [
+        "Peter",
+        "Singer"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Christine Korsgaard",
+      "dates": "b. 1952",
+      "archetype": "The Cartographer",
+      "before": [],
+      "after": [
+        "Christine",
+        "Korsgaard"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Harry Frankfurt",
+      "dates": "1929–2023",
+      "archetype": "The Cartographer",
+      "before": [],
+      "after": [
+        "Harry",
+        "Frankfurt"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Richard Rorty",
+      "dates": "1931–2007",
+      "archetype": "The Touchstone",
+      "before": [],
+      "after": [
+        "Richard",
+        "Rorty"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "George Herbert Mead",
+      "dates": "1863–1931",
+      "archetype": "The Forge",
+      "before": [],
+      "after": [
+        "George",
+        "Mead"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Judith Butler",
+      "dates": "b. 1956",
+      "archetype": "The Touchstone",
+      "before": [],
+      "after": [
+        "Judith",
+        "Butler"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Donna Haraway",
+      "dates": "b. 1944",
+      "archetype": "The Forge",
+      "before": [],
+      "after": [
+        "Donna",
+        "Haraway"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Angela Davis",
+      "dates": "b. 1944",
+      "archetype": "The Forge",
+      "before": [],
+      "after": [
+        "Angela",
+        "Davis"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Gayatri Spivak",
+      "dates": "b. 1942",
+      "archetype": "The Touchstone",
+      "before": [],
+      "after": [
+        "Gayatri",
+        "Spivak"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Sylvia Wynter",
+      "dates": "b. 1928",
+      "archetype": "The Forge",
+      "before": [],
+      "after": [
+        "Sylvia",
+        "Wynter"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Cornel West",
+      "dates": "b. 1953",
+      "archetype": "The Forge",
+      "before": [],
+      "after": [
+        "Cornel",
+        "West"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Stuart Hall",
+      "dates": "1932–2014",
+      "archetype": "The Forge",
+      "before": [],
+      "after": [
+        "Stuart",
+        "Hall"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "D.T. Suzuki",
+      "dates": "1870–1966",
+      "archetype": "The Threshold",
+      "before": [],
+      "after": [
+        "D.T. Suzuki",
+        "Suzuki"
+      ],
+      "source": "manual_override"
+    },
+    {
+      "name": "Carl Jung",
+      "dates": "1875–1961",
+      "archetype": "The Pilgrim",
+      "before": [],
+      "after": [
+        "Carl",
+        "Jung"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Mary Astell",
+      "dates": "1666–1731",
+      "archetype": "The Cartographer",
+      "before": [],
+      "after": [
+        "Mary",
+        "Astell"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Sojourner Truth",
+      "dates": "~1797–1883",
+      "archetype": "The Forge",
+      "before": [],
+      "after": [
+        "Sojourner",
+        "Truth"
+      ],
+      "source": "algorithm"
+    },
+    {
+      "name": "Albert Schweitzer",
+      "dates": "1875–1965",
+      "archetype": "The Keel",
+      "before": [],
+      "after": [
+        "Albert",
+        "Schweitzer"
+      ],
+      "source": "algorithm"
+    }
+  ]
+}

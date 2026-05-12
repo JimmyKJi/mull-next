@@ -11,10 +11,14 @@
 //   3. Delete the auth.users row via the admin client. This signs the user
 //      out everywhere and prevents re-login.
 //
+// The list of tables to wipe lives in lib/user-scoped-tables.ts so it stays
+// byte-for-byte in sync with the account-export route — no more drift.
+//
 // Requires SUPABASE_SERVICE_ROLE_KEY in env (see utils/supabase/admin.ts).
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { createAdminClient } from '@/utils/supabase/admin';
+import { TABLES_TO_WIPE } from '@/lib/user-scoped-tables';
 
 const CONFIRMATION = 'DELETE MY ACCOUNT';
 
@@ -35,39 +39,16 @@ export async function POST(req: Request) {
     // Wipe user-scoped rows. We swallow individual errors and report at the
     // end so partial failures still get the auth row removed where possible.
     const tableErrors: Array<{ table: string; code?: string; message: string }> = [];
-    const wipe = async (table: string) => {
+    for (const table of TABLES_TO_WIPE) {
       const { error } = await supabase.from(table).delete().eq('user_id', user.id);
       if (error) tableErrors.push({ table, code: error.code, message: error.message });
-    };
-    // Explicitly wipe every user-scoped table. Most have ON DELETE
-    // CASCADE on auth.users, but listing them here makes the data
-    // promise auditable + survives any FK config drift.
-    await wipe('quiz_attempts');
-    await wipe('dilemma_responses');
-    await wipe('diary_entries');
-    await wipe('debate_history');
-    await wipe('exercise_reflections');
-    await wipe('public_profiles');
-    await wipe('notification_preferences');
-    await wipe('subscriptions');
-    await wipe('mo_messages');
-    await wipe('mo_conversations');
-    await wipe('diary_embeddings');
-    await wipe('diary_clusters');
-    await wipe('diary_entry_clusters');
-    await wipe('welcome_emails');
-    await wipe('error_log');
-    await wipe('streak_break_emails');
-    // Referrals: we wipe the user's OWN code + their referrer-record.
-    // Other users' referral rows pointing to this user are kept but
-    // get NULLed via ON DELETE SET NULL on the FK — anonymous trail
-    // remains, but their identifier disappears.
-    await wipe('referral_codes');
-    await wipe('referrals');
-    // Note: `feedback` rows are kept (with user_id NULLed via FK
-    // ON DELETE SET NULL) because the body text is the maintainer's
-    // research record, not personal data. The user's identifier
-    // disappears; the words remain anonymous.
+    }
+
+    // Tables NOT in the wipe loop (e.g. `feedback`, `rate_limit_events`) have
+    // ON DELETE SET NULL on their FK to auth.users — when the auth row goes
+    // away below, their user_id columns are NULLed automatically, the row
+    // bodies persist as anonymous data. See lib/user-scoped-tables.ts for
+    // the per-table rationale.
 
     // Now delete the auth row. Any failure here is the only one that's truly
     // fatal — without removing auth.users, the user could log back in.
@@ -79,7 +60,7 @@ export async function POST(req: Request) {
       return NextResponse.json({
         error: 'Account deletion is misconfigured server-side. Email jimmy.kaian.ji@gmail.com — your data has been wiped but the auth record could not be removed.',
         partial: true,
-        wiped: ['quiz_attempts', 'dilemma_responses', 'diary_entries', 'debate_history', 'public_profiles'],
+        wiped: [...TABLES_TO_WIPE],
         tableErrors,
       }, { status: 500 });
     }

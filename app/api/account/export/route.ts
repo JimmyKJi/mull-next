@@ -1,17 +1,22 @@
 // Export all data we hold for the signed-in user as a single JSON payload.
 //
-// What this includes: every row in every table that's user-scoped — quiz
-// attempts, dilemma responses, diary entries, saved debates, public profile
-// settings if any. Each row is included as-is (no transformation), so this
-// doubles as a transparency tool: you can see literally what we have on you.
+// What this includes: every row in every user-scoped table — registered in
+// lib/user-scoped-tables.ts. The list is shared with the account-deletion
+// route so the data we wipe is the data we expose: there's no longer a way
+// for the two flows to drift.
 //
-// What this DOES NOT include: anything from the Supabase auth.users row
-// (email, password hash, sign-in metadata) since that's managed by Supabase
-// itself. The user's email is added separately so the file is self-contained.
+// What this DOES NOT include:
+//   - The Supabase auth.users row beyond { id, email, created_at }. The
+//     password hash and sign-in metadata are owned by Supabase, not by us.
+//   - Tables marked `inExport: false` in the registry (currently just
+//     rate_limit_events — IP-hashed ops data that auto-prunes every 24h).
 //
-// Returns: a downloadable JSON file.
+// Returns: a downloadable JSON file with one top-level key per table.
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
+import { TABLES_TO_EXPORT } from '@/lib/user-scoped-tables';
+
+type TableError = { table: string; code?: string; message: string };
 
 export async function GET() {
   try {
@@ -19,59 +24,45 @@ export async function GET() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Not signed in.' }, { status: 401 });
 
-    // Fan out — these tables are all user-scoped via RLS, so the simple
-    // SELECTs return only this user's rows. We export every user-
-    // scoped table, including notification prefs, subscription state,
-    // any Mo conversations, and the diary cluster derived data.
-    const [
-      quiz, dilemmas, diary, debates, profile, reflections,
-      notifPrefs, subscription, moConvos, moMessages,
-    ] = await Promise.all([
-      supabase.from('quiz_attempts').select('*').eq('user_id', user.id),
-      supabase.from('dilemma_responses').select('*').eq('user_id', user.id),
-      supabase.from('diary_entries').select('*').eq('user_id', user.id),
-      supabase.from('debate_history').select('*').eq('user_id', user.id),
-      supabase.from('public_profiles').select('*').eq('user_id', user.id).maybeSingle(),
-      supabase.from('exercise_reflections').select('*').eq('user_id', user.id),
-      supabase.from('notification_preferences').select('*').eq('user_id', user.id).maybeSingle(),
-      supabase.from('subscriptions').select('*').eq('user_id', user.id).maybeSingle(),
-      supabase.from('mo_conversations').select('*').eq('user_id', user.id),
-      supabase.from('mo_messages').select('*').eq('user_id', user.id),
-    ]);
+    // Fan out reads in parallel. Singletons get .maybeSingle() so the
+    // payload field is `<table>: {…}` rather than `<table>: [{…}]`; the
+    // shape matches what we documented in the prior hand-curated version.
+    const results = await Promise.all(
+      TABLES_TO_EXPORT.map(async (t) => {
+        const base = supabase.from(t.name).select('*').eq('user_id', user.id);
+        const res = t.singleton ? await base.maybeSingle() : await base;
+        return { table: t, res };
+      }),
+    );
 
-    const payload = {
-      schema: 'mull/account-export@v2',
+    // Build payload + errors array. Keep tables as top-level keys for
+    // readability; collected error metadata goes under `_errors` so
+    // existing scripts that consume the export keep working.
+    const payload: Record<string, unknown> = {
+      schema: 'mull/account-export@v3',
       exported_at: new Date().toISOString(),
       account: {
         id: user.id,
         email: user.email ?? null,
         created_at: user.created_at ?? null,
       },
-      quiz_attempts: quiz.data ?? [],
-      dilemma_responses: dilemmas.data ?? [],
-      diary_entries: diary.data ?? [],
-      debate_history: debates.data ?? [],
-      exercise_reflections: reflections.data ?? [],
-      public_profile: profile.data ?? null,
-      notification_preferences: notifPrefs.data ?? null,
-      subscription: subscription.data ?? null,
-      mo_conversations: moConvos.data ?? [],
-      mo_messages: moMessages.data ?? [],
-      // Tables that returned errors are surfaced so the user knows something
-      // didn't make it into the export rather than silently missing.
-      _errors: [
-        quiz.error && { table: 'quiz_attempts', code: quiz.error.code, message: quiz.error.message },
-        dilemmas.error && { table: 'dilemma_responses', code: dilemmas.error.code, message: dilemmas.error.message },
-        diary.error && { table: 'diary_entries', code: diary.error.code, message: diary.error.message },
-        debates.error && { table: 'debate_history', code: debates.error.code, message: debates.error.message },
-        reflections.error && { table: 'exercise_reflections', code: reflections.error.code, message: reflections.error.message },
-        notifPrefs.error && { table: 'notification_preferences', code: notifPrefs.error.code, message: notifPrefs.error.message },
-        subscription.error && { table: 'subscriptions', code: subscription.error.code, message: subscription.error.message },
-        moConvos.error && { table: 'mo_conversations', code: moConvos.error.code, message: moConvos.error.message },
-        moMessages.error && { table: 'mo_messages', code: moMessages.error.code, message: moMessages.error.message },
-        profile.error && { table: 'public_profiles', code: profile.error.code, message: profile.error.message },
-      ].filter(Boolean),
     };
+    const errors: TableError[] = [];
+
+    for (const { table, res } of results) {
+      payload[table.name] = res.data ?? (table.singleton ? null : []);
+      if (res.error) {
+        errors.push({
+          table: table.name,
+          code: res.error.code,
+          message: res.error.message,
+        });
+      }
+    }
+
+    // Tables that returned errors are surfaced so the user knows something
+    // didn't make it into the export rather than silently missing.
+    payload._errors = errors;
 
     const filename = `mull-export-${user.id.slice(0, 8)}-${new Date().toISOString().slice(0, 10)}.json`;
     return new NextResponse(JSON.stringify(payload, null, 2), {
