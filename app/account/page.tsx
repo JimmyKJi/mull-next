@@ -143,29 +143,40 @@ export default async function AccountPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
-  // Fetch all four event types in parallel
+  // Fetch all four event types in parallel.
+  //
+  // IMPORTANT: we explicitly filter every query by user_id. These tables
+  // have two RLS policies on SELECT — "your own rows" via auth.uid() AND
+  // "anyone's rows where is_public = true" (added in 20260509_public_per_entry).
+  // Without an explicit user_id filter, a query returns the union: a brand
+  // new account would see every other user's public entries in their own
+  // trajectory. The trajectory is a private-by-design view; filter loudly.
   const [attemptsRes, dilemmasRes, diariesRes, reflectionsRes] = await Promise.all([
     supabase
       .from('quiz_attempts')
       .select('id, archetype, flavor, alignment_pct, taken_at, vector')
+      .eq('user_id', user.id)
       .order('taken_at', { ascending: false })
       .limit(20)
       .returns<Attempt[]>(),
     supabase
       .from('dilemma_responses')
       .select('id, dilemma_date, question_text, response_text, vector_delta, analysis, created_at')
+      .eq('user_id', user.id)
       .order('created_at', { ascending: false })
       .limit(40)
       .returns<DilemmaResponse[]>(),
     supabase
       .from('diary_entries')
       .select('id, title, content, vector_delta, analysis, word_count, created_at')
+      .eq('user_id', user.id)
       .order('created_at', { ascending: false })
       .limit(60)
       .returns<DiaryEntryRow[]>(),
     supabase
       .from('exercise_reflections')
       .select('id, exercise_slug, content, vector_delta, analysis, word_count, created_at')
+      .eq('user_id', user.id)
       .order('created_at', { ascending: false })
       .limit(60)
       .returns<ExerciseReflectionRow[]>()

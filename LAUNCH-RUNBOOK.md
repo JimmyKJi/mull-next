@@ -137,6 +137,44 @@ This is calibration drift, not a bug. The quiz isn't broken. Tell users it's a v
 
 ---
 
+## Sanity checks to run before every deploy
+
+These run locally, take a few seconds each, and catch the things that are easy to miss in a manual review. Run them in order; bail on the first failure.
+
+```bash
+# 1. TypeScript compiles. Catches the largest class of build-breakers.
+npx tsc --noEmit -p .
+
+# 2. The privacy invariant — every user-scoped table is registered in
+#    lib/user-scoped-tables.ts, both account-delete and account-export
+#    iterate from that registry (no hardcoded table names), and no
+#    schema-listed user_id table is missing from the registry. If this
+#    fails the data promise is broken — fix before deploying.
+node scripts/check-table-invariants.mjs
+
+# 3. Lint on the touched directories. The full `npx eslint .` works too
+#    but takes longer; this is the targeted version.
+npx eslint app lib components scripts
+
+# 4. Calibration distribution sanity check. Reports a markdown summary
+#    to scripts/calibration-report.md. Doesn't fail the deploy on its
+#    own — read the report and decide. Run this after you add new
+#    philosophers to scripts/gen-philosophers.mjs.
+node scripts/check-philosopher-calibration.mjs
+
+# 5. Production build. Catches route-export shapes, OG-image generation,
+#    and bundle-level errors that tsc misses. The slowest of the bunch
+#    so save it for last.
+npm run build
+```
+
+If a future contributor adds a new user-scoped table, only step 2 will
+catch the omission. That's the whole point of step 2 — register the
+table in `lib/user-scoped-tables.ts` and both the delete and export
+routes pick it up automatically.
+
+---
+
 ## Database migrations to confirm applied
 
 Before launch, confirm these are in your Supabase project. All are idempotent (`IF NOT EXISTS` / `OR REPLACE`), so re-running is safe.
