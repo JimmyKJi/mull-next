@@ -1,5 +1,57 @@
 @import "tailwindcss";
 
+/* Design tokens exposed to Tailwind v4. Mirrors lib/design-tokens.ts
+   (the TypeScript source of truth used by any code that still computes
+   styles in JS). Adding tokens here is purely additive: it surfaces
+   utility classes like `bg-cream`, `text-ink-soft`, `font-display`
+   without affecting any existing rendered surface. Existing inline
+   styles continue to work unchanged until each surface is migrated. */
+@theme {
+  /* Cream + warm editorial palette (mull.html :root copied verbatim
+     so a Wave-1 migration of a static surface lands pixel-identical). */
+  --color-cream: #FAF6EC;
+  --color-cream-2: #F1EAD8;
+  --color-ink: #221E18;
+  --color-ink-soft: #4A4338;
+  --color-line: #D6CDB6;
+
+  /* Night palette — used by the constellation map background and any
+     dark-mode-ish surface inside the result reveal. */
+  --color-night: #0C141E;
+  --color-night-2: #131F2E;
+  --color-night-3: #1D2D44;
+  --color-star: #F1EAD8;
+
+  /* Default theme accent = amber. Per-archetype overrides happen via
+     inline custom-property assignment on the result wrapper, which
+     keeps theme switching cheap. */
+  --color-acc: #B8862F;
+  --color-acc-deep: #8C6520;
+  --color-acc-soft: #F8EDC8;
+  --color-acc-bg: #F8EDC8;
+
+  /* Typography. Body keeps the existing system stack to stay calm;
+     display switches to Cormorant Garamond for the editorial H1s
+     mull.html already uses. */
+  --font-sans: ui-sans-serif, -apple-system, "Inter", "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Cormorant Garamond", Georgia, serif;
+
+  /* Editorial column. The H1+lede+daily-wisdom rag-right invariant
+     (see AGENTS.md) assumes content lives at this width. */
+  --container-editorial: 720px;
+  --container-editorial-wide: 1040px;
+
+  /* Motion tokens. Match lib/motion-tokens.ts. Framer Motion accepts
+     numbers for duration (seconds) and arrays for cubic-bezier, but
+     these CSS-side copies let plain CSS transitions stay consistent. */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 180ms;
+  --duration-base: 280ms;
+  --duration-slow: 520ms;
+  --duration-reveal: 880ms;
+}
+
 :root {
   --background: #FAF6EC;
   --foreground: #221E18;
