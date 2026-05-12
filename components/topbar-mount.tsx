@@ -11,7 +11,8 @@
 import { usePathname } from 'next/navigation';
 
 const HIDDEN_PREFIXES = [
-  '/account',  // has its own header with LogoutButton + privacy controls
+  '/account',         // has its own header with LogoutButton + privacy controls
+  '/result-preview',  // redesign sandbox; the dark reveal would clash with the cream topbar
 ];
 
 export default function TopBarMount({ children }: { children: React.ReactNode }) {

@@ -11,15 +11,28 @@
 'use client';
 
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 const sans = "'Inter', system-ui, sans-serif";
 
+// Routes where the floating Feedback pill would clash visually with
+// the page (e.g. the redesign sandbox has its own bottom-floating
+// switcher). Keep this list aligned with topbar-mount.tsx where
+// possible — when a route opts out of the top bar it usually also
+// wants a clean bottom edge.
+const HIDDEN_PREFIXES = ['/result-preview'];
+
 export default function FeedbackButton() {
+  const pathname = usePathname() || '/';
+  const hide = HIDDEN_PREFIXES.some(p => pathname === p || pathname.startsWith(p + '/'));
+
   const [open, setOpen] = useState(false);
   const [text, setText] = useState('');
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  if (hide) return null;
 
   async function submit() {
     if (!text.trim() || busy) return;
