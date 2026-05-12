@@ -187,6 +187,7 @@ export default async function MethodologyPage() {
           <li>The <strong>philosopher position vectors</strong> are drawn from reading their actual writings, but they&apos;re assigned by a single editor (Jimmy). A scholar in each tradition reviewing the assignments would tighten them considerably; that&apos;s queued for after subscriptions cover the cost of paying scholars.</li>
           <li>The <strong>archetype assignments</strong> use cosine similarity, which treats all dimensions as equally important. A real psychometric instrument would weight some axes more heavily based on how much they discriminate between archetypes. We don&apos;t do that yet.</li>
           <li>The <strong>16 dimensions themselves</strong> are not provably the right 16. They&apos;re the result of careful reading and many iterations, but the claim is one of usefulness, not metaphysical correctness.</li>
+          <li>The <strong>ten archetypes don&apos;t cover every philosophical stance equally well</strong>. The combination of high reverence-for-tradition AND high sovereign-self — the Burkean conservative who venerates inherited institutions while locating moral authority in the individual — sits in an unclaimed quadrant of the 16-D space. People in that quadrant land near Keel or Hearth but rarely <em>on</em> them. The dimensional reading is the more honest portrait; the archetype label is approximate. A future model revision may add an archetype here.</li>
         </ul>
       </Section>
 
