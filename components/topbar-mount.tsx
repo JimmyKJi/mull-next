@@ -11,11 +11,8 @@
 import { usePathname } from 'next/navigation';
 
 const HIDDEN_PREFIXES = [
-  '/account',         // has its own header with LogoutButton + privacy controls
-  '/result-preview',  // redesign sandbox; the dark reveal would clash with the cream topbar
-  '/home',            // redesign sandbox; the new hero brings its own version banner
-  '/quiz',            // redesign sandbox; quiz is a focused single-task surface
-  '/result',          // redesign sandbox; result reveal owns the page chrome
+  '/account',  // has its own header with LogoutButton + privacy controls
+  '/home',     // redesign v2 sandbox — has its own slim wordmark header
 ];
 
 export default function TopBarMount({ children }: { children: React.ReactNode }) {
