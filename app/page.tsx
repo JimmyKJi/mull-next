@@ -1,4 +1,4 @@
-// /home — v2 homepage. Server-rendered, no client JS on first paint.
+// / — v2 homepage. Server-rendered, no client JS on first paint.
 //
 // Design intent (see DESIGN-DIRECTION.md):
 //   Editorial-first, not app-first. Cormorant Garamond italic at
@@ -9,6 +9,11 @@
 // One file by design — small enough to read top-to-bottom, no
 // premature abstraction. Components get extracted when they're
 // actually shared, not before.
+//
+// As of cutover (this file replaces the / → /mull.html rewrite),
+// this is the production homepage. mull.html stays in /public until
+// the rest of the redesign lands so we have a quick rollback path
+// if needed.
 
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
@@ -24,8 +29,6 @@ export const metadata: Metadata = {
   title: "Mull · Find your place on the map of how you think",
   description:
     "A philosophical-mapping tool. 16 dimensions, ten archetypes, 560 thinkers. Take the quiz, see where your worldview sits — and which thinkers across history have stood near you.",
-  // Sandbox during the redesign — production / still serves mull.html.
-  robots: { index: false, follow: false },
 };
 
 export const viewport: Viewport = {

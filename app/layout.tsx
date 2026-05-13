@@ -1,10 +1,23 @@
 import type { Metadata, Viewport } from "next";
+import { Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import GlobalTopBar from "@/components/global-topbar";
 import TopBarMount from "@/components/topbar-mount";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import FeedbackButton from "@/components/feedback-button";
+
+// Cormorant Garamond as the display face for the v2 redesign — used
+// anywhere a component sets `fontFamily: var(--font-display)`. Loaded
+// globally so /, /quiz, /result, and any future redesign route can
+// reference it without their own font loader.
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-cormorant",
+  display: "swap",
+});
 
 // Critical for mobile — without this iOS Safari renders at desktop
 // scale and the layout looks zoomed-out and broken. mull.html has
@@ -44,7 +57,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" style={{ colorScheme: "light" }}>
+    <html
+      lang="en"
+      className={cormorant.variable}
+      style={
+        {
+          colorScheme: "light",
+          ["--font-display" as string]:
+            "var(--font-cormorant), Georgia, serif",
+        } as React.CSSProperties
+      }
+    >
       <body
         style={{
           background: "#FAF6EC",

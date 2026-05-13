@@ -10,18 +10,11 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve(__dirname),
   },
-  async rewrites() {
-    return {
-      beforeFiles: [
-        {
-          source: "/",
-          destination: "/mull.html",
-        },
-      ],
-      afterFiles: [],
-      fallback: [],
-    };
-  },
+  // The / → /mull.html rewrite was removed at v2 cutover. The new
+  // editorial homepage at app/page.tsx is now what / serves. The
+  // mull.html file stays in /public until the rest of the redesign
+  // (archetype + philosopher restyles) lands, so we have a quick
+  // rollback path: re-add the rewrite if anything's broken.
 };
 
 export default nextConfig;
