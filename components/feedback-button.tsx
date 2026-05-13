@@ -20,7 +20,7 @@ const sans = "'Inter', system-ui, sans-serif";
 // switcher). Keep this list aligned with topbar-mount.tsx where
 // possible — when a route opts out of the top bar it usually also
 // wants a clean bottom edge.
-const HIDDEN_PREFIXES: string[] = [];
+const HIDDEN_PREFIXES = ['/quiz', '/result'];
 
 export default function FeedbackButton() {
   const pathname = usePathname() || '/';

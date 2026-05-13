@@ -17,6 +17,8 @@ import { getArchetypeColor } from "@/lib/archetype-colors";
 import { getDailyWisdom } from "@/lib/daily-wisdom";
 import { getServerLocale } from "@/lib/locale-server";
 import { t } from "@/lib/translations";
+import { Constellation } from "@/components/constellation";
+import { PHILOSOPHERS } from "@/lib/philosophers";
 
 export const metadata: Metadata = {
   title: "Mull · Find your place on the map of how you think",
@@ -141,6 +143,52 @@ export default async function HomeV2() {
                 ~6 minutes for the quick read.
               </span>
             </p>
+          </div>
+        </section>
+
+        {/* ─── The constellation ──────────────────────────────────
+            All {PHILOSOPHERS.length} positioned philosophers, projected
+            from 16 dimensions into a 2-D plane. Hover any point for
+            the name + dates; click to open their entry. The map is
+            the soul of the product — putting it on /home makes that
+            unmistakable. */}
+        <section className="border-y border-[#EBE3CA] bg-[#FFFCF4] px-6 py-16 sm:px-10 sm:py-24">
+          <div className="mx-auto max-w-[1200px]">
+            <div className="max-w-[800px]">
+              <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.24em] text-[#8C6520]">
+                <span className="h-px w-10 bg-[#8C6520] opacity-50" />
+                The map
+              </div>
+              <h2
+                className="mt-5 font-display text-[36px] leading-tight text-[#221E18] sm:text-[48px] md:text-[56px]"
+                style={{ fontFamily: "var(--font-display)" }}
+              >
+                {PHILOSOPHERS.length} thinkers, <em>positioned</em>
+              </h2>
+              <p className="mt-5 max-w-[640px] text-[16px] leading-relaxed text-[#4A4338] sm:text-[17px]">
+                Every philosopher in Mull sits at a real point in
+                16-D space, drawn from their actual writings. The map
+                below is that space, flattened to two readable axes.
+                Hover any point to read their name.
+              </p>
+            </div>
+
+            <div className="mt-10">
+              <Constellation
+                variant="interactive"
+                clickable={true}
+                className="max-h-[640px]"
+              />
+            </div>
+
+            <div className="mt-6 flex flex-wrap items-baseline justify-between gap-2 text-[12.5px] text-[#8C6520]">
+              <span className="opacity-80">
+                X axis: theoretical / abstract ↔ embodied / practical
+              </span>
+              <span className="opacity-80">
+                Y axis: sovereign self ↔ communal embeddedness
+              </span>
+            </div>
           </div>
         </section>
 
