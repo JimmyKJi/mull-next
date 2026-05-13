@@ -13,6 +13,7 @@ import { usePathname } from 'next/navigation';
 const HIDDEN_PREFIXES = [
   '/account',         // has its own header with LogoutButton + privacy controls
   '/result-preview',  // redesign sandbox; the dark reveal would clash with the cream topbar
+  '/home',            // redesign sandbox; the new hero brings its own version banner
 ];
 
 export default function TopBarMount({ children }: { children: React.ReactNode }) {
