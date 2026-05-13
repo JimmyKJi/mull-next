@@ -50,6 +50,23 @@ every active worktree under `.claude/worktrees/`, run:
 Run this once after creating a new worktree (or after rotating keys
 in the main `.env.local`).
 
+## Running the dev server (memory-safe)
+
+The dev scripts in `package.json` are tuned for laptops:
+
+- `npm run dev` — Turbopack (fastest HMR; heaviest on RAM). The
+  `NODE_OPTIONS='--max-old-space-size=4096'` prefix caps Node's heap
+  at 4GB so a leak can't run the machine into swap.
+- `npm run dev:webpack` — legacy webpack dev mode. Slower compile
+  but markedly easier on memory and battery; the fallback when
+  Turbopack misbehaves.
+- `npm run preview` — `next build && next start`. Production-mode
+  build that's the cheapest way to *view* changes without the dev
+  cost. Recommended when you're not actively editing.
+
+If a dev session ever spikes badly: `pkill -f 'next dev'` to clear
+zombie processes, then `npm run preview` instead.
+
 ## Required SQL migrations
 
 Run each in the Supabase SQL editor (or `supabase db push` if using the CLI).

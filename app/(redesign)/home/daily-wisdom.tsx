@@ -1,20 +1,16 @@
-// DailyWisdom — server component that renders today's deterministic
-// philosopher quote. Picks via lib/daily-wisdom.ts so the quote ships
-// in the initial HTML (no flash, indexable, instant paint).
+// DailyWisdom — today's deterministic philosopher quote.
 //
-// Visual: small "Today's thinker" eyebrow, italic Cormorant quote,
-// philosopher attribution. Aligns flush-left with the H1 + lede so
-// the rag-right edge invariant holds (see AGENTS.md).
+// V2: bolder. The quote is larger (24 → 32px on desktop) and lives
+// inside a thin-bordered accent rail that visually anchors it on
+// the page. The attribution is its own line with a small accent dot
+// so the eye finds it without scanning.
+//
+// Server component — quote ships in the initial HTML, indexed by
+// crawlers, no flash on hydrate.
 
 import { getDailyWisdom } from "@/lib/daily-wisdom";
 import { getServerLocale } from "@/lib/locale-server";
-import { t } from "@/lib/translations";
 
-// We don't have a translated "Today's thinker" eyebrow string in the
-// existing translations table; fall back to English for non-en locales
-// here and add the key to translations.ts in a later i18n pass. Keeping
-// the rest of the page i18n-clean is more important than blocking on
-// this one label.
 const EYEBROW: Record<string, string> = {
   en: "Today's thinker",
   es: "Pensador de hoy",
@@ -31,27 +27,32 @@ export default async function DailyWisdom() {
   const { philosopher } = getDailyWisdom();
 
   const eyebrow = EYEBROW[locale] ?? EYEBROW.en;
-  // The keyIdea is English-only by design (philosophical content
-  // policy — see AGENTS.md). All other locales fall back to it.
-  void t;
 
   return (
     <section
-      className="mt-10 max-w-[640px]"
+      className="mt-16 max-w-[720px]"
       aria-label="Daily wisdom"
     >
-      <div className="text-[11px] uppercase tracking-[0.2em] text-[var(--color-ink-soft,#4A4338)] opacity-65">
-        {eyebrow}
-      </div>
-      <p
-        className="mt-3 font-display text-[22px] leading-snug text-[var(--color-ink,#221E18)] sm:text-[24px]"
-        style={{ fontFamily: "var(--font-display)" }}
-      >
-        <em>&ldquo;{philosopher.keyIdea}&rdquo;</em>
-      </p>
-      <div className="mt-2 text-[13px] text-[var(--color-ink-soft,#4A4338)]">
-        — {philosopher.name}
-        {philosopher.dates ? `, ${philosopher.dates}` : ""}
+      <div className="border-l-2 border-[var(--color-acc-deep,#8C6520)]/40 pl-5">
+        <div className="text-[11px] uppercase tracking-[0.22em] text-[var(--color-acc-deep,#8C6520)] opacity-80">
+          {eyebrow}
+        </div>
+        <p
+          className="mt-4 font-display text-[26px] leading-[1.35] text-[var(--color-ink,#221E18)] sm:text-[30px]"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
+          <em>&ldquo;{philosopher.keyIdea}&rdquo;</em>
+        </p>
+        <div className="mt-4 flex items-center gap-2 text-[13px] text-[var(--color-ink-soft,#4A4338)]">
+          <span
+            className="inline-block h-1 w-1 rounded-full bg-[var(--color-acc,#B8862F)]"
+            aria-hidden
+          />
+          <span>
+            {philosopher.name}
+            {philosopher.dates ? `, ${philosopher.dates}` : ""}
+          </span>
+        </div>
       </div>
     </section>
   );

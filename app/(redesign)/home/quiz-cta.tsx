@@ -3,19 +3,18 @@
 // QuizCTA — the two big quiz-start buttons (Quick start / Detailed
 // diagnosis) plus the "just show me the map" skip link.
 //
-// Client component because the buttons get a subtle hover/press
-// motion (Framer Motion via the motion primitives). Navigation is
-// plain Next.js <Link> so the press is intentional and shareable.
-//
-// The "Just show me the map" route doesn't exist in the redesign yet
-// (it's part of the constellation Phase 3e); link goes to /result-preview
-// for now so visitors who hit it during Phase 3 don't dead-end.
+// V2: bolder. The recommended path (Quick) is now visibly the
+// primary action — accent-bg card with deep-amber type, a substantial
+// arrow CTA pill, and a slight lift on hover. The Detailed option is
+// the secondary cream card. Both are tall enough to read as deliberate
+// choices, not button-row chrome. The skip link sits below as an
+// explicit third option, not a footnote.
 
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import type { Locale } from "@/lib/translations";
 import { t } from "@/lib/translations";
-import { DURATION, EASE } from "@/lib/motion-tokens";
+import { EASE, SPRING } from "@/lib/motion-tokens";
 
 type Props = {
   locale: Locale;
@@ -25,33 +24,57 @@ export default function QuizCTA({ locale }: Props) {
   const reduce = useReducedMotion();
 
   return (
-    <div className="mt-12 flex flex-col gap-3 sm:flex-row sm:gap-4">
-      <QuizButton
-        href="/quiz?mode=quick"
-        name={t("home.quick_name", locale)}
-        meta={t("home.quick_meta", locale)}
-        desc={t("home.quick_desc", locale)}
-        cta={t("home.begin", locale)}
-        primary
-        reduce={!!reduce}
-      />
-      <QuizButton
-        href="/quiz?mode=detailed"
-        name={t("home.detailed_name", locale)}
-        meta={t("home.detailed_meta", locale)}
-        desc={t("home.detailed_desc", locale)}
-        cta={t("home.begin", locale)}
-        reduce={!!reduce}
-      />
-      <div className="mt-2 flex items-center justify-center sm:mt-0 sm:basis-full">
+    <motion.div
+      initial="pre"
+      animate="reveal"
+      variants={{
+        pre: {},
+        reveal: {
+          transition: {
+            staggerChildren: reduce ? 0 : 0.12,
+            delayChildren: reduce ? 0 : 0.6,
+          },
+        },
+      }}
+      className="mt-16 max-w-[720px]"
+    >
+      <div className="grid gap-4 sm:grid-cols-2">
+        <QuizButton
+          href="/quiz?mode=quick"
+          name={t("home.quick_name", locale)}
+          meta={t("home.quick_meta", locale)}
+          desc={t("home.quick_desc", locale)}
+          cta={t("home.begin", locale)}
+          variant="primary"
+          reduce={!!reduce}
+        />
+        <QuizButton
+          href="/quiz?mode=detailed"
+          name={t("home.detailed_name", locale)}
+          meta={t("home.detailed_meta", locale)}
+          desc={t("home.detailed_desc", locale)}
+          cta={t("home.begin", locale)}
+          variant="secondary"
+          reduce={!!reduce}
+        />
+      </div>
+
+      <motion.div
+        variants={{
+          pre: { opacity: 0, y: 8 },
+          reveal: { opacity: 1, y: 0 },
+        }}
+        transition={{ duration: reduce ? 0 : 0.5, ease: EASE.outSoft }}
+        className="mt-5 flex justify-center"
+      >
         <Link
           href="/result-preview"
           className="text-[14px] text-[var(--color-ink-soft,#4A4338)] underline decoration-[var(--color-line,#D6CDB6)] decoration-1 underline-offset-4 hover:text-[var(--color-ink,#221E18)] hover:decoration-[var(--color-acc-deep,#8C6520)]"
         >
           {t("home.just_map", locale)}
         </Link>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
@@ -61,7 +84,7 @@ function QuizButton({
   meta,
   desc,
   cta,
-  primary = false,
+  variant,
   reduce,
 }: {
   href: string;
@@ -69,40 +92,70 @@ function QuizButton({
   meta: string;
   desc: string;
   cta: string;
-  primary?: boolean;
+  variant: "primary" | "secondary";
   reduce: boolean;
 }) {
+  const isPrimary = variant === "primary";
+
   return (
     <motion.div
-      whileHover={reduce ? undefined : { y: -2 }}
-      whileTap={reduce ? undefined : { y: 0, scale: 0.99 }}
-      transition={{ duration: reduce ? 0 : DURATION.fast, ease: EASE.outSoft }}
-      className="flex-1"
+      variants={{
+        pre: { opacity: 0, y: 30, scale: 0.96 },
+        reveal: { opacity: 1, y: 0, scale: 1 },
+      }}
+      transition={reduce ? { duration: 0 } : SPRING.soft}
+      whileHover={reduce ? undefined : { y: -4 }}
+      whileTap={reduce ? undefined : { y: -1, scale: 0.99 }}
     >
       <Link
         href={href}
         className={
-          // Card-style button. `primary` is a slight shade darker so the
-          // first option reads as the recommended path without shouting.
-          "group block h-full rounded-2xl border bg-[var(--color-cream-2,#F1EAD8)] p-6 transition-shadow " +
-          (primary
-            ? "border-[var(--color-acc-deep,#8C6520)]/25 shadow-[0_2px_8px_rgba(34,30,24,0.05)] hover:shadow-[0_12px_32px_rgba(34,30,24,0.12)]"
-            : "border-[var(--color-line,#D6CDB6)] hover:shadow-[0_12px_32px_rgba(34,30,24,0.08)]")
+          // Card-style button — significantly more visual weight than
+          // V1. Primary is filled with the accent-soft tone and
+          // deep-amber type; secondary is cream with a darker border.
+          "group block h-full rounded-3xl border-2 p-7 transition-all duration-300 sm:p-8 " +
+          (isPrimary
+            ? "border-[var(--color-acc-deep,#8C6520)] bg-[var(--color-acc-soft,#F8EDC8)] hover:shadow-[0_20px_50px_rgba(140,101,32,0.25)]"
+            : "border-[var(--color-line,#D6CDB6)] bg-[var(--color-cream-2,#F1EAD8)] hover:border-[var(--color-acc-deep,#8C6520)]/60 hover:shadow-[0_16px_40px_rgba(34,30,24,0.12)]")
         }
       >
         <div className="flex items-baseline justify-between gap-3">
-          <span className="font-display text-[24px] leading-tight text-[var(--color-ink,#221E18)]" style={{ fontFamily: "var(--font-display)" }}>
+          <span
+            className={
+              "font-display text-[28px] leading-tight sm:text-[32px] " +
+              (isPrimary
+                ? "text-[var(--color-acc-deep,#8C6520)]"
+                : "text-[var(--color-ink,#221E18)]")
+            }
+            style={{ fontFamily: "var(--font-display)" }}
+          >
             {name}
           </span>
-          <span className="text-[12px] text-[var(--color-ink-soft,#4A4338)]">
-            {meta}
-          </span>
         </div>
-        <p className="mt-3 text-[15px] leading-relaxed text-[var(--color-ink-soft,#4A4338)]">
+        <div
+          className={
+            "mt-1 text-[11px] uppercase tracking-[0.16em] " +
+            (isPrimary
+              ? "text-[var(--color-acc-deep,#8C6520)]/70"
+              : "text-[var(--color-ink-soft,#4A4338)]/80")
+          }
+        >
+          {meta}
+        </div>
+        <p className="mt-5 text-[15.5px] leading-relaxed text-[var(--color-ink-soft,#4A4338)]">
           {desc}
         </p>
-        <div className="mt-4 text-[14px] font-medium text-[var(--color-acc-deep,#8C6520)] transition-transform group-hover:translate-x-0.5">
-          {cta}
+        <div className="mt-6 flex items-center gap-2">
+          <span
+            className={
+              "inline-flex items-center gap-2 rounded-full px-4 py-2 text-[14px] font-medium transition-transform group-hover:translate-x-0.5 " +
+              (isPrimary
+                ? "bg-[var(--color-acc-deep,#8C6520)] text-[var(--color-acc-soft,#F8EDC8)]"
+                : "border border-[var(--color-acc-deep,#8C6520)]/30 text-[var(--color-acc-deep,#8C6520)]")
+            }
+          >
+            {cta}
+          </span>
         </div>
       </Link>
     </motion.div>

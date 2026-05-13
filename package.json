@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "NODE_OPTIONS='--max-old-space-size=4096' next dev",
+    "dev:webpack": "NODE_OPTIONS='--max-old-space-size=4096' next dev --webpack",
     "build": "next build",
     "start": "next start",
+    "preview": "next build && next start",
     "lint": "eslint"
   },
   "dependencies": {

@@ -1,79 +1,79 @@
 "use client";
 
-// ResultReveal — the choreographed quiz-result reveal.
+// ResultReveal — the choreographed quiz-result reveal (V2: bolder).
 //
-// This is the highest-emotional-payoff surface of Mull: the moment a
-// person finds out which of the 10 archetypes they are. Today
-// (mull.html) the reveal is a static jump — the result section becomes
-// visible, all at once, with no sense of arrival. This POC explores
-// what it feels like when the reveal is staged like a small piece of
-// cinema: a press from cream into night, the figure developing out of
-// the dark, the name landing, the dimensions laddering in, the
-// kindred thinkers gathering around.
+// This is the highest-emotional-payoff surface of Mull. V1 was too
+// quiet — fades, small slides, ~2.6s total. V2 leans into drama:
+// a longer build, larger spatial gestures, spring physics, an
+// expanding ink-blot transition into night, the figure rising from
+// off-screen, per-word reveal on the archetype name, alignment
+// percent counting up, dim chips bouncing in with overshoot.
 //
-// Choreography (in seconds, all timings tuned together):
-//   0.00  Cream → night background ramp (the "press into night" feel)
-//   0.25  Halo bloom behind where the figure will be
-//   0.45  Figure scales up + fades in (svg renders all at once;
-//         "drawing" effect comes from the halo + scale, not stroke
-//         animation, which would require per-svg stroke prep)
-//   0.95  "You are..." label fades in
-//   1.20  Archetype name (italic, large) slides up
-//   1.55  Spirit phrase fades in below
-//   2.00  Four dominant-dimension chips ladder in, staggered
-//   2.60  Cream coda begins (kindred thinkers, blurb, CTA)
+// Choreography (in seconds):
+//   0.00  Page sits on cream. Tight, restrained.
+//   0.10  Ink expands from center — a radial circle grows outward and
+//         floods the screen with night. ~1.4s sweep.
+//   0.50  Halo births at the future figure spot — starts at scale:0.1
+//   1.10  Figure rises from below (y:140 → 0) while scaling 0.7→1
+//   2.20  "You are" eyebrow cascades letter by letter
+//   2.70  "The" lands (scale 1.4 → 1, soft spring)
+//   2.95  Archetype name word lands (scale 1.4 → 1, soft spring)
+//   3.40  Spirit phrase slides up (y:40 → 0, slow ease)
+//   3.85  Alignment % counts up 0 → final over 0.9s
+//   4.30  Dim chips bounce in with spring overshoot, staggered
+//   5.10  Stars burst out radially from figure center
+//   5.50  Cream coda becomes visible
 //
-// All timings collapse to ~0 under prefers-reduced-motion (handled by
-// the motion primitives + a top-level reduce check).
+// All timings collapse to ~0 under prefers-reduced-motion (the
+// useReducedMotion hook returns true, every duration multiplies by 0,
+// every delay collapses, and Framer Motion jumps to the final frame).
 
-import { motion, useReducedMotion } from "framer-motion";
+import {
+  motion,
+  useReducedMotion,
+  useMotionValue,
+  animate,
+} from "framer-motion";
+import { useEffect, useState } from "react";
 import type { Archetype } from "@/lib/archetypes";
 import { DIM_NAMES, type DimKey } from "@/lib/dimensions";
 import { FIGURES } from "@/lib/figures";
 import { getArchetypeColor } from "@/lib/archetype-colors";
-import { DURATION, EASE } from "@/lib/motion-tokens";
+import { EASE, SPRING } from "@/lib/motion-tokens";
 import { cn } from "@/lib/cn";
 
 type Props = {
   archetype: Archetype;
-  /**
-   * If provided, used as the user's "alignment" percent in the small
-   * caption under the archetype name. POC defaults to 87 — high
-   * enough to feel like a real result, low enough that not every
-   * preview claims a perfect match.
-   */
+  /** User's alignment percent for the small caption. POC defaults to
+   *  87 — strong enough to feel like a real result, low enough not to
+   *  claim a perfect match every time. */
   alignmentPct?: number;
-  // (replayToken accepted by the parent wrapper, where it drives a
-  // `key` to force remount; not consumed here.)
 };
+
+// Beat times — in seconds. Centralized so we can tune the rhythm
+// without grepping the file. These are the "begin animating" delays
+// from page mount.
+const BEAT = {
+  ink: 0.1,
+  halo: 0.5,
+  figure: 1.1,
+  eyebrow: 2.2,
+  nameThe: 2.7,
+  nameWord: 2.95,
+  spirit: 3.4,
+  alignment: 3.85,
+  chips: 4.3,
+  stars: 5.1,
+} as const;
 
 export function ResultReveal({ archetype, alignmentPct = 87 }: Props) {
   const reduce = useReducedMotion();
   const color = getArchetypeColor(archetype.key);
 
-  // No phase state — Framer Motion handles the initial→animate
-  // transition automatically on mount. Replay/archetype-switch is
-  // implemented via a `key` change on the wrapper, which forces a
-  // fresh mount and re-runs the choreography from the top.
-  //
-  // Earlier versions tried to gate the reveal on a useEffect-driven
-  // phase token to guarantee a paint of the pre-state. That dance
-  // turned out brittle under React strict mode + reduced-motion: the
-  // cleanup could cancel the rAF chain mid-flight and leave phase
-  // stuck at "pre" forever, with all opacities at 0 — total whiteout.
-  // The simpler `key`-based approach is what Framer Motion is built
-  // for and never gets stuck.
-
-  // Per-archetype CSS custom properties — drives the scrim hue, the
-  // halo behind the figure, the chip border, and the CTA button.
-  // Setting these on the root wrapper lets nested elements `var(--acc)`
-  // without each component knowing the archetype.
-  //
-  // We also re-publish the cream/night/star tokens locally (matching
-  // mull.html's :root names) so nested arbitrary-value Tailwind
-  // classes like `text-[var(--star)]` resolve. The @theme block uses
-  // the `--color-*` prefix Tailwind requires for utility generation,
-  // but those names aren't always the cleanest to reference inline.
+  // Per-archetype theme tokens, published as CSS custom properties so
+  // nested elements can read them via `var(--acc)` etc. Re-publishing
+  // the cream/star/ink palette here too so arbitrary-value Tailwind
+  // classes like `text-[var(--star)]` resolve inside this subtree.
   const themeStyle: React.CSSProperties = {
     ["--acc" as string]: color.primary,
     ["--acc-deep" as string]: color.deep,
@@ -87,113 +87,111 @@ export function ResultReveal({ archetype, alignmentPct = 87 }: Props) {
     ["--line" as string]: "#D6CDB6",
   };
 
-  // Top-4 dominant dimensions for this archetype. We use the
-  // dominantDimensions array from lib/archetypes.ts (3 entries) and
-  // pad with the next-most-prominent — for the POC, we just show the
-  // 3 we have, which keeps the layout balanced on mobile.
   const dims = (archetype.dominantDimensions as DimKey[]).slice(0, 3);
-
-  // Three kindred thinkers — first three from the curated list. The
-  // full archetype page shows all 6–10; the reveal moment wants
-  // restraint.
   const kin = archetype.kindredThinkers.slice(0, 3);
 
   return (
-    <div
-      style={themeStyle}
-      className="relative w-full overflow-hidden"
-    >
-      {/* ── REVEAL PANEL (night) ─────────────────────────────────────
-          Full-bleed dark surface that ramps in from the cream baseline.
-          On mobile this fills the viewport on first paint; on desktop
-          it's contained to a tall hero block. */}
-      <NightPanel reduce={!!reduce}>
-        <div className="relative z-10 mx-auto flex max-w-[680px] flex-col items-center px-6 pt-20 pb-24 text-center md:pt-28">
-          {/* Halo + figure */}
+    <div style={themeStyle} className="relative w-full overflow-hidden">
+      <NightStage reduce={!!reduce}>
+        <div className="relative z-20 mx-auto flex max-w-[680px] flex-col items-center px-6 pt-24 pb-28 text-center md:pt-32">
+          {/* Halo + figure column */}
           <Halo reduce={!!reduce} />
           <FigureBloom svg={FIGURES[archetype.key] ?? ""} reduce={!!reduce} />
 
-          {/* Eyebrow ("You are...") */}
-          <motion.p
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: reduce ? 0 : DURATION.base,
-              ease: EASE.outSoft,
-              delay: reduce ? 0 : 0.95,
-            }}
-            className="mt-10 text-[13px] uppercase tracking-[0.18em] text-[var(--acc-soft)] opacity-80"
-          >
-            You are
-          </motion.p>
+          {/* Eyebrow — letter-by-letter cascade */}
+          <LetterReveal
+            text="YOU ARE"
+            beat={BEAT.eyebrow}
+            reduce={!!reduce}
+            className="mt-12 text-[13px] tracking-[0.22em] text-[var(--acc-soft)]"
+          />
 
-          {/* Archetype name — Cormorant italic, generous */}
-          <motion.h1
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: reduce ? 0 : DURATION.slow,
-              ease: EASE.outSoft,
-              delay: reduce ? 0 : 1.2,
-            }}
-            className="mt-3 font-display text-[44px] leading-[1.05] text-[var(--star)] sm:text-[56px] md:text-[64px]"
+          {/* Archetype name — "The" first, then the archetype word.
+              Each scales from 1.4 → 1 with a soft spring, creating a
+              "lands hard" feeling. Two-beat rhythm so the name reads
+              as a deliberate naming, not a label slap. */}
+          <h1
+            className="mt-5 flex flex-wrap items-baseline justify-center gap-x-3 font-display text-[48px] leading-[1.0] text-[var(--star)] sm:text-[64px] md:text-[76px]"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            <em className="not-italic">The </em>
-            <em>{capitalize(archetype.key)}</em>
-          </motion.h1>
+            <motion.span
+              initial={{ opacity: 0, scale: 1.4 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{
+                ...SPRING.soft,
+                delay: reduce ? 0 : BEAT.nameThe,
+              }}
+              className="not-italic"
+              style={{
+                textShadow:
+                  "0 2px 30px color-mix(in oklab, var(--acc) 60%, transparent)",
+              }}
+            >
+              The
+            </motion.span>
+            <motion.em
+              initial={{ opacity: 0, scale: 1.4, y: 8 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{
+                ...SPRING.soft,
+                delay: reduce ? 0 : BEAT.nameWord,
+              }}
+              style={{
+                textShadow:
+                  "0 2px 30px color-mix(in oklab, var(--acc) 70%, transparent)",
+              }}
+            >
+              {capitalize(archetype.key)}
+            </motion.em>
+          </h1>
 
-          {/* Spirit phrase */}
+          {/* Spirit phrase — bigger slide (y:40), slower duration so it
+              feels like a sentence being placed, not a hover hint. */}
           <motion.p
-            initial={{ opacity: 0, y: 6 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{
-              duration: reduce ? 0 : DURATION.base,
+              duration: reduce ? 0 : 0.7,
               ease: EASE.outSoft,
-              delay: reduce ? 0 : 1.55,
+              delay: reduce ? 0 : BEAT.spirit,
             }}
-            className="mt-4 max-w-[480px] text-[17px] leading-relaxed text-[var(--cream-2)] opacity-85"
+            className="mt-7 max-w-[520px] text-[18px] leading-relaxed text-[var(--cream-2)] sm:text-[20px]"
           >
             {archetype.spirit}
           </motion.p>
 
-          {/* Alignment percent — small, low-key, builds trust without
-              shouting */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{
-              duration: reduce ? 0 : DURATION.base,
-              delay: reduce ? 0 : 1.75,
-            }}
-            className="mt-5 flex items-center gap-2 text-[12px] uppercase tracking-[0.16em] text-[var(--cream-2)] opacity-65"
-          >
-            <span className="inline-block h-1 w-1 rounded-full bg-[var(--acc-accent)]" />
-            {alignmentPct}% alignment
-          </motion.div>
+          {/* Alignment counter — counts up from 0 instead of just
+              fading in. Numeric animation reads as "the system is
+              measuring you", which is the truthful frame for what
+              just happened. */}
+          <AlignmentCounter
+            target={alignmentPct}
+            reduce={!!reduce}
+            className="mt-7"
+          />
 
-          {/* Dominant-dimension chips */}
+          {/* Dimension chips — bounce in with spring overshoot,
+              staggered. */}
           <DimChips dims={dims} reduce={!!reduce} />
         </div>
-      </NightPanel>
 
-      {/* ── CREAM CODA ──────────────────────────────────────────────
-          The transition back to cream — kindred thinkers, blurb,
-          what's next. Uses onView so it animates as the user scrolls
-          into it (or, on desktop where it's already in view, it
-          comes in with a small delay after the reveal completes). */}
+        {/* Radial star-burst — fires after the chips land. Each star
+            travels OUTWARD from the figure center as if the reveal
+            expelled them. */}
+        <StarBurst reduce={!!reduce} />
+      </NightStage>
+
       <CreamCoda archetype={archetype} kin={kin} reduce={!!reduce} />
     </div>
   );
 }
 
 // ──────────────────────────────────────────────────────────────────
-// NightPanel — the dark surface that ramps in from the cream baseline.
-// Uses a layered radial gradient so the per-archetype --acc-deep
-// tints the night without dominating it. The 100vh min-height on
-// mobile is what makes the reveal feel like its own page.
+// NightStage — the dark surface that the reveal happens on. Starts
+// as cream, then an expanding ink-blot wipes from center outward to
+// fill the screen with the per-archetype night.
 // ──────────────────────────────────────────────────────────────────
-function NightPanel({
+function NightStage({
   reduce,
   children,
 }: {
@@ -201,127 +199,293 @@ function NightPanel({
   children: React.ReactNode;
 }) {
   return (
-    <motion.div
-      initial={{ backgroundColor: "#FAF6EC" }}
-      animate={{ backgroundColor: "#0C141E" }}
-      transition={{
-        duration: reduce ? 0 : DURATION.reveal,
-        ease: EASE.inOutSoft,
-      }}
-      className="relative min-h-[100svh] w-full"
-      // Static gradient — it sits on top of the animated bg-color.
-      // Pre-state shows as a slightly-warm radial on cream; once the
-      // bg ramps to night the gradient reads as the per-archetype
-      // halo behind the figure. Cheaper than animating two layers.
-      style={{
-        backgroundImage:
-          "radial-gradient(circle at 50% 38%, color-mix(in oklab, var(--acc-deep) 55%, transparent) 0%, transparent 55%)",
-      }}
+    <div
+      className="relative min-h-[100svh] w-full overflow-hidden"
+      style={{ backgroundColor: "#FAF6EC" }}
     >
-      {/* Star field — very subtle, only ten or so. Adds depth without
-          pretending to be a real night sky. */}
-      <Stars reduce={reduce} />
+      {/* The ink — a giant circle scaled from 0 to ~2.5 viewport widths,
+          colored with the archetype's deep shade fading to true night
+          at the center. Behind everything but absolutely positioned
+          and clip-pathed by overflow-hidden on the parent. */}
+      <motion.div
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{
+          duration: reduce ? 0 : 1.4,
+          ease: EASE.inOutSoft,
+          delay: reduce ? 0 : 0.1,
+        }}
+        className="pointer-events-none absolute left-1/2 top-[28%] z-0 aspect-square w-[250vmax] -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{
+          background:
+            "radial-gradient(circle, #0C141E 0%, #0C141E 30%, color-mix(in oklab, var(--acc-deep) 70%, #0C141E) 60%, #0C141E 100%)",
+        }}
+      />
+
+      {/* Subtle vignette overlay — adds depth once the ink settles */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.6 }}
+        transition={{
+          duration: reduce ? 0 : 1.0,
+          delay: reduce ? 0 : 1.4,
+        }}
+        className="pointer-events-none absolute inset-0 z-[1]"
+        style={{
+          background:
+            "radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.5) 100%)",
+        }}
+      />
+
       {children}
-    </motion.div>
+    </div>
   );
 }
 
 // ──────────────────────────────────────────────────────────────────
-// Halo — the soft glow behind the figure, in the per-archetype hue.
-// Scales + fades in slightly before the figure does, so the figure
-// looks like it's emerging from the halo rather than landing on it.
+// Halo — soft glow behind the figure. Starts as a near-zero point,
+// expands to full halo with a slow spring. The big scale range
+// (0.1 → 1) is what makes this feel like a birth rather than a fade.
 // ──────────────────────────────────────────────────────────────────
 function Halo({ reduce }: { reduce: boolean }) {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.6 }}
-      animate={{ opacity: 0.5, scale: 1 }}
+      initial={{ opacity: 0, scale: 0.1 }}
+      animate={{ opacity: 0.75, scale: 1 }}
       transition={{
-        duration: reduce ? 0 : DURATION.reveal,
-        ease: EASE.outSoft,
-        delay: reduce ? 0 : 0.25,
+        ...SPRING.floaty,
+        delay: reduce ? 0 : BEAT.halo,
       }}
-      className="pointer-events-none absolute left-1/2 top-[18%] -translate-x-1/2 -translate-y-0 md:top-[22%]"
+      className="pointer-events-none absolute left-1/2 top-[22%] z-10 -translate-x-1/2 md:top-[24%]"
       style={{
-        width: 280,
-        height: 280,
+        width: 340,
+        height: 340,
         background:
-          "radial-gradient(circle, var(--acc) 0%, var(--acc-deep) 35%, transparent 72%)",
-        filter: "blur(40px)",
+          "radial-gradient(circle, var(--acc) 0%, var(--acc-deep) 30%, transparent 70%)",
+        filter: "blur(50px)",
       }}
     />
   );
 }
 
 // ──────────────────────────────────────────────────────────────────
-// FigureBloom — the archetype SVG, scales up while fading, sitting
-// inside a soft circular cream "card" so the dark line work in the
-// SVGs reads against the night background.
+// FigureBloom — the archetype SVG. Rises from below (y:140), scaling
+// up from 0.7. Generous shadow + inset ring frame it. Once landed,
+// continues a slow ambient "breathing" loop (small scale 1↔1.02) so
+// it never feels static.
 // ──────────────────────────────────────────────────────────────────
-function FigureBloom({
-  svg,
-  reduce,
-}: {
-  svg: string;
-  reduce: boolean;
-}) {
+function FigureBloom({ svg, reduce }: { svg: string; reduce: boolean }) {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.92, y: 8 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{
-        duration: reduce ? 0 : DURATION.reveal,
-        ease: EASE.outSoft,
-        delay: reduce ? 0 : 0.45,
-      }}
-      className="relative h-[180px] w-[180px] overflow-hidden rounded-full ring-1 ring-[var(--acc-deep)]/30 sm:h-[200px] sm:w-[200px]"
+      initial={{ opacity: 0, scale: 0.7, y: 140 }}
+      animate={
+        reduce
+          ? { opacity: 1, scale: 1, y: 0 }
+          : {
+              opacity: 1,
+              scale: [0.7, 1.05, 1, 1.02, 1],
+              y: 0,
+            }
+      }
+      transition={
+        reduce
+          ? { duration: 0 }
+          : {
+              y: { ...SPRING.soft, delay: BEAT.figure },
+              opacity: { duration: 0.6, delay: BEAT.figure },
+              scale: {
+                times: [0, 0.4, 0.6, 0.85, 1],
+                duration: 1.4,
+                ease: EASE.outSoft,
+                delay: BEAT.figure,
+              },
+            }
+      }
+      className="relative z-20 h-[200px] w-[200px] overflow-hidden rounded-full sm:h-[220px] sm:w-[220px]"
       style={{
-        // The figures all draw a cream-ish circle background via their
-        // own SVG; the ring + the scale-from-92 frames it nicely.
         boxShadow:
-          "0 20px 60px rgba(12,20,30,.5), inset 0 0 0 8px color-mix(in oklab, var(--acc) 25%, transparent)",
+          "0 30px 80px rgba(12,20,30,.6), 0 0 0 1px color-mix(in oklab, var(--acc) 30%, transparent), inset 0 0 0 10px color-mix(in oklab, var(--acc) 25%, transparent)",
       }}
-      // SVG markup is hand-authored in lib/figures.ts (extracted from
-      // mull.html) — it's known-safe, not user input.
+      // SVG is hand-authored in lib/figures.ts (extracted from
+      // mull.html), known-safe.
       dangerouslySetInnerHTML={{ __html: svg }}
     />
   );
 }
 
 // ──────────────────────────────────────────────────────────────────
-// Stars — a small scatter of points, very low opacity, that fade in
-// after the night background is established. Adds the sense that the
-// reveal happens against something rather than nothing.
+// LetterReveal — splits text into characters and cascades them in
+// one by one. Used for the small "YOU ARE" eyebrow to give a sense of
+// "the system is composing this for you, character by character."
 // ──────────────────────────────────────────────────────────────────
-const STAR_POSITIONS = [
-  { top: "14%", left: "12%", size: 1.5, delay: 1.6 },
-  { top: "9%", left: "78%", size: 2, delay: 1.4 },
-  { top: "62%", left: "8%", size: 1, delay: 1.9 },
-  { top: "70%", left: "92%", size: 1.5, delay: 1.7 },
-  { top: "30%", left: "5%", size: 1, delay: 2.1 },
-  { top: "44%", left: "94%", size: 1, delay: 2.0 },
-  { top: "82%", left: "22%", size: 1, delay: 1.85 },
-  { top: "88%", left: "70%", size: 1.5, delay: 1.95 },
-];
-
-function Stars({ reduce }: { reduce: boolean }) {
+function LetterReveal({
+  text,
+  beat,
+  reduce,
+  className,
+}: {
+  text: string;
+  beat: number;
+  reduce: boolean;
+  className?: string;
+}) {
+  // Split keeping spaces — we need them rendered, not collapsed.
+  const chars = text.split("");
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      {STAR_POSITIONS.map((s, i) => (
+    <motion.div
+      aria-label={text}
+      initial="hidden"
+      animate="visible"
+      variants={{
+        hidden: {},
+        visible: {
+          transition: {
+            staggerChildren: reduce ? 0 : 0.05,
+            delayChildren: reduce ? 0 : beat,
+          },
+        },
+      }}
+      className={className}
+    >
+      {chars.map((ch, i) => (
         <motion.span
           key={i}
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 0.55, scale: 1 }}
+          aria-hidden
+          variants={{
+            hidden: { opacity: 0, y: 10 },
+            visible: { opacity: 1, y: 0 },
+          }}
+          transition={{ duration: reduce ? 0 : 0.4, ease: EASE.outSoft }}
+          style={{
+            display: "inline-block",
+            whiteSpace: "pre",
+          }}
+        >
+          {ch}
+        </motion.span>
+      ))}
+    </motion.div>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────────
+// AlignmentCounter — numeric count-up from 0 to the final percent.
+// Uses Framer Motion's `animate()` with a motion value so the digit
+// re-renders smoothly. The accent dot pulses once the count lands.
+// ──────────────────────────────────────────────────────────────────
+function AlignmentCounter({
+  target,
+  reduce,
+  className,
+}: {
+  target: number;
+  reduce: boolean;
+  className?: string;
+}) {
+  const mv = useMotionValue(0);
+  const [display, setDisplay] = useState(0);
+
+  useEffect(() => {
+    if (reduce) {
+      setDisplay(target);
+      mv.set(target);
+      return;
+    }
+    const id = setTimeout(() => {
+      const controls = animate(mv, target, {
+        duration: 0.9,
+        ease: EASE.outSoft,
+        onUpdate: (v) => setDisplay(Math.round(v)),
+      });
+      return () => controls.stop();
+    }, BEAT.alignment * 1000);
+    return () => clearTimeout(id);
+  }, [mv, target, reduce]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{
+        duration: reduce ? 0 : 0.4,
+        delay: reduce ? 0 : BEAT.alignment,
+      }}
+      className={cn(
+        "flex items-baseline justify-center gap-3 text-[var(--cream-2)]",
+        className,
+      )}
+    >
+      <motion.span
+        animate={{ scale: reduce ? 1 : [1, 1.3, 1] }}
+        transition={{
+          duration: 0.5,
+          delay: reduce ? 0 : BEAT.alignment + 0.9,
+          times: [0, 0.5, 1],
+        }}
+        className="inline-block h-1.5 w-1.5 rounded-full bg-[var(--acc-accent)]"
+      />
+      <span
+        className="font-display text-[36px] leading-none text-[var(--star)]"
+        style={{ fontFamily: "var(--font-display)" }}
+      >
+        {display}
+      </span>
+      <span className="text-[12px] uppercase tracking-[0.22em] opacity-70">
+        % alignment
+      </span>
+    </motion.div>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────────
+// StarBurst — twelve points scattered around the figure, each
+// animating OUTWARD from the center on a timed delay. Reads as the
+// reveal "expelling" stars as it lands. Static positions after they
+// arrive — we don't loop, just want the burst gesture.
+// ──────────────────────────────────────────────────────────────────
+const STAR_DESTS = [
+  { x: -180, y: -120, size: 1.5 },
+  { x: 180, y: -130, size: 2 },
+  { x: -220, y: -40, size: 1 },
+  { x: 220, y: -30, size: 1.2 },
+  { x: -260, y: 80, size: 1 },
+  { x: 260, y: 70, size: 1.3 },
+  { x: -160, y: 180, size: 1 },
+  { x: 170, y: 190, size: 1.5 },
+  { x: 0, y: -260, size: 1 },
+  { x: 0, y: 260, size: 1 },
+  { x: -300, y: -200, size: 0.8 },
+  { x: 310, y: -210, size: 0.8 },
+];
+
+function StarBurst({ reduce }: { reduce: boolean }) {
+  return (
+    <div
+      className="pointer-events-none absolute left-1/2 top-[22%] z-[15] -translate-x-1/2"
+      style={{ width: 0, height: 0 }}
+    >
+      {STAR_DESTS.map((s, i) => (
+        <motion.span
+          key={i}
+          initial={{ opacity: 0, x: 0, y: 0, scale: 0 }}
+          animate={{
+            opacity: 0.7,
+            x: s.x,
+            y: s.y,
+            scale: 1,
+          }}
           transition={{
-            duration: reduce ? 0 : DURATION.slow,
-            delay: reduce ? 0 : s.delay,
+            duration: reduce ? 0 : 1.6,
+            ease: EASE.outSoft,
+            delay: reduce ? 0 : BEAT.stars + i * 0.04,
           }}
           className="absolute rounded-full bg-[var(--star)]"
           style={{
-            top: s.top,
-            left: s.left,
-            width: s.size * 2,
-            height: s.size * 2,
+            width: s.size * 3,
+            height: s.size * 3,
+            top: -s.size,
+            left: -s.size,
+            boxShadow: "0 0 8px var(--star)",
           }}
         />
       ))}
@@ -330,16 +494,11 @@ function Stars({ reduce }: { reduce: boolean }) {
 }
 
 // ──────────────────────────────────────────────────────────────────
-// DimChips — the three dominant dimensions, each as a small chip
-// with the dim code + name. Ladders in 0.06s apart.
+// DimChips — three dominant-dimension chips that bounce in one by
+// one with spring overshoot. The overshoot is what makes this feel
+// like physical objects landing rather than UI fading in.
 // ──────────────────────────────────────────────────────────────────
-function DimChips({
-  dims,
-  reduce,
-}: {
-  dims: DimKey[];
-  reduce: boolean;
-}) {
+function DimChips({ dims, reduce }: { dims: DimKey[]; reduce: boolean }) {
   return (
     <motion.div
       initial="pre"
@@ -348,30 +507,28 @@ function DimChips({
         pre: {},
         reveal: {
           transition: {
-            staggerChildren: reduce ? 0 : 0.08,
-            delayChildren: reduce ? 0 : 2.0,
+            staggerChildren: reduce ? 0 : 0.12,
+            delayChildren: reduce ? 0 : BEAT.chips,
           },
         },
       }}
-      className="mt-8 flex flex-wrap items-center justify-center gap-2"
+      className="mt-10 flex flex-wrap items-center justify-center gap-2.5"
     >
       {dims.map((k) => (
         <motion.div
           key={k}
           variants={{
-            pre: { opacity: 0, y: 8 },
-            reveal: { opacity: 1, y: 0 },
+            pre: { opacity: 0, y: 30, scale: 0.6 },
+            reveal: { opacity: 1, y: 0, scale: 1 },
           }}
-          transition={{
-            duration: reduce ? 0 : DURATION.base,
-            ease: EASE.outSoft,
-          }}
+          transition={reduce ? { duration: 0 } : SPRING.soft}
           className={cn(
-            "flex items-center gap-2 rounded-full border border-[var(--acc-soft)]/25 bg-[var(--acc-deep)]/40 px-3 py-1.5",
-            "text-[12px] text-[var(--star)] backdrop-blur-sm"
+            "flex items-center gap-2 rounded-full border border-[var(--acc-soft)]/30 bg-[var(--acc-deep)]/50 px-4 py-2",
+            "text-[13px] text-[var(--star)] backdrop-blur-sm",
+            "shadow-[0_4px_20px_rgba(0,0,0,0.3)]",
           )}
         >
-          <span className="font-mono text-[10px] tracking-wider text-[var(--acc-accent)] opacity-80">
+          <span className="font-mono text-[10px] tracking-wider text-[var(--acc-accent)] opacity-90">
             {k}
           </span>
           <span>{DIM_NAMES[k]}</span>
@@ -382,10 +539,8 @@ function DimChips({
 }
 
 // ──────────────────────────────────────────────────────────────────
-// CreamCoda — the back-to-cream section with the longer-form context.
-// Three blocks: "What this orientation gets right" lift from the
-// archetype data, kindred thinkers (3 names), and a CTA card that
-// nods to "Save this result" / "Read the full essay".
+// CreamCoda — back-to-cream section. Triggers off scroll (whileInView)
+// so it isn't visible until the user has soaked in the reveal.
 // ──────────────────────────────────────────────────────────────────
 function CreamCoda({
   archetype,
@@ -397,15 +552,14 @@ function CreamCoda({
   reduce: boolean;
 }) {
   return (
-    <div className="relative w-full bg-[#FAF6EC] px-6 pb-32 pt-20 text-[#221E18]">
+    <div className="relative w-full bg-[#FAF6EC] px-6 pb-32 pt-24 text-[#221E18]">
       <div className="mx-auto max-w-[680px]">
-        {/* Section label */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-15%" }}
           transition={{
-            duration: reduce ? 0 : DURATION.base,
+            duration: reduce ? 0 : 0.4,
             ease: EASE.outSoft,
           }}
           className="text-[11px] uppercase tracking-[0.2em] text-[#4A4338] opacity-70"
@@ -413,23 +567,21 @@ function CreamCoda({
           What this orientation sees
         </motion.div>
 
-        {/* "What it gets right" pull — the philosophical value-prop */}
         <motion.p
-          initial={{ opacity: 0, y: 14 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-15%" }}
           transition={{
-            duration: reduce ? 0 : DURATION.slow,
+            duration: reduce ? 0 : 0.7,
             ease: EASE.outSoft,
-            delay: reduce ? 0 : 0.08,
+            delay: reduce ? 0 : 0.1,
           }}
-          className="mt-4 font-display text-[26px] leading-[1.35] text-[#221E18] sm:text-[30px]"
+          className="mt-4 font-display text-[28px] leading-[1.3] text-[#221E18] sm:text-[32px]"
           style={{ fontFamily: "var(--font-display)" }}
         >
           {archetype.whatItGetsRight}
         </motion.p>
 
-        {/* Kindred thinkers — three names, slim layout */}
         <motion.div
           initial="pre"
           whileInView="reveal"
@@ -438,19 +590,19 @@ function CreamCoda({
             pre: {},
             reveal: {
               transition: {
-                staggerChildren: reduce ? 0 : 0.08,
-                delayChildren: reduce ? 0 : 0.2,
+                staggerChildren: reduce ? 0 : 0.1,
+                delayChildren: reduce ? 0 : 0.25,
               },
             },
           }}
-          className="mt-12"
+          className="mt-14"
         >
           <motion.div
             variants={{
               pre: { opacity: 0, y: 10 },
               reveal: { opacity: 1, y: 0 },
             }}
-            transition={{ duration: reduce ? 0 : DURATION.base }}
+            transition={{ duration: reduce ? 0 : 0.4 }}
             className="text-[11px] uppercase tracking-[0.2em] text-[#4A4338] opacity-70"
           >
             Kindred thinkers
@@ -460,16 +612,16 @@ function CreamCoda({
               <motion.div
                 key={name}
                 variants={{
-                  pre: { opacity: 0, y: 10 },
-                  reveal: { opacity: 1, y: 0 },
+                  pre: { opacity: 0, y: 20, scale: 0.95 },
+                  reveal: { opacity: 1, y: 0, scale: 1 },
                 }}
-                transition={{
-                  duration: reduce ? 0 : DURATION.base,
-                  ease: EASE.outSoft,
-                }}
+                transition={reduce ? { duration: 0 } : SPRING.soft}
                 className="bg-[#FAF6EC] px-4 py-5 text-[16px] text-[#221E18]"
               >
-                <div className="font-display text-[20px] leading-tight" style={{ fontFamily: "var(--font-display)" }}>
+                <div
+                  className="font-display text-[22px] leading-tight"
+                  style={{ fontFamily: "var(--font-display)" }}
+                >
                   {name}
                 </div>
               </motion.div>
@@ -477,19 +629,18 @@ function CreamCoda({
           </div>
         </motion.div>
 
-        {/* CTA card — what's next */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-15%" }}
           transition={{
-            duration: reduce ? 0 : DURATION.slow,
+            duration: reduce ? 0 : 0.7,
             ease: EASE.outSoft,
-            delay: reduce ? 0 : 0.3,
+            delay: reduce ? 0 : 0.35,
           }}
           className={cn(
-            "mt-14 overflow-hidden rounded-2xl border bg-[var(--acc-soft)] p-7",
-            "border-[var(--acc-deep)]/15 shadow-[0_12px_40px_rgba(34,30,24,0.06)]"
+            "mt-16 overflow-hidden rounded-2xl border bg-[var(--acc-soft)] p-7",
+            "border-[var(--acc-deep)]/15 shadow-[0_12px_40px_rgba(34,30,24,0.06)]",
           )}
         >
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -498,7 +649,7 @@ function CreamCoda({
                 Read on
               </div>
               <div
-                className="mt-1 font-display text-[26px] leading-tight text-[var(--acc-deep)]"
+                className="mt-1 font-display text-[28px] leading-tight text-[var(--acc-deep)]"
                 style={{ fontFamily: "var(--font-display)" }}
               >
                 The full essay on the {capitalize(archetype.key)}
@@ -507,10 +658,10 @@ function CreamCoda({
             <button
               type="button"
               className={cn(
-                "shrink-0 rounded-full bg-[var(--acc-deep)] px-5 py-3 text-[14px] font-medium",
-                "text-[var(--acc-soft)] transition-transform hover:scale-[1.03] focus-visible:outline-none",
+                "shrink-0 rounded-full bg-[var(--acc-deep)] px-6 py-3 text-[14px] font-medium",
+                "text-[var(--acc-soft)] transition-transform hover:scale-[1.05] focus-visible:outline-none",
                 "focus-visible:ring-2 focus-visible:ring-[var(--acc-deep)] focus-visible:ring-offset-2",
-                "focus-visible:ring-offset-[var(--acc-soft)]"
+                "focus-visible:ring-offset-[var(--acc-soft)]",
               )}
             >
               Open essay →
