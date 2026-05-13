@@ -102,6 +102,13 @@ export const TRANSLATIONS: TranslationMap = {
     ko: "현재 Mull의 번역은 기계가 만든 프로토타입입니다 — 읽을 수는 있지만 아직 다듬어지지 않았습니다. 모국어 사용자와 함께하는 정밀한 교정이 진행 중이며, 점차 교체됩니다."
   },
 
+  // ─── Quiz UI chrome (mull.html migration, Phase 3c) ───────────
+  "quiz.question_count": { en: "Question {n} of {m}", es: "Pregunta {n} de {m}", fr: "Question {n} sur {m}", pt: "Pergunta {n} de {m}", ru: "Вопрос {n} из {m}", zh: "第 {n} 题 / 共 {m} 题", ja: "問 {n} / {m}", ko: "질문 {n} / {m}" },
+  "quiz.multi_hint":     { en: "Pick up to {max} that genuinely fit.", es: "Elige hasta {max} que de verdad encajen.", fr: "Choisis jusqu'à {max} qui te correspondent vraiment.", pt: "Escolha até {max} que realmente se encaixem.", ru: "Выберите до {max}, которые вам по-настоящему подходят.", zh: "最多选 {max} 项 —— 选真正贴近你的。", ja: "本当に当てはまるものを最大 {max} つ選ぶ。", ko: "정말로 맞는 것 최대 {max}개를 고르세요." },
+  "quiz.skip":           { en: "Skip — none of these fit me", es: "Saltar — ninguna me encaja", fr: "Passer — aucune ne me correspond", pt: "Pular — nenhuma se encaixa em mim", ru: "Пропустить — ни одна не подходит", zh: "跳过 —— 都不太像我", ja: "スキップ — どれもしっくり来ない", ko: "건너뛰기 — 어느 것도 나와 맞지 않는다" },
+  "quiz.back":           { en: "← Back", es: "← Atrás", fr: "← Retour", pt: "← Voltar", ru: "← Назад", zh: "← 返回", ja: "← 戻る", ko: "← 뒤로" },
+  "quiz.continue":       { en: "Continue →", es: "Continuar →", fr: "Continuer →", pt: "Continuar →", ru: "Продолжить →", zh: "继续 →", ja: "次へ →", ko: "계속 →" },
+
   "nav.dilemma": { en: "Today's dilemma", es: "Dilema de hoy", fr: "Le dilemme du jour", pt: "Dilema de hoje", ru: "Дилемма дня", zh: "今日困境", ja: "今日のジレンマ", ko: "오늘의 딜레마" },
   "nav.diary": { en: "Diary", es: "Diario", fr: "Journal", pt: "Diário", ru: "Дневник", zh: "日记", ja: "日記", ko: "일기" },
   "nav.debate": { en: "Simulated debate", es: "Debate simulado", fr: "Débat simulé", pt: "Debate simulado", ru: "Симулированный диспут", zh: "模拟辩论", ja: "思考実験的対話", ko: "가상 토론" },
