@@ -151,16 +151,32 @@ export function ResultClient({
                   {flavor.toUpperCase()}
                 </div>
               ) : null}
+              {/* Headline: wrap "THE" and the archetype word on
+                  separate lines so long names ("THRESHOLD",
+                  "CARTOGRAPHER", "LIGHTHOUSE") don't overflow the
+                  panel. Sizes capped so even the widest name fits
+                  with the 3-px hard shadow inside the column.
+                  Right padding on the wrapper reserves space for
+                  the drop shadow. */}
               <h1
-                className="mt-3 text-[40px] leading-none tracking-[0.04em] sm:text-[64px] md:text-[80px]"
+                className="mt-3 pr-2 leading-[0.95] tracking-[0.04em] sm:pr-3"
                 style={{
                   color: color.deep,
                   fontFamily: "var(--font-pixel-display)",
                 }}
               >
-                <span style={{ textShadow: `5px 5px 0 ${color.primary}` }}>
-                  THE {capitalize(topKey).toUpperCase()}
-                </span>
+                <div
+                  className="text-[28px] sm:text-[40px] md:text-[44px]"
+                  style={{ textShadow: `3px 3px 0 ${color.primary}` }}
+                >
+                  THE
+                </div>
+                <div
+                  className="mt-2 text-[34px] sm:text-[52px] md:text-[64px]"
+                  style={{ textShadow: `3px 3px 0 ${color.primary}` }}
+                >
+                  {capitalize(topKey).toUpperCase()}
+                </div>
               </h1>
 
               <p
@@ -265,10 +281,10 @@ export function ResultClient({
             ▶ STOOD NEAR YOU
           </div>
           <h2
-            className="mt-4 text-[28px] leading-none tracking-[0.04em] text-[#221E18] sm:text-[40px]"
+            className="mt-4 pr-2 text-[24px] leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[32px] md:text-[40px]"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
-            <span style={{ textShadow: "4px 4px 0 #B8862F" }}>
+            <span style={{ textShadow: "3px 3px 0 #B8862F" }}>
               THE NEAREST THREE
             </span>
           </h2>
@@ -345,10 +361,10 @@ export function ResultClient({
               ▶ WHERE YOU SIT
             </div>
             <h2
-              className="mt-4 text-[28px] leading-none tracking-[0.04em] text-[#221E18] sm:text-[40px]"
+              className="mt-4 pr-2 text-[24px] leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[32px] md:text-[40px]"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
-              <span style={{ textShadow: "4px 4px 0 #B8862F" }}>
+              <span style={{ textShadow: "3px 3px 0 #B8862F" }}>
                 YOU ON THE MAP
               </span>
             </h2>
@@ -531,16 +547,29 @@ function AlignmentCounter({
       >
         ALIGNMENT
       </div>
-      <div className="mt-1 flex items-baseline gap-2">
+      {/* Cap the digit size to 36px so the `%` glyph + 2-px hard
+          shadow stay within the parent column. Display digits
+          + percent sit on one baseline. */}
+      <div className="mt-1 flex items-baseline gap-1.5">
         <span
-          className="text-[48px] leading-none tracking-[0.04em]"
+          className="text-[36px] leading-none tracking-[0.04em]"
           style={{
             color,
             fontFamily: "var(--font-pixel-display)",
-            textShadow: "3px 3px 0 #B8862F",
+            textShadow: "2px 2px 0 #B8862F",
           }}
         >
-          {display}%
+          {display}
+        </span>
+        <span
+          className="text-[20px] leading-none"
+          style={{
+            color,
+            fontFamily: "var(--font-pixel-display)",
+            textShadow: "2px 2px 0 #B8862F",
+          }}
+        >
+          %
         </span>
       </div>
     </div>

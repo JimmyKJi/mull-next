@@ -283,10 +283,10 @@ export function QuizEngine({ questions, mode, locale }: Props) {
               {glyph}
             </div>
             <h1
-              className="mt-6 text-[28px] leading-none tracking-[0.04em] text-[#F8EDC8] sm:text-[40px]"
+              className="mt-6 px-2 text-[26px] leading-[1.1] tracking-[0.04em] text-[#F8EDC8] sm:text-[36px]"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
-              <span style={{ textShadow: "4px 4px 0 #B8862F" }}>
+              <span style={{ textShadow: "3px 3px 0 #B8862F" }}>
                 {title}
               </span>
             </h1>

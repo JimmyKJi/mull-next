@@ -204,10 +204,10 @@ export default async function HomeV2() {
                 THE PHILOSOPHICAL REALM
               </div>
               <h2
-                className="mt-5 text-[32px] leading-none tracking-[0.04em] text-[#221E18] sm:text-[44px] md:text-[56px]"
+                className="mt-5 pr-2 text-[28px] leading-[1.05] tracking-[0.04em] text-[#221E18] sm:text-[40px] md:text-[48px]"
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
-                <span style={{ textShadow: "4px 4px 0 #B8862F" }}>
+                <span style={{ textShadow: "3px 3px 0 #B8862F" }}>
                   {PHILOSOPHERS.length} THINKERS
                 </span>
               </h2>
@@ -333,10 +333,10 @@ export default async function HomeV2() {
                 CHOOSE YOUR ARCHETYPE
               </div>
               <h2
-                className="mt-5 text-[28px] leading-none tracking-[0.04em] text-[#221E18] sm:text-[40px] md:text-[48px]"
+                className="mt-5 pr-2 text-[22px] leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[32px] md:text-[40px]"
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
-                <span style={{ textShadow: "4px 4px 0 #B8862F" }}>
+                <span style={{ textShadow: "3px 3px 0 #B8862F" }}>
                   TEN WAYS TO HOLD THE WORLD
                 </span>
               </h2>
@@ -470,10 +470,10 @@ export default async function HomeV2() {
                 <span className="pixel-blink">▶</span> READY?
               </div>
               <h2
-                className="mt-5 text-[40px] leading-none tracking-[0.04em] text-[#F8EDC8] sm:text-[64px]"
+                className="mt-5 px-2 text-[28px] leading-[1.05] tracking-[0.04em] text-[#F8EDC8] sm:text-[44px] md:text-[52px]"
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
-                <span style={{ textShadow: "5px 5px 0 #B8862F" }}>
+                <span style={{ textShadow: "3px 3px 0 #B8862F" }}>
                   WHERE DO YOU SIT?
                 </span>
               </h2>
