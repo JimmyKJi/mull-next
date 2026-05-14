@@ -230,3 +230,38 @@ select:focus-visible {
 .pixel-float {
   animation: pixel-float 2.4s steps(4, end) infinite;
 }
+
+/* Archetype-tile sprite default + hover. Default is a slow gentle
+   bob; on hover the sprite jiggles harder + scales slightly. Steps
+   keep the motion crunchy — no smooth lerps. */
+@keyframes archetype-sprite-idle {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
+}
+@keyframes archetype-sprite-jiggle {
+  0%   { transform: translate(0, -2px) rotate(0deg) scale(1.08); }
+  20%  { transform: translate(-2px, -4px) rotate(-3deg) scale(1.10); }
+  40%  { transform: translate(2px, -3px) rotate(3deg)  scale(1.10); }
+  60%  { transform: translate(-1px, -5px) rotate(-2deg) scale(1.12); }
+  80%  { transform: translate(1px, -3px) rotate(2deg)  scale(1.10); }
+  100% { transform: translate(0, -2px) rotate(0deg) scale(1.08); }
+}
+.archetype-sprite {
+  animation: archetype-sprite-idle 2.4s steps(4, end) infinite;
+  transform-origin: center;
+  will-change: transform;
+}
+.archetype-tile:hover .archetype-sprite {
+  animation: archetype-sprite-jiggle 0.6s steps(6, end) infinite;
+}
+
+/* Sprite "wake up" pop — used when a tooltip first reveals a
+   procedural philosopher sprite. Single play, snappy. */
+@keyframes sprite-pop-in {
+  0%   { transform: translateY(8px) scale(0.7); opacity: 0; }
+  60%  { transform: translateY(-2px) scale(1.05); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+.sprite-pop-in {
+  animation: sprite-pop-in 0.32s steps(5, end) both;
+}

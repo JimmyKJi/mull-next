@@ -22,7 +22,7 @@
 
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Text } from "@react-three/drei";
-import { useState, useRef, useMemo, Suspense } from "react";
+import { useState, useRef, useMemo, Suspense, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import * as THREE from "three";
 import { ARCHETYPES } from "@/lib/archetypes";
@@ -34,6 +34,7 @@ import {
   PHILOSOPHER_POSITIONS_3D,
   projectTo3D,
 } from "@/lib/projection";
+import { PhilosopherSprite } from "./philosopher-sprite";
 
 type Hovered = (typeof PHILOSOPHER_POSITIONS_3D)[number] | null;
 
@@ -62,10 +63,35 @@ export function Constellation3D({
   const isInteractive = variant === "interactive";
   const [hovered, setHovered] = useState<Hovered>(null);
 
+  // Search box: a non-empty query filters which philosophers appear
+  // in the cloud, and the search result list (DOM, outside the
+  // canvas) lets the user click to "fly to" any matching point.
+  const [search, setSearch] = useState("");
+  const trimmedQuery = search.trim().toLowerCase();
+  const matched = useMemo(() => {
+    if (!trimmedQuery) return null; // null = no filter (show all)
+    return new Set(
+      PHILOSOPHER_POSITIONS_3D.filter((p) =>
+        p.name.toLowerCase().includes(trimmedQuery),
+      ).map((p) => p.slug),
+    );
+  }, [trimmedQuery]);
+
   // All archetypes start enabled; toggle from the legend.
   const [enabled, setEnabled] = useState<Set<string>>(
     () => new Set(ARCHETYPES.map((a) => a.key)),
   );
+
+  // When search narrows to a single match, surface its details in the
+  // hover card so the user sees who they found without having to
+  // mouse-hunt for the highlighted point.
+  useEffect(() => {
+    if (matched && matched.size === 1) {
+      const slug = matched.values().next().value;
+      const found = PHILOSOPHER_POSITIONS_3D.find((p) => p.slug === slug);
+      if (found) setHovered(found);
+    }
+  }, [matched]);
 
   function toggleArchetype(key: string) {
     setEnabled((prev) => {
@@ -92,7 +118,7 @@ export function Constellation3D({
 
   return (
     <div
-      className="relative w-full overflow-hidden rounded-2xl border border-[#D6CDB6] bg-[#0E1419]"
+      className="relative w-full overflow-hidden bg-[#1A1612]"
       style={{ height }}
     >
       <Canvas
@@ -100,17 +126,21 @@ export function Constellation3D({
         gl={{ antialias: true, powerPreference: "high-performance" }}
         dpr={[1, 2]}
       >
-        {/* Soft ambient + key + fill lighting. The points use
-            emissive material so they stay readable in any lighting,
-            but the directional light gives shape to the user halo
-            and any helper geometry. */}
-        <ambientLight intensity={0.35} />
-        <directionalLight position={[6, 8, 4]} intensity={0.6} />
-        <directionalLight position={[-6, -4, -4]} intensity={0.25} />
+        {/* Brighter ambient + key + amber rim light. The warm tint
+            from the rim makes the front-facing points pop against
+            the dark amber bg without needing more emissive boost. */}
+        <ambientLight intensity={0.55} />
+        <directionalLight position={[6, 8, 4]} intensity={0.9} color="#FFE3B0" />
+        <directionalLight position={[-6, -4, -4]} intensity={0.4} color="#FFFCF4" />
+        {/* Color the scene background with a warm amber-ink tone
+            instead of pure dark blue — much friendlier on the eye
+            and gives front-facing points more contrast. */}
+        <color attach="background" args={["#1A1612"]} />
 
         <Suspense fallback={null}>
           <Scene
             enabled={enabled}
+            matched={matched}
             userPos={userPos}
             onHover={setHovered}
             isInteractive={isInteractive}
@@ -129,13 +159,19 @@ export function Constellation3D({
         />
       </Canvas>
 
-      {/* Hover card overlay — DOM, outside the canvas. Reads the
-          hovered philosopher and renders an editorial card in the
-          top-right of the canvas. */}
+      {/* Search bar — pixel-bordered input pinned top-center. */}
+      {isInteractive ? (
+        <SearchBar
+          value={search}
+          onChange={setSearch}
+          matchCount={matched ? matched.size : null}
+        />
+      ) : null}
+
+      {/* Hover card overlay — DOM, outside the canvas. */}
       {isInteractive && hovered ? <HoverCard p={hovered} /> : null}
 
-      {/* Archetype legend — sidebar with toggles. Only on the
-          interactive variant. */}
+      {/* Archetype legend — sidebar with toggles. */}
       {isInteractive ? (
         <Legend
           enabled={enabled}
@@ -145,61 +181,62 @@ export function Constellation3D({
         />
       ) : null}
 
-      {/* Caption with axis legend at the bottom — interactive only */}
+      {/* Caption with axis legend at the bottom. */}
       {isInteractive ? <AxesCaption /> : null}
 
-      {/* Empty state — cloud is dimmed if user has no archetype
-          enabled */}
+      {/* Empty state — cloud is empty if user toggled everything off. */}
       {isInteractive && enabled.size === 0 ? <EmptyState onAll={setAll} /> : null}
     </div>
   );
 }
 
 // ────────────────────────────────────────────────────────────────
-// Scene — everything inside the <Canvas>. Split out so React Three
-// Fiber's reconciler isolates it from the DOM-side state changes
-// (hover, legend) that don't need to re-mount the canvas.
+// Scene — everything inside the <Canvas>.
 // ────────────────────────────────────────────────────────────────
 function Scene({
   enabled,
+  matched,
   userPos,
   onHover,
   isInteractive,
 }: {
   enabled: Set<string>;
+  matched: Set<string> | null;
   userPos: [number, number, number] | null;
   onHover: (p: Hovered) => void;
   isInteractive: boolean;
 }) {
   return (
     <>
-      {/* Faint axis grid — the three planes give visual depth cues
-          so the user can read which way is "up" while orbiting. */}
       <AxisGrid />
-
-      {/* Philosopher points — one mesh per philosopher. Filtered by
-          the legend's enabled set. */}
-      <PhilosopherCloud enabled={enabled} onHover={onHover} />
-
-      {/* User point — only when we have a vector. */}
+      <PhilosopherCloud
+        enabled={enabled}
+        matched={matched}
+        onHover={onHover}
+      />
       {userPos ? <UserPoint position={userPos} /> : null}
-
-      {/* Axis labels — only on interactive variant. drei's <Text>
-          renders SDF text in 3-D space. */}
       {isInteractive ? <AxisLabels /> : null}
     </>
   );
 }
 
 // ────────────────────────────────────────────────────────────────
-// PhilosopherCloud — the 560 philosopher spheres. Memoized so we
-// only build the mesh list once, then filter via mesh.visible.
+// PhilosopherCloud — the 560 philosopher spheres.
+//
+// Visibility logic:
+//   - If `matched` is null, no search is active. Points show iff
+//     their archetype is in `enabled`.
+//   - If `matched` is non-null, search is active. Points NOT in
+//     `matched` get dimmed + shrunk (still visible for context),
+//     points in `matched` stay full-size + bright.
 // ────────────────────────────────────────────────────────────────
 function PhilosopherCloud({
   enabled,
+  matched,
   onHover,
 }: {
   enabled: Set<string>;
+  matched: Set<string> | null;
   onHover: (p: Hovered) => void;
 }) {
   const router = useRouter();
@@ -207,10 +244,22 @@ function PhilosopherCloud({
   return (
     <group>
       {PHILOSOPHER_POSITIONS_3D.map((p) => {
-        const visible = enabled.has(p.archetypeKey);
-        if (!visible) return null;
+        const archetypeOn = enabled.has(p.archetypeKey);
+        if (!archetypeOn) return null;
+
+        const isMatch = matched ? matched.has(p.slug) : true;
+        const dimmed = matched && !isMatch;
+
         const color =
           ARCHETYPE_COLORS[p.archetypeKey] ?? DEFAULT_ARCHETYPE_COLOR;
+
+        // Bigger + brighter than v1. When dimmed by an active
+        // search filter, shrink + drop emissive so matched points
+        // visually pop.
+        const radius = dimmed ? 0.04 : 0.085;
+        const emissiveIntensity = dimmed ? 0.15 : 1.1;
+        const opacity = dimmed ? 0.25 : 1;
+
         return (
           <mesh
             key={p.slug}
@@ -233,15 +282,15 @@ function PhilosopherCloud({
               router.push(`/philosopher/${p.slug}`);
             }}
           >
-            {/* Small sphere with a generous emissive boost so points
-                read clearly against the dark background. */}
-            <sphereGeometry args={[0.06, 12, 12]} />
+            <sphereGeometry args={[radius, 14, 14]} />
             <meshStandardMaterial
               color={color.primary}
               emissive={color.primary}
-              emissiveIntensity={0.6}
-              roughness={0.5}
-              metalness={0.1}
+              emissiveIntensity={emissiveIntensity}
+              roughness={0.4}
+              metalness={0.05}
+              transparent={!!dimmed}
+              opacity={opacity}
             />
           </mesh>
         );
@@ -352,8 +401,14 @@ function AxisLabels() {
 }
 
 // ────────────────────────────────────────────────────────────────
-// HoverCard — DOM overlay shown when a point is hovered. Reads the
-// philosopher's name, dates, key idea, archetype.
+// HoverCard — DOM overlay shown when a point is hovered. Pixel-
+// chrome panel with a procedural pixel sprite of the philosopher,
+// their name + dates + archetype tag + key idea.
+//
+// The sprite is generated on-the-fly from the philosopher's name
+// (deterministic) — same name always produces the same sprite, so
+// Plato is always Plato. Hover-triggered + sprite-pop-in animation
+// makes every hover feel alive.
 // ────────────────────────────────────────────────────────────────
 function HoverCard({ p }: { p: NonNullable<Hovered> }) {
   const color =
@@ -361,36 +416,152 @@ function HoverCard({ p }: { p: NonNullable<Hovered> }) {
   const archName =
     ARCHETYPES.find((a) => a.key === p.archetypeKey)?.key ?? p.archetypeKey;
   return (
-    <div className="pointer-events-none absolute right-4 top-4 z-10 max-w-[300px] rounded-xl border border-[#3A3528]/60 bg-[#0E1419]/95 p-4 shadow-[0_12px_40px_rgba(0,0,0,0.5)] backdrop-blur-md">
-      <div className="flex items-baseline gap-2">
-        <span
-          aria-hidden
-          className="inline-block h-1.5 w-1.5 rounded-full"
-          style={{ backgroundColor: color.primary }}
-        />
-        <span
-          className="text-[10px] uppercase tracking-[0.22em]"
-          style={{ color: color.soft }}
-        >
-          The {archName}
-        </span>
-      </div>
+    <div
+      key={p.slug}
+      className="pointer-events-none absolute right-4 top-20 z-10 w-[300px] sm:right-6 sm:top-24"
+    >
       <div
-        className="mt-2 font-display text-[22px] italic leading-tight text-[#F1EAD8]"
-        style={{ fontFamily: "var(--font-display)" }}
+        className="pixel-panel sprite-pop-in pixel-panel--ink"
+        style={{
+          borderColor: color.deep,
+          boxShadow: `4px 4px 0 0 ${color.deep}`,
+        }}
       >
-        {p.name}
+        {/* Title bar */}
+        <div
+          className="flex items-center justify-between border-b-4 px-3 py-2 text-[10px] tracking-[0.18em]"
+          style={{
+            borderColor: color.deep,
+            backgroundColor: color.deep,
+            color: color.soft,
+            fontFamily: "var(--font-pixel-display)",
+          }}
+        >
+          <span>THE {archName.toUpperCase()}</span>
+          <span className="text-[#FFD580]">▶ HOVER</span>
+        </div>
+
+        {/* Sprite + name row */}
+        <div className="flex items-start gap-3 px-3 py-3">
+          <div className="shrink-0">
+            <PhilosopherSprite
+              name={p.name}
+              archetypeKey={p.archetypeKey}
+              size={64}
+            />
+          </div>
+          <div className="min-w-0">
+            <div
+              className="text-[20px] leading-tight text-[#F8EDC8]"
+              style={{ fontFamily: "var(--font-pixel-body)" }}
+            >
+              {p.name}
+            </div>
+            {p.dates ? (
+              <div
+                className="mt-0.5 text-[14px] text-[#B8862F]"
+                style={{ fontFamily: "var(--font-pixel-body)" }}
+              >
+                {p.dates}
+              </div>
+            ) : null}
+          </div>
+        </div>
+
+        {/* Key idea — Cormorant inside the pixel panel for the
+            "library book inside the game" beat. */}
+        {p.keyIdea ? (
+          <div
+            className="border-t-2 px-3 py-3"
+            style={{ borderColor: color.deep }}
+          >
+            <p
+              className="text-[15px] leading-[1.4] text-[#F8EDC8]/90"
+              style={{ fontFamily: "var(--font-prose)" }}
+            >
+              <em>&ldquo;{p.keyIdea}&rdquo;</em>
+            </p>
+          </div>
+        ) : null}
+
+        {/* Click prompt */}
+        <div
+          className="border-t-2 px-3 py-1.5 text-center text-[10px] tracking-[0.2em]"
+          style={{
+            borderColor: color.deep,
+            color: color.soft,
+            fontFamily: "var(--font-pixel-display)",
+          }}
+        >
+          ▶ CLICK FOR PROFILE
+        </div>
       </div>
-      {p.dates ? (
-        <div className="mt-1 text-[12px] text-[#9A8B6A]">{p.dates}</div>
-      ) : null}
-      {p.keyIdea ? (
-        <p className="mt-3 text-[13px] leading-relaxed text-[#D6CDB6]/90">
-          &ldquo;{p.keyIdea}&rdquo;
-        </p>
-      ) : null}
-      <div className="mt-3 text-[11px] text-[#8C6520]">
-        Click to open profile →
+    </div>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────
+// SearchBar — pixel-bordered input pinned at the top of the canvas.
+// Query is passed up; parent computes which slugs match and renders
+// matched points bright + dimmed points faint. Match count chip
+// shows result count when a query is active.
+// ────────────────────────────────────────────────────────────────
+function SearchBar({
+  value,
+  onChange,
+  matchCount,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  matchCount: number | null;
+}) {
+  return (
+    <div className="absolute left-1/2 top-4 z-20 w-[88%] max-w-[360px] -translate-x-1/2 sm:w-auto">
+      <div
+        className="border-4 border-[#221E18] bg-[#FFFCF4]"
+        style={{ boxShadow: "4px 4px 0 0 #B8862F" }}
+      >
+        <div className="flex items-stretch">
+          <span
+            className="flex items-center border-r-2 border-[#221E18] bg-[#221E18] px-3 text-[12px] tracking-[0.16em] text-[#F8EDC8]"
+            style={{ fontFamily: "var(--font-pixel-display)" }}
+          >
+            FIND ▶
+          </span>
+          <input
+            type="text"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder="search 560 thinkers…"
+            className="min-w-0 flex-1 bg-transparent px-3 py-1.5 text-[18px] leading-none text-[#221E18] placeholder:text-[#8C6520]/60 focus:outline-none"
+            style={{ fontFamily: "var(--font-pixel-body)" }}
+          />
+          {value ? (
+            <button
+              type="button"
+              onClick={() => onChange("")}
+              className="border-l-2 border-[#221E18] bg-[#FFFCF4] px-2 text-[16px] text-[#8C6520] hover:bg-[#F8EDC8]"
+              style={{ fontFamily: "var(--font-pixel-display)" }}
+              aria-label="Clear search"
+            >
+              ×
+            </button>
+          ) : null}
+        </div>
+        {matchCount !== null ? (
+          <div
+            className="border-t-2 border-[#221E18] bg-[#F8EDC8] px-3 py-1 text-[12px] tracking-[0.14em] text-[#8C6520]"
+            style={{ fontFamily: "var(--font-pixel-display)" }}
+          >
+            {matchCount === 0 ? (
+              <span className="text-[#7A2E2E]">▶ NO MATCH</span>
+            ) : matchCount === 1 ? (
+              <span>▶ 1 MATCH · CHECK PANEL</span>
+            ) : (
+              <span>▶ {matchCount} MATCHES</span>
+            )}
+          </div>
+        ) : null}
       </div>
     </div>
   );

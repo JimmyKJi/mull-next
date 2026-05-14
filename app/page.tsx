@@ -24,6 +24,8 @@ import { getDailyWisdom } from "@/lib/daily-wisdom";
 import { getServerLocale } from "@/lib/locale-server";
 import { t } from "@/lib/translations";
 import { ConstellationMount } from "@/components/constellation-mount";
+import { HeroSprites } from "@/components/hero-sprites";
+import { PhilosopherSprite } from "@/components/philosopher-sprite";
 import { PHILOSOPHERS } from "@/lib/philosophers";
 
 export const metadata: Metadata = {
@@ -71,84 +73,134 @@ export default async function HomeV2() {
       <main className="relative z-10 min-h-[100svh] bg-[#FAF6EC] text-[#221E18]">
         {/* SiteNav (in app/layout.tsx) is the global top bar now. */}
 
-        {/* ─── Hero — pixel-game opening screen ──────────────────
-            Big chunky title in Press Start 2P, a pixel-dialog
-            "QUEST BRIEF" panel containing the lede, and a chunky
-            pixel "BEGIN THE QUIZ" button as the primary action. */}
-        <section className="mx-auto max-w-[1200px] px-6 pt-12 pb-20 sm:px-10 sm:pt-20 sm:pb-28 md:pt-24">
-          <div className="relative">
-            {/* "PRESS START" eyebrow with blink */}
-            <div
-              className="flex items-center gap-3 text-[10px] tracking-[0.24em] text-[#8C6520]"
-              style={{ fontFamily: "var(--font-pixel-display)" }}
-            >
-              <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F] pixel-blink" />
-              <span>AN ATLAS OF HOW YOU THINK</span>
-            </div>
-
-            {/* Big pixel title MULL */}
-            <h1
-              className="mt-6 text-[64px] leading-none tracking-[0.04em] text-[#221E18] sm:text-[96px] md:text-[128px]"
-              style={{ fontFamily: "var(--font-pixel-display)" }}
-            >
-              <span className="inline-block" style={{ textShadow: "6px 6px 0 #B8862F" }}>
-                MULL
-              </span>
-            </h1>
-
-            {/* Subtitle in VT323 — the human-readable version of the hero */}
-            <p
-              className="mt-7 max-w-[680px] text-[26px] leading-[1.25] text-[#221E18] sm:text-[30px]"
-              style={{ fontFamily: "var(--font-pixel-body)" }}
-            >
-              Find your place on the{" "}
-              <span className="text-[#8C6520]">map of how you think.</span>
-            </p>
-
-            {/* Lede inside a pixel dialog window — "quest brief" beat */}
-            <div className="mt-10 max-w-[720px]">
-              <div className="pixel-panel--amber pixel-panel">
-                <div
-                  className="border-b-4 border-[#8C6520] bg-[#8C6520] px-4 py-1.5 text-[10px] tracking-[0.2em] text-[#F8EDC8]"
-                  style={{ fontFamily: "var(--font-pixel-display)" }}
-                >
-                  ▶ QUEST BRIEF
-                </div>
-                <p
-                  className="px-5 py-4 text-[22px] leading-[1.35] text-[#221E18]"
-                  style={{ fontFamily: "var(--font-pixel-body)" }}
-                >
-                  {t("home.hero_lede", locale)}
-                </p>
-              </div>
-            </div>
-
-            {/* Chunky pixel CTA + secondary link */}
-            <div className="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-              <Link
-                href="/quiz?mode=quick"
-                className="pixel-button pixel-button--amber"
+        {/* ─── Hero — pixel opening screen, 2 columns ───────────
+            Left: title + lede + CTA. Right: decorative floating
+            pixel sprites of the archetype mascots over a tiny
+            "preview" of the philosopher cloud. */}
+        <section className="mx-auto max-w-[1200px] px-6 pt-12 pb-12 sm:px-10 sm:pt-20 sm:pb-16 md:pt-24">
+          <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-[1fr_360px] lg:gap-16">
+            {/* ── Left column: title + CTA ── */}
+            <div className="relative">
+              <div
+                className="flex items-center gap-3 text-[10px] tracking-[0.24em] text-[#8C6520]"
+                style={{ fontFamily: "var(--font-pixel-display)" }}
               >
-                <span>▶ BEGIN THE QUIZ</span>
-              </Link>
-              <Link
-                href="/quiz?mode=detailed"
-                className="text-[20px] leading-none text-[#4A4338] hover:text-[#221E18] hover:underline"
+                <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F] pixel-blink" />
+                <span>AN ATLAS OF HOW YOU THINK</span>
+              </div>
+
+              <h1
+                className="mt-6 text-[64px] leading-none tracking-[0.04em] text-[#221E18] sm:text-[96px] md:text-[128px]"
+                style={{ fontFamily: "var(--font-pixel-display)" }}
+              >
+                <span className="inline-block" style={{ textShadow: "6px 6px 0 #B8862F" }}>
+                  MULL
+                </span>
+              </h1>
+
+              <p
+                className="mt-7 max-w-[680px] text-[26px] leading-[1.25] text-[#221E18] sm:text-[30px]"
                 style={{ fontFamily: "var(--font-pixel-body)" }}
               >
-                or the 50-question deep dive →
-              </Link>
+                Find your place on the{" "}
+                <span className="text-[#8C6520]">map of how you think.</span>
+              </p>
+
+              <div className="mt-10 max-w-[640px]">
+                <div className="pixel-panel pixel-panel--amber">
+                  <div
+                    className="border-b-4 border-[#8C6520] bg-[#8C6520] px-4 py-1.5 text-[10px] tracking-[0.2em] text-[#F8EDC8]"
+                    style={{ fontFamily: "var(--font-pixel-display)" }}
+                  >
+                    ▶ QUEST BRIEF
+                  </div>
+                  <p
+                    className="px-5 py-4 text-[22px] leading-[1.35] text-[#221E18]"
+                    style={{ fontFamily: "var(--font-pixel-body)" }}
+                  >
+                    {t("home.hero_lede", locale)}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+                <Link
+                  href="/quiz?mode=quick"
+                  className="pixel-button pixel-button--amber"
+                >
+                  <span>▶ BEGIN THE QUIZ</span>
+                </Link>
+                <Link
+                  href="/quiz?mode=detailed"
+                  className="text-[20px] leading-none text-[#4A4338] hover:text-[#221E18] hover:underline"
+                  style={{ fontFamily: "var(--font-pixel-body)" }}
+                >
+                  or the 50-question deep dive →
+                </Link>
+              </div>
+
+              <p
+                className="mt-5 max-w-[520px] text-[18px] leading-[1.4] text-[#8C6520]"
+                style={{ fontFamily: "var(--font-pixel-body)" }}
+              >
+                No right answers. Skip anything. No signup needed.{" "}
+                <span className="text-[#4A4338]">
+                  ~6 minutes for the quick read.
+                </span>
+              </p>
             </div>
 
-            <p
-              className="mt-5 max-w-[520px] text-[18px] leading-[1.4] text-[#8C6520]"
-              style={{ fontFamily: "var(--font-pixel-body)" }}
-            >
-              No right answers. Skip anything. No signup needed.{" "}
-              <span className="text-[#4A4338]">
-                ~6 minutes for the quick read.
-              </span>
-            </p>
+            {/* ── Right column: floating pixel sprites + mini map ── */}
+            <HeroSprites />
+          </div>
+        </section>
+
+        {/* ─── Today's thinker — sits right under the hero ─────── */}
+        <section className="px-6 pb-16 sm:px-10 sm:pb-20">
+          <div className="mx-auto max-w-[1200px]">
+            <div className="pixel-panel">
+              <div
+                className="flex items-center justify-between border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
+                style={{ fontFamily: "var(--font-pixel-display)" }}
+              >
+                <span>{todayLabel.toUpperCase()}</span>
+                <span className="text-[#B8862F]">▶ DAILY DROP</span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] md:items-center">
+                <div className="px-6 py-7 sm:px-10 sm:py-9">
+                  <p
+                    className="text-[24px] leading-[1.35] text-[#221E18] sm:text-[30px]"
+                    style={{ fontFamily: "var(--font-prose)" }}
+                  >
+                    <em>&ldquo;{philosopher.keyIdea}&rdquo;</em>
+                  </p>
+                  <div
+                    className="mt-5 flex items-center gap-3 text-[18px] text-[#4A4338]"
+                    style={{ fontFamily: "var(--font-pixel-body)" }}
+                  >
+                    <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
+                    <span>
+                      {philosopher.name}
+                      {philosopher.dates ? (
+                        <span className="text-[#8C6520]"> · {philosopher.dates}</span>
+                      ) : null}
+                    </span>
+                  </div>
+                </div>
+                {/* A floating pixel sprite of today's philosopher.
+                    Procedural generation by name lives in
+                    components/pixel-philosopher-sprite.tsx — used here
+                    and in the constellation hover tooltip. */}
+                <div className="hidden border-l-4 border-[#221E18] bg-[#F8EDC8] px-8 py-7 md:block">
+                  <PhilosopherSprite
+                    name={philosopher.name}
+                    archetypeKey={philosopher.archetypeKey}
+                    size={96}
+                    floating
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -211,43 +263,6 @@ export default async function HomeV2() {
           </div>
         </section>
 
-        {/* ─── Today's thinker — pixel scroll panel ────────────── */}
-        <section className="px-6 py-16 sm:px-10 sm:py-24">
-          <div className="mx-auto max-w-[900px]">
-            <div className="pixel-panel">
-              {/* Title bar */}
-              <div
-                className="flex items-center justify-between border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
-                style={{ fontFamily: "var(--font-pixel-display)" }}
-              >
-                <span>{todayLabel.toUpperCase()}</span>
-                <span className="text-[#B8862F]">DAILY DROP</span>
-              </div>
-              {/* Quote in Cormorant — the "library book inside the
-                  game" beat. Pixel chrome, Cormorant content. */}
-              <div className="px-6 py-8 sm:px-10 sm:py-10">
-                <p
-                  className="text-[26px] leading-[1.35] text-[#221E18] sm:text-[34px]"
-                  style={{ fontFamily: "var(--font-prose)" }}
-                >
-                  <em>&ldquo;{philosopher.keyIdea}&rdquo;</em>
-                </p>
-                <div
-                  className="mt-6 flex items-center gap-3 text-[18px] text-[#4A4338]"
-                  style={{ fontFamily: "var(--font-pixel-body)" }}
-                >
-                  <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
-                  <span>
-                    {philosopher.name}
-                    {philosopher.dates ? (
-                      <span className="text-[#8C6520]"> · {philosopher.dates}</span>
-                    ) : null}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* ─── What Mull actually is ──────────────────────────────
             Three short paragraphs. The "what's different about this"
@@ -366,21 +381,26 @@ export default async function HomeV2() {
             no one sits exactly on top of one.
           </p>
 
-          <ul className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          {/* Equal-height archetype tiles. `auto-rows-fr` makes every
+              row the same height; `h-full` on the inner panel + `flex
+              flex-col` lets the spirit text fill remaining space so all
+              tiles end up the same total size regardless of spirit
+              length. Hover: lifts up + jiggles the sprite + reveals an
+              animated "READ ESSAY ▶" CTA at the bottom. */}
+          <ul className="mt-10 grid auto-rows-fr grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             {ARCHETYPES.map((a) => {
               const color = getArchetypeColor(a.key);
               const figure = FIGURES[a.key] ?? "";
               return (
-                <li key={a.key}>
+                <li key={a.key} className="h-full">
                   <Link
                     href={`/archetype/${a.key}`}
-                    className="group block transition-transform hover:-translate-x-[2px] hover:-translate-y-[2px]"
+                    className="archetype-tile group block h-full transition-transform duration-200 ease-out hover:-translate-x-1 hover:-translate-y-1"
                   >
                     <div
-                      className="pixel-panel transition-shadow group-hover:[box-shadow:6px_6px_0_0_#221E18]"
+                      className="pixel-panel flex h-full flex-col transition-all duration-200 group-hover:[box-shadow:8px_8px_0_0_var(--accent-deep)]"
                       style={
                         {
-                          // Per-archetype tint of the panel
                           background: color.soft,
                           borderColor: color.deep,
                           boxShadow: `4px 4px 0 0 ${color.deep}`,
@@ -389,7 +409,7 @@ export default async function HomeV2() {
                         } as React.CSSProperties
                       }
                     >
-                      {/* Title bar — archetype name in pixel display */}
+                      {/* Title bar */}
                       <div
                         className="flex items-center justify-between border-b-4 px-3 py-2 text-[10px] tracking-[0.18em]"
                         style={{
@@ -403,11 +423,11 @@ export default async function HomeV2() {
                         <span>THE {capitalize(a.key).toUpperCase()}</span>
                       </div>
 
-                      {/* Sprite — SVG figure rendered with crisp pixel
-                          edges. CSS image-rendering:pixelated forces
-                          the browser to nearest-neighbor scale. */}
+                      {/* Sprite. The figure scales + jiggles on hover —
+                          group-hover triggers archetype-tile-sprite
+                          animation defined in globals.css. */}
                       <div
-                        className="relative mx-auto my-4 flex h-[120px] w-[120px] items-center justify-center"
+                        className="relative mx-auto my-4 flex h-[120px] w-[120px] shrink-0 items-center justify-center"
                         aria-hidden
                       >
                         <div
@@ -417,21 +437,42 @@ export default async function HomeV2() {
                           }}
                         />
                         <div
-                          className="pixel-crisp pixel-float relative h-[88px] w-[88px]"
+                          className="archetype-sprite pixel-crisp relative h-[88px] w-[88px]"
                           dangerouslySetInnerHTML={{ __html: figure }}
                         />
                       </div>
 
-                      {/* Spirit line in VT323 + Cormorant italic for
-                          the proper name. */}
-                      <div className="border-t-2 px-3 py-3 text-center"
-                        style={{ borderColor: color.deep }}>
+                      {/* Spirit line — flex-1 so it pushes the CTA strip
+                          to the bottom regardless of length. */}
+                      <div
+                        className="flex-1 border-t-2 px-3 py-3 text-center"
+                        style={{ borderColor: color.deep }}
+                      >
                         <p
                           className="text-[18px] leading-[1.3] text-[#221E18]"
                           style={{ fontFamily: "var(--font-pixel-body)" }}
                         >
                           {a.spirit}
                         </p>
+                      </div>
+
+                      {/* Hover-revealed CTA strip */}
+                      <div
+                        className="overflow-hidden border-t-2 transition-[max-height,padding] duration-200 ease-out"
+                        style={{
+                          borderColor: color.deep,
+                          backgroundColor: color.deep,
+                          color: color.soft,
+                        }}
+                      >
+                        <div
+                          className="flex items-center justify-center px-3 py-2 text-[10px] tracking-[0.22em]"
+                          style={{ fontFamily: "var(--font-pixel-display)" }}
+                        >
+                          <span className="opacity-60 transition-opacity group-hover:opacity-100">
+                            ▶ READ ESSAY
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </Link>
