@@ -1,35 +1,15 @@
 'use client';
 
+// /signup — v3 pixel chrome restyle.
+// Same Supabase signUp flow, locale cookie reading, "check your
+// email" confirm state. Just visual rework.
+
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 import { t, type Locale, isLocale } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
-
-const serif = "'Cormorant Garamond', Georgia, serif";
-const sans = "'Inter', system-ui, sans-serif";
-
-const inputStyle: React.CSSProperties = {
-  fontFamily: sans,
-  fontSize: 16,  // ≥16 prevents iOS Safari focus-zoom
-  padding: '12px 14px',
-  border: '1px solid #D6CDB6',
-  borderRadius: 8,
-  background: '#FFFCF4',
-  color: '#221E18',
-  outline: 'none',
-};
-
-const labelStyle: React.CSSProperties = {
-  fontFamily: sans,
-  fontSize: 13,
-  color: '#4A4338',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 6,
-  letterSpacing: 0.3,
-};
 
 export default function SignupPage() {
   const [email, setEmail] = useState('');
@@ -55,7 +35,10 @@ export default function SignupPage() {
       email,
       password,
       options: {
-        emailRedirectTo: typeof window !== 'undefined' ? `${window.location.origin}/account` : undefined,
+        emailRedirectTo:
+          typeof window !== 'undefined'
+            ? `${window.location.origin}/account`
+            : undefined,
       },
     });
     if (signUpError) {
@@ -73,173 +56,168 @@ export default function SignupPage() {
   }
 
   return (
-    <main style={{
-      maxWidth: 420,
-      margin: '0 auto',
-      padding: '60px 24px',
-      minHeight: '100vh',
-    }}>
-      <header style={{
-        marginBottom: 48,
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        gap: 12,
-      }}>
-        <Link href="/" style={{
-          fontFamily: serif,
-          fontSize: 28,
-          fontWeight: 500,
-          color: '#221E18',
-          textDecoration: 'none',
-          letterSpacing: '-0.5px',
-        }}>
-          Mull<span style={{ color: '#B8862F' }}>.</span>
-        </Link>
+    <main className="mx-auto flex min-h-[calc(100vh-64px)] max-w-[480px] flex-col px-6 pb-32 pt-12 sm:pt-16">
+      <div className="mb-6 flex justify-end">
         <LanguageSwitcher initial={locale} />
-      </header>
+      </div>
 
-      {confirmSent ? (
-        <>
-          <h1 style={{
-            fontFamily: serif,
-            fontSize: 38,
-            fontWeight: 500,
-            margin: '0 0 12px',
-            letterSpacing: '-0.5px',
-          }}>
-            {t('auth.check_email', locale)}
-          </h1>
-          <p style={{
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 19,
-            color: '#4A4338',
-            lineHeight: 1.5,
-          }}>
-            {t('auth.check_email_body', locale, { email: '' }).split('{email}')[0]}
-            <strong>{email}</strong>
-            {t('auth.check_email_body', locale, { email: '' }).split('{email}')[1] || ''}
-          </p>
-          <p style={{
-            fontFamily: sans,
-            fontSize: 13,
-            color: '#8C6520',
-            marginTop: 24,
-          }}>
-            {t('auth.didnt_arrive', locale)}{' '}
-            <button
-              onClick={() => { setConfirmSent(false); setError(null); }}
-              style={{
-                background: 'none', border: 'none', padding: 0,
-                color: '#8C6520', textDecoration: 'underline', cursor: 'pointer',
-                font: 'inherit',
+      <div
+        className="border-4 border-[#221E18] bg-[#FFFCF4]"
+        style={{ boxShadow: '6px 6px 0 0 #8C6520' }}
+      >
+        {/* Title bar */}
+        <div
+          className="flex items-center justify-between border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
+          style={{ fontFamily: 'var(--font-pixel-display)' }}
+        >
+          <span>▶ {confirmSent ? 'CHECK YOUR EMAIL' : 'CREATE ACCOUNT'}</span>
+          <span className="text-[#B8862F]">AUTH.SYS</span>
+        </div>
+
+        <div className="px-6 py-7 sm:px-8">
+          {confirmSent ? (
+            <ConfirmState
+              email={email}
+              locale={locale}
+              onTryAgain={() => {
+                setConfirmSent(false);
+                setError(null);
               }}
-            >
-              {t('auth.try_again', locale)}
-            </button>.
-          </p>
-        </>
-      ) : (
-        <>
-          <h1 style={{
-            fontFamily: serif,
-            fontSize: 42,
-            fontWeight: 500,
-            margin: '0 0 8px',
-            letterSpacing: '-0.5px',
-          }}>
-            {t('auth.create_account', locale)}
-          </h1>
-          <p style={{
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 18,
-            color: '#4A4338',
-            marginBottom: 36,
-          }}>
-            {t('auth.signup_subtitle', locale)}
-          </p>
+            />
+          ) : (
+            <>
+              <h1
+                className="text-[24px] leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[32px]"
+                style={{ fontFamily: 'var(--font-pixel-display)' }}
+              >
+                <span style={{ textShadow: '3px 3px 0 #B8862F' }}>
+                  {t('auth.create_account', locale).toUpperCase()}
+                </span>
+              </h1>
+              <p
+                className="mt-4 text-[15px] italic leading-[1.5] text-[#4A4338]"
+                style={{ fontFamily: 'var(--font-prose)' }}
+              >
+                {t('auth.signup_subtitle', locale)}
+              </p>
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-            <label style={labelStyle}>
-              {t('auth.email', locale)}
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                autoComplete="email"
-                style={inputStyle}
-              />
-            </label>
+              <form onSubmit={handleSubmit} className="mt-7 flex flex-col gap-5">
+                <label
+                  className="flex flex-col gap-1.5 text-[12px] tracking-[0.18em] text-[#8C6520]"
+                  style={{ fontFamily: 'var(--font-pixel-display)' }}
+                >
+                  {t('auth.email', locale).toUpperCase()}
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    autoComplete="email"
+                    className="border-2 border-[#221E18] bg-[#FFFCF4] px-3 py-2.5 text-[16px] text-[#221E18] focus:bg-[#F8EDC8] focus:outline-none"
+                    style={{ fontFamily: 'var(--font-prose)' }}
+                  />
+                </label>
 
-            <label style={labelStyle}>
-              {t('auth.password', locale)}
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                autoComplete="new-password"
-                minLength={6}
-                style={inputStyle}
-              />
-              <span style={{ fontSize: 12, color: '#8C6520', marginTop: 2, letterSpacing: 0 }}>
-                {t('auth.password_hint', locale)}
-              </span>
-            </label>
+                <label
+                  className="flex flex-col gap-1.5 text-[12px] tracking-[0.18em] text-[#8C6520]"
+                  style={{ fontFamily: 'var(--font-pixel-display)' }}
+                >
+                  {t('auth.password', locale).toUpperCase()}
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    autoComplete="new-password"
+                    minLength={6}
+                    className="border-2 border-[#221E18] bg-[#FFFCF4] px-3 py-2.5 text-[16px] text-[#221E18] focus:bg-[#F8EDC8] focus:outline-none"
+                    style={{ fontFamily: 'var(--font-prose)' }}
+                  />
+                  <span className="mt-1 text-[11.5px] tracking-normal text-[#8C6520]" style={{ fontFamily: 'var(--font-prose)' }}>
+                    {t('auth.password_hint', locale)}
+                  </span>
+                </label>
 
-            {error && (
-              <div style={{
-                fontFamily: sans,
-                fontSize: 13,
-                color: '#7A2E2E',
-                background: 'rgba(122, 46, 46, 0.08)',
-                border: '1px solid rgba(122, 46, 46, 0.2)',
-                padding: '10px 14px',
-                borderRadius: 6,
-              }}>
-                {error}
-              </div>
-            )}
+                {error ? (
+                  <div
+                    className="border-2 border-[#7A2E2E] bg-[#F5DCD0] px-3 py-2 text-[13px] text-[#7A2E2E]"
+                    style={{ boxShadow: '2px 2px 0 0 #7A2E2E' }}
+                  >
+                    ▶ {error}
+                  </div>
+                ) : null}
 
-            <button
-              type="submit"
-              disabled={loading}
-              style={{
-                fontFamily: sans,
-                fontSize: 15,
-                fontWeight: 500,
-                padding: '14px 20px',
-                background: '#221E18',
-                color: '#FAF6EC',
-                border: 'none',
-                borderRadius: 8,
-                cursor: loading ? 'wait' : 'pointer',
-                opacity: loading ? 0.7 : 1,
-                marginTop: 8,
-                letterSpacing: 0.5,
-              }}
-            >
-              {loading ? t('auth.creating', locale) : t('auth.create_account', locale)}
-            </button>
-          </form>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="pixel-button pixel-button--amber justify-center disabled:cursor-wait disabled:opacity-70"
+                >
+                  <span>
+                    ▶{' '}
+                    {loading
+                      ? t('auth.creating', locale).toUpperCase()
+                      : t('auth.create_account', locale).toUpperCase()}
+                  </span>
+                </button>
+              </form>
+            </>
+          )}
+        </div>
 
-          <p style={{
-            fontFamily: sans,
-            fontSize: 14,
-            color: '#4A4338',
-            marginTop: 32,
-            textAlign: 'center',
-          }}>
-            {t('auth.already_account', locale)}{' '}
-            <Link href="/login" style={{ color: '#8C6520', textDecoration: 'underline', textUnderlineOffset: 3 }}>
-              {t('auth.signin', locale)}
-            </Link>
-          </p>
-        </>
-      )}
+        <div className="border-t-2 border-[#221E18] bg-[#F8EDC8] px-6 py-3 text-center text-[13px] text-[#4A4338] sm:px-8">
+          {t('auth.already_account', locale)}{' '}
+          <Link
+            href="/login"
+            className="font-medium text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          >
+            {t('auth.signin', locale)} →
+          </Link>
+        </div>
+      </div>
     </main>
+  );
+}
+
+function ConfirmState({
+  email,
+  locale,
+  onTryAgain,
+}: {
+  email: string;
+  locale: Locale;
+  onTryAgain: () => void;
+}) {
+  const body = t('auth.check_email_body', locale, { email: '' });
+  const [before, after] = body.split('{email}');
+  return (
+    <>
+      <h1
+        className="text-[22px] leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[28px]"
+        style={{ fontFamily: 'var(--font-pixel-display)' }}
+      >
+        <span style={{ textShadow: '3px 3px 0 #B8862F' }}>
+          {t('auth.check_email', locale).toUpperCase()}
+        </span>
+      </h1>
+      <p
+        className="mt-4 text-[16px] italic leading-[1.55] text-[#4A4338]"
+        style={{ fontFamily: 'var(--font-prose)' }}
+      >
+        {before}
+        <strong className="text-[#221E18]">{email}</strong>
+        {after || ''}
+      </p>
+      <p className="mt-6 text-[13px] text-[#8C6520]">
+        {t('auth.didnt_arrive', locale)}{' '}
+        <button
+          onClick={onTryAgain}
+          className="border-0 bg-transparent p-0 text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          style={{ font: 'inherit' }}
+        >
+          {t('auth.try_again', locale)}
+        </button>
+        .
+      </p>
+    </>
   );
 }

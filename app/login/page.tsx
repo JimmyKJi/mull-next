@@ -1,38 +1,15 @@
 'use client';
 
+// /login — v3 pixel chrome restyle. Pixel form panel, pixel button.
+// All functionality (Supabase signInWithPassword, locale cookie
+// reading, error display, redirect to /account) preserved.
+
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 import { t, type Locale, isLocale } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
-
-const serif = "'Cormorant Garamond', Georgia, serif";
-const sans = "'Inter', system-ui, sans-serif";
-
-const inputStyle: React.CSSProperties = {
-  fontFamily: sans,
-  // 16px so iOS Safari doesn't auto-zoom on focus (anything <16
-  // triggers the zoom + layout shift, especially noticeable inside
-  // Instagram/TikTok in-app browsers).
-  fontSize: 16,
-  padding: '12px 14px',
-  border: '1px solid #D6CDB6',
-  borderRadius: 8,
-  background: '#FFFCF4',
-  color: '#221E18',
-  outline: 'none',
-};
-
-const labelStyle: React.CSSProperties = {
-  fontFamily: sans,
-  fontSize: 13,
-  color: '#4A4338',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 6,
-  letterSpacing: 0.3,
-};
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -64,124 +41,102 @@ export default function LoginPage() {
   }
 
   return (
-    <main style={{
-      maxWidth: 420,
-      margin: '0 auto',
-      padding: '60px 24px',
-      minHeight: '100vh',
-    }}>
-      <header style={{
-        marginBottom: 48,
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        gap: 12,
-      }}>
-        <Link href="/" style={{
-          fontFamily: serif,
-          fontSize: 28,
-          fontWeight: 500,
-          color: '#221E18',
-          textDecoration: 'none',
-          letterSpacing: '-0.5px',
-        }}>
-          Mull<span style={{ color: '#B8862F' }}>.</span>
-        </Link>
+    <main className="mx-auto flex min-h-[calc(100vh-64px)] max-w-[480px] flex-col px-6 pb-32 pt-12 sm:pt-16">
+      <div className="mb-6 flex justify-end">
         <LanguageSwitcher initial={locale} />
-      </header>
+      </div>
 
-      <h1 style={{
-        fontFamily: serif,
-        fontSize: 42,
-        fontWeight: 500,
-        margin: '0 0 8px',
-        letterSpacing: '-0.5px',
-      }}>
-        {t('auth.welcome_back', locale)}
-      </h1>
-      <p style={{
-        fontFamily: serif,
-        fontStyle: 'italic',
-        fontSize: 18,
-        color: '#4A4338',
-        marginBottom: 36,
-      }}>
-        {t('auth.signin_subtitle', locale)}
-      </p>
-
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-        <label style={labelStyle}>
-          {t('auth.email', locale)}
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            autoComplete="email"
-            style={inputStyle}
-          />
-        </label>
-
-        <label style={labelStyle}>
-          {t('auth.password', locale)}
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            autoComplete="current-password"
-            style={inputStyle}
-          />
-        </label>
-
-        {error && (
-          <div style={{
-            fontFamily: sans,
-            fontSize: 13,
-            color: '#7A2E2E',
-            background: 'rgba(122, 46, 46, 0.08)',
-            border: '1px solid rgba(122, 46, 46, 0.2)',
-            padding: '10px 14px',
-            borderRadius: 6,
-          }}>
-            {error}
-          </div>
-        )}
-
-        <button
-          type="submit"
-          disabled={loading}
-          style={{
-            fontFamily: sans,
-            fontSize: 15,
-            fontWeight: 500,
-            padding: '14px 20px',
-            background: '#221E18',
-            color: '#FAF6EC',
-            border: 'none',
-            borderRadius: 8,
-            cursor: loading ? 'wait' : 'pointer',
-            opacity: loading ? 0.7 : 1,
-            marginTop: 8,
-            letterSpacing: 0.5,
-          }}
+      <div
+        className="border-4 border-[#221E18] bg-[#FFFCF4]"
+        style={{ boxShadow: '6px 6px 0 0 #8C6520' }}
+      >
+        {/* Title bar */}
+        <div
+          className="flex items-center justify-between border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
+          style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
-          {loading ? t('auth.signing_in', locale) : t('auth.signin', locale)}
-        </button>
-      </form>
+          <span>▶ SIGN IN</span>
+          <span className="text-[#B8862F]">AUTH.SYS</span>
+        </div>
 
-      <p style={{
-        fontFamily: sans,
-        fontSize: 14,
-        color: '#4A4338',
-        marginTop: 32,
-        textAlign: 'center',
-      }}>
-        {t('auth.no_account', locale)}{' '}
-        <Link href="/signup" style={{ color: '#8C6520', textDecoration: 'underline', textUnderlineOffset: 3 }}>
-          {t('auth.create_one', locale)}
-        </Link>
-      </p>
+        <div className="px-6 py-7 sm:px-8">
+          <h1
+            className="text-[26px] leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[36px]"
+            style={{ fontFamily: 'var(--font-pixel-display)' }}
+          >
+            <span style={{ textShadow: '3px 3px 0 #B8862F' }}>
+              {t('auth.welcome_back', locale).toUpperCase()}
+            </span>
+          </h1>
+          <p
+            className="mt-4 text-[15px] italic leading-[1.5] text-[#4A4338]"
+            style={{ fontFamily: 'var(--font-prose)' }}
+          >
+            {t('auth.signin_subtitle', locale)}
+          </p>
+
+          <form onSubmit={handleSubmit} className="mt-7 flex flex-col gap-5">
+            <label className="flex flex-col gap-1.5 text-[12px] tracking-[0.18em] text-[#8C6520]" style={{ fontFamily: 'var(--font-pixel-display)' }}>
+              {t('auth.email', locale).toUpperCase()}
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                autoComplete="email"
+                className="border-2 border-[#221E18] bg-[#FFFCF4] px-3 py-2.5 text-[16px] text-[#221E18] focus:bg-[#F8EDC8] focus:outline-none"
+                style={{ fontFamily: 'var(--font-prose)' }}
+              />
+            </label>
+
+            <label className="flex flex-col gap-1.5 text-[12px] tracking-[0.18em] text-[#8C6520]" style={{ fontFamily: 'var(--font-pixel-display)' }}>
+              {t('auth.password', locale).toUpperCase()}
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                autoComplete="current-password"
+                className="border-2 border-[#221E18] bg-[#FFFCF4] px-3 py-2.5 text-[16px] text-[#221E18] focus:bg-[#F8EDC8] focus:outline-none"
+                style={{ fontFamily: 'var(--font-prose)' }}
+              />
+            </label>
+
+            {error ? (
+              <div
+                className="border-2 border-[#7A2E2E] bg-[#F5DCD0] px-3 py-2 text-[13px] text-[#7A2E2E]"
+                style={{ boxShadow: '2px 2px 0 0 #7A2E2E' }}
+              >
+                ▶ {error}
+              </div>
+            ) : null}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="pixel-button pixel-button--amber justify-center disabled:cursor-wait disabled:opacity-70"
+            >
+              <span>
+                ▶ {loading
+                  ? t('auth.signing_in', locale).toUpperCase()
+                  : t('auth.signin', locale).toUpperCase()}
+              </span>
+            </button>
+          </form>
+        </div>
+
+        <div
+          className="border-t-2 border-[#221E18] bg-[#F8EDC8] px-6 py-3 text-center text-[13px] text-[#4A4338] sm:px-8"
+        >
+          {t('auth.no_account', locale)}{' '}
+          <Link
+            href="/signup"
+            className="font-medium text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          >
+            {t('auth.create_one', locale)} →
+          </Link>
+        </div>
+      </div>
     </main>
   );
 }
