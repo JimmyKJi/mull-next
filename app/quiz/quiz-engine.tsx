@@ -1,20 +1,17 @@
 "use client";
 
-// QuizEngine — client state machine for the v2 quiz.
+// QuizEngine — v3 pixel-game world.
 //
-// Design intent (DESIGN-DIRECTION.md §3):
-//   "Single question at a time. Each question is its own moment —
-//   minimal chrome, generous prompt, answer cards that feel like
-//   deliberate choices rather than radio buttons. A faint progress
-//   dot, not a bar. No-go: bouncy progress animation, sound effects,
-//   gamification beyond the actual moral seriousness of the prompts."
-//
-// What this does:
-//   - Tracks idx, running 16-D vector, answers history (so Back works)
-//   - Persists to sessionStorage so refresh doesn't lose progress
-//   - On finish: base64-encodes the vector into ?v= and pushes to
-//     /result. URL convention matches mull.html's share links so
-//     old links keep working post-cutover.
+// New beats vs v2:
+//   - Pixel chrome on the question container (4-px ink border,
+//     amber shadow, title bar "QUESTION 03 / 20")
+//   - Chapter pagination: every 5 questions the user passes through
+//     a CHAPTER-TRANSITION screen — a chunky pixel scene with the
+//     chapter number, a thematic line, a "▶ CONTINUE" button.
+//   - Per-question decorative sprite — a tiny pixel glyph next to
+//     the prompt that reflects what kind of question this is.
+//   - System sans body for prompts/answers (NO VT323 at body size).
+//   - Pixel buttons for skip/back/continue.
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -33,16 +30,11 @@ type Props = {
   locale: Locale;
 };
 
-// Per-question history. `single` = one answer picked. `multi` = up to
-// `max` answers picked (vectors get averaged). `skip` = user skipped.
 type AnswerHistoryEntry =
   | { kind: "single"; index: number }
   | { kind: "multi"; indices: number[] }
   | { kind: "skip" };
 
-// sessionStorage payload. Keyed by mode so quick + detailed have
-// separate resume states (otherwise jumping between modes would
-// corrupt the running vector).
 type PersistedState = {
   idx: number;
   answers: AnswerHistoryEntry[];
@@ -51,6 +43,60 @@ type PersistedState = {
 };
 
 const STORAGE_PREFIX = "mull.quiz.progress.";
+
+// ─── Chapter metadata ──────────────────────────────────────────
+// Every 5 questions = 1 chapter. We show a transition screen between
+// chapters with a thematic title + a small pixel glyph. Themes are
+// loose and rotated rather than perfectly mapped to question content
+// — the goal is rhythm, not curriculum.
+
+const CHAPTER_TITLES = [
+  "OF ENDINGS",
+  "OF KNOWING",
+  "OF POWER",
+  "OF THE SELF",
+  "OF MEANING",
+  "OF BEAUTY",
+  "OF JUSTICE",
+  "OF LOVE",
+  "OF TIME",
+  "OF SILENCE",
+] as const;
+
+const CHAPTER_GLYPHS = ["✦", "◆", "▲", "◐", "✶", "❋", "▣", "◉", "✧", "◇"] as const;
+
+const CHAPTER_LINES = [
+  "Five questions about what we do with finitude.",
+  "Five questions about how we come to trust what we believe.",
+  "Five questions about authority, freedom, and force.",
+  "Five questions about the person you take yourself to be.",
+  "Five questions about what life is supposed to be for.",
+  "Five questions about taste, art, and what catches you.",
+  "Five questions about fairness, harm, and what we owe.",
+  "Five questions about attention, attachment, and care.",
+  "Five questions about memory, change, and the long arc.",
+  "Five questions about what can't be said.",
+] as const;
+
+const QUESTIONS_PER_CHAPTER = 5;
+
+function chapterOf(idx: number): number {
+  return Math.floor(idx / QUESTIONS_PER_CHAPTER);
+}
+function isChapterBoundary(idx: number): boolean {
+  // Boundary = the question is the first of a new chapter (idx 5, 10, ...).
+  // Excludes idx 0 — chapter 1 doesn't need a transition before it.
+  return idx > 0 && idx % QUESTIONS_PER_CHAPTER === 0;
+}
+
+// ─── Per-question decorative glyphs ────────────────────────────
+// A tiny rotating set of pixel glyphs — purely decorative, gives
+// each question a slightly different visual flavor without us
+// having to hand-author 20-50 illustrations.
+const QUESTION_GLYPHS = [
+  "✦", "❋", "◆", "✧", "◉", "◇", "✶", "▲", "△", "▤",
+  "◐", "◑", "◒", "◓", "□", "▣", "▢", "◈", "✺", "✹",
+];
 
 export function QuizEngine({ questions, mode, locale }: Props) {
   const router = useRouter();
@@ -61,8 +107,11 @@ export function QuizEngine({ questions, mode, locale }: Props) {
   const [multiPicks, setMultiPicks] = useState<number[]>([]);
   const [resumed, setResumed] = useState(false);
 
-  // Hydrate from sessionStorage on mount. Not via useState's
-  // initializer because sessionStorage is undefined during SSR.
+  // Chapter-transition view. When the user advances INTO a chapter
+  // boundary, we briefly show the chapter intro before the question.
+  const [showingChapter, setShowingChapter] = useState(false);
+
+  // Resume from sessionStorage on mount.
   useEffect(() => {
     if (resumed) return;
     setResumed(true);
@@ -83,13 +132,10 @@ export function QuizEngine({ questions, mode, locale }: Props) {
         setAnswers(parsed.answers ?? []);
       }
     } catch {
-      // Corrupt stash — start fresh.
+      // corrupt stash, start fresh
     }
   }, [mode, questions.length, resumed]);
 
-  // Persist on every state change once we're past the initial
-  // hydration. Cheap; sessionStorage writes are synchronous but the
-  // payload is tiny.
   useEffect(() => {
     if (!resumed) return;
     try {
@@ -99,7 +145,7 @@ export function QuizEngine({ questions, mode, locale }: Props) {
         JSON.stringify(payload),
       );
     } catch {
-      /* storage disabled or full — fine */
+      /* storage disabled, fine */
     }
   }, [idx, vector, answers, mode, resumed]);
 
@@ -107,9 +153,6 @@ export function QuizEngine({ questions, mode, locale }: Props) {
   const isMulti = !!question?.multi;
   const maxPicks = question?.multi?.max ?? 1;
 
-  // Resolve the localized version if we have one. The detailed
-  // (50-question) set is English-only per AGENTS.md content policy;
-  // only the quick set has translations.
   const localized = useMemo(() => {
     if (mode === "detailed" || locale === "en") return null;
     return getLocalizedQuickQuestion(idx, locale as SupportedQuizLocale);
@@ -133,27 +176,20 @@ export function QuizEngine({ questions, mode, locale }: Props) {
   function selectSingle(answerIdx: number) {
     if (!question) return;
     const delta = question.a[answerIdx]?.v ?? zeros();
-    const newVector = add(vector, delta);
-    advance(newVector, [
+    advance(add(vector, delta), [
       ...answers,
       { kind: "single", index: answerIdx },
     ]);
   }
-
   function toggleMulti(answerIdx: number) {
     setMultiPicks((prev) => {
-      if (prev.includes(answerIdx)) {
-        return prev.filter((i) => i !== answerIdx);
-      }
+      if (prev.includes(answerIdx)) return prev.filter((i) => i !== answerIdx);
       if (prev.length >= maxPicks) return prev;
       return [...prev, answerIdx];
     });
   }
-
   function submitMulti() {
     if (!question || multiPicks.length === 0) return;
-    // Sum then divide by count — so multi-pick doesn't double-count
-    // weight vs single-pick. Same approach as mull.html.
     const summed = multiPicks.reduce(
       (acc, i) => add(acc, question.a[i].v),
       zeros(),
@@ -164,29 +200,22 @@ export function QuizEngine({ questions, mode, locale }: Props) {
       { kind: "multi", indices: multiPicks },
     ]);
   }
-
   function skip() {
     advance(vector, [...answers, { kind: "skip" }]);
   }
-
-  function advance(
-    newVector: number[],
-    newAnswers: AnswerHistoryEntry[],
-  ) {
+  function advance(newVector: number[], newAnswers: AnswerHistoryEntry[]) {
     if (idx + 1 >= questions.length) {
       finish(newVector);
       return;
     }
     setVector(newVector);
     setAnswers(newAnswers);
-    setIdx(idx + 1);
+    const next = idx + 1;
+    setIdx(next);
+    if (isChapterBoundary(next)) setShowingChapter(true);
   }
-
   function goBack() {
     if (idx === 0) return;
-    // Recompute from scratch by replaying all-but-last answers.
-    // Keeps `answers` as source of truth; protects against vector
-    // drift from add/subtract rounding.
     const prevAnswers = answers.slice(0, -1);
     let prevVec = zeros();
     for (let i = 0; i < prevAnswers.length; i++) {
@@ -202,14 +231,12 @@ export function QuizEngine({ questions, mode, locale }: Props) {
         );
         prevVec = add(prevVec, scale(summed, 1 / a.indices.length));
       }
-      // skip contributes 0.
     }
     setVector(prevVec);
     setAnswers(prevAnswers);
     setIdx(idx - 1);
     setMultiPicks([]);
   }
-
   function finish(finalVector: number[]) {
     try {
       window.sessionStorage.removeItem(STORAGE_PREFIX + mode);
@@ -228,101 +255,165 @@ export function QuizEngine({ questions, mode, locale }: Props) {
     );
   }
 
-  return (
-    <div className="mx-auto max-w-[820px] px-6 pt-12 pb-24 sm:px-10 sm:pt-20 sm:pb-32">
-      {/* Faint progress dots only — the wordmark + nav live in the
-          global SiteNav now. Each dot is filled if visited, hollow if
-          ahead. Active dot is the deeper amber. */}
-      <div className="flex items-center justify-end">
-        <ProgressDots
-          total={questions.length}
-          current={idx}
-        />
-      </div>
-
-      {/* ─── Question prompt ─────────────────────────────────────
-          Generous Cormorant italic, big leading. The eyebrow above
-          gives a sense of "where I am in this" without bouncing
-          progress chrome. */}
-      <div className="mt-16 sm:mt-24">
-        <div className="flex items-baseline gap-3 text-[11px] uppercase tracking-[0.22em] text-[#8C6520]">
-          <span>Question {idx + 1}</span>
-          <span className="text-[#8C6520]/40">/</span>
-          <span className="text-[#8C6520]/60">{questions.length}</span>
-          {isMulti ? (
-            <span className="ml-4 text-[#8C6520]/80">
-              Pick up to {maxPicks}
-            </span>
-          ) : null}
-        </div>
-
-        <h1
-          className="mt-8 font-display text-[28px] leading-[1.25] text-[#221E18] sm:text-[36px] md:text-[44px]"
-          style={{ fontFamily: "var(--font-display)" }}
+  // ── CHAPTER TRANSITION ───────────────────────────────────────
+  if (showingChapter) {
+    const chapter = chapterOf(idx);
+    const title = CHAPTER_TITLES[chapter % CHAPTER_TITLES.length];
+    const glyph = CHAPTER_GLYPHS[chapter % CHAPTER_GLYPHS.length];
+    const line = CHAPTER_LINES[chapter % CHAPTER_LINES.length];
+    const totalChapters = Math.ceil(
+      questions.length / QUESTIONS_PER_CHAPTER,
+    );
+    return (
+      <div className="mx-auto flex min-h-[80vh] max-w-[820px] flex-col items-center justify-center px-6 py-16 text-center">
+        <div
+          className="pixel-panel pixel-panel--ink w-full max-w-[560px]"
         >
-          {prompt}
-        </h1>
-      </div>
-
-      {/* ─── Answer cards ───────────────────────────────────────
-          Each answer is a substantial card, not a radio button. The
-          dot on the left fills in on hover/selection. Multi-pick
-          shows selected state without auto-advancing. */}
-      <ul className="mt-12 flex flex-col gap-3">
-        {answerTexts.map((text, i) => {
-          const selected = multiPicks.includes(i);
-          return (
-            <li key={i}>
+          <div
+            className="border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.24em] text-[#F8EDC8]"
+            style={{ fontFamily: "var(--font-pixel-display)" }}
+          >
+            CHAPTER {chapter + 1} / {totalChapters}
+          </div>
+          <div className="px-8 py-12">
+            <div
+              className="text-[64px] leading-none text-[#B8862F]"
+              aria-hidden
+            >
+              {glyph}
+            </div>
+            <h1
+              className="mt-6 text-[28px] leading-none tracking-[0.04em] text-[#F8EDC8] sm:text-[40px]"
+              style={{ fontFamily: "var(--font-pixel-display)" }}
+            >
+              <span style={{ textShadow: "4px 4px 0 #B8862F" }}>
+                {title}
+              </span>
+            </h1>
+            <p className="mx-auto mt-7 max-w-[420px] text-[15px] leading-[1.65] text-[#F8EDC8]/85 sm:text-[16px]">
+              {line}
+            </p>
+            <div className="mt-10">
               <button
                 type="button"
-                onClick={() =>
-                  isMulti ? toggleMulti(i) : selectSingle(i)
-                }
-                className={
-                  // Card-style answer. Hover lifts the border, fills
-                  // the leading dot, and shifts the text faintly.
-                  // Selected (multi-pick) state uses accent-soft bg.
-                  "group flex w-full items-start gap-4 rounded-xl border bg-[#FFFCF4] px-5 py-5 text-left transition-all duration-200 " +
-                  "hover:border-[#8C6520]/60 hover:bg-[#FFF9E8] " +
-                  (selected
-                    ? "border-[#8C6520] bg-[#F8EDC8]"
-                    : "border-[#D6CDB6]")
-                }
+                onClick={() => setShowingChapter(false)}
+                className="pixel-button pixel-button--amber"
               >
-                <span
-                  className={
-                    "mt-1.5 inline-block h-3 w-3 shrink-0 rounded-full border-2 transition-colors " +
-                    (selected
-                      ? "border-[#8C6520] bg-[#8C6520]"
-                      : "border-[#D6CDB6] group-hover:border-[#8C6520]")
-                  }
-                  aria-hidden
-                />
-                <span className="text-[16px] leading-[1.55] text-[#221E18] sm:text-[17px]">
-                  {text}
-                </span>
+                <span>▶ CONTINUE</span>
               </button>
-            </li>
-          );
-        })}
-      </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-      {/* ─── Footer controls ────────────────────────────────────
-          Three actions: Back (quiet), Skip (quiet), Continue (only
-          for multi-pick, deep-amber button when active). */}
-      <div className="mt-10 flex items-center justify-between gap-4">
+  // ── QUESTION ─────────────────────────────────────────────────
+  const chapter = chapterOf(idx);
+  const totalChapters = Math.ceil(questions.length / QUESTIONS_PER_CHAPTER);
+  const positionInChapter = (idx % QUESTIONS_PER_CHAPTER) + 1;
+  const decorGlyph = QUESTION_GLYPHS[idx % QUESTION_GLYPHS.length];
+
+  return (
+    <div className="mx-auto max-w-[820px] px-6 pt-8 pb-24 sm:px-10 sm:pt-12 sm:pb-32">
+      {/* Top status row — chapter + progress dots */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div
+          className="text-[10px] tracking-[0.24em] text-[#8C6520]"
+          style={{ fontFamily: "var(--font-pixel-display)" }}
+        >
+          CHAPTER {chapter + 1} / {totalChapters} ·
+          <span className="ml-2 text-[#B8862F]">
+            {positionInChapter} / {QUESTIONS_PER_CHAPTER}
+          </span>
+        </div>
+        <ProgressDots total={questions.length} current={idx} />
+      </div>
+
+      {/* Pixel question panel */}
+      <div className="mt-8 pixel-panel">
+        {/* Title bar */}
+        <div
+          className="flex items-center justify-between border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
+          style={{ fontFamily: "var(--font-pixel-display)" }}
+        >
+          <span>QUESTION {String(idx + 1).padStart(2, "0")} / {questions.length}</span>
+          {isMulti ? (
+            <span className="text-[#B8862F]">PICK UP TO {maxPicks}</span>
+          ) : (
+            <span className="text-[#B8862F]">PICK ONE</span>
+          )}
+        </div>
+
+        {/* Prompt + decorative pixel glyph */}
+        <div className="px-6 py-8 sm:px-10 sm:py-10">
+          <div className="flex items-start gap-5">
+            <div
+              className="hidden shrink-0 pt-1 text-[44px] leading-none text-[#B8862F] sm:block"
+              aria-hidden
+            >
+              {decorGlyph}
+            </div>
+            <h1 className="text-[22px] font-medium leading-[1.4] text-[#221E18] sm:text-[28px]">
+              {prompt}
+            </h1>
+          </div>
+
+          {/* Answer cards */}
+          <ul className="mt-8 flex flex-col gap-3">
+            {answerTexts.map((text, i) => {
+              const selected = multiPicks.includes(i);
+              return (
+                <li key={i}>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      isMulti ? toggleMulti(i) : selectSingle(i)
+                    }
+                    className={
+                      // Pixel-border answer card. No rounded corners,
+                      // 3-px border, hard amber shadow on hover.
+                      "group flex w-full items-start gap-4 border-[3px] bg-[#FFFCF4] px-5 py-4 text-left transition-all duration-150 " +
+                      "hover:translate-x-[-2px] hover:translate-y-[-2px] hover:bg-[#FFF9E8] hover:shadow-[4px_4px_0_0_#8C6520] " +
+                      (selected
+                        ? "border-[#8C6520] bg-[#F8EDC8] shadow-[4px_4px_0_0_#221E18]"
+                        : "border-[#D6CDB6]")
+                    }
+                  >
+                    <span
+                      className={
+                        "mt-1.5 inline-block h-3 w-3 shrink-0 border-2 transition-colors " +
+                        (selected
+                          ? "border-[#8C6520] bg-[#8C6520]"
+                          : "border-[#D6CDB6] group-hover:border-[#8C6520]")
+                      }
+                      aria-hidden
+                    />
+                    <span className="text-[15px] leading-[1.55] text-[#221E18] sm:text-[16px]">
+                      {text}
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </div>
+
+      {/* Footer controls — pixel chrome */}
+      <div className="mt-8 flex items-center justify-between gap-3">
         <button
           type="button"
           onClick={goBack}
           disabled={idx === 0}
-          className="text-[13.5px] text-[#4A4338] underline decoration-[#D6CDB6] decoration-1 underline-offset-4 hover:text-[#221E18] hover:decoration-[#8C6520] disabled:opacity-30 disabled:no-underline"
+          className="border-2 border-[#221E18] bg-[#FFFCF4] px-4 py-2 text-[13px] font-medium leading-none text-[#221E18] hover:bg-[#F8EDC8] disabled:cursor-not-allowed disabled:border-[#D6CDB6] disabled:text-[#8C6520]/40"
         >
           ← {t("quiz.back", locale)}
         </button>
         <button
           type="button"
           onClick={skip}
-          className="text-[13.5px] text-[#4A4338] underline decoration-[#D6CDB6] decoration-1 underline-offset-4 hover:text-[#221E18] hover:decoration-[#8C6520]"
+          className="text-[13px] text-[#8C6520] underline decoration-[#D6CDB6] decoration-2 underline-offset-4 hover:text-[#221E18] hover:decoration-[#8C6520]"
         >
           {t("quiz.skip", locale)}
         </button>
@@ -332,18 +423,16 @@ export function QuizEngine({ questions, mode, locale }: Props) {
             onClick={submitMulti}
             disabled={multiPicks.length === 0}
             className={
-              "rounded-full px-5 py-2.5 text-[14px] font-medium transition-all " +
+              "border-2 px-5 py-2 text-[13px] font-medium leading-none transition-all " +
               (multiPicks.length === 0
-                ? "cursor-not-allowed bg-[#EBE3CA] text-[#8C6520]/50"
-                : "bg-[#221E18] text-[#FAF6EC] hover:bg-[#8C6520] hover:shadow-[0_8px_24px_rgba(140,101,32,0.25)]")
+                ? "cursor-not-allowed border-[#D6CDB6] bg-[#EBE3CA] text-[#8C6520]/50"
+                : "border-[#221E18] bg-[#221E18] text-[#FAF6EC] shadow-[3px_3px_0_0_#8C6520] hover:bg-[#8C6520] hover:shadow-[3px_3px_0_0_#221E18]")
             }
           >
             {t("quiz.continue", locale)} →
           </button>
         ) : (
-          // Spacer keeps the back/skip alignment consistent across
-          // single-pick and multi-pick questions.
-          <div className="w-[92px]" aria-hidden />
+          <div className="w-[88px]" aria-hidden />
         )}
       </div>
     </div>
@@ -351,10 +440,9 @@ export function QuizEngine({ questions, mode, locale }: Props) {
 }
 
 // ────────────────────────────────────────────────────────────────
-// ProgressDots — a row of small dots, one per question. Visited
-// dots are filled in dim amber; the current is filled deep amber;
-// upcoming are hollow. On wider screens we show all dots; on
-// narrow ones we compress to ~10 evenly-spaced indicators.
+// ProgressDots — pixel-square dots, one per question. Visited =
+// filled; current = bigger filled; upcoming = hollow. Limited to
+// 20 visible dots on long sets.
 // ────────────────────────────────────────────────────────────────
 function ProgressDots({
   total,
@@ -363,15 +451,12 @@ function ProgressDots({
   total: number;
   current: number;
 }) {
-  // Limit visible dots to 20 even on the 50-question set —
-  // more dots become noise rather than information. Map current
-  // onto a visible position.
   const visible = Math.min(total, 20);
   const ratio = total === 1 ? 1 : current / (total - 1);
   const visibleCurrent = Math.round(ratio * (visible - 1));
 
   return (
-    <div className="flex items-center gap-1.5" aria-hidden>
+    <div className="flex items-center gap-1" aria-hidden>
       {Array.from({ length: visible }).map((_, i) => {
         const filled = i < visibleCurrent;
         const here = i === visibleCurrent;
@@ -379,12 +464,12 @@ function ProgressDots({
           <span
             key={i}
             className={
-              "inline-block rounded-full transition-all " +
+              "inline-block transition-all " +
               (here
-                ? "h-2 w-2 bg-[#8C6520]"
+                ? "h-2.5 w-2.5 bg-[#8C6520]"
                 : filled
-                  ? "h-1.5 w-1.5 bg-[#B8862F]/60"
-                  : "h-1.5 w-1.5 bg-[#D6CDB6]")
+                  ? "h-2 w-2 bg-[#B8862F]/60"
+                  : "h-2 w-2 bg-[#D6CDB6]")
             }
           />
         );

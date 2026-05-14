@@ -94,12 +94,11 @@ export function SiteNav() {
                   <Link
                     href={link.href}
                     className={
-                      "text-[20px] leading-none transition-colors " +
+                      "text-[14px] font-medium leading-none transition-colors " +
                       (active
                         ? "text-[#221E18] underline decoration-[3px] decoration-[#B8862F] underline-offset-[6px]"
                         : "text-[#4A4338] hover:text-[#221E18]")
                     }
-                    style={{ fontFamily: "var(--font-pixel-body)" }}
                   >
                     {link.label}
                   </Link>
@@ -113,13 +112,12 @@ export function SiteNav() {
             <button
               type="button"
               onClick={() => setOpen(true)}
-              className="hidden items-center gap-2 border-2 border-[#221E18] bg-[#FFFCF4] px-2.5 py-1 text-[18px] leading-none text-[#221E18] hover:bg-[#F8EDC8] sm:inline-flex"
-              style={{ fontFamily: "var(--font-pixel-body)" }}
+              className="hidden items-center gap-2 border-2 border-[#221E18] bg-[#FFFCF4] px-3 py-1.5 text-[13px] font-medium leading-none text-[#221E18] hover:bg-[#F8EDC8] sm:inline-flex"
               aria-label="Open command palette"
             >
               <span>Search</span>
               <kbd
-                className="border border-[#221E18]/40 bg-[#EBE3CA] px-1 py-0.5 text-[11px] leading-none text-[#8C6520]"
+                className="border border-[#221E18]/40 bg-[#EBE3CA] px-1 py-0.5 text-[10px] leading-none text-[#8C6520]"
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
                 {isMac ? "⌘K" : "^K"}
@@ -127,8 +125,7 @@ export function SiteNav() {
             </button>
             <Link
               href="/account"
-              className="border-2 border-[#221E18] bg-[#221E18] px-3 py-1 text-[18px] leading-none text-[#FAF6EC] hover:bg-[#8C6520] hover:border-[#8C6520]"
-              style={{ fontFamily: "var(--font-pixel-body)" }}
+              className="border-2 border-[#221E18] bg-[#221E18] px-3.5 py-1.5 text-[13px] font-medium leading-none text-[#FAF6EC] hover:bg-[#8C6520] hover:border-[#8C6520]"
             >
               Account
             </Link>
@@ -270,15 +267,11 @@ function CommandPalette({ onClose }: { onClose: () => void }) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={onKey}
-          className="w-full border-b-2 border-[#221E18] bg-[#F8EDC8] px-5 py-3 text-[20px] leading-none text-[#221E18] placeholder:text-[#8C6520]/70 focus:outline-none"
-          style={{ fontFamily: "var(--font-pixel-body)" }}
+          className="w-full border-b-2 border-[#221E18] bg-[#F8EDC8] px-5 py-3 text-[15px] leading-tight text-[#221E18] placeholder:text-[#8C6520]/70 focus:outline-none"
         />
         <div className="max-h-[60vh] overflow-y-auto bg-[#FFFCF4] p-2">
           {items.length === 0 ? (
-            <div
-              className="px-3 py-8 text-center text-[18px] text-[#8C6520]"
-              style={{ fontFamily: "var(--font-pixel-body)" }}
-            >
+            <div className="px-3 py-8 text-center text-[14px] text-[#8C6520]">
               No matches. Try a different search.
             </div>
           ) : (
@@ -290,10 +283,7 @@ function CommandPalette({ onClose }: { onClose: () => void }) {
             />
           )}
         </div>
-        <div
-          className="flex items-center justify-between border-t-2 border-[#221E18] bg-[#221E18] px-4 py-1.5 text-[14px] leading-none text-[#F8EDC8]"
-          style={{ fontFamily: "var(--font-pixel-body)" }}
-        >
+        <div className="flex items-center justify-between border-t-2 border-[#221E18] bg-[#221E18] px-4 py-1.5 text-[12px] leading-none text-[#F8EDC8]">
           <span>↑↓ navigate · ↵ open · esc close</span>
           <span>{items.length} match{items.length === 1 ? "" : "es"}</span>
         </div>
@@ -338,16 +328,15 @@ function ItemList({
         onMouseEnter={() => onHover(idx)}
         onClick={() => onSelect(item)}
         className={
-          "flex w-full items-baseline justify-between gap-3 px-3 py-1.5 text-left text-[18px] leading-none transition-none " +
+          "flex w-full items-baseline justify-between gap-3 px-3 py-2 text-left text-[14px] leading-none transition-none " +
           (isActive
             ? "bg-[#B8862F] text-[#1A1612]"
             : "text-[#221E18] hover:bg-[#F8EDC8]")
         }
-        style={{ fontFamily: "var(--font-pixel-body)" }}
       >
-        <span>{isActive ? "▶ " : "  "}{item.label}</span>
+        <span className="font-medium">{isActive ? "▶ " : "  "}{item.label}</span>
         {item.hint ? (
-          <span className={`ml-auto truncate text-[14px] ${isActive ? "text-[#3A2F18]" : "text-[#8C6520]"}`}>
+          <span className={`ml-auto truncate text-[12px] ${isActive ? "text-[#3A2F18]" : "text-[#8C6520]"}`}>
             {item.hint}
           </span>
         ) : null}

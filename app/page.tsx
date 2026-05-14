@@ -19,13 +19,13 @@ import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import { ARCHETYPES } from "@/lib/archetypes";
 import { getArchetypeColor } from "@/lib/archetype-colors";
-import { FIGURES } from "@/lib/figures";
 import { getDailyWisdom } from "@/lib/daily-wisdom";
 import { getServerLocale } from "@/lib/locale-server";
 import { t } from "@/lib/translations";
 import { ConstellationMount } from "@/components/constellation-mount";
 import { HeroSprites } from "@/components/hero-sprites";
 import { PhilosopherSprite } from "@/components/philosopher-sprite";
+import { ArchetypeSprite } from "@/components/archetype-sprite";
 import { PHILOSOPHERS } from "@/lib/philosophers";
 
 export const metadata: Metadata = {
@@ -98,10 +98,7 @@ export default async function HomeV2() {
                 </span>
               </h1>
 
-              <p
-                className="mt-7 max-w-[680px] text-[26px] leading-[1.25] text-[#221E18] sm:text-[30px]"
-                style={{ fontFamily: "var(--font-pixel-body)" }}
-              >
+              <p className="mt-7 max-w-[680px] text-[22px] font-light leading-[1.35] text-[#221E18] sm:text-[26px]">
                 Find your place on the{" "}
                 <span className="text-[#8C6520]">map of how you think.</span>
               </p>
@@ -114,10 +111,7 @@ export default async function HomeV2() {
                   >
                     ▶ QUEST BRIEF
                   </div>
-                  <p
-                    className="px-5 py-4 text-[22px] leading-[1.35] text-[#221E18]"
-                    style={{ fontFamily: "var(--font-pixel-body)" }}
-                  >
+                  <p className="px-5 py-4 text-[16px] font-normal leading-[1.55] text-[#221E18] sm:text-[17px]">
                     {t("home.hero_lede", locale)}
                   </p>
                 </div>
@@ -132,17 +126,13 @@ export default async function HomeV2() {
                 </Link>
                 <Link
                   href="/quiz?mode=detailed"
-                  className="text-[20px] leading-none text-[#4A4338] hover:text-[#221E18] hover:underline"
-                  style={{ fontFamily: "var(--font-pixel-body)" }}
+                  className="text-[14px] leading-none text-[#4A4338] hover:text-[#221E18] hover:underline"
                 >
                   or the 50-question deep dive →
                 </Link>
               </div>
 
-              <p
-                className="mt-5 max-w-[520px] text-[18px] leading-[1.4] text-[#8C6520]"
-                style={{ fontFamily: "var(--font-pixel-body)" }}
-              >
+              <p className="mt-5 max-w-[520px] text-[14px] leading-[1.55] text-[#8C6520]">
                 No right answers. Skip anything. No signup needed.{" "}
                 <span className="text-[#4A4338]">
                   ~6 minutes for the quick read.
@@ -174,10 +164,7 @@ export default async function HomeV2() {
                   >
                     <em>&ldquo;{philosopher.keyIdea}&rdquo;</em>
                   </p>
-                  <div
-                    className="mt-5 flex items-center gap-3 text-[18px] text-[#4A4338]"
-                    style={{ fontFamily: "var(--font-pixel-body)" }}
-                  >
+                  <div className="mt-5 flex items-center gap-3 text-[14px] text-[#4A4338]">
                     <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
                     <span>
                       {philosopher.name}
@@ -224,10 +211,7 @@ export default async function HomeV2() {
                   {PHILOSOPHERS.length} THINKERS
                 </span>
               </h2>
-              <p
-                className="mt-5 max-w-[640px] text-[22px] leading-[1.3] text-[#4A4338]"
-                style={{ fontFamily: "var(--font-pixel-body)" }}
-              >
+              <p className="mt-5 max-w-[640px] text-[16px] leading-[1.6] text-[#4A4338] sm:text-[17px]">
                 Every philosopher in Mull sits at a real point in
                 16-D space — drawn from their actual writings.
                 Below is that space, flattened to a readable map.
@@ -251,10 +235,7 @@ export default async function HomeV2() {
               <ConstellationMount height={640} variant="interactive" />
             </div>
 
-            <p
-              className="mt-5 max-w-[720px] text-[18px] leading-[1.4] text-[#8C6520]"
-              style={{ fontFamily: "var(--font-pixel-body)" }}
-            >
+            <p className="mt-5 max-w-[720px] text-[14px] leading-[1.55] text-[#8C6520]">
               Take the quiz to see where{" "}
               <span className="text-[#221E18]">you</span> appear in the
               cloud. The closer the point, the closer their pattern is
@@ -327,10 +308,7 @@ export default async function HomeV2() {
                   >
                     {card.num}
                   </div>
-                  <p
-                    className="mt-5 text-[18px] leading-[1.35] text-[#4A4338]"
-                    style={{ fontFamily: "var(--font-pixel-body)" }}
-                  >
+                  <p className="mt-5 text-[15px] leading-[1.6] text-[#4A4338] sm:text-[16px]">
                     {card.body}
                   </p>
                 </div>
@@ -365,17 +343,13 @@ export default async function HomeV2() {
             </div>
             <Link
               href="/archetype"
-              className="hidden text-[18px] text-[#8C6520] hover:text-[#221E18] hover:underline sm:inline"
-              style={{ fontFamily: "var(--font-pixel-body)" }}
+              className="hidden text-[14px] text-[#8C6520] hover:text-[#221E18] hover:underline sm:inline"
             >
               View all essays →
             </Link>
           </div>
 
-          <p
-            className="mt-6 max-w-[720px] text-[22px] leading-[1.3] text-[#4A4338]"
-            style={{ fontFamily: "var(--font-pixel-body)" }}
-          >
+          <p className="mt-6 max-w-[720px] text-[16px] leading-[1.6] text-[#4A4338] sm:text-[17px]">
             Each is one stable pattern across the 16 dimensions. The
             quiz places you near the one you&rsquo;re closest to — but
             no one sits exactly on top of one.
@@ -390,7 +364,6 @@ export default async function HomeV2() {
           <ul className="mt-10 grid auto-rows-fr grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             {ARCHETYPES.map((a) => {
               const color = getArchetypeColor(a.key);
-              const figure = FIGURES[a.key] ?? "";
               return (
                 <li key={a.key} className="h-full">
                   <Link
@@ -423,9 +396,10 @@ export default async function HomeV2() {
                         <span>THE {capitalize(a.key).toUpperCase()}</span>
                       </div>
 
-                      {/* Sprite. The figure scales + jiggles on hover —
-                          group-hover triggers archetype-tile-sprite
-                          animation defined in globals.css. */}
+                      {/* Hand-crafted 16×16 pixel sprite for this
+                          archetype. The figure jiggles on hover —
+                          archetype-tile-sprite animation defined in
+                          globals.css. */}
                       <div
                         className="relative mx-auto my-4 flex h-[120px] w-[120px] shrink-0 items-center justify-center"
                         aria-hidden
@@ -436,10 +410,9 @@ export default async function HomeV2() {
                             boxShadow: `inset 0 0 0 3px ${color.deep}`,
                           }}
                         />
-                        <div
-                          className="archetype-sprite pixel-crisp relative h-[88px] w-[88px]"
-                          dangerouslySetInnerHTML={{ __html: figure }}
-                        />
+                        <div className="archetype-sprite relative">
+                          <ArchetypeSprite archetypeKey={a.key} size={88} />
+                        </div>
                       </div>
 
                       {/* Spirit line — flex-1 so it pushes the CTA strip
@@ -448,10 +421,7 @@ export default async function HomeV2() {
                         className="flex-1 border-t-2 px-3 py-3 text-center"
                         style={{ borderColor: color.deep }}
                       >
-                        <p
-                          className="text-[18px] leading-[1.3] text-[#221E18]"
-                          style={{ fontFamily: "var(--font-pixel-body)" }}
-                        >
+                        <p className="text-[14px] leading-[1.5] text-[#221E18]">
                           {a.spirit}
                         </p>
                       </div>
@@ -483,8 +453,7 @@ export default async function HomeV2() {
 
           <Link
             href="/archetype"
-            className="mt-8 inline-block text-[18px] text-[#8C6520] hover:text-[#221E18] hover:underline sm:hidden"
-            style={{ fontFamily: "var(--font-pixel-body)" }}
+            className="mt-8 inline-block text-[14px] text-[#8C6520] hover:text-[#221E18] hover:underline sm:hidden"
           >
             View all essays →
           </Link>
@@ -508,10 +477,7 @@ export default async function HomeV2() {
                   WHERE DO YOU SIT?
                 </span>
               </h2>
-              <p
-                className="mx-auto mt-6 max-w-[520px] text-[22px] leading-[1.35] text-[#F8EDC8]/85"
-                style={{ fontFamily: "var(--font-pixel-body)" }}
-              >
+              <p className="mx-auto mt-6 max-w-[520px] text-[16px] leading-[1.6] text-[#F8EDC8]/90">
                 Twenty questions, six minutes, no signup. You can skip
                 anything that doesn&rsquo;t fit you.
               </p>
@@ -528,11 +494,8 @@ export default async function HomeV2() {
         </section>
 
         {/* ─── Footer — pixel status bar ─────────────────────── */}
-        <footer
-          className="border-t-4 border-[#221E18] bg-[#221E18] px-6 py-5 sm:px-10"
-          style={{ fontFamily: "var(--font-pixel-body)" }}
-        >
-          <div className="mx-auto flex max-w-[1200px] flex-wrap items-baseline justify-between gap-4 text-[18px] leading-relaxed text-[#B8862F]">
+        <footer className="border-t-4 border-[#221E18] bg-[#221E18] px-6 py-5 sm:px-10">
+          <div className="mx-auto flex max-w-[1200px] flex-wrap items-baseline justify-between gap-4 text-[14px] leading-relaxed text-[#B8862F]">
             <div>
               <span
                 className="mr-2 text-[12px] tracking-[0.2em] text-[#F8EDC8]"

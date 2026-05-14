@@ -30,6 +30,7 @@ import {
   ARCHETYPE_COLORS,
   DEFAULT_ARCHETYPE_COLOR,
 } from "@/lib/archetype-colors";
+import { CANONICAL_PHILOSOPHER_NAMES } from "@/lib/canonical-philosophers";
 import {
   PHILOSOPHER_POSITIONS_3D,
   projectTo3D,
@@ -81,6 +82,26 @@ export function Constellation3D({
   const [enabled, setEnabled] = useState<Set<string>>(
     () => new Set(ARCHETYPES.map((a) => a.key)),
   );
+
+  // Canonical-only mode: by default, show only the 60 canonical
+  // philosophers — keeps the cloud legible and the names recognizable.
+  // User can flip the legend toggle to opt into the full 560.
+  const [showAll, setShowAll] = useState(false);
+
+  // Per-philosopher "pinned" set — when the user finds someone via
+  // search who's NOT in the canonical 60, clicking the pin button
+  // adds them to this set so they stay visible after the search
+  // clears. (Cheap way to "favorite" individuals into the cloud.)
+  const [pinned, setPinned] = useState<Set<string>>(() => new Set());
+
+  function togglePin(slug: string) {
+    setPinned((prev) => {
+      const next = new Set(prev);
+      if (next.has(slug)) next.delete(slug);
+      else next.add(slug);
+      return next;
+    });
+  }
 
   // When search narrows to a single match, surface its details in the
   // hover card so the user sees who they found without having to
@@ -141,6 +162,8 @@ export function Constellation3D({
           <Scene
             enabled={enabled}
             matched={matched}
+            showAll={showAll}
+            pinned={pinned}
             userPos={userPos}
             onHover={setHovered}
             isInteractive={isInteractive}
@@ -169,7 +192,14 @@ export function Constellation3D({
       ) : null}
 
       {/* Hover card overlay — DOM, outside the canvas. */}
-      {isInteractive && hovered ? <HoverCard p={hovered} /> : null}
+      {isInteractive && hovered ? (
+        <HoverCard
+          p={hovered}
+          pinned={pinned.has(hovered.slug)}
+          isCanonical={CANONICAL_PHILOSOPHER_NAMES.has(hovered.name)}
+          onTogglePin={() => togglePin(hovered.slug)}
+        />
+      ) : null}
 
       {/* Archetype legend — sidebar with toggles. */}
       {isInteractive ? (
@@ -178,6 +208,10 @@ export function Constellation3D({
           onToggle={toggleArchetype}
           onOnly={setOnly}
           onAll={setAll}
+          showAll={showAll}
+          setShowAll={setShowAll}
+          pinnedCount={pinned.size}
+          onClearPins={() => setPinned(new Set())}
         />
       ) : null}
 
@@ -196,12 +230,16 @@ export function Constellation3D({
 function Scene({
   enabled,
   matched,
+  showAll,
+  pinned,
   userPos,
   onHover,
   isInteractive,
 }: {
   enabled: Set<string>;
   matched: Set<string> | null;
+  showAll: boolean;
+  pinned: Set<string>;
   userPos: [number, number, number] | null;
   onHover: (p: Hovered) => void;
   isInteractive: boolean;
@@ -212,6 +250,8 @@ function Scene({
       <PhilosopherCloud
         enabled={enabled}
         matched={matched}
+        showAll={showAll}
+        pinned={pinned}
         onHover={onHover}
       />
       {userPos ? <UserPoint position={userPos} /> : null}
@@ -233,10 +273,14 @@ function Scene({
 function PhilosopherCloud({
   enabled,
   matched,
+  showAll,
+  pinned,
   onHover,
 }: {
   enabled: Set<string>;
   matched: Set<string> | null;
+  showAll: boolean;
+  pinned: Set<string>;
   onHover: (p: Hovered) => void;
 }) {
   const router = useRouter();
@@ -247,8 +291,18 @@ function PhilosopherCloud({
         const archetypeOn = enabled.has(p.archetypeKey);
         if (!archetypeOn) return null;
 
-        const isMatch = matched ? matched.has(p.slug) : true;
-        const dimmed = matched && !isMatch;
+        // Visibility rules:
+        //   - If showAll is true, show every philosopher whose
+        //     archetype is enabled.
+        //   - Otherwise show: canonical 60 + pinned + (when search
+        //     is active) any matched slug.
+        const isCanonical = CANONICAL_PHILOSOPHER_NAMES.has(p.name);
+        const isPinned = pinned.has(p.slug);
+        const isMatch = matched ? matched.has(p.slug) : false;
+        if (!showAll && !isCanonical && !isPinned && !isMatch) return null;
+
+        const inMatchSet = matched ? matched.has(p.slug) : true;
+        const dimmed = matched && !inMatchSet;
 
         const color =
           ARCHETYPE_COLORS[p.archetypeKey] ?? DEFAULT_ARCHETYPE_COLOR;
@@ -410,7 +464,17 @@ function AxisLabels() {
 // Plato is always Plato. Hover-triggered + sprite-pop-in animation
 // makes every hover feel alive.
 // ────────────────────────────────────────────────────────────────
-function HoverCard({ p }: { p: NonNullable<Hovered> }) {
+function HoverCard({
+  p,
+  pinned,
+  isCanonical,
+  onTogglePin,
+}: {
+  p: NonNullable<Hovered>;
+  pinned: boolean;
+  isCanonical: boolean;
+  onTogglePin: () => void;
+}) {
   const color =
     ARCHETYPE_COLORS[p.archetypeKey] ?? DEFAULT_ARCHETYPE_COLOR;
   const archName =
@@ -418,7 +482,7 @@ function HoverCard({ p }: { p: NonNullable<Hovered> }) {
   return (
     <div
       key={p.slug}
-      className="pointer-events-none absolute right-4 top-20 z-10 w-[300px] sm:right-6 sm:top-24"
+      className="absolute right-4 top-20 z-10 w-[300px] sm:right-6 sm:top-24"
     >
       <div
         className="pixel-panel sprite-pop-in pixel-panel--ink"
@@ -451,17 +515,11 @@ function HoverCard({ p }: { p: NonNullable<Hovered> }) {
             />
           </div>
           <div className="min-w-0">
-            <div
-              className="text-[20px] leading-tight text-[#F8EDC8]"
-              style={{ fontFamily: "var(--font-pixel-body)" }}
-            >
+            <div className="text-[18px] font-medium leading-tight text-[#F8EDC8]">
               {p.name}
             </div>
             {p.dates ? (
-              <div
-                className="mt-0.5 text-[14px] text-[#B8862F]"
-                style={{ fontFamily: "var(--font-pixel-body)" }}
-              >
+              <div className="mt-0.5 text-[12px] text-[#B8862F]">
                 {p.dates}
               </div>
             ) : null}
@@ -476,12 +534,30 @@ function HoverCard({ p }: { p: NonNullable<Hovered> }) {
             style={{ borderColor: color.deep }}
           >
             <p
-              className="text-[15px] leading-[1.4] text-[#F8EDC8]/90"
+              className="text-[14px] leading-[1.45] text-[#F8EDC8]/90"
               style={{ fontFamily: "var(--font-prose)" }}
             >
               <em>&ldquo;{p.keyIdea}&rdquo;</em>
             </p>
           </div>
+        ) : null}
+
+        {/* Pin toggle — only relevant for non-canonical philosophers
+            (canonical ones are always shown). Click to add them to
+            the pinned set so they stay visible after search clears. */}
+        {!isCanonical ? (
+          <button
+            type="button"
+            onClick={onTogglePin}
+            className="block w-full border-t-2 px-3 py-2 text-center text-[11px] tracking-[0.18em] hover:bg-[#221E18]/40"
+            style={{
+              borderColor: color.deep,
+              color: color.soft,
+              fontFamily: "var(--font-pixel-display)",
+            }}
+          >
+            {pinned ? "★ PINNED — CLICK TO UNPIN" : "☆ PIN TO MAP"}
+          </button>
         ) : null}
 
         {/* Click prompt */}
@@ -493,7 +569,7 @@ function HoverCard({ p }: { p: NonNullable<Hovered> }) {
             fontFamily: "var(--font-pixel-display)",
           }}
         >
-          ▶ CLICK FOR PROFILE
+          ▶ CLICK POINT FOR PROFILE
         </div>
       </div>
     </div>
@@ -577,16 +653,68 @@ function Legend({
   onToggle,
   onOnly,
   onAll,
+  showAll,
+  setShowAll,
+  pinnedCount,
+  onClearPins,
 }: {
   enabled: Set<string>;
   onToggle: (key: string) => void;
   onOnly: (key: string) => void;
   onAll: () => void;
+  showAll: boolean;
+  setShowAll: (v: boolean) => void;
+  pinnedCount: number;
+  onClearPins: () => void;
 }) {
   return (
-    <div className="absolute bottom-4 left-4 z-10 max-w-[200px] rounded-xl border border-[#3A3528]/60 bg-[#0E1419]/90 p-3 shadow-[0_12px_40px_rgba(0,0,0,0.4)] backdrop-blur-md">
+    <div
+      className="absolute bottom-4 left-4 z-10 max-w-[220px] border-4 border-[#3A3528] bg-[#0E1419]/95 p-3 backdrop-blur-md"
+      style={{ boxShadow: "4px 4px 0 0 #221E18" }}
+    >
+      {/* Cloud size toggle — opt-in to all 560 */}
       <div className="flex items-center justify-between">
-        <span className="text-[10px] uppercase tracking-[0.22em] text-[#9A8B6A]">
+        <span
+          className="text-[9px] uppercase tracking-[0.22em] text-[#9A8B6A]"
+          style={{ fontFamily: "var(--font-pixel-display)" }}
+        >
+          The cloud
+        </span>
+      </div>
+      <button
+        type="button"
+        onClick={() => setShowAll(!showAll)}
+        className={
+          "mt-1.5 flex w-full items-center justify-between px-2 py-1.5 text-left text-[12px] transition-colors " +
+          (showAll
+            ? "bg-[#B8862F] text-[#1A1612]"
+            : "bg-[#1A2129] text-[#F1EAD8] hover:bg-[#28323F]")
+        }
+      >
+        <span className="font-medium">
+          {showAll ? "SHOWING ALL 560" : "ESSENTIAL 60"}
+        </span>
+        <span className="text-[10px] opacity-70">
+          {showAll ? "▶ HIDE" : "▶ SHOW ALL"}
+        </span>
+      </button>
+      {pinnedCount > 0 ? (
+        <button
+          type="button"
+          onClick={onClearPins}
+          className="mt-1 flex w-full items-center justify-between px-2 py-1 text-[11px] text-[#B8862F] hover:bg-[#1A2129]"
+        >
+          <span>★ {pinnedCount} pinned</span>
+          <span className="text-[10px] opacity-70">clear</span>
+        </button>
+      ) : null}
+
+      {/* Archetype filter */}
+      <div className="mt-3 flex items-center justify-between border-t border-[#3A3528]/60 pt-2.5">
+        <span
+          className="text-[9px] uppercase tracking-[0.22em] text-[#9A8B6A]"
+          style={{ fontFamily: "var(--font-pixel-display)" }}
+        >
           Archetypes
         </span>
         <button
@@ -598,7 +726,7 @@ function Legend({
           All
         </button>
       </div>
-      <ul className="mt-2.5 space-y-0.5">
+      <ul className="mt-1.5 space-y-0.5">
         {ARCHETYPES.map((a) => {
           const color =
             ARCHETYPE_COLORS[a.key] ?? DEFAULT_ARCHETYPE_COLOR;
@@ -609,24 +737,21 @@ function Legend({
                 type="button"
                 onClick={() => onToggle(a.key)}
                 onDoubleClick={() => onOnly(a.key)}
-                title={`Click to toggle, double-click to solo`}
-                className="group flex w-full items-center gap-2 rounded px-1.5 py-1 hover:bg-[#1A2129]"
+                title="Click to toggle, double-click to solo"
+                className="group flex w-full items-center gap-2 px-1.5 py-1 hover:bg-[#1A2129]"
               >
                 <span
                   aria-hidden
-                  className="inline-block h-2.5 w-2.5 shrink-0 rounded-full transition-opacity"
+                  className="inline-block h-2.5 w-2.5 shrink-0 transition-opacity"
                   style={{
                     backgroundColor: color.primary,
                     opacity: isOn ? 1 : 0.25,
-                    boxShadow: isOn
-                      ? `0 0 6px ${color.primary}`
-                      : "none",
+                    boxShadow: isOn ? `0 0 6px ${color.primary}` : "none",
                   }}
                 />
                 <span
-                  className="font-display text-[14px] capitalize transition-colors"
+                  className="text-[12px] capitalize transition-colors"
                   style={{
-                    fontFamily: "var(--font-display)",
                     color: isOn ? "#F1EAD8" : "#5A5448",
                   }}
                 >
@@ -637,8 +762,8 @@ function Legend({
           );
         })}
       </ul>
-      <div className="mt-2.5 border-t border-[#3A3528]/40 pt-2 text-[10px] text-[#5A5448]">
-        Click toggle · double-click solo
+      <div className="mt-2 border-t border-[#3A3528]/40 pt-1.5 text-[10px] text-[#5A5448]">
+        click toggle · dbl-click solo
       </div>
     </div>
   );

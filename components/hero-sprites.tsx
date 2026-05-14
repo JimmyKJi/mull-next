@@ -14,8 +14,8 @@
 
 import { ARCHETYPES } from "@/lib/archetypes";
 import { ARCHETYPE_COLORS } from "@/lib/archetype-colors";
-import { FIGURES } from "@/lib/figures";
 import { PHILOSOPHER_POSITIONS } from "@/lib/projection";
+import { ArchetypeSprite } from "./archetype-sprite";
 
 // Pick three archetype figures to "feature" on the right side.
 // Hand-chosen to be visually varied (not three blue figures stacked).
@@ -43,16 +43,11 @@ export function HeroSprites() {
         </div>
       </div>
 
-      {/* Floating archetype sprites — three of them, staggered in
-          position + animation timing. The pixel-float keyframes give
-          each a chunky bob; image-rendering: pixelated keeps the SVG
-          edges crisp at 88×88. */}
+      {/* Floating pixel archetype sprites — three of them with
+          staggered positions + animation delays. */}
       {FEATURED.map((key, i) => {
         const color = ARCHETYPE_COLORS[key];
-        const fig = FIGURES[key] ?? "";
         const arch = ARCHETYPES.find((a) => a.key === key);
-        // Position each sprite differently — manual placement reads
-        // more deliberate than auto-layout for decorative chrome.
         const positions: React.CSSProperties[] = [
           { left: "0%", top: "200px" },
           { left: "32%", top: "260px" },
@@ -66,7 +61,6 @@ export function HeroSprites() {
             style={positions[i]}
             aria-hidden
           >
-            {/* Per-sprite chunky drop shadow */}
             <div
               className="relative h-[100px] w-[100px]"
               style={{
@@ -80,11 +74,9 @@ export function HeroSprites() {
                   background: `radial-gradient(circle at 50% 50%, ${color.soft} 0%, ${color.soft} 55%, transparent 75%)`,
                 }}
               />
-              <div
-                className="pixel-crisp absolute inset-1"
-                dangerouslySetInnerHTML={{ __html: fig }}
-              />
-              {/* Tiny pixel name label below */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <ArchetypeSprite archetypeKey={key} size={84} />
+              </div>
               <div
                 className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap border-2 border-[#221E18] bg-[#FFFCF4] px-1.5 py-0.5 text-[9px] tracking-[0.12em] text-[#221E18]"
                 style={{
