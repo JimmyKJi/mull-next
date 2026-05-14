@@ -1,41 +1,37 @@
 // /archetype/[slug] — long-form archetype profile.
-// Public, indexable, statically generated for the 10 known keys.
-//
-// Sections in order: hero (figure + name + spirit), detailedAbout, quotes,
-// reading list, kindred thinkers, what it gets right, where it falters,
-// day in the life, dominant dimensions, suggested exercises, suggested
-// dilemma themes, footer with link to take the quiz.
+// v3 pixel chrome restyle. Pixel header, pixel windows around each
+// section, Cormorant for the long prose (library-book-in-game beat),
+// pixel sprite for the archetype mascot, per-archetype color theming
+// driven by lib/archetype-colors.
 
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { ARCHETYPES, archetypeKeys, getArchetypeByKey } from '@/lib/archetypes';
-import { FIGURES } from '@/lib/figures';
+import { getArchetypeColor } from '@/lib/archetype-colors';
+import { ArchetypeSprite } from '@/components/archetype-sprite';
 import { DIM_NAMES } from '@/lib/dimensions';
 import { EXERCISES } from '@/lib/exercises';
 import { PHILOSOPHERS, philosopherSlug } from '@/lib/philosophers';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
-
-const serif = "'Cormorant Garamond', Georgia, serif";
-const sans = "'Inter', system-ui, sans-serif";
+import { PixelWindow } from '@/components/pixel-window';
 
 export function generateStaticParams() {
-  return archetypeKeys().map(slug => ({ slug }));
+  return archetypeKeys().map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const { slug } = await params;
   const a = getArchetypeByKey(slug);
   if (!a) return { title: 'Archetype not found' };
 
-  // Use the English name for SEO predictability.
   const enName = a.key.charAt(0).toUpperCase() + a.key.slice(1);
-  // Built dynamically by app/archetype/[slug]/opengraph-image.tsx and
-  // routed by Next as /archetype/<slug>/opengraph-image. Twitter wants
-  // the large-image card; Facebook/LinkedIn pick this up automatically
-  // from the openGraph.images entry.
   const ogImage = `https://mull.world/archetype/${slug}/opengraph-image`;
   return {
     title: `The ${enName}`,
@@ -58,411 +54,402 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-export default async function ArchetypeDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ArchetypeDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const archetype = getArchetypeByKey(slug);
   if (!archetype) notFound();
 
   const locale = await getServerLocale();
+  const color = getArchetypeColor(archetype.key);
   const name = t(`arch.${archetype.key}.name`, locale) || archetype.key;
   const blurb = t(`arch.${archetype.key}.blurb`, locale) || '';
-  const svg = FIGURES[archetype.key] || '';
 
-  // Resolve suggested exercises by slug.
   const exerciseObjs = archetype.suggestedExercises
-    .map(s => EXERCISES.find(e => e.slug === s))
+    .map((s) => EXERCISES.find((e) => e.slug === s))
     .filter((x): x is NonNullable<typeof x> => !!x);
 
-  // Resolve dominant dimensions by key.
-  const dimensions = archetype.dominantDimensions
-    .map(k => ({ key: k, name: DIM_NAMES[k as keyof typeof DIM_NAMES] || k }));
+  const dimensions = archetype.dominantDimensions.map((k) => ({
+    key: k,
+    name: DIM_NAMES[k as keyof typeof DIM_NAMES] || k,
+  }));
 
-  // Other archetypes to suggest at the bottom.
-  const others = ARCHETYPES.filter(a => a.key !== archetype.key);
+  const others = ARCHETYPES.filter((a) => a.key !== archetype.key);
 
   return (
-    <main style={{ maxWidth: 760, margin: '0 auto', padding: '60px 24px 120px' }}>
-      <header style={{
-        display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
-        marginBottom: 36, gap: 16, flexWrap: 'wrap'
-      }}>
-        <Link href="/" style={{
-          fontFamily: serif, fontSize: 28, fontWeight: 500,
-          color: '#221E18', textDecoration: 'none', letterSpacing: '-0.5px'
-        }}>
-          Mull<span style={{ color: '#B8862F' }}>.</span>
+    <main
+      className="mx-auto max-w-[860px] px-6 pb-32 pt-12 sm:px-10 sm:pt-16"
+      style={
+        {
+          ['--acc' as string]: color.primary,
+          ['--acc-deep' as string]: color.deep,
+          ['--acc-soft' as string]: color.soft,
+        } as React.CSSProperties
+      }
+    >
+      <div className="mb-6 flex items-center justify-between gap-4">
+        <Link
+          href="/archetype"
+          className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"
+        >
+          ← {t('arch_detail.back_to_index', locale)}
         </Link>
-        <nav style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-          <LanguageSwitcher initial={locale} />
-          <Link href="/archetype" style={{
-            fontFamily: sans, fontSize: 13, color: '#4A4338',
-            textDecoration: 'none', letterSpacing: 0.3,
-          }}>
-            ← {t('arch_detail.back_to_index', locale)}
-          </Link>
-        </nav>
-      </header>
+        <LanguageSwitcher initial={locale} />
+      </div>
 
-      {/* Hero */}
-      <section style={{ marginBottom: 40 }}>
-        <div style={{
-          display: 'flex', gap: 22, alignItems: 'flex-start',
-          flexWrap: 'wrap',
-        }}>
+      {/* ─── Hero — pixel sprite + name + spirit ─── */}
+      <PixelWindow
+        title={`▶ ARCHETYPE NO. ${String(ARCHETYPES.indexOf(archetype) + 1).padStart(2, '0')}`}
+        badge="ARCHETYPE_PROFILE.MD"
+        accent={{ primary: color.primary, deep: color.deep, soft: color.soft }}
+      >
+        <div className="grid grid-cols-1 items-center gap-6 sm:grid-cols-[auto_1fr]">
           <div
-            style={{ width: 110, height: 110, flexShrink: 0 }}
+            className="mx-auto border-4 p-3"
+            style={{
+              borderColor: color.deep,
+              background: '#FFFCF4',
+              boxShadow: `4px 4px 0 0 ${color.deep}`,
+            }}
             aria-hidden
-            dangerouslySetInnerHTML={{ __html: svg }}
-          />
-          <div style={{ flex: '1 1 320px', minWidth: 0 }}>
-            <div style={{
-              fontFamily: sans, fontSize: 11, fontWeight: 600,
-              color: '#8C6520', textTransform: 'uppercase',
-              letterSpacing: '0.18em', marginBottom: 8,
-            }}>
-              {t('arch_detail.eyebrow', locale)}
+          >
+            <ArchetypeSprite archetypeKey={archetype.key} size={120} floating />
+          </div>
+          <div>
+            <div
+              className="text-[10px] tracking-[0.24em]"
+              style={{ color: color.deep, fontFamily: 'var(--font-pixel-display)' }}
+            >
+              {t('arch_detail.eyebrow', locale).toUpperCase()}
             </div>
-            <h1 style={{
-              fontFamily: serif, fontSize: 42, fontWeight: 500,
-              margin: '0 0 8px', letterSpacing: '-0.4px', lineHeight: 1.05,
-            }}>
-              {name}
+            <h1
+              className="mt-2 pr-2 text-[28px] leading-[1.05] tracking-[0.04em] sm:text-[40px] md:text-[48px]"
+              style={{
+                color: color.deep,
+                fontFamily: 'var(--font-pixel-display)',
+              }}
+            >
+              <span style={{ textShadow: `3px 3px 0 ${color.primary}` }}>
+                {name.toUpperCase()}
+              </span>
             </h1>
-            <p style={{
-              fontFamily: serif, fontStyle: 'italic',
-              fontSize: 19, color: '#8C6520',
-              margin: 0, lineHeight: 1.4,
-            }}>
-              {archetype.spirit}
+            <p
+              className="mt-4 text-[18px] italic leading-[1.45] text-[#221E18]"
+              style={{ fontFamily: 'var(--font-prose)' }}
+            >
+              &ldquo;{archetype.spirit}&rdquo;
             </p>
           </div>
         </div>
 
-        {blurb && (
-          <p style={{
-            fontFamily: sans, fontSize: 16,
-            color: '#4A4338', lineHeight: 1.65,
-            margin: '24px 0 0', padding: '14px 18px',
-            background: '#FFFCF4', borderLeft: '3px solid #B8862F',
-            borderRadius: 6,
-          }}>
+        {blurb ? (
+          <p
+            className="mt-5 border-l-4 px-4 py-3 text-[15px] leading-[1.65] text-[#221E18]"
+            style={{
+              borderColor: color.deep,
+              background: '#FFFCF4',
+              fontFamily: 'var(--font-prose)',
+            }}
+          >
             {blurb}
           </p>
-        )}
-      </section>
+        ) : null}
+      </PixelWindow>
 
-      <Section title={t('arch_detail.section_about', locale)}>
-        {archetype.detailedAbout.split('\n\n').map((para, i) => (
-          <p key={i} style={paragraphStyle}>{para}</p>
-        ))}
-      </Section>
+      <div className="mt-8 space-y-8">
+        {/* ─── About — long-form essay (Cormorant) ─── */}
+        <PixelWindow title={t('arch_detail.section_about', locale).toUpperCase()} badge="▶ ESSAY">
+          <Prose>
+            {archetype.detailedAbout.split('\n\n').map((para, i) => (
+              <p key={i}>{para}</p>
+            ))}
+          </Prose>
+        </PixelWindow>
 
-      <Section title={t('arch_detail.section_quotes', locale)}>
-        <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 18 }}>
-          {archetype.quotes.map((q, i) => (
-            <li key={i} style={{
-              padding: '14px 18px', background: '#FFFCF4',
-              borderLeft: '3px solid #D6CDB6', borderRadius: 6,
-            }}>
-              <p style={{
-                fontFamily: serif, fontStyle: 'italic',
-                fontSize: 17, color: '#221E18',
-                margin: '0 0 6px', lineHeight: 1.5,
-              }}>
-                &ldquo;{q.text}&rdquo;
-              </p>
-              <p style={{
-                fontFamily: sans, fontSize: 12,
-                color: '#8C6520', margin: 0, letterSpacing: 0.3,
-              }}>
-                — {q.attribution}
-              </p>
-            </li>
-          ))}
-        </ul>
-      </Section>
-
-      <Section title={t('arch_detail.section_reading', locale)}>
-        <p style={{ ...paragraphStyle, marginBottom: 18, color: '#4A4338', fontSize: 14, fontStyle: 'italic' }}>
-          {t('arch_detail.reading_helper', locale)}
-        </p>
-        <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 14 }}>
-          {archetype.readingList.map((book, i) => (
-            <li key={i} style={{
-              padding: '14px 18px', background: '#FFFCF4',
-              border: '1px solid #EBE3CA', borderRadius: 8,
-            }}>
-              <div style={{
-                fontFamily: serif, fontSize: 18, fontWeight: 500,
-                color: '#221E18', marginBottom: 2, lineHeight: 1.3,
-              }}>
-                {book.title}
-              </div>
-              <div style={{
-                fontFamily: sans, fontSize: 12.5,
-                color: '#8C6520', marginBottom: 6, letterSpacing: 0.2,
-              }}>
-                {book.author}{book.year ? ` · ${book.year}` : ''}
-              </div>
-              <p style={{
-                fontFamily: sans, fontSize: 14,
-                color: '#4A4338', margin: 0, lineHeight: 1.55,
-              }}>
-                {book.note}
-              </p>
-            </li>
-          ))}
-        </ul>
-      </Section>
-
-      <Section title={t('arch_detail.section_kindred', locale)}>
-        <p style={{ ...paragraphStyle, marginBottom: 12 }}>
-          {t('arch_detail.kindred_helper', locale)}
-        </p>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-          {archetype.kindredThinkers.map((thinker, i) => {
-            // If this kindred-thinker name matches a philosopher in the
-            // constellation, link the chip to their /philosopher/[slug]
-            // page. Otherwise render as a static chip (for thinkers
-            // who're listed by category, e.g. "the Hebrew prophets").
-            const matched = PHILOSOPHERS.find(p =>
-              p.name.toLowerCase() === thinker.toLowerCase() ||
-              p.aliases.some(a => a.toLowerCase() === thinker.toLowerCase())
-            );
-            const chipStyle: React.CSSProperties = {
-              padding: '6px 12px',
-              background: '#F5EFDC',
-              border: '1px solid #E2D8B6',
-              borderRadius: 999,
-              fontFamily: sans, fontSize: 13.5, color: '#221E18',
-              letterSpacing: 0.2,
-              textDecoration: 'none',
-              display: 'inline-block',
-            };
-            if (matched) {
-              return (
-                <Link
-                  key={i}
-                  href={`/philosopher/${philosopherSlug(matched.name)}`}
-                  style={chipStyle}
+        {/* ─── Quotes ─── */}
+        <PixelWindow title={t('arch_detail.section_quotes', locale).toUpperCase()} badge="▶ QUOTES">
+          <ul className="space-y-3">
+            {archetype.quotes.map((q, i) => (
+              <li
+                key={i}
+                className="border-l-4 px-4 py-3"
+                style={{ borderColor: color.deep, background: '#FFFCF4' }}
+              >
+                <p
+                  className="text-[16.5px] italic leading-[1.5] text-[#221E18]"
+                  style={{ fontFamily: 'var(--font-prose)' }}
                 >
-                  {thinker} →
-                </Link>
-              );
-            }
-            return (
-              <span key={i} style={chipStyle}>
-                {thinker}
-              </span>
-            );
-          })}
-        </div>
-      </Section>
-
-      <div style={{
-        display: 'grid', gap: 18,
-        // auto-fit minmax so the pair collapses to one column on
-        // narrow screens; otherwise the two paragraphs become
-        // ~140px wide on a phone and unreadable.
-        gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-        marginBottom: 32,
-      }}>
-        <SidedSection
-          title={t('arch_detail.section_get_right', locale)}
-          tone="positive"
-          body={archetype.whatItGetsRight}
-        />
-        <SidedSection
-          title={t('arch_detail.section_falter', locale)}
-          tone="caution"
-          body={archetype.whereItFalters}
-        />
-      </div>
-
-      <Section title={t('arch_detail.section_dayinlife', locale)}>
-        <p style={{ ...paragraphStyle, fontStyle: 'italic', fontSize: 16.5 }}>
-          {archetype.dayInTheLife}
-        </p>
-      </Section>
-
-      <Section title={t('arch_detail.section_dimensions', locale)}>
-        <p style={{ ...paragraphStyle, marginBottom: 14 }}>
-          {t('arch_detail.dimensions_helper', locale)}
-        </p>
-        <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 8 }}>
-          {dimensions.map((d, i) => {
-            const dimName = t(`dim.${d.key}.name`, locale) || d.name;
-            const dimDesc = t(`dim.${d.key}.desc`, locale) || '';
-            return (
-              <li key={i} style={{
-                padding: '12px 16px', background: '#FBFAF2',
-                borderLeft: '3px solid #2F5D5C', borderRadius: 6,
-              }}>
-                <div style={{
-                  fontFamily: sans, fontSize: 11, fontWeight: 600,
-                  color: '#2F5D5C', textTransform: 'uppercase',
-                  letterSpacing: '0.16em',
-                }}>
-                  {d.key}
-                </div>
-                <div style={{
-                  fontFamily: serif, fontSize: 17, color: '#221E18',
-                  margin: '2px 0 4px', fontWeight: 500,
-                }}>
-                  {dimName}
-                </div>
-                <p style={{
-                  fontFamily: sans, fontSize: 13.5,
-                  color: '#4A4338', margin: 0, lineHeight: 1.5,
-                }}>
-                  {dimDesc}
+                  &ldquo;{q.text}&rdquo;
                 </p>
-              </li>
-            );
-          })}
-        </ul>
-      </Section>
-
-      {exerciseObjs.length > 0 && (
-        <Section title={t('arch_detail.section_exercises', locale)}>
-          <p style={{ ...paragraphStyle, marginBottom: 14 }}>
-            {t('arch_detail.exercises_helper', locale)}
-          </p>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 10 }}>
-            {exerciseObjs.map(ex => (
-              <li key={ex.slug}>
-                <Link
-                  href={`/exercises/${ex.slug}`}
-                  style={{
-                    display: 'block', padding: '12px 16px',
-                    background: '#FFFCF4', border: '1px solid #EBE3CA',
-                    borderRadius: 8, textDecoration: 'none', color: 'inherit',
-                  }}
-                >
-                  <div style={{
-                    fontFamily: serif, fontSize: 17, fontWeight: 500,
-                    color: '#221E18', marginBottom: 2,
-                  }}>
-                    {ex.name} →
-                  </div>
-                  <p style={{
-                    fontFamily: sans, fontSize: 13.5, color: '#4A4338',
-                    margin: 0, lineHeight: 1.5,
-                  }}>
-                    {ex.summary}
-                  </p>
-                </Link>
+                <p className="mt-1 text-[12px] tracking-wide text-[#8C6520]">
+                  — {q.attribution}
+                </p>
               </li>
             ))}
           </ul>
-        </Section>
-      )}
+        </PixelWindow>
 
-      <Section title={t('arch_detail.section_other', locale)}>
-        <p style={{ ...paragraphStyle, marginBottom: 14 }}>
-          {t('arch_detail.other_helper', locale)}
-        </p>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-          {others.map(a => {
-            const otherName = t(`arch.${a.key}.name`, locale) || a.key;
-            return (
-              <Link
-                key={a.key}
-                href={`/archetype/${a.key}`}
+        {/* ─── Reading list ─── */}
+        <PixelWindow title={t('arch_detail.section_reading', locale).toUpperCase()} badge="▶ READING">
+          <p
+            className="mb-4 text-[14px] italic leading-[1.6] text-[#4A4338]"
+            style={{ fontFamily: 'var(--font-prose)' }}
+          >
+            {t('arch_detail.reading_helper', locale)}
+          </p>
+          <ul className="space-y-3">
+            {archetype.readingList.map((book, i) => (
+              <li
+                key={i}
+                className="border-2 px-4 py-3"
                 style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 8,
-                  padding: '8px 14px',
-                  background: '#FFFCF4', border: '1px solid #D6CDB6',
-                  borderRadius: 999, textDecoration: 'none', color: '#221E18',
-                  fontFamily: sans, fontSize: 13,
+                  borderColor: '#EBE3CA',
+                  background: '#FFFCF4',
+                  boxShadow: `2px 2px 0 0 ${color.deep}`,
                 }}
               >
-                <span style={{
-                  display: 'inline-block', width: 22, height: 22,
-                }}
-                  aria-hidden
-                  dangerouslySetInnerHTML={{ __html: FIGURES[a.key] || '' }}
-                />
-                {otherName}
-              </Link>
-            );
-          })}
-        </div>
-      </Section>
+                <div
+                  className="text-[18px] font-medium leading-tight text-[#221E18]"
+                  style={{ fontFamily: 'var(--font-prose)' }}
+                >
+                  {book.title}
+                </div>
+                <div className="mt-1 text-[12.5px] tracking-wide text-[#8C6520]">
+                  {book.author}
+                  {book.year ? ` · ${book.year}` : ''}
+                </div>
+                <p className="mt-2 text-[14px] leading-[1.55] text-[#4A4338]">
+                  {book.note}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </PixelWindow>
 
-      <div style={{
-        marginTop: 32, padding: '20px 24px',
-        background: '#F5EFDC', border: '1px solid #E2D8B6',
-        borderLeft: '3px solid #B8862F', borderRadius: 8,
-        textAlign: 'center',
-      }}>
-        <p style={{
-          fontFamily: serif, fontSize: 17, color: '#221E18',
-          margin: '0 0 14px', lineHeight: 1.5,
-        }}>
+        {/* ─── Kindred thinkers ─── */}
+        <PixelWindow title={t('arch_detail.section_kindred', locale).toUpperCase()} badge="▶ KINDRED">
+          <p
+            className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
+            style={{ fontFamily: 'var(--font-prose)' }}
+          >
+            {t('arch_detail.kindred_helper', locale)}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {archetype.kindredThinkers.map((thinker, i) => {
+              const matched = PHILOSOPHERS.find(
+                (p) =>
+                  p.name.toLowerCase() === thinker.toLowerCase() ||
+                  p.aliases.some(
+                    (al) => al.toLowerCase() === thinker.toLowerCase(),
+                  ),
+              );
+              const chipClass =
+                'inline-block border-2 px-3 py-1.5 text-[13px] text-[#221E18] transition-all hover:translate-x-[-1px] hover:translate-y-[-1px]';
+              const chipStyle: React.CSSProperties = {
+                borderColor: color.deep,
+                background: '#F5EFDC',
+                boxShadow: `2px 2px 0 0 ${color.deep}`,
+              };
+              if (matched) {
+                return (
+                  <Link
+                    key={i}
+                    href={`/philosopher/${philosopherSlug(matched.name)}`}
+                    className={chipClass}
+                    style={chipStyle}
+                  >
+                    {thinker} →
+                  </Link>
+                );
+              }
+              return (
+                <span key={i} className={chipClass} style={chipStyle}>
+                  {thinker}
+                </span>
+              );
+            })}
+          </div>
+        </PixelWindow>
+
+        {/* ─── What it gets right / Where it falters — side-by-side ─── */}
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+          <PixelWindow title={t('arch_detail.section_get_right', locale).toUpperCase()} badge="▶ STRENGTH">
+            <p
+              className="text-[15px] leading-[1.65] text-[#221E18]"
+              style={{ fontFamily: 'var(--font-prose)' }}
+            >
+              {archetype.whatItGetsRight}
+            </p>
+          </PixelWindow>
+          <PixelWindow title={t('arch_detail.section_falter', locale).toUpperCase()} badge="▶ LIMIT">
+            <p
+              className="text-[15px] leading-[1.65] text-[#221E18]"
+              style={{ fontFamily: 'var(--font-prose)' }}
+            >
+              {archetype.whereItFalters}
+            </p>
+          </PixelWindow>
+        </div>
+
+        {/* ─── A day in the life ─── */}
+        <PixelWindow title={t('arch_detail.section_dayinlife', locale).toUpperCase()} badge="▶ SCENE">
+          <p
+            className="text-[16px] italic leading-[1.7] text-[#221E18]"
+            style={{ fontFamily: 'var(--font-prose)' }}
+          >
+            {archetype.dayInTheLife}
+          </p>
+        </PixelWindow>
+
+        {/* ─── Dominant dimensions ─── */}
+        <PixelWindow title={t('arch_detail.section_dimensions', locale).toUpperCase()} badge="▶ DIMS">
+          <p
+            className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
+            style={{ fontFamily: 'var(--font-prose)' }}
+          >
+            {t('arch_detail.dimensions_helper', locale)}
+          </p>
+          <ul className="space-y-2.5">
+            {dimensions.map((d, i) => {
+              const dimName = t(`dim.${d.key}.name`, locale) || d.name;
+              const dimDesc = t(`dim.${d.key}.desc`, locale) || '';
+              return (
+                <li
+                  key={i}
+                  className="border-l-4 px-4 py-3"
+                  style={{ borderColor: color.deep, background: '#FBFAF2' }}
+                >
+                  <div
+                    className="text-[10px] tracking-[0.16em]"
+                    style={{
+                      color: color.deep,
+                      fontFamily: 'var(--font-pixel-display)',
+                    }}
+                  >
+                    {d.key}
+                  </div>
+                  <div
+                    className="mt-1 text-[17px] font-medium text-[#221E18]"
+                    style={{ fontFamily: 'var(--font-prose)' }}
+                  >
+                    {dimName}
+                  </div>
+                  <p className="mt-1.5 text-[13.5px] leading-[1.55] text-[#4A4338]">
+                    {dimDesc}
+                  </p>
+                </li>
+              );
+            })}
+          </ul>
+        </PixelWindow>
+
+        {/* ─── Suggested exercises ─── */}
+        {exerciseObjs.length > 0 ? (
+          <PixelWindow title={t('arch_detail.section_exercises', locale).toUpperCase()} badge="▶ PRACTICE">
+            <p
+              className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
+              style={{ fontFamily: 'var(--font-prose)' }}
+            >
+              {t('arch_detail.exercises_helper', locale)}
+            </p>
+            <ul className="space-y-2.5">
+              {exerciseObjs.map((ex) => (
+                <li key={ex.slug}>
+                  <Link
+                    href={`/exercises/${ex.slug}`}
+                    className="block border-2 px-4 py-3 transition-all hover:translate-x-[-1px] hover:translate-y-[-1px]"
+                    style={{
+                      borderColor: '#EBE3CA',
+                      background: '#FFFCF4',
+                      boxShadow: `2px 2px 0 0 ${color.deep}`,
+                    }}
+                  >
+                    <div
+                      className="text-[17px] font-medium text-[#221E18]"
+                      style={{ fontFamily: 'var(--font-prose)' }}
+                    >
+                      {ex.name} →
+                    </div>
+                    <p className="mt-1 text-[13.5px] leading-[1.55] text-[#4A4338]">
+                      {ex.summary}
+                    </p>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </PixelWindow>
+        ) : null}
+
+        {/* ─── Other archetypes ─── */}
+        <PixelWindow title={t('arch_detail.section_other', locale).toUpperCase()} badge="▶ EXPLORE">
+          <p
+            className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
+            style={{ fontFamily: 'var(--font-prose)' }}
+          >
+            {t('arch_detail.other_helper', locale)}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {others.map((a) => {
+              const otherColor = getArchetypeColor(a.key);
+              const otherName = t(`arch.${a.key}.name`, locale) || a.key;
+              return (
+                <Link
+                  key={a.key}
+                  href={`/archetype/${a.key}`}
+                  className="inline-flex items-center gap-2 border-2 px-3 py-1.5 text-[13px] text-[#221E18] transition-all hover:translate-x-[-1px] hover:translate-y-[-1px]"
+                  style={{
+                    borderColor: otherColor.deep,
+                    background: '#FFFCF4',
+                    boxShadow: `2px 2px 0 0 ${otherColor.deep}`,
+                  }}
+                >
+                  <span aria-hidden className="inline-block h-5 w-5">
+                    <ArchetypeSprite archetypeKey={a.key} size={20} />
+                  </span>
+                  {otherName}
+                </Link>
+              );
+            })}
+          </div>
+        </PixelWindow>
+      </div>
+
+      {/* ─── CTA ─── */}
+      <div
+        className="mt-10 border-4 px-6 py-7 text-center"
+        style={{
+          borderColor: color.deep,
+          background: color.soft,
+          boxShadow: `4px 4px 0 0 ${color.deep}`,
+        }}
+      >
+        <p
+          className="text-[16px] leading-[1.5] text-[#221E18]"
+          style={{ fontFamily: 'var(--font-prose)' }}
+        >
           {t('arch_detail.cta_unsure', locale)}
         </p>
-        <Link href="/" style={{
-          display: 'inline-block',
-          padding: '10px 22px', background: '#221E18', color: '#FAF6EC',
-          borderRadius: 6, textDecoration: 'none',
-          fontFamily: sans, fontSize: 14, fontWeight: 500,
-        }}>
-          {t('arch_detail.cta_take_quiz', locale)}
+        <Link
+          href="/quiz?mode=quick"
+          className="pixel-button pixel-button--amber mt-5"
+        >
+          <span>▶ {t('arch_detail.cta_take_quiz', locale).toUpperCase()}</span>
         </Link>
       </div>
     </main>
   );
 }
 
-const paragraphStyle: React.CSSProperties = {
-  fontFamily: sans, fontSize: 15.5,
-  color: '#4A4338', lineHeight: 1.7, margin: '0 0 14px',
-};
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Prose({ children }: { children: React.ReactNode }) {
   return (
-    <section style={{
-      marginBottom: 36, paddingTop: 28, borderTop: '1px solid #EBE3CA',
-    }}>
-      <h2 style={{
-        fontFamily: serif, fontSize: 26, fontWeight: 500,
-        margin: '0 0 16px', letterSpacing: '-0.3px', color: '#221E18',
-      }}>
-        {title}
-      </h2>
-      <div>{children}</div>
-    </section>
-  );
-}
-
-function SidedSection({
-  title, body, tone,
-}: {
-  title: string;
-  body: string;
-  tone: 'positive' | 'caution';
-}) {
-  const accent = tone === 'positive' ? '#2F5D5C' : '#8C6520';
-  return (
-    <section style={{
-      padding: '20px 22px',
-      background: '#FFFCF4', border: '1px solid #EBE3CA',
-      borderTop: `3px solid ${accent}`, borderRadius: 8,
-    }}>
-      <h3 style={{
-        fontFamily: sans, fontSize: 11, fontWeight: 600,
-        color: accent, textTransform: 'uppercase',
-        letterSpacing: '0.18em', margin: '0 0 10px',
-      }}>
-        {title}
-      </h3>
-      <p style={{
-        fontFamily: sans, fontSize: 14, color: '#4A4338',
-        margin: 0, lineHeight: 1.65,
-      }}>
-        {body}
-      </p>
-    </section>
+    <div
+      className="space-y-4 text-[15.5px] leading-[1.7] text-[#221E18]"
+      style={{ fontFamily: 'var(--font-prose)' }}
+    >
+      {children}
+    </div>
   );
 }
