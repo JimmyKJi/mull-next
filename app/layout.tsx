@@ -1,8 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
-import GlobalTopBar from "@/components/global-topbar";
-import TopBarMount from "@/components/topbar-mount";
+import { SiteNav } from "@/components/site-nav";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import FeedbackButton from "@/components/feedback-button";
@@ -80,12 +79,11 @@ export default function RootLayout({
           WebkitFontSmoothing: "antialiased",
         }}
       >
-        {/* Global TopBar appears on every Next.js route EXCEPT /account
-            (which has its own in-page header with Sign out + Language).
-            TopBarMount is a thin client wrapper that does the path check. */}
-        <TopBarMount>
-          <GlobalTopBar />
-        </TopBarMount>
+        {/* SiteNav is the v2 sticky top bar — wordmark, page links,
+            Cmd-K command palette, Account button. Visible on every
+            route. Replaces the old GlobalTopBar / TopBarMount pair
+            (kept in repo for now in case anything still imports them). */}
+        <SiteNav />
         {children}
         {/* Vercel Web Analytics — page views, referrers, locations.
             Custom events fire from individual pages via the `track()`

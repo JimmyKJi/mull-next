@@ -230,18 +230,10 @@ export function QuizEngine({ questions, mode, locale }: Props) {
 
   return (
     <div className="mx-auto max-w-[820px] px-6 pt-12 pb-24 sm:px-10 sm:pt-20 sm:pb-32">
-      {/* ─── Slim header: wordmark + faint progress dots ──────────
-          No progress BAR — the per-question dots tell you where you
-          are without insisting. Each is filled if visited, hollow if
-          ahead. Active dot is filled in deeper amber.  */}
-      <div className="flex items-center justify-between">
-        <a
-          href="/home"
-          className="font-display text-[20px] italic text-[#221E18]"
-          style={{ fontFamily: "var(--font-display)" }}
-        >
-          Mull
-        </a>
+      {/* Faint progress dots only — the wordmark + nav live in the
+          global SiteNav now. Each dot is filled if visited, hollow if
+          ahead. Active dot is the deeper amber. */}
+      <div className="flex items-center justify-end">
         <ProgressDots
           total={questions.length}
           current={idx}

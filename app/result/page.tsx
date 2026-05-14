@@ -30,7 +30,7 @@ import {
   zeros,
   magnitude,
 } from "@/lib/vectors";
-import { Constellation } from "@/components/constellation";
+import { ConstellationMount } from "@/components/constellation-mount";
 import { ResultSave } from "./result-save";
 
 export const metadata: Metadata = {
@@ -154,19 +154,7 @@ export default async function ResultPage({
         mode={mode}
       />
 
-      {/* ─── Slim top rail ─────────────────────────────────────── */}
-      <header className="mx-auto flex max-w-[1200px] items-center justify-between px-6 pt-7 pb-2 sm:px-10 sm:pt-10">
-        <Link
-          href="/home"
-          className="font-display text-[22px] italic text-[#221E18]"
-          style={{ fontFamily: "var(--font-display)" }}
-        >
-          Mull
-        </Link>
-        <span className="text-[11px] uppercase tracking-[0.22em] text-[#8C6520]">
-          Your result
-        </span>
-      </header>
+      {/* SiteNav (in app/layout.tsx) handles the top bar. */}
 
       {/* ─── Hero: "where you sit" ──────────────────────────────
           The archetype headline. Big Cormorant italic name with the
@@ -246,22 +234,20 @@ export default async function ResultPage({
           </div>
 
           <div className="mt-10">
-            <Constellation
+            <ConstellationMount
               userVector={vector}
+              height={640}
               variant="interactive"
-              clickable={true}
-              className="max-h-[640px]"
             />
           </div>
 
-          <div className="mt-6 flex flex-wrap items-baseline justify-between gap-2 text-[12.5px] text-[#8C6520]">
-            <span className="opacity-80">
-              X: theoretical / abstract ↔ embodied / practical
-            </span>
-            <span className="opacity-80">
-              Y: sovereign self ↔ communal embeddedness
-            </span>
-          </div>
+          <p className="mt-5 max-w-[640px] text-[13.5px] leading-relaxed text-[#8C6520]/80">
+            The dark amber pulse is{" "}
+            <span className="text-[#221E18]">you</span>. Drag to orbit,
+            scroll to zoom. Hover any colored point to see who they were.
+            Hide other archetypes from the legend to see who specifically
+            sits near you.
+          </p>
         </div>
       </section>
 

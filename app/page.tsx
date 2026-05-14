@@ -19,10 +19,11 @@ import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import { ARCHETYPES } from "@/lib/archetypes";
 import { getArchetypeColor } from "@/lib/archetype-colors";
+import { FIGURES } from "@/lib/figures";
 import { getDailyWisdom } from "@/lib/daily-wisdom";
 import { getServerLocale } from "@/lib/locale-server";
 import { t } from "@/lib/translations";
-import { Constellation } from "@/components/constellation";
+import { ConstellationMount } from "@/components/constellation-mount";
 import { PHILOSOPHERS } from "@/lib/philosophers";
 
 export const metadata: Metadata = {
@@ -68,21 +69,8 @@ export default async function HomeV2() {
       />
 
       <main className="relative z-10 min-h-[100svh] bg-[#FAF6EC] text-[#221E18]">
-        {/* ─── Slim top rail ──────────────────────────────────────
-            No global top bar on this surface — TopBarMount opts out
-            of /home. The wordmark + version pill is the entire top. */}
-        <header className="mx-auto flex max-w-[1200px] items-center justify-between px-6 pt-7 pb-2 sm:px-10 sm:pt-10">
-          <Link
-            href="/"
-            className="font-display text-[22px] italic tracking-tight text-[#221E18]"
-            style={{ fontFamily: "var(--font-display)" }}
-          >
-            Mull
-          </Link>
-          <span className="text-[11px] uppercase tracking-[0.22em] text-[#8C6520]">
-            v0.9 · early build
-          </span>
-        </header>
+        {/* SiteNav (in app/layout.tsx) is the global top bar now —
+            no per-page header here. */}
 
         {/* ─── Hero ───────────────────────────────────────────────
             Generous H1, single accent rule, lede column.
@@ -107,8 +95,17 @@ export default async function HomeV2() {
               An atlas of how you think
             </div>
 
+            {/* H1 typography:
+                  - leading 1.08 (was 0.95) so descenders don't collide
+                    with ascenders on the line below
+                  - tracking widened slightly (was -tight) so italic
+                    Cormorant letters at display size don't overlap
+                  - max size capped to 96px so the longest words on
+                    desktop don't bleed past the column edge
+                The <em> contents (translated emphasis) get italic
+                Cormorant in the deep amber. */}
             <h1
-              className="relative mt-7 font-display text-[56px] leading-[0.95] tracking-tight text-[#221E18] sm:text-[88px] md:text-[112px] [&_em]:not-italic [&_em]:italic [&_em]:font-display [&_em]:text-[#8C6520]"
+              className="relative mt-7 font-display text-[44px] leading-[1.08] tracking-[-0.012em] text-[#221E18] sm:text-[64px] sm:leading-[1.06] md:text-[88px] md:leading-[1.04] [&_em]:not-italic [&_em]:italic [&_em]:font-display [&_em]:text-[#8C6520]"
               style={{ fontFamily: "var(--font-display)" }}
               dangerouslySetInnerHTML={{ __html: t("home.hero_h1", locale) }}
             />
@@ -177,21 +174,15 @@ export default async function HomeV2() {
             </div>
 
             <div className="mt-10">
-              <Constellation
-                variant="interactive"
-                clickable={true}
-                className="max-h-[640px]"
-              />
+              <ConstellationMount height={640} variant="interactive" />
             </div>
 
-            <div className="mt-6 flex flex-wrap items-baseline justify-between gap-2 text-[12.5px] text-[#8C6520]">
-              <span className="opacity-80">
-                X axis: theoretical / abstract ↔ embodied / practical
-              </span>
-              <span className="opacity-80">
-                Y axis: sovereign self ↔ communal embeddedness
-              </span>
-            </div>
+            <p className="mt-5 max-w-[640px] text-[13.5px] leading-relaxed text-[#8C6520]/80">
+              Drag to orbit · scroll to zoom · hover any point for the
+              philosopher · click to open their profile · use the legend to
+              hide or solo archetypes. Take the quiz to see where{" "}
+              <span className="text-[#221E18]">you</span> sit in the cloud.
+            </p>
           </div>
         </section>
 
@@ -295,34 +286,78 @@ export default async function HomeV2() {
             no one sits exactly on top of one.
           </p>
 
-          <ul className="mt-12 grid grid-cols-1 gap-px overflow-hidden rounded-lg border border-[#D6CDB6] bg-[#D6CDB6] sm:grid-cols-2 md:grid-cols-5">
+          {/* Each tile shows the archetype's SVG figure (cartographer
+              with compass, keel boat, threshold arch, etc) — extracted
+              from mull.html into lib/figures.ts. The figure sits inside
+              a circular cream "card" with the archetype's accent color
+              behind it. Hover lifts the tile and intensifies the halo. */}
+          <ul className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
             {ARCHETYPES.map((a) => {
               const color = getArchetypeColor(a.key);
+              const figure = FIGURES[a.key] ?? "";
               return (
                 <li key={a.key}>
                   <Link
                     href={`/archetype/${a.key}`}
-                    className="flex h-full flex-col gap-2 bg-[#FAF6EC] px-5 py-6 transition-colors hover:bg-[color:var(--hover)]"
+                    className="group flex h-full flex-col gap-3 rounded-2xl border border-[#D6CDB6] bg-[#FFFCF4] p-5 transition-all hover:-translate-y-0.5 hover:border-[color:var(--accent-deep)] hover:bg-[color:var(--accent-soft)] hover:shadow-[0_18px_40px_rgba(34,30,24,0.1)]"
                     style={
                       {
-                        ["--hover" as string]: color.soft,
+                        ["--accent-deep" as string]: color.deep,
+                        ["--accent-soft" as string]: color.soft,
                       } as React.CSSProperties
                     }
                   >
-                    <span
+                    {/* Figure circle. The SVG paints its own circular
+                        background; we wrap it in a slightly larger
+                        accent-colored disc so the figure sits inside
+                        a "halo" you can read at a glance. */}
+                    <div
+                      className="relative mx-auto flex h-[112px] w-[112px] items-center justify-center"
                       aria-hidden
-                      className="inline-block h-1 w-6 rounded-full"
-                      style={{ backgroundColor: color.primary }}
-                    />
-                    <span
-                      className="font-display text-[24px] italic leading-tight text-[#221E18]"
-                      style={{ fontFamily: "var(--font-display)" }}
                     >
-                      {capitalize(a.key)}
-                    </span>
-                    <span className="text-[13.5px] leading-relaxed text-[#4A4338]">
+                      <div
+                        className="absolute inset-0 rounded-full transition-transform group-hover:scale-105"
+                        style={{
+                          background: `radial-gradient(circle, ${color.soft} 0%, ${color.soft} 55%, transparent 75%)`,
+                        }}
+                      />
+                      <div
+                        className="relative h-[96px] w-[96px] overflow-hidden rounded-full"
+                        style={{
+                          boxShadow: `inset 0 0 0 2px ${color.primary}40`,
+                        }}
+                        dangerouslySetInnerHTML={{ __html: figure }}
+                      />
+                    </div>
+
+                    <div className="text-center">
+                      <div
+                        className="text-[10px] uppercase tracking-[0.22em]"
+                        style={{ color: color.deep }}
+                      >
+                        The
+                      </div>
+                      <div
+                        className="font-display text-[26px] italic leading-tight"
+                        style={{
+                          fontFamily: "var(--font-display)",
+                          color: color.deep,
+                        }}
+                      >
+                        {capitalize(a.key)}
+                      </div>
+                    </div>
+
+                    <p className="text-center text-[13.5px] leading-relaxed text-[#4A4338]">
                       {a.spirit}
-                    </span>
+                    </p>
+
+                    <div
+                      className="mt-auto text-center text-[12px] font-medium opacity-0 transition-opacity group-hover:opacity-100"
+                      style={{ color: color.deep }}
+                    >
+                      Read more →
+                    </div>
                   </Link>
                 </li>
               );
