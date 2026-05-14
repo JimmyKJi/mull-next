@@ -1,124 +1,180 @@
-# Mull · Design direction (v2 redesign)
+# Mull · Design direction (v3: pixel-game world)
 
-The v1 redesign was scrapped on 2026-05-13 — the result felt timid
-relative to the bar Jimmy wants, and the dev experience was crashing
-his laptop. This doc is the framing for v2 so we agree on direction
-before building.
+**v3 (2026-05-14): pivoted to a deliberate 8-bit pixel-art aesthetic.**
+The reasoning: Mull's thesis is "for the curious, not the credentialed
+— philosophy made accessible." A playful, game-like aesthetic actually
+*serves* that thesis; "editorial-restrained" was the academic tone the
+brand explicitly rejects. The literal pivot moment was Jimmy's note:
+"if the general public is captivated by something fun, why gatekeep
+philosophy and continue unnecessary seriousness."
+
+(v2 — editorial Cormorant + 3D R3F constellation — landed the
+constellation but felt thin everywhere else. Files preserved in git
+history; the pivot below replaces the visual layer wholesale while
+keeping all data, copy, and infrastructure.)
 
 ## What we keep
 
-- **Brand**: cream + warm editorial palette, deep amber accents,
-  Cormorant Garamond italic for display moments.
+- **Brand palette base**: cream `#FAF6EC` + ink `#221E18` + warm
+  amber `#B8862F` + deep amber `#8C6520`. Translates surprisingly
+  well to 8-bit (think Game Boy + warm-tones).
+- **Per-archetype accents** (10 hues from `lib/archetype-colors.ts`)
+  remain — used as palette swaps for sprites.
 - **Product**: 16-D model, 10 archetypes, 560 philosophers.
 - **Copy**: every line in mull.html (hero, lede, archetype prose,
   quiz questions, dilemmas, daily wisdom) stays.
 - **Infrastructure**: Supabase tables, RLS, auth, OG generation,
   Vercel cron — reuse what exists.
+- **Cormorant Garamond** is *retained* — but only for the long-form
+  editorial body inside the archetype/philosopher essay pages.
+  Rationale: the killer combo is pixel-game *chrome* containing
+  *library-book content* — like opening an old leather-bound book
+  inside a JRPG. Cormorant lives inside that beat. Everywhere else
+  uses pixel typography.
 
 ## The bar
 
-"Top tier modern and interactive." Reference points I'm aiming at:
+"Modern, interactive, fun." Reference points I'm aiming at:
 
-- **The Pudding** — long-scroll data essays. Type-driven, image-light,
-  occasional interactive widgets that genuinely earn their place.
-- **Stripe Press** — texture, weight, generous whitespace, the sense
-  of having been *designed* rather than templated.
-- **Are.na** — library/archive feeling. The site reads as a place to
-  spend time, not a tool to spend time *with*.
-- **Apple Newsroom / Books** — cinematic scroll-driven reveals when
-  they matter, restraint everywhere else.
+- **Stardew Valley / Octopath Traveler** — pixel art done with real
+  craft, not "amateur retro." Every sprite considered, the world
+  feels lived-in. *That* level of execution.
+- **Loot-drop.io** (Jimmy's seed) — playful info-density, character-
+  driven, dark humor adjacent.
+- **Pixel art philosophy / educational JRPGs** — the rare game that
+  treats serious ideas with affection rather than reverence.
+- **Chillquarium / Cookie Clicker / The Lobotomy Corporation** —
+  pixel UI that rewards exploration without explaining itself.
 
-What "top tier" does NOT mean for Mull:
-- Not a SaaS marketing site with parallax stock photos.
-- Not a flashy product launch microsite.
-- Not animation-for-animation's-sake.
+What this is NOT:
+- Not "amateur pixel art" or stock retro assets — every sprite is
+  hand-considered.
+- Not chiptune-on-loop noise — sound is opt-in, used sparingly.
+- Not gamification-for-engagement-metrics — the playful chrome
+  is in service of *making philosophy approachable*, not making
+  the user click more.
 
-## Design principles
+## Design principles (v3)
 
-1. **Editorial-first, app-second.** The writing is the soul. The
-   product happens to be interactive. The site should read like a
-   thoughtful publication that lets you take a quiz inside it, not
-   a SaaS app with prose decoration.
+1. **Pixel-game world, library-book content.** UI chrome — buttons,
+   nav, panels, transitions, tooltips — is chunky 8-bit pixel art.
+   Long-form content (archetype essays, philosopher entries) is
+   *editorial Cormorant inside a pixel window*. The contrast is
+   the brand.
 
-2. **Restrained but precise motion.** Every animation has a reason.
-   Cream→night reads as "entering thought-space." A figure rising
-   reads as "the person becoming visible." If we can't articulate
-   what a piece of motion is *saying*, it's wrong.
+2. **Restrained palette.** Six colors max in any view: cream,
+   ink, warm amber, deep amber, plus 1-2 archetype accents when
+   relevant. Limited palette is what makes pixel art read as
+   intentional rather than amateurish.
 
-3. **Generous typography.** Cormorant Garamond italic at display
-   sizes (60–100px). Body text in a quality sans (Inter or system),
-   real attention to leading (1.5–1.6 for body, 1.05–1.15 for
-   display), letter-tracking deliberate.
+3. **Crisp, never blurred.** `image-rendering: pixelated` on every
+   sprite. No anti-aliasing on small text or sprite edges.
+   Animations snap on a beat (16ms intervals, not smooth lerps).
 
-4. **Color discipline.** Cream (`#FAF6EC`) + deep ink (`#221E18`) +
-   warm amber (`#B8862F` / `#8C6520`) are the whole palette for
-   chrome. Per-archetype accents (10 hues from
-   `lib/archetype-colors.ts`) used only on archetype and result
-   surfaces, never as global chrome.
+4. **Discoverable, not gamified.** No XP bars, no streaks-as-
+   pressure, no FOMO. The pixel chrome invites exploration; the
+   *content* rewards it. The user can ignore every game-like
+   affordance and still get the philosophical map.
 
-5. **Per-page craft.** Homepage, quiz, result, archetype detail,
-   philosopher detail each deserve their own aesthetic treatment.
-   Not one template five times.
+5. **Per-surface craft.** Homepage, constellation, quiz, result,
+   archetype detail, philosopher detail each get their own
+   pixel-scene treatment. Not one template five times.
 
-6. **Mobile-first but laptop-glorious.** Mull's growth is IG/TikTok
-   shares — phone is the primary surface. Desktop should reward the
-   bigger viewport with bigger interactions (constellation rotation,
-   richer typography, more whitespace) but never *require* them.
+6. **Mobile-first but laptop-glorious.** Pixel art scales cleanly
+   to any viewport (no responsive image headaches). Mobile gets
+   touch-tap-zoom on the constellation; desktop gets keyboard
+   shortcuts and richer overlays.
 
-7. **Cheap to run.** Server-render where possible. Lazy-load anything
-   heavy (R3F, large client bundles). The dev experience should not
-   crash a laptop. Production bundle should ship under 200KB of JS
-   on the homepage, no exceptions.
+7. **Cheap to run.** Pixel SVG/canvas is *lighter* than R3F.
+   We can probably ship the whole homepage under 100KB of JS.
+   No more dev-server crashes — `npm run preview` is the gold
+   path for viewing.
 
-## The five surfaces
+## Visual language tokens
+
+### Typography
+- **`Press Start 2P`** (Google Font) — pixel display face. Used
+  sparingly: page titles ("MULL"), section labels ("THE MAP"),
+  small UI captions. Hard pixel forms.
+- **`VT323`** (Google Font) — pixel monospace, but readable at
+  body size. Used for in-game text: hover tooltips, button
+  labels, quiz prompts, philosopher names in the constellation
+  legend.
+- **`Cormorant Garamond`** — kept *only* for the long-form
+  essays inside the archetype/philosopher detail pages. The
+  "library book inside the game" beat.
+
+### Color
+Hex — keep these as the only colors in `chrome` views:
+```
+Cream      #FAF6EC   page background
+Ink        #221E18   primary text + dark UI panels
+Amber      #B8862F   accent highlights, button fills
+Amber-deep #8C6520   text on amber, button hover
+Amber-soft #F8EDC8   panel backgrounds, soft halos
+Line       #D6CDB6   borders, dividers
+```
+Plus the 10 per-archetype palettes (already in
+`lib/archetype-colors.ts`) used as palette swaps for sprites.
+
+### Sprite spec
+- 64×64 sprites for archetype mascots
+- 16×16 or 32×32 for philosopher avatars (procedural by name hash)
+- 8-pixel borders on UI panels (chunky)
+- 2-pixel borders on small chips
+- `image-rendering: pixelated` everywhere
+- No drop-shadow blurs — use a hard 4-pixel offset shadow instead
+
+## The five surfaces (v3)
 
 ### 1. Home
-Editorial landing. Big H1 in italic Cormorant ("Find your place on
-the map of how you think"), generous lede, today's philosopher quote
-as a pull-out, single primary CTA into the quiz, a quiet preview of
-the ten archetypes, footer.
+Pixel-game opening screen. Wordmark "MULL" in `Press Start 2P` 96px.
+Hero block frames the quiz CTA inside a pixel "dialog box" border.
+Today's thinker becomes a "scroll" pixel artifact pinned in the
+margin. Below: a 2D pixel "philosophical realm" overworld
+(constellation, see #2). Then the ten archetype tiles as 64×64
+sprite cards. CTA: a chunky pixel button "▶ BEGIN THE QUIZ".
 
-What makes it top-tier: typographic richness (real hierarchy, real
-breathing room), a *subtle* ambient texture (paper grain or soft
-gradient drift, no parallax stock animation), and the constellation
-hero — discussed below.
+### 2. Constellation (the philosophical realm)
+2D pixel overworld. 560 philosophers as small colored sprites
+scattered on a pixel grid. The plane represents abstract↔embodied
+× sovereign↔communal. Drag to pan, scroll to zoom. Hover any
+sprite → pixel-bordered tooltip with name, dates, key idea, and
+their archetype tag. Click → opens their philosopher page.
+Sidebar with pixel-style toggles for each archetype (show/solo/all).
+After the quiz, the user's avatar appears as a sprite in the
+realm with a "YOU" pixel label and a pulsing halo.
 
-### 2. Constellation (the map)
-The piece v1 didn't deliver. 560 philosopher positions projected from
-16-D to 2-D via PCA, drifting slowly. Hover any → name + key idea +
-their archetype. Click → /philosopher/[slug]. After the quiz the
-user's own point appears, the surrounding philosophers brighten, and
-the rest dim — *that* is the result.
-
-Implementation: SVG or Canvas 2D for v2. Three.js / R3F only if and
-when the 2D version stops feeling enough. Lighter, faster, simpler
-to reason about.
+(R3F 3D version retired — 2D pixel reads as more on-theme and
+ships in <50KB instead of 500KB.)
 
 ### 3. Quiz
-Single question at a time. Each question is its own moment — minimal
-chrome, generous prompt, answer cards that feel like deliberate
-choices rather than radio buttons. A faint progress dot, not a bar.
-No-go: bouncy progress animation, "Continue →" sound effects, any
-gamification beyond the actual moral seriousness of the prompts.
+Each question is a pixel "scene". Generous Cormorant prompt INSIDE
+a pixel dialog window. Answer choices as pixel buttons that "press"
+on click (1-pixel offset). Per-question micro-sprites themed to
+the prompt (e.g. a tiny pixel skull for the dying-friend question,
+a pixel scale for the trolley problem). Chapter pagination — every
+5 questions a transition scene says "CHAPTER 2: TRUTH" with a
+themed sprite, then continues. No progress bar; the chapter
+counter is the rhythm.
 
 ### 4. Result
-"Here is where you sit." The constellation re-renders with the user's
-point. Three closest philosophers introduce themselves through their
-key ideas. The matched archetype is named — italic, generous — with
-its short spirit phrase. A walking tour of why this archetype (the
-dimensions you share, the runner-up, the productive tensions). At
-the bottom: archetype essay, retake, save/sign-up CTA.
-
-Motion: deliberate but not cinematic-overwrought. The user's point
-fading into view in the constellation is the magic moment; everything
-else is editorial revealing.
+"YOU ARE THE [ARCHETYPE]." Pixel-game victory screen vibe — the
+archetype's mascot sprite springs into the center on a chunky
+animation. The user's stats appear as a pixel radar chart of
+their 16-D fingerprint (literally drawn in pixels). Three nearest
+philosophers as pixel cards "appearing" beside the user. The
+constellation overworld is embedded with the user-sprite placed
+in it. Tail: chunky pixel buttons — "READ THE ESSAY", "RETAKE
+QUIZ", "SAVE PROGRESS".
 
 ### 5. Archetype / philosopher detail
-Long-scroll essays. The kind of polish you'd expect from a Pudding
-or Stripe Press article — pulled quotes, an embedded
-"fingerprint" (16-D vector visualization) for the philosopher pages,
-a reading list at the bottom. Already exist as routes in `/archetype`
-and `/philosopher` — restyle, don't rebuild.
+This is the "library book inside the game" beat. Page header is
+pixel chrome (archetype mascot sprite, archetype name in
+`Press Start 2P`), then opens to a long-scroll editorial essay in
+**Cormorant Garamond** — generous body text, real serif elegance.
+At the bottom: pixel UI for the kindred-thinkers list and the
+reading list. Pulled quotes get a pixel "scroll" frame.
 
 ## Build order
 

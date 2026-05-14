@@ -52,20 +52,37 @@ export function SiteNav() {
 
   return (
     <>
-      <nav className="sticky top-0 z-40 border-b border-[#EBE3CA] bg-[#FAF6EC]/85 backdrop-blur-md">
-        <div className="mx-auto flex h-14 max-w-[1400px] items-center justify-between gap-6 px-4 sm:px-8">
-          {/* Wordmark */}
+      {/* Pixel-game top nav — chunky 4px ink border on the bottom,
+          flat cream surface, no rounded corners, no smooth shadows.
+          Reads as the title bar of an 8-bit window. */}
+      <nav className="sticky top-0 z-40 border-b-4 border-[#221E18] bg-[#FAF6EC]">
+        <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-6 px-4 sm:px-8">
+          {/* Wordmark — Press Start 2P pixel typeface */}
           <Link
             href="/"
-            className="font-display text-[22px] italic text-[#221E18] hover:text-[#8C6520]"
-            style={{ fontFamily: "var(--font-display)" }}
+            className="flex items-center gap-2.5 hover:text-[#8C6520]"
           >
-            Mull
+            {/* Tiny pixel-art "M" tile */}
+            <span
+              aria-hidden
+              className="inline-block h-4 w-4 bg-[#221E18]"
+              style={{
+                backgroundImage:
+                  "linear-gradient(45deg, #B8862F 25%, transparent 25%, transparent 75%, #B8862F 75%), linear-gradient(45deg, #B8862F 25%, transparent 25%, transparent 75%, #B8862F 75%)",
+                backgroundSize: "8px 8px",
+                backgroundPosition: "0 0, 4px 4px",
+              }}
+            />
+            <span
+              className="text-[14px] tracking-[0.12em] text-[#221E18]"
+              style={{ fontFamily: "var(--font-pixel-display)" }}
+            >
+              MULL
+            </span>
           </Link>
 
-          {/* Center links — hidden on the smallest viewports; the
-              palette is the fallback there */}
-          <ul className="hidden items-center gap-7 md:flex">
+          {/* Center links — VT323 pixel font, hidden on small */}
+          <ul className="hidden items-center gap-5 md:flex">
             {NAV_LINKS.map((link) => {
               const active =
                 link.href === "/"
@@ -77,11 +94,12 @@ export function SiteNav() {
                   <Link
                     href={link.href}
                     className={
-                      "text-[13px] transition-colors " +
+                      "text-[20px] leading-none transition-colors " +
                       (active
-                        ? "font-medium text-[#221E18]"
+                        ? "text-[#221E18] underline decoration-[3px] decoration-[#B8862F] underline-offset-[6px]"
                         : "text-[#4A4338] hover:text-[#221E18]")
                     }
+                    style={{ fontFamily: "var(--font-pixel-body)" }}
                   >
                     {link.label}
                   </Link>
@@ -90,22 +108,27 @@ export function SiteNav() {
             })}
           </ul>
 
-          {/* Cmd-K trigger + sign-in */}
-          <div className="flex items-center gap-3">
+          {/* Cmd-K trigger + Account button */}
+          <div className="flex items-center gap-2.5">
             <button
               type="button"
               onClick={() => setOpen(true)}
-              className="hidden items-center gap-2 rounded-full border border-[#D6CDB6] bg-[#FFFCF4] px-3 py-1.5 text-[12px] text-[#4A4338] hover:border-[#8C6520] hover:text-[#221E18] sm:inline-flex"
+              className="hidden items-center gap-2 border-2 border-[#221E18] bg-[#FFFCF4] px-2.5 py-1 text-[18px] leading-none text-[#221E18] hover:bg-[#F8EDC8] sm:inline-flex"
+              style={{ fontFamily: "var(--font-pixel-body)" }}
               aria-label="Open command palette"
             >
               <span>Search</span>
-              <kbd className="rounded bg-[#EBE3CA] px-1.5 py-0.5 font-mono text-[10px] text-[#8C6520]">
-                {isMac ? "⌘K" : "Ctrl K"}
+              <kbd
+                className="border border-[#221E18]/40 bg-[#EBE3CA] px-1 py-0.5 text-[11px] leading-none text-[#8C6520]"
+                style={{ fontFamily: "var(--font-pixel-display)" }}
+              >
+                {isMac ? "⌘K" : "^K"}
               </kbd>
             </button>
             <Link
               href="/account"
-              className="rounded-full bg-[#221E18] px-4 py-1.5 text-[13px] font-medium text-[#FAF6EC] hover:bg-[#8C6520]"
+              className="border-2 border-[#221E18] bg-[#221E18] px-3 py-1 text-[18px] leading-none text-[#FAF6EC] hover:bg-[#8C6520] hover:border-[#8C6520]"
+              style={{ fontFamily: "var(--font-pixel-body)" }}
             >
               Account
             </Link>
@@ -214,13 +237,32 @@ function CommandPalette({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center bg-[#221E18]/40 px-4 pt-[12vh] backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-start justify-center bg-[#221E18]/60 px-4 pt-[12vh]"
       onClick={onClose}
     >
+      {/* Pixel dialog box: 4-px ink border, hard amber shadow */}
       <div
-        className="w-full max-w-[640px] overflow-hidden rounded-2xl border border-[#D6CDB6] bg-[#FFFCF4] shadow-[0_30px_80px_rgba(34,30,24,0.3)]"
+        className="w-full max-w-[640px] overflow-hidden border-4 border-[#221E18] bg-[#FFFCF4] shadow-[8px_8px_0_0_#8C6520]"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Title bar */}
+        <div className="flex items-center justify-between border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2">
+          <span
+            className="text-[12px] tracking-[0.16em] text-[#F8EDC8]"
+            style={{ fontFamily: "var(--font-pixel-display)" }}
+          >
+            QUICK TRAVEL
+          </span>
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-[14px] text-[#F8EDC8] hover:text-[#B8862F]"
+            style={{ fontFamily: "var(--font-pixel-display)" }}
+            aria-label="Close"
+          >
+            X
+          </button>
+        </div>
         <input
           autoFocus
           type="text"
@@ -228,11 +270,15 @@ function CommandPalette({ onClose }: { onClose: () => void }) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={onKey}
-          className="w-full border-b border-[#EBE3CA] bg-transparent px-5 py-4 text-[16px] text-[#221E18] placeholder:text-[#8C6520]/60 focus:outline-none"
+          className="w-full border-b-2 border-[#221E18] bg-[#F8EDC8] px-5 py-3 text-[20px] leading-none text-[#221E18] placeholder:text-[#8C6520]/70 focus:outline-none"
+          style={{ fontFamily: "var(--font-pixel-body)" }}
         />
-        <div className="max-h-[60vh] overflow-y-auto p-2">
+        <div className="max-h-[60vh] overflow-y-auto bg-[#FFFCF4] p-2">
           {items.length === 0 ? (
-            <div className="px-3 py-8 text-center text-[14px] text-[#8C6520]">
+            <div
+              className="px-3 py-8 text-center text-[18px] text-[#8C6520]"
+              style={{ fontFamily: "var(--font-pixel-body)" }}
+            >
               No matches. Try a different search.
             </div>
           ) : (
@@ -244,7 +290,10 @@ function CommandPalette({ onClose }: { onClose: () => void }) {
             />
           )}
         </div>
-        <div className="flex items-center justify-between border-t border-[#EBE3CA] bg-[#FAF6EC] px-4 py-2 text-[11px] text-[#8C6520]">
+        <div
+          className="flex items-center justify-between border-t-2 border-[#221E18] bg-[#221E18] px-4 py-1.5 text-[14px] leading-none text-[#F8EDC8]"
+          style={{ fontFamily: "var(--font-pixel-body)" }}
+        >
           <span>↑↓ navigate · ↵ open · esc close</span>
           <span>{items.length} match{items.length === 1 ? "" : "es"}</span>
         </div>
@@ -273,7 +322,8 @@ function ItemList({
       out.push(
         <div
           key={`g-${item.group}`}
-          className="mt-2 px-3 pb-1 text-[10px] uppercase tracking-[0.22em] text-[#8C6520]"
+          className="mt-2 px-3 pb-1 text-[11px] uppercase tracking-[0.22em] text-[#8C6520]"
+          style={{ fontFamily: "var(--font-pixel-display)" }}
         >
           {item.group}
         </div>,
@@ -288,15 +338,16 @@ function ItemList({
         onMouseEnter={() => onHover(idx)}
         onClick={() => onSelect(item)}
         className={
-          "flex w-full items-baseline justify-between gap-3 rounded-md px-3 py-2 text-left transition-colors " +
+          "flex w-full items-baseline justify-between gap-3 px-3 py-1.5 text-left text-[18px] leading-none transition-none " +
           (isActive
-            ? "bg-[#F8EDC8] text-[#221E18]"
-            : "text-[#221E18] hover:bg-[#F1EAD8]")
+            ? "bg-[#B8862F] text-[#1A1612]"
+            : "text-[#221E18] hover:bg-[#F8EDC8]")
         }
+        style={{ fontFamily: "var(--font-pixel-body)" }}
       >
-        <span className="text-[14px]">{item.label}</span>
+        <span>{isActive ? "▶ " : "  "}{item.label}</span>
         {item.hint ? (
-          <span className="ml-auto truncate text-[12px] text-[#8C6520]">
+          <span className={`ml-auto truncate text-[14px] ${isActive ? "text-[#3A2F18]" : "text-[#8C6520]"}`}>
             {item.hint}
           </span>
         ) : null}

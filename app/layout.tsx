@@ -1,15 +1,39 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond } from "next/font/google";
+import { Cormorant_Garamond, Press_Start_2P, VT323 } from "next/font/google";
 import "./globals.css";
 import { SiteNav } from "@/components/site-nav";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import FeedbackButton from "@/components/feedback-button";
 
-// Cormorant Garamond as the display face for the v2 redesign — used
-// anywhere a component sets `fontFamily: var(--font-display)`. Loaded
-// globally so /, /quiz, /result, and any future redesign route can
-// reference it without their own font loader.
+// v3 pixel-game typography stack. Three faces with very different
+// roles — see DESIGN-DIRECTION.md "Visual language tokens".
+//
+// pressStart2P  — the pixel display face. Page titles, section
+//                 labels, small UI captions ("MULL", "THE MAP",
+//                 chunky button labels). Used sparingly because
+//                 it's noisy at body sizes.
+// vt323         — pixel monospace, readable at body size. Used
+//                 for in-game text: hover tooltips, button labels,
+//                 quiz prompts, philosopher names in the legend.
+// cormorant     — kept for the long-form editorial body inside
+//                 archetype/philosopher detail pages — the
+//                 "library book inside the game" beat.
+
+const pressStart2P = Press_Start_2P({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-pixel-display",
+  display: "swap",
+});
+
+const vt323 = VT323({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-pixel-body",
+  display: "swap",
+});
+
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
@@ -58,11 +82,16 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cormorant.variable}
+      className={`${cormorant.variable} ${pressStart2P.variable} ${vt323.variable}`}
       style={
         {
           colorScheme: "light",
+          // Three font tokens, three roles. See DESIGN-DIRECTION.md.
           ["--font-display" as string]:
+            "var(--font-pixel-display), 'Courier New', monospace",
+          ["--font-body" as string]:
+            "var(--font-pixel-body), 'Courier New', monospace",
+          ["--font-prose" as string]:
             "var(--font-cormorant), Georgia, serif",
         } as React.CSSProperties
       }

@@ -69,76 +69,82 @@ export default async function HomeV2() {
       />
 
       <main className="relative z-10 min-h-[100svh] bg-[#FAF6EC] text-[#221E18]">
-        {/* SiteNav (in app/layout.tsx) is the global top bar now —
-            no per-page header here. */}
+        {/* SiteNav (in app/layout.tsx) is the global top bar now. */}
 
-        {/* ─── Hero ───────────────────────────────────────────────
-            Generous H1, single accent rule, lede column.
-            On desktop the column is centered with substantial padding;
-            on mobile it left-aligns with the rest of the page rhythm. */}
-        <section className="mx-auto max-w-[1200px] px-6 pt-16 pb-24 sm:px-10 sm:pt-24 sm:pb-32 md:pt-32 md:pb-40">
-          <div className="relative max-w-[900px]">
-            {/* Ambient amber wash — absolute, behind the H1. Subtle. */}
+        {/* ─── Hero — pixel-game opening screen ──────────────────
+            Big chunky title in Press Start 2P, a pixel-dialog
+            "QUEST BRIEF" panel containing the lede, and a chunky
+            pixel "BEGIN THE QUIZ" button as the primary action. */}
+        <section className="mx-auto max-w-[1200px] px-6 pt-12 pb-20 sm:px-10 sm:pt-20 sm:pb-28 md:pt-24">
+          <div className="relative">
+            {/* "PRESS START" eyebrow with blink */}
             <div
-              aria-hidden
-              className="pointer-events-none absolute -left-16 -top-16 h-[420px] w-[640px] sm:-left-32 sm:-top-20"
-              style={{
-                background:
-                  "radial-gradient(ellipse at 30% 50%, rgba(184, 134, 47, 0.18) 0%, transparent 65%)",
-                filter: "blur(40px)",
-              }}
-            />
-
-            {/* Hairline rule + page label */}
-            <div className="relative flex items-center gap-3 text-[11px] uppercase tracking-[0.24em] text-[#8C6520]">
-              <span className="h-px w-10 bg-[#8C6520] opacity-50" />
-              An atlas of how you think
+              className="flex items-center gap-3 text-[10px] tracking-[0.24em] text-[#8C6520]"
+              style={{ fontFamily: "var(--font-pixel-display)" }}
+            >
+              <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F] pixel-blink" />
+              <span>AN ATLAS OF HOW YOU THINK</span>
             </div>
 
-            {/* H1 typography:
-                  - leading 1.08 (was 0.95) so descenders don't collide
-                    with ascenders on the line below
-                  - tracking widened slightly (was -tight) so italic
-                    Cormorant letters at display size don't overlap
-                  - max size capped to 96px so the longest words on
-                    desktop don't bleed past the column edge
-                The <em> contents (translated emphasis) get italic
-                Cormorant in the deep amber. */}
+            {/* Big pixel title MULL */}
             <h1
-              className="relative mt-7 font-display text-[44px] leading-[1.08] tracking-[-0.012em] text-[#221E18] sm:text-[64px] sm:leading-[1.06] md:text-[88px] md:leading-[1.04] [&_em]:not-italic [&_em]:italic [&_em]:font-display [&_em]:text-[#8C6520]"
-              style={{ fontFamily: "var(--font-display)" }}
-              dangerouslySetInnerHTML={{ __html: t("home.hero_h1", locale) }}
-            />
+              className="mt-6 text-[64px] leading-none tracking-[0.04em] text-[#221E18] sm:text-[96px] md:text-[128px]"
+              style={{ fontFamily: "var(--font-pixel-display)" }}
+            >
+              <span className="inline-block" style={{ textShadow: "6px 6px 0 #B8862F" }}>
+                MULL
+              </span>
+            </h1>
 
-            <p className="relative mt-10 max-w-[640px] text-[18px] leading-relaxed text-[#4A4338] sm:text-[20px] sm:leading-[1.6]">
-              {t("home.hero_lede", locale)}
+            {/* Subtitle in VT323 — the human-readable version of the hero */}
+            <p
+              className="mt-7 max-w-[680px] text-[26px] leading-[1.25] text-[#221E18] sm:text-[30px]"
+              style={{ fontFamily: "var(--font-pixel-body)" }}
+            >
+              Find your place on the{" "}
+              <span className="text-[#8C6520]">map of how you think.</span>
             </p>
 
-            {/* Primary CTA. Single button — the secondary "detailed
-                diagnosis" option lives one tap deeper, on the next
-                screen, because the choice between modes is genuinely
-                a secondary concern. */}
-            <div className="relative mt-12 flex flex-col items-start gap-4 sm:flex-row sm:items-baseline">
+            {/* Lede inside a pixel dialog window — "quest brief" beat */}
+            <div className="mt-10 max-w-[720px]">
+              <div className="pixel-panel--amber pixel-panel">
+                <div
+                  className="border-b-4 border-[#8C6520] bg-[#8C6520] px-4 py-1.5 text-[10px] tracking-[0.2em] text-[#F8EDC8]"
+                  style={{ fontFamily: "var(--font-pixel-display)" }}
+                >
+                  ▶ QUEST BRIEF
+                </div>
+                <p
+                  className="px-5 py-4 text-[22px] leading-[1.35] text-[#221E18]"
+                  style={{ fontFamily: "var(--font-pixel-body)" }}
+                >
+                  {t("home.hero_lede", locale)}
+                </p>
+              </div>
+            </div>
+
+            {/* Chunky pixel CTA + secondary link */}
+            <div className="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
               <Link
                 href="/quiz?mode=quick"
-                className="group inline-flex items-center gap-3 rounded-full bg-[#221E18] px-7 py-4 text-[15px] font-medium text-[#FAF6EC] transition-all hover:bg-[#8C6520] hover:shadow-[0_12px_40px_rgba(140,101,32,0.25)]"
+                className="pixel-button pixel-button--amber"
               >
-                <span>Begin the quiz</span>
-                <span className="transition-transform group-hover:translate-x-0.5">
-                  →
-                </span>
+                <span>▶ BEGIN THE QUIZ</span>
               </Link>
               <Link
                 href="/quiz?mode=detailed"
-                className="text-[14px] text-[#4A4338] underline decoration-[#D6CDB6] decoration-1 underline-offset-4 hover:text-[#221E18] hover:decoration-[#8C6520]"
+                className="text-[20px] leading-none text-[#4A4338] hover:text-[#221E18] hover:underline"
+                style={{ fontFamily: "var(--font-pixel-body)" }}
               >
-                Or take the 50-question deep dive →
+                or the 50-question deep dive →
               </Link>
             </div>
 
-            <p className="relative mt-6 max-w-[520px] text-[13.5px] leading-relaxed text-[#8C6520] opacity-80">
-              No right answers. Skip anything. No signup needed.
-              {" "}
+            <p
+              className="mt-5 max-w-[520px] text-[18px] leading-[1.4] text-[#8C6520]"
+              style={{ fontFamily: "var(--font-pixel-body)" }}
+            >
+              No right answers. Skip anything. No signup needed.{" "}
               <span className="text-[#4A4338]">
                 ~6 minutes for the quick read.
               </span>
@@ -146,69 +152,98 @@ export default async function HomeV2() {
           </div>
         </section>
 
-        {/* ─── The constellation ──────────────────────────────────
-            All {PHILOSOPHERS.length} positioned philosophers, projected
-            from 16 dimensions into a 2-D plane. Hover any point for
-            the name + dates; click to open their entry. The map is
-            the soul of the product — putting it on /home makes that
-            unmistakable. */}
-        <section className="border-y border-[#EBE3CA] bg-[#FFFCF4] px-6 py-16 sm:px-10 sm:py-24">
+        {/* ─── The constellation — pixel-framed for this slice
+            (next slice replaces R3F with a 2D pixel overworld) ─── */}
+        <section className="border-y-4 border-[#221E18] bg-[#FFFCF4] px-6 py-14 sm:px-10 sm:py-20">
           <div className="mx-auto max-w-[1200px]">
             <div className="max-w-[800px]">
-              <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.24em] text-[#8C6520]">
-                <span className="h-px w-10 bg-[#8C6520] opacity-50" />
-                The map
+              <div
+                className="flex items-center gap-3 text-[10px] tracking-[0.24em] text-[#8C6520]"
+                style={{ fontFamily: "var(--font-pixel-display)" }}
+              >
+                <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
+                THE PHILOSOPHICAL REALM
               </div>
               <h2
-                className="mt-5 font-display text-[36px] leading-tight text-[#221E18] sm:text-[48px] md:text-[56px]"
-                style={{ fontFamily: "var(--font-display)" }}
+                className="mt-5 text-[32px] leading-none tracking-[0.04em] text-[#221E18] sm:text-[44px] md:text-[56px]"
+                style={{ fontFamily: "var(--font-pixel-display)" }}
               >
-                {PHILOSOPHERS.length} thinkers, <em>positioned</em>
+                <span style={{ textShadow: "4px 4px 0 #B8862F" }}>
+                  {PHILOSOPHERS.length} THINKERS
+                </span>
               </h2>
-              <p className="mt-5 max-w-[640px] text-[16px] leading-relaxed text-[#4A4338] sm:text-[17px]">
+              <p
+                className="mt-5 max-w-[640px] text-[22px] leading-[1.3] text-[#4A4338]"
+                style={{ fontFamily: "var(--font-pixel-body)" }}
+              >
                 Every philosopher in Mull sits at a real point in
-                16-D space, drawn from their actual writings. The map
-                below is that space, flattened to two readable axes.
-                Hover any point to read their name.
+                16-D space — drawn from their actual writings.
+                Below is that space, flattened to a readable map.
+                Hover anyone to read who they were.
               </p>
             </div>
 
-            <div className="mt-10">
+            {/* Pixel-framed map container */}
+            <div className="mt-10 border-4 border-[#221E18] bg-[#0E1419] shadow-[8px_8px_0_0_#8C6520]">
+              <div
+                className="flex items-center justify-between border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2"
+                style={{ fontFamily: "var(--font-pixel-display)" }}
+              >
+                <span className="text-[10px] tracking-[0.18em] text-[#F8EDC8]">
+                  ▶ MAP_OF_MINDS.EXE
+                </span>
+                <span className="text-[10px] tracking-[0.14em] text-[#B8862F]">
+                  DRAG · ZOOM · HOVER
+                </span>
+              </div>
               <ConstellationMount height={640} variant="interactive" />
             </div>
 
-            <p className="mt-5 max-w-[640px] text-[13.5px] leading-relaxed text-[#8C6520]/80">
-              Drag to orbit · scroll to zoom · hover any point for the
-              philosopher · click to open their profile · use the legend to
-              hide or solo archetypes. Take the quiz to see where{" "}
-              <span className="text-[#221E18]">you</span> sit in the cloud.
+            <p
+              className="mt-5 max-w-[720px] text-[18px] leading-[1.4] text-[#8C6520]"
+              style={{ fontFamily: "var(--font-pixel-body)" }}
+            >
+              Take the quiz to see where{" "}
+              <span className="text-[#221E18]">you</span> appear in the
+              cloud. The closer the point, the closer their pattern is
+              to yours.
             </p>
           </div>
         </section>
 
-        {/* ─── Today's thinker ────────────────────────────────────
-            Editorial pull-quote moment. Left rail in amber. */}
-        <section className="border-y border-[#EBE3CA] bg-gradient-to-b from-[#F8EDC8]/30 to-[#FAF6EC] px-6 py-20 sm:px-10 sm:py-28">
+        {/* ─── Today's thinker — pixel scroll panel ────────────── */}
+        <section className="px-6 py-16 sm:px-10 sm:py-24">
           <div className="mx-auto max-w-[900px]">
-            <div className="border-l-2 border-[#8C6520]/40 pl-6 sm:pl-10">
-              <div className="text-[11px] uppercase tracking-[0.24em] text-[#8C6520] opacity-90">
-                {todayLabel}
-              </div>
-              <p
-                className="mt-5 font-display text-[28px] leading-[1.35] text-[#221E18] sm:text-[36px] md:text-[42px]"
-                style={{ fontFamily: "var(--font-display)" }}
+            <div className="pixel-panel">
+              {/* Title bar */}
+              <div
+                className="flex items-center justify-between border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
+                style={{ fontFamily: "var(--font-pixel-display)" }}
               >
-                <em>&ldquo;{philosopher.keyIdea}&rdquo;</em>
-              </p>
-              <div className="mt-6 flex items-center gap-3 text-[14px] text-[#4A4338]">
-                <span
-                  aria-hidden
-                  className="inline-block h-1.5 w-1.5 rounded-full bg-[#B8862F]"
-                />
-                <span>
-                  {philosopher.name}
-                  {philosopher.dates ? <>, <span className="opacity-70">{philosopher.dates}</span></> : null}
-                </span>
+                <span>{todayLabel.toUpperCase()}</span>
+                <span className="text-[#B8862F]">DAILY DROP</span>
+              </div>
+              {/* Quote in Cormorant — the "library book inside the
+                  game" beat. Pixel chrome, Cormorant content. */}
+              <div className="px-6 py-8 sm:px-10 sm:py-10">
+                <p
+                  className="text-[26px] leading-[1.35] text-[#221E18] sm:text-[34px]"
+                  style={{ fontFamily: "var(--font-prose)" }}
+                >
+                  <em>&ldquo;{philosopher.keyIdea}&rdquo;</em>
+                </p>
+                <div
+                  className="mt-6 flex items-center gap-3 text-[18px] text-[#4A4338]"
+                  style={{ fontFamily: "var(--font-pixel-body)" }}
+                >
+                  <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
+                  <span>
+                    {philosopher.name}
+                    {philosopher.dates ? (
+                      <span className="text-[#8C6520]"> · {philosopher.dates}</span>
+                    ) : null}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -218,80 +253,120 @@ export default async function HomeV2() {
             Three short paragraphs. The "what's different about this"
             beat that wins over readers who arrive skeptical of
             personality quizzes. */}
-        <section className="mx-auto max-w-[760px] px-6 py-24 sm:px-10 sm:py-32">
-          <div className="text-[11px] uppercase tracking-[0.24em] text-[#8C6520]">
-            What this is
+        {/* ─── What this is — three pixel info-cards ─────────────
+            Same content as before, restructured as three pixel-
+            panel "stat cards" so the section reads as a game-style
+            briefing instead of a wall of prose. Each card has a
+            pixel-glyph icon, a chunky pixel heading, and short body. */}
+        <section className="mx-auto max-w-[1200px] px-6 py-20 sm:px-10 sm:py-28">
+          <div
+            className="flex items-center gap-3 text-[10px] tracking-[0.24em] text-[#8C6520]"
+            style={{ fontFamily: "var(--font-pixel-display)" }}
+          >
+            <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
+            WHAT THIS IS
           </div>
-          <div className="mt-6 space-y-7 text-[17px] leading-[1.65] text-[#221E18] sm:text-[19px]">
-            <p>
-              <strong className="font-medium">
-                Mull places you in a 16-dimensional space
-              </strong>{" "}
-              of philosophical tendencies — Trust in Reason, Tragic
-              Vision, Mystical Receptivity, Communal Embeddedness,
-              Self as Illusion, and twelve more. Each answer in the
-              quiz is a small vector that nudges your position.
-            </p>
-            <p>
-              <strong className="font-medium">
-                Over 500 philosophers are positioned alongside you
-              </strong>
-              , drawn from their actual writings. Buddha and Hume both
-              score high on Self as Illusion but for opposite reasons.
-              Nietzsche and Sartre both score high on Sovereign Self
-              but split on Will to Power. The dimensions catch real
-              distinctions.
-            </p>
-            <p>
-              <strong className="font-medium">
-                You&rsquo;re a continuous point, not a fixed type.
-              </strong>{" "}
-              A political compass collapses everything to two axes
-              and four quadrants. MBTI sorts you into one of sixteen
-              boxes. Mull never collapses you — two people who get
-              the same archetype headline still have different
-              fingerprints, and the same person, taking the test six
-              months later, will land somewhere slightly different.
-            </p>
+          <h2
+            className="mt-5 text-[28px] leading-none tracking-[0.04em] text-[#221E18] sm:text-[40px]"
+            style={{ fontFamily: "var(--font-pixel-display)" }}
+          >
+            <span style={{ textShadow: "4px 4px 0 #B8862F" }}>HOW IT WORKS</span>
+          </h2>
+
+          <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
+            {[
+              {
+                glyph: "▦",
+                num: "16",
+                title: "DIMENSIONS",
+                body: "Mull places you in a 16-dimensional space of philosophical tendencies — Trust in Reason, Tragic Vision, Mystical Receptivity, Communal Embeddedness, Self as Illusion, and twelve more. Each quiz answer is a small vector that nudges your position.",
+              },
+              {
+                glyph: "✦",
+                num: "560",
+                title: "THINKERS",
+                body: "Over 500 philosophers are positioned alongside you, drawn from their actual writings. Buddha and Hume both score high on Self as Illusion — but for opposite reasons. The dimensions catch real distinctions.",
+              },
+              {
+                glyph: "◇",
+                num: "1",
+                title: "OF YOU",
+                body: "You're a continuous point, not a fixed type. A political compass collapses to 4 quadrants. MBTI sorts you into 16 boxes. Mull never collapses you — two people with the same archetype still have different fingerprints.",
+              },
+            ].map((card) => (
+              <div key={card.title} className="pixel-panel">
+                <div
+                  className="flex items-center justify-between border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
+                  style={{ fontFamily: "var(--font-pixel-display)" }}
+                >
+                  <span>{card.glyph}</span>
+                  <span>{card.title}</span>
+                </div>
+                <div className="px-5 py-5">
+                  <div
+                    className="text-[64px] leading-none text-[#B8862F]"
+                    style={{
+                      fontFamily: "var(--font-pixel-display)",
+                      textShadow: "4px 4px 0 #221E18",
+                    }}
+                  >
+                    {card.num}
+                  </div>
+                  <p
+                    className="mt-5 text-[18px] leading-[1.35] text-[#4A4338]"
+                    style={{ fontFamily: "var(--font-pixel-body)" }}
+                  >
+                    {card.body}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 
-        {/* ─── Ten archetypes preview ─────────────────────────────
-            Each archetype as a small pillar with the accent dot in
-            its primary color. Click → /archetype/[key]. */}
-        <section className="mx-auto max-w-[1200px] border-t border-[#EBE3CA] px-6 py-24 sm:px-10 sm:py-32">
+        {/* ─── Ten archetypes — pixel character roster ────────────
+            Each archetype is a pixel "character card" — the SVG
+            figure rendered with image-rendering:pixelated so it
+            reads as a sprite, framed in a pixel panel in the
+            archetype's color. */}
+        <section className="mx-auto max-w-[1200px] border-t-4 border-[#221E18] px-6 py-20 sm:px-10 sm:py-28">
           <div className="flex items-baseline justify-between">
             <div>
-              <div className="text-[11px] uppercase tracking-[0.24em] text-[#8C6520]">
-                The ten archetypes
+              <div
+                className="flex items-center gap-3 text-[10px] tracking-[0.24em] text-[#8C6520]"
+                style={{ fontFamily: "var(--font-pixel-display)" }}
+              >
+                <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
+                CHOOSE YOUR ARCHETYPE
               </div>
               <h2
-                className="mt-4 font-display text-[36px] leading-tight text-[#221E18] sm:text-[44px]"
-                style={{ fontFamily: "var(--font-display)" }}
+                className="mt-5 text-[28px] leading-none tracking-[0.04em] text-[#221E18] sm:text-[40px] md:text-[48px]"
+                style={{ fontFamily: "var(--font-pixel-display)" }}
               >
-                Ten ways of <em>holding the world</em>
+                <span style={{ textShadow: "4px 4px 0 #B8862F" }}>
+                  TEN WAYS TO HOLD THE WORLD
+                </span>
               </h2>
             </div>
             <Link
               href="/archetype"
-              className="hidden text-[13px] text-[#8C6520] underline decoration-1 underline-offset-4 hover:text-[#221E18] sm:inline"
+              className="hidden text-[18px] text-[#8C6520] hover:text-[#221E18] hover:underline sm:inline"
+              style={{ fontFamily: "var(--font-pixel-body)" }}
             >
               View all essays →
             </Link>
           </div>
 
-          <p className="mt-6 max-w-[640px] text-[16px] leading-relaxed text-[#4A4338]">
+          <p
+            className="mt-6 max-w-[720px] text-[22px] leading-[1.3] text-[#4A4338]"
+            style={{ fontFamily: "var(--font-pixel-body)" }}
+          >
             Each is one stable pattern across the 16 dimensions. The
             quiz places you near the one you&rsquo;re closest to — but
             no one sits exactly on top of one.
           </p>
 
-          {/* Each tile shows the archetype's SVG figure (cartographer
-              with compass, keel boat, threshold arch, etc) — extracted
-              from mull.html into lib/figures.ts. The figure sits inside
-              a circular cream "card" with the archetype's accent color
-              behind it. Hover lifts the tile and intensifies the halo. */}
-          <ul className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+          <ul className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             {ARCHETYPES.map((a) => {
               const color = getArchetypeColor(a.key);
               const figure = FIGURES[a.key] ?? "";
@@ -299,64 +374,65 @@ export default async function HomeV2() {
                 <li key={a.key}>
                   <Link
                     href={`/archetype/${a.key}`}
-                    className="group flex h-full flex-col gap-3 rounded-2xl border border-[#D6CDB6] bg-[#FFFCF4] p-5 transition-all hover:-translate-y-0.5 hover:border-[color:var(--accent-deep)] hover:bg-[color:var(--accent-soft)] hover:shadow-[0_18px_40px_rgba(34,30,24,0.1)]"
-                    style={
-                      {
-                        ["--accent-deep" as string]: color.deep,
-                        ["--accent-soft" as string]: color.soft,
-                      } as React.CSSProperties
-                    }
+                    className="group block transition-transform hover:-translate-x-[2px] hover:-translate-y-[2px]"
                   >
-                    {/* Figure circle. The SVG paints its own circular
-                        background; we wrap it in a slightly larger
-                        accent-colored disc so the figure sits inside
-                        a "halo" you can read at a glance. */}
                     <div
-                      className="relative mx-auto flex h-[112px] w-[112px] items-center justify-center"
-                      aria-hidden
+                      className="pixel-panel transition-shadow group-hover:[box-shadow:6px_6px_0_0_#221E18]"
+                      style={
+                        {
+                          // Per-archetype tint of the panel
+                          background: color.soft,
+                          borderColor: color.deep,
+                          boxShadow: `4px 4px 0 0 ${color.deep}`,
+                          ["--accent" as string]: color.primary,
+                          ["--accent-deep" as string]: color.deep,
+                        } as React.CSSProperties
+                      }
                     >
+                      {/* Title bar — archetype name in pixel display */}
                       <div
-                        className="absolute inset-0 rounded-full transition-transform group-hover:scale-105"
+                        className="flex items-center justify-between border-b-4 px-3 py-2 text-[10px] tracking-[0.18em]"
                         style={{
-                          background: `radial-gradient(circle, ${color.soft} 0%, ${color.soft} 55%, transparent 75%)`,
-                        }}
-                      />
-                      <div
-                        className="relative h-[96px] w-[96px] overflow-hidden rounded-full"
-                        style={{
-                          boxShadow: `inset 0 0 0 2px ${color.primary}40`,
-                        }}
-                        dangerouslySetInnerHTML={{ __html: figure }}
-                      />
-                    </div>
-
-                    <div className="text-center">
-                      <div
-                        className="text-[10px] uppercase tracking-[0.22em]"
-                        style={{ color: color.deep }}
-                      >
-                        The
-                      </div>
-                      <div
-                        className="font-display text-[26px] italic leading-tight"
-                        style={{
-                          fontFamily: "var(--font-display)",
-                          color: color.deep,
+                          borderColor: color.deep,
+                          backgroundColor: color.deep,
+                          color: color.soft,
+                          fontFamily: "var(--font-pixel-display)",
                         }}
                       >
-                        {capitalize(a.key)}
+                        <span>NO. {String(ARCHETYPES.indexOf(a) + 1).padStart(2, "0")}</span>
+                        <span>THE {capitalize(a.key).toUpperCase()}</span>
                       </div>
-                    </div>
 
-                    <p className="text-center text-[13.5px] leading-relaxed text-[#4A4338]">
-                      {a.spirit}
-                    </p>
+                      {/* Sprite — SVG figure rendered with crisp pixel
+                          edges. CSS image-rendering:pixelated forces
+                          the browser to nearest-neighbor scale. */}
+                      <div
+                        className="relative mx-auto my-4 flex h-[120px] w-[120px] items-center justify-center"
+                        aria-hidden
+                      >
+                        <div
+                          className="absolute inset-2 bg-[#FFFCF4]"
+                          style={{
+                            boxShadow: `inset 0 0 0 3px ${color.deep}`,
+                          }}
+                        />
+                        <div
+                          className="pixel-crisp pixel-float relative h-[88px] w-[88px]"
+                          dangerouslySetInnerHTML={{ __html: figure }}
+                        />
+                      </div>
 
-                    <div
-                      className="mt-auto text-center text-[12px] font-medium opacity-0 transition-opacity group-hover:opacity-100"
-                      style={{ color: color.deep }}
-                    >
-                      Read more →
+                      {/* Spirit line in VT323 + Cormorant italic for
+                          the proper name. */}
+                      <div className="border-t-2 px-3 py-3 text-center"
+                        style={{ borderColor: color.deep }}>
+                        <p
+                          className="text-[18px] leading-[1.3] text-[#221E18]"
+                          style={{ fontFamily: "var(--font-pixel-body)" }}
+                        >
+                          {a.spirit}
+                        </p>
+                      </div>
                     </div>
                   </Link>
                 </li>
@@ -366,76 +442,76 @@ export default async function HomeV2() {
 
           <Link
             href="/archetype"
-            className="mt-8 inline-block text-[13px] text-[#8C6520] underline decoration-1 underline-offset-4 hover:text-[#221E18] sm:hidden"
+            className="mt-8 inline-block text-[18px] text-[#8C6520] hover:text-[#221E18] hover:underline sm:hidden"
+            style={{ fontFamily: "var(--font-pixel-body)" }}
           >
             View all essays →
           </Link>
         </section>
 
-        {/* ─── Tail CTA ───────────────────────────────────────────
-            One more push to start, after the reader has been given
-            real reasons. */}
-        <section className="mx-auto max-w-[760px] px-6 pb-32 pt-12 text-center sm:px-10">
-          <div
-            className="font-display text-[36px] italic leading-tight text-[#221E18] sm:text-[48px]"
-            style={{ fontFamily: "var(--font-display)" }}
-          >
-            Where do <em>you</em> sit?
+        {/* ─── Tail CTA — pixel "PRESS START" screen ─────────── */}
+        <section className="mx-auto max-w-[920px] px-6 pb-28 pt-12 text-center sm:px-10">
+          <div className="pixel-panel pixel-panel--ink mx-auto">
+            <div className="px-6 py-10 sm:px-12 sm:py-14">
+              <div
+                className="text-[14px] tracking-[0.24em] text-[#B8862F]"
+                style={{ fontFamily: "var(--font-pixel-display)" }}
+              >
+                <span className="pixel-blink">▶</span> READY?
+              </div>
+              <h2
+                className="mt-5 text-[40px] leading-none tracking-[0.04em] text-[#F8EDC8] sm:text-[64px]"
+                style={{ fontFamily: "var(--font-pixel-display)" }}
+              >
+                <span style={{ textShadow: "5px 5px 0 #B8862F" }}>
+                  WHERE DO YOU SIT?
+                </span>
+              </h2>
+              <p
+                className="mx-auto mt-6 max-w-[520px] text-[22px] leading-[1.35] text-[#F8EDC8]/85"
+                style={{ fontFamily: "var(--font-pixel-body)" }}
+              >
+                Twenty questions, six minutes, no signup. You can skip
+                anything that doesn&rsquo;t fit you.
+              </p>
+              <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+                <Link
+                  href="/quiz?mode=quick"
+                  className="pixel-button pixel-button--amber"
+                >
+                  <span>▶ BEGIN THE QUIZ</span>
+                </Link>
+              </div>
+            </div>
           </div>
-          <p className="mx-auto mt-6 max-w-[480px] text-[16px] leading-relaxed text-[#4A4338]">
-            Twenty questions, six minutes, no signup. You can skip
-            anything that doesn&rsquo;t fit you.
-          </p>
-          <Link
-            href="/quiz?mode=quick"
-            className="group mt-10 inline-flex items-center gap-3 rounded-full bg-[#221E18] px-8 py-4 text-[15px] font-medium text-[#FAF6EC] transition-all hover:bg-[#8C6520] hover:shadow-[0_12px_40px_rgba(140,101,32,0.25)]"
-          >
-            <span>Begin the quiz</span>
-            <span className="transition-transform group-hover:translate-x-0.5">
-              →
-            </span>
-          </Link>
         </section>
 
-        {/* ─── Footer ─────────────────────────────────────────────
-            Quiet. Inline rather than its own component — small enough. */}
-        <footer className="border-t border-[#EBE3CA] px-6 py-8 sm:px-10">
-          <div className="mx-auto flex max-w-[1200px] flex-wrap items-baseline justify-between gap-4 text-[12.5px] leading-relaxed text-[#8C6520]">
-            <div className="opacity-90">
-              <strong className="font-semibold text-[#221E18]">Mull</strong>
-              {" · a passion project · "}
+        {/* ─── Footer — pixel status bar ─────────────────────── */}
+        <footer
+          className="border-t-4 border-[#221E18] bg-[#221E18] px-6 py-5 sm:px-10"
+          style={{ fontFamily: "var(--font-pixel-body)" }}
+        >
+          <div className="mx-auto flex max-w-[1200px] flex-wrap items-baseline justify-between gap-4 text-[18px] leading-relaxed text-[#B8862F]">
+            <div>
+              <span
+                className="mr-2 text-[12px] tracking-[0.2em] text-[#F8EDC8]"
+                style={{ fontFamily: "var(--font-pixel-display)" }}
+              >
+                MULL
+              </span>
+              <span className="text-[#B8862F]">a passion project · </span>
               <a
                 href="mailto:jimmy.kaian.ji@gmail.com"
-                className="underline decoration-[#B8862F]/30 underline-offset-2 hover:decoration-[#8C6520]"
+                className="text-[#F8EDC8] underline decoration-[#B8862F]/40 underline-offset-2 hover:decoration-[#F8EDC8]"
               >
                 jimmy.kaian.ji@gmail.com
               </a>
             </div>
-            <nav className="flex flex-wrap gap-5">
-              <Link
-                href="/about"
-                className="underline decoration-[#B8862F]/40 underline-offset-2 hover:decoration-[#8C6520]"
-              >
-                About
-              </Link>
-              <Link
-                href="/methodology"
-                className="underline decoration-[#B8862F]/40 underline-offset-2 hover:decoration-[#8C6520]"
-              >
-                Methodology
-              </Link>
-              <Link
-                href="/privacy"
-                className="underline decoration-[#B8862F]/40 underline-offset-2 hover:decoration-[#8C6520]"
-              >
-                Privacy
-              </Link>
-              <Link
-                href="/terms"
-                className="underline decoration-[#B8862F]/40 underline-offset-2 hover:decoration-[#8C6520]"
-              >
-                Terms
-              </Link>
+            <nav className="flex flex-wrap gap-5 text-[#F8EDC8]">
+              <Link href="/about" className="hover:text-[#B8862F]">About</Link>
+              <Link href="/methodology" className="hover:text-[#B8862F]">Methodology</Link>
+              <Link href="/privacy" className="hover:text-[#B8862F]">Privacy</Link>
+              <Link href="/terms" className="hover:text-[#B8862F]">Terms</Link>
             </nav>
           </div>
         </footer>

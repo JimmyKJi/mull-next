@@ -91,3 +91,142 @@ select:focus-visible {
     scroll-behavior: auto !important;
   }
 }
+
+/* ─── v3 pixel-game world helpers ──────────────────────────────────
+   Crisp pixel rendering. Anything inside `.pixel-crisp` (or any
+   <img> / <svg> tagged with `data-pixel`) won't be antialiased — so
+   sprites stay crunchy at any scale. */
+.pixel-crisp,
+.pixel-crisp img,
+.pixel-crisp svg,
+[data-pixel] {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+}
+
+/* Pixel "panel" — chunky 4-pixel border with a hard 4-pixel
+   bottom-right shadow. The border + shadow combine into the look
+   of a classic JRPG dialog window. Use as `.pixel-panel` on any
+   container that should read as a UI block. */
+.pixel-panel {
+  border: 4px solid #221E18;
+  background: #FFFCF4;
+  box-shadow: 4px 4px 0 0 #221E18;
+  border-radius: 0; /* never round — pixel chrome */
+}
+
+.pixel-panel--amber {
+  border-color: #8C6520;
+  background: #F8EDC8;
+  box-shadow: 4px 4px 0 0 #8C6520;
+}
+
+.pixel-panel--ink {
+  border-color: #221E18;
+  background: #1A1612;
+  color: #F8EDC8;
+  box-shadow: 4px 4px 0 0 #8C6520;
+}
+
+/* Pixel button — chunky pixel border, hard shadow, "press" feel
+   on click via shifting the shadow into the button (1-pixel offset). */
+.pixel-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 22px;
+  background: #221E18;
+  color: #FAF6EC;
+  border: 4px solid #221E18;
+  box-shadow: 4px 4px 0 0 #8C6520;
+  font-family: var(--font-pixel-display, 'Courier New', monospace);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 80ms steps(2, end), box-shadow 80ms steps(2, end);
+  border-radius: 0;
+}
+.pixel-button:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 0 #B8862F;
+}
+.pixel-button:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 0 #8C6520;
+}
+.pixel-button--amber {
+  background: #B8862F;
+  color: #1A1612;
+  border-color: #8C6520;
+  box-shadow: 4px 4px 0 0 #221E18;
+}
+.pixel-button--amber:hover {
+  background: #D4A93D;
+  box-shadow: 5px 5px 0 0 #221E18;
+}
+.pixel-button--ghost {
+  background: transparent;
+  color: #221E18;
+  border-color: #221E18;
+  box-shadow: 4px 4px 0 0 #B8862F;
+}
+.pixel-button--ghost:hover {
+  background: #F8EDC8;
+}
+
+/* CRT scanline overlay — sits on top of the page at very low
+   opacity so the cream background gets a subtle horizontal-line
+   texture. Toggle with `.crt-scanlines` on a wrapper. */
+.crt-scanlines {
+  position: relative;
+}
+.crt-scanlines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(34, 30, 24, 0.04) 0px,
+    rgba(34, 30, 24, 0.04) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: multiply;
+  z-index: 1;
+}
+
+/* A sprinkle of "press" noise — tiny pixel dots scattered as
+   background, low opacity. Cheaper than an SVG noise filter. */
+.pixel-noise {
+  background-image:
+    radial-gradient(#221E18 1px, transparent 1px),
+    radial-gradient(#8C6520 1px, transparent 1px);
+  background-size: 32px 32px, 48px 48px;
+  background-position: 0 0, 16px 16px;
+  background-attachment: fixed;
+  opacity: 0.025;
+}
+
+/* Simple pixel-art "blink" animation for sprite eyes / cursor
+   indicators. Steps so it pops rather than fades. */
+@keyframes pixel-blink {
+  0%, 60%, 100% { opacity: 1; }
+  61%, 80%      { opacity: 0; }
+}
+.pixel-blink {
+  animation: pixel-blink 1.6s steps(2, end) infinite;
+}
+
+/* Pixel float — slow chunky bob for sprites. Steps to keep that
+   8-bit non-smoothness. */
+@keyframes pixel-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+.pixel-float {
+  animation: pixel-float 2.4s steps(4, end) infinite;
+}
