@@ -339,94 +339,74 @@ export default async function AccountPage() {
   const referralCount: number = referralCountRes.count ?? 0;
 
   return (
-    <main style={{ maxWidth: 760, margin: '60px auto', padding: '0 24px' }}>
-      <header style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'baseline',
-        marginBottom: 36,
-        gap: 16,
-        flexWrap: 'wrap'
-      }}>
-        <Link href="/" style={{
-          fontFamily: serif,
-          fontSize: 28,
-          fontWeight: 500,
-          color: '#221E18',
-          textDecoration: 'none',
-          letterSpacing: '-0.5px'
-        }}>
-          Mull<span style={{ color: '#B8862F' }}>.</span>
-        </Link>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <LanguageSwitcher initial={locale} />
-          <LogoutButton locale={locale} />
-        </div>
-      </header>
+    <main className="mx-auto max-w-[820px] px-6 pb-32 pt-10 sm:px-10">
+      {/* Top rail — language switcher + sign-out (the wordmark lives
+          in the global SiteNav now). */}
+      <div className="mb-6 flex items-center justify-end gap-3">
+        <LanguageSwitcher initial={locale} />
+        <LogoutButton locale={locale} />
+      </div>
 
       {locale !== 'en' && (
-        <div style={{
-          padding: '10px 14px',
-          background: '#F5EFDC',
-          borderLeft: '3px solid #B8862F',
-          borderRadius: 6,
-          fontFamily: sans,
-          fontSize: 12.5,
-          color: '#4A4338',
-          marginBottom: 24,
-          lineHeight: 1.55,
-        }}>
+        <div
+          className="mb-6 border-l-4 px-4 py-2.5 text-[13px] leading-[1.55] text-[#4A4338]"
+          style={{ borderColor: '#B8862F', background: '#F5EFDC' }}
+        >
           {t('i18n.content_notice', locale)}
         </div>
       )}
 
-      <h1 style={{
-        fontFamily: serif,
-        fontSize: 42,
-        fontWeight: 500,
-        margin: '0 0 8px',
-        letterSpacing: '-0.5px'
-      }}>
-        {t('account.title', locale)}
-      </h1>
-      <p style={{
-        fontFamily: sans,
-        fontSize: 15,
-        color: '#4A4338',
-        marginBottom: 32
-      }}>
-        {t('account.signed_in_as', locale)} <strong>{user.email}</strong>
-        {' · '}
-        <Link href="/account/profile" style={{
-          color: '#8C6520',
-          textDecoration: 'underline',
-          textUnderlineOffset: 3,
-        }}>
-          {t('nav.public_profile_settings', locale)}
-        </Link>
-        {' · '}
-        <Link href="/account/retrospective" style={{
-          color: '#8C6520',
-          textDecoration: 'underline',
-          textUnderlineOffset: 3,
-        }}>
-          Yearly retrospective
-        </Link>
-        {/* Admin-only: link to the editor's-picks curation UI. Only renders
-            for users whose UUID is in ADMIN_USER_IDS env var. */}
-        {isAdminUserId(user.id) && (
-          <>
-            {' · '}
-            <Link href="/account/curate" style={{
-              color: '#8C6520',
-              textDecoration: 'underline',
-              textUnderlineOffset: 3,
-            }}>
-              Curate picks
+      {/* Pixel page header — "ACCOUNT" + signed-in pill. */}
+      <header className="mb-8">
+        <div
+          className="flex items-center gap-3 text-[10px] tracking-[0.24em] text-[#8C6520]"
+          style={{ fontFamily: 'var(--font-pixel-display)' }}
+        >
+          <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
+          ▶ YOUR ACCOUNT
+        </div>
+        <h1
+          className="mt-5 pr-2 text-[28px] leading-[1.05] tracking-[0.04em] text-[#221E18] sm:text-[40px]"
+          style={{ fontFamily: 'var(--font-pixel-display)' }}
+        >
+          <span style={{ textShadow: '3px 3px 0 #B8862F' }}>
+            {t('account.title', locale).toUpperCase()}
+          </span>
+        </h1>
+
+        {/* Signed-in card — pixel-bordered with email + admin links */}
+        <div
+          className="mt-6 border-2 border-[#221E18] bg-[#FFFCF4] p-3 text-[13.5px] text-[#4A4338]"
+          style={{ boxShadow: '3px 3px 0 0 #8C6520' }}
+        >
+          <div>
+            {t('account.signed_in_as', locale)}{' '}
+            <strong className="text-[#221E18]">{user.email}</strong>
+          </div>
+          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[13px]">
+            <Link
+              href="/account/profile"
+              className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+            >
+              {t('nav.public_profile_settings', locale)} →
             </Link>
-          </>
-        )}
-      </p>
+            <Link
+              href="/account/retrospective"
+              className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+            >
+              Yearly retrospective →
+            </Link>
+            {isAdminUserId(user.id) ? (
+              <Link
+                href="/account/curate"
+                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+              >
+                Curate picks →
+              </Link>
+            ) : null}
+          </div>
+        </div>
+      </header>
 
       {/* First-time empty state — shown only before the user has any data
           to display in the stats / trajectory sections below. Three doors
