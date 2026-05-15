@@ -397,8 +397,9 @@ export default async function DilemmaPage() {
                 key={r.id}
                 style={{
                   background: '#FFFCF4',
-                  border: '1px solid #EBE3CA',
-                  borderRadius: 8,
+                  border: '3px solid #221E18',
+                  boxShadow: '3px 3px 0 0 #B8862F',
+                  borderRadius: 0,
                   padding: '14px 18px',
                 }}
               >
@@ -412,17 +413,16 @@ export default async function DilemmaPage() {
                 }}>
                   <span style={{
                     display: 'block',
-                    fontFamily: sans,
+                    fontFamily: 'var(--font-pixel-display)',
                     fontSize: 10,
-                    fontWeight: 600,
                     color: '#8C6520',
                     textTransform: 'uppercase',
-                    letterSpacing: '0.16em',
-                    marginBottom: 6,
+                    letterSpacing: '0.18em',
+                    marginBottom: 8,
                   }}>
-                    {new Date(r.dilemma_date).toLocaleDateString(locale === 'en' ? 'en-GB' : locale, {
+                    ▸ {new Date(r.dilemma_date).toLocaleDateString(locale === 'en' ? 'en-GB' : locale, {
                       weekday: 'short', day: 'numeric', month: 'short'
-                    })}
+                    }).toUpperCase()}
                   </span>
                   {r.question_text}
                 </summary>

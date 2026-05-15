@@ -168,21 +168,21 @@ export default async function DilemmaArchivePage({
             <li
               key={item.dateKey}
               style={{
-                background: answered ? '#FBFAF2' : '#FFFCF4',
-                border: '1px solid #EBE3CA',
-                borderLeft: answered ? '3px solid #2F5D5C' : '3px solid #D6CDB6',
-                borderRadius: 8,
+                background: answered ? '#F8EDC8' : '#FFFCF4',
+                border: '3px solid #221E18',
+                boxShadow: answered ? '3px 3px 0 0 #2F5D5C' : '3px 3px 0 0 #D6CDB6',
+                borderRadius: 0,
                 padding: '16px 20px',
               }}
             >
               <div style={{
-                fontFamily: sans, fontSize: 11, fontWeight: 600,
+                fontFamily: 'var(--font-pixel-display)', fontSize: 10,
                 color: answered ? '#2F5D5C' : '#8C6520',
-                textTransform: 'uppercase', letterSpacing: '0.14em',
-                marginBottom: 8,
+                textTransform: 'uppercase', letterSpacing: '0.18em',
+                marginBottom: 10,
               }}>
-                {dateLabel}
-                {answered && <span style={{ marginLeft: 10 }}>· {t('archive.answered_tag', locale)}</span>}
+                ▸ {dateLabel.toUpperCase()}
+                {answered && <span style={{ marginLeft: 10 }}>· {t('archive.answered_tag', locale).toUpperCase()}</span>}
               </div>
 
               <h2 style={{

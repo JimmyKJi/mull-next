@@ -188,11 +188,11 @@ export default async function ComparePage({
         marginBottom: 36,
         padding: '24px 26px',
         background: '#FFFCF4',
-        border: '1px solid #EBE3CA',
-        borderLeft: '3px solid #B8862F',
-        borderRadius: 8,
+        border: '4px solid #221E18',
+        boxShadow: '5px 5px 0 0 #B8862F',
+        borderRadius: 0,
       }}>
-        <div style={eyebrow}>Where you diverge most</div>
+        <div style={{ ...eyebrow, color: '#B8862F' }}>▸ WHERE YOU DIVERGE MOST</div>
         <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 16 }}>
           {divergences.length === 0 ? (
             <li style={{ fontFamily: serif, fontStyle: 'italic', color: '#8C6520' }}>
@@ -201,18 +201,21 @@ export default async function ComparePage({
           ) : divergences.map((d, i) => (
             <li key={d.key}>
               <div style={{
-                fontFamily: sans, fontSize: 11, fontWeight: 600,
+                fontFamily: 'var(--font-pixel-display)', fontSize: 11,
                 color: '#8C6520', textTransform: 'uppercase',
-                letterSpacing: '0.16em', marginBottom: 6,
+                letterSpacing: '0.18em', marginBottom: 8,
               }}>
-                {i === 0 ? 'Biggest divergence' : `#${i + 1}`} · {d.label}
+                ▸ {(i === 0 ? 'Biggest divergence' : `#${i + 1}`).toUpperCase()} · {d.label}
                 {d.poleFlip && (
                   <span style={{
-                    marginLeft: 8,
-                    color: '#7A2E2E',
-                    fontSize: 9.5,
+                    marginLeft: 10,
+                    padding: '2px 6px',
+                    color: '#FAF6EC',
+                    background: '#7A2E2E',
+                    border: '2px solid #221E18',
+                    fontSize: 9,
                     letterSpacing: '0.18em',
-                  }}>↔ opposite poles</span>
+                  }}>↔ OPPOSITE POLES</span>
                 )}
               </div>
               <p style={{
@@ -237,23 +240,20 @@ export default async function ComparePage({
           marginBottom: 36,
           padding: '24px 26px',
           background: '#FFFCF4',
-          border: '1px solid #EBE3CA',
-          borderLeft: '3px solid #2F5D5C',
-          borderRadius: 8,
+          border: '4px solid #221E18',
+          boxShadow: '5px 5px 0 0 #2F5D5C',
+          borderRadius: 0,
         }}>
-          <div style={{
-            ...eyebrow,
-            color: '#2F5D5C',
-          }}>Where you converge most</div>
+          <div style={{ ...eyebrow, color: '#2F5D5C' }}>▸ WHERE YOU CONVERGE MOST</div>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 16 }}>
             {convergences.map((c, i) => (
               <li key={c.key}>
                 <div style={{
-                  fontFamily: sans, fontSize: 11, fontWeight: 600,
+                  fontFamily: 'var(--font-pixel-display)', fontSize: 11,
                   color: '#2F5D5C', textTransform: 'uppercase',
-                  letterSpacing: '0.16em', marginBottom: 6,
+                  letterSpacing: '0.18em', marginBottom: 8,
                 }}>
-                  {i === 0 ? 'Strongest agreement' : `#${i + 1}`} · {c.label}
+                  ▸ {(i === 0 ? 'Strongest agreement' : `#${i + 1}`).toUpperCase()} · {c.label}
                 </div>
                 <p style={{
                   fontFamily: serif, fontSize: 16, color: '#221E18',
@@ -271,11 +271,12 @@ export default async function ComparePage({
 
       {/* Full 16-dim side-by-side table */}
       <section style={{ marginBottom: 36 }}>
-        <div style={eyebrow}>All sixteen dimensions</div>
+        <div style={eyebrow}>▸ ALL SIXTEEN DIMENSIONS</div>
         <div style={{
           background: '#FFFCF4',
-          border: '1px solid #EBE3CA',
-          borderRadius: 8,
+          border: '4px solid #221E18',
+          boxShadow: '5px 5px 0 0 #8C6520',
+          borderRadius: 0,
           overflow: 'hidden',
         }}>
           {DIM_KEYS.map((k, i) => {
@@ -288,9 +289,9 @@ export default async function ComparePage({
                 display: 'grid',
                 gridTemplateColumns: '1.4fr 1fr 1fr',
                 gap: 12,
-                padding: '10px 14px',
-                borderTop: i === 0 ? 'none' : '1px solid #EBE3CA',
-                fontFamily: sans, fontSize: 13.5,
+                padding: '12px 16px',
+                borderTop: i === 0 ? 'none' : '2px dashed #D6CDB6',
+                fontFamily: serif, fontSize: 15,
                 color: '#221E18',
                 alignItems: 'center',
               }}>
@@ -503,9 +504,9 @@ function ComparePicker({ initialYou, initialThem }: { initialYou: string; initia
 }
 
 const eyebrow: React.CSSProperties = {
-  fontFamily: sans, fontSize: 11, fontWeight: 600,
+  fontFamily: 'var(--font-pixel-display)', fontSize: 12,
   color: '#8C6520', textTransform: 'uppercase',
-  letterSpacing: '0.18em', marginBottom: 14,
+  letterSpacing: '0.18em', marginBottom: 16,
 };
 const fieldLabel: React.CSSProperties = { display: 'flex', flexDirection: 'column', gap: 4 };
 const fieldText: React.CSSProperties = {

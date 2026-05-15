@@ -149,16 +149,16 @@ export default async function DiaryPage() {
               const preview = e.content.length > 280 ? e.content.slice(0, 280) + '…' : e.content;
               return (
                 <li key={e.id}>
-                  <Link href={`/diary/${e.id}`} style={{
+                  <Link href={`/diary/${e.id}`} className="pixel-press" style={{
                     display: 'block',
                     padding: '20px 22px',
                     background: '#FFFCF4',
-                    border: '1px solid #EBE3CA',
-                    borderLeft: '3px solid #2F5D5C',
-                    borderRadius: 8,
+                    border: '4px solid #221E18',
+                    boxShadow: '4px 4px 0 0 #2F5D5C',
+                    borderRadius: 0,
                     textDecoration: 'none',
                     color: 'inherit',
-                    transition: 'border-color 0.15s ease, transform 0.15s ease',
+                    transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
                   }}>
                     <div style={{
                       display: 'flex',

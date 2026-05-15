@@ -71,15 +71,16 @@ export default async function ExercisesPage() {
             <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
               {items.map(ex => (
                 <li key={ex.slug}>
-                  <Link href={`/exercises/${ex.slug}`} style={{
+                  <Link href={`/exercises/${ex.slug}`} className="pixel-press" style={{
                     display: 'block',
                     padding: '18px 20px',
                     background: '#FFFCF4',
-                    border: '1px solid #EBE3CA',
-                    borderLeft: '3px solid ' + meta.accent,
-                    borderRadius: 10,
+                    border: '4px solid #221E18',
+                    boxShadow: `4px 4px 0 0 ${meta.accent}`,
+                    borderRadius: 0,
                     textDecoration: 'none',
                     color: 'inherit',
+                    transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
                   }}>
                     <div style={{
                       display: 'flex',
