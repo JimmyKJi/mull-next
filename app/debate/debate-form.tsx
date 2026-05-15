@@ -372,25 +372,18 @@ function SavedDebatesList({
             key={d.id}
             type="button"
             onClick={() => onPick(d)}
+            className="pixel-press"
             style={{
               textAlign: 'left',
               padding: '14px 18px',
               background: '#FFFCF4',
-              border: '1px solid #EBE3CA',
-              borderLeft: '3px solid #B8862F',
-              borderRadius: 8,
+              border: '4px solid #221E18',
+              boxShadow: '4px 4px 0 0 #B8862F',
+              borderRadius: 0,
               cursor: 'pointer',
               fontFamily: 'inherit',
-              transition: 'border-color 0.12s ease, background 0.12s ease',
+              transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
               width: '100%',
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.borderLeftColor = '#221E18';
-              e.currentTarget.style.background = '#F5EFDC';
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.borderLeftColor = '#B8862F';
-              e.currentTarget.style.background = '#FFFCF4';
             }}
           >
             <div style={{

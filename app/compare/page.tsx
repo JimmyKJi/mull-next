@@ -343,19 +343,23 @@ function UserHeroCard({
     <div style={{
       padding: '20px 22px',
       background: '#FFFCF4',
-      border: '1px solid #EBE3CA',
-      borderRadius: 10,
+      border: '4px solid #221E18',
+      boxShadow: '4px 4px 0 0 #B8862F',
+      borderRadius: 0,
     }}>
       <div style={{
         display: 'flex', gap: 14, alignItems: 'center', marginBottom: 12,
       }}>
         {figure && (
-          <Link href={slug ? `/archetype/${slug}` : '#'} style={{
+          <Link href={slug ? `/archetype/${slug}` : '#'} className="pixel-press pixel-crisp" style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             width: 64, height: 64, flexShrink: 0,
-            background: '#F1EAD8', borderRadius: '50%',
-            border: '1.5px solid #B8862F', padding: 8,
+            background: '#F8EDC8', borderRadius: 0,
+            border: '3px solid #221E18',
+            boxShadow: '3px 3px 0 0 #8C6520',
+            padding: 6,
             textDecoration: 'none',
+            transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
           }}>
             <span aria-hidden style={{ width: '100%', height: '100%' }}
               dangerouslySetInnerHTML={{ __html: figure }} />

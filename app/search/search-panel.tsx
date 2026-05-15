@@ -150,14 +150,16 @@ export default function SearchPanel({ locale = 'en' }: { locale?: Locale }) {
         }}>
           {results.map(r => (
             <li key={r.handle}>
-              <Link href={r.url} style={{
+              <Link href={r.url} className="pixel-press" style={{
                 display: 'block',
                 padding: '14px 18px',
                 background: '#FFFCF4',
-                border: '1px solid #EBE3CA',
-                borderRadius: 8,
+                border: '3px solid #221E18',
+                boxShadow: '3px 3px 0 0 #B8862F',
+                borderRadius: 0,
                 textDecoration: 'none',
                 color: 'inherit',
+                transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
               }}>
                 <div style={{
                   display: 'flex',

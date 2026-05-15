@@ -250,9 +250,9 @@ export default async function OriginalThinking() {
             <li key={`${r.sourceType}:${r.id}`} style={{
               padding: '18px 22px',
               background: '#FFFCF4',
-              border: '1px solid #EBE3CA',
-              borderLeft: '3px solid #6B3E8C',
-              borderRadius: 8,
+              border: '4px solid #221E18',
+              boxShadow: '4px 4px 0 0 #6B3E8C',
+              borderRadius: 0,
             }}>
               <div style={{
                 display: 'flex', justifyContent: 'space-between',

@@ -84,9 +84,9 @@ export default async function DiaryEntryPage({ params }: { params: Promise<{ id:
         whiteSpace: 'pre-wrap',
         padding: '24px 28px',
         background: '#FFFCF4',
-        border: '1px solid #EBE3CA',
-        borderLeft: '3px solid #2F5D5C',
-        borderRadius: 8,
+        border: '4px solid #221E18',
+        boxShadow: '5px 5px 0 0 #2F5D5C',
+        borderRadius: 0,
       }}>
         {entry.content}
       </article>
@@ -106,20 +106,20 @@ export default async function DiaryEntryPage({ params }: { params: Promise<{ id:
         <div style={{
           marginTop: 32,
           padding: '20px 24px',
-          background: '#F5EFDC',
-          borderLeft: '3px solid #B8862F',
-          borderRadius: 8,
+          background: '#F8EDC8',
+          border: '4px solid #221E18',
+          boxShadow: '5px 5px 0 0 #B8862F',
+          borderRadius: 0,
         }}>
           <div style={{
-            fontFamily: sans,
+            fontFamily: 'var(--font-pixel-display)',
             fontSize: 11,
-            fontWeight: 600,
             color: '#8C6520',
             textTransform: 'uppercase',
-            letterSpacing: '0.16em',
-            marginBottom: 10,
+            letterSpacing: '0.18em',
+            marginBottom: 12,
           }}>
-            {t('dilemma.what_revealed', locale)}
+            ▸ {t('dilemma.what_revealed', locale).toUpperCase()}
           </div>
           <p style={{
             fontFamily: serif,

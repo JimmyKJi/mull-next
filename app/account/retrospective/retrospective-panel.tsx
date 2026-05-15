@@ -160,9 +160,9 @@ export default function RetrospectivePanel({ locale = 'en' }: { locale?: Locale 
             <article style={{
               padding: '32px 36px',
               background: '#FFFCF4',
-              border: '1px solid #EBE3CA',
-              borderLeft: '3px solid #B8862F',
-              borderRadius: 10,
+              border: '4px solid #221E18',
+              boxShadow: '5px 5px 0 0 #B8862F',
+              borderRadius: 0,
               fontFamily: serif,
               fontSize: 17.5,
               color: '#221E18',
@@ -194,8 +194,9 @@ function Stat({ label, value }: { label: string; value: number }) {
     <div style={{
       padding: '14px 16px',
       background: '#FFFCF4',
-      border: '1px solid #EBE3CA',
-      borderRadius: 8,
+      border: '3px solid #221E18',
+      boxShadow: '3px 3px 0 0 #8C6520',
+      borderRadius: 0,
     }}>
       <div style={{
         fontFamily: serif,

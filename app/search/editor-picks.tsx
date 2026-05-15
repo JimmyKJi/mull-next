@@ -93,9 +93,9 @@ export default async function EditorPicks({ locale = 'en' }: { locale?: string }
             <li key={`${p.slot}-${p.source_id}`} style={{
               padding: '18px 22px',
               background: '#FFFCF4',
-              border: '1px solid #EBE3CA',
-              borderLeft: '3px solid #B8862F',
-              borderRadius: 8,
+              border: '4px solid #221E18',
+              boxShadow: '4px 4px 0 0 #B8862F',
+              borderRadius: 0,
             }}>
               <div style={{
                 display: 'flex', justifyContent: 'space-between',

@@ -113,22 +113,24 @@ export default async function Leaderboard({ locale = 'en' as Locale }: { locale?
               <li key={row.handle}>
                 <Link
                   href={`/u/${row.handle}`}
+                  className="pixel-press"
                   style={{
                     display: 'grid',
                     gridTemplateColumns: 'auto auto 1fr auto',
                     alignItems: 'center',
                     gap: 14,
                     padding: '12px 16px',
-                    background: rank <= 3 ? '#FBF6E8' : '#FFFCF4',
-                    border: '1px solid #EBE3CA',
-                    borderLeft: rank === 1
-                      ? '3px solid #B8862F'
+                    background: rank <= 3 ? '#F8EDC8' : '#FFFCF4',
+                    border: '3px solid #221E18',
+                    boxShadow: rank === 1
+                      ? '3px 3px 0 0 #B8862F'
                       : rank <= 3
-                        ? '3px solid #D6CDB6'
-                        : '1px solid #EBE3CA',
-                    borderRadius: 8,
+                        ? '3px 3px 0 0 #8C6520'
+                        : '3px 3px 0 0 #D6CDB6',
+                    borderRadius: 0,
                     textDecoration: 'none',
                     color: 'inherit',
+                    transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
                   }}
                 >
                   {/* Rank number */}

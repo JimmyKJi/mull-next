@@ -144,20 +144,20 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
       <div style={{
         marginTop: 36,
         padding: '22px 26px',
-        background: '#F5EFDC',
-        borderLeft: '3px solid #B8862F',
-        borderRadius: 8,
+        background: '#F8EDC8',
+        border: '4px solid #221E18',
+        boxShadow: '5px 5px 0 0 #B8862F',
+        borderRadius: 0,
       }}>
         <div style={{
-          fontFamily: sans,
+          fontFamily: 'var(--font-pixel-display)',
           fontSize: 11,
-          fontWeight: 600,
           color: '#8C6520',
           textTransform: 'uppercase',
           letterSpacing: '0.18em',
-          marginBottom: 10,
+          marginBottom: 12,
         }}>
-          {t('exercises.after', locale)}
+          ▸ {t('exercises.after', locale).toUpperCase()}
         </div>
         <p style={{
           margin: 0,
@@ -268,7 +268,7 @@ function ExerciseExtrasSection({
             {extras.relatedThinkers.map((thinker, i) => (
               <li key={i} style={{
                 padding: '10px 14px', background: '#FFFCF4',
-                border: '1px solid #EBE3CA', borderRadius: 6,
+                border: '2px solid #221E18', borderRadius: 0,
               }}>
                 <strong style={{ color: '#221E18' }}>{thinker.name}</strong>
                 <span style={{ color: '#4A4338' }}> — {thinker.note}</span>
@@ -284,7 +284,9 @@ function ExerciseExtrasSection({
             {extras.furtherReading.map((book, i) => (
               <li key={i} style={{
                 padding: '12px 16px', background: '#FFFCF4',
-                border: '1px solid #EBE3CA', borderRadius: 8,
+                border: '3px solid #221E18',
+                boxShadow: '3px 3px 0 0 #B8862F',
+                borderRadius: 0,
               }}>
                 <div style={{
                   fontFamily: serif, fontSize: 17, color: '#221E18',
@@ -312,10 +314,14 @@ function ExerciseExtrasSection({
               <li key={rex.slug}>
                 <Link
                   href={`/exercises/${rex.slug}`}
+                  className="pixel-press"
                   style={{
                     display: 'block', padding: '12px 16px',
-                    background: '#FFFCF4', border: '1px solid #EBE3CA',
-                    borderRadius: 8, textDecoration: 'none', color: 'inherit',
+                    background: '#FFFCF4',
+                    border: '3px solid #221E18',
+                    boxShadow: '3px 3px 0 0 #2F5D5C',
+                    borderRadius: 0, textDecoration: 'none', color: 'inherit',
+                    transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
                   }}
                 >
                   <div style={{ fontFamily: serif, fontSize: 17, color: '#221E18' }}>
