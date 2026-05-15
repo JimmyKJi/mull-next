@@ -136,6 +136,54 @@ function computeTrajectory(events: EventEntry[]) {
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
+const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
+
+// Pixel-window stat card — used by the quiz/dilemma/diary tally row
+// at the top of /account. Big VT323-ish pixel digit on top, tiny
+// caret-prefixed pixel label below.
+const statCardStyle: React.CSSProperties = {
+  padding: '16px 20px',
+  background: '#FFFCF4',
+  border: '4px solid #221E18',
+  boxShadow: '4px 4px 0 0 #B8862F',
+  borderRadius: 0,
+};
+const statValueStyle: React.CSSProperties = {
+  fontFamily: pixel,
+  fontSize: 28,
+  color: '#221E18',
+  lineHeight: 1,
+  letterSpacing: 0.4,
+};
+const statLabelStyle: React.CSSProperties = {
+  fontFamily: pixel,
+  fontSize: 10,
+  color: '#8C6520',
+  textTransform: 'uppercase',
+  letterSpacing: '0.18em',
+  marginTop: 8,
+};
+
+// Chunky pixel-button style for the trio of action <Link>s in the
+// "latest result" card. Three configurable colors map to the three
+// surfaces (fill, text, shadow). Hover lift handled via CSS in
+// globals.css if present, else stays static.
+function pixelActionLink(bg: string, color: string, shadow: string): React.CSSProperties {
+  return {
+    display: 'inline-block',
+    padding: '10px 18px',
+    background: bg,
+    color,
+    border: '3px solid #221E18',
+    boxShadow: `3px 3px 0 0 ${shadow}`,
+    borderRadius: 0,
+    fontFamily: pixel,
+    fontSize: 11,
+    letterSpacing: 0.4,
+    textDecoration: 'none',
+    transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+  };
+}
 
 export default async function AccountPage() {
   const supabase = await createClient();
@@ -410,19 +458,19 @@ export default async function AccountPage() {
 
       {/* First-time empty state — shown only before the user has any data
           to display in the stats / trajectory sections below. Three doors
-          into the product, in the order most people benefit from them. */}
+          into the product, in the order most people benefit from them.
+          Pixel-restyled: chunky pixel eyebrow + grid of pixel-window doors. */}
       {quizCount === 0 && dilemmaCount === 0 && diaryCount === 0 && (
         <section style={{ marginBottom: 44 }}>
           <div style={{
-            fontFamily: sans,
+            fontFamily: 'var(--font-pixel-display)',
             fontSize: 11,
-            fontWeight: 600,
             color: '#8C6520',
             textTransform: 'uppercase',
             letterSpacing: '0.18em',
             marginBottom: 14,
           }}>
-            {t('first.eyebrow', locale)}
+            ▸ {t('first.eyebrow', locale).toUpperCase()}
           </div>
           <h2 style={{
             fontFamily: serif,
@@ -438,7 +486,7 @@ export default async function AccountPage() {
             fontStyle: 'italic',
             fontSize: 17,
             color: '#4A4338',
-            margin: '0 0 22px',
+            margin: '0 0 24px',
             lineHeight: 1.55,
           }}>
             {t('first.subtitle', locale)}
@@ -446,10 +494,10 @@ export default async function AccountPage() {
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-            gap: 14,
+            gap: 16,
           }}>
             <FirstStepCard
-              accent="#221E18"
+              accent="#B8862F"
               title={t('first.q_title', locale)}
               body={t('first.q_body', locale)}
               cta={t('first.cta_q', locale)}
@@ -464,7 +512,7 @@ export default async function AccountPage() {
               href="/dilemma"
             />
             <FirstStepCard
-              accent="#8C6520"
+              accent="#7A4A2E"
               title={t('first.j_title', locale)}
               body={t('first.j_body', locale)}
               cta={t('first.cta_j', locale)}
@@ -496,97 +544,45 @@ export default async function AccountPage() {
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-          gap: 12,
+          gap: 14,
           marginBottom: 44,
         }}>
-          <div style={{
-            padding: '16px 20px',
-            background: '#FFFCF4',
-            border: '1px solid #EBE3CA',
-            borderRadius: 10,
-          }}>
-            <div style={{
-              fontFamily: serif,
-              fontSize: 32,
-              fontWeight: 500,
-              color: '#221E18',
-              lineHeight: 1,
-            }}>{quizCount}</div>
-            <div style={{
-              fontFamily: sans,
-              fontSize: 11,
-              color: '#8C6520',
-              textTransform: 'uppercase',
-              letterSpacing: '0.14em',
-              marginTop: 6,
-            }}>{t(quizCount === 1 ? 'account.stat_quiz_attempt' : 'account.stat_quiz_attempts', locale)}</div>
+          <div style={statCardStyle}>
+            <div style={statValueStyle}>{quizCount}</div>
+            <div style={statLabelStyle}>{t(quizCount === 1 ? 'account.stat_quiz_attempt' : 'account.stat_quiz_attempts', locale)}</div>
           </div>
-          <div style={{
-            padding: '16px 20px',
-            background: '#FFFCF4',
-            border: '1px solid #EBE3CA',
-            borderRadius: 10,
-          }}>
-            <div style={{
-              fontFamily: serif,
-              fontSize: 32,
-              fontWeight: 500,
-              color: '#221E18',
-              lineHeight: 1,
-            }}>{dilemmaCount}</div>
-            <div style={{
-              fontFamily: sans,
-              fontSize: 11,
-              color: '#8C6520',
-              textTransform: 'uppercase',
-              letterSpacing: '0.14em',
-              marginTop: 6,
-            }}>{t(dilemmaCount === 1 ? 'account.stat_dilemma_answered' : 'account.stat_dilemmas_answered', locale)}</div>
+          <div style={statCardStyle}>
+            <div style={statValueStyle}>{dilemmaCount}</div>
+            <div style={statLabelStyle}>{t(dilemmaCount === 1 ? 'account.stat_dilemma_answered' : 'account.stat_dilemmas_answered', locale)}</div>
           </div>
-          <div style={{
-            padding: '16px 20px',
-            background: '#FFFCF4',
-            border: '1px solid #EBE3CA',
-            borderRadius: 10,
-          }}>
-            <div style={{
-              fontFamily: serif,
-              fontSize: 32,
-              fontWeight: 500,
-              color: '#221E18',
-              lineHeight: 1,
-            }}>{diaryCount}</div>
-            <div style={{
-              fontFamily: sans,
-              fontSize: 11,
-              color: '#8C6520',
-              textTransform: 'uppercase',
-              letterSpacing: '0.14em',
-              marginTop: 6,
-            }}>{t(diaryCount === 1 ? 'account.stat_diary_entry' : 'account.stat_diary_entries', locale)}</div>
+          <div style={statCardStyle}>
+            <div style={statValueStyle}>{diaryCount}</div>
+            <div style={statLabelStyle}>{t(diaryCount === 1 ? 'account.stat_diary_entry' : 'account.stat_diary_entries', locale)}</div>
           </div>
           {streak > 0 && (
             <div style={{
               padding: '16px 20px',
               background: '#221E18',
-              border: '1px solid #221E18',
-              borderRadius: 10,
+              border: '4px solid #221E18',
+              boxShadow: '4px 4px 0 0 #B8862F',
+              borderRadius: 0,
               color: '#FAF6EC',
             }}>
               <div style={{
-                fontFamily: serif,
-                fontSize: 32,
-                fontWeight: 500,
+                fontFamily: 'var(--font-pixel-display)',
+                fontSize: 28,
+                color: '#F8EDC8',
                 lineHeight: 1,
-              }}>{streak} <span style={{ fontSize: 16, opacity: 0.7 }}>{t(streak === 1 ? 'account.stat_day' : 'account.stat_days', locale)}</span></div>
+                letterSpacing: 0.4,
+              }}>{streak}<span style={{ fontSize: 13, opacity: 0.7, marginLeft: 6 }}>{t(streak === 1 ? 'account.stat_day' : 'account.stat_days', locale).toUpperCase()}</span></div>
               <div style={{
-                fontFamily: sans,
-                fontSize: 11,
+                fontFamily: 'var(--font-pixel-display)',
+                fontSize: 10,
                 color: '#F1C76A',
                 textTransform: 'uppercase',
-                letterSpacing: '0.14em',
-                marginTop: 6,
-              }}>{t('account.stat_current_streak', locale)}</div>
+                letterSpacing: '0.18em',
+                marginTop: 8,
+              }}>▸ {t('account.stat_current_streak', locale).toUpperCase()}</div>
             </div>
           )}
         </div>
@@ -594,27 +590,29 @@ export default async function AccountPage() {
 
       <section style={{ marginBottom: 48 }}>
         <h2 style={{
-          fontFamily: serif,
-          fontStyle: 'italic',
-          fontSize: 22,
-          fontWeight: 500,
-          color: '#4A4338',
-          marginBottom: 16
+          fontFamily: pixel,
+          fontSize: 16,
+          color: '#221E18',
+          textTransform: 'uppercase',
+          letterSpacing: '0.18em',
+          marginBottom: 18,
+          textShadow: '2px 2px 0 #B8862F',
         }}>
-          {t('account.latest_result', locale)}
+          ▸ {t('account.latest_result', locale).toUpperCase()}
         </h2>
 
         {latestQuiz ? (
           <div style={{
-            border: '1px solid #D6CDB6',
-            borderRadius: 12,
+            border: '4px solid #221E18',
+            boxShadow: '5px 5px 0 0 #B8862F',
+            borderRadius: 0,
             padding: '28px 32px',
             background: '#FFFCF4'
           }}>
             {/* Figure + name row. Figure links to the long-form archetype
                 essay; on phones it sits above the name (flex-wrap) so the
                 name remains readable instead of squeezing next to a 120px
-                tile in 320px of width. */}
+                tile in 320px of width. Pixel-tile around the figure now. */}
             <div style={{
               display: 'flex',
               alignItems: 'center',
@@ -638,12 +636,15 @@ export default async function AccountPage() {
                     width: 100,
                     height: 100,
                     flexShrink: 0,
-                    background: '#F1EAD8',
-                    borderRadius: '50%',
-                    border: '2px solid #B8862F',
-                    padding: 12,
+                    background: '#F8EDC8',
+                    borderRadius: 0,
+                    border: '4px solid #221E18',
+                    boxShadow: '4px 4px 0 0 #8C6520',
+                    padding: 10,
                     textDecoration: 'none',
-                  }}>
+                  }}
+                    className="pixel-crisp"
+                  >
                     <span
                       aria-hidden
                       style={{ width: '100%', height: '100%', display: 'block' }}
@@ -659,16 +660,16 @@ export default async function AccountPage() {
                   fontWeight: 500,
                   letterSpacing: '-0.5px',
                   lineHeight: 1.1,
-                  marginBottom: 8,
+                  marginBottom: 10,
                 }}>
                   {latestQuiz.flavor ? `${latestQuiz.flavor} ` : ''}
                   {latestQuiz.archetype.replace(/^The /, '')}
                 </div>
                 <div style={{
-                  fontFamily: sans,
-                  fontSize: 13,
+                  fontFamily: pixel,
+                  fontSize: 11,
                   color: '#8C6520',
-                  letterSpacing: 1,
+                  letterSpacing: 0.4,
                   textTransform: 'uppercase',
                 }}>
                   {latestQuiz.alignment_pct}{t('account.percent_alignment', locale)} · {fmt(latestQuiz.taken_at)}
@@ -676,43 +677,22 @@ export default async function AccountPage() {
               </div>
             </div>
             <div style={{ marginBottom: 24 }} />
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-              <Link href="/" style={{
-                display: 'inline-block',
-                padding: '10px 20px',
-                border: '1px solid #221E18',
-                borderRadius: 6,
-                color: '#221E18',
-                textDecoration: 'none',
-                fontFamily: sans,
-                fontSize: 14
-              }}>
-                {t('account.take_it_again', locale)}
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+              <Link href="/" style={pixelActionLink('#221E18', '#FAF6EC', '#B8862F')}>
+                {t('account.take_it_again', locale).toUpperCase()}
               </Link>
-              <Link href="/dilemma" style={{
-                display: 'inline-block',
-                padding: '10px 20px',
-                background: respondedToday ? 'transparent' : '#221E18',
-                border: respondedToday ? '1px solid #D6CDB6' : '1px solid #221E18',
-                borderRadius: 6,
-                color: respondedToday ? '#4A4338' : '#FAF6EC',
-                textDecoration: 'none',
-                fontFamily: sans,
-                fontSize: 14
-              }}>
-                {respondedToday ? t('account.todays_dilemma_answered', locale) : t('account.todays_dilemma_arrow', locale)}
+              <Link
+                href="/dilemma"
+                style={
+                  respondedToday
+                    ? pixelActionLink('#FFFCF4', '#4A4338', '#D6CDB6')
+                    : pixelActionLink('#B8862F', '#1A1612', '#221E18')
+                }
+              >
+                {(respondedToday ? t('account.todays_dilemma_answered', locale) : t('account.todays_dilemma_arrow', locale)).toUpperCase()}
               </Link>
-              <Link href="/diary" style={{
-                display: 'inline-block',
-                padding: '10px 20px',
-                border: '1px solid #2F5D5C',
-                borderRadius: 6,
-                color: '#2F5D5C',
-                textDecoration: 'none',
-                fontFamily: sans,
-                fontSize: 14
-              }}>
-                {t('account.write_diary', locale)}
+              <Link href="/diary" style={pixelActionLink('#FFFCF4', '#2F5D5C', '#2F5D5C')}>
+                {t('account.write_diary', locale).toUpperCase()}
               </Link>
             </div>
             {/* Share row — same X intent / copy link / native share that
@@ -726,32 +706,23 @@ export default async function AccountPage() {
           </div>
         ) : (
           <div style={{
-            border: '1px dashed #D6CDB6',
-            borderRadius: 12,
+            border: '3px dashed #8C6520',
+            borderRadius: 0,
             padding: '36px 28px',
             textAlign: 'center',
             color: '#4A4338',
             background: '#FFFCF4'
           }}>
             <p style={{
-              margin: '0 0 16px',
+              margin: '0 0 18px',
               fontFamily: serif,
               fontStyle: 'italic',
               fontSize: 20
             }}>
               {t('account.no_quiz_yet', locale)}
             </p>
-            <Link href="/" style={{
-              display: 'inline-block',
-              padding: '10px 20px',
-              border: '1px solid #221E18',
-              borderRadius: 6,
-              color: '#221E18',
-              textDecoration: 'none',
-              fontFamily: sans,
-              fontSize: 14
-            }}>
-              {t('account.take_quiz_arrow', locale)}
+            <Link href="/" style={pixelActionLink('#B8862F', '#1A1612', '#221E18')}>
+              {t('account.take_quiz_arrow', locale).toUpperCase()}
             </Link>
           </div>
         )}
@@ -760,18 +731,20 @@ export default async function AccountPage() {
       {iframeSrc && (
         <section style={{ marginBottom: 48 }}>
           <h2 style={{
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 22,
-            fontWeight: 500,
-            color: '#4A4338',
-            marginBottom: 16
+            fontFamily: pixel,
+            fontSize: 16,
+            color: '#221E18',
+            textTransform: 'uppercase',
+            letterSpacing: '0.18em',
+            marginBottom: 18,
+            textShadow: '2px 2px 0 #2F5D5C',
           }}>
-            {t('account.your_trajectory', locale)}
+            ▸ {t('account.your_trajectory', locale).toUpperCase()}
           </h2>
           <div style={{
-            border: '1px solid #D6CDB6',
-            borderRadius: 12,
+            border: '4px solid #221E18',
+            boxShadow: '5px 5px 0 0 #2F5D5C',
+            borderRadius: 0,
             overflow: 'hidden',
             background: '#FFFCF4',
             position: 'relative'
@@ -789,25 +762,27 @@ export default async function AccountPage() {
             />
           </div>
           <p style={{
-            fontFamily: sans,
-            fontSize: 13,
+            fontFamily: pixel,
+            fontSize: 11,
             color: '#8C6520',
-            marginTop: 12,
-            letterSpacing: 0.3,
+            marginTop: 14,
+            letterSpacing: 0.4,
+            textTransform: 'uppercase',
           }}>
-            {trailVectors.length > 1
+            ▸ {(trailVectors.length > 1
               ? t('account.trajectory_caption_with_trail', locale, { n: trailVectors.length })
-              : t('account.trajectory_caption_no_trail', locale)}
+              : t('account.trajectory_caption_no_trail', locale)).toUpperCase()}
           </p>
           <div style={{
             marginTop: 18,
             padding: '14px 16px',
-            background: '#F5EFDC',
-            borderLeft: '3px solid #B8862F',
-            borderRadius: 6,
-            fontFamily: sans,
-            fontSize: 13,
-            color: '#4A4338',
+            background: '#F8EDC8',
+            border: '3px solid #221E18',
+            boxShadow: '3px 3px 0 0 #B8862F',
+            borderRadius: 0,
+            fontFamily: serif,
+            fontSize: 14,
+            color: '#221E18',
             lineHeight: 1.55,
           }}>
             <strong style={{ color: '#221E18' }}>{t('account.trajectory_explainer_title', locale)}</strong>{' '}
@@ -819,21 +794,23 @@ export default async function AccountPage() {
       {trajectoryNewestFirst.length > 0 && (
         <section style={{ marginBottom: 48 }}>
           <h2 style={{
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 22,
-            fontWeight: 500,
-            color: '#4A4338',
-            marginBottom: 8
+            fontFamily: pixel,
+            fontSize: 16,
+            color: '#221E18',
+            textTransform: 'uppercase',
+            letterSpacing: '0.18em',
+            marginBottom: 8,
+            textShadow: '2px 2px 0 #B8862F',
           }}>
-            {t('account.recent_shifts', locale)}
+            ▸ {t('account.recent_shifts', locale).toUpperCase()}
           </h2>
           <p style={{
-            fontFamily: sans,
-            fontSize: 13,
-            color: '#8C6520',
-            marginBottom: 18,
-            letterSpacing: 0.3,
+            fontFamily: serif,
+            fontStyle: 'italic',
+            fontSize: 14.5,
+            color: '#4A4338',
+            marginBottom: 22,
+            lineHeight: 1.55,
           }}>
             {t('account.recent_shifts_subtitle', locale)}
           </p>
@@ -843,16 +820,14 @@ export default async function AccountPage() {
               const ts =
                 event.kind === 'quiz' ? event.taken_at :
                 event.created_at;
+              // Per-kind accent maps to the shadow color so each
+              // event-type reads at-a-glance: amber=quiz, blue=dilemma,
+              // teal=diary, brick=exercise.
               const accent =
                 event.kind === 'quiz' ? '#B8862F' :
                 event.kind === 'dilemma' ? '#3D7DA8' :
                 event.kind === 'diary' ? '#2F5D5C' :
                 '#7A2E2E';
-              const labelColor =
-                event.kind === 'quiz' ? '#8C6520' :
-                event.kind === 'dilemma' ? '#1F4666' :
-                event.kind === 'diary' ? '#173533' :
-                '#4D1818';
               const labelText =
                 event.kind === 'quiz' ? t('account.event_quiz_attempt', locale) :
                 event.kind === 'dilemma' ? t('account.event_daily_dilemma', locale) :
@@ -861,11 +836,11 @@ export default async function AccountPage() {
               return (
                 <li key={event.id} style={{
                   padding: '18px 20px',
-                  marginBottom: 10,
+                  marginBottom: 14,
                   background: '#FFFCF4',
-                  border: '1px solid #EBE3CA',
-                  borderLeft: `3px solid ${accent}`,
-                  borderRadius: 8,
+                  border: '4px solid #221E18',
+                  boxShadow: `4px 4px 0 0 ${accent}`,
+                  borderRadius: 0,
                 }}>
                   <div style={{
                     display: 'flex',
@@ -873,23 +848,24 @@ export default async function AccountPage() {
                     alignItems: 'baseline',
                     flexWrap: 'wrap',
                     gap: 8,
-                    marginBottom: 6,
+                    marginBottom: 8,
                   }}>
                     <span style={{
-                      fontFamily: sans,
+                      fontFamily: pixel,
                       fontSize: 11,
-                      fontWeight: 600,
                       textTransform: 'uppercase',
-                      letterSpacing: '0.14em',
-                      color: labelColor,
+                      letterSpacing: '0.18em',
+                      color: accent,
                     }}>
-                      {labelText} · {fmtRel(ts)}
+                      ▸ {labelText.toUpperCase()} · {fmtRel(ts).toUpperCase()}
                     </span>
                     <span style={{
-                      fontFamily: sans,
-                      fontSize: 12,
+                      fontFamily: pixel,
+                      fontSize: 10,
                       color: '#8C6520',
-                      opacity: 0.75,
+                      opacity: 0.85,
+                      letterSpacing: 0.4,
+                      textTransform: 'uppercase',
                     }}>
                       {fmt(ts)}
                     </span>
@@ -906,12 +882,11 @@ export default async function AccountPage() {
                       {event.flavor ? `${event.flavor} ` : ''}
                       {event.archetype.replace(/^The /, '')}
                       <span style={{
-                        fontFamily: sans,
-                        fontSize: 13,
+                        fontFamily: pixel,
+                        fontSize: 12,
                         color: '#8C6520',
-                        marginLeft: 10,
-                        letterSpacing: 1,
-                        fontWeight: 400,
+                        marginLeft: 12,
+                        letterSpacing: 0.4,
                       }}>
                         {event.alignment_pct}%
                       </span>
@@ -926,7 +901,7 @@ export default async function AccountPage() {
                         color: '#4A4338',
                         margin: '0 0 8px',
                       }}>
-                        "{event.question_text}"
+                        &ldquo;{event.question_text}&rdquo;
                       </p>
                       {event.analysis && (
                         <p style={{
@@ -976,44 +951,55 @@ export default async function AccountPage() {
                         </p>
                       )}
                       <a href={`/diary/${event.id}`} style={{
-                        fontFamily: sans,
-                        fontSize: 12,
+                        fontFamily: pixel,
+                        fontSize: 11,
                         color: '#2F5D5C',
-                        textDecoration: 'underline',
-                        textUnderlineOffset: 3,
+                        textDecoration: 'none',
+                        letterSpacing: 0.4,
+                        textTransform: 'uppercase',
+                        borderBottom: '2px solid #2F5D5C',
+                        paddingBottom: 1,
                       }}>
-                        {t('account.read_full_entry', locale)}
+                        ▸ {t('account.read_full_entry', locale).toUpperCase()}
                       </a>
                     </>
                   )}
                   {shifts.length > 0 ? (
                     <div style={{
                       display: 'flex',
-                      gap: 14,
+                      gap: 12,
                       flexWrap: 'wrap',
-                      marginTop: 10,
+                      marginTop: 12,
+                      paddingTop: 12,
+                      borderTop: '2px dashed #D6CDB6',
                     }}>
                       {shifts.map(s => (
                         <span key={s.key} style={{
-                          fontFamily: sans,
-                          fontSize: 13,
+                          fontFamily: pixel,
+                          fontSize: 11,
                           color: s.delta > 0 ? '#2F5D5C' : '#7A2E2E',
+                          letterSpacing: 0.4,
+                          textTransform: 'uppercase',
+                          padding: '4px 10px',
+                          background: s.delta > 0 ? '#E5F0EE' : '#F5E0E0',
+                          border: `2px solid ${s.delta > 0 ? '#2F5D5C' : '#7A2E2E'}`,
                         }}>
                           <strong style={{ fontVariantNumeric: 'tabular-nums' }}>
                             {s.delta > 0 ? '+' : ''}{s.delta.toFixed(1)}
                           </strong>{' '}
-                          <span style={{ color: '#4A4338' }}>{s.name}</span>
+                          {s.name}
                         </span>
                       ))}
                     </div>
                   ) : (
                     event.kind === 'quiz' && (
                       <div style={{
-                        fontFamily: sans,
-                        fontSize: 12,
-                        color: '#8C6520',
+                        fontFamily: serif,
                         fontStyle: 'italic',
-                        opacity: 0.7,
+                        fontSize: 13,
+                        color: '#8C6520',
+                        opacity: 0.85,
+                        marginTop: 10,
                       }}>
                         {t('account.first_event', locale)}
                       </div>
@@ -1063,6 +1049,9 @@ export default async function AccountPage() {
   );
 }
 
+// First-time empty-state door. Pixel chrome: chunky 4px ink border +
+// hard accent shadow. Primary card swaps to amber fill so the
+// "take the quiz" path reads as the recommended starting point.
 function FirstStepCard({
   accent, title, body, cta, href, primary = false,
 }: {
@@ -1072,18 +1061,19 @@ function FirstStepCard({
     <Link href={href} style={{
       display: 'block',
       padding: '20px 22px',
-      background: primary ? '#FFFCF4' : 'transparent',
-      border: '1px solid ' + (primary ? '#D6CDB6' : '#EBE3CA'),
-      borderLeft: '3px solid ' + accent,
-      borderRadius: 10,
+      background: primary ? '#F8EDC8' : '#FFFCF4',
+      border: '4px solid #221E18',
+      boxShadow: `5px 5px 0 0 ${accent}`,
+      borderRadius: 0,
       textDecoration: 'none',
       color: '#221E18',
+      transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
     }}>
       <div style={{
         fontFamily: serif,
         fontSize: 21,
         fontWeight: 500,
-        marginBottom: 6,
+        marginBottom: 8,
         letterSpacing: '-0.2px',
         color: '#221E18',
       }}>
@@ -1093,18 +1083,19 @@ function FirstStepCard({
         fontFamily: sans,
         fontSize: 13.5,
         color: '#4A4338',
-        margin: '0 0 12px',
+        margin: '0 0 14px',
         lineHeight: 1.55,
       }}>
         {body}
       </p>
       <span style={{
-        fontFamily: sans,
-        fontSize: 13.5,
+        fontFamily: pixel,
+        fontSize: 11,
         color: accent,
-        fontWeight: 500,
+        letterSpacing: 0.4,
+        textTransform: 'uppercase',
       }}>
-        {cta}
+        ▸ {cta.toUpperCase()}
       </span>
     </Link>
   );
