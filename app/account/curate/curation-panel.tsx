@@ -126,7 +126,7 @@ export default function CurationPanel() {
   }
 
   return (
-    <div>
+    <div className="pixel-form">
       {/* Slot row */}
       <div style={{
         display: 'grid',

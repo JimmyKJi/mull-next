@@ -280,7 +280,7 @@ export default function DiaryComposer({ locale = 'en' }: { locale?: Locale }) {
   }
 
   return (
-    <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+    <form onSubmit={onSubmit} className="pixel-form" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
       <input
         type="text"
         value={title}

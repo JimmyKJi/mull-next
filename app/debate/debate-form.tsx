@@ -194,7 +194,7 @@ export default function DebateForm({
   }
 
   return (
-    <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
+    <form onSubmit={onSubmit} className="pixel-form" style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
       <div style={{
         display: 'grid',
         // Two pickers (philosopher A vs B) — collapse to one column

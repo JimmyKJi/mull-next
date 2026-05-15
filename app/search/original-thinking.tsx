@@ -204,10 +204,12 @@ export default async function OriginalThinking() {
         alignItems: 'baseline', marginBottom: 8, flexWrap: 'wrap', gap: 8,
       }}>
         <h2 style={{
-          fontFamily: serif, fontSize: 28, fontWeight: 500,
-          margin: 0, color: '#221E18', letterSpacing: '-0.3px',
+          fontFamily: 'var(--font-pixel-display, "Courier New", monospace)',
+          fontSize: 22, fontWeight: 400,
+          margin: 0, color: '#221E18', letterSpacing: '0.04em',
+          textShadow: '3px 3px 0 #6B3E8C', lineHeight: 1.1,
         }}>
-          Original thinking
+          ORIGINAL THINKING
         </h2>
         <span style={{
           fontFamily: sans, fontSize: 11, fontWeight: 600,

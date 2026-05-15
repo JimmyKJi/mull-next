@@ -57,7 +57,7 @@ export default function DilemmaArchiveForm({
   }
 
   return (
-    <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+    <form onSubmit={onSubmit} className="pixel-form" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}

@@ -289,7 +289,7 @@ export default function ReflectionForm({
 
   // Signed in & writing → form.
   return (
-    <form onSubmit={onSubmit} style={{ marginTop: 36, display: 'flex', flexDirection: 'column', gap: 14 }}>
+    <form onSubmit={onSubmit} className="pixel-form" style={{ marginTop: 36, display: 'flex', flexDirection: 'column', gap: 14 }}>
       <div style={{
         fontFamily: sans,
         fontSize: 11,

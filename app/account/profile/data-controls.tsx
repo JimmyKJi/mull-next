@@ -62,10 +62,10 @@ export default function DataControls({ locale = 'en' }: { locale?: Locale }) {
   }
 
   return (
-    <section style={{
+    <section className="pixel-form" style={{
       marginTop: 56,
       paddingTop: 28,
-      borderTop: '1px solid #EBE3CA',
+      borderTop: '4px solid #221E18',
     }}>
       <div style={{
         fontFamily: sans,

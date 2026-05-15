@@ -51,7 +51,7 @@ export default function RetrospectivePanel({ locale = 'en' }: { locale?: Locale 
   for (let y = 2024; y <= currentYear; y++) years.push(y);
 
   return (
-    <div>
+    <div className="pixel-form">
       <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', marginBottom: 24 }}>
         <label style={{ fontFamily: sans, fontSize: 13, color: '#4A4338' }}>
           {t('retro.year_label', locale)}{' '}

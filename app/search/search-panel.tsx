@@ -69,7 +69,7 @@ export default function SearchPanel({ locale = 'en' }: { locale?: Locale }) {
   }, [q]);
 
   return (
-    <div>
+    <div className="pixel-form">
       <div style={{ position: 'relative' }}>
         <input
           type="text"

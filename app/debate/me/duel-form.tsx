@@ -141,7 +141,7 @@ export default function DuelForm({ philosophers, locale = 'en' }: { philosophers
   }
 
   return (
-    <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
+    <form onSubmit={onSubmit} className="pixel-form" style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
       <PhilosopherPicker
         search={search}
         setSearch={setSearch}

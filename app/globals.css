@@ -265,3 +265,94 @@ select:focus-visible {
 .sprite-pop-in {
   animation: sprite-pop-in 0.32s steps(5, end) both;
 }
+
+/* ─── Pixel form container ─────────────────────────────────────
+   Wrap any form in <div class="pixel-form">…</div> and its inputs,
+   textareas, and labels pick up the v3 pixel chrome styling without
+   touching the underlying React state/logic.
+
+   Form code that already uses inline style={…} keeps working — these
+   rules only apply when the inline style doesn't override (border,
+   background, font-family, etc.). For totally inline-styled forms
+   we override existing inline styles with `!important` because that's
+   the only way to win against the React inline-style cascade. The
+   `!important` is intentional: this is a transitional layer until
+   each form is rewritten.
+
+   What's overridden:
+     - text-rendering on inputs/textareas/selects
+     - their borders + radii (no rounded corners)
+     - the focus state (warm amber bg)
+     - submit button visual (the form keeps its onClick handler)
+*/
+.pixel-form input[type="text"],
+.pixel-form input[type="email"],
+.pixel-form input[type="password"],
+.pixel-form input[type="search"],
+.pixel-form input[type="number"],
+.pixel-form input[type="url"],
+.pixel-form select,
+.pixel-form textarea {
+  font-family: 'Inter', system-ui, sans-serif !important;
+  font-size: 16px !important;
+  border: 2px solid #221E18 !important;
+  border-radius: 0 !important;
+  background: #FFFCF4 !important;
+  color: #221E18 !important;
+  padding: 10px 12px !important;
+  outline: none !important;
+  -webkit-font-smoothing: antialiased !important;
+}
+.pixel-form input:focus,
+.pixel-form select:focus,
+.pixel-form textarea:focus {
+  background: #F8EDC8 !important;
+  outline: none !important;
+}
+.pixel-form textarea {
+  line-height: 1.5 !important;
+}
+.pixel-form label {
+  font-family: var(--font-pixel-display, 'Courier New', monospace) !important;
+  font-size: 11px !important;
+  letter-spacing: 0.16em !important;
+  color: #8C6520 !important;
+  text-transform: uppercase !important;
+}
+
+/* Pixel-form submit + primary action buttons (anything matching
+   .pixel-form button[type="submit"]) — but ONLY when the button
+   doesn't already have its own pixel chrome via the .pixel-button
+   class. Tagged with :not(.pixel-button) to opt out for forms that
+   already manage their button look. */
+.pixel-form button[type="submit"]:not(.pixel-button):not(.no-pixel) {
+  font-family: var(--font-pixel-display, 'Courier New', monospace) !important;
+  font-size: 13px !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  border: 4px solid #8C6520 !important;
+  background: #B8862F !important;
+  color: #1A1612 !important;
+  border-radius: 0 !important;
+  padding: 12px 22px !important;
+  box-shadow: 4px 4px 0 0 #221E18 !important;
+  cursor: pointer !important;
+  transition: transform 80ms steps(2, end), box-shadow 80ms steps(2, end) !important;
+}
+.pixel-form button[type="submit"]:not(.pixel-button):not(.no-pixel):hover {
+  background: #D4A93D !important;
+  transform: translate(-1px, -1px) !important;
+  box-shadow: 5px 5px 0 0 #221E18 !important;
+}
+.pixel-form button[type="submit"]:not(.pixel-button):not(.no-pixel):active {
+  transform: translate(2px, 2px) !important;
+  box-shadow: 1px 1px 0 0 #221E18 !important;
+}
+.pixel-form button[type="submit"]:not(.pixel-button):not(.no-pixel):disabled {
+  background: #EBE3CA !important;
+  color: rgba(140, 101, 32, 0.5) !important;
+  border-color: #D6CDB6 !important;
+  box-shadow: 4px 4px 0 0 #D6CDB6 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}

@@ -229,10 +229,13 @@ const sectionStyle: React.CSSProperties = {
 };
 
 const headingStyle: React.CSSProperties = {
-  fontFamily: serif,
-  fontSize: 28,
-  fontWeight: 500,
+  // Pixel-display heading for v3 — large, hard amber drop shadow.
+  fontFamily: 'var(--font-pixel-display, "Courier New", monospace)',
+  fontSize: 22,
+  fontWeight: 400,
   margin: 0,
   color: '#221E18',
-  letterSpacing: '-0.3px',
+  letterSpacing: '0.04em',
+  textShadow: '3px 3px 0 #B8862F',
+  lineHeight: 1.1,
 };
