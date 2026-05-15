@@ -9,6 +9,7 @@ import type { Metadata } from 'next';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
+const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
 type ProfileRow = {
   user_id: string;
@@ -245,34 +246,43 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
           <LanguageSwitcher initial={locale} />
           <Link href={`/compare?them=${profile.handle}`} style={{
-            fontFamily: sans, fontSize: 13, color: '#8C6520',
-            textDecoration: 'underline', textUnderlineOffset: 3,
+            fontFamily: pixel, fontSize: 11, color: '#8C6520',
+            textDecoration: 'none',
+            letterSpacing: 0.4,
+            textTransform: 'uppercase',
+            borderBottom: '2px solid #8C6520',
+            paddingBottom: 1,
           }}>
-            Compare with me →
+            ▸ COMPARE WITH ME
           </Link>
-          <Link href="/" style={{ fontFamily: sans, fontSize: 13, color: '#4A4338', textDecoration: 'none' }}>
-            {t('nav.find_your_place', locale)}
+          <Link href="/" style={{
+            fontFamily: pixel, fontSize: 11, color: '#4A4338',
+            textDecoration: 'none', letterSpacing: 0.4,
+            textTransform: 'uppercase',
+          }}>
+            {t('nav.find_your_place', locale).toUpperCase()}
           </Link>
         </div>
       </header>
 
+      {/* Pixel handle eyebrow → big serif display name. Two layers of
+          chrome: the eyebrow caret + the name itself. */}
       <div style={{
-        fontFamily: sans,
-        fontSize: 11,
-        fontWeight: 600,
+        fontFamily: pixel,
+        fontSize: 12,
         color: '#8C6520',
         textTransform: 'uppercase',
         letterSpacing: '0.18em',
         marginBottom: 14,
       }}>
-        @{profile.handle}
+        ▸ @{profile.handle}
       </div>
 
       <h1 style={{
         fontFamily: serif,
         fontSize: 44,
         fontWeight: 500,
-        margin: '0 0 6px',
+        margin: '0 0 8px',
         letterSpacing: '-0.01em',
         lineHeight: 1.1,
       }}>
@@ -287,7 +297,17 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           color: '#8C6520',
           margin: '0 0 18px',
         }}>
-          {headline} · <span style={{ fontStyle: 'normal', fontSize: 16, color: '#8C6520' }}>{latest.alignment_pct}{t('account.percent_alignment', locale)}</span>
+          {headline}
+          {' · '}
+          <span style={{
+            fontFamily: pixel,
+            fontStyle: 'normal',
+            fontSize: 13,
+            color: '#8C6520',
+            letterSpacing: 0.4,
+          }}>
+            {latest.alignment_pct}{t('account.percent_alignment', locale).toUpperCase()}
+          </span>
         </p>
       )}
 
@@ -310,30 +330,28 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           padding: '8px 16px',
           background: '#221E18',
           color: '#FAF6EC',
-          borderRadius: 999,
-          fontFamily: sans,
-          fontSize: 13,
+          border: '3px solid #221E18',
+          boxShadow: '3px 3px 0 0 #B8862F',
+          borderRadius: 0,
+          fontFamily: pixel,
+          fontSize: 12,
+          letterSpacing: 0.4,
+          textTransform: 'uppercase',
           marginBottom: 32,
         }}>
-          {t('pub.streak_emoji', locale, { n: streak })}
+          ▸ {t('pub.streak_emoji', locale, { n: streak }).toUpperCase()}
         </div>
       )}
 
       {iframeSrc && (
-        <section style={{ marginBottom: 40 }}>
-          <h2 style={{
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 22,
-            fontWeight: 500,
-            color: '#4A4338',
-            margin: '0 0 12px',
-          }}>
-            {t('pub.their_place', locale)}
+        <section style={{ marginBottom: 44 }}>
+          <h2 style={pixelSectionH2('#2F5D5C')}>
+            ▸ {t('pub.their_place', locale).toUpperCase()}
           </h2>
           <div style={{
-            border: '1px solid #D6CDB6',
-            borderRadius: 12,
+            border: '4px solid #221E18',
+            boxShadow: '5px 5px 0 0 #2F5D5C',
+            borderRadius: 0,
             overflow: 'hidden',
             background: '#FFFCF4',
           }}>
@@ -351,31 +369,26 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           </div>
           {trailVectors.length > 1 && (
             <p style={{
-              fontFamily: sans,
-              fontSize: 12,
+              fontFamily: pixel,
+              fontSize: 11,
               color: '#8C6520',
-              marginTop: 8,
-              opacity: 0.75,
+              marginTop: 12,
+              opacity: 0.85,
+              letterSpacing: 0.4,
+              textTransform: 'uppercase',
             }}>
-              {t('pub.trail_caption', locale, { count: trailVectors.length })}
+              ▸ {t('pub.trail_caption', locale, { count: trailVectors.length }).toUpperCase()}
             </p>
           )}
         </section>
       )}
 
       {profile.show_dimensions && topDims.some(d => d.v > 0) && (
-        <section style={{ marginBottom: 40 }}>
-          <h2 style={{
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 22,
-            fontWeight: 500,
-            color: '#4A4338',
-            margin: '0 0 14px',
-          }}>
-            {t('pub.strongest_tendencies', locale)}
+        <section style={{ marginBottom: 44 }}>
+          <h2 style={pixelSectionH2('#B8862F')}>
+            ▸ {t('pub.strongest_tendencies', locale).toUpperCase()}
           </h2>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
             {topDims.map(d => (
               // Switched from a fixed 180px / 1fr / 50px grid to a
               // flex-wrap layout: on wide screens the name + bar +
@@ -385,17 +398,18 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
               <li key={d.key} style={{
                 display: 'flex',
                 flexWrap: 'wrap',
-                gap: 12,
+                gap: 14,
                 alignItems: 'center',
-                fontFamily: sans,
-                fontSize: 14,
+                fontFamily: serif,
+                fontSize: 15,
                 color: '#221E18',
               }}>
                 <span style={{ minWidth: 140 }}>{d.name}</span>
                 <div style={{
-                  height: 6,
-                  background: '#EBE3CA',
-                  borderRadius: 3,
+                  height: 10,
+                  background: '#FAF6EC',
+                  border: '2px solid #221E18',
+                  borderRadius: 0,
                   overflow: 'hidden',
                   flex: 1,
                   minWidth: 120,
@@ -404,13 +418,17 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                     height: '100%',
                     width: `${Math.max(0, Math.min(100, (d.v / 12) * 100))}%`,
                     background: '#B8862F',
+                    transition: 'width 0.4s steps(8, end)',
                   }} />
                 </div>
                 <span style={{
+                  fontFamily: pixel,
+                  fontSize: 13,
                   fontVariantNumeric: 'tabular-nums',
                   color: '#8C6520',
                   textAlign: 'right',
                   minWidth: 50,
+                  letterSpacing: 0.4,
                 }}>
                   {d.v.toFixed(1)}
                 </span>
@@ -421,38 +439,17 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
       )}
 
       {publicDilemmas.length > 0 && (
-        <section style={{ marginBottom: 40 }}>
-          <h2 style={{
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 22,
-            fontWeight: 500,
-            color: '#4A4338',
-            margin: '0 0 14px',
-          }}>
-            Recent dilemma responses · last {publicDilemmas.length}
+        <section style={{ marginBottom: 44 }}>
+          <h2 style={pixelSectionH2('#3D7DA8')}>
+            ▸ RECENT DILEMMA RESPONSES · LAST {publicDilemmas.length}
           </h2>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 14 }}>
             {publicDilemmas.map(d => {
               const shifts = topShifts(d.vector_delta || [], 0.3, 3);
               return (
-                <li key={d.id} style={{
-                  padding: '18px 22px',
-                  background: '#FFFCF4',
-                  border: '1px solid #EBE3CA',
-                  borderLeft: '3px solid #3D7DA8',
-                  borderRadius: 8,
-                }}>
-                  <div style={{
-                    fontFamily: sans,
-                    fontSize: 11,
-                    fontWeight: 600,
-                    color: '#1F4666',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.14em',
-                    marginBottom: 8,
-                  }}>
-                    Daily dilemma · {fmtDate(d.created_at)}
+                <li key={d.id} style={publicEntryCard('#3D7DA8')}>
+                  <div style={publicEventEyebrow('#3D7DA8')}>
+                    ▸ DAILY DILEMMA · {fmtDate(d.created_at).toUpperCase()}
                   </div>
                   <p style={{
                     fontFamily: serif,
@@ -461,7 +458,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                     color: '#4A4338',
                     margin: '0 0 8px',
                   }}>
-                    "{d.question_text}"
+                    &ldquo;{d.question_text}&rdquo;
                   </p>
                   <p style={{
                     fontFamily: serif,
@@ -474,29 +471,18 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                     {d.response_text}
                   </p>
                   {d.analysis && (
-                    <p style={{
-                      fontFamily: serif,
-                      fontStyle: 'italic',
-                      fontSize: 14,
-                      color: '#8C6520',
-                      margin: '0 0 8px',
-                      lineHeight: 1.5,
-                    }}>
+                    <p style={publicEventAnalysis}>
                       {d.analysis}
                     </p>
                   )}
                   {shifts.length > 0 && (
-                    <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginTop: 6 }}>
+                    <div style={publicShiftsRow}>
                       {shifts.map(s => (
-                        <span key={s.key} style={{
-                          fontFamily: sans,
-                          fontSize: 12.5,
-                          color: s.delta > 0 ? '#2F5D5C' : '#7A2E2E',
-                        }}>
+                        <span key={s.key} style={publicShiftChip(s.delta > 0)}>
                           <strong style={{ fontVariantNumeric: 'tabular-nums' }}>
                             {s.delta > 0 ? '+' : ''}{s.delta.toFixed(1)}
                           </strong>{' '}
-                          <span style={{ color: '#4A4338' }}>{s.name}</span>
+                          {s.name}
                         </span>
                       ))}
                     </div>
@@ -509,39 +495,18 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
       )}
 
       {publicDiaries.length > 0 && (
-        <section style={{ marginBottom: 40 }}>
-          <h2 style={{
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 22,
-            fontWeight: 500,
-            color: '#4A4338',
-            margin: '0 0 14px',
-          }}>
-            Recent diary entries · last {publicDiaries.length}
+        <section style={{ marginBottom: 44 }}>
+          <h2 style={pixelSectionH2('#2F5D5C')}>
+            ▸ RECENT DIARY ENTRIES · LAST {publicDiaries.length}
           </h2>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 14 }}>
             {publicDiaries.map(d => {
               const shifts = topShifts(d.vector_delta || [], 0.3, 3);
               const preview = d.content.length > 320 ? d.content.slice(0, 320) + '…' : d.content;
               return (
-                <li key={d.id} style={{
-                  padding: '18px 22px',
-                  background: '#FFFCF4',
-                  border: '1px solid #EBE3CA',
-                  borderLeft: '3px solid #2F5D5C',
-                  borderRadius: 8,
-                }}>
-                  <div style={{
-                    fontFamily: sans,
-                    fontSize: 11,
-                    fontWeight: 600,
-                    color: '#173533',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.14em',
-                    marginBottom: 8,
-                  }}>
-                    Diary entry · {fmtDate(d.created_at)}
+                <li key={d.id} style={publicEntryCard('#2F5D5C')}>
+                  <div style={publicEventEyebrow('#2F5D5C')}>
+                    ▸ DIARY ENTRY · {fmtDate(d.created_at).toUpperCase()}
                   </div>
                   {d.title && (
                     <div style={{
@@ -565,29 +530,18 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                     {preview}
                   </p>
                   {d.analysis && (
-                    <p style={{
-                      fontFamily: serif,
-                      fontStyle: 'italic',
-                      fontSize: 14,
-                      color: '#8C6520',
-                      margin: '0 0 8px',
-                      lineHeight: 1.5,
-                    }}>
+                    <p style={publicEventAnalysis}>
                       {d.analysis}
                     </p>
                   )}
                   {shifts.length > 0 && (
-                    <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginTop: 6 }}>
+                    <div style={publicShiftsRow}>
                       {shifts.map(s => (
-                        <span key={s.key} style={{
-                          fontFamily: sans,
-                          fontSize: 12.5,
-                          color: s.delta > 0 ? '#2F5D5C' : '#7A2E2E',
-                        }}>
+                        <span key={s.key} style={publicShiftChip(s.delta > 0)}>
                           <strong style={{ fontVariantNumeric: 'tabular-nums' }}>
                             {s.delta > 0 ? '+' : ''}{s.delta.toFixed(1)}
                           </strong>{' '}
-                          <span style={{ color: '#4A4338' }}>{s.name}</span>
+                          {s.name}
                         </span>
                       ))}
                     </div>
@@ -599,20 +553,104 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
         </section>
       )}
 
+      {/* Bottom CTA — pixel cream-on-amber dialog window. The Mull
+          arc-shape ends here for unauthed visitors: take the quiz. */}
       <div style={{
         marginTop: 56,
         padding: '20px 24px',
-        background: '#F5EFDC',
-        borderLeft: '3px solid #B8862F',
-        borderRadius: 8,
-        fontFamily: sans,
-        fontSize: 13.5,
-        color: '#4A4338',
+        background: '#F8EDC8',
+        border: '4px solid #221E18',
+        boxShadow: '5px 5px 0 0 #B8862F',
+        borderRadius: 0,
+        fontFamily: serif,
+        fontSize: 15,
+        color: '#221E18',
         lineHeight: 1.55,
       }}>
-        <strong style={{ color: '#221E18' }}>{t('pub.cta_title', locale)}</strong> {t('pub.cta_body', locale)}{' '}
-        <Link href="/" style={{ color: '#8C6520', textDecoration: 'underline' }}>{t('pub.cta_link', locale)}</Link>
+        <strong style={{ color: '#221E18' }}>{t('pub.cta_title', locale)}</strong>{' '}
+        {t('pub.cta_body', locale)}{' '}
+        <Link href="/" style={{
+          color: '#8C6520',
+          fontFamily: pixel,
+          fontSize: 11,
+          letterSpacing: 0.4,
+          textTransform: 'uppercase',
+          textDecoration: 'none',
+          borderBottom: '2px solid #8C6520',
+          paddingBottom: 1,
+          marginLeft: 4,
+        }}>
+          ▸ {t('pub.cta_link', locale).toUpperCase()}
+        </Link>
       </div>
     </main>
   );
+}
+
+// Pixel section heading: caret + uppercase pixel display + accent
+// drop shadow. Used for each major section on /u/[handle].
+function pixelSectionH2(accent: string): React.CSSProperties {
+  return {
+    fontFamily: pixel,
+    fontSize: 16,
+    color: '#221E18',
+    textTransform: 'uppercase',
+    letterSpacing: '0.18em',
+    margin: '0 0 16px',
+    textShadow: `2px 2px 0 ${accent}`,
+  };
+}
+
+// One public entry card (dilemma response or diary entry) — chunky
+// pixel chrome, accent-colored hard shadow that matches the section.
+function publicEntryCard(accent: string): React.CSSProperties {
+  return {
+    padding: '18px 22px',
+    background: '#FFFCF4',
+    border: '4px solid #221E18',
+    boxShadow: `4px 4px 0 0 ${accent}`,
+    borderRadius: 0,
+  };
+}
+
+function publicEventEyebrow(accent: string): React.CSSProperties {
+  return {
+    fontFamily: pixel,
+    fontSize: 11,
+    color: accent,
+    textTransform: 'uppercase',
+    letterSpacing: '0.18em',
+    marginBottom: 10,
+  };
+}
+
+const publicEventAnalysis: React.CSSProperties = {
+  fontFamily: serif,
+  fontStyle: 'italic',
+  fontSize: 14,
+  color: '#8C6520',
+  margin: '0 0 8px',
+  lineHeight: 1.5,
+};
+
+const publicShiftsRow: React.CSSProperties = {
+  display: 'flex',
+  gap: 10,
+  flexWrap: 'wrap',
+  marginTop: 12,
+  paddingTop: 12,
+  borderTop: '2px dashed #D6CDB6',
+};
+
+function publicShiftChip(positive: boolean): React.CSSProperties {
+  return {
+    fontFamily: pixel,
+    fontSize: 11,
+    color: positive ? '#2F5D5C' : '#7A2E2E',
+    letterSpacing: 0.4,
+    textTransform: 'uppercase',
+    padding: '4px 10px',
+    background: positive ? '#E5F0EE' : '#F5E0E0',
+    border: `2px solid ${positive ? '#2F5D5C' : '#7A2E2E'}`,
+  };
 }
