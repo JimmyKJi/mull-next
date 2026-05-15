@@ -128,6 +128,7 @@ export default function NextActionCard({
       </div>
       <Link
         href={href}
+        className="pixel-press"
         style={{
           padding: '12px 20px',
           background: '#221E18',

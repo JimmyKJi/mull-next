@@ -64,6 +64,11 @@ body {
   margin: 0;
   padding: 0;
   -webkit-font-smoothing: antialiased;
+  /* Chunky pixel drop-shadows hang 4–8px past their owner's right
+     edge. Without overflow:clip a phone-width screen shows a thin
+     horizontal scrollbar from the rightmost shadow on every page.
+     `clip` (vs. `hidden`) preserves position:sticky inside the body. */
+  overflow-x: clip;
 }
 
 /* Visible focus ring for keyboard navigation. Uses :focus-visible so it
@@ -175,6 +180,81 @@ select:focus-visible {
 }
 .pixel-button--ghost:hover {
   background: #F8EDC8;
+}
+
+/* Pixel-press utility — slap onto any element that already carries a
+   pixel-style box-shadow (chunky inline buttons, pixel-bordered Links,
+   etc.) to give it the same hover-lift + active-press feel as
+   .pixel-button without rewriting the inline styles. The element MUST
+   already have its own `box-shadow` declared inline; this rule only
+   adjusts transform on hover/active and doesn't try to override the
+   shadow color (which is per-instance accent).
+
+   Pair it with the standard transition we use everywhere:
+     transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)'
+   so the lift snaps in steps and reads as 8-bit, not smooth. */
+.pixel-press {
+  cursor: pointer;
+}
+.pixel-press:hover {
+  transform: translate(-1px, -1px);
+}
+.pixel-press:active {
+  transform: translate(2px, 2px);
+}
+.pixel-press[disabled],
+.pixel-press[aria-disabled="true"] {
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Pixel shimmer — used by Suspense-style loading skeletons. Same
+   slow horizontal sweep as the old soft shimmer, but inside chunky
+   pixel chrome (3px ink border, no radius). Drop the `.pixel-shimmer`
+   class onto a div with explicit width/height to render a placeholder
+   in the same visual language as the rest of the site. */
+@keyframes pixel-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.pixel-shimmer {
+  background-image: linear-gradient(
+    90deg,
+    #F5EFDC 0%,
+    #FBF6E8 50%,
+    #F5EFDC 100%
+  );
+  background-size: 200% 100%;
+  background-color: #F5EFDC;
+  animation: pixel-shimmer 1.6s steps(8, end) infinite;
+  border: 3px solid #221E18;
+  border-radius: 0;
+}
+
+/* Mobile: scale the chunkiest cards' shadows down so a 4px hard
+   shadow doesn't crowd a 320px viewport. Targets the .pixel-panel +
+   .pixel-button helpers — anything inline-styled stays as-is because
+   each surface picked its own offset. */
+@media (max-width: 480px) {
+  .pixel-panel {
+    box-shadow: 3px 3px 0 0 #221E18;
+  }
+  .pixel-panel--amber {
+    box-shadow: 3px 3px 0 0 #8C6520;
+  }
+  .pixel-panel--ink {
+    box-shadow: 3px 3px 0 0 #8C6520;
+  }
+  .pixel-button {
+    box-shadow: 3px 3px 0 0 #8C6520;
+    padding: 12px 18px;
+  }
+  .pixel-button--amber {
+    box-shadow: 3px 3px 0 0 #221E18;
+  }
+  .pixel-button--ghost {
+    box-shadow: 3px 3px 0 0 #B8862F;
+  }
 }
 
 /* CRT scanline overlay — sits on top of the page at very low

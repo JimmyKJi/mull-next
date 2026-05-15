@@ -103,6 +103,7 @@ export default function ShareResultCard({
           href={xIntent}
           target="_blank"
           rel="noopener noreferrer"
+          className="pixel-press"
           style={{ ...pixelShareButton, textDecoration: 'none' }}
         >
           <span aria-hidden style={{ marginRight: 8 }}>𝕏</span>
@@ -112,6 +113,7 @@ export default function ShareResultCard({
           href={shareCardUrl}
           target="_blank"
           rel="noopener noreferrer"
+          className="pixel-press"
           style={{ ...pixelShareButton, textDecoration: 'none' }}
           title="Opens a screenshot-friendly card you can share to Instagram"
         >
@@ -122,6 +124,7 @@ export default function ShareResultCard({
           href={shareCardUrl}
           target="_blank"
           rel="noopener noreferrer"
+          className="pixel-press"
           style={{ ...pixelShareButton, textDecoration: 'none' }}
           title="Opens a screenshot-friendly card you can share to TikTok"
         >
@@ -131,6 +134,7 @@ export default function ShareResultCard({
         <button
           type="button"
           onClick={copyLink}
+          className="pixel-press"
           style={{
             ...pixelShareButton,
             ...(copied ? copiedStyle : {}),
@@ -141,7 +145,7 @@ export default function ShareResultCard({
           <span>{copied ? 'COPIED!' : 'COPY LINK'}</span>
         </button>
         {hasNativeShare && (
-          <button type="button" onClick={nativeShare} style={{ ...pixelShareButton, cursor: 'pointer' }}>
+          <button type="button" onClick={nativeShare} className="pixel-press" style={{ ...pixelShareButton, cursor: 'pointer' }}>
             <span aria-hidden style={{ marginRight: 8 }}>↗</span>
             <span>SHARE…</span>
           </button>

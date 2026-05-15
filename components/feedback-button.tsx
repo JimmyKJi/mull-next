@@ -7,13 +7,19 @@
 // Designed for the launch window: friends see it on every page,
 // and you wake up Wednesday to a list of unfiltered first
 // impressions in your Supabase 'feedback' table.
+//
+// v3 pixel chrome: chunky pixel button (replaces the rounded pill),
+// pixel dialog window for the popup form. Reuses .pixel-form so the
+// textarea inside picks up the chunky-bordered cream input look.
 
 'use client';
 
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 
+const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
+const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
 // Routes where the floating Feedback pill would clash visually with
 // the page (e.g. the redesign sandbox has its own bottom-floating
@@ -66,25 +72,27 @@ export default function FeedbackButton() {
           type="button"
           onClick={() => setOpen(true)}
           aria-label="Send feedback"
+          className="pixel-press"
           style={{
             position: 'fixed',
             bottom: 18,
             right: 18,
             zIndex: 60,
-            padding: '9px 16px',
+            padding: '10px 16px',
             background: '#221E18',
             color: '#FAF6EC',
-            border: 'none',
-            borderRadius: 999,
-            fontFamily: sans,
-            fontSize: 13,
-            fontWeight: 500,
+            border: '4px solid #221E18',
+            boxShadow: '4px 4px 0 0 #B8862F',
+            borderRadius: 0,
+            fontFamily: pixel,
+            fontSize: 11,
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
             cursor: 'pointer',
-            boxShadow: '0 4px 12px rgba(34,30,24,0.18)',
-            letterSpacing: 0.3,
+            transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
           }}
         >
-          Feedback
+          ▸ FEEDBACK
         </button>
       )}
 
@@ -92,6 +100,7 @@ export default function FeedbackButton() {
         <div
           role="dialog"
           aria-label="Feedback form"
+          className="pixel-form"
           style={{
             position: 'fixed',
             bottom: 18,
@@ -100,9 +109,9 @@ export default function FeedbackButton() {
             width: 320,
             maxWidth: 'calc(100vw - 36px)',
             background: '#FFFCF4',
-            border: '1px solid #D6CDB6',
-            borderRadius: 12,
-            boxShadow: '0 12px 32px rgba(34,30,24,0.18)',
+            border: '4px solid #221E18',
+            boxShadow: '5px 5px 0 0 #B8862F',
+            borderRadius: 0,
             padding: '16px 18px',
             fontFamily: sans,
           }}
@@ -111,14 +120,16 @@ export default function FeedbackButton() {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginBottom: 10,
+            marginBottom: 12,
           }}>
             <strong style={{
-              fontSize: 11, fontWeight: 600,
-              color: '#8C6520', textTransform: 'uppercase',
-              letterSpacing: '0.16em',
+              fontFamily: pixel,
+              fontSize: 11,
+              color: '#8C6520',
+              textTransform: 'uppercase',
+              letterSpacing: '0.18em',
             }}>
-              Send feedback
+              ▸ SEND FEEDBACK
             </strong>
             <button
               type="button"
@@ -126,22 +137,31 @@ export default function FeedbackButton() {
               aria-label="Close"
               style={{
                 background: 'none', border: 'none', cursor: 'pointer',
-                fontSize: 18, color: '#8C6520', padding: '0 4px', lineHeight: 1,
+                fontFamily: pixel,
+                fontSize: 14, color: '#8C6520',
+                padding: '0 4px', lineHeight: 1,
               }}
             >
-              ×
+              X
             </button>
           </div>
           {sent ? (
             <p style={{
-              margin: 0, fontFamily: 'Cormorant Garamond, Georgia, serif',
-              fontStyle: 'italic', fontSize: 15, color: '#2F5D5C',
+              margin: 0,
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: 15,
+              color: '#2F5D5C',
               lineHeight: 1.5,
+              padding: '8px 0',
             }}>
               Thank you. Read every word.
             </p>
           ) : (
             <>
+              {/* The pixel-form wrapper above auto-applies chunky cream
+                  input chrome via globals.css — no inline border / fonts
+                  needed here beyond width + min-height. */}
               <textarea
                 placeholder="What's broken, what's confusing, what worked, what didn't?"
                 value={text}
@@ -150,52 +170,41 @@ export default function FeedbackButton() {
                 maxLength={4000}
                 style={{
                   width: '100%',
-                  padding: '8px 10px',
-                  fontFamily: 'Cormorant Garamond, Georgia, serif',
-                  fontSize: 14,
-                  lineHeight: 1.5,
-                  border: '1px solid #EBE3CA',
-                  borderRadius: 6,
-                  background: '#FAF6EC',
-                  color: '#221E18',
+                  minHeight: 90,
                   resize: 'vertical',
-                  minHeight: 80,
                   boxSizing: 'border-box',
-                  outline: 'none',
                 }}
               />
               <div style={{
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                marginTop: 8,
-                fontSize: 11,
+                marginTop: 10,
+                fontFamily: pixel,
+                fontSize: 10,
                 color: '#8C6520',
+                letterSpacing: 0.4,
+                textTransform: 'uppercase',
               }}>
                 <span>{text.length} / 4000</span>
                 <button
-                  type="button"
+                  type="submit"
                   onClick={submit}
                   disabled={!text.trim() || busy}
-                  style={{
-                    padding: '7px 14px',
-                    background: text.trim() && !busy ? '#221E18' : '#A39880',
-                    color: '#FAF6EC',
-                    border: 'none',
-                    borderRadius: 6,
-                    fontFamily: sans,
-                    fontSize: 13,
-                    fontWeight: 500,
-                    cursor: text.trim() && !busy ? 'pointer' : 'not-allowed',
-                    letterSpacing: 0.3,
-                  }}
                 >
                   {busy ? 'Sending…' : 'Send'}
                 </button>
               </div>
               {error && (
                 <p style={{
-                  margin: '8px 0 0', fontSize: 12, color: '#7A2E2E',
+                  margin: '12px 0 0',
+                  fontFamily: sans,
+                  fontSize: 12,
+                  color: '#7A2E2E',
+                  background: 'rgba(122, 46, 46, 0.08)',
+                  border: '2px solid #7A2E2E',
+                  borderRadius: 0,
+                  padding: '6px 10px',
                 }}>
                   {error}
                 </p>

@@ -68,6 +68,7 @@ export default function PlanPicker({ locale = 'en' }: { locale?: Locale }) {
               type="button"
               onClick={() => pick(key)}
               disabled={!!loading}
+              className="pixel-press"
               style={{
                 fontFamily: pixel,
                 fontSize: 13,

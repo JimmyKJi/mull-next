@@ -678,11 +678,12 @@ export default async function AccountPage() {
             </div>
             <div style={{ marginBottom: 24 }} />
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-              <Link href="/" style={pixelActionLink('#221E18', '#FAF6EC', '#B8862F')}>
+              <Link href="/" className="pixel-press" style={pixelActionLink('#221E18', '#FAF6EC', '#B8862F')}>
                 {t('account.take_it_again', locale).toUpperCase()}
               </Link>
               <Link
                 href="/dilemma"
+                className="pixel-press"
                 style={
                   respondedToday
                     ? pixelActionLink('#FFFCF4', '#4A4338', '#D6CDB6')
@@ -691,7 +692,7 @@ export default async function AccountPage() {
               >
                 {(respondedToday ? t('account.todays_dilemma_answered', locale) : t('account.todays_dilemma_arrow', locale)).toUpperCase()}
               </Link>
-              <Link href="/diary" style={pixelActionLink('#FFFCF4', '#2F5D5C', '#2F5D5C')}>
+              <Link href="/diary" className="pixel-press" style={pixelActionLink('#FFFCF4', '#2F5D5C', '#2F5D5C')}>
                 {t('account.write_diary', locale).toUpperCase()}
               </Link>
             </div>
@@ -721,7 +722,7 @@ export default async function AccountPage() {
             }}>
               {t('account.no_quiz_yet', locale)}
             </p>
-            <Link href="/" style={pixelActionLink('#B8862F', '#1A1612', '#221E18')}>
+            <Link href="/" className="pixel-press" style={pixelActionLink('#B8862F', '#1A1612', '#221E18')}>
               {t('account.take_quiz_arrow', locale).toUpperCase()}
             </Link>
           </div>
@@ -1058,7 +1059,7 @@ function FirstStepCard({
   accent: string; title: string; body: string; cta: string; href: string; primary?: boolean;
 }) {
   return (
-    <Link href={href} style={{
+    <Link href={href} className="pixel-press" style={{
       display: 'block',
       padding: '20px 22px',
       background: primary ? '#F8EDC8' : '#FFFCF4',

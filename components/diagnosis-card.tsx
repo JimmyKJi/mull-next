@@ -113,7 +113,7 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel }: Diagnosi
                     borderRadius: 0,
                     transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
                   }}
-                  className="diagnosis-kindred-card"
+                  className="pixel-press"
                 >
                   <div style={{
                     display: 'flex',

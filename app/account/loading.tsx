@@ -1,59 +1,54 @@
 // Loading state for /account. Account page does several Supabase reads
 // (quiz attempts, dilemma responses, diary entries) so first paint can lag
 // noticeably on a cold connection.
+//
+// Pixel chrome: each shimmer block is a chunky pixel rectangle (3px
+// ink border, no border-radius) so the skeleton speaks the same
+// visual language as the resolved page.
 
-const serif = "'Cormorant Garamond', Georgia, serif";
-
-const shimmer: React.CSSProperties = {
-  background: 'linear-gradient(90deg, #F5EFDC 0%, #FBF6E8 50%, #F5EFDC 100%)',
-  backgroundSize: '200% 100%',
-  animation: 'mull-shimmer 1.4s ease-in-out infinite',
-  borderRadius: 8,
-};
+const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
 export default function Loading() {
   return (
     <main style={{ maxWidth: 760, margin: '60px auto', padding: '0 24px' }}>
-      <style>{`
-        @keyframes mull-shimmer {
-          0%   { background-position: 200% 0; }
-          100% { background-position: -200% 0; }
-        }
-      `}</style>
-
       <header style={{
         display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'baseline',
-        marginBottom: 36,
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        marginBottom: 28,
         flexWrap: 'wrap',
-        gap: 16,
+        gap: 12,
       }}>
-        <div style={{ fontFamily: serif, fontSize: 28, fontWeight: 500, color: '#221E18' }}>
-          Mull<span style={{ color: '#B8862F' }}>.</span>
-        </div>
-        <div style={{ display: 'flex', gap: 12 }}>
-          <div style={{ ...shimmer, width: 90, height: 28 }} />
-          <div style={{ ...shimmer, width: 80, height: 36, borderRadius: 999 }} />
-        </div>
+        <div className="pixel-shimmer" style={{ width: 90, height: 28 }} />
+        <div className="pixel-shimmer" style={{ width: 80, height: 36 }} />
       </header>
 
-      <div style={{ ...shimmer, width: '40%', height: 44, marginBottom: 12 }} />
-      <div style={{ ...shimmer, width: '60%', height: 18, marginBottom: 36 }} />
+      {/* Eyebrow caret + title shimmer */}
+      <div style={{
+        fontFamily: pixel, fontSize: 11,
+        color: '#8C6520', textTransform: 'uppercase',
+        letterSpacing: '0.18em', marginBottom: 14,
+      }}>
+        ▸ LOADING…
+      </div>
+      <div className="pixel-shimmer" style={{ width: '40%', height: 36, marginBottom: 16 }} />
+      <div className="pixel-shimmer" style={{ width: '60%', height: 18, marginBottom: 36 }} />
 
+      {/* Stat row */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-        gap: 12,
-        marginBottom: 44,
+        gap: 14,
+        marginBottom: 36,
       }}>
         {[0, 1, 2, 3].map(i => (
-          <div key={i} style={{ ...shimmer, height: 80 }} />
+          <div key={i} className="pixel-shimmer" style={{ height: 84 }} />
         ))}
       </div>
 
-      <div style={{ ...shimmer, height: 240, marginBottom: 24 }} />
-      <div style={{ ...shimmer, height: 80 }} />
+      {/* Latest result block + map */}
+      <div className="pixel-shimmer" style={{ height: 220, marginBottom: 24 }} />
+      <div className="pixel-shimmer" style={{ height: 80 }} />
     </main>
   );
 }

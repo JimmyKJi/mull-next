@@ -122,13 +122,14 @@ export default function ReferralCard({ initialCode = null, initialCount = 0 }: P
         <button
           type="button"
           onClick={copy}
+          className="pixel-press"
           style={{
             padding: '10px 18px',
             background: copied ? '#2F5D5C' : '#221E18',
             color: '#FAF6EC',
             border: '3px solid #221E18',
             borderRadius: 0,
-            boxShadow: copied ? '3px 3px 0 0 #B8862F' : '3px 3px 0 0 #B8862F',
+            boxShadow: '3px 3px 0 0 #B8862F',
             fontFamily: pixel,
             fontSize: 12,
             letterSpacing: '0.08em',

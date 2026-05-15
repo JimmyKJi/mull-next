@@ -94,7 +94,7 @@ export default async function DryRunCheckoutPage({
           {t('billing.dryrun_body', locale)}
         </p>
 
-        <Link href="/billing" style={{
+        <Link href="/billing" className="pixel-press" style={{
           display: 'inline-block',
           padding: '12px 22px',
           background: '#221E18',
