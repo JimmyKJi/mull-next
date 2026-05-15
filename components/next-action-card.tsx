@@ -9,11 +9,15 @@
 //
 // Static / server component — takes pre-computed flags from the
 // /account page so we don't double-fetch.
+//
+// v3 pixel chrome: chunky 4px ink border + accent-colored hard
+// shadow that matches the branch's accent color. The CTA is a
+// pixel button with stepped hover.
 
 import Link from 'next/link';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
-const sans = "'Inter', system-ui, sans-serif";
+const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
 type Props = {
   quizCount: number;
@@ -38,40 +42,40 @@ export default function NextActionCard({
   let accent: string;
 
   if (!respondedToday) {
-    eyebrow = "Today's prompt";
+    eyebrow = "TODAY'S PROMPT";
     title = "Today's dilemma is waiting.";
     body = "One short philosophical question. Your answer adds a small shift to your map.";
-    cta = "Answer today's →";
+    cta = "ANSWER TODAY'S →";
     href = '/dilemma';
     accent = '#B8862F';
   } else if (streak >= 7 && hasShareable && topArchetypeKey) {
-    eyebrow = `${streak}-day streak`;
+    eyebrow = `${streak}-DAY STREAK`;
     title = "You've kept the practice for a week.";
     body = "Worth marking. Drop a screenshot to your story so a friend might find their map too.";
-    cta = 'Get your share card →';
+    cta = 'GET YOUR SHARE CARD →';
     href = `/share/${topArchetypeKey}`;
     accent = '#2F5D5C';
   } else if (streak >= 3) {
-    eyebrow = `${streak}-day streak`;
+    eyebrow = `${streak}-DAY STREAK`;
     title = 'Today is in. Try a different angle.';
     body = 'A diary entry or a philosophical exercise lets you write longer-form — they shift the map differently.';
-    cta = 'Open the diary →';
+    cta = 'OPEN THE DIARY →';
     href = '/diary';
     accent = '#7A4A2E';
   } else if (streak >= 1) {
-    eyebrow = `Day ${streak}`;
+    eyebrow = `DAY ${streak}`;
     title = 'Today is in. Come back tomorrow.';
     body = 'Two days in a row turns this into a habit. The map shifts when you keep showing up.';
-    cta = 'See how it shifted →';
+    cta = 'SEE HOW IT SHIFTED →';
     href = '/account#progression';
     accent = '#2F5D5C';
   } else {
     // respondedToday && streak === 0 — shouldn't normally happen, but
     // be defensive.
-    eyebrow = "Today's prompt";
+    eyebrow = "TODAY'S PROMPT";
     title = 'Nicely done.';
     body = 'Your response is logged. The shift is small but real — see it on your map below.';
-    cta = 'Scroll to map →';
+    cta = 'SCROLL TO MAP →';
     href = '/account#map';
     accent = '#2F5D5C';
   }
@@ -80,9 +84,9 @@ export default function NextActionCard({
     <section style={{
       padding: '20px 24px',
       background: '#FFFCF4',
-      border: '1px solid #EBE3CA',
-      borderLeft: `3px solid ${accent}`,
-      borderRadius: 10,
+      border: '4px solid #221E18',
+      boxShadow: `5px 5px 0 0 ${accent}`,
+      borderRadius: 0,
       marginBottom: 28,
       display: 'flex',
       gap: 18,
@@ -91,15 +95,14 @@ export default function NextActionCard({
     }}>
       <div style={{ flex: '1 1 320px', minWidth: 0 }}>
         <div style={{
-          fontFamily: sans,
+          fontFamily: pixel,
           fontSize: 11,
-          fontWeight: 600,
           color: accent,
           textTransform: 'uppercase',
           letterSpacing: '0.18em',
-          marginBottom: 6,
+          marginBottom: 8,
         }}>
-          {eyebrow}
+          ▸ {eyebrow}
         </div>
         <h2 style={{
           fontFamily: serif,
@@ -126,16 +129,18 @@ export default function NextActionCard({
       <Link
         href={href}
         style={{
-          padding: '11px 20px',
+          padding: '12px 20px',
           background: '#221E18',
           color: '#FAF6EC',
-          borderRadius: 8,
-          fontFamily: sans,
-          fontSize: 13.5,
-          fontWeight: 500,
+          border: '4px solid #221E18',
+          borderRadius: 0,
+          boxShadow: `4px 4px 0 0 ${accent}`,
+          fontFamily: pixel,
+          fontSize: 12,
+          letterSpacing: '0.08em',
           textDecoration: 'none',
-          letterSpacing: 0.4,
           flexShrink: 0,
+          transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
         }}
       >
         {cta}

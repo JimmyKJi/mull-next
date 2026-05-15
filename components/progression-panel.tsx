@@ -4,6 +4,11 @@
 // Server component: takes a UserStats snapshot and renders. The snapshot
 // is computed once per page render in the parent (lib/profile-progression
 // .computeUserStats), so this component does no I/O.
+//
+// v3 pixel chrome: badges + milestones are tiny dialog-windows with
+// chunky 3px ink borders + hard amber drop-shadows. Earned items get
+// a brighter shadow color; pending items use the muted line color.
+// The progress bar is a chunky 6px segmented bar (no smooth transition).
 
 import { MILESTONES, MILESTONE_TRACK_META, type MilestoneTrack } from '@/lib/milestones';
 import { BADGES, partitionBadges } from '@/lib/badges';
@@ -12,6 +17,7 @@ import { t, type Locale } from '@/lib/translations';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
+const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
 export default function ProgressionPanel({
   stats,
@@ -47,15 +53,17 @@ export default function ProgressionPanel({
     <section style={{ marginTop: 48, marginBottom: 48 }}>
       <header style={{ marginBottom: 22 }}>
         <h2 style={{
-          fontFamily: serif, fontSize: 28, fontWeight: 500,
-          margin: 0, color: '#221E18', letterSpacing: '-0.3px',
+          fontFamily: pixel, fontSize: 22,
+          margin: 0, color: '#221E18', letterSpacing: '0.06em',
+          textTransform: 'uppercase',
+          textShadow: '3px 3px 0 #B8862F',
         }}>
-          {t('progression.title', locale)}
+          ▸ {t('progression.title', locale).toUpperCase()}
         </h2>
         <p style={{
           fontFamily: serif, fontStyle: 'italic',
           fontSize: 15, color: '#4A4338',
-          margin: '6px 0 0', lineHeight: 1.55,
+          margin: '12px 0 0', lineHeight: 1.55,
         }}>
           {t('progression.subtitle', locale, {
             earned: earnedMilestones,
@@ -68,25 +76,25 @@ export default function ProgressionPanel({
 
       {/* Earned badges */}
       <div style={{ marginBottom: 32 }}>
-        <h3 style={subhead}>{t('progression.badges_earned', locale)}</h3>
+        <h3 style={subhead}>▸ {t('progression.badges_earned', locale).toUpperCase()}</h3>
         {earned.length > 0 ? (
           <ul style={{
             listStyle: 'none', padding: 0, margin: 0,
-            display: 'grid', gap: 10,
+            display: 'grid', gap: 12,
             gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
           }}>
             {earned.map(b => (
               <li key={b.key} style={{
                 display: 'flex', alignItems: 'flex-start', gap: 12,
                 padding: '12px 14px',
-                background: '#FBF6E8',
-                border: '1px solid #E2D8B6',
-                borderLeft: '3px solid #B8862F',
-                borderRadius: 8,
+                background: '#F8EDC8',
+                border: '3px solid #221E18',
+                boxShadow: '3px 3px 0 0 #B8862F',
+                borderRadius: 0,
               }}>
                 <span aria-hidden style={{
-                  fontFamily: serif, fontSize: 24,
-                  color: '#B8862F', lineHeight: 1, flexShrink: 0,
+                  fontFamily: serif, fontSize: 26,
+                  color: '#8C6520', lineHeight: 1, flexShrink: 0,
                   minWidth: 28, textAlign: 'center',
                 }}>
                   {b.glyph}
@@ -114,15 +122,16 @@ export default function ProgressionPanel({
         )}
 
         {previewUnearned.length > 0 && (
-          <details style={{ marginTop: 14 }}>
+          <details style={{ marginTop: 16 }}>
             <summary style={{
-              cursor: 'pointer', fontFamily: sans, fontSize: 13,
-              color: '#8C6520', letterSpacing: 0.2,
+              cursor: 'pointer', fontFamily: pixel, fontSize: 12,
+              color: '#8C6520', letterSpacing: 0.4,
+              textTransform: 'uppercase',
             }}>
               {t('progression.show_unearned', locale, { n: unearned.length })}
             </summary>
             <ul style={{
-              listStyle: 'none', padding: 0, margin: '10px 0 0',
+              listStyle: 'none', padding: 0, margin: '12px 0 0',
               display: 'grid', gap: 8,
               gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
               opacity: 0.7,
@@ -132,8 +141,8 @@ export default function ProgressionPanel({
                   display: 'flex', alignItems: 'flex-start', gap: 12,
                   padding: '10px 14px',
                   background: '#FFFCF4',
-                  border: '1px dashed #D6CDB6',
-                  borderRadius: 8,
+                  border: '2px dashed #8C6520',
+                  borderRadius: 0,
                 }}>
                   <span aria-hidden style={{
                     fontFamily: serif, fontSize: 22,
@@ -166,8 +175,8 @@ export default function ProgressionPanel({
 
       {/* Milestones grouped by track */}
       <div>
-        <h3 style={subhead}>{t('progression.milestones', locale)}</h3>
-        <div style={{ display: 'grid', gap: 20 }}>
+        <h3 style={subhead}>▸ {t('progression.milestones', locale).toUpperCase()}</h3>
+        <div style={{ display: 'grid', gap: 24 }}>
           {(Object.keys(byTrack) as MilestoneTrack[]).map(track => {
             const meta = MILESTONE_TRACK_META[track];
             const items = byTrack[track];
@@ -185,38 +194,40 @@ export default function ProgressionPanel({
                     {meta.label}
                   </h4>
                   <span style={{
-                    fontFamily: sans, fontSize: 11, fontWeight: 600,
+                    fontFamily: pixel, fontSize: 11,
                     color: meta.accent, textTransform: 'uppercase',
-                    letterSpacing: '0.14em',
+                    letterSpacing: 0.4,
+                    fontVariantNumeric: 'tabular-nums',
                   }}>
                     {items.filter(m => compute(m).done).length} / {items.length}
                   </span>
                 </div>
                 <p style={{
                   fontFamily: sans, fontSize: 13, color: '#8C6520',
-                  margin: '0 0 10px', opacity: 0.85, lineHeight: 1.5,
+                  margin: '0 0 12px', opacity: 0.85, lineHeight: 1.5,
                 }}>
                   {meta.blurb}
                 </p>
                 <ul style={{
                   listStyle: 'none', padding: 0, margin: 0,
-                  display: 'grid', gap: 8,
+                  display: 'grid', gap: 10,
                 }}>
                   {items.map(m => {
                     const { current, ratio, done } = compute(m);
                     return (
                       <li key={m.key} style={{
-                        padding: '10px 14px',
-                        background: done ? '#FBF6E8' : '#FFFCF4',
-                        border: '1px solid',
-                        borderColor: done ? '#E2D8B6' : '#EBE3CA',
-                        borderLeft: `3px solid ${done ? meta.accent : '#D6CDB6'}`,
-                        borderRadius: 6,
+                        padding: '12px 14px',
+                        background: done ? '#F8EDC8' : '#FFFCF4',
+                        border: '3px solid #221E18',
+                        boxShadow: done
+                          ? `3px 3px 0 0 ${meta.accent}`
+                          : '3px 3px 0 0 #D6CDB6',
+                        borderRadius: 0,
                       }}>
                         <div style={{
                           display: 'flex', justifyContent: 'space-between',
                           alignItems: 'baseline', gap: 12,
-                          marginBottom: 4, flexWrap: 'wrap',
+                          marginBottom: 6, flexWrap: 'wrap',
                         }}>
                           <span style={{
                             fontFamily: serif, fontSize: 15.5,
@@ -225,9 +236,10 @@ export default function ProgressionPanel({
                             {done ? '✓ ' : ''}{m.name}
                           </span>
                           <span style={{
-                            fontFamily: sans, fontSize: 12,
+                            fontFamily: pixel, fontSize: 11,
                             color: done ? meta.accent : '#8C6520',
                             fontVariantNumeric: 'tabular-nums',
+                            letterSpacing: 0.4,
                           }}>
                             {current} / {m.target}
                           </span>
@@ -235,20 +247,21 @@ export default function ProgressionPanel({
                         <p style={{
                           fontFamily: sans, fontSize: 13,
                           color: '#4A4338', lineHeight: 1.5,
-                          margin: '0 0 8px',
+                          margin: '0 0 10px',
                         }}>
                           {m.description}
                         </p>
-                        {/* Progress bar */}
+                        {/* Pixel progress bar — segmented look via stepped width */}
                         <div style={{
-                          height: 4, background: '#EBE3CA',
-                          borderRadius: 2, overflow: 'hidden',
+                          height: 8, background: '#FAF6EC',
+                          border: '2px solid #221E18',
+                          borderRadius: 0, overflow: 'hidden',
                         }}>
                           <div style={{
                             height: '100%',
                             width: `${ratio * 100}%`,
                             background: meta.accent,
-                            transition: 'width 0.3s ease',
+                            transition: 'width 0.4s steps(8, end)',
                           }} />
                         </div>
                       </li>
@@ -265,15 +278,15 @@ export default function ProgressionPanel({
 }
 
 const subhead: React.CSSProperties = {
-  fontFamily: sans, fontSize: 11, fontWeight: 600,
+  fontFamily: pixel, fontSize: 12,
   color: '#8C6520', textTransform: 'uppercase',
-  letterSpacing: '0.18em', margin: '0 0 12px',
+  letterSpacing: 0.4, margin: '0 0 14px',
 };
 
 const emptyState: React.CSSProperties = {
   fontFamily: serif, fontStyle: 'italic',
   fontSize: 14, color: '#8C6520',
   padding: '12px 16px', background: '#FFFCF4',
-  border: '1px dashed #D6CDB6', borderRadius: 6,
+  border: '2px dashed #8C6520', borderRadius: 0,
   margin: 0,
 };
