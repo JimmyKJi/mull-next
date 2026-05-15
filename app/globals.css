@@ -72,11 +72,14 @@ body {
 }
 
 /* Visible focus ring for keyboard navigation. Uses :focus-visible so it
-   doesn't show on mouse clicks (which feels noisy) but does show on Tab. */
+   doesn't show on mouse clicks (which feels noisy) but does show on Tab.
+   Square ring (border-radius: 0) so it matches the pixel chrome of the
+   element it's framing — a rounded ring around a square pixel button
+   reads as a leftover from the editorial era. */
 :focus-visible {
   outline: 2px solid #B8862F;
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: 0;
 }
 button:focus-visible,
 a:focus-visible,
@@ -85,6 +88,7 @@ textarea:focus-visible,
 select:focus-visible {
   outline: 2px solid #B8862F;
   outline-offset: 2px;
+  border-radius: 0;
 }
 
 /* Respect users who've asked the OS to reduce motion. */
@@ -206,6 +210,24 @@ select:focus-visible {
 .pixel-press[aria-disabled="true"] {
   cursor: not-allowed;
   transform: none;
+}
+
+/* Pixel "keycap" — chunky 8-bit keyboard-shortcut chip. Use inside
+   shortcut hints ("press ⌘ + ↵ to save") and the Cmd-K trigger.
+   Uses the pixel-display variable directly so callers don't have to
+   repeat fontFamily inline. */
+.pixel-kbd {
+  display: inline-block;
+  padding: 1px 6px;
+  background: #F8EDC8;
+  color: #221E18;
+  border: 2px solid #221E18;
+  border-radius: 0;
+  font-family: var(--font-pixel-display, 'Courier New', monospace);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  vertical-align: 1px;
 }
 
 /* Pixel shimmer — used by Suspense-style loading skeletons. Same

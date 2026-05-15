@@ -116,10 +116,7 @@ export function SiteNav() {
               aria-label="Open command palette"
             >
               <span>Search</span>
-              <kbd
-                className="border border-[#221E18]/40 bg-[#EBE3CA] px-1 py-0.5 text-[10px] leading-none text-[#8C6520]"
-                style={{ fontFamily: "var(--font-pixel-display)" }}
-              >
+              <kbd className="pixel-kbd">
                 {isMac ? "⌘K" : "^K"}
               </kbd>
             </button>
