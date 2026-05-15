@@ -6,6 +6,7 @@ import DuelForm from './duel-form';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
+import { PixelPageHeader } from '@/components/pixel-window';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
@@ -25,78 +26,35 @@ export default async function DuelPage() {
   const hasQuizzed = (quizCount ?? 0) > 0;
 
   return (
-    <main style={{ maxWidth: 820, margin: '0 auto', padding: '60px 24px 120px' }}>
-      <header style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'baseline',
-        marginBottom: 36,
-        gap: 16,
-        flexWrap: 'wrap',
-      }}>
-        <Link href="/" style={{
-          fontFamily: serif,
-          fontSize: 28,
-          fontWeight: 500,
-          color: '#221E18',
-          textDecoration: 'none',
-          letterSpacing: '-0.5px'
-        }}>
-          Mull<span style={{ color: '#B8862F' }}>.</span>
+    <main className="mx-auto max-w-[860px] px-6 pb-32 pt-10 sm:px-10">
+      <div className="mb-6 flex items-center justify-between gap-4">
+        <Link
+          href="/debate"
+          className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"
+        >
+          ← {t('nav.two_thinker_debate', locale)}
         </Link>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <LanguageSwitcher initial={locale} />
-          <Link href="/debate" style={{ fontFamily: sans, fontSize: 13, color: '#4A4338', textDecoration: 'none' }}>
-            {t('nav.two_thinker_debate', locale)}
-          </Link>
-        </div>
-      </header>
-
-      <div style={{
-        fontFamily: sans,
-        fontSize: 11,
-        fontWeight: 600,
-        color: '#8C6520',
-        textTransform: 'uppercase',
-        letterSpacing: '0.18em',
-        marginBottom: 14,
-      }}>
-        {t('duel.eyebrow', locale)}
+        <LanguageSwitcher initial={locale} />
       </div>
-      <h1 style={{
-        fontFamily: serif,
-        fontSize: 44,
-        fontWeight: 500,
-        margin: '0 0 12px',
-        letterSpacing: '-0.01em',
-        lineHeight: 1.05,
-      }}>
-        {t('duel.title_html', locale).split('{em_you}').map((part, i, arr) => (
-          <span key={i}>{part}{i < arr.length - 1 && <em style={{ color: '#8C6520' }}>{t('duel.you_em', locale)}</em>}</span>
-        ))}
-      </h1>
-      <p style={{
-        fontFamily: serif,
-        fontStyle: 'italic',
-        fontSize: 18,
-        color: '#4A4338',
-        marginBottom: 14,
-        lineHeight: 1.55,
-      }}>
-        {t('duel.subtitle', locale)}
-      </p>
-      <div style={{
-        padding: '12px 16px',
-        background: '#F5EFDC',
-        borderLeft: '3px solid #B8862F',
-        borderRadius: 6,
-        fontFamily: sans,
-        fontSize: 12.5,
-        color: '#4A4338',
-        marginBottom: 32,
-        lineHeight: 1.55,
-      }}>
-        <strong style={{ color: '#221E18' }}>{t('duel.mull_plus_notice', locale)}</strong> {t('duel.mull_plus_body', locale)}
+
+      <PixelPageHeader
+        eyebrow={`▶ ${t('duel.eyebrow', locale).toUpperCase()}`}
+        title="DEBATE YOURSELF"
+        subtitle={
+          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-prose)' }}>
+            {t('duel.subtitle', locale)}
+          </p>
+        }
+      />
+
+      <div
+        className="-mt-4 mb-8 border-l-4 px-4 py-2.5 text-[13px] leading-[1.6] text-[#4A4338]"
+        style={{ borderColor: '#B8862F', background: '#F5EFDC' }}
+      >
+        <strong className="text-[#221E18]">
+          {t('duel.mull_plus_notice', locale)}
+        </strong>{' '}
+        {t('duel.mull_plus_body', locale)}
       </div>
 
       {!hasQuizzed ? (

@@ -50,57 +50,44 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
   const isAuthed = !!user;
 
   return (
-    <main style={{ maxWidth: 720, margin: '60px auto', padding: '0 24px 120px' }}>
-      <header style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 36,
-        flexWrap: 'wrap',
-        gap: 12,
-      }}>
-        <Link href="/exercises" style={{
-          fontFamily: sans,
-          fontSize: 13,
-          color: '#4A4338',
-          textDecoration: 'none',
-        }}>
-          {t('exercises.all', locale)}
+    <main className="mx-auto max-w-[820px] px-6 pb-32 pt-10 sm:px-10">
+      <div className="mb-6 flex items-center justify-between gap-4">
+        <Link
+          href="/exercises"
+          className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"
+        >
+          ← {t('exercises.all', locale)}
         </Link>
         <LanguageSwitcher initial={locale} />
-      </header>
-
-      <div style={{
-        fontFamily: sans,
-        fontSize: 11,
-        fontWeight: 600,
-        color: '#8C6520',
-        textTransform: 'uppercase',
-        letterSpacing: '0.18em',
-        marginBottom: 12,
-      }}>
-        {ex.tradition} · {ex.duration}
       </div>
-      <h1 style={{
-        fontFamily: serif,
-        fontSize: 44,
-        fontWeight: 500,
-        margin: '0 0 12px',
-        letterSpacing: '-0.5px',
-        lineHeight: 1.05,
-      }}>
-        {ex.name}
+
+      <div
+        className="flex flex-wrap items-center gap-3 text-[10px] tracking-[0.22em] text-[#8C6520]"
+        style={{ fontFamily: 'var(--font-pixel-display)' }}
+      >
+        <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
+        <span>▶ {ex.tradition.toUpperCase()}</span>
+        <span className="opacity-60">·</span>
+        <span className="text-[#221E18]">{ex.duration.toUpperCase()}</span>
+      </div>
+
+      <h1
+        className="mt-5 pr-2 text-[26px] leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[36px] md:text-[44px]"
+        style={{ fontFamily: 'var(--font-pixel-display)' }}
+      >
+        <span style={{ textShadow: '3px 3px 0 #B8862F' }}>
+          {ex.name.toUpperCase()}
+        </span>
       </h1>
-      <p style={{
-        fontFamily: serif,
-        fontStyle: 'italic',
-        fontSize: 19,
-        color: '#4A4338',
-        margin: '0 0 36px',
-        lineHeight: 1.55,
-      }}>
+
+      <p
+        className="mt-6 text-[18px] italic leading-[1.55] text-[#4A4338]"
+        style={{ fontFamily: 'var(--font-prose)' }}
+      >
         {ex.summary}
       </p>
+
+      <div className="mt-8" />
 
       <Section title={t('exercises.about', locale)}>
         {locale !== 'en' && (

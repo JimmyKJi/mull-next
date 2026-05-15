@@ -14,6 +14,7 @@ import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { PixelPageHeader } from '@/components/pixel-window';
 
 const LAUNCH_DATE = '2026-01-01';
 const PAGE_SIZE = 30;
@@ -88,52 +89,27 @@ export default async function DilemmaArchivePage({
   const dateFmt = locale === 'en' ? 'en-GB' : locale;
 
   return (
-    <main style={{ maxWidth: 760, margin: '0 auto', padding: '60px 24px 120px' }}>
-      <header style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'baseline',
-        marginBottom: 36,
-        gap: 16,
-        flexWrap: 'wrap'
-      }}>
-        <Link href="/" style={{
-          fontFamily: serif, fontSize: 28, fontWeight: 500,
-          color: '#221E18', textDecoration: 'none', letterSpacing: '-0.5px'
-        }}>
-          Mull<span style={{ color: '#B8862F' }}>.</span>
+    <main className="mx-auto max-w-[860px] px-6 pb-32 pt-10 sm:px-10">
+      <div className="mb-6 flex items-center justify-end gap-3">
+        <LanguageSwitcher initial={locale} />
+        <Link
+          href="/dilemma"
+          className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"
+        >
+          {t('archive.todays_dilemma', locale)} →
         </Link>
-        <nav style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-          <LanguageSwitcher initial={locale} />
-          <Link href="/dilemma" style={{
-            fontFamily: sans, fontSize: 13, color: '#4A4338',
-            textDecoration: 'none', letterSpacing: 0.3,
-          }}>
-            {t('archive.todays_dilemma', locale)}
-          </Link>
-        </nav>
-      </header>
-
-      <div style={{
-        fontFamily: sans, fontSize: 11, fontWeight: 600, color: '#8C6520',
-        textTransform: 'uppercase', letterSpacing: '0.18em', marginBottom: 14,
-      }}>
-        {t('archive.eyebrow', locale)}
       </div>
 
-      <h1 style={{
-        fontFamily: serif, fontSize: 38, fontWeight: 500,
-        margin: '0 0 16px', letterSpacing: '-0.01em', lineHeight: 1.2,
-      }}>
-        {t('archive.title', locale)}
-      </h1>
+      <PixelPageHeader
+        eyebrow={`▶ ${t('archive.eyebrow', locale).toUpperCase()}`}
+        title="DILEMMA ARCHIVE"
+        subtitle={
+          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-prose)' }}>
+            {t('archive.subtitle', locale)}
+          </p>
+        }
+      />
 
-      <p style={{
-        fontFamily: serif, fontStyle: 'italic',
-        fontSize: 17, color: '#4A4338', margin: '0 0 32px', lineHeight: 1.55,
-      }}>
-        {t('archive.subtitle', locale)}
-      </p>
 
       {!user && (
         <div style={{

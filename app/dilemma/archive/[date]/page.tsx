@@ -86,61 +86,60 @@ export default async function DilemmaArchiveDatePage({
   });
 
   return (
-    <main style={{ maxWidth: 720, margin: '0 auto', padding: '60px 24px 120px' }}>
-      <header style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'baseline',
-        marginBottom: 36,
-        gap: 16,
-        flexWrap: 'wrap'
-      }}>
-        <Link href="/" style={{
-          fontFamily: serif, fontSize: 28, fontWeight: 500,
-          color: '#221E18', textDecoration: 'none', letterSpacing: '-0.5px'
-        }}>
-          Mull<span style={{ color: '#B8862F' }}>.</span>
+    <main className="mx-auto max-w-[820px] px-6 pb-32 pt-10 sm:px-10">
+      <div className="mb-6 flex items-center justify-end gap-3">
+        <LanguageSwitcher initial={locale} />
+        <Link
+          href="/dilemma/archive"
+          className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"
+        >
+          ← {t('archive.back_to_archive', locale)}
         </Link>
-        <nav style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-          <LanguageSwitcher initial={locale} />
-          <Link href="/dilemma/archive" style={{
-            fontFamily: sans, fontSize: 13, color: '#4A4338',
-            textDecoration: 'none', letterSpacing: 0.3,
-          }}>
-            ← {t('archive.back_to_archive', locale)}
-          </Link>
-        </nav>
-      </header>
-
-      <div style={{
-        fontFamily: sans, fontSize: 11, fontWeight: 600, color: '#8C6520',
-        textTransform: 'uppercase', letterSpacing: '0.18em', marginBottom: 14,
-      }}>
-        {t('archive.past_eyebrow', locale)} · {dateLabel}
       </div>
 
-      <h1 style={{
-        fontFamily: serif, fontSize: 36, fontWeight: 500,
-        margin: '0 0 16px', letterSpacing: '-0.01em', lineHeight: 1.2,
-      }}>
-        {dilemma.prompt}
-      </h1>
+      <div
+        className="flex flex-wrap items-center gap-3 text-[10px] tracking-[0.22em] text-[#8C6520]"
+        style={{ fontFamily: 'var(--font-pixel-display)' }}
+      >
+        <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
+        <span>▶ {t('archive.past_eyebrow', locale).toUpperCase()}</span>
+        <span className="opacity-60">·</span>
+        <span className="text-[#221E18]">{dateLabel.toUpperCase()}</span>
+      </div>
 
-      {dilemma.hint && (
-        <p style={{
-          fontFamily: serif, fontStyle: 'italic',
-          fontSize: 17, color: '#4A4338', marginBottom: 32,
-        }}>
-          {dilemma.hint}
-        </p>
-      )}
+      <div
+        className="mt-7 border-4 border-[#221E18] bg-[#FFFCF4]"
+        style={{ boxShadow: '6px 6px 0 0 #8C6520' }}
+      >
+        <div
+          className="border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
+          style={{ fontFamily: 'var(--font-pixel-display)' }}
+        >
+          ▶ PAST QUESTION
+        </div>
+        <div className="px-6 py-7 sm:px-8 sm:py-9">
+          <h1
+            className="text-[24px] font-medium leading-[1.3] text-[#221E18] sm:text-[28px] md:text-[32px]"
+            style={{ fontFamily: 'var(--font-prose)' }}
+          >
+            {dilemma.prompt}
+          </h1>
+          {dilemma.hint ? (
+            <p
+              className="mt-5 border-l-4 px-4 py-2 text-[15.5px] italic leading-[1.55] text-[#4A4338]"
+              style={{ borderColor: '#B8862F', fontFamily: 'var(--font-prose)' }}
+            >
+              {dilemma.hint}
+            </p>
+          ) : null}
+        </div>
+      </div>
 
-      <DilemmaArchiveForm targetDate={date} locale={locale} />
+      <div className="mt-8">
+        <DilemmaArchiveForm targetDate={date} locale={locale} />
+      </div>
 
-      <p style={{
-        fontFamily: sans, fontSize: 12, color: '#8C6520',
-        marginTop: 48, opacity: 0.75, textAlign: 'center', letterSpacing: 0.3,
-      }}>
+      <p className="mt-12 text-center text-[12px] tracking-[0.16em] text-[#8C6520] opacity-75">
         {t('archive.past_footer_note', locale)}
       </p>
     </main>

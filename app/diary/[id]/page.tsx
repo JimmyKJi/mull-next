@@ -48,54 +48,30 @@ export default async function DiaryEntryPage({ params }: { params: Promise<{ id:
     new Date(s).toLocaleString(localeMap[locale] || 'en-GB', { dateStyle: 'long', timeStyle: 'short' });
 
   return (
-    <main style={{ maxWidth: 760, margin: '0 auto', padding: '60px 24px 120px' }}>
-      <header style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'baseline',
-        marginBottom: 36,
-        gap: 16,
-        flexWrap: 'wrap',
-      }}>
-        <Link href="/" style={{
-          fontFamily: serif,
-          fontSize: 28,
-          fontWeight: 500,
-          color: '#221E18',
-          textDecoration: 'none',
-          letterSpacing: '-0.5px'
-        }}>
-          Mull<span style={{ color: '#B8862F' }}>.</span>
+    <main className="mx-auto max-w-[820px] px-6 pb-32 pt-10 sm:px-10">
+      <div className="mb-6 flex items-center justify-between gap-4">
+        <Link
+          href="/diary"
+          className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"
+        >
+          ← {t('nav.all_entries', locale)}
         </Link>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <Link href="/diary" style={{ fontFamily: sans, fontSize: 13, color: '#4A4338', textDecoration: 'none' }}>
-            {t('nav.all_entries', locale)}
-          </Link>
-          <LanguageSwitcher initial={locale} />
-        </div>
-      </header>
+        <LanguageSwitcher initial={locale} />
+      </div>
 
-      <div style={{
-        fontFamily: sans,
-        fontSize: 11,
-        fontWeight: 600,
-        color: '#2F5D5C',
-        textTransform: 'uppercase',
-        letterSpacing: '0.18em',
-        marginBottom: 14,
-      }}>
-        {t('diary.entry_eyebrow_detail', locale, { date: fmtDate(entry.created_at) })}
+      <div
+        className="flex flex-wrap items-center gap-3 text-[10px] tracking-[0.22em] text-[#2F5D5C]"
+        style={{ fontFamily: 'var(--font-pixel-display)' }}
+      >
+        <span aria-hidden className="inline-block h-2 w-2 bg-[#2F5D5C]" />
+        ▶ {t('diary.entry_eyebrow_detail', locale, { date: fmtDate(entry.created_at) }).toUpperCase()}
       </div>
 
       {entry.title && (
-        <h1 style={{
-          fontFamily: serif,
-          fontSize: 38,
-          fontWeight: 500,
-          margin: '0 0 24px',
-          letterSpacing: '-0.01em',
-          lineHeight: 1.15,
-        }}>
+        <h1
+          className="mt-5 text-[28px] font-medium leading-[1.15] text-[#221E18] sm:text-[36px]"
+          style={{ fontFamily: 'var(--font-prose)' }}
+        >
           {entry.title}
         </h1>
       )}

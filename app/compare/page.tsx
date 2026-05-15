@@ -135,27 +135,30 @@ export default async function ComparePage({
   const themSlug = archetypeKey(them.archetype?.archetype);
 
   return (
-    <main style={{ maxWidth: 880, margin: '40px auto', padding: '0 24px 120px' }}>
-      <div style={{
-        fontFamily: sans, fontSize: 11, fontWeight: 600,
-        color: '#8C6520', textTransform: 'uppercase',
-        letterSpacing: '0.18em', marginBottom: 12,
-      }}>
-        Compare two minds
+    <main className="mx-auto max-w-[920px] px-6 pb-32 pt-10 sm:px-10">
+      <div
+        className="flex items-center gap-3 text-[10px] tracking-[0.22em] text-[#8C6520]"
+        style={{ fontFamily: 'var(--font-pixel-display)' }}
+      >
+        <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
+        ▶ COMPARE TWO MINDS
       </div>
-      <h1 style={{
-        fontFamily: serif, fontSize: 42, fontWeight: 500,
-        margin: '0 0 8px', letterSpacing: '-0.4px', lineHeight: 1.05,
-      }}>
-        {youName} <span style={{ fontStyle: 'italic', color: '#8C6520', fontSize: 28 }}>&amp;</span> {themName}
+      <h1
+        className="mt-5 pr-2 text-[24px] leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[32px] md:text-[40px]"
+        style={{ fontFamily: 'var(--font-pixel-display)' }}
+      >
+        <span style={{ textShadow: '3px 3px 0 #B8862F' }}>
+          {youName.toUpperCase()} VS {themName.toUpperCase()}
+        </span>
       </h1>
-      <p style={{
-        fontFamily: serif, fontStyle: 'italic',
-        fontSize: 17, color: '#4A4338',
-        margin: '0 0 32px', lineHeight: 1.55,
-      }}>
-        Two worldviews, sixteen dimensions. Where you converge, and where you don&rsquo;t.
+      <p
+        className="mt-5 text-[16px] italic leading-[1.55] text-[#4A4338]"
+        style={{ fontFamily: 'var(--font-prose)' }}
+      >
+        Two worldviews, sixteen dimensions. Where you converge, and where
+        you don&rsquo;t.
       </p>
+      <div className="mb-8" />
 
       {/* Side-by-side hero cards */}
       <div style={{
@@ -420,70 +423,80 @@ function DimBar({ value }: { value: number | null }) {
 
 function ComparePicker({ initialYou, initialThem }: { initialYou: string; initialThem: string }) {
   return (
-    <main style={{ maxWidth: 560, margin: '60px auto', padding: '0 24px 120px' }}>
-      <div style={{
-        fontFamily: sans, fontSize: 11, fontWeight: 600,
-        color: '#8C6520', textTransform: 'uppercase',
-        letterSpacing: '0.18em', marginBottom: 12,
-      }}>
-        Compare two minds
+    <main className="mx-auto max-w-[640px] px-6 pb-32 pt-10 sm:px-10">
+      <div
+        className="flex items-center gap-3 text-[10px] tracking-[0.22em] text-[#8C6520]"
+        style={{ fontFamily: 'var(--font-pixel-display)' }}
+      >
+        <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
+        ▶ COMPARE TWO MINDS
       </div>
-      <h1 style={{
-        fontFamily: serif, fontSize: 38, fontWeight: 500,
-        margin: '0 0 12px', letterSpacing: '-0.4px', lineHeight: 1.1,
-      }}>
-        Which two profiles?
+      <h1
+        className="mt-5 pr-2 text-[26px] leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[34px]"
+        style={{ fontFamily: 'var(--font-pixel-display)' }}
+      >
+        <span style={{ textShadow: '3px 3px 0 #B8862F' }}>WHICH TWO PROFILES?</span>
       </h1>
-      <p style={{
-        fontFamily: serif, fontStyle: 'italic',
-        fontSize: 17, color: '#4A4338',
-        margin: '0 0 28px', lineHeight: 1.55,
-      }}>
-        Enter two public-profile handles. The page lays them side by side, calls out the three biggest divergences in plain language, and shows all sixteen dimensions for both.
+      <p
+        className="mt-5 text-[16px] italic leading-[1.55] text-[#4A4338]"
+        style={{ fontFamily: 'var(--font-prose)' }}
+      >
+        Enter two public-profile handles. The page lays them side by side,
+        calls out the three biggest divergences in plain language, and shows
+        all sixteen dimensions for both.
       </p>
-      <form action="/compare" method="GET" style={{ display: 'grid', gap: 14 }}>
-        <label style={fieldLabel}>
-          <span style={fieldText}>Your handle</span>
-          <input
-            type="text"
-            name="you"
-            defaultValue={initialYou}
-            placeholder="e.g. jimmy"
-            style={inputStyle}
-            required
-          />
-        </label>
-        <label style={fieldLabel}>
-          <span style={fieldText}>Their handle</span>
-          <input
-            type="text"
-            name="them"
-            defaultValue={initialThem}
-            placeholder="e.g. alice"
-            style={inputStyle}
-            required
-          />
-        </label>
-        <button type="submit" style={{
-          marginTop: 6,
-          padding: '12px 22px',
-          background: '#221E18',
-          color: '#FAF6EC',
-          border: 'none',
-          borderRadius: 8,
-          fontFamily: sans,
-          fontSize: 14, fontWeight: 500,
-          cursor: 'pointer',
-          letterSpacing: 0.4,
-        }}>
-          Compare
-        </button>
-      </form>
-      <p style={{
-        marginTop: 22, fontFamily: sans, fontSize: 12.5,
-        color: '#8C6520', opacity: 0.85, lineHeight: 1.55,
-      }}>
-        Both users need a public profile (Account → Public profile settings → toggle on) for the comparison to work. Per-field visibility (archetype, dimensions, etc.) is respected.
+
+      <div
+        className="mt-8 border-4 border-[#221E18] bg-[#FFFCF4]"
+        style={{ boxShadow: '6px 6px 0 0 #8C6520' }}
+      >
+        <div
+          className="border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
+          style={{ fontFamily: 'var(--font-pixel-display)' }}
+        >
+          ▶ COMPARE.SYS
+        </div>
+        <form action="/compare" method="GET" className="grid gap-4 px-6 py-6 sm:px-8">
+          <label
+            className="flex flex-col gap-1.5 text-[12px] tracking-[0.18em] text-[#8C6520]"
+            style={{ fontFamily: 'var(--font-pixel-display)' }}
+          >
+            YOUR HANDLE
+            <input
+              type="text"
+              name="you"
+              defaultValue={initialYou}
+              placeholder="e.g. jimmy"
+              required
+              className="border-2 border-[#221E18] bg-[#FFFCF4] px-3 py-2.5 text-[16px] text-[#221E18] focus:bg-[#F8EDC8] focus:outline-none"
+              style={{ fontFamily: 'var(--font-prose)' }}
+            />
+          </label>
+          <label
+            className="flex flex-col gap-1.5 text-[12px] tracking-[0.18em] text-[#8C6520]"
+            style={{ fontFamily: 'var(--font-pixel-display)' }}
+          >
+            THEIR HANDLE
+            <input
+              type="text"
+              name="them"
+              defaultValue={initialThem}
+              placeholder="e.g. alice"
+              required
+              className="border-2 border-[#221E18] bg-[#FFFCF4] px-3 py-2.5 text-[16px] text-[#221E18] focus:bg-[#F8EDC8] focus:outline-none"
+              style={{ fontFamily: 'var(--font-prose)' }}
+            />
+          </label>
+          <button type="submit" className="pixel-button pixel-button--amber justify-center">
+            <span>▶ COMPARE</span>
+          </button>
+        </form>
+      </div>
+
+      <p className="mt-6 text-[12.5px] leading-[1.55] text-[#8C6520] opacity-90">
+        Both users need a public profile (Account → Public profile settings →
+        toggle on) for the comparison to work. Per-field visibility
+        (archetype, dimensions, etc.) is respected.
       </p>
     </main>
   );

@@ -124,85 +124,80 @@ export default async function DilemmaPage() {
   const shifts = existing?.vector_delta ? topShifts(existing.vector_delta) : [];
 
   return (
-    <main style={{ maxWidth: 720, margin: '0 auto', padding: '60px 24px 120px' }}>
-      <header style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'baseline',
-        marginBottom: 36,
-        gap: 16,
-        flexWrap: 'wrap'
-      }}>
-        <Link href="/" style={{
-          fontFamily: serif,
-          fontSize: 28,
-          fontWeight: 500,
-          color: '#221E18',
-          textDecoration: 'none',
-          letterSpacing: '-0.5px'
-        }}>
-          Mull<span style={{ color: '#B8862F' }}>.</span>
+    <main className="mx-auto max-w-[820px] px-6 pb-32 pt-10 sm:px-10">
+      <div className="mb-6 flex items-center justify-end gap-3">
+        <LanguageSwitcher initial={locale} />
+        <Link
+          href="/account"
+          className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"
+        >
+          {t('nav.account_arrow', locale)}
         </Link>
-        <nav style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-          <LanguageSwitcher initial={locale} />
-          <Link href="/account" style={{
-            fontFamily: sans, fontSize: 13, color: '#4A4338',
-            textDecoration: 'none', letterSpacing: 0.3,
-          }}>{t('nav.account_arrow', locale)}</Link>
-        </nav>
-      </header>
-
-      <div style={{
-        fontFamily: sans,
-        fontSize: 11,
-        fontWeight: 600,
-        color: '#8C6520',
-        textTransform: 'uppercase',
-        letterSpacing: '0.18em',
-        marginBottom: 14,
-      }}>
-        {t('dilemma.eyebrow', locale)} · {new Date(today.dateKey).toLocaleDateString(locale === 'en' ? 'en-GB' : locale, {
-          weekday: 'long', day: 'numeric', month: 'long'
-        })}
-        {streak > 1 && (
-          <span style={{ marginLeft: 14, color: '#2F5D5C' }}>
-            · {t('dilemma.streak', locale, { n: streak })}
-          </span>
-        )}
-        {user && (
-          <Link href="/dilemma/archive" style={{
-            marginLeft: 14, color: '#8C6520',
-            textDecoration: 'none', fontWeight: 500,
-            borderBottom: '1px solid rgba(140, 101, 32, 0.4)',
-            paddingBottom: 1,
-          }}>
-            {t('dilemma.see_archive', locale)}
-          </Link>
-        )}
       </div>
 
-      <h1 style={{
-        fontFamily: serif,
-        fontSize: 38,
-        fontWeight: 500,
-        margin: '0 0 16px',
-        letterSpacing: '-0.01em',
-        lineHeight: 1.2,
-      }}>
-        {localizedPrompt}
-      </h1>
+      {/* Pixel eyebrow with date + streak + archive link */}
+      <div
+        className="flex flex-wrap items-center gap-3 text-[10px] tracking-[0.22em] text-[#8C6520]"
+        style={{ fontFamily: 'var(--font-pixel-display)' }}
+      >
+        <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F] pixel-blink" />
+        <span>▶ {t('dilemma.eyebrow', locale).toUpperCase()}</span>
+        <span className="opacity-60">·</span>
+        <span className="text-[#221E18]">
+          {new Date(today.dateKey).toLocaleDateString(
+            locale === 'en' ? 'en-GB' : locale,
+            { weekday: 'long', day: 'numeric', month: 'long' },
+          ).toUpperCase()}
+        </span>
+        {streak > 1 ? (
+          <>
+            <span className="opacity-60">·</span>
+            <span className="text-[#2F5D5C]">
+              {t('dilemma.streak', locale, { n: streak }).toUpperCase()}
+            </span>
+          </>
+        ) : null}
+        {user ? (
+          <Link
+            href="/dilemma/archive"
+            className="ml-auto text-[#8C6520] underline decoration-[#B8862F]/50 underline-offset-3 hover:decoration-[#8C6520]"
+          >
+            {t('dilemma.see_archive', locale).toUpperCase()} →
+          </Link>
+        ) : null}
+      </div>
 
-      {localizedHint && (
-        <p style={{
-          fontFamily: serif,
-          fontStyle: 'italic',
-          fontSize: 17,
-          color: '#4A4338',
-          marginBottom: 32,
-        }}>
-          {localizedHint}
-        </p>
-      )}
+      {/* Prompt panel — pixel-bordered, big Cormorant question */}
+      <div
+        className="mt-7 border-4 border-[#221E18] bg-[#FFFCF4]"
+        style={{ boxShadow: '6px 6px 0 0 #8C6520' }}
+      >
+        <div
+          className="border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
+          style={{ fontFamily: 'var(--font-pixel-display)' }}
+        >
+          ▶ TODAY&apos;S QUESTION
+        </div>
+        <div className="px-6 py-7 sm:px-8 sm:py-9">
+          <h1
+            className="text-[24px] font-medium leading-[1.3] text-[#221E18] sm:text-[30px] md:text-[34px]"
+            style={{ fontFamily: 'var(--font-prose)' }}
+          >
+            {localizedPrompt}
+          </h1>
+          {localizedHint ? (
+            <p
+              className="mt-5 border-l-4 px-4 py-2 text-[15.5px] italic leading-[1.55] text-[#4A4338]"
+              style={{ borderColor: '#B8862F', fontFamily: 'var(--font-prose)' }}
+            >
+              {localizedHint}
+            </p>
+          ) : null}
+        </div>
+      </div>
+
+      <div className="mt-8" />
+
 
       {!user ? (
         <div style={{
