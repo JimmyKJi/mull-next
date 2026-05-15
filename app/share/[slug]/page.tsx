@@ -26,6 +26,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getArchetypeByKey } from '@/lib/archetypes';
 import { FIGURES } from '@/lib/figures';
+import MullWordmark from '@/components/mull-wordmark';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
@@ -115,15 +116,7 @@ export default async function SharePage({
           marginTop: 14,
           marginBottom: 28,
         }}>
-          <div style={{
-            fontFamily: serif,
-            fontSize: 28,
-            fontWeight: 600,
-            lineHeight: 1,
-            letterSpacing: '-0.5px',
-          }}>
-            Mull<span style={{ color: '#B8862F' }}>.</span>
-          </div>
+          <MullWordmark as="div" />
           <div style={{
             fontFamily: pixel,
             fontSize: 10,

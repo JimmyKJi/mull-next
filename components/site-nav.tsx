@@ -14,6 +14,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { ARCHETYPES } from "@/lib/archetypes";
 import { PHILOSOPHERS } from "@/lib/philosophers";
+import FocusTrap from "./focus-trap";
 
 // Routes pinned to the top nav. Anything else lives in the command
 // palette under "Pages" or "Philosophers".
@@ -233,7 +234,11 @@ function CommandPalette({ onClose }: { onClose: () => void }) {
     <div
       className="fixed inset-0 z-50 flex items-start justify-center bg-[#221E18]/60 px-4 pt-[12vh]"
       onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Quick travel command palette"
     >
+      <FocusTrap onEscape={onClose}>
       {/* Pixel dialog box: 4-px ink border, hard amber shadow */}
       <div
         className="w-full max-w-[640px] overflow-hidden border-4 border-[#221E18] bg-[#FFFCF4] shadow-[8px_8px_0_0_#8C6520]"
@@ -285,6 +290,7 @@ function CommandPalette({ onClose }: { onClose: () => void }) {
           <span>{items.length} match{items.length === 1 ? "" : "es"}</span>
         </div>
       </div>
+      </FocusTrap>
     </div>
   );
 }

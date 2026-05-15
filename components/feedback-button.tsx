@@ -16,6 +16,7 @@
 
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
+import FocusTrap from './focus-trap';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
@@ -97,8 +98,10 @@ export default function FeedbackButton() {
       )}
 
       {open && (
+        <FocusTrap onEscape={() => { setOpen(false); setSent(false); setError(null); }}>
         <div
           role="dialog"
+          aria-modal="true"
           aria-label="Feedback form"
           className="pixel-form"
           style={{
@@ -196,22 +199,14 @@ export default function FeedbackButton() {
                 </button>
               </div>
               {error && (
-                <p style={{
-                  margin: '12px 0 0',
-                  fontFamily: sans,
-                  fontSize: 12,
-                  color: '#7A2E2E',
-                  background: 'rgba(122, 46, 46, 0.08)',
-                  border: '2px solid #7A2E2E',
-                  borderRadius: 0,
-                  padding: '6px 10px',
-                }}>
+                <p className="pixel-alert pixel-alert--error" style={{ marginTop: 12 }}>
                   {error}
                 </p>
               )}
             </>
           )}
         </div>
+        </FocusTrap>
       )}
     </>
   );

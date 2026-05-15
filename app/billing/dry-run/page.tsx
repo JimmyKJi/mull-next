@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { PRICES, type Plan } from '@/lib/billing';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
+import MullWordmark from '@/components/mull-wordmark';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
@@ -25,18 +26,9 @@ export default async function DryRunCheckoutPage({
 
   return (
     <main style={{ maxWidth: 540, margin: '120px auto', padding: '0 24px', textAlign: 'center' }}>
-      <Link href="/" style={{
-        fontFamily: serif,
-        fontSize: 28,
-        fontWeight: 500,
-        color: '#221E18',
-        textDecoration: 'none',
-        letterSpacing: '-0.5px',
-        display: 'inline-block',
-        marginBottom: 36,
-      }}>
-        Mull<span style={{ color: '#B8862F' }}>.</span>
-      </Link>
+      <div style={{ marginBottom: 36 }}>
+        <MullWordmark />
+      </div>
 
       <div style={{
         padding: '32px 28px',

@@ -108,12 +108,17 @@ export default function RootLayout({
           WebkitFontSmoothing: "antialiased",
         }}
       >
+        {/* Skip-to-content keyboard shortcut. Renders off-screen
+            until it gets focus, then slides in. Lets keyboard users
+            jump past the sticky nav (which has 6+ tabbable links)
+            and land directly in the page body. */}
+        <a href="#main-content" className="skip-link">▸ SKIP TO CONTENT</a>
         {/* SiteNav is the v2 sticky top bar — wordmark, page links,
             Cmd-K command palette, Account button. Visible on every
             route. Replaces the old GlobalTopBar / TopBarMount pair
             (kept in repo for now in case anything still imports them). */}
         <SiteNav />
-        {children}
+        <div id="main-content">{children}</div>
         {/* Vercel Web Analytics — page views, referrers, locations.
             Custom events fire from individual pages via the `track()`
             helper from @vercel/analytics. Privacy-respecting (no

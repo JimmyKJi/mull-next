@@ -7,7 +7,8 @@
 // ink border, no border-radius) so the skeleton matches the resolved
 // public profile.
 
-const serif = "'Cormorant Garamond', Georgia, serif";
+import MullWordmark from '@/components/mull-wordmark';
+
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
 export default function Loading() {
@@ -21,9 +22,7 @@ export default function Loading() {
         flexWrap: 'wrap',
         gap: 12,
       }}>
-        <div style={{ fontFamily: serif, fontSize: 28, fontWeight: 500, color: '#221E18' }}>
-          Mull<span style={{ color: '#B8862F' }}>.</span>
-        </div>
+        <MullWordmark as="div" />
         <div className="pixel-shimmer" style={{ width: 110, height: 28 }} />
       </header>
 

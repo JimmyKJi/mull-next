@@ -5,6 +5,7 @@ import { DIM_KEYS, DIM_NAMES, topShifts } from '@/lib/dimensions';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
+import MullWordmark from '@/components/mull-wordmark';
 import type { Metadata } from 'next';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
@@ -233,16 +234,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
         gap: 16,
         flexWrap: 'wrap',
       }}>
-        <Link href="/" style={{
-          fontFamily: serif,
-          fontSize: 28,
-          fontWeight: 500,
-          color: '#221E18',
-          textDecoration: 'none',
-          letterSpacing: '-0.5px'
-        }}>
-          Mull<span style={{ color: '#B8862F' }}>.</span>
-        </Link>
+        <MullWordmark />
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
           <LanguageSwitcher initial={locale} />
           <Link href={`/compare?them=${profile.handle}`} style={{

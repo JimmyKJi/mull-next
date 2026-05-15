@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
+import MullWordmark from '@/components/mull-wordmark';
 import { PRICES } from '@/lib/billing';
 import PlanPicker from './plan-picker';
 import type { Metadata } from 'next';
@@ -35,16 +36,7 @@ export default async function BillingPage() {
         flexWrap: 'wrap',
         gap: 16,
       }}>
-        <Link href="/" style={{
-          fontFamily: serif,
-          fontSize: 28,
-          fontWeight: 500,
-          color: '#221E18',
-          textDecoration: 'none',
-          letterSpacing: '-0.5px',
-        }}>
-          Mull<span style={{ color: '#B8862F' }}>.</span>
-        </Link>
+        <MullWordmark />
         <LanguageSwitcher initial={locale} />
       </header>
 
