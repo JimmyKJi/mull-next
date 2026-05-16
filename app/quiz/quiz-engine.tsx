@@ -119,6 +119,13 @@ export function QuizEngine({ questions, mode, locale }: Props) {
   // the route load.
   const [computing, setComputing] = useState(false);
 
+  // Resumed-from-stash banner. When the engine silently restores
+  // progress from sessionStorage on mount, surface a one-time chip
+  // so the user knows they're not starting fresh ("▸ RESUMED FROM
+  // QUESTION 6"). Auto-dismisses after 4s or on user interaction
+  // (next answer, back, skip — any of which set this to null).
+  const [resumedNotice, setResumedNotice] = useState<number | null>(null);
+
   // Resume from sessionStorage on mount.
   useEffect(() => {
     if (resumed) return;
@@ -133,11 +140,14 @@ export function QuizEngine({ questions, mode, locale }: Props) {
         parsed.idx >= 0 &&
         parsed.idx < questions.length &&
         Array.isArray(parsed.vector) &&
-        parsed.vector.length === 16
+        parsed.vector.length === 16 &&
+        parsed.idx > 0   // Only show "resumed" if they're past Q1
       ) {
         setIdx(parsed.idx);
         setVector(parsed.vector);
         setAnswers(parsed.answers ?? []);
+        setResumedNotice(parsed.idx + 1);
+        window.setTimeout(() => setResumedNotice(null), 4000);
       }
     } catch {
       // corrupt stash, start fresh
@@ -316,6 +326,21 @@ export function QuizEngine({ questions, mode, locale }: Props) {
 
   return (
     <div className="mx-auto max-w-[820px] px-6 pt-8 pb-24 sm:px-10 sm:pt-12 sm:pb-32">
+      {/* Resumed-from-stash banner. Auto-dismisses after 4s. */}
+      {resumedNotice !== null && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="mb-4 inline-flex items-center gap-2 border-[3px] border-[#221E18] bg-[#F8EDC8] px-3 py-1.5 text-[10px] tracking-[0.16em] text-[#221E18]"
+          style={{
+            fontFamily: "var(--font-pixel-display)",
+            boxShadow: '3px 3px 0 0 #2F5D5C',
+          }}
+        >
+          ▸ RESUMED FROM QUESTION {resumedNotice}
+        </div>
+      )}
+
       {/* Top status row — chapter + progress dots */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div

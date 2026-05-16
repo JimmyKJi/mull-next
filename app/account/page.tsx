@@ -14,6 +14,7 @@ import DilemmaReminderCard from '@/components/dilemma-reminder-card';
 import ShareResultCard from '@/components/share-result-card';
 import ReflectionCard from '@/components/reflection-card';
 import WelcomePinger from '@/components/welcome-pinger';
+import WelcomeBackBanner from '@/components/welcome-back-banner';
 import NextActionCard from '@/components/next-action-card';
 import ReferralCard from '@/components/referral-card';
 import PendingAttemptClaimer from '@/components/pending-attempt-claimer';
@@ -431,6 +432,13 @@ export default async function AccountPage() {
         <LanguageSwitcher initial={locale} />
         <LogoutButton locale={locale} />
       </div>
+
+      {/* Welcome-back banner — client component that surfaces only
+          when the user hasn't visited /account in >3 days. Tracks
+          the last visit in localStorage; auto-dismisses after 6s
+          or on click. Renders nothing on first visit + same-session
+          revisits. */}
+      <WelcomeBackBanner />
 
       {locale !== 'en' && (
         <div
