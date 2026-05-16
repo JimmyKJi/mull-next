@@ -6,6 +6,7 @@ import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
 import MullWordmark from '@/components/mull-wordmark';
+import ScrollToTop from '@/components/scroll-to-top';
 import type { Metadata } from 'next';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
@@ -673,6 +674,10 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           </span>
         </div>
       </Link>
+
+      {/* Floating scroll-to-top — appears after scrolling >600px so
+          visitors browsing long public profiles can jump back. */}
+      <ScrollToTop />
     </main>
   );
 }

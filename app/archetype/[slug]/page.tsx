@@ -467,12 +467,45 @@ export default async function ArchetypeDetailPage({
         >
           {t('arch_detail.cta_unsure', locale)}
         </p>
-        <Link
-          href="/quiz?mode=quick"
-          className="pixel-button pixel-button--amber mt-5"
-        >
-          <span>▶ {t('arch_detail.cta_take_quiz', locale).toUpperCase()}</span>
-        </Link>
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+          <Link
+            href="/quiz?mode=quick"
+            className="pixel-button pixel-button--amber"
+          >
+            <span>▶ {t('arch_detail.cta_take_quiz', locale).toUpperCase()}</span>
+          </Link>
+          {/* Share this archetype — X intent. Lets readers who feel
+              the page applies to a friend pass the link along without
+              hunting for the URL. */}
+          <a
+            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+              `The ${name} on Mull — ${archetype.spirit}`
+            )}&url=${encodeURIComponent(`https://mull.world/archetype/${slug}`)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="pixel-press"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              padding: '10px 16px',
+              background: 'transparent',
+              color: color.deep,
+              border: `3px solid ${color.deep}`,
+              boxShadow: `3px 3px 0 0 ${color.deep}`,
+              borderRadius: 0,
+              fontFamily: "var(--font-pixel-display, 'Courier New', monospace)",
+              fontSize: 11,
+              letterSpacing: 0.4,
+              textTransform: 'uppercase',
+              textDecoration: 'none',
+              transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+            }}
+          >
+            <span aria-hidden>𝕏</span>
+            <span>SHARE THIS ARCHETYPE</span>
+          </a>
+        </div>
       </div>
     </main>
     </>

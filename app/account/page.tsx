@@ -15,6 +15,7 @@ import ShareResultCard from '@/components/share-result-card';
 import ReflectionCard from '@/components/reflection-card';
 import WelcomePinger from '@/components/welcome-pinger';
 import WelcomeBackBanner from '@/components/welcome-back-banner';
+import ScrollToTop from '@/components/scroll-to-top';
 import NextActionCard from '@/components/next-action-card';
 import ReferralCard from '@/components/referral-card';
 import PendingAttemptClaimer from '@/components/pending-attempt-claimer';
@@ -1154,6 +1155,11 @@ export default async function AccountPage() {
           Sits inside /account so the privacy-respecting opt-in is the
           first place a user encounters it. */}
       <DilemmaReminderCard locale={locale} />
+
+      {/* Floating scroll-to-top — only renders after scrolling >600px,
+          so it doesn't clutter brand-new accounts (which fit on one
+          screen anyway). */}
+      <ScrollToTop />
     </main>
   );
 }
