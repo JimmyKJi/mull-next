@@ -117,6 +117,23 @@ export default function AssignmentSubmitForm({
           your instructor reviews the submission.
         </p>
       )}
+
+      {/* Honest disclosure: a heuristic AI-pattern scan runs on
+          submissions so teachers see a "patterns we noticed" signal.
+          Telling students up front means no surprise + the framing
+          stays accurate ("we look for patterns, not run a verdict"). */}
+      <p style={{
+        fontFamily: serif,
+        fontSize: 12.5,
+        color: '#8C6520',
+        margin: 0,
+        lineHeight: 1.5,
+      }}>
+        Heads up: your teacher sees a heuristic AI-pattern signal alongside
+        your submission. It looks for common AI phrasing and structure — it
+        is not a verdict and false positives happen, but writing in your own
+        voice is the safest path.
+      </p>
     </form>
   );
 }

@@ -15,6 +15,7 @@ import type { Metadata } from 'next';
 import { createClient } from '@/utils/supabase/server';
 import MullWordmark from '@/components/mull-wordmark';
 import AssignmentSubmitForm from './assignment-submit-form';
+import { scoreAuthenticity, authSummary, type AuthResult } from '@/lib/ai-authenticity';
 
 export const metadata: Metadata = {
   title: 'Assignment · Mull',
@@ -274,6 +275,10 @@ async function TeacherSubmissionsView({
               const studentLabel = rosterRow?.pseudonym
                 ? rosterRow.pseudonym
                 : (profile?.display_name || (profile ? `@${profile.handle}` : `Student · ${s.student_user_id.slice(0, 6)}`));
+              // Heuristic AI-pattern score — computed on-the-fly,
+              // no DB column, no API call. Surfaced as a signal,
+              // not a verdict. See lib/ai-authenticity.ts header.
+              const auth = scoreAuthenticity(s.response_text);
               return (
                 <li key={s.id} style={{
                   padding: '14px 16px',
@@ -309,6 +314,7 @@ async function TeacherSubmissionsView({
                       {s.reviewed_at && <> · ✓ REVIEWED</>}
                     </span>
                   </div>
+                  <AuthBadge auth={auth} />
                   <p style={{
                     fontFamily: serif,
                     fontSize: 15.5,
@@ -361,5 +367,85 @@ async function TeacherSubmissionsView({
         )}
       </section>
     </>
+  );
+}
+
+// ─── AuthBadge ───────────────────────────────────────────────────────
+//
+// Heuristic AI-pattern indicator. NOT a verdict — just surfaces what
+// the scorer noticed. Always paired with a tooltip-equivalent
+// <details> drilling into the specific flags, so teachers don't have
+// to take the score on faith.
+
+function AuthBadge({ auth }: { auth: AuthResult }) {
+  const palette = {
+    high:   { fg: '#7A2E2E', bg: '#F5E0E0', border: '#7A2E2E', icon: '!' },
+    medium: { fg: '#8C6520', bg: '#F8EDC8', border: '#B8862F', icon: '·' },
+    low:    { fg: '#2F5D5C', bg: '#E5F0EE', border: '#2F5D5C', icon: '✓' },
+  }[auth.bucket];
+  return (
+    <details style={{ marginBottom: 10 }}>
+      <summary style={{
+        cursor: 'pointer',
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 8,
+        padding: '4px 10px',
+        background: palette.bg,
+        border: `2px solid ${palette.border}`,
+        fontFamily: pixel,
+        fontSize: 10,
+        color: palette.fg,
+        letterSpacing: 0.4,
+        textTransform: 'uppercase',
+      }}>
+        <span aria-hidden style={{ fontWeight: 700 }}>{palette.icon}</span>
+        <span>AI-PATTERN SCAN · {authSummary(auth)}</span>
+      </summary>
+      <div style={{
+        marginTop: 8,
+        padding: '10px 12px',
+        background: '#FFFCF4',
+        border: '2px solid #D6CDB6',
+        fontFamily: serif,
+        fontSize: 13,
+        color: '#4A4338',
+        lineHeight: 1.5,
+      }}>
+        <p style={{ margin: '0 0 8px', fontStyle: 'italic' }}>
+          This is a heuristic signal, not a verdict. False positives
+          happen, especially for students with a formal register or
+          non-native English speakers writing carefully.
+        </p>
+        {auth.flags.length === 0 ? (
+          <p style={{ margin: 0 }}>No patterns flagged.</p>
+        ) : (
+          <ul style={{
+            margin: 0,
+            paddingLeft: 16,
+            display: 'grid',
+            gap: 6,
+          }}>
+            {auth.flags.map(f => (
+              <li key={f.kind} style={{ margin: 0 }}>
+                <strong style={{ fontWeight: 600 }}>{f.label}</strong>
+                {f.evidence.length > 0 && (
+                  <div style={{
+                    marginTop: 4,
+                    fontSize: 12,
+                    color: '#8C6520',
+                    fontStyle: 'italic',
+                  }}>
+                    {f.evidence.slice(0, 2).map((e, i) => (
+                      <div key={i}>{e}</div>
+                    ))}
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </details>
   );
 }
