@@ -112,17 +112,79 @@ export default async function ComparePage({
   ]);
 
   if (!you || !them) {
+    // Identify which handle(s) failed so the error message can be
+    // specific. Bad spelling ≫ private profile ≫ deleted account, in
+    // descending order of likelihood.
+    const missing = [
+      !you ? `@${youHandle}` : null,
+      !them ? `@${themHandle}` : null,
+    ].filter(Boolean).join(' or ');
+
     return (
-      <main style={{ maxWidth: 720, margin: '60px auto', padding: '0 24px 120px' }}>
-        <h1 style={{ fontFamily: serif, fontSize: 36, fontWeight: 500, margin: 0 }}>
-          One of those handles doesn&rsquo;t resolve
-        </h1>
-        <p style={{ fontFamily: serif, fontStyle: 'italic', color: '#4A4338', marginTop: 12 }}>
-          Either the handle has a typo, or that profile isn&rsquo;t public. Both users need to have opted into a public profile (Account → Public profile settings) for the comparison to work.
-        </p>
-        <p style={{ marginTop: 24 }}>
-          <Link href="/compare" style={{ color: '#8C6520' }}>← Try different handles</Link>
-        </p>
+      <main style={{ maxWidth: 640, margin: '80px auto', padding: '0 24px 120px' }}>
+        <div style={{
+          padding: '32px 30px',
+          background: '#FFFCF4',
+          border: '4px solid #221E18',
+          boxShadow: '6px 6px 0 0 #7A2E2E',
+          borderRadius: 0,
+          textAlign: 'center',
+        }}>
+          <div style={{
+            fontFamily: 'var(--font-pixel-display)',
+            fontSize: 12,
+            color: '#7A2E2E',
+            textTransform: 'uppercase',
+            letterSpacing: '0.18em',
+            marginBottom: 16,
+          }}>
+            HANDLE NOT FOUND
+          </div>
+          <h1 style={{
+            fontFamily: serif,
+            fontSize: 30,
+            fontWeight: 500,
+            margin: '0 0 14px',
+            letterSpacing: '-0.5px',
+            lineHeight: 1.15,
+          }}>
+            We couldn&rsquo;t find {missing}.
+          </h1>
+          <p style={{
+            fontFamily: serif,
+            fontStyle: 'italic',
+            fontSize: 16,
+            color: '#4A4338',
+            margin: '0 0 28px',
+            lineHeight: 1.55,
+          }}>
+            Common reasons: a typo, the profile isn&rsquo;t public yet, or the
+            account hasn&rsquo;t taken the quiz. Both sides need a public
+            profile (Account → Public profile settings → toggle on)
+            for the comparison to render.
+          </p>
+          <Link
+            href="/compare"
+            className="pixel-press"
+            style={{
+              display: 'inline-block',
+              padding: '12px 22px',
+              background: '#221E18',
+              color: '#FAF6EC',
+              border: '4px solid #221E18',
+              boxShadow: '4px 4px 0 0 #B8862F',
+              borderRadius: 0,
+              fontFamily: 'var(--font-pixel-display)',
+              fontSize: 12,
+              letterSpacing: '0.08em',
+              textDecoration: 'none',
+              textTransform: 'uppercase',
+              transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+            }}
+          >
+            ◂ TRY DIFFERENT HANDLES
+          </Link>
+        </div>
       </main>
     );
   }

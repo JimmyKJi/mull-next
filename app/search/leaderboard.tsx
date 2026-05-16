@@ -16,6 +16,7 @@ import { createClient } from '@/utils/supabase/server';
 import { FIGURES } from '@/lib/figures';
 import { ARCHETYPES } from '@/lib/archetypes';
 import { t, type Locale } from '@/lib/translations';
+import EmptyStateSprite from '@/components/empty-state-sprite';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
@@ -90,14 +91,17 @@ export default async function Leaderboard({ locale = 'en' as Locale }: { locale?
       </p>
 
       {rows.length === 0 ? (
-        <p style={{
-          fontFamily: sans, fontSize: 14, color: '#8C6520',
-          fontStyle: 'italic', padding: '16px 18px',
-          background: '#FFFCF4', border: '1px dashed #D6CDB6',
-          borderRadius: 8, margin: 0,
+        <div style={{
+          padding: '20px 18px',
+          background: '#FFFCF4',
+          border: '3px dashed #B8862F',
+          borderRadius: 0,
         }}>
-          {t('leaderboard.empty', locale)}
-        </p>
+          <EmptyStateSprite
+            variant="compass"
+            caption={t('leaderboard.empty', locale)}
+          />
+        </div>
       ) : (
         <ol style={{
           listStyle: 'none', padding: 0, margin: 0,

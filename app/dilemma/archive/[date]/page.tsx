@@ -142,6 +142,39 @@ export default async function DilemmaArchiveDatePage({
       <p className="mt-12 text-center text-[12px] tracking-[0.16em] text-[#8C6520] opacity-75">
         {t('archive.past_footer_note', locale)}
       </p>
+
+      {/* Back-navigation footer. Same chunky pixel-chip pattern as
+          the diary detail + exercise detail pages — paired with the
+          today's-dilemma path for users who'd rather catch up live. */}
+      <nav
+        aria-label="Continue elsewhere"
+        className="mt-10 flex flex-wrap justify-center gap-3 border-t-2 border-dashed border-[#D6CDB6] pt-6"
+      >
+        <Link
+          href="/dilemma/archive"
+          className="pixel-press inline-block border-[3px] border-[#221E18] bg-[#FFFCF4] px-4 py-2.5 text-[11px] tracking-[0.08em] text-[#2F5D5C] no-underline"
+          style={{
+            fontFamily: 'var(--font-pixel-display)',
+            boxShadow: '3px 3px 0 0 #2F5D5C',
+            textTransform: 'uppercase',
+            transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+          }}
+        >
+          ◂ ALL PAST DILEMMAS
+        </Link>
+        <Link
+          href="/dilemma"
+          className="pixel-press inline-block border-[3px] border-[#221E18] bg-[#221E18] px-4 py-2.5 text-[11px] tracking-[0.08em] text-[#FAF6EC] no-underline"
+          style={{
+            fontFamily: 'var(--font-pixel-display)',
+            boxShadow: '3px 3px 0 0 #B8862F',
+            textTransform: 'uppercase',
+            transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+          }}
+        >
+          ▸ TODAY&apos;S DILEMMA
+        </Link>
+      </nav>
     </main>
   );
 }
