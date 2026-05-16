@@ -14,7 +14,7 @@
 //   - Pixel buttons for skip/back/continue.
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import type { Question } from "@/lib/quiz-questions";
 import { add, scale, zeros } from "@/lib/vectors";
 import {
@@ -100,6 +100,11 @@ const QUESTION_GLYPHS = [
 
 export function QuizEngine({ questions, mode, locale }: Props) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  // Friend-challenge invite code (if the user landed via /challenge/<code>).
+  // Plumbed through to /result so the post-quiz CTA can offer "Compare
+  // with your friend" instead of the standard share screen.
+  const challengerCode = searchParams?.get('challenger') || null;
 
   const [idx, setIdx] = useState(0);
   const [vector, setVector] = useState<number[]>(zeros);
@@ -277,7 +282,10 @@ export function QuizEngine({ questions, mode, locale }: Props) {
     // feels weighty; fire the navigation in parallel so the route
     // load overlaps with the visible animation.
     setComputing(true);
-    router.push(`/result?v=${encodeURIComponent(v)}&m=${mode}`);
+    const challengerSuffix = challengerCode
+      ? `&challenger=${encodeURIComponent(challengerCode)}`
+      : '';
+    router.push(`/result?v=${encodeURIComponent(v)}&m=${mode}${challengerSuffix}`);
   }
 
   if (!question) {

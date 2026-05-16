@@ -55,6 +55,14 @@ type Props = {
       full-width (anonymous viewers — the conversion population) or
       shows the standard 3-column footer (signed-in users). */
   isSignedIn: boolean;
+  /** Friend-challenge inviter handle (resolved from challenger code).
+   *  When non-null, we surface a "Compare with <inviter>" CTA at the
+   *  top of the page that points directly to /compare?them=<handle>. */
+  challengerHandle: string | null;
+  challengerName: string | null;
+  /** The raw challenger code we arrived with. Plumbed through to the
+   *  accept-count bump (so the inviter sees their loop working). */
+  challengerCode: string | null;
 };
 
 export function ResultClient({
@@ -72,6 +80,9 @@ export function ResultClient({
   dimRadar,
   userTop3,
   isSignedIn,
+  challengerHandle,
+  challengerName,
+  challengerCode,
 }: Props) {
   const color = getArchetypeColor(topKey);
 
@@ -93,6 +104,12 @@ export function ResultClient({
         flavor={flavor || null}
         alignmentPct={alignmentPct}
         mode={mode}
+      />
+
+      <ChallengerBanner
+        challengerHandle={challengerHandle}
+        challengerName={challengerName}
+        challengerCode={challengerCode}
       />
 
       {/* ─── Hero — "QUEST COMPLETE" pixel banner ───────────────
@@ -806,4 +823,105 @@ function RadarChart({
 
 function capitalize(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+// ────────────────────────────────────────────────────────────────
+// ChallengerBanner — renders only when the user arrived via a
+// friend-challenge invite link. Surfaces a "Compare with <inviter>"
+// CTA at the top of the result page. Also fires a fire-and-forget
+// "accept" bump so the inviter's account telemetry reflects that
+// their link actually worked.
+// ────────────────────────────────────────────────────────────────
+function ChallengerBanner({
+  challengerHandle,
+  challengerName,
+  challengerCode,
+}: {
+  challengerHandle: string | null;
+  challengerName: string | null;
+  challengerCode: string | null;
+}) {
+  useEffect(() => {
+    if (!challengerCode) return;
+    // Fire-and-forget — increments accept_count on the friend_challenges
+    // row so the inviter can see "3 friends took the quiz from your link"
+    // on /account. Don't block render; ignore errors (the comparison
+    // still works without the telemetry bump).
+    fetch('/api/challenge/accept', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: challengerCode }),
+    }).catch(() => {});
+  }, [challengerCode]);
+
+  if (!challengerHandle || !challengerName) return null;
+
+  return (
+    <section className="mx-auto max-w-[1100px] px-6 pt-8 sm:px-10 sm:pt-12">
+      <Link
+        href={`/compare?them=${encodeURIComponent(challengerHandle)}`}
+        className="pixel-press pixel-press--lg block"
+        style={{
+          padding: '20px 24px',
+          background: '#F8EDC8',
+          border: '4px solid #221E18',
+          boxShadow: '5px 5px 0 0 #B8862F',
+          borderRadius: 0,
+          textDecoration: 'none',
+          color: '#221E18',
+          transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 16,
+            flexWrap: 'wrap',
+          }}
+        >
+          <span>
+            <span
+              style={{
+                fontFamily: 'var(--font-pixel-display)',
+                fontSize: 11,
+                color: '#8C6520',
+                letterSpacing: '0.18em',
+                textTransform: 'uppercase',
+                display: 'block',
+                marginBottom: 6,
+              }}
+            >
+              ▸ {challengerName.toUpperCase()} CHALLENGED YOU
+            </span>
+            <span
+              style={{
+                fontFamily: "'Cormorant Garamond', Georgia, serif",
+                fontSize: 18,
+              }}
+            >
+              See how your map sits next to theirs, side by side.
+            </span>
+          </span>
+          <span
+            style={{
+              color: '#1A1612',
+              background: '#B8862F',
+              padding: '10px 16px',
+              border: '3px solid #221E18',
+              boxShadow: '3px 3px 0 0 #221E18',
+              fontFamily: 'var(--font-pixel-display)',
+              fontSize: 12,
+              letterSpacing: 0.4,
+              textTransform: 'uppercase',
+              flexShrink: 0,
+            }}
+          >
+            ▸ COMPARE NOW
+          </span>
+        </div>
+      </Link>
+    </section>
+  );
 }

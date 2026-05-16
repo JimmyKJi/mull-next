@@ -35,7 +35,7 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-type SearchParams = Promise<{ v?: string; m?: string }>;
+type SearchParams = Promise<{ v?: string; m?: string; challenger?: string }>;
 
 function decodeVector(raw: string | undefined): number[] {
   if (!raw) return zeros();
@@ -72,6 +72,30 @@ export default async function ResultPage({
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   const isSignedIn = !!user;
+
+  // If the user arrived via a friend-challenge link, resolve the
+  // inviter so we can show a "Compare with <inviter>" CTA. Falls back
+  // to plain string "your friend" when handle is private/missing.
+  let challengerHandle: string | null = null;
+  let challengerName: string | null = null;
+  if (params.challenger) {
+    const { data: challenge } = await supabase
+      .from('friend_challenges')
+      .select('inviter_id')
+      .eq('code', params.challenger)
+      .maybeSingle<{ inviter_id: string }>();
+    if (challenge) {
+      const { data: profile } = await supabase
+        .from('public_profiles')
+        .select('handle, display_name')
+        .eq('user_id', challenge.inviter_id)
+        .maybeSingle<{ handle: string; display_name: string | null }>();
+      if (profile) {
+        challengerHandle = profile.handle;
+        challengerName = profile.display_name || profile.handle;
+      }
+    }
+  }
 
   const scored = ARCHETYPES.map((a) => {
     const target = ARCHETYPE_TARGETS.find((t) => t.key === a.key);
@@ -129,6 +153,9 @@ export default async function ResultPage({
       dimRadar={dimRadar}
       userTop3={userTop3.map((d) => ({ key: d.key, name: DIM_NAMES[d.key] }))}
       isSignedIn={isSignedIn}
+      challengerHandle={challengerHandle}
+      challengerName={challengerName}
+      challengerCode={params.challenger ?? null}
     />
   );
 }
