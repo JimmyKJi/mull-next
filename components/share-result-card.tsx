@@ -85,6 +85,43 @@ export default function ShareResultCard({
   const hasNativeShare =
     typeof window !== 'undefined' && typeof navigator.share === 'function';
 
+  // ── Friend-challenge invite ──────────────────────────────────────
+  // Click → POST /api/challenge/create → copy the returned URL to
+  // clipboard. Signed-out users see a sign-in prompt instead; we
+  // detect that via the 401 from the API.
+  const [challengeUrl, setChallengeUrl] = useState<string | null>(null);
+  const [challengeBusy, setChallengeBusy] = useState(false);
+
+  async function challengeFriend() {
+    if (challengeBusy) return;
+    setChallengeBusy(true);
+    setError(null);
+    try {
+      const res = await fetch('/api/challenge/create', { method: 'POST' });
+      if (res.status === 401) {
+        // Signed-out user — send them to /signup with a return-to
+        // hint so they can come back and challenge after signup.
+        window.location.href = '/signup?next=/result';
+        return;
+      }
+      const json = await res.json();
+      if (!res.ok) {
+        setError(json?.error || 'Could not create invite.');
+        setChallengeBusy(false);
+        return;
+      }
+      const full = `${window.location.origin}${json.url}`;
+      setChallengeUrl(full);
+      try {
+        await navigator.clipboard.writeText(full);
+      } catch {/* clipboard denied — the URL is still visible below */}
+    } catch {
+      setError('Network error.');
+    } finally {
+      setChallengeBusy(false);
+    }
+  }
+
   return (
     <div style={{
       marginTop: 22,
@@ -150,7 +187,59 @@ export default function ShareResultCard({
             <span>SHARE…</span>
           </button>
         )}
+        {/* Friend-challenge invite. Different visual weight (amber
+            fill) because this is the high-leverage growth CTA: a
+            friend who takes the quiz via this link lands on /compare
+            with you, not on the generic result page. */}
+        <button
+          type="button"
+          onClick={challengeFriend}
+          disabled={challengeBusy}
+          className="pixel-press"
+          style={{
+            ...pixelShareButton,
+            background: '#B8862F',
+            color: '#1A1612',
+            borderColor: '#221E18',
+            boxShadow: '3px 3px 0 0 #221E18',
+            cursor: challengeBusy ? 'wait' : 'pointer',
+          }}
+        >
+          <span aria-hidden style={{ marginRight: 8 }}>⚔</span>
+          <span>{challengeBusy ? 'MINTING…' : 'CHALLENGE A FRIEND'}</span>
+        </button>
       </div>
+      {challengeUrl && (
+        <div style={{
+          marginTop: 14,
+          padding: '12px 14px',
+          background: '#F8EDC8',
+          border: '3px solid #221E18',
+          boxShadow: '3px 3px 0 0 #B8862F',
+          borderRadius: 0,
+        }}>
+          <div style={{
+            fontFamily: pixel,
+            fontSize: 10,
+            color: '#8C6520',
+            letterSpacing: 0.4,
+            textTransform: 'uppercase',
+            marginBottom: 8,
+          }}>
+            ▸ INVITE LINK COPIED · SHARE IT WITH A FRIEND
+          </div>
+          <code
+            style={{
+              fontFamily: 'ui-monospace, Menlo, monospace',
+              fontSize: 12,
+              color: '#221E18',
+              wordBreak: 'break-all',
+            }}
+          >
+            {challengeUrl}
+          </code>
+        </div>
+      )}
       {error && (
         <p style={{
           marginTop: 12, fontFamily: sans, fontSize: 12, color: '#7A2E2E',

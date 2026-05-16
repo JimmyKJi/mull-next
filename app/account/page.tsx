@@ -484,6 +484,9 @@ export default async function AccountPage() {
             <Link href="/account/profile" className="pixel-press" style={accountSubChip}>
               ▸ {t('nav.public_profile_settings', locale).toUpperCase()}
             </Link>
+            <Link href="/classes" className="pixel-press" style={accountSubChip}>
+              ▸ CLASSES
+            </Link>
             <Link href="/account/retrospective" className="pixel-press" style={accountSubChip}>
               ▸ YEARLY RETROSPECTIVE
             </Link>
@@ -501,19 +504,40 @@ export default async function AccountPage() {
           finding "where's the map again?" requires scrolling. This
           strip is the escape valve. Only renders for users with at
           least one quiz/dilemma/diary so brand-new accounts don't get
-          a wall of "you don't have this yet" anchors. */}
-      {(quizCount > 0 || dilemmaCount > 0 || diaryCount > 0) && (
-        <nav
-          aria-label="Jump to section"
-          className="mb-9 flex flex-wrap gap-2"
-        >
-          <a href="#latest-result" className="pixel-press" style={accountJumpChip}>▸ RESULT</a>
-          {iframeSrc && <a href="#trajectory" className="pixel-press" style={accountJumpChip}>▸ MAP</a>}
-          {trajectoryNewestFirst.length > 0 && <a href="#shifts" className="pixel-press" style={accountJumpChip}>▸ SHIFTS</a>}
-          <a href="#progression" className="pixel-press" style={accountJumpChip}>▸ BADGES</a>
-          <a href="#invite" className="pixel-press" style={accountJumpChip}>▸ INVITE</a>
-        </nav>
-      )}
+          a wall of "you don't have this yet" anchors.
+
+          The Wrapped chip is added in December (when the year is
+          ending) and January (when last year just finished) so it's
+          discoverable in the seasonal window. Outside that window it
+          stays accessible via /wrapped/YYYY directly. */}
+      {(quizCount > 0 || dilemmaCount > 0 || diaryCount > 0) && (() => {
+        const now = new Date();
+        const month = now.getMonth(); // 0-indexed
+        const wrappedMonth = month === 11 || month === 0; // Dec or Jan
+        const wrappedYear = month === 0 ? now.getFullYear() - 1 : now.getFullYear();
+        return (
+          <nav
+            aria-label="Jump to section"
+            className="mb-9 flex flex-wrap gap-2"
+          >
+            <a href="#latest-result" className="pixel-press" style={accountJumpChip}>▸ RESULT</a>
+            {iframeSrc && <a href="#trajectory" className="pixel-press" style={accountJumpChip}>▸ MAP</a>}
+            {trajectoryNewestFirst.length > 0 && <a href="#shifts" className="pixel-press" style={accountJumpChip}>▸ SHIFTS</a>}
+            <a href="#progression" className="pixel-press" style={accountJumpChip}>▸ BADGES</a>
+            <a href="#invite" className="pixel-press" style={accountJumpChip}>▸ INVITE</a>
+            {wrappedMonth && (
+              <Link href={`/wrapped/${wrappedYear}`} className="pixel-press" style={{
+                ...accountJumpChip,
+                background: '#B8862F',
+                color: '#1A1612',
+                boxShadow: '3px 3px 0 0 #221E18',
+              }}>
+                ▸ {wrappedYear} WRAPPED
+              </Link>
+            )}
+          </nav>
+        );
+      })()}
 
       {/* First-time empty state — shown only before the user has any data
           to display in the stats / trajectory sections below. Three doors

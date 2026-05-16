@@ -210,6 +210,43 @@ export const USER_SCOPED_TABLES: readonly UserScopedTable[] = [
     inExport: false,
     note: 'IP-hashed rate-limit events. Auto-pruned every 24h by a cron. Not worth exporting (it\'s ephemeral ops data and the IPs are already hashed).',
   },
+
+  // ── Classroom (teacher + student membership) ──────────────────────
+  // Classes are owned by a teacher (FK CASCADE) and joined by students
+  // via invite codes. On user delete: classes the user *taught*
+  // cascade away (taking class_members + class_assignments with them);
+  // memberships the user *had as a student* cascade away too. The
+  // simplest model for v1; teacher hand-off is a v2 feature.
+  {
+    name: 'classes',
+    deleteStrategy: 'wipe',
+    inExport: true,
+    note: 'Classes the user created as a teacher. Each is a roster of students who joined via invite_code, plus the assignments threaded under it.',
+  },
+  {
+    name: 'class_members',
+    deleteStrategy: 'wipe',
+    inExport: true,
+    note: 'Class memberships — one row per (class, student) pair. Wipe on user delete removes them from every class they joined.',
+  },
+  {
+    name: 'class_assignments',
+    deleteStrategy: 'wipe',
+    inExport: true,
+    note: 'Assignments the user created as a teacher. Cascades from classes on teacher delete; included here so the export path also surfaces them.',
+  },
+  {
+    name: 'class_assignment_submissions',
+    deleteStrategy: 'wipe',
+    inExport: true,
+    note: 'Student responses to class assignments. One per (assignment, student). Wipe removes the user\'s submissions on delete.',
+  },
+  {
+    name: 'friend_challenges',
+    deleteStrategy: 'wipe',
+    inExport: true,
+    note: 'Friend-challenge invite codes the user minted. Telemetry on view_count / accept_count is theirs to see.',
+  },
 ] as const;
 
 // ─── Derived accessors ──────────────────────────────────────────────
