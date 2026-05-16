@@ -609,38 +609,59 @@ export default async function AccountPage() {
             <div style={statValueStyle}>{diaryCount}</div>
             <div style={statLabelStyle}>{t(diaryCount === 1 ? 'account.stat_diary_entry' : 'account.stat_diary_entries', locale)}</div>
           </div>
-          {streak > 0 && (
-            <div style={{
-              padding: '16px 20px',
-              background: '#221E18',
-              border: '4px solid #221E18',
-              boxShadow: '4px 4px 0 0 #B8862F',
-              borderRadius: 0,
-              color: '#FAF6EC',
-            }}>
-              <div style={{
-                fontFamily: 'var(--font-pixel-display)',
-                fontSize: 28,
-                color: '#F8EDC8',
-                lineHeight: 1,
-                letterSpacing: 0.4,
-              }}>{
-                // Cap displayed streak at "30+" so a 200-day streak
-                // doesn't dominate the stat row visually. The real
-                // number still drives milestones + badges; this is
-                // purely a layout-bound display cap.
-                streak >= 30 ? '30+' : streak
-              }<span style={{ fontSize: 13, opacity: 0.7, marginLeft: 6 }}>{t(streak === 1 ? 'account.stat_day' : 'account.stat_days', locale).toUpperCase()}</span></div>
-              <div style={{
-                fontFamily: 'var(--font-pixel-display)',
-                fontSize: 10,
-                color: '#F1C76A',
-                textTransform: 'uppercase',
-                letterSpacing: '0.18em',
-                marginTop: 8,
-              }}>{t('account.stat_current_streak', locale).toUpperCase()}{streak >= 30 ? ` · ${streak} DAYS` : ''}</div>
-            </div>
-          )}
+          {streak > 0 && (() => {
+            // Milestone tiers determine whether the streak card pulses
+            // (the .pixel-milestone class) and what tier label rides
+            // along with the eyebrow. Quiet at streak 1–2; "ON FIRE"
+            // from 3+, "DEDICATED" from 7+, "MASTERED" from 30+. Each
+            // tier label persists past its threshold so a 50-day
+            // streak still says "MASTERED" and pulses.
+            const milestone =
+              streak >= 30 ? 'MASTERED' :
+              streak >= 7 ? 'DEDICATED' :
+              streak >= 3 ? 'ON FIRE' :
+              null;
+            const isMilestone = milestone !== null;
+            return (
+              <div
+                className={isMilestone ? 'pixel-milestone' : undefined}
+                style={{
+                  padding: '16px 20px',
+                  background: '#221E18',
+                  border: '4px solid #221E18',
+                  boxShadow: '4px 4px 0 0 #B8862F',
+                  borderRadius: 0,
+                  color: '#FAF6EC',
+                }}
+              >
+                <div style={{
+                  fontFamily: 'var(--font-pixel-display)',
+                  fontSize: 28,
+                  color: '#F8EDC8',
+                  lineHeight: 1,
+                  letterSpacing: 0.4,
+                }}>{
+                  // Cap displayed streak at "30+" so a 200-day streak
+                  // doesn't dominate the stat row visually. The real
+                  // number still drives milestones + badges; this is
+                  // purely a layout-bound display cap.
+                  streak >= 30 ? '30+' : streak
+                }<span style={{ fontSize: 13, opacity: 0.7, marginLeft: 6 }}>{t(streak === 1 ? 'account.stat_day' : 'account.stat_days', locale).toUpperCase()}</span></div>
+                <div style={{
+                  fontFamily: 'var(--font-pixel-display)',
+                  fontSize: 10,
+                  color: '#F1C76A',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.18em',
+                  marginTop: 8,
+                }}>
+                  {t('account.stat_current_streak', locale).toUpperCase()}
+                  {milestone && ` · ${milestone}`}
+                  {streak >= 30 && ` · ${streak} DAYS`}
+                </div>
+              </div>
+            );
+          })()}
         </div>
       )}
 

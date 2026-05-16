@@ -440,6 +440,19 @@ select:focus-visible {
   animation: archetype-sprite-jiggle 0.6s steps(6, end) infinite;
 }
 
+/* Streak-milestone glow — slow chunky pulse on the streak stat
+   card when the user crosses a meaningful threshold (3, 7, 30,
+   100 days). Doesn't loop forever; the glow fades in to a steady
+   subtle outer-glow that says "this is special" without screaming
+   for attention every time the user reloads /account. */
+@keyframes pixel-milestone-pulse {
+  0%, 100% { box-shadow: 4px 4px 0 0 #B8862F, 0 0 0 0 rgba(184, 134, 47, 0); }
+  50%      { box-shadow: 4px 4px 0 0 #B8862F, 0 0 16px 4px rgba(184, 134, 47, 0.55); }
+}
+.pixel-milestone {
+  animation: pixel-milestone-pulse 2.4s steps(8, end) infinite;
+}
+
 /* Sprite "wake up" pop — used when a tooltip first reveals a
    procedural philosopher sprite. Single play, snappy. */
 @keyframes sprite-pop-in {

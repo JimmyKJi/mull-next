@@ -177,17 +177,28 @@ export function QuizEngine({ questions, mode, locale }: Props) {
   useEffect(() => {
     if (lastIdx.current !== idx) {
       setMultiPicks([]);
+      setLockedSingle(null);
       lastIdx.current = idx;
     }
   }, [idx]);
 
+  // Single-pick selection feedback. When the user clicks an answer
+  // we briefly hold on the question screen with the chosen card
+  // visually "locked in" (amber fill + ink shadow) before advancing.
+  // The 180ms beat makes the click feel intentional rather than
+  // making the question yank away mid-thought.
+  const [lockedSingle, setLockedSingle] = useState<number | null>(null);
+
   function selectSingle(answerIdx: number) {
-    if (!question) return;
+    if (!question || lockedSingle !== null) return;
+    setLockedSingle(answerIdx);
     const delta = question.a[answerIdx]?.v ?? zeros();
-    advance(add(vector, delta), [
-      ...answers,
-      { kind: "single", index: answerIdx },
-    ]);
+    window.setTimeout(() => {
+      advance(add(vector, delta), [
+        ...answers,
+        { kind: "single", index: answerIdx },
+      ]);
+    }, 180);
   }
   function toggleMulti(answerIdx: number) {
     setMultiPicks((prev) => {
@@ -362,7 +373,14 @@ export function QuizEngine({ questions, mode, locale }: Props) {
           {/* Answer cards */}
           <ul className="mt-8 flex flex-col gap-3">
             {answerTexts.map((text, i) => {
-              const selected = multiPicks.includes(i);
+              // For multi-pick: card is "selected" if it's in
+              // multiPicks. For single-pick: card is "locked-in" if
+              // it's the one we just clicked (the 180ms feedback
+              // beat before advance fires).
+              const selected = isMulti
+                ? multiPicks.includes(i)
+                : lockedSingle === i;
+              const otherLocked = !isMulti && lockedSingle !== null && lockedSingle !== i;
               return (
                 <li key={i}>
                   <button
@@ -370,6 +388,7 @@ export function QuizEngine({ questions, mode, locale }: Props) {
                     onClick={() =>
                       isMulti ? toggleMulti(i) : selectSingle(i)
                     }
+                    disabled={otherLocked}
                     className={
                       // Pixel-border answer card. No rounded corners,
                       // 3-px border, hard amber shadow on hover.
@@ -377,7 +396,9 @@ export function QuizEngine({ questions, mode, locale }: Props) {
                       "hover:translate-x-[-2px] hover:translate-y-[-2px] hover:bg-[#FFF9E8] hover:shadow-[4px_4px_0_0_#8C6520] " +
                       (selected
                         ? "border-[#8C6520] bg-[#F8EDC8] shadow-[4px_4px_0_0_#221E18]"
-                        : "border-[#D6CDB6]")
+                        : otherLocked
+                          ? "border-[#D6CDB6] opacity-40"
+                          : "border-[#D6CDB6]")
                     }
                   >
                     <span
