@@ -592,12 +592,17 @@ function AlignmentCounter({
   // as "this exact target has been seen this session" — not strict
   // identity, since a fresh quiz attempt produces a new ResultClient
   // mount with a likely-different target value anyway.
+  //
+  // Also: respect prefers-reduced-motion — skip the animation entirely
+  // and start at the final value for users who've opted out of motion.
   const [display, setDisplay] = useState<number>(() => {
     if (typeof window === 'undefined') return 0;
     try {
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduced) return target;
       const seen = window.sessionStorage.getItem(SEEN_RESULT_KEY);
       if (seen && Number(seen) === target) return target;
-    } catch {/* sessionStorage disabled — fall through to animation */}
+    } catch {/* sessionStorage / matchMedia disabled — fall through to animation */}
     return 0;
   });
 
