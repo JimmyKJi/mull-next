@@ -201,6 +201,35 @@ export default async function ClassDetailPage({
         />
       )}
 
+      {/* Teacher-only insights entry-point — links to /classes/[id]/insights
+          where archetype distribution + class-wide dimensional map +
+          pre/post shift live. Hidden from students. */}
+      {isTeacher && (
+        <div style={{ marginTop: 18, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          <Link
+            href={`/classes/${cls.id}/insights`}
+            className="pixel-press"
+            style={{
+              display: 'inline-block',
+              padding: '10px 16px',
+              background: '#221E18',
+              color: '#FAF6EC',
+              border: '3px solid #221E18',
+              boxShadow: '3px 3px 0 0 #2F5D5C',
+              borderRadius: 0,
+              fontFamily: pixel,
+              fontSize: 11,
+              letterSpacing: 0.4,
+              textTransform: 'uppercase',
+              textDecoration: 'none',
+              transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+            }}
+          >
+            ▸ CLASS INSIGHTS · MAP + SHIFTS
+          </Link>
+        </div>
+      )}
+
       {/* Roster section — both views. Teacher sees full list; student
           sees classmates count + their own row. */}
       <section style={{ marginTop: 36 }}>
