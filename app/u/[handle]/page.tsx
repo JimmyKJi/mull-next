@@ -364,7 +364,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                 color: '#F1C76A', textTransform: 'uppercase',
                 letterSpacing: '0.18em', marginTop: 8,
               }}>
-                ▸ STREAK{streak >= 30 ? ` · ${streak} DAYS` : ''}
+                STREAK{streak >= 30 ? ` · ${streak} DAYS` : ''}
               </div>
             </div>
           )}
@@ -385,7 +385,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                 color: '#3D7DA8', textTransform: 'uppercase',
                 letterSpacing: '0.18em', marginTop: 8,
               }}>
-                ▸ {publicDilemmas.length === 1 ? 'PUBLIC DILEMMA' : 'PUBLIC DILEMMAS'}
+                {publicDilemmas.length === 1 ? 'PUBLIC DILEMMA' : 'PUBLIC DILEMMAS'}
               </div>
             </div>
           )}
@@ -406,7 +406,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                 color: '#2F5D5C', textTransform: 'uppercase',
                 letterSpacing: '0.18em', marginTop: 8,
               }}>
-                ▸ {publicDiaries.length === 1 ? 'PUBLIC DIARY' : 'PUBLIC DIARIES'}
+                {publicDiaries.length === 1 ? 'PUBLIC DIARY' : 'PUBLIC DIARIES'}
               </div>
             </div>
           )}
@@ -447,7 +447,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
               letterSpacing: 0.4,
               textTransform: 'uppercase',
             }}>
-              ▸ {t('pub.trail_caption', locale, { count: trailVectors.length }).toUpperCase()}
+              {t('pub.trail_caption', locale, { count: trailVectors.length }).toUpperCase()}
             </p>
           )}
         </section>
@@ -519,7 +519,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
               return (
                 <li key={d.id} style={publicEntryCard('#3D7DA8')}>
                   <div style={publicEventEyebrow('#3D7DA8')}>
-                    ▸ DAILY DILEMMA · {fmtDate(d.created_at).toUpperCase()}
+                    DAILY DILEMMA · {fmtDate(d.created_at).toUpperCase()}
                   </div>
                   <p style={{
                     fontFamily: serif,
@@ -576,7 +576,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
               return (
                 <li key={d.id} style={publicEntryCard('#2F5D5C')}>
                   <div style={publicEventEyebrow('#2F5D5C')}>
-                    ▸ DIARY ENTRY · {fmtDate(d.created_at).toUpperCase()}
+                    DIARY ENTRY · {fmtDate(d.created_at).toUpperCase()}
                   </div>
                   {d.title && (
                     <div style={{

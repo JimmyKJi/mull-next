@@ -205,7 +205,7 @@ export default async function ComparePage({
                 color: '#8C6520', textTransform: 'uppercase',
                 letterSpacing: '0.18em', marginBottom: 8,
               }}>
-                ▸ {(i === 0 ? 'Biggest divergence' : `#${i + 1}`).toUpperCase()} · {d.label}
+                {(i === 0 ? 'Biggest divergence' : `#${i + 1}`).toUpperCase()} · {d.label}
                 {d.poleFlip && (
                   <span style={{
                     marginLeft: 10,
@@ -253,7 +253,7 @@ export default async function ComparePage({
                   color: '#2F5D5C', textTransform: 'uppercase',
                   letterSpacing: '0.18em', marginBottom: 8,
                 }}>
-                  ▸ {(i === 0 ? 'Strongest agreement' : `#${i + 1}`).toUpperCase()} · {c.label}
+                  {(i === 0 ? 'Strongest agreement' : `#${i + 1}`).toUpperCase()} · {c.label}
                 </div>
                 <p style={{
                   fontFamily: serif, fontSize: 16, color: '#221E18',

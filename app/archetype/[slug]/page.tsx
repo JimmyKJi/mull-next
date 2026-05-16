@@ -79,7 +79,42 @@ export default async function ArchetypeDetailPage({
 
   const others = ARCHETYPES.filter((a) => a.key !== archetype.key);
 
+  // Structured data — Schema.org Article since each archetype page
+  // is an editorial essay on a philosophical pattern. Search engines
+  // surface these as rich-result candidates and use the structured
+  // data to disambiguate from the 10+ other things on the web that
+  // share these archetype names ("the cartographer" etc.).
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: `The ${name} — a philosophical archetype`,
+    description: archetype.spirit,
+    image: `https://mull.world/archetype/${slug}/opengraph-image`,
+    url: `https://mull.world/archetype/${slug}`,
+    inLanguage: locale,
+    mainEntity: {
+      '@type': 'DefinedTerm',
+      name: `The ${name}`,
+      description: archetype.spirit,
+      inDefinedTermSet: {
+        '@type': 'DefinedTermSet',
+        name: 'Mull archetypes',
+        url: 'https://mull.world/archetype',
+      },
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Mull',
+      url: 'https://mull.world',
+    },
+  };
+
   return (
+    <>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+    />
     <main
       className="mx-auto max-w-[860px] px-6 pb-32 pt-12 sm:px-10 sm:pt-16"
       style={
@@ -440,6 +475,7 @@ export default async function ArchetypeDetailPage({
         </Link>
       </div>
     </main>
+    </>
   );
 }
 

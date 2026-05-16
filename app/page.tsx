@@ -56,8 +56,46 @@ export default async function HomeV2() {
   const { philosopher } = getDailyWisdom();
   const todayLabel = EYEBROW_TODAY[locale] ?? EYEBROW_TODAY.en;
 
+  // JSON-LD for SEO. Two schemas: Organization (so Google knows
+  // who Mull is and links to the right social profiles, etc.) and
+  // WebSite (so the SearchAction lets Google show a search box
+  // sitelink for the canonical homepage). Both rendered as one
+  // application/ld+json blob since they share @context.
+  const homeSchema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Organization',
+        '@id': 'https://mull.world/#org',
+        name: 'Mull',
+        url: 'https://mull.world',
+        description:
+          'A philosophical-mapping tool. 16 dimensions, ten archetypes, 560 thinkers.',
+      },
+      {
+        '@type': 'WebSite',
+        '@id': 'https://mull.world/#site',
+        url: 'https://mull.world',
+        name: 'Mull',
+        publisher: { '@id': 'https://mull.world/#org' },
+        potentialAction: {
+          '@type': 'SearchAction',
+          target: {
+            '@type': 'EntryPoint',
+            urlTemplate: 'https://mull.world/search?q={search_term_string}',
+          },
+          'query-input': 'required name=search_term_string',
+        },
+      },
+    ],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(homeSchema) }}
+      />
       {/* Top-of-page paper-grain texture. Pure SVG, ~3KB, encoded
           inline so there's no network round-trip. Sits at 4% opacity
           — present enough that the page doesn't feel flat, faint

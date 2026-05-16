@@ -111,6 +111,14 @@ export function QuizEngine({ questions, mode, locale }: Props) {
   // boundary, we briefly show the chapter intro before the question.
   const [showingChapter, setShowingChapter] = useState(false);
 
+  // Computing-result transition. Between the final answer and the
+  // /result navigation, we show a ~1.6s pixel "computing" screen so
+  // the moment the user submitted their last answer feels weighty
+  // and the (potentially slow) /result server fetch is masked. The
+  // navigation fires after the screen renders so it overlaps with
+  // the route load.
+  const [computing, setComputing] = useState(false);
+
   // Resume from sessionStorage on mount.
   useEffect(() => {
     if (resumed) return;
@@ -244,6 +252,10 @@ export function QuizEngine({ questions, mode, locale }: Props) {
       /* ignore */
     }
     const v = btoa(JSON.stringify(finalVector.map((n) => +n.toFixed(3))));
+    // Show the computing screen first so the moment of submission
+    // feels weighty; fire the navigation in parallel so the route
+    // load overlaps with the visible animation.
+    setComputing(true);
     router.push(`/result?v=${encodeURIComponent(v)}&m=${mode}`);
   }
 
@@ -253,6 +265,15 @@ export function QuizEngine({ questions, mode, locale }: Props) {
         Loading…
       </div>
     );
+  }
+
+  // ── COMPUTING SCREEN ─────────────────────────────────────────
+  // Renders after the user submits their final answer, while the
+  // /result route is being fetched. The screen has its own pixel
+  // animation that runs concurrently with the navigation so the
+  // user sees the system "doing something" with their input.
+  if (computing) {
+    return <ComputingScreen />;
   }
 
   // ── CHAPTER TRANSITION ───────────────────────────────────────
@@ -414,6 +435,89 @@ export function QuizEngine({ questions, mode, locale }: Props) {
         ) : (
           <div className="w-[88px]" aria-hidden />
         )}
+      </div>
+    </div>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────
+// ComputingScreen — bridge between the final quiz answer and the
+// /result route load. Renders a chunky pixel "MAPPING YOUR PLACE"
+// dialog with cycling stage labels (loosely matches what the server
+// is actually doing — projecting the vector, scoring archetypes,
+// finding kindred philosophers).
+//
+// The /result navigation fires at the same moment this renders, so
+// the screen's animation overlaps with the route load. Most users
+// will see the full ~1.6s loop once before /result mounts; slow
+// connections see it longer.
+// ────────────────────────────────────────────────────────────────
+const COMPUTING_STAGES = [
+  'PROJECTING YOUR VECTOR INTO 16-D SPACE',
+  'SCORING TEN ARCHETYPES BY COSINE SIMILARITY',
+  'FINDING THE PHILOSOPHERS NEAREST TO YOU',
+  'PLACING YOU ON THE CONSTELLATION',
+] as const;
+
+function ComputingScreen() {
+  const [stage, setStage] = useState(0);
+
+  useEffect(() => {
+    const id = window.setInterval(
+      () => setStage((s) => (s + 1) % COMPUTING_STAGES.length),
+      450,
+    );
+    return () => window.clearInterval(id);
+  }, []);
+
+  return (
+    <div className="mx-auto flex min-h-[80vh] max-w-[720px] flex-col items-center justify-center px-6 py-16 text-center">
+      <div className="pixel-panel pixel-panel--ink w-full max-w-[520px]">
+        <div
+          className="border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.24em] text-[#F8EDC8]"
+          style={{ fontFamily: "var(--font-pixel-display)" }}
+        >
+          <span className="pixel-blink">▶</span> MAPPING_YOUR_PLACE.EXE
+        </div>
+        <div className="px-8 py-12">
+          <div
+            className="text-[64px] leading-none text-[#B8862F] pixel-float"
+            aria-hidden
+          >
+            ✦
+          </div>
+          <h1
+            className="mt-6 text-[20px] leading-[1.2] tracking-[0.04em] text-[#F8EDC8] sm:text-[24px]"
+            style={{ fontFamily: "var(--font-pixel-display)" }}
+          >
+            <span style={{ textShadow: "3px 3px 0 #B8862F" }}>
+              COMPUTING YOUR RESULT
+            </span>
+          </h1>
+          {/* Stage label rotates every ~450ms so the user can read
+              what's happening behind the screen. The label is
+              aria-live so screen readers also hear the progression. */}
+          <p
+            aria-live="polite"
+            aria-atomic="true"
+            className="mt-7 min-h-[2.5em] text-[12px] leading-[1.6] tracking-[0.18em] text-[#F8EDC8]/85"
+            style={{ fontFamily: "var(--font-pixel-display)" }}
+          >
+            {COMPUTING_STAGES[stage]}
+          </p>
+          {/* Marching pixel dots — three squares cycling. */}
+          <div className="mt-7 flex items-center justify-center gap-2" aria-hidden>
+            {[0, 1, 2].map((i) => (
+              <span
+                key={i}
+                className="inline-block h-3 w-3 bg-[#B8862F]"
+                style={{
+                  animation: `pixel-blink 1.2s steps(2, end) ${i * 0.2}s infinite`,
+                }}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
