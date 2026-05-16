@@ -68,3 +68,38 @@ export function isPaidPlan(plan: Plan | undefined | null): boolean {
   if (!plan) return false;
   return plan !== 'free';
 }
+
+// Academic email detection — drives the free EDU Mull+ tier.
+// We grant Mull+ at no charge to anyone whose primary email matches
+// a recognised academic domain. The detection is intentionally
+// permissive (better to comp Mull+ to a few false positives than
+// turn away a real student / professor).
+//
+// Patterns covered:
+//   - .edu                  (US universities + some K-12)
+//   - .edu.<cc>             (Brazil .edu.br, India .edu.in, etc.)
+//   - .ac.<cc>              (UK .ac.uk, JP .ac.jp, NZ .ac.nz, AU .ac.au, KR .ac.kr, ZA .ac.za, IN .ac.in, CN .ac.cn)
+//   - .k12.<state>.us       (US K-12 districts)
+//   - Common explicit school domains we whitelist by hand (none yet)
+//
+// If a partner institution uses a non-standard domain (e.g.
+// alumni-style addresses), we can add it to EXTRA_EDU_DOMAINS below.
+
+const EDU_REGEX = /(?:\.edu|\.edu\.[a-z]{2,3}|\.ac\.[a-z]{2,3}|\.k12\.[a-z]{2}\.us)$/i;
+
+const EXTRA_EDU_DOMAINS = new Set<string>([
+  // Add bespoke partner domains here, e.g. 'hostos.cuny.edu' (already
+  // covered by .edu), 'maths.cam.ac.uk' (already covered by .ac.uk).
+  // Kept as an escape hatch for institutions on non-standard TLDs.
+]);
+
+export function isEduEmail(email: string | null | undefined): boolean {
+  if (!email) return false;
+  const at = email.indexOf('@');
+  if (at < 0) return false;
+  const domain = email.slice(at + 1).toLowerCase().trim();
+  if (!domain) return false;
+  if (EDU_REGEX.test(domain)) return true;
+  if (EXTRA_EDU_DOMAINS.has(domain)) return true;
+  return false;
+}

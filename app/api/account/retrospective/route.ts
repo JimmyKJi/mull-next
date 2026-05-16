@@ -45,8 +45,9 @@ export async function GET(req: Request) {
   // ── Gating (Mull+ only) ────────────────────────────────────────────
   // 402 Payment Required is the semantically-correct response for a
   // gated route. The client surfaces a "Upgrade to Mull+" CTA when it
-  // sees this status.
-  const { isMullPlus } = await getUserPlan(supabase, user.id);
+  // sees this status. Passing user.email through enables free EDU-tier
+  // access for academic emails (see lib/subscription.getUserPlan).
+  const { isMullPlus } = await getUserPlan(supabase, user.id, user.email);
   if (!isMullPlus) {
     return NextResponse.json(
       { error: 'Mull+ only.', upgradeUrl: '/billing' },
