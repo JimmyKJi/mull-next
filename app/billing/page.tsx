@@ -8,7 +8,7 @@ import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
 import MullWordmark from '@/components/mull-wordmark';
-import { PRICES } from '@/lib/billing';
+import { PRICES, isDryRun } from '@/lib/billing';
 import PlanPicker from './plan-picker';
 import type { Metadata } from 'next';
 
@@ -73,20 +73,24 @@ export default async function BillingPage() {
         {t('billing.subtitle', locale)}
       </p>
 
-      <div style={{
-        padding: '14px 18px',
-        background: '#F8EDC8',
-        border: '3px solid #221E18',
-        boxShadow: '3px 3px 0 0 #B8862F',
-        borderRadius: 0,
-        fontFamily: serif,
-        fontSize: 14.5,
-        color: '#221E18',
-        marginBottom: 36,
-        lineHeight: 1.55,
-      }}>
-        {t('billing.dryrun_notice', locale)}
-      </div>
+      {/* Dry-run notice only renders when STRIPE_SECRET_KEY is unset.
+          Live deploys see no notice, just the pricing grid. */}
+      {isDryRun() && (
+        <div style={{
+          padding: '14px 18px',
+          background: '#F8EDC8',
+          border: '3px solid #221E18',
+          boxShadow: '3px 3px 0 0 #B8862F',
+          borderRadius: 0,
+          fontFamily: serif,
+          fontSize: 14.5,
+          color: '#221E18',
+          marginBottom: 36,
+          lineHeight: 1.55,
+        }}>
+          {t('billing.dryrun_notice', locale)}
+        </div>
+      )}
 
       <div style={{
         display: 'grid',

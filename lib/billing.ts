@@ -1,17 +1,16 @@
-// Billing helpers — wrap Stripe + the local subscriptions cache.
+// Billing helpers — single source of truth for plan definitions
+// (PRICES below) + the dry-run/live mode switch.
 //
-// CURRENTLY DRY-RUN: Stripe SDK is NOT a dependency yet. Routes that call
-// the helpers will return a clearly-flagged mock response when
-// STRIPE_SECRET_KEY is not set, so the UI flow can be exercised end-to-end
-// without real charges.
+// Live mode kicks in automatically when STRIPE_SECRET_KEY is set;
+// otherwise routes return a synthetic dry-run URL pointing at
+// /billing/dry-run so the UI flow can be exercised end-to-end.
 //
-// To enable for real:
-//   1. npm install stripe
-//   2. Set STRIPE_SECRET_KEY (sk_test_… or sk_live_…) in env
-//   3. Set STRIPE_WEBHOOK_SECRET for the webhook
-//   4. Set NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY for the client
-//   5. Replace the dryRun branches in lib/billing.ts with the real Stripe calls
-//   6. Run the 20260510_subscriptions.sql migration
+// Required env vars (live mode):
+//   STRIPE_SECRET_KEY       — sk_test_… or sk_live_…
+//   STRIPE_WEBHOOK_SECRET   — whsec_… (webhook receiver)
+//   NEXT_PUBLIC_SITE_URL    — optional; defaults to https://mull.world
+//
+// Required SQL: supabase/migrations/20260510_subscriptions.sql.
 
 export type Plan = 'free' | 'plus_monthly' | 'plus_yearly' | 'founding_lifetime';
 

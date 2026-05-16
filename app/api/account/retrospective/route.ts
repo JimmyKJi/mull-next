@@ -4,10 +4,9 @@
 // entries), distills it into a Claude-generated essay about how the user's
 // thinking shifted over the year. Designed to be sent around Dec 28.
 //
-// Currently SCAFFOLD: the route works end-to-end and the essay generation
-// is real (calls Claude). The Mull+ gate is mocked — uncomment the
-// subscription check once Stripe is wired up. Until then, anyone signed
-// in can call it.
+// Gated to Mull+ subscribers via getUserPlan (lib/subscription). Free
+// users hit 402 with a "Mull+ only" payload the client uses to point
+// them at /billing.
 //
 // GET params:
 //   year=YYYY  (defaults to current calendar year in user's local TZ)
@@ -19,6 +18,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { DIM_KEYS, DIM_NAMES } from '@/lib/dimensions';
+import { getUserPlan } from '@/lib/subscription';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -43,10 +43,16 @@ export async function GET(req: Request) {
   if (!user) return NextResponse.json({ error: 'Not signed in.' }, { status: 401 });
 
   // ── Gating (Mull+ only) ────────────────────────────────────────────
-  // TODO: once Stripe is wired up, replace this with a real subscription
-  // lookup. For now, leave open so we can dogfood.
-  // const isMullPlus = await checkSubscription(user.id);
-  // if (!isMullPlus) return NextResponse.json({ error: 'Mull+ only.' }, { status: 402 });
+  // 402 Payment Required is the semantically-correct response for a
+  // gated route. The client surfaces a "Upgrade to Mull+" CTA when it
+  // sees this status.
+  const { isMullPlus } = await getUserPlan(supabase, user.id);
+  if (!isMullPlus) {
+    return NextResponse.json(
+      { error: 'Mull+ only.', upgradeUrl: '/billing' },
+      { status: 402 },
+    );
+  }
 
   const start = `${year}-01-01T00:00:00Z`;
   const end = `${year + 1}-01-01T00:00:00Z`;
