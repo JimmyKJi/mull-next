@@ -92,7 +92,7 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel }: Diagnosi
             color: '#8C6520', textTransform: 'uppercase',
             letterSpacing: '0.18em', marginBottom: 10, marginTop: 16,
           }}>
-            ▸ KINDRED THINKERS
+            KINDRED THINKERS
           </div>
           <ul style={{
             listStyle: 'none', padding: 0, margin: 0,
@@ -158,7 +158,7 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel }: Diagnosi
             color: '#8C6520', textTransform: 'uppercase',
             letterSpacing: '0.18em', marginBottom: 10, marginTop: 16,
           }}>
-            ▸ ALSO ECHOES
+            ALSO ECHOES
           </div>
           <ul style={{
             listStyle: 'none', padding: 0, margin: 0,
@@ -222,7 +222,7 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel }: Diagnosi
             color: '#8C6520', textTransform: 'uppercase',
             letterSpacing: '0.18em', marginBottom: 10, marginTop: 16,
           }}>
-            ▸ TRADITIONS
+            TRADITIONS
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
             {kinship.traditions.map(tr => (

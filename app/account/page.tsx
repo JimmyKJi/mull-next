@@ -520,7 +520,7 @@ export default async function AccountPage() {
             letterSpacing: '0.18em',
             marginBottom: 14,
           }}>
-            ▸ {t('first.eyebrow', locale).toUpperCase()}
+            {t('first.eyebrow', locale).toUpperCase()}
           </div>
           <h2 style={{
             fontFamily: serif,
@@ -638,7 +638,7 @@ export default async function AccountPage() {
                 textTransform: 'uppercase',
                 letterSpacing: '0.18em',
                 marginTop: 8,
-              }}>▸ {t('account.stat_current_streak', locale).toUpperCase()}{streak >= 30 ? ` · ${streak} DAYS` : ''}</div>
+              }}>{t('account.stat_current_streak', locale).toUpperCase()}{streak >= 30 ? ` · ${streak} DAYS` : ''}</div>
             </div>
           )}
         </div>
@@ -844,7 +844,7 @@ export default async function AccountPage() {
             letterSpacing: 0.4,
             textTransform: 'uppercase',
           }}>
-            ▸ {(trailVectors.length > 1
+            {(trailVectors.length > 1
               ? t('account.trajectory_caption_with_trail', locale, { n: trailVectors.length })
               : t('account.trajectory_caption_no_trail', locale)).toUpperCase()}
           </p>
@@ -932,7 +932,7 @@ export default async function AccountPage() {
                       letterSpacing: '0.18em',
                       color: accent,
                     }}>
-                      ▸ {labelText.toUpperCase()} · {fmtRel(ts).toUpperCase()}
+                      {labelText.toUpperCase()} · {fmtRel(ts).toUpperCase()}
                     </span>
                     <span style={{
                       fontFamily: pixel,
