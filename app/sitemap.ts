@@ -6,6 +6,7 @@
 // search engines should still find it through this sitemap entry.
 import type { MetadataRoute } from 'next';
 import { philosopherSlugs } from '@/lib/philosophers';
+import { TOPICS } from '@/lib/topics';
 
 const SITE = 'https://mull.world';
 
@@ -44,6 +45,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: 'monthly' as const,
       priority: 0.5,
+    })),
+    // Topic explainer pages — evergreen organic-search landings.
+    { url: `${SITE}/topic`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
+    ...TOPICS.map(t => ({
+      url: `${SITE}/topic/${t.slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
     })),
   ];
 }
