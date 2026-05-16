@@ -9,6 +9,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { t, type Locale } from '@/lib/translations';
+import EmptyStateSprite from '@/components/empty-state-sprite';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
@@ -111,32 +112,18 @@ export default function SearchPanel({ locale = 'en' }: { locale?: Locale }) {
       </div>
 
       {error && (
-        <div style={{
-          marginTop: 16,
-          padding: '10px 14px',
-          background: 'rgba(122, 46, 46, 0.08)',
-          border: '1px solid rgba(122, 46, 46, 0.2)',
-          borderRadius: 6,
-          fontFamily: sans,
-          fontSize: 13,
-          color: '#7A2E2E',
-        }}>
+        <p className="pixel-alert pixel-alert--error" style={{ marginTop: 16 }}>
           {error}
-        </div>
+        </p>
       )}
 
       {q.trim() && hasSearched && !searching && results.length === 0 && !error && (
-        <p style={{
-          marginTop: 24,
-          fontFamily: serif,
-          fontStyle: 'italic',
-          fontSize: 16,
-          color: '#8C6520',
-          textAlign: 'center',
-          opacity: 0.85,
-        }}>
-          {t('search.no_match', locale, { q })}
-        </p>
+        <div style={{ marginTop: 24 }}>
+          <EmptyStateSprite
+            variant="explorer"
+            caption={t('search.no_match', locale, { q })}
+          />
+        </div>
       )}
 
       {results.length > 0 && (

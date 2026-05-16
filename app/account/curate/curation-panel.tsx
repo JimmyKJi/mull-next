@@ -14,6 +14,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import EmptyStateSprite from '@/components/empty-state-sprite';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
@@ -270,15 +271,17 @@ export default function CurationPanel() {
 
       {/* Candidates feed */}
       {!loading && candidates.length === 0 && (
-        <p style={{
-          fontFamily: serif, fontStyle: 'italic',
-          fontSize: 15, color: '#8C6520',
-          padding: '14px 18px',
-          background: '#FFFCF4', border: '1px dashed #D6CDB6',
-          borderRadius: 8,
+        <div style={{
+          padding: '20px 18px',
+          background: '#FFFCF4',
+          border: '3px dashed #8C6520',
+          borderRadius: 0,
         }}>
-          No public entries match these filters yet.
-        </p>
+          <EmptyStateSprite
+            variant="explorer"
+            caption="No public entries match these filters yet."
+          />
+        </div>
       )}
       <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 12 }}>
         {candidates.map(c => {

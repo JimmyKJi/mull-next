@@ -17,6 +17,7 @@
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
 import { findExercise } from '@/lib/exercises';
+import EmptyStateSprite from '@/components/empty-state-sprite';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
@@ -231,16 +232,17 @@ export default async function OriginalThinking() {
       </p>
 
       {rows.length === 0 ? (
-        <p style={{
-          fontFamily: serif, fontStyle: 'italic',
-          fontSize: 15, color: '#8C6520',
-          padding: '16px 18px',
-          background: '#FFFCF4', border: '1px dashed #D6CDB6',
-          borderRadius: 8, margin: 0,
+        <div style={{
+          padding: '20px 18px',
+          background: '#FFFCF4',
+          border: '3px dashed #6B3E8C',
+          borderRadius: 0,
         }}>
-          No entries here yet. Once someone writes something genuinely
-          uncovered by the canon and marks it public, it surfaces here.
-        </p>
+          <EmptyStateSprite
+            variant="explorer"
+            caption="No entries here yet. Once someone writes something genuinely uncovered by the canon and marks it public, it surfaces here."
+          />
+        </div>
       ) : (
         <ol style={{
           listStyle: 'none', padding: 0, margin: 0,

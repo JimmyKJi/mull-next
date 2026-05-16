@@ -27,6 +27,7 @@ import { HeroSprites } from "@/components/hero-sprites";
 import { PhilosopherSprite } from "@/components/philosopher-sprite";
 import { ArchetypeSprite } from "@/components/archetype-sprite";
 import { PHILOSOPHERS } from "@/lib/philosophers";
+import { ObfuscatedEmail } from "@/components/obfuscated-email";
 
 export const metadata: Metadata = {
   title: "Mull · Find your place on the map of how you think",
@@ -556,12 +557,16 @@ export default async function HomeV2() {
                 MULL
               </span>
               <span className="text-[#B8862F]">a passion project · </span>
-              <a
-                href="mailto:jimmy.kaian.ji@gmail.com"
+              {/* Email obfuscated to dodge naive scrapers — the real
+                  address is reassembled at click via the <ObfuscatedEmail>
+                  component (writes the mailto on the fly). Bots that
+                  parse the rendered HTML statically just see the visual
+                  spelling, not a clickable mailto. */}
+              <ObfuscatedEmail
+                user="jimmy.kaian.ji"
+                domain="gmail.com"
                 className="text-[#F8EDC8] underline decoration-[#B8862F]/40 underline-offset-2 hover:decoration-[#F8EDC8]"
-              >
-                jimmy.kaian.ji@gmail.com
-              </a>
+              />
             </div>
             <nav className="flex flex-wrap gap-5 text-[#F8EDC8]">
               <Link href="/about" className="hover:text-[#B8862F]">About</Link>

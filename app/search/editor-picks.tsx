@@ -10,6 +10,7 @@
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
 import { weekKey, weekRangeLabel } from '@/lib/week';
+import EmptyStateSprite from '@/components/empty-state-sprite';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
@@ -75,15 +76,17 @@ export default async function EditorPicks({ locale = 'en' }: { locale?: string }
       </p>
 
       {picks.length === 0 ? (
-        <p style={{
-          fontFamily: serif, fontStyle: 'italic',
-          fontSize: 15, color: '#8C6520',
-          padding: '16px 18px',
-          background: '#FFFCF4', border: '1px dashed #D6CDB6',
-          borderRadius: 8, margin: 0,
+        <div style={{
+          padding: '20px 18px',
+          background: '#FFFCF4',
+          border: '3px dashed #8C6520',
+          borderRadius: 0,
         }}>
-          No picks this week yet. Check back in a few days, or set your own entries to public to be eligible for next week&rsquo;s round.
-        </p>
+          <EmptyStateSprite
+            variant="star"
+            caption="No picks this week yet. Check back in a few days, or set your own entries to public to be eligible for next week's round."
+          />
+        </div>
       ) : (
         <ol style={{
           listStyle: 'none', padding: 0, margin: 0,

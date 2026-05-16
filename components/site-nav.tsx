@@ -131,6 +131,27 @@ export function SiteNav() {
         </div>
       </nav>
 
+      {/* Mobile-only floating Cmd-K trigger. Sits bottom-left so it
+          doesn't collide with the Feedback button (bottom-right).
+          Hidden on sm+ since the inline Search button in the nav
+          already covers desktop. The pixel "⌘" button is small and
+          unobtrusive — discoverable for someone tapping around without
+          dominating the viewport. */}
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        aria-label="Open command palette"
+        className="pixel-press fixed bottom-[18px] left-[18px] z-[60] flex h-12 w-12 items-center justify-center border-4 border-[#221E18] bg-[#221E18] text-[#FAF6EC] shadow-[3px_3px_0_0_#B8862F] sm:hidden"
+        style={{
+          fontFamily: "var(--font-pixel-display)",
+          fontSize: 14,
+          letterSpacing: 0,
+          transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+        }}
+      >
+        ⌘K
+      </button>
+
       {open ? <CommandPalette onClose={() => setOpen(false)} /> : null}
     </>
   );

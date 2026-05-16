@@ -107,6 +107,11 @@ export default function DilemmaReminderCard({ locale = 'en' as Locale }: { local
       <h3 style={heading}>{t('reminder.title', locale)}</h3>
       <p style={blurb}>{t('reminder.blurb', locale)}</p>
 
+      {/* Inviting opt-in copy. The checkbox label speaks in voice
+          ("I'd like to / Yes — every morning at …") rather than the
+          generic Off/On toggle, which makes it feel like a setting
+          you have to figure out instead of a thing you'd actually
+          want. */}
       <label style={toggleRow}>
         <input
           type="checkbox"
@@ -116,8 +121,18 @@ export default function DilemmaReminderCard({ locale = 'en' as Locale }: { local
         />
         <span style={{ fontFamily: sans, fontSize: 14.5, color: '#221E18' }}>
           {prefs.enabled
-            ? t('reminder.toggle_on', locale)
-            : t('reminder.toggle_off', locale)}
+            ? (() => {
+                // Format the user's chosen hour in their locale so the
+                // label reads as "Yes — every morning at 9:00 AM in
+                // America/New_York" rather than a generic "On".
+                const d = new Date();
+                d.setHours(prefs.hour, 0, 0, 0);
+                const time = d.toLocaleTimeString(locale === 'en' ? 'en-US' : locale, {
+                  hour: 'numeric', minute: '2-digit',
+                });
+                return `Yes — send today's dilemma at ${time}.`;
+              })()
+            : "I'd like today's dilemma in my inbox each morning."}
         </span>
       </label>
 
