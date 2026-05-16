@@ -131,15 +131,14 @@ export default function DebateForm({
     return (
       <div>
         <div style={{
-          fontFamily: sans,
-          fontSize: 11,
-          fontWeight: 600,
+          fontFamily: 'var(--font-pixel-display)',
+          fontSize: 12,
           color: '#8C6520',
           textTransform: 'uppercase',
           letterSpacing: '0.18em',
           marginBottom: 14,
         }}>
-          {t('debate.exchange_on', locale, { topic: result.topic })}
+          ▸ {t('debate.exchange_on', locale, { topic: result.topic }).toUpperCase()}
         </div>
         {result.setup && (
           <p style={{
@@ -174,19 +173,23 @@ export default function DebateForm({
         <div style={{ marginTop: 36, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
           <button
             onClick={reset}
+            className="pixel-press"
             style={{
-              padding: '11px 20px',
+              padding: '12px 22px',
               background: '#221E18',
               color: '#FAF6EC',
-              border: 'none',
-              borderRadius: 8,
+              border: '4px solid #221E18',
+              boxShadow: '4px 4px 0 0 #B8862F',
+              borderRadius: 0,
               cursor: 'pointer',
-              fontFamily: sans,
-              fontSize: 14,
-              fontWeight: 500,
+              fontFamily: 'var(--font-pixel-display)',
+              fontSize: 12,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
             }}
           >
-            {t('debate.different_debate', locale)}
+            ▸ {t('debate.different_debate', locale).toUpperCase()}
           </button>
         </div>
       </div>
