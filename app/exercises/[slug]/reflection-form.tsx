@@ -151,38 +151,38 @@ export default function ReflectionForm({
         marginTop: 36,
         padding: '28px 32px',
         background: '#FFFCF4',
-        border: '1px solid #D6CDB6',
-        borderLeft: '3px solid #2F5D5C',
-        borderRadius: 10,
+        border: '4px solid #221E18',
+        boxShadow: '5px 5px 0 0 #2F5D5C',
+        borderRadius: 0,
       }}>
         <div style={{
-          fontFamily: sans,
-          fontSize: 11,
-          fontWeight: 600,
+          fontFamily: 'var(--font-pixel-display)',
+          fontSize: 12,
           color: '#2F5D5C',
           textTransform: 'uppercase',
-          letterSpacing: '0.16em',
+          letterSpacing: '0.18em',
           marginBottom: 14,
         }}>
-          {t('reflect.saved', locale)}
+          ✓ {t('reflect.saved', locale).toUpperCase()}
         </div>
         {result.analysis ? (
           <div style={{
             padding: '14px 16px',
-            background: '#F5EFDC',
-            borderRadius: 6,
+            background: '#F8EDC8',
+            border: '3px solid #221E18',
+            boxShadow: '3px 3px 0 0 #B8862F',
+            borderRadius: 0,
             marginBottom: 16,
           }}>
             <div style={{
-              fontFamily: sans,
+              fontFamily: 'var(--font-pixel-display)',
               fontSize: 10,
-              fontWeight: 600,
               color: '#8C6520',
               textTransform: 'uppercase',
-              letterSpacing: '0.16em',
-              marginBottom: 6,
+              letterSpacing: '0.18em',
+              marginBottom: 8,
             }}>
-              {t('dilemma.what_revealed', locale)}
+              {t('dilemma.what_revealed', locale).toUpperCase()}
             </div>
             <p style={{
               fontFamily: serif,
@@ -289,7 +289,7 @@ export default function ReflectionForm({
 
   // Signed in & writing → form.
   return (
-    <form onSubmit={onSubmit} style={{ marginTop: 36, display: 'flex', flexDirection: 'column', gap: 14 }}>
+    <form onSubmit={onSubmit} className="pixel-form" style={{ marginTop: 36, display: 'flex', flexDirection: 'column', gap: 14 }}>
       <div style={{
         fontFamily: sans,
         fontSize: 11,
@@ -374,9 +374,9 @@ export default function ReflectionForm({
         alignItems: 'flex-start',
         gap: 10,
         padding: '10px 14px',
-        background: makePublic ? '#F5EFDC' : 'transparent',
-        border: '1px solid #EBE3CA',
-        borderRadius: 8,
+        background: makePublic ? '#F8EDC8' : '#FFFCF4',
+        border: '2px solid #221E18',
+        borderRadius: 0,
         cursor: 'pointer',
         fontFamily: sans,
         fontSize: 13,

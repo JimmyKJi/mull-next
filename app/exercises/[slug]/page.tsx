@@ -50,57 +50,44 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
   const isAuthed = !!user;
 
   return (
-    <main style={{ maxWidth: 720, margin: '60px auto', padding: '0 24px 120px' }}>
-      <header style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 36,
-        flexWrap: 'wrap',
-        gap: 12,
-      }}>
-        <Link href="/exercises" style={{
-          fontFamily: sans,
-          fontSize: 13,
-          color: '#4A4338',
-          textDecoration: 'none',
-        }}>
-          {t('exercises.all', locale)}
+    <main className="mx-auto max-w-[820px] px-6 pb-32 pt-10 sm:px-10">
+      <div className="mb-6 flex items-center justify-between gap-4">
+        <Link
+          href="/exercises"
+          className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"
+        >
+          ← {t('exercises.all', locale)}
         </Link>
         <LanguageSwitcher initial={locale} />
-      </header>
-
-      <div style={{
-        fontFamily: sans,
-        fontSize: 11,
-        fontWeight: 600,
-        color: '#8C6520',
-        textTransform: 'uppercase',
-        letterSpacing: '0.18em',
-        marginBottom: 12,
-      }}>
-        {ex.tradition} · {ex.duration}
       </div>
-      <h1 style={{
-        fontFamily: serif,
-        fontSize: 44,
-        fontWeight: 500,
-        margin: '0 0 12px',
-        letterSpacing: '-0.5px',
-        lineHeight: 1.05,
-      }}>
-        {ex.name}
+
+      <div
+        className="flex flex-wrap items-center gap-3 text-[10px] tracking-[0.22em] text-[#8C6520]"
+        style={{ fontFamily: 'var(--font-pixel-display)' }}
+      >
+        <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
+        <span>▶ {ex.tradition.toUpperCase()}</span>
+        <span className="opacity-60">·</span>
+        <span className="text-[#221E18]">{ex.duration.toUpperCase()}</span>
+      </div>
+
+      <h1
+        className="mt-5 pr-2 text-[26px] leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[36px] md:text-[44px]"
+        style={{ fontFamily: 'var(--font-pixel-display)' }}
+      >
+        <span style={{ textShadow: '3px 3px 0 #B8862F' }}>
+          {ex.name.toUpperCase()}
+        </span>
       </h1>
-      <p style={{
-        fontFamily: serif,
-        fontStyle: 'italic',
-        fontSize: 19,
-        color: '#4A4338',
-        margin: '0 0 36px',
-        lineHeight: 1.55,
-      }}>
+
+      <p
+        className="mt-6 text-[18px] italic leading-[1.55] text-[#4A4338]"
+        style={{ fontFamily: 'var(--font-prose)' }}
+      >
         {ex.summary}
       </p>
+
+      <div className="mt-8" />
 
       <Section title={t('exercises.about', locale)}>
         {locale !== 'en' && (
@@ -157,20 +144,20 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
       <div style={{
         marginTop: 36,
         padding: '22px 26px',
-        background: '#F5EFDC',
-        borderLeft: '3px solid #B8862F',
-        borderRadius: 8,
+        background: '#F8EDC8',
+        border: '4px solid #221E18',
+        boxShadow: '5px 5px 0 0 #B8862F',
+        borderRadius: 0,
       }}>
         <div style={{
-          fontFamily: sans,
+          fontFamily: 'var(--font-pixel-display)',
           fontSize: 11,
-          fontWeight: 600,
           color: '#8C6520',
           textTransform: 'uppercase',
           letterSpacing: '0.18em',
-          marginBottom: 10,
+          marginBottom: 12,
         }}>
-          {t('exercises.after', locale)}
+          ▸ {t('exercises.after', locale).toUpperCase()}
         </div>
         <p style={{
           margin: 0,
@@ -203,16 +190,67 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
         <ExerciseExtrasSection slug={slug} extras={EXERCISE_EXTRAS[slug]} locale={locale} />
       )}
 
-      <p style={{
-        textAlign: 'center',
-        marginTop: 48,
-        fontFamily: sans,
-        fontSize: 13,
-      }}>
-        <Link href="/exercises" style={{ color: '#8C6520', textDecoration: 'underline', textUnderlineOffset: 3 }}>
-          {t('exercises.all', locale)}
+      {/* Back-navigation footer — paired pixel chips so users coming
+          from the trajectory list, the exercise index, or the
+          archetype's "suggested exercises" section have an obvious
+          path back. Account-trajectory only renders if the user has
+          one (we don't know that here without auth) so we always
+          show both and let the user choose. */}
+      <nav
+        aria-label="Continue elsewhere"
+        style={{
+          marginTop: 56,
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 12,
+          justifyContent: 'center',
+          paddingTop: 24,
+          borderTop: '2px dashed #D6CDB6',
+        }}
+      >
+        <Link
+          href="/exercises"
+          className="pixel-press"
+          style={{
+            display: 'inline-block',
+            padding: '10px 16px',
+            background: '#FFFCF4',
+            color: '#7A4A2E',
+            border: '3px solid #221E18',
+            boxShadow: '3px 3px 0 0 #7A4A2E',
+            borderRadius: 0,
+            fontFamily: 'var(--font-pixel-display)',
+            fontSize: 11,
+            letterSpacing: 0.4,
+            textDecoration: 'none',
+            textTransform: 'uppercase',
+            transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+          }}
+        >
+          ◂ {t('exercises.all', locale).toUpperCase()}
         </Link>
-      </p>
+        <Link
+          href="/account#shifts"
+          className="pixel-press"
+          style={{
+            display: 'inline-block',
+            padding: '10px 16px',
+            background: '#221E18',
+            color: '#FAF6EC',
+            border: '3px solid #221E18',
+            boxShadow: '3px 3px 0 0 #B8862F',
+            borderRadius: 0,
+            fontFamily: 'var(--font-pixel-display)',
+            fontSize: 11,
+            letterSpacing: 0.4,
+            textDecoration: 'none',
+            textTransform: 'uppercase',
+            transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+          }}
+        >
+          ▸ YOUR TRAJECTORY
+        </Link>
+      </nav>
     </main>
   );
 }
@@ -281,7 +319,7 @@ function ExerciseExtrasSection({
             {extras.relatedThinkers.map((thinker, i) => (
               <li key={i} style={{
                 padding: '10px 14px', background: '#FFFCF4',
-                border: '1px solid #EBE3CA', borderRadius: 6,
+                border: '2px solid #221E18', borderRadius: 0,
               }}>
                 <strong style={{ color: '#221E18' }}>{thinker.name}</strong>
                 <span style={{ color: '#4A4338' }}> — {thinker.note}</span>
@@ -297,7 +335,9 @@ function ExerciseExtrasSection({
             {extras.furtherReading.map((book, i) => (
               <li key={i} style={{
                 padding: '12px 16px', background: '#FFFCF4',
-                border: '1px solid #EBE3CA', borderRadius: 8,
+                border: '3px solid #221E18',
+                boxShadow: '3px 3px 0 0 #B8862F',
+                borderRadius: 0,
               }}>
                 <div style={{
                   fontFamily: serif, fontSize: 17, color: '#221E18',
@@ -325,10 +365,14 @@ function ExerciseExtrasSection({
               <li key={rex.slug}>
                 <Link
                   href={`/exercises/${rex.slug}`}
+                  className="pixel-press"
                   style={{
                     display: 'block', padding: '12px 16px',
-                    background: '#FFFCF4', border: '1px solid #EBE3CA',
-                    borderRadius: 8, textDecoration: 'none', color: 'inherit',
+                    background: '#FFFCF4',
+                    border: '3px solid #221E18',
+                    boxShadow: '3px 3px 0 0 #2F5D5C',
+                    borderRadius: 0, textDecoration: 'none', color: 'inherit',
+                    transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
                   }}
                 >
                   <div style={{ fontFamily: serif, fontSize: 17, color: '#221E18' }}>

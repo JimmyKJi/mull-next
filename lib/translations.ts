@@ -39,6 +39,76 @@ type TranslationMap = Record<string, Partial<Record<Locale, string>>>;
 // English source strings. Run scripts/translate-i18n.js to fill in the rest.
 // (After running, this file gets overwritten with all locales filled in.)
 export const TRANSLATIONS: TranslationMap = {
+  // ─── Homepage (mull.html migration, Phase 3b) ─────────────────
+  "home.version_banner": {
+    en: "<strong>Mull v0.9</strong> · early build · hand-built",
+    es: "<strong>Mull v0.9</strong> · versión inicial · hecho a mano",
+    fr: "<strong>Mull v0.9</strong> · version préliminaire · fait main",
+    pt: "<strong>Mull v0.9</strong> · versão inicial · feito à mão",
+    ru: "<strong>Mull v0.9</strong> · ранняя сборка · сделано вручную",
+    zh: "<strong>Mull v0.9</strong> · 早期版本 · 手工打造",
+    ja: "<strong>Mull v0.9</strong> · 早期版 · 手作り",
+    ko: "<strong>Mull v0.9</strong> · 초기 버전 · 수작업"
+  },
+  "home.construction_notice": {
+    en: "<strong>Early build.</strong> The quiz is in demo stage — calibration is actively being tuned, so your placement may shift as the model improves over the next few weeks. Subscriptions aren't live yet either, so AI features run on the maintainer's pocket and may pause briefly if the budget runs out. Thanks for your patience while this finds its shape.",
+    es: "<strong>Versión temprana.</strong> Las suscripciones aún no están activas, así que las funciones de IA salen del bolsillo y pueden pausarse brevemente si se agota el presupuesto. Gracias por la paciencia.",
+    fr: "<strong>Version préliminaire.</strong> Les abonnements ne sont pas encore actifs, donc les fonctions d'IA sont payées de la poche et peuvent s'interrompre brièvement si le budget est épuisé. Merci de ta patience.",
+    pt: "<strong>Versão inicial.</strong> As assinaturas ainda não estão ativas, então as funções de IA saem do bolso e podem pausar brevemente se o orçamento acabar. Obrigado pela paciência.",
+    ru: "<strong>Ранняя сборка.</strong> Подписки пока не активны — функции с ИИ оплачиваются из кармана и могут ненадолго приостанавливаться, если бюджет исчерпается. Спасибо за терпение.",
+    zh: "<strong>早期版本。</strong>订阅尚未上线，AI 功能由个人承担费用，预算用尽时可能短暂暂停。感谢理解。",
+    ja: "<strong>早期版です。</strong>サブスクリプションはまだ稼働しておらず、AI 機能は自費で運用しています。予算が尽きると一時的に停止することがあります。ご理解に感謝します。",
+    ko: "<strong>초기 버전입니다.</strong> 구독이 아직 가동되지 않아 AI 기능은 자비로 운영하고 있습니다. 예산이 바닥나면 잠시 멈출 수 있습니다. 너그러이 양해해 주세요."
+  },
+  "home.hero_h1": {
+    en: "Find your place on the <em>map of how you think.</em>",
+    es: "Encuentra tu lugar en el <em>mapa de cómo piensas.</em>",
+    fr: "Trouve ta place sur la <em>carte de ta façon de penser.</em>",
+    pt: "Encontre seu lugar no <em>mapa de como você pensa.</em>",
+    ru: "Найдите своё место на <em>карте того, как вы мыслите.</em>",
+    zh: "在<em>你思考方式的地图</em>上找到你的位置。",
+    ja: "<em>あなたの考え方の地図</em>のうえで、自分の位置を見つけよう。",
+    ko: "<em>당신의 사고방식 지도</em> 위에서 자신의 자리를 찾아보세요."
+  },
+  "home.hero_lede": {
+    en: "No right answers. Skip anything. At the end you'll see where your worldview sits — and which thinkers across history have stood near you.",
+    es: "No hay respuestas correctas. Salta lo que quieras. Al final verás dónde se sitúa tu visión del mundo — y qué pensadores a lo largo de la historia han estado cerca de ti.",
+    fr: "Pas de bonnes réponses. Tu peux passer ce que tu veux. À la fin, tu verras où se situe ta vision du monde — et quels penseurs, au fil de l'histoire, ont occupé une place proche de la tienne.",
+    pt: "Não há respostas certas. Pule o que quiser. No final você verá onde sua visão de mundo se situa — e quais pensadores, ao longo da história, estiveram perto de você.",
+    ru: "Здесь нет правильных ответов. Любой вопрос можно пропустить. В конце вы увидите, где находится ваша картина мира — и какие мыслители на протяжении истории стояли близко к вам.",
+    zh: "没有标准答案。任何题目都可以跳过。最后你会看到自己的世界观坐落在何处 —— 以及历史上哪些思想家曾站在你附近。",
+    ja: "正解はありません。気が乗らない問いはスキップして大丈夫。最後に、あなたの世界観がどこに位置するか — そして歴史のなかで誰があなたの近くに立っていたか — が見えてきます。",
+    ko: "정답은 없습니다. 어떤 질문이든 건너뛰어도 좋아요. 끝에 가면 당신의 세계관이 어디쯤 자리하는지 — 그리고 역사 속 어떤 사상가들이 당신 가까이 서 있었는지 보게 될 거예요."
+  },
+  "home.quick_name":   { en: "Quick start", es: "Inicio rápido", fr: "Démarrage rapide", pt: "Início rápido", ru: "Быстрый старт", zh: "快速开始", ja: "クイックスタート", ko: "빠른 시작" },
+  "home.quick_meta":   { en: "20 questions · ~6 minutes", es: "20 preguntas · ~6 minutos", fr: "20 questions · ~6 minutes", pt: "20 perguntas · ~6 minutos", ru: "20 вопросов · ~6 минут", zh: "20 道题 · 约 6 分钟", ja: "20問 ・ 約6分", ko: "20문항 · 약 6분" },
+  "home.quick_desc":   { en: "A broad sketch of where you sit. Best if you're new to Mull or short on time.", es: "Un esbozo amplio de dónde te sitúas. Ideal si llegas nuevo a Mull o vas con poco tiempo.", fr: "Une esquisse large de ta position. Idéal si tu découvres Mull ou si tu as peu de temps.", pt: "Um esboço geral de onde você se encontra. Melhor se você é novo no Mull ou tem pouco tempo.", ru: "Общий набросок того, где вы находитесь. Подходит, если вы только знакомитесь с Mull или у вас мало времени.", zh: "对你所处位置的大致勾勒。如果你刚接触 Mull 或时间有限，最适合从这里开始。", ja: "あなたの立ち位置をざっくり描き出します。Mull が初めての方や、時間が限られているときに。", ko: "당신이 어디쯤 있는지를 큰 그림으로 그려줍니다. Mull이 처음이거나 시간이 부족할 때 좋아요." },
+  "home.detailed_name":{ en: "Detailed diagnosis", es: "Diagnóstico detallado", fr: "Diagnostic détaillé", pt: "Diagnóstico detalhado", ru: "Подробная диагностика", zh: "详细诊断", ja: "詳細診断", ko: "정밀 진단" },
+  "home.detailed_meta":{ en: "50 questions · ~15 minutes", es: "50 preguntas · ~15 minutos", fr: "50 questions · ~15 minutes", pt: "50 perguntas · ~15 minutos", ru: "50 вопросов · ~15 минут", zh: "50 道题 · 约 15 分钟", ja: "50問 ・ 約15分", ko: "50문항 · 약 15분" },
+  "home.detailed_desc":{ en: "Probes more dimensions, more carefully. The portrait gets sharper. Best if you want a serious read.", es: "Sondea más dimensiones, con más cuidado. El retrato se vuelve más nítido. Ideal si quieres una lectura seria.", fr: "Sonde plus de dimensions, plus finement. Le portrait gagne en netteté. Idéal pour une lecture sérieuse.", pt: "Sonda mais dimensões, com mais cuidado. O retrato fica mais nítido. Ideal se você quer uma leitura séria.", ru: "Прорабатывает больше измерений и тоньше. Портрет получается чётче. Подходит, если хотите серьёзный разбор.", zh: "更多维度、更细致的考察。最终的画像也更清晰。如果你想认真做一次解读，最适合。", ja: "より多くの次元を、より丁寧に探ります。あなたの肖像はより鮮明になります。じっくり読みたい方に。", ko: "더 많은 차원을, 더 꼼꼼하게 들여다봅니다. 초상이 한층 또렷해져요. 진지하게 읽어보고 싶을 때 가장 잘 맞습니다." },
+  "home.begin":        { en: "Begin →", es: "Empezar →", fr: "Commencer →", pt: "Começar →", ru: "Начать →", zh: "开始 →", ja: "はじめる →", ko: "시작하기 →" },
+  "home.just_map":     { en: "Just show me the map →", es: "Solo muéstrame el mapa →", fr: "Montre-moi juste la carte →", pt: "Só me mostre o mapa →", ru: "Просто покажи мне карту →", zh: "直接看地图 →", ja: "とりあえずマップを見る →", ko: "지도만 바로 볼래요 →" },
+  "home.promise_skip":     { en: "<strong>Skippable.</strong> Any question that doesn't fit you, skip it.", es: "<strong>Saltables.</strong> Cualquier pregunta que no encaje contigo, sáltala.", fr: "<strong>Tu peux passer.</strong> Toute question qui ne te parle pas, passe-la.", pt: "<strong>Pulável.</strong> Qualquer pergunta que não combine com você, pule.", ru: "<strong>Можно пропускать.</strong> Любой вопрос, который вам не подходит, можно пропустить.", zh: "<strong>可跳过。</strong>任何不适合你的题目，都可以跳过。", ja: "<strong>スキップ可。</strong>合わないと感じた問いはどれでも飛ばして大丈夫です。", ko: "<strong>건너뛰기 가능.</strong> 자신과 맞지 않는 질문은 언제든 넘겨도 괜찮습니다." },
+  "home.promise_nosignup": { en: "<strong>No signup needed.</strong> An optional account saves your map and tracks how it shifts.", es: "<strong>Sin registro obligatorio.</strong> Una cuenta opcional guarda tu mapa y registra cómo cambia.", fr: "<strong>Aucune inscription requise.</strong> Un compte optionnel sauvegarde ta carte et suit son évolution.", pt: "<strong>Sem cadastro obrigatório.</strong> Uma conta opcional guarda seu mapa e acompanha como ele muda.", ru: "<strong>Регистрация не нужна.</strong> Необязательный аккаунт сохранит вашу карту и проследит, как она меняется.", zh: "<strong>无需注册。</strong>账户是可选的——注册后会保存你的地图，并记录它的变化。", ja: "<strong>登録は不要。</strong>任意のアカウントを作れば、マップを保存して変化を追えます。", ko: "<strong>가입 필수 아님.</strong> 원하시면 계정을 만들어 지도를 저장하고 변화를 추적할 수 있습니다." },
+  "home.promise_curious":  { en: "<strong>For the curious, not the credentialed.</strong> No prior philosophy required.", es: "<strong>Para curiosos, no para credencialistas.</strong> No hace falta saber filosofía.", fr: "<strong>Pour les curieux, pas pour les diplômés.</strong> Aucune connaissance préalable en philosophie n'est requise.", pt: "<strong>Para os curiosos, não para os credenciados.</strong> Não é preciso saber filosofia antes.", ru: "<strong>Для любопытных, а не для обладателей дипломов.</strong> Никаких предварительных знаний по философии не требуется.", zh: "<strong>给好奇者，而不是给科班出身者。</strong>无需任何哲学背景。", ja: "<strong>資格ではなく、好奇心のための。</strong>哲学の予備知識はいりません。", ko: "<strong>학위가 아니라 호기심을 위한 곳.</strong> 미리 알아둘 철학 지식은 필요하지 않습니다." },
+  "home.translation_notice": {
+    en: "Translations on Mull are currently a machine-generated prototype — readable but not yet polished. A careful pass with native speakers is in progress and will replace these as it lands.",
+    es: "Las traducciones de Mull son actualmente un prototipo generado por máquina — legibles pero aún sin pulir. Una revisión cuidadosa con hablantes nativos está en curso y las irá reemplazando.",
+    fr: "Les traductions de Mull sont actuellement un prototype généré par machine — lisibles, mais pas encore polies. Une relecture soignée par des locutrices et locuteurs natifs est en cours et les remplacera progressivement.",
+    pt: "As traduções do Mull são, no momento, um protótipo gerado por máquina — legíveis, mas ainda não refinadas. Uma revisão cuidadosa com falantes nativos está em andamento e as substituirá conforme avança.",
+    ru: "Переводы на Mull — пока машинный прототип: читабельно, но ещё не отшлифовано. Тщательная редактура с носителями языка уже идёт и будет постепенно заменять текст.",
+    zh: "Mull 当前的翻译是机器生成的原型 —— 能读懂，但尚未打磨。母语者参与的精细校对正在进行中，会陆续替换上去。",
+    ja: "Mull の翻訳は現在、機械生成のプロトタイプです — 読めますが、まだ磨き切れていません。母語話者による丁寧な見直しが進行中で、順次置き換わっていきます。",
+    ko: "현재 Mull의 번역은 기계가 만든 프로토타입입니다 — 읽을 수는 있지만 아직 다듬어지지 않았습니다. 모국어 사용자와 함께하는 정밀한 교정이 진행 중이며, 점차 교체됩니다."
+  },
+
+  // ─── Quiz UI chrome (mull.html migration, Phase 3c) ───────────
+  "quiz.question_count": { en: "Question {n} of {m}", es: "Pregunta {n} de {m}", fr: "Question {n} sur {m}", pt: "Pergunta {n} de {m}", ru: "Вопрос {n} из {m}", zh: "第 {n} 题 / 共 {m} 题", ja: "問 {n} / {m}", ko: "질문 {n} / {m}" },
+  "quiz.multi_hint":     { en: "Pick up to {max} that genuinely fit.", es: "Elige hasta {max} que de verdad encajen.", fr: "Choisis jusqu'à {max} qui te correspondent vraiment.", pt: "Escolha até {max} que realmente se encaixem.", ru: "Выберите до {max}, которые вам по-настоящему подходят.", zh: "最多选 {max} 项 —— 选真正贴近你的。", ja: "本当に当てはまるものを最大 {max} つ選ぶ。", ko: "정말로 맞는 것 최대 {max}개를 고르세요." },
+  "quiz.skip":           { en: "Skip — none of these fit me", es: "Saltar — ninguna me encaja", fr: "Passer — aucune ne me correspond", pt: "Pular — nenhuma se encaixa em mim", ru: "Пропустить — ни одна не подходит", zh: "跳过 —— 都不太像我", ja: "スキップ — どれもしっくり来ない", ko: "건너뛰기 — 어느 것도 나와 맞지 않는다" },
+  "quiz.back":           { en: "← Back", es: "← Atrás", fr: "← Retour", pt: "← Voltar", ru: "← Назад", zh: "← 返回", ja: "← 戻る", ko: "← 뒤로" },
+  "quiz.continue":       { en: "Continue →", es: "Continuar →", fr: "Continuer →", pt: "Continuar →", ru: "Продолжить →", zh: "继续 →", ja: "次へ →", ko: "계속 →" },
+
   "nav.dilemma": { en: "Today's dilemma", es: "Dilema de hoy", fr: "Le dilemme du jour", pt: "Dilema de hoje", ru: "Дилемма дня", zh: "今日困境", ja: "今日のジレンマ", ko: "오늘의 딜레마" },
   "nav.diary": { en: "Diary", es: "Diario", fr: "Journal", pt: "Diário", ru: "Дневник", zh: "日记", ja: "日記", ko: "일기" },
   "nav.debate": { en: "Simulated debate", es: "Debate simulado", fr: "Débat simulé", pt: "Debate simulado", ru: "Симулированный диспут", zh: "模拟辩论", ja: "思考実験的対話", ko: "가상 토론" },

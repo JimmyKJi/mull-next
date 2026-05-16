@@ -1,19 +1,8 @@
-// /philosopher/[slug] — long-form profile per philosopher in the
-// constellation. 166 statically generated routes, indexable, designed
-// to be the entry point for searches like "Marcus Aurelius philosophy"
-// or "what is Epicurean ethics".
-//
-// Each page surfaces:
-//   - Name, dates, key idea (the canonical line)
-//   - Their archetype (links to /archetype/[slug])
-//   - Top 4 dimensions they lean toward
-//   - 6 nearest other thinkers in vector space
-//   - Suggested exercises in their lineage (via archetype's suggestions)
-//   - JSON-LD Person schema for Google's knowledge surfaces
-//   - OG image at /philosopher/[slug]/opengraph-image
-//
-// All page chrome is wrapped in the global TopBar via app/layout.tsx
-// so we don't repeat brand + nav here.
+// /philosopher/[slug] — long-form philosopher profile.
+// v3 pixel chrome restyle. Procedural pixel sprite of the philosopher
+// (deterministic from name) sits beside the name + dates + key idea
+// in the hero. Sections wrapped in PixelWindow with archetype-tinted
+// borders. Content + functionality preserved.
 
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -26,41 +15,36 @@ import {
   topDimensions,
 } from '@/lib/philosophers';
 import { DIM_NAMES } from '@/lib/dimensions';
-import { getArchetypeByKey, ARCHETYPES } from '@/lib/archetypes';
+import { getArchetypeByKey } from '@/lib/archetypes';
+import { getArchetypeColor } from '@/lib/archetype-colors';
+import { ArchetypeSprite } from '@/components/archetype-sprite';
+import { PhilosopherSprite } from '@/components/philosopher-sprite';
 import { EXERCISES } from '@/lib/exercises';
-import { FIGURES } from '@/lib/figures';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
-
-const serif = "'Cormorant Garamond', Georgia, serif";
-const sans = "'Inter', system-ui, sans-serif";
+import { PixelWindow } from '@/components/pixel-window';
 
 export function generateStaticParams() {
-  return philosopherSlugs().map(slug => ({ slug }));
+  return philosopherSlugs().map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const { slug } = await params;
   const p = getPhilosopherBySlug(slug);
   if (!p) return { title: 'Philosopher not found' };
 
-  // Description trims the keyIdea aggressively so social previews don't
-  // truncate mid-sentence.
-  const desc = p.keyIdea.length > 155
-    ? p.keyIdea.slice(0, 152).trimEnd() + '…'
-    : p.keyIdea;
+  const desc =
+    p.keyIdea.length > 155 ? p.keyIdea.slice(0, 152).trimEnd() + '…' : p.keyIdea;
   const ogImage = `https://mull.world/philosopher/${slug}/opengraph-image`;
 
   return {
     title: p.name,
     description: `${p.name} (${p.dates}) — ${desc}`,
-    keywords: [
-      p.name,
-      ...p.aliases,
-      'philosophy',
-      'philosopher',
-      p.archetypeName,
-    ].join(', '),
+    keywords: [p.name, ...p.aliases, 'philosophy', 'philosopher', p.archetypeName].join(', '),
     openGraph: {
       title: `${p.name} — Mull`,
       description: desc,
@@ -79,28 +63,27 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-export default async function PhilosopherDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function PhilosopherDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const p = getPhilosopherBySlug(slug);
   if (!p) notFound();
 
   const locale = await getServerLocale();
-
   const archetype = getArchetypeByKey(p.archetypeKey);
+  const color = getArchetypeColor(p.archetypeKey);
   const dims = topDimensions(p, 4);
   const nearest = nearestPhilosophers(p, 6);
-  const figure = FIGURES[p.archetypeKey] || '';
-  // Suggested exercises pulled from the archetype's recommendations —
-  // good enough as a first pass, since philosophers in the same archetype
-  // share roughly the same practice tradition.
+
   const suggestedExerciseSlugs = archetype?.suggestedExercises ?? [];
   const suggestedExercises = suggestedExerciseSlugs
-    .map(s => EXERCISES.find(e => e.slug === s))
+    .map((s) => EXERCISES.find((e) => e.slug === s))
     .filter((x): x is NonNullable<typeof x> => !!x)
     .slice(0, 3);
 
-  // JSON-LD Person schema. Tells Google this is a person profile and
-  // helps with knowledge-graph surfaces.
   const personSchema = {
     '@context': 'https://schema.org',
     '@type': 'Person',
@@ -113,7 +96,7 @@ export default async function PhilosopherDetailPage({ params }: { params: Promis
     knowsAbout: [
       'Philosophy',
       p.archetypeName,
-      ...dims.map(d => DIM_NAMES[Object.keys(DIM_NAMES)[d.idx] as keyof typeof DIM_NAMES]),
+      ...dims.map((d) => DIM_NAMES[Object.keys(DIM_NAMES)[d.idx] as keyof typeof DIM_NAMES]),
     ].filter(Boolean),
   };
 
@@ -123,229 +106,331 @@ export default async function PhilosopherDetailPage({ params }: { params: Promis
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
       />
-      <main style={{ maxWidth: 760, margin: '24px auto 80px', padding: '0 24px' }}>
-        {/* Hero */}
-        <div style={{
-          fontFamily: sans, fontSize: 11, fontWeight: 600,
-          color: '#8C6520', textTransform: 'uppercase',
-          letterSpacing: '0.18em', marginBottom: 14,
-        }}>
-          {t('phil.eyebrow', locale)}
+      <main
+        className="mx-auto max-w-[860px] px-6 pb-32 pt-12 sm:px-10 sm:pt-16"
+        style={
+          {
+            ['--acc' as string]: color.primary,
+            ['--acc-deep' as string]: color.deep,
+            ['--acc-soft' as string]: color.soft,
+          } as React.CSSProperties
+        }
+      >
+        <div className="mb-6 flex items-center justify-between gap-4">
+          <Link
+            href="/philosopher"
+            className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"
+          >
+            ← {t('philindex.eyebrow', locale)}
+          </Link>
         </div>
-        <h1 style={{
-          fontFamily: serif, fontSize: 46, fontWeight: 500,
-          margin: '0 0 8px', letterSpacing: '-0.5px', lineHeight: 1.05,
-        }}>
-          {p.name}
-        </h1>
-        <p style={{
-          fontFamily: sans, fontSize: 14, color: '#8C6520',
-          margin: '0 0 24px', letterSpacing: 0.4,
-        }}>
-          {p.dates}
-        </p>
-        <p style={{
-          fontFamily: serif, fontStyle: 'italic',
-          fontSize: 22, color: '#221E18',
-          margin: '0 0 32px', lineHeight: 1.5,
-          paddingLeft: 18, borderLeft: '3px solid #B8862F',
-        }}>
-          {p.keyIdea}
-        </p>
 
-        {/* Archetype card */}
-        {archetype && (
-          <Section title={t('phil.section_archetype', locale)}>
-            <Link href={`/archetype/${p.archetypeKey}`} style={{
-              display: 'flex', gap: 16, alignItems: 'center',
-              padding: '16px 18px',
-              background: '#FFFCF4', border: '1px solid #EBE3CA',
-              borderRadius: 8, textDecoration: 'none', color: 'inherit',
-            }}>
-              <div
-                style={{ width: 64, height: 64, flexShrink: 0 }}
-                aria-hidden
-                dangerouslySetInnerHTML={{ __html: figure }}
+        {/* Hero */}
+        <PixelWindow
+          title={`▶ ${t('phil.eyebrow', locale).toUpperCase()}`}
+          badge="PHILOSOPHER_PROFILE.MD"
+          accent={{ primary: color.primary, deep: color.deep, soft: color.soft }}
+        >
+          <div className="grid grid-cols-1 items-start gap-5 sm:grid-cols-[auto_1fr]">
+            <div
+              className="mx-auto border-4 p-2"
+              style={{
+                borderColor: color.deep,
+                background: '#FFFCF4',
+                boxShadow: `4px 4px 0 0 ${color.deep}`,
+              }}
+              aria-hidden
+            >
+              <PhilosopherSprite
+                name={p.name}
+                archetypeKey={p.archetypeKey}
+                size={104}
+                floating
               />
-              <div>
-                <div style={{
-                  fontFamily: serif, fontSize: 22, fontWeight: 500,
-                  color: '#221E18', marginBottom: 4,
-                }}>
-                  {p.archetypeName} →
-                </div>
-                <div style={{
-                  fontFamily: sans, fontSize: 13.5,
-                  color: '#4A4338', lineHeight: 1.5,
-                }}>
-                  {archetype.spirit}
-                </div>
-              </div>
-            </Link>
-          </Section>
-        )}
+            </div>
+            <div>
+              <h1
+                className="pr-2 text-[28px] font-medium leading-[1.05] text-[#221E18] sm:text-[40px]"
+                style={{ fontFamily: 'var(--font-prose)' }}
+              >
+                {p.name}
+              </h1>
+              <p
+                className="mt-1 text-[12px] tracking-[0.18em] text-[#8C6520]"
+                style={{ fontFamily: 'var(--font-pixel-display)' }}
+              >
+                {p.dates}
+              </p>
+              <p
+                className="mt-4 border-l-4 px-4 py-3 text-[16px] italic leading-[1.55] text-[#221E18]"
+                style={{
+                  borderColor: color.deep,
+                  background: '#FFFCF4',
+                  fontFamily: 'var(--font-prose)',
+                }}
+              >
+                &ldquo;{p.keyIdea}&rdquo;
+              </p>
+            </div>
+          </div>
+        </PixelWindow>
 
-        {/* Defining dimensions */}
-        <Section title={t('phil.section_dimensions', locale)}>
-          <p style={paragraphStyle}>
-            {t('phil.dimensions_helper', locale)}
-          </p>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 8 }}>
-            {dims.map(d => {
-              const key = Object.keys(DIM_NAMES)[d.idx] as keyof typeof DIM_NAMES;
-              const name = DIM_NAMES[key];
-              return (
-                <li key={d.idx} style={{
-                  display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
-                  padding: '10px 14px',
-                  background: '#FBFAF2', borderLeft: '3px solid #2F5D5C',
-                  borderRadius: 6,
-                }}>
-                  <span style={{
-                    fontFamily: serif, fontSize: 17, color: '#221E18',
-                  }}>
-                    {name}
-                  </span>
-                  <span style={{
-                    fontFamily: sans, fontSize: 13, fontWeight: 600,
-                    color: '#2F5D5C', fontVariantNumeric: 'tabular-nums',
-                  }}>
-                    {d.value} / 10
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
-        </Section>
-
-        {/* Nearest thinkers */}
-        <Section title={t('phil.section_nearest', locale)}>
-          <p style={paragraphStyle}>
-            {t('phil.nearest_helper', locale)}
-          </p>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 10 }}>
-            {nearest.map(other => (
-              <li key={other.name}>
-                <Link
-                  href={`/philosopher/${philosopherSlug(other.name)}`}
+        <div className="mt-8 space-y-8">
+          {/* Archetype card */}
+          {archetype ? (
+            <PixelWindow title={t('phil.section_archetype', locale).toUpperCase()} badge="▶ KIN">
+              <Link
+                href={`/archetype/${p.archetypeKey}`}
+                className="flex items-center gap-4 border-2 px-4 py-3 transition-all hover:translate-x-[-1px] hover:translate-y-[-1px]"
+                style={{
+                  borderColor: color.deep,
+                  background: '#FFFCF4',
+                  boxShadow: `3px 3px 0 0 ${color.deep}`,
+                }}
+              >
+                <div
+                  className="border-2 p-1.5"
                   style={{
-                    display: 'block', padding: '12px 16px',
-                    background: '#FFFCF4', border: '1px solid #EBE3CA',
-                    borderRadius: 8, textDecoration: 'none', color: 'inherit',
+                    borderColor: color.deep,
+                    background: color.soft,
                   }}
+                  aria-hidden
                 >
-                  <div style={{
-                    display: 'flex', justifyContent: 'space-between',
-                    alignItems: 'baseline', gap: 12, marginBottom: 4,
-                  }}>
-                    <span style={{
-                      fontFamily: serif, fontSize: 17, fontWeight: 500,
-                      color: '#221E18',
-                    }}>
-                      {other.name}
-                    </span>
-                    <span style={{
-                      fontFamily: sans, fontSize: 12,
-                      color: '#8C6520', letterSpacing: 0.2,
-                    }}>
-                      {other.archetypeName}
-                    </span>
-                  </div>
-                  <p style={{
-                    fontFamily: sans, fontSize: 13.5,
-                    color: '#4A4338', margin: 0, lineHeight: 1.5,
-                  }}>
-                    {other.keyIdea}
-                  </p>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        {/* Suggested exercises */}
-        {suggestedExercises.length > 0 && (
-          <Section title={t('phil.section_exercises', locale)}>
-            <p style={paragraphStyle}>
-              {t('phil.exercises_helper', locale, { name: p.name })}
-            </p>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 10 }}>
-              {suggestedExercises.map(ex => (
-                <li key={ex.slug}>
-                  <Link
-                    href={`/exercises/${ex.slug}`}
-                    style={{
-                      display: 'block', padding: '12px 16px',
-                      background: '#FFFCF4', border: '1px solid #EBE3CA',
-                      borderRadius: 8, textDecoration: 'none', color: 'inherit',
-                    }}
+                  <ArchetypeSprite archetypeKey={p.archetypeKey} size={56} />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div
+                    className="text-[20px] font-medium text-[#221E18]"
+                    style={{ fontFamily: 'var(--font-prose)' }}
                   >
-                    <div style={{
-                      fontFamily: serif, fontSize: 17, fontWeight: 500,
-                      color: '#221E18', marginBottom: 2,
-                    }}>
-                      {ex.name} →
-                    </div>
-                    <p style={{
-                      fontFamily: sans, fontSize: 13.5, color: '#4A4338',
-                      margin: 0, lineHeight: 1.5,
-                    }}>
-                      {ex.summary}
-                    </p>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </Section>
-        )}
+                    {p.archetypeName} →
+                  </div>
+                  <p className="mt-1 text-[13.5px] leading-[1.5] text-[#4A4338]">
+                    {archetype.spirit}
+                  </p>
+                </div>
+              </Link>
+            </PixelWindow>
+          ) : null}
 
-        {/* CTA — convert reader → quiz-taker */}
-        <div style={{
-          marginTop: 36, padding: '20px 24px',
-          background: '#F5EFDC', border: '1px solid #E2D8B6',
-          borderLeft: '3px solid #B8862F', borderRadius: 8,
-          textAlign: 'center',
-        }}>
-          <p style={{
-            fontFamily: serif, fontSize: 17, color: '#221E18',
-            margin: '0 0 14px', lineHeight: 1.5,
-          }}>
+          {/* Defining dimensions */}
+          <PixelWindow title={t('phil.section_dimensions', locale).toUpperCase()} badge="▶ FINGERPRINT">
+            <p
+              className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
+              style={{ fontFamily: 'var(--font-prose)' }}
+            >
+              {t('phil.dimensions_helper', locale)}
+            </p>
+            <ul className="space-y-2">
+              {dims.map((d) => {
+                const key = Object.keys(DIM_NAMES)[d.idx] as keyof typeof DIM_NAMES;
+                const name = DIM_NAMES[key];
+                const pct = (d.value / 10) * 100;
+                return (
+                  <li
+                    key={d.idx}
+                    className="border-l-4 px-4 py-2.5"
+                    style={{ borderColor: color.deep, background: '#FBFAF2' }}
+                  >
+                    <div className="flex items-baseline justify-between gap-3">
+                      <div>
+                        <span
+                          className="mr-2 text-[10px] tracking-[0.16em]"
+                          style={{
+                            color: color.deep,
+                            fontFamily: 'var(--font-pixel-display)',
+                          }}
+                        >
+                          {key}
+                        </span>
+                        <span
+                          className="text-[16px] font-medium text-[#221E18]"
+                          style={{ fontFamily: 'var(--font-prose)' }}
+                        >
+                          {name}
+                        </span>
+                      </div>
+                      <span
+                        className="text-[12px] tracking-wider"
+                        style={{
+                          color: color.deep,
+                          fontFamily: 'var(--font-pixel-display)',
+                        }}
+                      >
+                        {d.value} / 10
+                      </span>
+                    </div>
+                    {/* Pixel meter */}
+                    <div
+                      className="mt-2 h-2 w-full"
+                      style={{ background: '#EBE3CA' }}
+                    >
+                      <div
+                        className="h-full"
+                        style={{ background: color.primary, width: `${pct}%` }}
+                      />
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </PixelWindow>
+
+          {/* Nearest thinkers */}
+          <PixelWindow title={t('phil.section_nearest', locale).toUpperCase()} badge="▶ NEAREST">
+            <p
+              className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
+              style={{ fontFamily: 'var(--font-prose)' }}
+            >
+              {t('phil.nearest_helper', locale)}
+            </p>
+            <ul className="space-y-2.5">
+              {nearest.map((other) => {
+                const otherColor = getArchetypeColor(other.archetypeKey);
+                return (
+                  <li key={other.name}>
+                    <Link
+                      href={`/philosopher/${philosopherSlug(other.name)}`}
+                      className="flex items-start gap-3 border-2 px-4 py-3 transition-all hover:translate-x-[-1px] hover:translate-y-[-1px]"
+                      style={{
+                        borderColor: '#EBE3CA',
+                        background: '#FFFCF4',
+                        boxShadow: `2px 2px 0 0 ${otherColor.deep}`,
+                      }}
+                    >
+                      <div className="shrink-0">
+                        <PhilosopherSprite
+                          name={other.name}
+                          archetypeKey={other.archetypeKey}
+                          size={44}
+                        />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-baseline justify-between gap-3">
+                          <span
+                            className="text-[16px] font-medium text-[#221E18]"
+                            style={{ fontFamily: 'var(--font-prose)' }}
+                          >
+                            {other.name}
+                          </span>
+                          <span
+                            className="text-[10px] tracking-[0.16em]"
+                            style={{
+                              color: otherColor.deep,
+                              fontFamily: 'var(--font-pixel-display)',
+                            }}
+                          >
+                            {other.archetypeKey.toUpperCase()}
+                          </span>
+                        </div>
+                        <p
+                          className="mt-1 text-[13px] leading-[1.5] text-[#4A4338]"
+                          style={{ fontFamily: 'var(--font-prose)' }}
+                        >
+                          {other.keyIdea}
+                        </p>
+                      </div>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </PixelWindow>
+
+          {/* Suggested exercises */}
+          {suggestedExercises.length > 0 ? (
+            <PixelWindow title={t('phil.section_exercises', locale).toUpperCase()} badge="▶ PRACTICE">
+              <p
+                className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
+                style={{ fontFamily: 'var(--font-prose)' }}
+              >
+                {t('phil.exercises_helper', locale, { name: p.name })}
+              </p>
+              <ul className="space-y-2.5">
+                {suggestedExercises.map((ex) => (
+                  <li key={ex.slug}>
+                    <Link
+                      href={`/exercises/${ex.slug}`}
+                      className="block border-2 px-4 py-3 transition-all hover:translate-x-[-1px] hover:translate-y-[-1px]"
+                      style={{
+                        borderColor: '#EBE3CA',
+                        background: '#FFFCF4',
+                        boxShadow: `2px 2px 0 0 ${color.deep}`,
+                      }}
+                    >
+                      <div
+                        className="text-[17px] font-medium text-[#221E18]"
+                        style={{ fontFamily: 'var(--font-prose)' }}
+                      >
+                        {ex.name} →
+                      </div>
+                      <p className="mt-1 text-[13.5px] leading-[1.55] text-[#4A4338]">
+                        {ex.summary}
+                      </p>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </PixelWindow>
+          ) : null}
+        </div>
+
+        {/* CTA */}
+        <div
+          className="mt-10 border-4 px-6 py-7 text-center"
+          style={{
+            borderColor: color.deep,
+            background: color.soft,
+            boxShadow: `4px 4px 0 0 ${color.deep}`,
+          }}
+        >
+          <p
+            className="text-[16px] leading-[1.5] text-[#221E18]"
+            style={{ fontFamily: 'var(--font-prose)' }}
+          >
             {t('phil.cta_text', locale, { name: p.name })}
           </p>
-          <Link href="/" style={{
-            display: 'inline-block',
-            padding: '10px 22px', background: '#221E18', color: '#FAF6EC',
-            borderRadius: 6, textDecoration: 'none',
-            fontFamily: sans, fontSize: 14, fontWeight: 500,
-          }}>
-            {t('phil.cta_button', locale)}
-          </Link>
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/quiz?mode=quick"
+              className="pixel-button pixel-button--amber"
+            >
+              <span>▶ {t('phil.cta_button', locale).toUpperCase()}</span>
+            </Link>
+            {/* Share this philosopher — X compose intent. Same pattern
+                as /archetype/[slug]; lets readers pass along a profile
+                of a thinker that struck them. */}
+            <a
+              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                `${p.name} on Mull — ${p.keyIdea.length > 120 ? p.keyIdea.slice(0, 117).trimEnd() + '…' : p.keyIdea}`
+              )}&url=${encodeURIComponent(`https://mull.world/philosopher/${slug}`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="pixel-press"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                padding: '10px 16px',
+                background: 'transparent',
+                color: color.deep,
+                border: `3px solid ${color.deep}`,
+                boxShadow: `3px 3px 0 0 ${color.deep}`,
+                borderRadius: 0,
+                fontFamily: "var(--font-pixel-display, 'Courier New', monospace)",
+                fontSize: 11,
+                letterSpacing: 0.4,
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+                transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+              }}
+            >
+              <span aria-hidden>𝕏</span>
+              <span>SHARE</span>
+            </a>
+          </div>
         </div>
       </main>
     </>
-  );
-
-  // ARCHETYPES referenced silently to keep import live for future use
-  void ARCHETYPES;
-}
-
-const paragraphStyle: React.CSSProperties = {
-  fontFamily: sans, fontSize: 14.5, color: '#4A4338',
-  lineHeight: 1.65, margin: '0 0 14px',
-};
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <section style={{
-      marginBottom: 32, paddingTop: 24, borderTop: '1px solid #EBE3CA',
-    }}>
-      <h2 style={{
-        fontFamily: serif, fontSize: 24, fontWeight: 500,
-        margin: '0 0 14px', letterSpacing: '-0.2px', color: '#221E18',
-      }}>
-        {title}
-      </h2>
-      <div>{children}</div>
-    </section>
   );
 }

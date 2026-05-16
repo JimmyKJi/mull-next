@@ -10,6 +10,11 @@
 //
 // Returns null when there's nothing to surface — most users for
 // the first 8 weeks of using Mull.
+//
+// v3 pixel chrome: outer card is a teal-shadowed pixel window; inner
+// blocks (the original prompt + the response) are pixel sub-cards.
+// The pixel-form class on the wrapper picks up the textarea + submit
+// button styling from globals.css.
 
 'use client';
 
@@ -17,6 +22,7 @@ import { useEffect, useState } from 'react';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
+const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
 type Candidate = {
   id: string;
@@ -91,7 +97,7 @@ export default function ReflectionCard() {
   if (done) {
     return (
       <section style={cardStyle}>
-        <div style={eyebrow}>Reflection saved</div>
+        <div style={eyebrow}>▸ REFLECTION SAVED</div>
         <p style={{
           fontFamily: serif, fontStyle: 'italic',
           fontSize: 17, color: '#221E18', margin: 0, lineHeight: 1.55,
@@ -103,8 +109,8 @@ export default function ReflectionCard() {
   }
 
   return (
-    <section style={cardStyle}>
-      <div style={eyebrow}>Has anything shifted?</div>
+    <section className="pixel-form" style={cardStyle}>
+      <div style={eyebrow}>▸ HAS ANYTHING SHIFTED?</div>
       <p style={{
         fontFamily: serif, fontStyle: 'italic', fontSize: 16,
         color: '#4A4338', margin: '0 0 18px', lineHeight: 1.55,
@@ -115,17 +121,14 @@ export default function ReflectionCard() {
       {/* Original prompt */}
       <div style={{
         padding: '14px 16px',
-        background: '#F5EFDC',
-        borderLeft: '3px solid #B8862F',
-        borderRadius: 6,
-        marginBottom: 12,
+        background: '#F8EDC8',
+        border: '3px solid #221E18',
+        boxShadow: '3px 3px 0 0 #B8862F',
+        borderRadius: 0,
+        marginBottom: 14,
       }}>
-        <div style={{
-          fontFamily: sans, fontSize: 10, fontWeight: 600,
-          color: '#8C6520', textTransform: 'uppercase',
-          letterSpacing: '0.18em', marginBottom: 6,
-        }}>
-          The dilemma
+        <div style={subEyebrow}>
+          THE DILEMMA
         </div>
         <p style={{
           fontFamily: serif, fontStyle: 'italic',
@@ -139,16 +142,13 @@ export default function ReflectionCard() {
       <div style={{
         padding: '14px 16px',
         background: '#FFFCF4',
-        border: '1px solid #EBE3CA',
-        borderRadius: 6,
-        marginBottom: 18,
+        border: '3px solid #221E18',
+        boxShadow: '3px 3px 0 0 #2F5D5C',
+        borderRadius: 0,
+        marginBottom: 20,
       }}>
-        <div style={{
-          fontFamily: sans, fontSize: 10, fontWeight: 600,
-          color: '#8C6520', textTransform: 'uppercase',
-          letterSpacing: '0.18em', marginBottom: 6,
-        }}>
-          What you wrote
+        <div style={subEyebrow}>
+          WHAT YOU WROTE
         </div>
         <p style={{
           fontFamily: serif, fontSize: 15.5, color: '#221E18',
@@ -160,11 +160,11 @@ export default function ReflectionCard() {
 
       {/* Followup input */}
       <div style={{
-        fontFamily: sans, fontSize: 11, fontWeight: 600,
+        fontFamily: pixel, fontSize: 11,
         color: '#2F5D5C', textTransform: 'uppercase',
-        letterSpacing: '0.16em', marginBottom: 8,
+        letterSpacing: '0.18em', marginBottom: 8,
       }}>
-        What you think now
+        ▸ WHAT YOU THINK NOW
       </div>
       <textarea
         value={text}
@@ -174,57 +174,40 @@ export default function ReflectionCard() {
         maxLength={4000}
         style={{
           width: '100%',
-          padding: '14px 16px',
-          fontFamily: serif,
-          fontSize: 16,
-          lineHeight: 1.6,
-          border: '1px solid #D6CDB6',
-          borderRadius: 8,
-          background: '#FFFCF4',
-          color: '#221E18',
-          resize: 'vertical',
           minHeight: 140,
+          resize: 'vertical',
           boxSizing: 'border-box',
-          outline: 'none',
         }}
       />
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginTop: 10,
+        marginTop: 12,
         flexWrap: 'wrap',
         gap: 12,
       }}>
         <span style={{
-          fontFamily: sans, fontSize: 12,
+          fontFamily: pixel, fontSize: 11,
           color: text.trim().length < 10 ? '#7A2E2E' : '#8C6520',
+          letterSpacing: 0.4,
         }}>
           {text.length} / 4000
-          {text.trim().length < 10 && text.length > 0 && ' · a little more'}
+          {text.trim().length < 10 && text.length > 0 && ' · A LITTLE MORE'}
         </span>
         <button
-          type="button"
+          type="submit"
           onClick={submit}
           disabled={text.trim().length < 10 || busy}
-          style={{
-            padding: '10px 20px',
-            background: text.trim().length >= 10 && !busy ? '#221E18' : '#A39880',
-            color: '#FAF6EC',
-            border: 'none',
-            borderRadius: 8,
-            fontFamily: sans,
-            fontSize: 13.5, fontWeight: 500,
-            cursor: text.trim().length >= 10 && !busy ? 'pointer' : 'not-allowed',
-            letterSpacing: 0.4,
-          }}
         >
           {busy ? 'Saving…' : 'Save reflection'}
         </button>
       </div>
       {error && (
         <p style={{
-          marginTop: 10, fontFamily: sans, fontSize: 13, color: '#7A2E2E',
+          marginTop: 12, fontFamily: sans, fontSize: 13, color: '#7A2E2E',
+          background: 'rgba(122, 46, 46, 0.08)', padding: '8px 12px',
+          border: '2px solid #7A2E2E', borderRadius: 0,
         }}>
           {error}
         </p>
@@ -237,13 +220,19 @@ const cardStyle: React.CSSProperties = {
   marginTop: 32,
   padding: '24px 26px',
   background: '#FFFCF4',
-  border: '1px solid #EBE3CA',
-  borderLeft: '3px solid #2F5D5C',
-  borderRadius: 8,
+  border: '4px solid #221E18',
+  boxShadow: '5px 5px 0 0 #2F5D5C',
+  borderRadius: 0,
 };
 
 const eyebrow: React.CSSProperties = {
-  fontFamily: sans, fontSize: 11, fontWeight: 600,
+  fontFamily: pixel, fontSize: 12,
   color: '#2F5D5C', textTransform: 'uppercase',
-  letterSpacing: '0.18em', marginBottom: 10,
+  letterSpacing: '0.18em', marginBottom: 12,
+};
+
+const subEyebrow: React.CSSProperties = {
+  fontFamily: pixel, fontSize: 10,
+  color: '#8C6520', textTransform: 'uppercase',
+  letterSpacing: '0.18em', marginBottom: 6,
 };

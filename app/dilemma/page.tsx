@@ -124,92 +124,88 @@ export default async function DilemmaPage() {
   const shifts = existing?.vector_delta ? topShifts(existing.vector_delta) : [];
 
   return (
-    <main style={{ maxWidth: 720, margin: '0 auto', padding: '60px 24px 120px' }}>
-      <header style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'baseline',
-        marginBottom: 36,
-        gap: 16,
-        flexWrap: 'wrap'
-      }}>
-        <Link href="/" style={{
-          fontFamily: serif,
-          fontSize: 28,
-          fontWeight: 500,
-          color: '#221E18',
-          textDecoration: 'none',
-          letterSpacing: '-0.5px'
-        }}>
-          Mull<span style={{ color: '#B8862F' }}>.</span>
+    <main className="mx-auto max-w-[820px] px-6 pb-32 pt-10 sm:px-10">
+      <div className="mb-6 flex items-center justify-end gap-3">
+        <LanguageSwitcher initial={locale} />
+        <Link
+          href="/account"
+          className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"
+        >
+          {t('nav.account_arrow', locale)}
         </Link>
-        <nav style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-          <LanguageSwitcher initial={locale} />
-          <Link href="/account" style={{
-            fontFamily: sans, fontSize: 13, color: '#4A4338',
-            textDecoration: 'none', letterSpacing: 0.3,
-          }}>{t('nav.account_arrow', locale)}</Link>
-        </nav>
-      </header>
-
-      <div style={{
-        fontFamily: sans,
-        fontSize: 11,
-        fontWeight: 600,
-        color: '#8C6520',
-        textTransform: 'uppercase',
-        letterSpacing: '0.18em',
-        marginBottom: 14,
-      }}>
-        {t('dilemma.eyebrow', locale)} · {new Date(today.dateKey).toLocaleDateString(locale === 'en' ? 'en-GB' : locale, {
-          weekday: 'long', day: 'numeric', month: 'long'
-        })}
-        {streak > 1 && (
-          <span style={{ marginLeft: 14, color: '#2F5D5C' }}>
-            · {t('dilemma.streak', locale, { n: streak })}
-          </span>
-        )}
-        {user && (
-          <Link href="/dilemma/archive" style={{
-            marginLeft: 14, color: '#8C6520',
-            textDecoration: 'none', fontWeight: 500,
-            borderBottom: '1px solid rgba(140, 101, 32, 0.4)',
-            paddingBottom: 1,
-          }}>
-            {t('dilemma.see_archive', locale)}
-          </Link>
-        )}
       </div>
 
-      <h1 style={{
-        fontFamily: serif,
-        fontSize: 38,
-        fontWeight: 500,
-        margin: '0 0 16px',
-        letterSpacing: '-0.01em',
-        lineHeight: 1.2,
-      }}>
-        {localizedPrompt}
-      </h1>
+      {/* Pixel eyebrow with date + streak + archive link */}
+      <div
+        className="flex flex-wrap items-center gap-3 text-[10px] tracking-[0.22em] text-[#8C6520]"
+        style={{ fontFamily: 'var(--font-pixel-display)' }}
+      >
+        <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F] pixel-blink" />
+        <span>▶ {t('dilemma.eyebrow', locale).toUpperCase()}</span>
+        <span className="opacity-60">·</span>
+        <span className="text-[#221E18]">
+          {new Date(today.dateKey).toLocaleDateString(
+            locale === 'en' ? 'en-GB' : locale,
+            { weekday: 'long', day: 'numeric', month: 'long' },
+          ).toUpperCase()}
+        </span>
+        {streak > 1 ? (
+          <>
+            <span className="opacity-60">·</span>
+            <span className="text-[#2F5D5C]">
+              {t('dilemma.streak', locale, { n: streak }).toUpperCase()}
+            </span>
+          </>
+        ) : null}
+        {user ? (
+          <Link
+            href="/dilemma/archive"
+            className="ml-auto text-[#8C6520] underline decoration-[#B8862F]/50 underline-offset-3 hover:decoration-[#8C6520]"
+          >
+            {t('dilemma.see_archive', locale).toUpperCase()} →
+          </Link>
+        ) : null}
+      </div>
 
-      {localizedHint && (
-        <p style={{
-          fontFamily: serif,
-          fontStyle: 'italic',
-          fontSize: 17,
-          color: '#4A4338',
-          marginBottom: 32,
-        }}>
-          {localizedHint}
-        </p>
-      )}
+      {/* Prompt panel — pixel-bordered, big Cormorant question */}
+      <div
+        className="mt-7 border-4 border-[#221E18] bg-[#FFFCF4]"
+        style={{ boxShadow: '6px 6px 0 0 #8C6520' }}
+      >
+        <div
+          className="border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
+          style={{ fontFamily: 'var(--font-pixel-display)' }}
+        >
+          ▶ TODAY&apos;S QUESTION
+        </div>
+        <div className="px-6 py-7 sm:px-8 sm:py-9">
+          <h1
+            className="text-[24px] font-medium leading-[1.3] text-[#221E18] sm:text-[30px] md:text-[34px]"
+            style={{ fontFamily: 'var(--font-prose)' }}
+          >
+            {localizedPrompt}
+          </h1>
+          {localizedHint ? (
+            <p
+              className="mt-5 border-l-4 px-4 py-2 text-[15.5px] italic leading-[1.55] text-[#4A4338]"
+              style={{ borderColor: '#B8862F', fontFamily: 'var(--font-prose)' }}
+            >
+              {localizedHint}
+            </p>
+          ) : null}
+        </div>
+      </div>
+
+      <div className="mt-8" />
+
 
       {!user ? (
         <div style={{
           padding: '28px 32px',
           background: '#FFFCF4',
-          border: '1px dashed #D6CDB6',
-          borderRadius: 12,
+          border: '4px solid #221E18',
+          boxShadow: '5px 5px 0 0 #B8862F',
+          borderRadius: 0,
           textAlign: 'center',
         }}>
           <p style={{
@@ -217,33 +213,52 @@ export default async function DilemmaPage() {
             fontStyle: 'italic',
             fontSize: 18,
             color: '#4A4338',
-            margin: '0 0 16px',
+            margin: '0 0 20px',
           }}>
             {t('dilemma.account_required_msg', locale)}
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/signup" style={{
-              padding: '10px 20px',
-              background: '#221E18',
-              color: '#FAF6EC',
-              borderRadius: 6,
-              textDecoration: 'none',
-              fontFamily: sans,
-              fontSize: 14,
-              fontWeight: 500,
-            }}>
-              {t('dilemma.create_account', locale)}
+            <Link
+              href="/signup"
+              className="pixel-press"
+              style={{
+                display: 'inline-block',
+                padding: '12px 22px',
+                background: '#B8862F',
+                color: '#1A1612',
+                border: '4px solid #221E18',
+                boxShadow: '4px 4px 0 0 #221E18',
+                borderRadius: 0,
+                fontFamily: 'var(--font-pixel-display)',
+                fontSize: 12,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+                transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+              }}
+            >
+              ▸ {t('dilemma.create_account', locale).toUpperCase()}
             </Link>
-            <Link href="/login" style={{
-              padding: '10px 20px',
-              border: '1px solid #221E18',
-              color: '#221E18',
-              borderRadius: 6,
-              textDecoration: 'none',
-              fontFamily: sans,
-              fontSize: 14,
-            }}>
-              {t('dilemma.sign_in', locale)}
+            <Link
+              href="/login"
+              className="pixel-press"
+              style={{
+                display: 'inline-block',
+                padding: '12px 22px',
+                background: '#FFFCF4',
+                color: '#221E18',
+                border: '4px solid #221E18',
+                boxShadow: '4px 4px 0 0 #B8862F',
+                borderRadius: 0,
+                fontFamily: 'var(--font-pixel-display)',
+                fontSize: 12,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+                transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+              }}
+            >
+              {t('dilemma.sign_in', locale).toUpperCase()}
             </Link>
           </div>
         </div>
@@ -251,20 +266,19 @@ export default async function DilemmaPage() {
         <div style={{
           padding: '28px 32px',
           background: '#FFFCF4',
-          border: '1px solid #D6CDB6',
-          borderLeft: '3px solid #B8862F',
-          borderRadius: 8,
+          border: '4px solid #221E18',
+          boxShadow: '5px 5px 0 0 #2F5D5C',
+          borderRadius: 0,
         }}>
           <div style={{
-            fontFamily: sans,
-            fontSize: 11,
-            fontWeight: 600,
+            fontFamily: 'var(--font-pixel-display)',
+            fontSize: 12,
             color: '#2F5D5C',
             textTransform: 'uppercase',
-            letterSpacing: '0.16em',
+            letterSpacing: '0.18em',
             marginBottom: 14,
           }}>
-            {t('dilemma.you_answered_today', locale)}
+            ✓ {t('dilemma.you_answered_today', locale).toUpperCase()}
           </div>
           <p style={{
             fontFamily: serif,
@@ -279,20 +293,21 @@ export default async function DilemmaPage() {
           {existing.analysis && (
             <div style={{
               padding: '14px 16px',
-              background: '#F5EFDC',
-              borderRadius: 6,
+              background: '#F8EDC8',
+              border: '3px solid #221E18',
+              boxShadow: '3px 3px 0 0 #B8862F',
+              borderRadius: 0,
               marginBottom: 16,
             }}>
               <div style={{
-                fontFamily: sans,
+                fontFamily: 'var(--font-pixel-display)',
                 fontSize: 10,
-                fontWeight: 600,
                 color: '#8C6520',
                 textTransform: 'uppercase',
-                letterSpacing: '0.16em',
-                marginBottom: 6,
+                letterSpacing: '0.18em',
+                marginBottom: 8,
               }}>
-                {t('dilemma.what_revealed', locale)}
+                {t('dilemma.what_revealed', locale).toUpperCase()}
               </div>
               <p style={{
                 fontFamily: serif,
@@ -344,21 +359,32 @@ export default async function DilemmaPage() {
           <div style={{
             marginTop: 22,
             paddingTop: 18,
-            borderTop: '1px solid #EBE3CA',
+            borderTop: '2px dashed #D6CDB6',
             display: 'flex',
             gap: 12,
             flexWrap: 'wrap',
+            alignItems: 'center',
           }}>
-            <Link href="/account" style={{
-              padding: '9px 18px',
-              border: '1px solid #221E18',
-              borderRadius: 6,
-              color: '#221E18',
-              textDecoration: 'none',
-              fontFamily: sans,
-              fontSize: 13.5,
-            }}>
-              {t('dilemma.see_trajectory', locale)}
+            <Link
+              href="/account#shifts"
+              className="pixel-press"
+              style={{
+                display: 'inline-block',
+                padding: '10px 16px',
+                background: '#221E18',
+                color: '#FAF6EC',
+                border: '3px solid #221E18',
+                boxShadow: '3px 3px 0 0 #B8862F',
+                borderRadius: 0,
+                fontFamily: 'var(--font-pixel-display)',
+                fontSize: 11,
+                letterSpacing: 0.4,
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+                transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+              }}
+            >
+              ▸ {t('dilemma.see_trajectory', locale).toUpperCase()}
             </Link>
             <span style={{
               fontFamily: sans,
@@ -402,8 +428,9 @@ export default async function DilemmaPage() {
                 key={r.id}
                 style={{
                   background: '#FFFCF4',
-                  border: '1px solid #EBE3CA',
-                  borderRadius: 8,
+                  border: '3px solid #221E18',
+                  boxShadow: '3px 3px 0 0 #B8862F',
+                  borderRadius: 0,
                   padding: '14px 18px',
                 }}
               >
@@ -417,17 +444,16 @@ export default async function DilemmaPage() {
                 }}>
                   <span style={{
                     display: 'block',
-                    fontFamily: sans,
+                    fontFamily: 'var(--font-pixel-display)',
                     fontSize: 10,
-                    fontWeight: 600,
                     color: '#8C6520',
                     textTransform: 'uppercase',
-                    letterSpacing: '0.16em',
-                    marginBottom: 6,
+                    letterSpacing: '0.18em',
+                    marginBottom: 8,
                   }}>
-                    {new Date(r.dilemma_date).toLocaleDateString(locale === 'en' ? 'en-GB' : locale, {
+                    ▸ {new Date(r.dilemma_date).toLocaleDateString(locale === 'en' ? 'en-GB' : locale, {
                       weekday: 'short', day: 'numeric', month: 'short'
-                    })}
+                    }).toUpperCase()}
                   </span>
                   {r.question_text}
                 </summary>

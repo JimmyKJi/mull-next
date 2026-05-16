@@ -119,7 +119,7 @@ export default function ProfileForm({ initial, userEmail, locale = 'en' }: { ini
   };
 
   return (
-    <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
+    <form onSubmit={onSubmit} className="pixel-form" style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
       <div>
         <label htmlFor="handle" style={labelStyle}>{t('profile.handle_label', locale)}</label>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>

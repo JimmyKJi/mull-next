@@ -1,11 +1,5 @@
-// /search — was just a public-profile search panel; now leads with an
-// activity leaderboard, with the search panel below as a "find someone
-// specific" affordance. The route stays /search so existing links from
-// brandbar etc. don't break.
-//
-// When the forum lands, this page will get a tab switcher above the
-// leaderboard with at least two leaderboards: activity (this one) and
-// forum reputation (upvotes received). See task #38.
+// /search — leaderboard + public-profile search.
+// v3 pixel chrome restyle.
 
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
@@ -16,10 +10,8 @@ import Leaderboard from './leaderboard';
 import EditorPicks from './editor-picks';
 import OriginalThinking from './original-thinking';
 import LeaderboardTabs, { type TabKey } from './leaderboard-tabs';
+import { PixelPageHeader } from '@/components/pixel-window';
 import type { Metadata } from 'next';
-
-const serif = "'Cormorant Garamond', Georgia, serif";
-const sans = "'Inter', system-ui, sans-serif";
 
 export const metadata: Metadata = {
   title: 'Leaderboard & search',
@@ -35,104 +27,79 @@ export default async function SearchPage({
   const locale = await getServerLocale();
   const sp = await searchParams;
   const activeTab: TabKey =
-    sp.tab === 'picks' ? 'picks' :
-    sp.tab === 'original' ? 'original' :
-    'activity';
+    sp.tab === 'picks' ? 'picks' : sp.tab === 'original' ? 'original' : 'activity';
 
   return (
-    <main style={{ maxWidth: 760, margin: '60px auto', padding: '0 24px 120px' }}>
-      <header style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'baseline',
-        marginBottom: 36,
-        flexWrap: 'wrap',
-        gap: 12,
-      }}>
-        <Link href="/" style={{
-          fontFamily: serif,
-          fontSize: 28,
-          fontWeight: 500,
-          color: '#221E18',
-          textDecoration: 'none',
-          letterSpacing: '-0.5px',
-        }}>
-          Mull<span style={{ color: '#B8862F' }}>.</span>
+    <main className="mx-auto max-w-[860px] px-6 pb-32 pt-10 sm:px-10">
+      <div className="mb-6 flex items-center justify-end gap-4">
+        <LanguageSwitcher initial={locale} />
+        <Link
+          href="/account"
+          className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"
+        >
+          {t('nav.account_arrow', locale)}
         </Link>
-        <nav style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-          <LanguageSwitcher initial={locale} />
-          <Link href="/account" style={{
-            fontFamily: sans, fontSize: 13, color: '#4A4338',
-            textDecoration: 'none', letterSpacing: 0.3,
-          }}>
-            {t('nav.account_arrow', locale)}
-          </Link>
-        </nav>
-      </header>
-
-      <div style={{
-        fontFamily: sans, fontSize: 11, fontWeight: 600,
-        color: '#8C6520', textTransform: 'uppercase',
-        letterSpacing: '0.18em', marginBottom: 14,
-      }}>
-        {t('search.eyebrow', locale)}
       </div>
-      <h1 style={{
-        fontFamily: serif,
-        fontSize: 42,
-        fontWeight: 500,
-        margin: '0 0 12px',
-        letterSpacing: '-0.5px',
-        lineHeight: 1.1,
-      }}>
-        {t('search.h1', locale)}
-      </h1>
-      <p style={{
-        fontFamily: serif,
-        fontStyle: 'italic',
-        fontSize: 18,
-        color: '#4A4338',
-        margin: '0 0 36px',
-        lineHeight: 1.55,
-      }}>
-        {t('search.h1_subtitle', locale)}
-      </p>
+
+      <PixelPageHeader
+        eyebrow={`▶ ${t('search.eyebrow', locale).toUpperCase()}`}
+        title={t('search.h1', locale).toUpperCase()}
+        subtitle={
+          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-prose)' }}>
+            {t('search.h1_subtitle', locale)}
+          </p>
+        }
+      />
 
       <LeaderboardTabs active={activeTab} />
       {activeTab === 'activity' && <Leaderboard locale={locale} />}
       {activeTab === 'picks' && <EditorPicks locale={locale} />}
       {activeTab === 'original' && <OriginalThinking />}
 
-      <section>
-        <h2 style={{
-          fontFamily: serif, fontSize: 24, fontWeight: 500,
-          margin: '0 0 6px', color: '#221E18', letterSpacing: '-0.2px',
-        }}>
-          {t('search.find_someone', locale)}
+      <section className="mt-12">
+        <div
+          className="flex items-center gap-3 text-[10px] tracking-[0.22em] text-[#8C6520]"
+          style={{ fontFamily: 'var(--font-pixel-display)' }}
+        >
+          <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
+          ▶ FIND SOMEONE
+        </div>
+        <h2
+          className="mt-4 text-[22px] leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[28px]"
+          style={{ fontFamily: 'var(--font-pixel-display)' }}
+        >
+          <span style={{ textShadow: '3px 3px 0 #B8862F' }}>
+            {t('search.find_someone', locale).toUpperCase()}
+          </span>
         </h2>
-        <p style={{
-          fontFamily: serif, fontStyle: 'italic',
-          fontSize: 15, color: '#4A4338',
-          margin: '0 0 18px', lineHeight: 1.55,
-        }}>
+        <p
+          className="mt-4 text-[15.5px] italic leading-[1.55] text-[#4A4338]"
+          style={{ fontFamily: 'var(--font-prose)' }}
+        >
           {t('search.subtitle', locale)}
         </p>
-        <SearchPanel locale={locale} />
+        <div className="mt-5">
+          <SearchPanel locale={locale} />
+        </div>
       </section>
 
-      <p style={{
-        marginTop: 60,
-        fontFamily: sans,
-        fontSize: 12,
-        color: '#8C6520',
-        opacity: 0.8,
-        textAlign: 'center',
-        lineHeight: 1.55,
-      }}>
-        <Link href="/account/profile" style={{ color: '#8C6520', textDecoration: 'underline', textUnderlineOffset: 3 }}>
-          {t('search.cta_make_profile', locale)}
+      {/* "Make yourself searchable" CTA — was a small underline text
+          link; promoted to a chunky pixel chip so users who searched
+          for themselves and found nothing have an obvious next step. */}
+      <div className="mt-16 flex justify-center">
+        <Link
+          href="/account/profile"
+          className="pixel-press inline-block border-[3px] border-[#221E18] bg-[#F8EDC8] px-4 py-2.5 text-[11px] tracking-[0.08em] text-[#221E18] no-underline"
+          style={{
+            fontFamily: 'var(--font-pixel-display)',
+            boxShadow: '3px 3px 0 0 #B8862F',
+            textTransform: 'uppercase',
+            transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+          }}
+        >
+          ▸ {t('search.cta_make_profile', locale).toUpperCase()}
         </Link>
-      </p>
+      </div>
     </main>
   );
 }

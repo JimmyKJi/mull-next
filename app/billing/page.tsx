@@ -7,12 +7,14 @@ import Link from 'next/link';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
+import MullWordmark from '@/components/mull-wordmark';
 import { PRICES } from '@/lib/billing';
 import PlanPicker from './plan-picker';
 import type { Metadata } from 'next';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
+const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
 export const metadata: Metadata = {
   title: 'Mull+',
@@ -34,39 +36,31 @@ export default async function BillingPage() {
         flexWrap: 'wrap',
         gap: 16,
       }}>
-        <Link href="/" style={{
-          fontFamily: serif,
-          fontSize: 28,
-          fontWeight: 500,
-          color: '#221E18',
-          textDecoration: 'none',
-          letterSpacing: '-0.5px',
-        }}>
-          Mull<span style={{ color: '#B8862F' }}>.</span>
-        </Link>
+        <MullWordmark />
         <LanguageSwitcher initial={locale} />
       </header>
 
       <div style={{
-        fontFamily: sans,
-        fontSize: 11,
-        fontWeight: 600,
+        fontFamily: pixel,
+        fontSize: 12,
         color: '#8C6520',
         textTransform: 'uppercase',
         letterSpacing: '0.18em',
         marginBottom: 14,
       }}>
-        {t('billing.eyebrow', locale)}
+        ▸ {t('billing.eyebrow', locale).toUpperCase()}
       </div>
       <h1 style={{
-        fontFamily: serif,
-        fontSize: 44,
-        fontWeight: 500,
-        margin: '0 0 12px',
-        letterSpacing: '-0.5px',
-        lineHeight: 1.05,
+        fontFamily: pixel,
+        fontSize: 36,
+        margin: '0 0 14px',
+        color: '#221E18',
+        letterSpacing: '0.06em',
+        textTransform: 'uppercase',
+        textShadow: '3px 3px 0 #B8862F',
+        lineHeight: 1.1,
       }}>
-        {t('billing.title', locale)}
+        {t('billing.title', locale).toUpperCase()}
       </h1>
       <p style={{
         fontFamily: serif,
@@ -81,12 +75,13 @@ export default async function BillingPage() {
 
       <div style={{
         padding: '14px 18px',
-        background: '#FBF6E8',
-        borderLeft: '3px solid #B8862F',
-        borderRadius: 8,
-        fontFamily: sans,
-        fontSize: 13.5,
-        color: '#4A4338',
+        background: '#F8EDC8',
+        border: '3px solid #221E18',
+        boxShadow: '3px 3px 0 0 #B8862F',
+        borderRadius: 0,
+        fontFamily: serif,
+        fontSize: 14.5,
+        color: '#221E18',
         marginBottom: 36,
         lineHeight: 1.55,
       }}>
@@ -142,6 +137,9 @@ export default async function BillingPage() {
   );
 }
 
+// One billing-plan tile. Pixel chrome with the plan accent colour as
+// the hard drop shadow. Primary tile (yearly) gets the amber fill so
+// the recommended plan reads at-a-glance.
 function PlanCard({ plan, accent, headline, label, description, badge, primary }: {
   plan: string;
   accent: string;
@@ -153,48 +151,50 @@ function PlanCard({ plan, accent, headline, label, description, badge, primary }
 }) {
   return (
     <div data-plan={plan} style={{
-      padding: '22px 22px 16px',
-      background: primary ? '#FFFCF4' : 'transparent',
-      border: '1px solid ' + (primary ? '#D6CDB6' : '#EBE3CA'),
-      borderLeft: '3px solid ' + accent,
-      borderRadius: 10,
+      padding: '22px 22px 18px',
+      background: primary ? '#F8EDC8' : '#FFFCF4',
+      border: '4px solid #221E18',
+      boxShadow: `5px 5px 0 0 ${accent}`,
+      borderRadius: 0,
     }}>
       {badge && (
         <div style={{
-          fontFamily: sans,
+          fontFamily: pixel,
           fontSize: 10,
-          fontWeight: 600,
           color: accent,
           textTransform: 'uppercase',
-          letterSpacing: '0.16em',
+          letterSpacing: '0.18em',
           marginBottom: 10,
+          padding: '3px 8px',
+          background: '#FFFCF4',
+          border: `2px solid ${accent}`,
+          display: 'inline-block',
         }}>
-          {badge}
+          ▸ {badge.toUpperCase()}
         </div>
       )}
       <div style={{
-        fontFamily: serif,
-        fontSize: 32,
-        fontWeight: 500,
+        fontFamily: pixel,
+        fontSize: 28,
         color: '#221E18',
-        margin: '0 0 4px',
-        letterSpacing: '-0.4px',
+        margin: '0 0 6px',
+        letterSpacing: 0.4,
       }}>
         {headline}
       </div>
       <div style={{
-        fontFamily: sans,
-        fontSize: 13.5,
+        fontFamily: serif,
+        fontSize: 16,
         fontWeight: 500,
         color: '#221E18',
-        marginBottom: 8,
+        marginBottom: 10,
       }}>
         {label}
       </div>
       <p style={{
         margin: 0,
-        fontFamily: sans,
-        fontSize: 13,
+        fontFamily: serif,
+        fontSize: 14,
         color: '#4A4338',
         lineHeight: 1.55,
       }}>

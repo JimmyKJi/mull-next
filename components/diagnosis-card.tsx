@@ -7,12 +7,17 @@
 //
 // Pure presentational component; takes already-shaped data. Both
 // surfaces (diary detail + dilemma archive) pass the same fields.
+//
+// v3 pixel chrome: chunky 4px ink border + hard amber drop-shadow.
+// "Original thinking" branch swaps the shadow to plum so the novel
+// callout reads at-a-glance.
 
 import Link from 'next/link';
 import type { Kinship } from '@/lib/kinship';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
+const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
 export type DiagnosisCardProps = {
   diagnosis: string | null;
@@ -27,39 +32,43 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel }: Diagnosi
   const hasAnything = !!diagnosis || hasPhilosophers || hasEchoes || hasTraditions || is_novel;
   if (!hasAnything) return null;
 
+  // Two color worlds: novel thinking (plum) vs. canonical kinship (teal).
+  const accent = is_novel ? '#6B3E8C' : '#2F5D5C';
+  const accentSoft = is_novel ? '#F0E6F5' : '#E5F0EE';
+
   return (
     <div style={{
       marginTop: 24,
       padding: '20px 24px',
       background: '#FFFCF4',
-      border: '1px solid #EBE3CA',
-      borderLeft: is_novel ? '3px solid #6B3E8C' : '3px solid #2F5D5C',
-      borderRadius: 8,
+      border: '4px solid #221E18',
+      boxShadow: `5px 5px 0 0 ${accent}`,
+      borderRadius: 0,
     }}>
       <div style={{
-        fontFamily: sans,
+        fontFamily: pixel,
         fontSize: 11,
-        fontWeight: 600,
-        color: is_novel ? '#6B3E8C' : '#2F5D5C',
+        color: accent,
         textTransform: 'uppercase',
-        letterSpacing: '0.16em',
-        marginBottom: 10,
+        letterSpacing: '0.18em',
+        marginBottom: 12,
         display: 'flex',
         gap: 10,
         alignItems: 'center',
         flexWrap: 'wrap',
       }}>
-        <span>Diagnosis</span>
+        <span>▸ DIAGNOSIS</span>
         {is_novel && (
           <span style={{
-            padding: '2px 8px',
+            padding: '3px 8px',
             background: '#6B3E8C',
             color: '#FAF6EC',
-            borderRadius: 999,
+            border: '2px solid #221E18',
+            fontFamily: pixel,
             fontSize: 10,
             letterSpacing: '0.18em',
           }}>
-            ✦ original thinking
+            ✦ ORIGINAL THINKING
           </span>
         )}
       </div>
@@ -79,11 +88,11 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel }: Diagnosi
       {hasPhilosophers && kinship && (
         <>
           <div style={{
-            fontFamily: sans, fontSize: 10.5, fontWeight: 600,
+            fontFamily: pixel, fontSize: 10.5,
             color: '#8C6520', textTransform: 'uppercase',
-            letterSpacing: '0.18em', marginBottom: 8, marginTop: 14,
+            letterSpacing: '0.18em', marginBottom: 10, marginTop: 16,
           }}>
-            Kindred thinkers
+            KINDRED THINKERS
           </div>
           <ul style={{
             listStyle: 'none', padding: 0, margin: 0,
@@ -97,11 +106,14 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel }: Diagnosi
                     textDecoration: 'none',
                     color: 'inherit',
                     display: 'block',
-                    padding: '10px 14px',
+                    padding: '11px 14px',
                     background: '#FAF6EC',
-                    border: '1px solid #EBE3CA',
-                    borderRadius: 6,
+                    border: '3px solid #221E18',
+                    boxShadow: '3px 3px 0 0 #B8862F',
+                    borderRadius: 0,
+                    transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
                   }}
+                  className="pixel-press"
                 >
                   <div style={{
                     display: 'flex',
@@ -116,10 +128,10 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel }: Diagnosi
                     }}>{kp.name}</span>
                     {kp.similarity > 0 && (
                       <span style={{
-                        fontFamily: sans, fontSize: 11.5, color: '#8C6520',
-                        fontVariantNumeric: 'tabular-nums', letterSpacing: 0.2,
+                        fontFamily: pixel, fontSize: 11, color: '#8C6520',
+                        fontVariantNumeric: 'tabular-nums', letterSpacing: 0.4,
                       }}>
-                        {Math.round(kp.similarity * 100)}% kinship
+                        {Math.round(kp.similarity * 100)}% KIN
                       </span>
                     )}
                   </div>
@@ -142,11 +154,11 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel }: Diagnosi
       {hasEchoes && kinship && kinship.echoes && (
         <>
           <div style={{
-            fontFamily: sans, fontSize: 10.5, fontWeight: 600,
+            fontFamily: pixel, fontSize: 10.5,
             color: '#8C6520', textTransform: 'uppercase',
-            letterSpacing: '0.18em', marginBottom: 8, marginTop: 14,
+            letterSpacing: '0.18em', marginBottom: 10, marginTop: 16,
           }}>
-            Also echoes
+            ALSO ECHOES
           </div>
           <ul style={{
             listStyle: 'none', padding: 0, margin: 0,
@@ -162,8 +174,8 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel }: Diagnosi
                     display: 'block',
                     padding: '8px 12px',
                     background: '#FAF6EC',
-                    border: '1px dashed #D6CDB6',
-                    borderRadius: 6,
+                    border: '2px dashed #8C6520',
+                    borderRadius: 0,
                   }}
                 >
                   <div style={{
@@ -179,9 +191,9 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel }: Diagnosi
                     }}>{kp.name}</span>
                     {kp.similarity > 0 && (
                       <span style={{
-                        fontFamily: sans, fontSize: 11, color: '#8C6520',
-                        fontVariantNumeric: 'tabular-nums', letterSpacing: 0.2,
-                        opacity: 0.75,
+                        fontFamily: pixel, fontSize: 10.5, color: '#8C6520',
+                        fontVariantNumeric: 'tabular-nums', letterSpacing: 0.4,
+                        opacity: 0.85,
                       }}>
                         {Math.round(kp.similarity * 100)}%
                       </span>
@@ -206,21 +218,21 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel }: Diagnosi
       {hasTraditions && kinship && (
         <>
           <div style={{
-            fontFamily: sans, fontSize: 10.5, fontWeight: 600,
+            fontFamily: pixel, fontSize: 10.5,
             color: '#8C6520', textTransform: 'uppercase',
-            letterSpacing: '0.18em', marginBottom: 8, marginTop: 14,
+            letterSpacing: '0.18em', marginBottom: 10, marginTop: 16,
           }}>
-            Traditions
+            TRADITIONS
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
             {kinship.traditions.map(tr => (
               <span key={tr} style={{
                 padding: '5px 12px',
-                background: '#F1EAD8',
-                border: '1px solid #E2D8B6',
-                borderRadius: 999,
-                fontFamily: sans, fontSize: 12.5, color: '#5C4B1F',
-                letterSpacing: 0.2,
+                background: accentSoft,
+                border: `2px solid ${accent}`,
+                borderRadius: 0,
+                fontFamily: pixel, fontSize: 11, color: accent,
+                letterSpacing: 0.4, textTransform: 'uppercase',
               }}>
                 {tr}
               </span>

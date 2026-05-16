@@ -1,5 +1,57 @@
 @import "tailwindcss";
 
+/* Design tokens exposed to Tailwind v4. Mirrors lib/design-tokens.ts
+   (the TypeScript source of truth used by any code that still computes
+   styles in JS). Adding tokens here is purely additive: it surfaces
+   utility classes like `bg-cream`, `text-ink-soft`, `font-display`
+   without affecting any existing rendered surface. Existing inline
+   styles continue to work unchanged until each surface is migrated. */
+@theme {
+  /* Cream + warm editorial palette (mull.html :root copied verbatim
+     so a Wave-1 migration of a static surface lands pixel-identical). */
+  --color-cream: #FAF6EC;
+  --color-cream-2: #F1EAD8;
+  --color-ink: #221E18;
+  --color-ink-soft: #4A4338;
+  --color-line: #D6CDB6;
+
+  /* Night palette — used by the constellation map background and any
+     dark-mode-ish surface inside the result reveal. */
+  --color-night: #0C141E;
+  --color-night-2: #131F2E;
+  --color-night-3: #1D2D44;
+  --color-star: #F1EAD8;
+
+  /* Default theme accent = amber. Per-archetype overrides happen via
+     inline custom-property assignment on the result wrapper, which
+     keeps theme switching cheap. */
+  --color-acc: #B8862F;
+  --color-acc-deep: #8C6520;
+  --color-acc-soft: #F8EDC8;
+  --color-acc-bg: #F8EDC8;
+
+  /* Typography. Body keeps the existing system stack to stay calm;
+     display switches to Cormorant Garamond for the editorial H1s
+     mull.html already uses. */
+  --font-sans: ui-sans-serif, -apple-system, "Inter", "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Cormorant Garamond", Georgia, serif;
+
+  /* Editorial column. The H1+lede+daily-wisdom rag-right invariant
+     (see AGENTS.md) assumes content lives at this width. */
+  --container-editorial: 720px;
+  --container-editorial-wide: 1040px;
+
+  /* Motion tokens. Match lib/motion-tokens.ts. Framer Motion accepts
+     numbers for duration (seconds) and arrays for cubic-bezier, but
+     these CSS-side copies let plain CSS transitions stay consistent. */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 180ms;
+  --duration-base: 280ms;
+  --duration-slow: 520ms;
+  --duration-reveal: 880ms;
+}
+
 :root {
   --background: #FAF6EC;
   --foreground: #221E18;
@@ -12,14 +64,22 @@ body {
   margin: 0;
   padding: 0;
   -webkit-font-smoothing: antialiased;
+  /* Chunky pixel drop-shadows hang 4–8px past their owner's right
+     edge. Without overflow:clip a phone-width screen shows a thin
+     horizontal scrollbar from the rightmost shadow on every page.
+     `clip` (vs. `hidden`) preserves position:sticky inside the body. */
+  overflow-x: clip;
 }
 
 /* Visible focus ring for keyboard navigation. Uses :focus-visible so it
-   doesn't show on mouse clicks (which feels noisy) but does show on Tab. */
+   doesn't show on mouse clicks (which feels noisy) but does show on Tab.
+   Square ring (border-radius: 0) so it matches the pixel chrome of the
+   element it's framing — a rounded ring around a square pixel button
+   reads as a leftover from the editorial era. */
 :focus-visible {
   outline: 2px solid #B8862F;
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: 0;
 }
 button:focus-visible,
 a:focus-visible,
@@ -28,6 +88,7 @@ textarea:focus-visible,
 select:focus-visible {
   outline: 2px solid #B8862F;
   outline-offset: 2px;
+  border-radius: 0;
 }
 
 /* Respect users who've asked the OS to reduce motion. */
@@ -38,4 +99,458 @@ select:focus-visible {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ─── v3 pixel-game world helpers ──────────────────────────────────
+   Crisp pixel rendering. Anything inside `.pixel-crisp` (or any
+   <img> / <svg> tagged with `data-pixel`) won't be antialiased — so
+   sprites stay crunchy at any scale. */
+.pixel-crisp,
+.pixel-crisp img,
+.pixel-crisp svg,
+[data-pixel] {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+}
+
+/* Pixel "panel" — chunky 4-pixel border with a hard 4-pixel
+   bottom-right shadow. The border + shadow combine into the look
+   of a classic JRPG dialog window. Use as `.pixel-panel` on any
+   container that should read as a UI block. */
+.pixel-panel {
+  border: 4px solid #221E18;
+  background: #FFFCF4;
+  box-shadow: 4px 4px 0 0 #221E18;
+  border-radius: 0; /* never round — pixel chrome */
+}
+
+.pixel-panel--amber {
+  border-color: #8C6520;
+  background: #F8EDC8;
+  box-shadow: 4px 4px 0 0 #8C6520;
+}
+
+.pixel-panel--ink {
+  border-color: #221E18;
+  background: #1A1612;
+  color: #F8EDC8;
+  box-shadow: 4px 4px 0 0 #8C6520;
+}
+
+/* Pixel button — chunky pixel border, hard shadow, "press" feel
+   on click via shifting the shadow into the button (1-pixel offset). */
+.pixel-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 22px;
+  background: #221E18;
+  color: #FAF6EC;
+  border: 4px solid #221E18;
+  box-shadow: 4px 4px 0 0 #8C6520;
+  font-family: var(--font-pixel-display, 'Courier New', monospace);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 80ms steps(2, end), box-shadow 80ms steps(2, end);
+  border-radius: 0;
+}
+.pixel-button:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 0 #B8862F;
+}
+.pixel-button:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 0 #8C6520;
+}
+.pixel-button--amber {
+  background: #B8862F;
+  color: #1A1612;
+  border-color: #8C6520;
+  box-shadow: 4px 4px 0 0 #221E18;
+}
+.pixel-button--amber:hover {
+  background: #D4A93D;
+  box-shadow: 5px 5px 0 0 #221E18;
+}
+.pixel-button--ghost {
+  background: transparent;
+  color: #221E18;
+  border-color: #221E18;
+  box-shadow: 4px 4px 0 0 #B8862F;
+}
+.pixel-button--ghost:hover {
+  background: #F8EDC8;
+}
+
+/* Pixel-press utility — slap onto any element that already carries a
+   pixel-style box-shadow (chunky inline buttons, pixel-bordered Links,
+   etc.) to give it the same hover-lift + active-press feel as
+   .pixel-button without rewriting the inline styles. The element MUST
+   already have its own `box-shadow` declared inline; this rule only
+   adjusts transform on hover/active and doesn't try to override the
+   shadow color (which is per-instance accent).
+
+   Pair it with the standard transition we use everywhere:
+     transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)'
+   so the lift snaps in steps and reads as 8-bit, not smooth. */
+.pixel-press {
+  cursor: pointer;
+}
+.pixel-press:hover {
+  transform: translate(-1px, -1px);
+}
+.pixel-press:active {
+  transform: translate(2px, 2px);
+}
+.pixel-press[disabled],
+.pixel-press[aria-disabled="true"] {
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Bigger -2px lift for chunky pixel-panel cards (vs. -1px for normal
+   buttons). The arcade-cabinet "thunk" feels right at -2px on bigger
+   surfaces but jarring on small inline buttons. */
+.pixel-press--lg:hover {
+  transform: translate(-2px, -2px);
+}
+.pixel-press--lg:active {
+  transform: translate(3px, 3px);
+}
+
+/* Touch-device tap feedback. On hover-capable devices the :hover lift
+   handles the "you tapped this" signal; on touch, hover doesn't fire,
+   so :active alone is the only feedback. The transform is short-lived
+   and easy to miss — add an amber background-tint flash so taps feel
+   acknowledged. */
+@media (hover: none) {
+  .pixel-press:active {
+    background-color: #F8EDC8 !important;
+  }
+}
+
+/* Pixel-alert — chunky bordered chip for inline messages (errors,
+   info, success). Three variants via modifier classes. Keeps every
+   form's error chrome visually consistent — previously each form
+   declared its own brick-tinted box with slightly different padding.
+
+   Usage:
+     <p class="pixel-alert pixel-alert--error">Could not save.</p>
+     <p class="pixel-alert pixel-alert--info">…</p>
+     <p class="pixel-alert pixel-alert--success">Saved.</p>
+*/
+.pixel-alert {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 14px;
+  line-height: 1.55;
+  border-radius: 0;
+  padding: 10px 14px;
+  border-style: solid;
+  border-width: 2px;
+  margin: 0;
+}
+.pixel-alert--error {
+  background: rgba(122, 46, 46, 0.08);
+  border-color: #7A2E2E;
+  color: #7A2E2E;
+}
+.pixel-alert--info {
+  background: #F8EDC8;
+  border-color: #8C6520;
+  color: #5C4B1F;
+}
+.pixel-alert--success {
+  background: #E5F0EE;
+  border-color: #2F5D5C;
+  color: #2F5D5C;
+}
+
+/* Skip-to-content link — keyboard-only escape valve so Tab doesn't
+   dump the user through every nav link before reaching <main>. The
+   link sits invisibly off-screen until it receives keyboard focus. */
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  padding: 12px 18px;
+  background: #221E18;
+  color: #FAF6EC;
+  border: 4px solid #B8862F;
+  font-family: var(--font-pixel-display, 'Courier New', monospace);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform 120ms ease-out;
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: none;
+}
+
+/* Pixel "keycap" — chunky 8-bit keyboard-shortcut chip. Use inside
+   shortcut hints ("press ⌘ + ↵ to save") and the Cmd-K trigger.
+   Uses the pixel-display variable directly so callers don't have to
+   repeat fontFamily inline. */
+.pixel-kbd {
+  display: inline-block;
+  padding: 1px 6px;
+  background: #F8EDC8;
+  color: #221E18;
+  border: 2px solid #221E18;
+  border-radius: 0;
+  font-family: var(--font-pixel-display, 'Courier New', monospace);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  vertical-align: 1px;
+}
+
+/* Pixel shimmer — used by Suspense-style loading skeletons. Same
+   slow horizontal sweep as the old soft shimmer, but inside chunky
+   pixel chrome (3px ink border, no radius). Drop the `.pixel-shimmer`
+   class onto a div with explicit width/height to render a placeholder
+   in the same visual language as the rest of the site. */
+@keyframes pixel-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.pixel-shimmer {
+  background-image: linear-gradient(
+    90deg,
+    #F5EFDC 0%,
+    #FBF6E8 50%,
+    #F5EFDC 100%
+  );
+  background-size: 200% 100%;
+  background-color: #F5EFDC;
+  animation: pixel-shimmer 1.6s steps(8, end) infinite;
+  border: 3px solid #221E18;
+  border-radius: 0;
+}
+
+/* Mobile: scale the chunkiest cards' shadows down so a 4px hard
+   shadow doesn't crowd a 320px viewport. Targets the .pixel-panel +
+   .pixel-button helpers — anything inline-styled stays as-is because
+   each surface picked its own offset. */
+@media (max-width: 480px) {
+  .pixel-panel {
+    box-shadow: 3px 3px 0 0 #221E18;
+  }
+  .pixel-panel--amber {
+    box-shadow: 3px 3px 0 0 #8C6520;
+  }
+  .pixel-panel--ink {
+    box-shadow: 3px 3px 0 0 #8C6520;
+  }
+  .pixel-button {
+    box-shadow: 3px 3px 0 0 #8C6520;
+    padding: 12px 18px;
+  }
+  .pixel-button--amber {
+    box-shadow: 3px 3px 0 0 #221E18;
+  }
+  .pixel-button--ghost {
+    box-shadow: 3px 3px 0 0 #B8862F;
+  }
+}
+
+/* CRT scanline overlay — sits on top of the page at very low
+   opacity so the cream background gets a subtle horizontal-line
+   texture. Toggle with `.crt-scanlines` on a wrapper. */
+.crt-scanlines {
+  position: relative;
+}
+.crt-scanlines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(34, 30, 24, 0.04) 0px,
+    rgba(34, 30, 24, 0.04) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: multiply;
+  z-index: 1;
+}
+
+/* A sprinkle of "press" noise — tiny pixel dots scattered as
+   background, low opacity. Cheaper than an SVG noise filter. */
+.pixel-noise {
+  background-image:
+    radial-gradient(#221E18 1px, transparent 1px),
+    radial-gradient(#8C6520 1px, transparent 1px);
+  background-size: 32px 32px, 48px 48px;
+  background-position: 0 0, 16px 16px;
+  background-attachment: fixed;
+  opacity: 0.025;
+}
+
+/* Simple pixel-art "blink" animation for sprite eyes / cursor
+   indicators. Steps so it pops rather than fades. */
+@keyframes pixel-blink {
+  0%, 60%, 100% { opacity: 1; }
+  61%, 80%      { opacity: 0; }
+}
+.pixel-blink {
+  animation: pixel-blink 1.6s steps(2, end) infinite;
+}
+
+/* Pixel float — slow chunky bob for sprites. Steps to keep that
+   8-bit non-smoothness. */
+@keyframes pixel-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+.pixel-float {
+  animation: pixel-float 2.4s steps(4, end) infinite;
+}
+
+/* Archetype-tile sprite default + hover. Default is a slow gentle
+   bob; on hover the sprite jiggles harder + scales slightly. Steps
+   keep the motion crunchy — no smooth lerps. */
+@keyframes archetype-sprite-idle {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
+}
+@keyframes archetype-sprite-jiggle {
+  0%   { transform: translate(0, -2px) rotate(0deg) scale(1.08); }
+  20%  { transform: translate(-2px, -4px) rotate(-3deg) scale(1.10); }
+  40%  { transform: translate(2px, -3px) rotate(3deg)  scale(1.10); }
+  60%  { transform: translate(-1px, -5px) rotate(-2deg) scale(1.12); }
+  80%  { transform: translate(1px, -3px) rotate(2deg)  scale(1.10); }
+  100% { transform: translate(0, -2px) rotate(0deg) scale(1.08); }
+}
+.archetype-sprite {
+  animation: archetype-sprite-idle 2.4s steps(4, end) infinite;
+  transform-origin: center;
+  will-change: transform;
+}
+.archetype-tile:hover .archetype-sprite {
+  animation: archetype-sprite-jiggle 0.6s steps(6, end) infinite;
+}
+
+/* Streak-milestone glow — slow chunky pulse on the streak stat
+   card when the user crosses a meaningful threshold (3, 7, 30,
+   100 days). Doesn't loop forever; the glow fades in to a steady
+   subtle outer-glow that says "this is special" without screaming
+   for attention every time the user reloads /account. */
+@keyframes pixel-milestone-pulse {
+  0%, 100% { box-shadow: 4px 4px 0 0 #B8862F, 0 0 0 0 rgba(184, 134, 47, 0); }
+  50%      { box-shadow: 4px 4px 0 0 #B8862F, 0 0 16px 4px rgba(184, 134, 47, 0.55); }
+}
+.pixel-milestone {
+  animation: pixel-milestone-pulse 2.4s steps(8, end) infinite;
+}
+
+/* Sprite "wake up" pop — used when a tooltip first reveals a
+   procedural philosopher sprite. Single play, snappy. */
+@keyframes sprite-pop-in {
+  0%   { transform: translateY(8px) scale(0.7); opacity: 0; }
+  60%  { transform: translateY(-2px) scale(1.05); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+.sprite-pop-in {
+  animation: sprite-pop-in 0.32s steps(5, end) both;
+}
+
+/* ─── Pixel form container ─────────────────────────────────────
+   Wrap any form in <div class="pixel-form">…</div> and its inputs,
+   textareas, and labels pick up the v3 pixel chrome styling without
+   touching the underlying React state/logic.
+
+   Form code that already uses inline style={…} keeps working — these
+   rules only apply when the inline style doesn't override (border,
+   background, font-family, etc.). For totally inline-styled forms
+   we override existing inline styles with `!important` because that's
+   the only way to win against the React inline-style cascade. The
+   `!important` is intentional: this is a transitional layer until
+   each form is rewritten.
+
+   What's overridden:
+     - text-rendering on inputs/textareas/selects
+     - their borders + radii (no rounded corners)
+     - the focus state (warm amber bg)
+     - submit button visual (the form keeps its onClick handler)
+*/
+.pixel-form input[type="text"],
+.pixel-form input[type="email"],
+.pixel-form input[type="password"],
+.pixel-form input[type="search"],
+.pixel-form input[type="number"],
+.pixel-form input[type="url"],
+.pixel-form select,
+.pixel-form textarea {
+  font-family: 'Inter', system-ui, sans-serif !important;
+  font-size: 16px !important;
+  border: 2px solid #221E18 !important;
+  border-radius: 0 !important;
+  background: #FFFCF4 !important;
+  color: #221E18 !important;
+  padding: 10px 12px !important;
+  outline: none !important;
+  -webkit-font-smoothing: antialiased !important;
+}
+.pixel-form input:focus,
+.pixel-form select:focus,
+.pixel-form textarea:focus {
+  background: #F8EDC8 !important;
+  outline: none !important;
+}
+.pixel-form textarea {
+  line-height: 1.5 !important;
+}
+.pixel-form label {
+  font-family: var(--font-pixel-display, 'Courier New', monospace) !important;
+  font-size: 11px !important;
+  letter-spacing: 0.16em !important;
+  color: #8C6520 !important;
+  text-transform: uppercase !important;
+}
+
+/* Pixel-form submit + primary action buttons (anything matching
+   .pixel-form button[type="submit"]) — but ONLY when the button
+   doesn't already have its own pixel chrome via the .pixel-button
+   class. Tagged with :not(.pixel-button) to opt out for forms that
+   already manage their button look. */
+.pixel-form button[type="submit"]:not(.pixel-button):not(.no-pixel) {
+  font-family: var(--font-pixel-display, 'Courier New', monospace) !important;
+  font-size: 13px !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  border: 4px solid #8C6520 !important;
+  background: #B8862F !important;
+  color: #1A1612 !important;
+  border-radius: 0 !important;
+  padding: 12px 22px !important;
+  box-shadow: 4px 4px 0 0 #221E18 !important;
+  cursor: pointer !important;
+  transition: transform 80ms steps(2, end), box-shadow 80ms steps(2, end) !important;
+}
+.pixel-form button[type="submit"]:not(.pixel-button):not(.no-pixel):hover {
+  background: #D4A93D !important;
+  transform: translate(-1px, -1px) !important;
+  box-shadow: 5px 5px 0 0 #221E18 !important;
+}
+.pixel-form button[type="submit"]:not(.pixel-button):not(.no-pixel):active {
+  transform: translate(2px, 2px) !important;
+  box-shadow: 1px 1px 0 0 #221E18 !important;
+}
+.pixel-form button[type="submit"]:not(.pixel-button):not(.no-pixel):disabled {
+  background: #EBE3CA !important;
+  color: rgba(140, 101, 32, 0.5) !important;
+  border-color: #D6CDB6 !important;
+  box-shadow: 4px 4px 0 0 #D6CDB6 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
 }

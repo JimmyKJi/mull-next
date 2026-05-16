@@ -16,6 +16,7 @@ import { createClient } from '@/utils/supabase/server';
 import { FIGURES } from '@/lib/figures';
 import { ARCHETYPES } from '@/lib/archetypes';
 import { t, type Locale } from '@/lib/translations';
+import EmptyStateSprite from '@/components/empty-state-sprite';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
@@ -90,14 +91,17 @@ export default async function Leaderboard({ locale = 'en' as Locale }: { locale?
       </p>
 
       {rows.length === 0 ? (
-        <p style={{
-          fontFamily: sans, fontSize: 14, color: '#8C6520',
-          fontStyle: 'italic', padding: '16px 18px',
-          background: '#FFFCF4', border: '1px dashed #D6CDB6',
-          borderRadius: 8, margin: 0,
+        <div style={{
+          padding: '20px 18px',
+          background: '#FFFCF4',
+          border: '3px dashed #B8862F',
+          borderRadius: 0,
         }}>
-          {t('leaderboard.empty', locale)}
-        </p>
+          <EmptyStateSprite
+            variant="compass"
+            caption={t('leaderboard.empty', locale)}
+          />
+        </div>
       ) : (
         <ol style={{
           listStyle: 'none', padding: 0, margin: 0,
@@ -113,22 +117,24 @@ export default async function Leaderboard({ locale = 'en' as Locale }: { locale?
               <li key={row.handle}>
                 <Link
                   href={`/u/${row.handle}`}
+                  className="pixel-press"
                   style={{
                     display: 'grid',
                     gridTemplateColumns: 'auto auto 1fr auto',
                     alignItems: 'center',
                     gap: 14,
                     padding: '12px 16px',
-                    background: rank <= 3 ? '#FBF6E8' : '#FFFCF4',
-                    border: '1px solid #EBE3CA',
-                    borderLeft: rank === 1
-                      ? '3px solid #B8862F'
+                    background: rank <= 3 ? '#F8EDC8' : '#FFFCF4',
+                    border: '3px solid #221E18',
+                    boxShadow: rank === 1
+                      ? '3px 3px 0 0 #B8862F'
                       : rank <= 3
-                        ? '3px solid #D6CDB6'
-                        : '1px solid #EBE3CA',
-                    borderRadius: 8,
+                        ? '3px 3px 0 0 #8C6520'
+                        : '3px 3px 0 0 #D6CDB6',
+                    borderRadius: 0,
                     textDecoration: 'none',
                     color: 'inherit',
+                    transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
                   }}
                 >
                   {/* Rank number */}
@@ -229,10 +235,13 @@ const sectionStyle: React.CSSProperties = {
 };
 
 const headingStyle: React.CSSProperties = {
-  fontFamily: serif,
-  fontSize: 28,
-  fontWeight: 500,
+  // Pixel-display heading for v3 — large, hard amber drop shadow.
+  fontFamily: 'var(--font-pixel-display, "Courier New", monospace)',
+  fontSize: 22,
+  fontWeight: 400,
   margin: 0,
   color: '#221E18',
-  letterSpacing: '-0.3px',
+  letterSpacing: '0.04em',
+  textShadow: '3px 3px 0 #B8862F',
+  lineHeight: 1.1,
 };

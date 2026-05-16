@@ -5,6 +5,7 @@ import DebateForm from './debate-form';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
+import { PixelPageHeader } from '@/components/pixel-window';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
@@ -40,69 +41,32 @@ export default async function DebatePage() {
   }
 
   return (
-    <main style={{ maxWidth: 820, margin: '0 auto', padding: '60px 24px 120px' }}>
-      <header style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'baseline',
-        marginBottom: 36,
-        gap: 16,
-        flexWrap: 'wrap',
-      }}>
-        <Link href="/" style={{
-          fontFamily: serif,
-          fontSize: 28,
-          fontWeight: 500,
-          color: '#221E18',
-          textDecoration: 'none',
-          letterSpacing: '-0.5px'
-        }}>
-          Mull<span style={{ color: '#B8862F' }}>.</span>
+    <main className="mx-auto max-w-[860px] px-6 pb-32 pt-10 sm:px-10">
+      <div className="mb-6 flex items-center justify-end gap-4">
+        <LanguageSwitcher initial={locale} />
+        <Link
+          href="/dilemma"
+          className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"
+        >
+          {t('nav.dilemma_arrow', locale)}
         </Link>
-        <nav style={{ display: 'flex', gap: 18, alignItems: 'center' }}>
-          <LanguageSwitcher initial={locale} />
-          <Link href="/dilemma" style={{ fontFamily: sans, fontSize: 13, color: '#4A4338', textDecoration: 'none' }}>
-            {t('nav.dilemma_arrow', locale)}
-          </Link>
-          <Link href="/account" style={{ fontFamily: sans, fontSize: 13, color: '#4A4338', textDecoration: 'none' }}>
-            {t('nav.account_arrow', locale)}
-          </Link>
-        </nav>
-      </header>
-
-      <div style={{
-        fontFamily: sans,
-        fontSize: 11,
-        fontWeight: 600,
-        color: '#8C6520',
-        textTransform: 'uppercase',
-        letterSpacing: '0.18em',
-        marginBottom: 14,
-      }}>
-        {t('debate.eyebrow', locale)}
+        <Link
+          href="/account"
+          className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"
+        >
+          {t('nav.account_arrow', locale)}
+        </Link>
       </div>
-      <h1 style={{
-        fontFamily: serif,
-        fontSize: 44,
-        fontWeight: 500,
-        margin: '0 0 12px',
-        letterSpacing: '-0.01em',
-        lineHeight: 1.05,
-      }}>
-        {t('debate.title_html', locale, { em_simulated: '' }).split('{em_simulated}').map((part, i, arr) => (
-          <span key={i}>{part}{i < arr.length - 1 && <em style={{ color: '#8C6520' }}>{t('debate.simulated_em', locale)}</em>}</span>
-        ))}
-      </h1>
-      <p style={{
-        fontFamily: serif,
-        fontStyle: 'italic',
-        fontSize: 18,
-        color: '#4A4338',
-        marginBottom: 12,
-        lineHeight: 1.5,
-      }}>
-        {t('debate.subtitle', locale)}
-      </p>
+
+      <PixelPageHeader
+        eyebrow={`▶ ${t('debate.eyebrow', locale).toUpperCase()}`}
+        title="SIMULATED DEBATE"
+        subtitle={
+          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-prose)' }}>
+            {t('debate.subtitle', locale)}
+          </p>
+        }
+      />
       <p style={{
         fontFamily: sans,
         fontSize: 12.5,

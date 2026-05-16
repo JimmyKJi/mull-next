@@ -7,12 +7,16 @@
 // manually. The screenshot itself becomes the visual asset.
 //
 // Native share + copy-link are kept as supplementary options.
+//
+// v3 pixel chrome: chunky pixel-button look on each share entry,
+// hover lifts via translate + shadow shift. Eyebrow uses pixel font.
 
 'use client';
 
 import { useState } from 'react';
 
 const sans = "'Inter', system-ui, sans-serif";
+const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
 function archetypeSlug(name: string): string {
   return name
@@ -85,63 +89,71 @@ export default function ShareResultCard({
     <div style={{
       marginTop: 22,
       paddingTop: 22,
-      borderTop: '1px solid #EBE3CA',
+      borderTop: '4px solid #221E18',
     }}>
       <div style={{
-        fontFamily: sans, fontSize: 11, fontWeight: 600,
+        fontFamily: pixel, fontSize: 11,
         color: '#8C6520', textTransform: 'uppercase',
-        letterSpacing: '0.18em', marginBottom: 10,
+        letterSpacing: '0.18em', marginBottom: 12,
       }}>
-        Share your archetype
+        ▸ SHARE YOUR ARCHETYPE
       </div>
-      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
         <a
           href={xIntent}
           target="_blank"
           rel="noopener noreferrer"
-          style={{ ...buttonStyle, display: 'inline-flex', alignItems: 'center', gap: 6 }}
+          className="pixel-press"
+          style={{ ...pixelShareButton, textDecoration: 'none' }}
         >
-          <span aria-hidden>𝕏</span>
-          <span>Post on X</span>
+          <span aria-hidden style={{ marginRight: 8 }}>𝕏</span>
+          <span>POST ON X</span>
         </a>
         <a
           href={shareCardUrl}
           target="_blank"
           rel="noopener noreferrer"
-          style={{ ...buttonStyle, display: 'inline-flex', alignItems: 'center', gap: 6 }}
+          className="pixel-press"
+          style={{ ...pixelShareButton, textDecoration: 'none' }}
           title="Opens a screenshot-friendly card you can share to Instagram"
         >
-          <span aria-hidden>◎</span>
-          <span>Share on Instagram</span>
+          <span aria-hidden style={{ marginRight: 8 }}>◎</span>
+          <span>INSTAGRAM</span>
         </a>
         <a
           href={shareCardUrl}
           target="_blank"
           rel="noopener noreferrer"
-          style={{ ...buttonStyle, display: 'inline-flex', alignItems: 'center', gap: 6 }}
+          className="pixel-press"
+          style={{ ...pixelShareButton, textDecoration: 'none' }}
           title="Opens a screenshot-friendly card you can share to TikTok"
         >
-          <span aria-hidden>♪</span>
-          <span>Share on TikTok</span>
+          <span aria-hidden style={{ marginRight: 8 }}>♪</span>
+          <span>TIKTOK</span>
         </a>
-        <button type="button" onClick={copyLink} style={{
-          ...buttonStyle,
-          ...(copied ? copiedStyle : {}),
-          cursor: 'pointer',
-        }}>
-          <span aria-hidden style={{ marginRight: 6 }}>↗</span>
-          <span>{copied ? 'Copied!' : 'Copy link'}</span>
+        <button
+          type="button"
+          onClick={copyLink}
+          className="pixel-press"
+          style={{
+            ...pixelShareButton,
+            ...(copied ? copiedStyle : {}),
+            cursor: 'pointer',
+          }}
+        >
+          <span aria-hidden style={{ marginRight: 8 }}>↗</span>
+          <span>{copied ? 'COPIED!' : 'COPY LINK'}</span>
         </button>
         {hasNativeShare && (
-          <button type="button" onClick={nativeShare} style={{ ...buttonStyle, cursor: 'pointer' }}>
-            <span aria-hidden style={{ marginRight: 6 }}>↗</span>
-            <span>Share…</span>
+          <button type="button" onClick={nativeShare} className="pixel-press" style={{ ...pixelShareButton, cursor: 'pointer' }}>
+            <span aria-hidden style={{ marginRight: 8 }}>↗</span>
+            <span>SHARE…</span>
           </button>
         )}
       </div>
       {error && (
         <p style={{
-          marginTop: 8, fontFamily: sans, fontSize: 12, color: '#7A2E2E',
+          marginTop: 12, fontFamily: sans, fontSize: 12, color: '#7A2E2E',
         }}>
           {error}
         </p>
@@ -150,22 +162,24 @@ export default function ShareResultCard({
   );
 }
 
-const buttonStyle: React.CSSProperties = {
-  padding: '8px 14px',
-  borderRadius: 999,
-  border: '1px solid #D6CDB6',
+const pixelShareButton: React.CSSProperties = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  padding: '10px 16px',
   background: '#FFFCF4',
   color: '#221E18',
-  fontFamily: sans,
-  fontSize: 13,
-  fontWeight: 500,
-  textDecoration: 'none',
-  letterSpacing: 0.2,
-  transition: 'border-color 0.15s, color 0.15s, background 0.15s',
+  border: '3px solid #221E18',
+  borderRadius: 0,
+  fontFamily: pixel,
+  fontSize: 12,
+  letterSpacing: 0.4,
+  textTransform: 'uppercase',
+  boxShadow: '3px 3px 0 0 #B8862F',
+  transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end), background 80ms steps(2, end)',
 };
 
 const copiedStyle: React.CSSProperties = {
-  borderColor: '#8C6520',
+  background: '#F8EDC8',
   color: '#8C6520',
-  background: '#F5EFDC',
+  boxShadow: '3px 3px 0 0 #2F5D5C',
 };

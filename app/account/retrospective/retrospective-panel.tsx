@@ -3,8 +3,9 @@
 // Year picker + "Generate" button + essay display. Calls the API on demand
 // rather than auto-loading (Claude essay generation isn't free).
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { t, type Locale } from '@/lib/translations';
+import EmptyStateSprite from '@/components/empty-state-sprite';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
@@ -51,7 +52,7 @@ export default function RetrospectivePanel({ locale = 'en' }: { locale?: Locale 
   for (let y = 2024; y <= currentYear; y++) years.push(y);
 
   return (
-    <div>
+    <div className="pixel-form">
       <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', marginBottom: 24 }}>
         <label style={{ fontFamily: sans, fontSize: 13, color: '#4A4338' }}>
           {t('retro.year_label', locale)}{' '}
@@ -94,22 +95,46 @@ export default function RetrospectivePanel({ locale = 'en' }: { locale?: Locale 
       </div>
 
       {error && (
-        <div style={{
-          padding: '12px 16px',
-          background: 'rgba(122, 46, 46, 0.08)',
-          border: '1px solid rgba(122, 46, 46, 0.2)',
-          borderRadius: 6,
-          color: '#7A2E2E',
-          fontFamily: sans,
-          fontSize: 13.5,
-          lineHeight: 1.55,
-          marginBottom: 24,
-        }}>
+        <p className="pixel-alert pixel-alert--error" style={{ marginBottom: 24 }}>
           {error}
-        </div>
+        </p>
       )}
 
-      {result && (
+      {/* Loading state — pixel typewriter that types out a placeholder
+          line at ~40 chars/sec while the Claude essay is being
+          generated. Sells the "AI is thinking" beat far better than a
+          static "Generating…" button. Renders only when `loading` is
+          true and we don't have a result yet. */}
+      {loading && (
+        <RetrospectiveTypewriter year={year} />
+      )}
+
+      {result && (() => {
+        // Detect a "no activity for this year" result so we render an
+        // empty-state sprite instead of four "0" stat cards and a
+        // failed-essay paragraph. The API returns counts: { quizzes:
+        // 0, dilemmas: 0, … } when the user has nothing for the year.
+        const noActivity =
+          result.periodSummary.counts.quizzes === 0 &&
+          result.periodSummary.counts.dilemmas === 0 &&
+          result.periodSummary.counts.diaries === 0 &&
+          (result.periodSummary.counts.reflections ?? 0) === 0;
+        if (noActivity) {
+          return (
+            <div style={{
+              padding: '20px 18px',
+              background: '#FFFCF4',
+              border: '3px dashed #8C6520',
+              borderRadius: 0,
+            }}>
+              <EmptyStateSprite
+                variant="book"
+                caption={`Nothing to retrospect on for ${result.year} yet — you haven't taken a quiz, answered a dilemma, written a diary entry, or saved an exercise reflection in that period.`}
+              />
+            </div>
+          );
+        }
+        return (
         <div>
           {/* Numbers strip */}
           <div style={{
@@ -160,9 +185,9 @@ export default function RetrospectivePanel({ locale = 'en' }: { locale?: Locale 
             <article style={{
               padding: '32px 36px',
               background: '#FFFCF4',
-              border: '1px solid #EBE3CA',
-              borderLeft: '3px solid #B8862F',
-              borderRadius: 10,
+              border: '4px solid #221E18',
+              boxShadow: '5px 5px 0 0 #B8862F',
+              borderRadius: 0,
               fontFamily: serif,
               fontSize: 17.5,
               color: '#221E18',
@@ -184,7 +209,106 @@ export default function RetrospectivePanel({ locale = 'en' }: { locale?: Locale 
             </p>
           )}
         </div>
-      )}
+        );
+      })()}
+    </div>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────
+// RetrospectiveTypewriter — placeholder that types out a quiet line
+// of "thinking…" prose while the Claude API call is in flight. ~40
+// chars/sec ish. Cycles through 3 placeholder lines so the user
+// doesn't see the same sentence stuck if generation takes more than
+// ~5 seconds. Reduced-motion: skip the animation, show all lines.
+// ────────────────────────────────────────────────────────────────
+function RetrospectiveTypewriter({ year }: { year: number }) {
+  const placeholders = [
+    `Reading every dilemma response, diary entry, and reflection from ${year}…`,
+    `Looking for the dimensions where you shifted, and the ones where you didn't…`,
+    `Drafting a letter to you about the year you actually had…`,
+  ];
+
+  const [reduced, setReduced] = useState(false);
+  const [lineIdx, setLineIdx] = useState(0);
+  const [chars, setChars] = useState(0);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReduced(mq.matches);
+  }, []);
+
+  useEffect(() => {
+    if (reduced) {
+      setLineIdx(placeholders.length - 1);
+      setChars(placeholders[placeholders.length - 1].length);
+      return;
+    }
+    const current = placeholders[lineIdx];
+    if (chars < current.length) {
+      const id = window.setTimeout(() => setChars(chars + 1), 25);
+      return () => window.clearTimeout(id);
+    }
+    // Line is fully typed — pause briefly, then move to next line
+    // (or clear and restart if we've shown the last one).
+    const id = window.setTimeout(() => {
+      const next = (lineIdx + 1) % placeholders.length;
+      setLineIdx(next);
+      setChars(0);
+    }, 1400);
+    return () => window.clearTimeout(id);
+    // placeholders is built from `year` only; safe to omit from deps.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chars, lineIdx, reduced]);
+
+  return (
+    <div style={{
+      padding: '24px 28px',
+      background: '#FFFCF4',
+      border: '4px solid #221E18',
+      boxShadow: '5px 5px 0 0 #B8862F',
+      borderRadius: 0,
+      marginBottom: 24,
+      minHeight: 110,
+    }}>
+      <div style={{
+        fontFamily: 'var(--font-pixel-display)',
+        fontSize: 11,
+        color: '#8C6520',
+        textTransform: 'uppercase',
+        letterSpacing: '0.18em',
+        marginBottom: 12,
+      }}>
+        ▸ DRAFTING YOUR RETROSPECTIVE
+      </div>
+      <p style={{
+        fontFamily: serif,
+        fontStyle: 'italic',
+        fontSize: 17,
+        color: '#221E18',
+        margin: 0,
+        lineHeight: 1.55,
+      }}>
+        {reduced
+          ? placeholders.join(' ')
+          : (
+            <>
+              {placeholders[lineIdx].slice(0, chars)}
+              <span
+                aria-hidden
+                style={{
+                  display: 'inline-block',
+                  width: 9,
+                  height: 16,
+                  marginLeft: 2,
+                  background: '#B8862F',
+                  verticalAlign: '-2px',
+                }}
+                className="pixel-blink"
+              />
+            </>
+          )}
+      </p>
     </div>
   );
 }
@@ -194,8 +318,9 @@ function Stat({ label, value }: { label: string; value: number }) {
     <div style={{
       padding: '14px 16px',
       background: '#FFFCF4',
-      border: '1px solid #EBE3CA',
-      borderRadius: 8,
+      border: '3px solid #221E18',
+      boxShadow: '3px 3px 0 0 #8C6520',
+      borderRadius: 0,
     }}>
       <div style={{
         fontFamily: serif,

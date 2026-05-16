@@ -1,21 +1,21 @@
-// /archetype — index of all 10 archetypes. Public, indexable. Each card
-// links to its detail page with the long-form essay, quotes, reading list,
-// and so on.
+// /archetype — index of all 10 archetypes. v3 pixel chrome restyle.
+// Each card uses the new pixel ArchetypeSprite (was the smooth SVG)
+// and the chunky pixel-panel styling pattern.
 
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { ARCHETYPES } from '@/lib/archetypes';
-import { FIGURES } from '@/lib/figures';
+import { getArchetypeColor } from '@/lib/archetype-colors';
+import { ArchetypeSprite } from '@/components/archetype-sprite';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
-
-const serif = "'Cormorant Garamond', Georgia, serif";
-const sans = "'Inter', system-ui, sans-serif";
+import { PixelPageHeader } from '@/components/pixel-window';
 
 export const metadata: Metadata = {
   title: 'The ten archetypes',
-  description: "The ten philosophical orientations Mull's quiz can place you at — Cartographer, Keel, Threshold, Pilgrim, Touchstone, Hearth, Forge, Hammer, Garden, Lighthouse.",
+  description:
+    "The ten philosophical orientations Mull's quiz can place you at — Cartographer, Keel, Threshold, Pilgrim, Touchstone, Hearth, Forge, Hammer, Garden, Lighthouse.",
   openGraph: {
     title: 'The ten archetypes — Mull',
     description: "The ten philosophical orientations Mull's quiz can place you at.",
@@ -30,124 +30,125 @@ export default async function ArchetypeIndexPage() {
   const locale = await getServerLocale();
 
   return (
-    <main style={{ maxWidth: 920, margin: '0 auto', padding: '60px 24px 120px' }}>
-      <header style={{
-        display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
-        marginBottom: 36, gap: 16, flexWrap: 'wrap'
-      }}>
-        <Link href="/" style={{
-          fontFamily: serif, fontSize: 28, fontWeight: 500,
-          color: '#221E18', textDecoration: 'none', letterSpacing: '-0.5px'
-        }}>
-          Mull<span style={{ color: '#B8862F' }}>.</span>
-        </Link>
+    <main className="mx-auto max-w-[1200px] px-6 pb-32 pt-12 sm:px-10 sm:pt-16">
+      <div className="mb-6 flex justify-end">
         <LanguageSwitcher initial={locale} />
-      </header>
+      </div>
 
-      <section style={{ marginBottom: 40 }}>
-        <h1 style={{
-          fontFamily: serif, fontSize: 42, fontWeight: 500,
-          margin: '0 0 14px', letterSpacing: '-0.5px', lineHeight: 1.1,
-        }}>
-          {t('arch_index.title', locale)}
-        </h1>
-        <p style={{
-          fontFamily: serif, fontStyle: 'italic',
-          fontSize: 18, color: '#4A4338', margin: '0 0 12px', lineHeight: 1.5,
-        }}>
-          {t('arch_index.subtitle', locale)}
-        </p>
-        <p style={{
-          fontFamily: sans, fontSize: 14, color: '#8C6520',
-          margin: 0, lineHeight: 1.6, opacity: 0.9, maxWidth: 640,
-        }}>
-          {t('arch_index.intro', locale)}
-        </p>
-      </section>
+      <PixelPageHeader
+        eyebrow="▶ THE TEN ARCHETYPES"
+        title="CHOOSE YOUR ARCHETYPE"
+        subtitle={
+          <p
+            className="text-[16px] italic"
+            style={{ fontFamily: 'var(--font-prose)' }}
+          >
+            {t('arch_index.subtitle', locale)}
+          </p>
+        }
+      />
 
-      <ul style={{
-        listStyle: 'none', padding: 0, margin: 0,
-        display: 'grid', gap: 16,
-        gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-      }}>
-        {ARCHETYPES.map(a => {
+      <p className="-mt-6 mb-10 max-w-[680px] text-[14px] leading-[1.6] text-[#4A4338] sm:mb-12">
+        {t('arch_index.intro', locale)}
+      </p>
+
+      {/* Equal-height roster — same pattern as the home grid. */}
+      <ul className="grid auto-rows-fr grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        {ARCHETYPES.map((a) => {
+          const color = getArchetypeColor(a.key);
           const name = t(`arch.${a.key}.name`, locale) || a.key;
           const blurb = t(`arch.${a.key}.blurb`, locale) || '';
-          const svg = FIGURES[a.key] || '';
 
           return (
-            <li key={a.key}>
+            <li key={a.key} className="h-full">
               <Link
                 href={`/archetype/${a.key}`}
-                style={{
-                  display: 'block',
-                  background: '#FFFCF4',
-                  border: '1px solid #EBE3CA',
-                  borderRadius: 10,
-                  padding: '20px 22px',
-                  textDecoration: 'none',
-                  color: 'inherit',
-                  transition: 'border-color 0.18s, box-shadow 0.18s',
-                  height: '100%',
-                }}
+                className="archetype-tile group block h-full transition-transform duration-200 hover:-translate-x-1 hover:-translate-y-1"
               >
-                <div style={{
-                  display: 'flex', alignItems: 'flex-start', gap: 14,
-                  marginBottom: 10,
-                }}>
+                <div
+                  className="flex h-full flex-col border-4"
+                  style={{
+                    background: color.soft,
+                    borderColor: color.deep,
+                    boxShadow: `4px 4px 0 0 ${color.deep}`,
+                  }}
+                >
                   <div
-                    style={{ width: 64, height: 64, flexShrink: 0 }}
+                    className="flex items-center justify-between border-b-4 px-3 py-2 text-[10px] tracking-[0.18em]"
+                    style={{
+                      borderColor: color.deep,
+                      backgroundColor: color.deep,
+                      color: color.soft,
+                      fontFamily: 'var(--font-pixel-display)',
+                    }}
+                  >
+                    <span>NO. {String(ARCHETYPES.indexOf(a) + 1).padStart(2, '0')}</span>
+                    <span>THE {a.key.toUpperCase()}</span>
+                  </div>
+
+                  <div
+                    className="relative mx-auto my-4 flex h-[120px] w-[120px] shrink-0 items-center justify-center"
                     aria-hidden
-                    dangerouslySetInnerHTML={{ __html: svg }}
-                  />
-                  <div>
-                    <div style={{
-                      fontFamily: sans, fontSize: 10, fontWeight: 600,
-                      color: '#8C6520', textTransform: 'uppercase',
-                      letterSpacing: '0.18em', marginBottom: 4,
-                    }}>
-                      {t('arch_index.eyebrow_one', locale)}
+                  >
+                    <div
+                      className="absolute inset-2 bg-[#FFFCF4]"
+                      style={{
+                        boxShadow: `inset 0 0 0 3px ${color.deep}`,
+                      }}
+                    />
+                    <div className="archetype-sprite relative">
+                      <ArchetypeSprite archetypeKey={a.key} size={88} />
                     </div>
-                    <h2 style={{
-                      fontFamily: serif, fontSize: 22, fontWeight: 500,
-                      margin: 0, color: '#221E18', lineHeight: 1.2,
-                    }}>
+                  </div>
+
+                  <div
+                    className="flex-1 border-t-2 px-3 py-3 text-center"
+                    style={{ borderColor: color.deep }}
+                  >
+                    <h2 className="text-[18px] font-medium leading-tight text-[#221E18]">
                       {name}
                     </h2>
-                    <p style={{
-                      fontFamily: serif, fontStyle: 'italic',
-                      fontSize: 14, color: '#8C6520',
-                      margin: '4px 0 0', lineHeight: 1.4,
-                    }}>
+                    <p
+                      className="mt-1 text-[13px] italic leading-[1.4] text-[#8C6520]"
+                      style={{ fontFamily: 'var(--font-prose)' }}
+                    >
                       {a.spirit}
                     </p>
+                    {blurb ? (
+                      <p
+                        className="mt-3 text-[13px] leading-[1.55] text-[#4A4338]"
+                        style={{ fontFamily: 'var(--font-prose)' }}
+                      >
+                        {blurb}
+                      </p>
+                    ) : null}
+                  </div>
+
+                  <div
+                    className="border-t-2 px-3 py-2 text-center text-[10px] tracking-[0.22em]"
+                    style={{
+                      borderColor: color.deep,
+                      backgroundColor: color.deep,
+                      color: color.soft,
+                      fontFamily: 'var(--font-pixel-display)',
+                    }}
+                  >
+                    <span className="opacity-60 transition-opacity group-hover:opacity-100">
+                      ▶ {t('arch_index.read_more', locale)}
+                    </span>
                   </div>
                 </div>
-                <p style={{
-                  fontFamily: sans, fontSize: 14,
-                  color: '#4A4338', margin: 0, lineHeight: 1.55,
-                }}>
-                  {blurb}
-                </p>
-                <span style={{
-                  display: 'inline-block', marginTop: 10,
-                  fontFamily: sans, fontSize: 13, color: '#2F5D5C',
-                  borderBottom: '1px solid rgba(47, 93, 92, 0.4)',
-                  paddingBottom: 1,
-                }}>
-                  {t('arch_index.read_more', locale)}
-                </span>
               </Link>
             </li>
           );
         })}
       </ul>
 
-      <p style={{
-        marginTop: 48, textAlign: 'center',
-        fontFamily: sans, fontSize: 13, color: '#8C6520',
-      }}>
-        <Link href="/" style={{ color: '#8C6520', textDecoration: 'underline', textUnderlineOffset: 3 }}>
+      <p className="mt-12 text-center text-[13px] text-[#8C6520]">
+        <Link
+          href="/"
+          className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+        >
           ← {t('arch_index.back_to_home', locale)}
         </Link>
       </p>

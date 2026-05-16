@@ -121,19 +121,23 @@ export default function DuelForm({ philosophers, locale = 'en' }: { philosophers
         <div style={{ marginTop: 36, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
           <button
             onClick={reset}
+            className="pixel-press"
             style={{
-              padding: '11px 20px',
+              padding: '12px 22px',
               background: '#221E18',
               color: '#FAF6EC',
-              border: 'none',
-              borderRadius: 8,
+              border: '4px solid #221E18',
+              boxShadow: '4px 4px 0 0 #B8862F',
+              borderRadius: 0,
               cursor: 'pointer',
-              fontFamily: sans,
-              fontSize: 14,
-              fontWeight: 500,
+              fontFamily: 'var(--font-pixel-display)',
+              fontSize: 12,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
             }}
           >
-            {t('duel.different_debate', locale)}
+            ▸ {t('duel.different_debate', locale).toUpperCase()}
           </button>
         </div>
       </div>
@@ -141,7 +145,7 @@ export default function DuelForm({ philosophers, locale = 'en' }: { philosophers
   }
 
   return (
-    <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
+    <form onSubmit={onSubmit} className="pixel-form" style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
       <PhilosopherPicker
         search={search}
         setSearch={setSearch}

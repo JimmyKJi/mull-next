@@ -12,11 +12,22 @@ import { usePathname } from 'next/navigation';
 
 const HIDDEN_PREFIXES = [
   '/account',  // has its own header with LogoutButton + privacy controls
+  '/quiz',     // v2 sandbox — focused single-task surface
+  '/result',   // v2 sandbox — owns the page chrome
 ];
+
+// Exact-match pathnames (no prefix match). Used for `/` because
+// the prefix logic would otherwise hide the bar on every route.
+const HIDDEN_EXACT = new Set([
+  '/',         // v2 homepage has its own slim wordmark header
+]);
 
 export default function TopBarMount({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() || '/';
-  const hide = HIDDEN_PREFIXES.some(p => pathname === p || pathname.startsWith(p + '/'));
-  if (hide) return null;
+  const hideExact = HIDDEN_EXACT.has(pathname);
+  const hidePrefix = HIDDEN_PREFIXES.some(
+    p => pathname === p || pathname.startsWith(p + '/'),
+  );
+  if (hideExact || hidePrefix) return null;
   return <>{children}</>;
 }

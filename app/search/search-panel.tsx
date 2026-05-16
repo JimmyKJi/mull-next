@@ -9,6 +9,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { t, type Locale } from '@/lib/translations';
+import EmptyStateSprite from '@/components/empty-state-sprite';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
@@ -69,7 +70,7 @@ export default function SearchPanel({ locale = 'en' }: { locale?: Locale }) {
   }, [q]);
 
   return (
-    <div>
+    <div className="pixel-form">
       <div style={{ position: 'relative' }}>
         <input
           type="text"
@@ -111,32 +112,18 @@ export default function SearchPanel({ locale = 'en' }: { locale?: Locale }) {
       </div>
 
       {error && (
-        <div style={{
-          marginTop: 16,
-          padding: '10px 14px',
-          background: 'rgba(122, 46, 46, 0.08)',
-          border: '1px solid rgba(122, 46, 46, 0.2)',
-          borderRadius: 6,
-          fontFamily: sans,
-          fontSize: 13,
-          color: '#7A2E2E',
-        }}>
+        <p className="pixel-alert pixel-alert--error" style={{ marginTop: 16 }}>
           {error}
-        </div>
+        </p>
       )}
 
       {q.trim() && hasSearched && !searching && results.length === 0 && !error && (
-        <p style={{
-          marginTop: 24,
-          fontFamily: serif,
-          fontStyle: 'italic',
-          fontSize: 16,
-          color: '#8C6520',
-          textAlign: 'center',
-          opacity: 0.85,
-        }}>
-          {t('search.no_match', locale, { q })}
-        </p>
+        <div style={{ marginTop: 24 }}>
+          <EmptyStateSprite
+            variant="explorer"
+            caption={t('search.no_match', locale, { q })}
+          />
+        </div>
       )}
 
       {results.length > 0 && (
@@ -150,14 +137,16 @@ export default function SearchPanel({ locale = 'en' }: { locale?: Locale }) {
         }}>
           {results.map(r => (
             <li key={r.handle}>
-              <Link href={r.url} style={{
+              <Link href={r.url} className="pixel-press" style={{
                 display: 'block',
                 padding: '14px 18px',
                 background: '#FFFCF4',
-                border: '1px solid #EBE3CA',
-                borderRadius: 8,
+                border: '3px solid #221E18',
+                boxShadow: '3px 3px 0 0 #B8862F',
+                borderRadius: 0,
                 textDecoration: 'none',
                 color: 'inherit',
+                transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
               }}>
                 <div style={{
                   display: 'flex',

@@ -32,6 +32,7 @@ export const revalidate = 0;
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
+const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
 type FeedbackRow = {
   id: string;
@@ -145,61 +146,69 @@ export default async function AdminPage() {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'baseline',
-        marginBottom: 24,
+        marginBottom: 28,
         gap: 12,
         flexWrap: 'wrap',
       }}>
         <div>
           <div style={{
-            fontFamily: sans, fontSize: 11, fontWeight: 600,
+            fontFamily: pixel, fontSize: 11,
             color: '#8C6520', textTransform: 'uppercase',
-            letterSpacing: '0.18em', marginBottom: 6,
+            letterSpacing: '0.18em', marginBottom: 8,
           }}>
-            Admin · Live
+            ▸ ADMIN · LIVE
           </div>
           <h1 style={{
-            fontFamily: serif, fontSize: 36, fontWeight: 500,
-            margin: 0, letterSpacing: '-0.5px',
+            fontFamily: pixel, fontSize: 28,
+            margin: 0, color: '#221E18',
+            letterSpacing: '0.06em',
+            textTransform: 'uppercase',
+            textShadow: '3px 3px 0 #B8862F',
           }}>
-            Launch dashboard
+            LAUNCH DASHBOARD
           </h1>
         </div>
         <div style={{
-          fontFamily: sans, fontSize: 12, color: '#8C6520',
+          fontFamily: pixel, fontSize: 11, color: '#8C6520',
           textAlign: 'right', lineHeight: 1.5,
+          letterSpacing: 0.4,
+          textTransform: 'uppercase',
         }}>
-          Refreshes every 60s · last fetch{' '}
-          {new Date(stats.fetchedAt).toLocaleTimeString('en-GB')}
+          ▸ REFRESHES EVERY 60S<br />
+          LAST FETCH {new Date(stats.fetchedAt).toLocaleTimeString('en-GB')}
         </div>
       </header>
 
-      {/* Service health — green/amber/red chips. Render-fast. */}
+      {/* Service health — chunky pixel chips, square corners. Green
+          when reachable, brick when down. */}
       <div style={{
         display: 'flex',
         gap: 10,
         flexWrap: 'wrap',
-        marginBottom: 18,
+        marginBottom: 22,
       }}>
         {health.map(h => (
           <div key={h.name} style={{
             display: 'flex',
             alignItems: 'center',
             gap: 8,
-            padding: '7px 12px',
-            background: h.ok ? '#EFF5F1' : '#FBEEEA',
-            border: `1px solid ${h.ok ? '#C9DBCB' : '#E0BFB6'}`,
-            borderRadius: 999,
-            fontFamily: sans,
-            fontSize: 12,
+            padding: '6px 12px',
+            background: h.ok ? '#E5F0EE' : '#F5E0E0',
+            border: `2px solid ${h.ok ? '#2F5D5C' : '#7A2E2E'}`,
+            borderRadius: 0,
+            fontFamily: pixel,
+            fontSize: 11,
             color: h.ok ? '#2F5D5C' : '#7A2E2E',
+            letterSpacing: 0.4,
+            textTransform: 'uppercase',
           }}>
             <span style={{
-              width: 8, height: 8, borderRadius: 4,
+              width: 8, height: 8,
               background: h.ok ? '#3D8C7A' : '#7A2E2E',
               display: 'inline-block',
             }} />
-            <strong style={{ fontWeight: 600 }}>{h.name}</strong>
-            <span style={{ opacity: 0.75 }}>· {h.latencyMs}ms{h.note ? ` · ${h.note}` : ''}</span>
+            <strong>{h.name}</strong>
+            <span style={{ opacity: 0.85 }}>· {h.latencyMs}MS{h.note ? ` · ${h.note.toUpperCase()}` : ''}</span>
           </div>
         ))}
       </div>
@@ -231,10 +240,10 @@ export default async function AdminPage() {
 
       {/* Archetype distribution */}
       {stats.archDistribution.length > 0 && (
-        <section style={cardStyle}>
-          <h2 style={sectionTitle}>Archetype distribution</h2>
+        <section style={cardStyle('#B8862F')}>
+          <h2 style={sectionTitle}>▸ ARCHETYPE DISTRIBUTION</h2>
           <p style={sectionSub}>How recent quiz takers are landing across the ten archetypes.</p>
-          <div style={{ marginTop: 14 }}>
+          <div style={{ marginTop: 18 }}>
             {stats.archDistribution.map(([key, count]) => {
               const max = stats.archDistribution[0][1] || 1;
               const pct = Math.round((count / max) * 100);
@@ -243,8 +252,8 @@ export default async function AdminPage() {
                   display: 'grid',
                   gridTemplateColumns: '120px 1fr 50px',
                   alignItems: 'center',
-                  gap: 12,
-                  marginBottom: 7,
+                  gap: 14,
+                  marginBottom: 10,
                 }}>
                   <span style={{
                     fontFamily: serif, fontSize: 15,
@@ -252,19 +261,23 @@ export default async function AdminPage() {
                   }}>{key}</span>
                   <div style={{
                     height: 10,
-                    background: '#F1EAD8',
-                    borderRadius: 5,
+                    background: '#FAF6EC',
+                    border: '2px solid #221E18',
+                    borderRadius: 0,
                     overflow: 'hidden',
                   }}>
                     <div style={{
                       width: `${pct}%`,
                       height: '100%',
                       background: '#B8862F',
+                      transition: 'width 0.4s steps(8, end)',
                     }} />
                   </div>
                   <span style={{
-                    fontFamily: sans, fontSize: 13, color: '#4A4338',
+                    fontFamily: pixel, fontSize: 12, color: '#8C6520',
                     textAlign: 'right',
+                    letterSpacing: 0.4,
+                    fontVariantNumeric: 'tabular-nums',
                   }}>{count}</span>
                 </div>
               );
@@ -273,15 +286,13 @@ export default async function AdminPage() {
         </section>
       )}
 
-      {/* Recent errors — surfaced first because they're actionable */}
-      <section style={{
-        ...cardStyle,
-        borderLeft: stats.errors.hour > 0 ? '3px solid #7A2E2E' : '1px solid #EBE3CA',
-      }}>
+      {/* Recent errors — surfaced first because they're actionable.
+          Critical errors (>0 last hour) get a brick shadow, otherwise teal. */}
+      <section style={cardStyle(stats.errors.hour > 0 ? '#7A2E2E' : '#2F5D5C')}>
         <h2 style={sectionTitle}>
-          Errors {stats.errors.hour > 0 && (
-            <span style={{ color: '#7A2E2E', fontSize: 16, marginLeft: 10 }}>
-              · {stats.errors.hour} in the last hour
+          ▸ ERRORS {stats.errors.hour > 0 && (
+            <span style={{ color: '#7A2E2E', fontSize: 14, marginLeft: 10 }}>
+              · {stats.errors.hour} IN THE LAST HOUR
             </span>
           )}
         </h2>
@@ -298,11 +309,12 @@ export default async function AdminPage() {
             {stats.errors.recent.map(e => (
               <li key={e.id} style={{
                 padding: '12px 0',
-                borderBottom: '1px solid #EBE3CA',
+                borderBottom: '2px dashed #D6CDB6',
               }}>
                 <div style={{
-                  fontFamily: sans, fontSize: 11, color: '#7A2E2E',
-                  marginBottom: 4, letterSpacing: 0.3,
+                  fontFamily: pixel, fontSize: 10, color: '#7A2E2E',
+                  marginBottom: 6, letterSpacing: 0.4,
+                  textTransform: 'uppercase',
                 }}>
                   {new Date(e.created_at).toLocaleString('en-GB')} · {e.source}
                   {e.url && ` · ${e.url}`}
@@ -320,8 +332,8 @@ export default async function AdminPage() {
       </section>
 
       {/* Recent feedback */}
-      <section style={cardStyle}>
-        <h2 style={sectionTitle}>Latest feedback</h2>
+      <section style={cardStyle('#5A3A6A')}>
+        <h2 style={sectionTitle}>▸ LATEST FEEDBACK</h2>
         <p style={sectionSub}>Most recent 10 notes — the unfiltered launch reactions.</p>
         {stats.feedback.recent.length === 0 ? (
           <p style={{
@@ -335,11 +347,12 @@ export default async function AdminPage() {
             {stats.feedback.recent.map(f => (
               <li key={f.id} style={{
                 padding: '14px 0',
-                borderBottom: '1px solid #EBE3CA',
+                borderBottom: '2px dashed #D6CDB6',
               }}>
                 <div style={{
-                  fontFamily: sans, fontSize: 11, color: '#8C6520',
-                  marginBottom: 6, letterSpacing: 0.3,
+                  fontFamily: pixel, fontSize: 10, color: '#8C6520',
+                  marginBottom: 6, letterSpacing: 0.4,
+                  textTransform: 'uppercase',
                 }}>
                   {new Date(f.created_at).toLocaleString('en-GB')} · {f.user_id ? 'signed in' : 'anonymous'}
                   {f.page_url && ` · ${f.page_url}`}
@@ -357,6 +370,9 @@ export default async function AdminPage() {
   );
 }
 
+// Top-row launch vital. Pixel chrome: chunky 4px ink + accent shadow.
+// Big VT323-ish pixel digit on top, tiny pixel-display label below,
+// secondary deltas in serif.
 function StatCard({
   label, total, day, hour, hourLabel = 'last hour', accent,
 }: {
@@ -371,24 +387,25 @@ function StatCard({
     <div style={{
       padding: '18px 20px',
       background: '#FFFCF4',
-      border: '1px solid #EBE3CA',
-      borderLeft: `3px solid ${accent}`,
-      borderRadius: 8,
+      border: '4px solid #221E18',
+      boxShadow: `4px 4px 0 0 ${accent}`,
+      borderRadius: 0,
     }}>
       <div style={{
-        fontFamily: sans, fontSize: 11, fontWeight: 600,
+        fontFamily: pixel, fontSize: 11,
         color: accent, textTransform: 'uppercase',
-        letterSpacing: '0.18em', marginBottom: 8,
-      }}>{label}</div>
+        letterSpacing: '0.18em', marginBottom: 12,
+      }}>▸ {label.toUpperCase()}</div>
       <div style={{
-        fontFamily: serif, fontSize: 38, fontWeight: 500,
-        color: '#221E18', lineHeight: 1, marginBottom: 8,
-        letterSpacing: '-0.5px',
+        fontFamily: pixel, fontSize: 36,
+        color: '#221E18', lineHeight: 1, marginBottom: 10,
+        letterSpacing: 0.4,
+        fontVariantNumeric: 'tabular-nums',
       }}>{total.toLocaleString()}</div>
       {(day !== null || hour !== null) && (
         <div style={{
-          fontFamily: sans, fontSize: 12, color: '#4A4338',
-          letterSpacing: 0.2,
+          fontFamily: serif, fontStyle: 'italic',
+          fontSize: 13, color: '#4A4338',
         }}>
           {day !== null && <>+{day} last 24h</>}
           {day !== null && hour !== null && ' · '}
@@ -399,40 +416,53 @@ function StatCard({
   );
 }
 
+// Secondary mini-stat for the diary/exercise/debate row. Slimmer
+// pixel chrome — 3px border, no shadow — so it reads as a sub-tier
+// to the StatCard above.
 function MiniStat({ label, value }: { label: string; value: number }) {
   return (
     <div style={{
       padding: '12px 14px',
       background: '#FAF6EC',
-      border: '1px solid #EBE3CA',
-      borderRadius: 6,
+      border: '3px solid #221E18',
+      borderRadius: 0,
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'baseline',
     }}>
       <span style={{
-        fontFamily: sans, fontSize: 12,
-        color: '#8C6520', letterSpacing: 0.2,
-      }}>{label}</span>
+        fontFamily: pixel, fontSize: 11,
+        color: '#8C6520', letterSpacing: 0.4,
+        textTransform: 'uppercase',
+      }}>{label.toUpperCase()}</span>
       <span style={{
-        fontFamily: serif, fontSize: 22, fontWeight: 500,
-        color: '#221E18',
+        fontFamily: pixel, fontSize: 22,
+        color: '#221E18', letterSpacing: 0.4,
+        fontVariantNumeric: 'tabular-nums',
       }}>{value.toLocaleString()}</span>
     </div>
   );
 }
 
-const cardStyle: React.CSSProperties = {
-  padding: '24px 26px',
-  background: '#FFFCF4',
-  border: '1px solid #EBE3CA',
-  borderRadius: 8,
-  marginBottom: 20,
-};
+// Section card with a colored accent shadow that matches the
+// content (gold for archetype distribution, brick or teal for
+// errors, plum for feedback).
+function cardStyle(accent: string): React.CSSProperties {
+  return {
+    padding: '24px 26px',
+    background: '#FFFCF4',
+    border: '4px solid #221E18',
+    boxShadow: `4px 4px 0 0 ${accent}`,
+    borderRadius: 0,
+    marginBottom: 24,
+  };
+}
 
 const sectionTitle: React.CSSProperties = {
-  fontFamily: serif, fontSize: 22, fontWeight: 500,
-  color: '#221E18', margin: '0 0 4px', letterSpacing: '-0.3px',
+  fontFamily: pixel, fontSize: 16,
+  color: '#221E18', margin: '0 0 6px',
+  letterSpacing: '0.18em',
+  textTransform: 'uppercase',
 };
 
 const sectionSub: React.CSSProperties = {

@@ -11,6 +11,7 @@ import { localizeExercise } from '@/lib/exercises-i18n';
 import { t } from '@/lib/translations';
 import { getServerLocale } from '@/lib/locale-server';
 import LanguageSwitcher from '@/components/language-switcher';
+import { PixelPageHeader } from '@/components/pixel-window';
 import type { Metadata } from 'next';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
@@ -26,58 +27,20 @@ export default async function ExercisesPage() {
   const locale = await getServerLocale();
 
   return (
-    <main style={{ maxWidth: 760, margin: '60px auto', padding: '0 24px 120px' }}>
-      <header style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'baseline',
-        marginBottom: 36,
-        flexWrap: 'wrap',
-        gap: 12,
-      }}>
-        <Link href="/" style={{
-          fontFamily: serif,
-          fontSize: 28,
-          fontWeight: 500,
-          color: '#221E18',
-          textDecoration: 'none',
-          letterSpacing: '-0.5px',
-        }}>
-          Mull<span style={{ color: '#B8862F' }}>.</span>
-        </Link>
+    <main className="mx-auto max-w-[860px] px-6 pb-32 pt-10 sm:px-10">
+      <div className="mb-6 flex justify-end">
         <LanguageSwitcher initial={locale} />
-      </header>
-
-      <div style={{
-        fontFamily: sans,
-        fontSize: 11,
-        fontWeight: 600,
-        color: '#8C6520',
-        textTransform: 'uppercase',
-        letterSpacing: '0.18em',
-        marginBottom: 14,
-      }}>
-        {t('exercises.eyebrow', locale)}
       </div>
-      <h1 style={{
-        fontFamily: serif,
-        fontSize: 42,
-        fontWeight: 500,
-        margin: '0 0 12px',
-        letterSpacing: '-0.5px',
-      }}>
-        {t('exercises.title', locale)}
-      </h1>
-      <p style={{
-        fontFamily: serif,
-        fontStyle: 'italic',
-        fontSize: 18,
-        color: '#4A4338',
-        margin: '0 0 36px',
-        lineHeight: 1.55,
-      }}>
-        {t('exercises.subtitle', locale)}
-      </p>
+
+      <PixelPageHeader
+        eyebrow={`▶ ${t('exercises.eyebrow', locale).toUpperCase()}`}
+        title={t('exercises.title', locale).toUpperCase()}
+        subtitle={
+          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-prose)' }}>
+            {t('exercises.subtitle', locale)}
+          </p>
+        }
+      />
 
       {(['contemplative', 'logic', 'argument'] as ExerciseCategory[]).map(cat => {
         const meta = CATEGORY_META[cat];
@@ -108,15 +71,16 @@ export default async function ExercisesPage() {
             <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
               {items.map(ex => (
                 <li key={ex.slug}>
-                  <Link href={`/exercises/${ex.slug}`} style={{
+                  <Link href={`/exercises/${ex.slug}`} className="pixel-press" style={{
                     display: 'block',
                     padding: '18px 20px',
                     background: '#FFFCF4',
-                    border: '1px solid #EBE3CA',
-                    borderLeft: '3px solid ' + meta.accent,
-                    borderRadius: 10,
+                    border: '4px solid #221E18',
+                    boxShadow: `4px 4px 0 0 ${meta.accent}`,
+                    borderRadius: 0,
                     textDecoration: 'none',
                     color: 'inherit',
+                    transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
                   }}>
                     <div style={{
                       display: 'flex',

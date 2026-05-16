@@ -144,38 +144,38 @@ export default function DiaryComposer({ locale = 'en' }: { locale?: Locale }) {
       <div style={{
         padding: '28px 32px',
         background: '#FFFCF4',
-        border: '1px solid #D6CDB6',
-        borderLeft: '3px solid #2F5D5C',
-        borderRadius: 8,
+        border: '4px solid #221E18',
+        boxShadow: '5px 5px 0 0 #2F5D5C',
+        borderRadius: 0,
       }}>
         <div style={{
-          fontFamily: sans,
-          fontSize: 11,
-          fontWeight: 600,
+          fontFamily: 'var(--font-pixel-display)',
+          fontSize: 12,
           color: '#2F5D5C',
           textTransform: 'uppercase',
-          letterSpacing: '0.16em',
+          letterSpacing: '0.18em',
           marginBottom: 14,
         }}>
-          {t('diary.saved_label', locale)}
+          ✓ {t('diary.saved_label', locale).toUpperCase()}
         </div>
         {result.analysis ? (
           <div style={{
             padding: '14px 16px',
-            background: '#F5EFDC',
-            borderRadius: 6,
+            background: '#F8EDC8',
+            border: '3px solid #221E18',
+            boxShadow: '3px 3px 0 0 #B8862F',
+            borderRadius: 0,
             marginBottom: 16,
           }}>
             <div style={{
-              fontFamily: sans,
+              fontFamily: 'var(--font-pixel-display)',
               fontSize: 10,
-              fontWeight: 600,
               color: '#8C6520',
               textTransform: 'uppercase',
-              letterSpacing: '0.16em',
-              marginBottom: 6,
+              letterSpacing: '0.18em',
+              marginBottom: 8,
             }}>
-              {t('dilemma.what_revealed', locale)}
+              {t('dilemma.what_revealed', locale).toUpperCase()}
             </div>
             <p style={{
               fontFamily: serif,
@@ -280,7 +280,7 @@ export default function DiaryComposer({ locale = 'en' }: { locale?: Locale }) {
   }
 
   return (
-    <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+    <form onSubmit={onSubmit} className="pixel-form" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
       <input
         type="text"
         value={title}
@@ -427,9 +427,9 @@ export default function DiaryComposer({ locale = 'en' }: { locale?: Locale }) {
         alignItems: 'flex-start',
         gap: 10,
         padding: '10px 14px',
-        background: makePublic ? '#F5EFDC' : 'transparent',
-        border: '1px solid #EBE3CA',
-        borderRadius: 8,
+        background: makePublic ? '#F8EDC8' : '#FFFCF4',
+        border: '2px solid #221E18',
+        borderRadius: 0,
         cursor: 'pointer',
         fontFamily: sans,
         fontSize: 13,
@@ -445,7 +445,7 @@ export default function DiaryComposer({ locale = 'en' }: { locale?: Locale }) {
         <span>
           <strong style={{ color: '#221E18' }}>{t('diary.show_on_public', locale)}</strong>{' '}
           <span style={{ fontStyle: locale === 'en' ? 'normal' : 'italic' }}>
-            Your most recent 5 public diary entries appear at <code style={{ fontSize: 11.5, background: '#EBE3CA', padding: '1px 5px', borderRadius: 3 }}>mull.world/u/&lt;your-handle&gt;</code> if you've set one up. Private by default.
+            Your most recent 5 public diary entries appear at <code className="pixel-kbd" style={{ fontSize: 11 }}>mull.world/u/&lt;your-handle&gt;</code> if you've set one up. Private by default.
           </span>
           {locale !== 'en' && (
             <span style={{ display: 'block', marginTop: 4, fontSize: 11.5, opacity: 0.7, fontStyle: 'italic' }}>
@@ -463,21 +463,7 @@ export default function DiaryComposer({ locale = 'en' }: { locale?: Locale }) {
         lineHeight: 1.55,
       }}>
         <span style={{ fontStyle: locale === 'en' ? 'normal' : 'italic' }}>
-          Drafts autosave to your browser. Submitted entries save to your account and Claude analyzes the prose into a small map shift. Press <kbd style={{
-            fontFamily: 'inherit',
-            background: '#F5EFDC',
-            border: '1px solid #EBE3CA',
-            borderRadius: 4,
-            padding: '1px 5px',
-            fontSize: 11,
-          }}>⌘</kbd> + <kbd style={{
-            fontFamily: 'inherit',
-            background: '#F5EFDC',
-            border: '1px solid #EBE3CA',
-            borderRadius: 4,
-            padding: '1px 5px',
-            fontSize: 11,
-          }}>↵</kbd> to save.
+          Drafts autosave to your browser. Submitted entries save to your account and Claude analyzes the prose into a small map shift. Press <kbd className="pixel-kbd">⌘</kbd> + <kbd className="pixel-kbd">↵</kbd> to save.
         </span>
         {locale !== 'en' && (
           <span style={{ display: 'block', marginTop: 4, opacity: 0.85, fontStyle: 'italic' }}>

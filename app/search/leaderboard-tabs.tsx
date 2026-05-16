@@ -33,14 +33,15 @@ export function useActiveTab(): TabKey {
 
 export default function LeaderboardTabs({ active }: { active: TabKey }) {
   return (
-    <div role="tablist" style={{
-      display: 'flex',
-      gap: 6,
-      marginBottom: 18,
-      borderBottom: '1px solid #EBE3CA',
-      flexWrap: 'wrap',
-    }}>
-      {TABS.map(tab => {
+    // Pixel-tabs: chunky 4-px ink bottom border with each tab as a
+    // pixel-bordered "button". Active tab gets the amber fill +
+    // hard ink shadow, inactive tabs sit flat in cream.
+    <div
+      role="tablist"
+      className="flex flex-wrap gap-2 border-b-4 border-[#221E18] pb-0"
+      style={{ marginBottom: 20 }}
+    >
+      {TABS.map((tab) => {
         const isActive = active === tab.key;
         return (
           <Link
@@ -48,19 +49,15 @@ export default function LeaderboardTabs({ active }: { active: TabKey }) {
             href={tab.key === 'activity' ? '/search' : `/search?tab=${tab.key}`}
             role="tab"
             aria-selected={isActive}
-            style={{
-              fontFamily: sans,
-              fontSize: 14,
-              fontWeight: isActive ? 600 : 500,
-              color: isActive ? '#221E18' : '#8C6520',
-              textDecoration: 'none',
-              padding: '10px 16px',
-              borderBottom: isActive ? '2px solid #B8862F' : '2px solid transparent',
-              marginBottom: -1,
-              transition: 'color 0.15s, border-color 0.15s',
-            }}
+            className={
+              'inline-flex items-center border-l-2 border-r-2 border-t-2 px-4 py-2 text-[11px] tracking-[0.18em] transition-colors ' +
+              (isActive
+                ? 'bg-[#B8862F] text-[#1A1612] border-[#221E18]'
+                : 'bg-[#FFFCF4] text-[#8C6520] border-[#D6CDB6] hover:bg-[#F8EDC8] hover:text-[#221E18] hover:border-[#221E18]')
+            }
+            style={{ fontFamily: 'var(--font-pixel-display)' }}
           >
-            {tab.label}
+            ▶ {tab.label.toUpperCase()}
           </Link>
         );
       })}

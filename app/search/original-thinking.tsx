@@ -17,6 +17,7 @@
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
 import { findExercise } from '@/lib/exercises';
+import EmptyStateSprite from '@/components/empty-state-sprite';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
@@ -204,10 +205,12 @@ export default async function OriginalThinking() {
         alignItems: 'baseline', marginBottom: 8, flexWrap: 'wrap', gap: 8,
       }}>
         <h2 style={{
-          fontFamily: serif, fontSize: 28, fontWeight: 500,
-          margin: 0, color: '#221E18', letterSpacing: '-0.3px',
+          fontFamily: 'var(--font-pixel-display, "Courier New", monospace)',
+          fontSize: 22, fontWeight: 400,
+          margin: 0, color: '#221E18', letterSpacing: '0.04em',
+          textShadow: '3px 3px 0 #6B3E8C', lineHeight: 1.1,
         }}>
-          Original thinking
+          ORIGINAL THINKING
         </h2>
         <span style={{
           fontFamily: sans, fontSize: 11, fontWeight: 600,
@@ -229,16 +232,17 @@ export default async function OriginalThinking() {
       </p>
 
       {rows.length === 0 ? (
-        <p style={{
-          fontFamily: serif, fontStyle: 'italic',
-          fontSize: 15, color: '#8C6520',
-          padding: '16px 18px',
-          background: '#FFFCF4', border: '1px dashed #D6CDB6',
-          borderRadius: 8, margin: 0,
+        <div style={{
+          padding: '20px 18px',
+          background: '#FFFCF4',
+          border: '3px dashed #6B3E8C',
+          borderRadius: 0,
         }}>
-          No entries here yet. Once someone writes something genuinely
-          uncovered by the canon and marks it public, it surfaces here.
-        </p>
+          <EmptyStateSprite
+            variant="explorer"
+            caption="No entries here yet. Once someone writes something genuinely uncovered by the canon and marks it public, it surfaces here."
+          />
+        </div>
       ) : (
         <ol style={{
           listStyle: 'none', padding: 0, margin: 0,
@@ -248,9 +252,9 @@ export default async function OriginalThinking() {
             <li key={`${r.sourceType}:${r.id}`} style={{
               padding: '18px 22px',
               background: '#FFFCF4',
-              border: '1px solid #EBE3CA',
-              borderLeft: '3px solid #6B3E8C',
-              borderRadius: 8,
+              border: '4px solid #221E18',
+              boxShadow: '4px 4px 0 0 #6B3E8C',
+              borderRadius: 0,
             }}>
               <div style={{
                 display: 'flex', justifyContent: 'space-between',
