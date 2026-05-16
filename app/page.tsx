@@ -124,20 +124,46 @@ export default async function HomeV2() {
                 >
                   <span>▶ BEGIN THE QUIZ</span>
                 </Link>
+                {/* Deep-dive: a ghost pixel-button (chunky border,
+                    transparent fill) so the path is discoverable as a
+                    real option rather than a dimmed footnote. The
+                    "fingerprint" framing sells what you get for the
+                    extra 9 minutes — a finer placement on the map. */}
                 <Link
                   href="/quiz?mode=detailed"
-                  className="text-[14px] leading-none text-[#4A4338] hover:text-[#221E18] hover:underline"
+                  className="pixel-button pixel-button--ghost"
                 >
-                  or the 50-question deep dive →
+                  <span>▶ 50-QUESTION FINGERPRINT</span>
                 </Link>
               </div>
 
               <p className="mt-5 max-w-[520px] text-[14px] leading-[1.55] text-[#8C6520]">
                 No right answers. Skip anything. No signup needed.{" "}
                 <span className="text-[#4A4338]">
-                  ~6 minutes for the quick read.
+                  ~6 minutes quick · ~15 minutes for the fingerprint.
                 </span>
               </p>
+
+              {/* Mobile-only inline philosopher sprite. The right-rail
+                  HeroSprites column hides on small screens, leaving
+                  the hero feeling unusually flat. A single procedural
+                  philosopher sprite under the lede gives the page the
+                  same playful texture the desktop version gets, without
+                  reflowing the column layout. */}
+              <div className="mt-6 flex items-center gap-3 lg:hidden">
+                <PhilosopherSprite
+                  name="Diogenes"
+                  archetypeKey="iconoclast"
+                  size={64}
+                  floating
+                />
+                <span
+                  className="text-[10px] tracking-[0.18em] text-[#8C6520]"
+                  style={{ fontFamily: "var(--font-pixel-display)" }}
+                >
+                  ▸ ONE OF 560 THINKERS<br/>WAITING ON THE MAP
+                </span>
+              </div>
             </div>
 
             {/* ── Right column: floating pixel sprites + mini map ── */}
@@ -156,11 +182,11 @@ export default async function HomeV2() {
                 <span>{todayLabel.toUpperCase()}</span>
                 <span className="text-[#B8862F]">▶ DAILY DROP</span>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] md:items-center">
+              <div className="relative grid grid-cols-1 md:grid-cols-[1fr_auto] md:items-center">
                 <div className="px-6 py-7 sm:px-10 sm:py-9">
                   <p
                     className="text-[24px] leading-[1.35] text-[#221E18] sm:text-[30px]"
-                    style={{ fontFamily: "var(--font-prose)" }}
+                    style={{ fontFamily: "var(--font-prose)", paddingRight: 56 }}
                   >
                     <em>&ldquo;{philosopher.keyIdea}&rdquo;</em>
                   </p>
@@ -175,14 +201,31 @@ export default async function HomeV2() {
                   </div>
                 </div>
                 {/* A floating pixel sprite of today's philosopher.
-                    Procedural generation by name lives in
-                    components/pixel-philosopher-sprite.tsx — used here
-                    and in the constellation hover tooltip. */}
+                    Desktop (md+): 96px sprite in a right-side rail.
+                    Mobile: 48px sprite floated top-right inside the
+                    quote, with quote padding-right reserving the space.
+                    Same delight beat for both viewports. */}
                 <div className="hidden border-l-4 border-[#221E18] bg-[#F8EDC8] px-8 py-7 md:block">
                   <PhilosopherSprite
                     name={philosopher.name}
                     archetypeKey={philosopher.archetypeKey}
                     size={96}
+                    floating
+                  />
+                </div>
+                <div
+                  aria-hidden
+                  className="md:hidden"
+                  style={{
+                    position: 'absolute',
+                    top: 18,
+                    right: 14,
+                  }}
+                >
+                  <PhilosopherSprite
+                    name={philosopher.name}
+                    archetypeKey={philosopher.archetypeKey}
+                    size={48}
                     floating
                   />
                 </div>
@@ -482,11 +525,20 @@ export default async function HomeV2() {
                 anything that doesn&rsquo;t fit you.
               </p>
               <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+                {/* Bigger CTA than the hero version — "PRESS START"
+                    screen energy. Doubles the padding + adds a SAVE
+                    glyph so the second viewing reads as "OK, I'm
+                    ready" rather than "wait, did I scroll up?" */}
                 <Link
                   href="/quiz?mode=quick"
-                  className="pixel-button pixel-button--amber"
+                  className="pixel-button pixel-button--amber pixel-press--lg"
+                  style={{
+                    fontSize: 16,
+                    padding: '18px 28px',
+                    boxShadow: '6px 6px 0 0 #221E18',
+                  }}
                 >
-                  <span>▶ BEGIN THE QUIZ</span>
+                  <span>▶ START NOW · 6 MIN</span>
                 </Link>
               </div>
             </div>
