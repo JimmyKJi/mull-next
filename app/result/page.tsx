@@ -20,6 +20,7 @@ import {
   zeros,
   magnitude,
 } from "@/lib/vectors";
+import { createClient } from "@/utils/supabase/server";
 import { ResultClient } from "./result-client";
 
 export const metadata: Metadata = {
@@ -63,6 +64,14 @@ export default async function ResultPage({
   if (sparse) {
     return <SparseFallback />;
   }
+
+  // Check signed-in state — drives whether the result page promotes
+  // the signup CTA full-width or shows the standard 3-column footer.
+  // Anonymous users are the conversion population; signed-in users
+  // already saved.
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const isSignedIn = !!user;
 
   const scored = ARCHETYPES.map((a) => {
     const target = ARCHETYPE_TARGETS.find((t) => t.key === a.key);
@@ -119,6 +128,7 @@ export default async function ResultPage({
       closest={closest}
       dimRadar={dimRadar}
       userTop3={userTop3.map((d) => ({ key: d.key, name: DIM_NAMES[d.key] }))}
+      isSignedIn={isSignedIn}
     />
   );
 }

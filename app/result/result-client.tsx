@@ -51,6 +51,10 @@ type Props = {
   closest: ClosestPhilosopher[];
   dimRadar: DimRadarPoint[];
   userTop3: Array<{ key: string; name: string }>;
+  /** Drives whether the next-steps section promotes the signup CTA
+      full-width (anonymous viewers — the conversion population) or
+      shows the standard 3-column footer (signed-in users). */
+  isSignedIn: boolean;
 };
 
 export function ResultClient({
@@ -67,6 +71,7 @@ export function ResultClient({
   closest,
   dimRadar,
   userTop3,
+  isSignedIn,
 }: Props) {
   const color = getArchetypeColor(topKey);
 
@@ -430,7 +435,58 @@ export function ResultClient({
 
       {/* ─── Next steps — pixel buttons ─────────────────────── */}
       <section className="mx-auto max-w-[1100px] px-6 pb-32 pt-8 sm:px-10">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        {/* Anonymous viewers see a promoted full-width signup card
+            on top — that's THE action that determines whether Mull
+            keeps them. The other two cards (essay + retake) sit
+            below in a 2-col. Signed-in viewers don't see the signup
+            promotion (they already saved); they get the standard
+            3-col footer with no signup card. */}
+        {!isSignedIn && (
+          <Link
+            href="/signup"
+            className="pixel-panel pixel-press pixel-press--lg block"
+            style={{
+              background: '#F8EDC8',
+              borderColor: '#221E18',
+              boxShadow: '6px 6px 0 0 #B8862F',
+              marginBottom: 18,
+              transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+            }}
+          >
+            <div
+              className="border-b-4 border-[#221E18] bg-[#221E18] px-5 py-2.5 text-[11px] tracking-[0.22em] text-[#B8862F]"
+              style={{ fontFamily: "var(--font-pixel-display)" }}
+            >
+              <span className="pixel-blink">▶</span> SAVE YOUR RESULT
+            </div>
+            <div className="grid gap-4 px-6 py-7 md:grid-cols-[1fr_auto] md:items-center sm:px-8">
+              <div>
+                <div className="text-[22px] font-medium text-[#221E18] sm:text-[24px]">
+                  This page disappears when you close the tab.
+                </div>
+                <p className="mt-3 text-[14px] leading-[1.55] text-[#4A4338] sm:text-[15px]">
+                  Free. Tracks how your map shifts over time as you write
+                  dilemmas, diary entries, and reflections — no other site
+                  on the internet does this for you.
+                </p>
+              </div>
+              <span
+                className="inline-block px-5 py-3 text-[12px] tracking-[0.08em] text-[#1A1612]"
+                style={{
+                  fontFamily: "var(--font-pixel-display)",
+                  background: '#B8862F',
+                  border: '4px solid #221E18',
+                  boxShadow: '4px 4px 0 0 #221E18',
+                  textTransform: 'uppercase',
+                }}
+              >
+                ▶ CREATE ACCOUNT · FREE
+              </span>
+            </div>
+          </Link>
+        )}
+
+        <div className={isSignedIn ? "grid grid-cols-1 gap-4 md:grid-cols-3" : "grid grid-cols-1 gap-4 md:grid-cols-2"}>
           <Link
             href={`/archetype/${topKey}`}
             className="pixel-panel block transition-transform hover:-translate-x-1 hover:-translate-y-1"
@@ -485,26 +541,28 @@ export function ResultClient({
             </div>
           </Link>
 
-          <Link
-            href="/signup"
-            className="pixel-panel block transition-transform hover:-translate-x-1 hover:-translate-y-1"
-          >
-            <div
-              className="border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
-              style={{ fontFamily: "var(--font-pixel-display)" }}
+          {isSignedIn && (
+            <Link
+              href="/account"
+              className="pixel-panel block transition-transform hover:-translate-x-1 hover:-translate-y-1"
             >
-              ▶ SAVE IT
-            </div>
-            <div className="px-5 py-5">
-              <div className="text-[18px] font-medium text-[#221E18]">
-                Create an account
+              <div
+                className="border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
+                style={{ fontFamily: "var(--font-pixel-display)" }}
+              >
+                ▶ TRAJECTORY
               </div>
-              <p className="mt-3 text-[13px] leading-[1.5] text-[#4A4338]">
-                Free. Tracks how your position shifts over time as
-                you write dilemmas, diary entries, and reflections.
-              </p>
-            </div>
-          </Link>
+              <div className="px-5 py-5">
+                <div className="text-[18px] font-medium text-[#221E18]">
+                  Open your account
+                </div>
+                <p className="mt-3 text-[13px] leading-[1.5] text-[#4A4338]">
+                  See this attempt added to your trajectory map, alongside
+                  your dilemma responses and diary entries.
+                </p>
+              </div>
+            </Link>
+          )}
         </div>
       </section>
     </main>
@@ -514,7 +572,14 @@ export function ResultClient({
 // ────────────────────────────────────────────────────────────────
 // AlignmentCounter — counts up from 0 to target over ~0.9s on mount.
 // Big chunky pixel-display digits.
+//
+// First-view detection: we stash a per-target sessionStorage flag so
+// a user who refreshes the page or comes back via browser back gets
+// the final number directly, without the count-up theatre. Avoids
+// the "every time I see this, it animates again" annoyance.
 // ────────────────────────────────────────────────────────────────
+const SEEN_RESULT_KEY = 'mull.result.seen.v1';
+
 function AlignmentCounter({
   target,
   color,
@@ -522,9 +587,26 @@ function AlignmentCounter({
   target: number;
   color: string;
 }) {
-  const [display, setDisplay] = useState(0);
+  // Detect first-view synchronously so we don't flash a 0 → target
+  // animation on returning visits. We treat the sessionStorage flag
+  // as "this exact target has been seen this session" — not strict
+  // identity, since a fresh quiz attempt produces a new ResultClient
+  // mount with a likely-different target value anyway.
+  const [display, setDisplay] = useState<number>(() => {
+    if (typeof window === 'undefined') return 0;
+    try {
+      const seen = window.sessionStorage.getItem(SEEN_RESULT_KEY);
+      if (seen && Number(seen) === target) return target;
+    } catch {/* sessionStorage disabled — fall through to animation */}
+    return 0;
+  });
 
   useEffect(() => {
+    // If we already started at the final value, no animation needed.
+    if (display === target) {
+      try { window.sessionStorage.setItem(SEEN_RESULT_KEY, String(target)); } catch { /* ignore */ }
+      return;
+    }
     const duration = 900; // ms
     const start = performance.now();
     let raf: number;
@@ -533,10 +615,17 @@ function AlignmentCounter({
       // Ease-out cubic so the count slows near the end
       const eased = 1 - Math.pow(1 - t, 3);
       setDisplay(Math.round(target * eased));
-      if (t < 1) raf = requestAnimationFrame(step);
+      if (t < 1) {
+        raf = requestAnimationFrame(step);
+      } else {
+        try { window.sessionStorage.setItem(SEEN_RESULT_KEY, String(target)); } catch { /* ignore */ }
+      }
     }
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
+    // We intentionally don't include `display` in deps — it would
+    // re-trigger the animation on every step.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [target]);
 
   return (
