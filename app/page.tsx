@@ -609,6 +609,7 @@ export default async function HomeV2() {
             <nav className="flex flex-wrap gap-5 text-[#F8EDC8]">
               <Link href="/about" className="hover:text-[#B8862F]">About</Link>
               <Link href="/topic" className="hover:text-[#B8862F]">Topics</Link>
+              <Link href="/vs" className="hover:text-[#B8862F]">Matchups</Link>
               <Link href="/methodology" className="hover:text-[#B8862F]">Methodology</Link>
               <Link href="/privacy" className="hover:text-[#B8862F]">Privacy</Link>
               <Link href="/terms" className="hover:text-[#B8862F]">Terms</Link>

@@ -7,6 +7,7 @@
 import type { MetadataRoute } from 'next';
 import { philosopherSlugs } from '@/lib/philosophers';
 import { TOPICS } from '@/lib/topics';
+import { curatedPairSlugs } from '@/lib/vs-pairs';
 
 const SITE = 'https://mull.world';
 
@@ -53,6 +54,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: 'monthly' as const,
       priority: 0.7,
+    })),
+    // Philosopher-vs-philosopher matchups — head-to-head SEO pages.
+    // Only curated pairs go in the sitemap (the route handles any
+    // arbitrary pair on demand, but most have no search demand).
+    { url: `${SITE}/vs`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    ...curatedPairSlugs().map(p => ({
+      url: `${SITE}/vs/${p.a}/${p.b}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
     })),
   ];
 }
