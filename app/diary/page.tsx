@@ -7,6 +7,7 @@ import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
 import { PixelPageHeader } from '@/components/pixel-window';
+import EmptyStateSprite from '@/components/empty-state-sprite';
 
 // Personal page; never index. Belt and braces alongside robots.ts.
 export const metadata: Metadata = {
@@ -129,6 +130,22 @@ export default async function DiaryPage() {
         </div>
       ) : (
         <DiaryComposer locale={locale} />
+      )}
+
+      {user && entries.length === 0 && (
+        <section style={{ marginTop: 48 }}>
+          <div style={{
+            padding: '20px 18px',
+            background: '#FFFCF4',
+            border: '3px dashed #2F5D5C',
+            borderRadius: 0,
+          }}>
+            <EmptyStateSprite
+              variant="book"
+              caption="Once you've saved your first diary entry, your earlier writing will surface here — alongside Claude's read of the small shift each entry adds to your map."
+            />
+          </div>
+        </section>
       )}
 
       {user && entries.length > 0 && (

@@ -112,20 +112,22 @@ export default function EmptyStateSprite({
         aria-hidden
         dangerouslySetInnerHTML={{ __html: SPRITES[variant] }}
       />
-      <p
-        style={{
-          fontFamily: "'Cormorant Garamond', Georgia, serif",
-          fontStyle: 'italic',
-          fontSize: 15,
-          color: '#8C6520',
-          margin: 0,
-          textAlign: 'center',
-          maxWidth: 320,
-          lineHeight: 1.55,
-        }}
-      >
-        {caption}
-      </p>
+      {caption && (
+        <p
+          style={{
+            fontFamily: "'Cormorant Garamond', Georgia, serif",
+            fontStyle: 'italic',
+            fontSize: 15,
+            color: '#8C6520',
+            margin: 0,
+            textAlign: 'center',
+            maxWidth: 320,
+            lineHeight: 1.55,
+          }}
+        >
+          {caption}
+        </p>
+      )}
     </div>
   );
 }
