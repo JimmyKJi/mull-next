@@ -237,14 +237,28 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
         <MullWordmark />
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
           <LanguageSwitcher initial={locale} />
-          <Link href={`/compare?them=${profile.handle}`} style={{
-            fontFamily: pixel, fontSize: 11, color: '#8C6520',
-            textDecoration: 'none',
-            letterSpacing: 0.4,
-            textTransform: 'uppercase',
-            borderBottom: '2px solid #8C6520',
-            paddingBottom: 1,
-          }}>
+          {/* Compare CTA — chunky amber pixel chip. The single most
+              interesting CTA on someone else's profile shouldn't read
+              like a tiny underline in the corner. */}
+          <Link
+            href={`/compare?them=${profile.handle}`}
+            className="pixel-press"
+            style={{
+              display: 'inline-block',
+              padding: '8px 14px',
+              background: '#B8862F',
+              color: '#1A1612',
+              border: '3px solid #221E18',
+              boxShadow: '3px 3px 0 0 #221E18',
+              borderRadius: 0,
+              fontFamily: pixel,
+              fontSize: 11,
+              letterSpacing: 0.4,
+              textDecoration: 'none',
+              textTransform: 'uppercase',
+              transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+            }}
+          >
             ▸ COMPARE WITH ME
           </Link>
           <Link href="/" style={{
@@ -316,22 +330,86 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
         </p>
       )}
 
-      {profile.show_streak && streak > 0 && (
+      {/* Public-profile stat row — matches /account stat-card style.
+          Promotes the streak from a tiny chip into a proper "this
+          person actually does this" signal. Three columns when full;
+          collapses to whichever cards have signal. */}
+      {((profile.show_streak && streak > 0) || publicDilemmas.length > 0 || publicDiaries.length > 0) && (
         <div style={{
-          display: 'inline-block',
-          padding: '8px 16px',
-          background: '#221E18',
-          color: '#FAF6EC',
-          border: '3px solid #221E18',
-          boxShadow: '3px 3px 0 0 #B8862F',
-          borderRadius: 0,
-          fontFamily: pixel,
-          fontSize: 12,
-          letterSpacing: 0.4,
-          textTransform: 'uppercase',
-          marginBottom: 32,
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+          gap: 14,
+          marginBottom: 36,
         }}>
-          ▸ {t('pub.streak_emoji', locale, { n: streak }).toUpperCase()}
+          {profile.show_streak && streak > 0 && (
+            <div style={{
+              padding: '16px 20px',
+              background: '#221E18',
+              border: '4px solid #221E18',
+              boxShadow: '4px 4px 0 0 #B8862F',
+              borderRadius: 0,
+              color: '#FAF6EC',
+            }}>
+              <div style={{
+                fontFamily: pixel, fontSize: 28,
+                color: '#F8EDC8', lineHeight: 1, letterSpacing: 0.4,
+              }}>
+                {streak >= 30 ? '30+' : streak}
+                <span style={{ fontSize: 13, opacity: 0.7, marginLeft: 6 }}>
+                  {streak === 1 ? 'DAY' : 'DAYS'}
+                </span>
+              </div>
+              <div style={{
+                fontFamily: pixel, fontSize: 10,
+                color: '#F1C76A', textTransform: 'uppercase',
+                letterSpacing: '0.18em', marginTop: 8,
+              }}>
+                ▸ STREAK{streak >= 30 ? ` · ${streak} DAYS` : ''}
+              </div>
+            </div>
+          )}
+          {publicDilemmas.length > 0 && (
+            <div style={{
+              padding: '16px 20px',
+              background: '#FFFCF4',
+              border: '4px solid #221E18',
+              boxShadow: '4px 4px 0 0 #3D7DA8',
+              borderRadius: 0,
+            }}>
+              <div style={{
+                fontFamily: pixel, fontSize: 28,
+                color: '#221E18', lineHeight: 1, letterSpacing: 0.4,
+              }}>{publicDilemmas.length}</div>
+              <div style={{
+                fontFamily: pixel, fontSize: 10,
+                color: '#3D7DA8', textTransform: 'uppercase',
+                letterSpacing: '0.18em', marginTop: 8,
+              }}>
+                ▸ {publicDilemmas.length === 1 ? 'PUBLIC DILEMMA' : 'PUBLIC DILEMMAS'}
+              </div>
+            </div>
+          )}
+          {publicDiaries.length > 0 && (
+            <div style={{
+              padding: '16px 20px',
+              background: '#FFFCF4',
+              border: '4px solid #221E18',
+              boxShadow: '4px 4px 0 0 #2F5D5C',
+              borderRadius: 0,
+            }}>
+              <div style={{
+                fontFamily: pixel, fontSize: 28,
+                color: '#221E18', lineHeight: 1, letterSpacing: 0.4,
+              }}>{publicDiaries.length}</div>
+              <div style={{
+                fontFamily: pixel, fontSize: 10,
+                color: '#2F5D5C', textTransform: 'uppercase',
+                letterSpacing: '0.18em', marginTop: 8,
+              }}>
+                ▸ {publicDiaries.length === 1 ? 'PUBLIC DIARY' : 'PUBLIC DIARIES'}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -545,36 +623,56 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
         </section>
       )}
 
-      {/* Bottom CTA — pixel cream-on-amber dialog window. The Mull
-          arc-shape ends here for unauthed visitors: take the quiz. */}
-      <div style={{
-        marginTop: 56,
-        padding: '20px 24px',
-        background: '#F8EDC8',
-        border: '4px solid #221E18',
-        boxShadow: '5px 5px 0 0 #B8862F',
-        borderRadius: 0,
-        fontFamily: serif,
-        fontSize: 15,
-        color: '#221E18',
-        lineHeight: 1.55,
-      }}>
-        <strong style={{ color: '#221E18' }}>{t('pub.cta_title', locale)}</strong>{' '}
-        {t('pub.cta_body', locale)}{' '}
-        <Link href="/" style={{
-          color: '#8C6520',
-          fontFamily: pixel,
-          fontSize: 11,
-          letterSpacing: 0.4,
-          textTransform: 'uppercase',
+      {/* Bottom CTA — pixel cream-on-amber dialog window. The whole
+          dialog is now a Link (was: dialog with a small text-link
+          inside). The arc-shape ends here for unauthed visitors:
+          take the quiz. */}
+      <Link
+        href="/"
+        className="pixel-press pixel-press--lg"
+        style={{
+          display: 'block',
+          marginTop: 56,
+          padding: '20px 24px',
+          background: '#F8EDC8',
+          border: '4px solid #221E18',
+          boxShadow: '5px 5px 0 0 #B8862F',
+          borderRadius: 0,
+          fontFamily: serif,
+          fontSize: 15,
+          color: '#221E18',
+          lineHeight: 1.55,
           textDecoration: 'none',
-          borderBottom: '2px solid #8C6520',
-          paddingBottom: 1,
-          marginLeft: 4,
+          transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+        }}
+      >
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 16,
+          flexWrap: 'wrap',
         }}>
-          ▸ {t('pub.cta_link', locale).toUpperCase()}
-        </Link>
-      </div>
+          <span>
+            <strong style={{ color: '#221E18' }}>{t('pub.cta_title', locale)}</strong>{' '}
+            {t('pub.cta_body', locale)}
+          </span>
+          <span style={{
+            color: '#1A1612',
+            background: '#B8862F',
+            padding: '8px 14px',
+            border: '3px solid #221E18',
+            boxShadow: '3px 3px 0 0 #221E18',
+            fontFamily: pixel,
+            fontSize: 11,
+            letterSpacing: 0.4,
+            textTransform: 'uppercase',
+            flexShrink: 0,
+          }}>
+            ▸ {t('pub.cta_link', locale).toUpperCase()}
+          </span>
+        </div>
+      </Link>
     </main>
   );
 }
