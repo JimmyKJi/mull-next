@@ -203,8 +203,9 @@ export default async function DilemmaPage() {
         <div style={{
           padding: '28px 32px',
           background: '#FFFCF4',
-          border: '1px dashed #D6CDB6',
-          borderRadius: 12,
+          border: '4px solid #221E18',
+          boxShadow: '5px 5px 0 0 #B8862F',
+          borderRadius: 0,
           textAlign: 'center',
         }}>
           <p style={{
@@ -212,33 +213,52 @@ export default async function DilemmaPage() {
             fontStyle: 'italic',
             fontSize: 18,
             color: '#4A4338',
-            margin: '0 0 16px',
+            margin: '0 0 20px',
           }}>
             {t('dilemma.account_required_msg', locale)}
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/signup" style={{
-              padding: '10px 20px',
-              background: '#221E18',
-              color: '#FAF6EC',
-              borderRadius: 6,
-              textDecoration: 'none',
-              fontFamily: sans,
-              fontSize: 14,
-              fontWeight: 500,
-            }}>
-              {t('dilemma.create_account', locale)}
+            <Link
+              href="/signup"
+              className="pixel-press"
+              style={{
+                display: 'inline-block',
+                padding: '12px 22px',
+                background: '#B8862F',
+                color: '#1A1612',
+                border: '4px solid #221E18',
+                boxShadow: '4px 4px 0 0 #221E18',
+                borderRadius: 0,
+                fontFamily: 'var(--font-pixel-display)',
+                fontSize: 12,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+                transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+              }}
+            >
+              ▸ {t('dilemma.create_account', locale).toUpperCase()}
             </Link>
-            <Link href="/login" style={{
-              padding: '10px 20px',
-              border: '1px solid #221E18',
-              color: '#221E18',
-              borderRadius: 6,
-              textDecoration: 'none',
-              fontFamily: sans,
-              fontSize: 14,
-            }}>
-              {t('dilemma.sign_in', locale)}
+            <Link
+              href="/login"
+              className="pixel-press"
+              style={{
+                display: 'inline-block',
+                padding: '12px 22px',
+                background: '#FFFCF4',
+                color: '#221E18',
+                border: '4px solid #221E18',
+                boxShadow: '4px 4px 0 0 #B8862F',
+                borderRadius: 0,
+                fontFamily: 'var(--font-pixel-display)',
+                fontSize: 12,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+                transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+              }}
+            >
+              {t('dilemma.sign_in', locale).toUpperCase()}
             </Link>
           </div>
         </div>
@@ -246,20 +266,19 @@ export default async function DilemmaPage() {
         <div style={{
           padding: '28px 32px',
           background: '#FFFCF4',
-          border: '1px solid #D6CDB6',
-          borderLeft: '3px solid #B8862F',
-          borderRadius: 8,
+          border: '4px solid #221E18',
+          boxShadow: '5px 5px 0 0 #2F5D5C',
+          borderRadius: 0,
         }}>
           <div style={{
-            fontFamily: sans,
-            fontSize: 11,
-            fontWeight: 600,
+            fontFamily: 'var(--font-pixel-display)',
+            fontSize: 12,
             color: '#2F5D5C',
             textTransform: 'uppercase',
-            letterSpacing: '0.16em',
+            letterSpacing: '0.18em',
             marginBottom: 14,
           }}>
-            {t('dilemma.you_answered_today', locale)}
+            ✓ {t('dilemma.you_answered_today', locale).toUpperCase()}
           </div>
           <p style={{
             fontFamily: serif,
@@ -274,20 +293,21 @@ export default async function DilemmaPage() {
           {existing.analysis && (
             <div style={{
               padding: '14px 16px',
-              background: '#F5EFDC',
-              borderRadius: 6,
+              background: '#F8EDC8',
+              border: '3px solid #221E18',
+              boxShadow: '3px 3px 0 0 #B8862F',
+              borderRadius: 0,
               marginBottom: 16,
             }}>
               <div style={{
-                fontFamily: sans,
+                fontFamily: 'var(--font-pixel-display)',
                 fontSize: 10,
-                fontWeight: 600,
                 color: '#8C6520',
                 textTransform: 'uppercase',
-                letterSpacing: '0.16em',
-                marginBottom: 6,
+                letterSpacing: '0.18em',
+                marginBottom: 8,
               }}>
-                {t('dilemma.what_revealed', locale)}
+                {t('dilemma.what_revealed', locale).toUpperCase()}
               </div>
               <p style={{
                 fontFamily: serif,
@@ -339,21 +359,32 @@ export default async function DilemmaPage() {
           <div style={{
             marginTop: 22,
             paddingTop: 18,
-            borderTop: '1px solid #EBE3CA',
+            borderTop: '2px dashed #D6CDB6',
             display: 'flex',
             gap: 12,
             flexWrap: 'wrap',
+            alignItems: 'center',
           }}>
-            <Link href="/account" style={{
-              padding: '9px 18px',
-              border: '1px solid #221E18',
-              borderRadius: 6,
-              color: '#221E18',
-              textDecoration: 'none',
-              fontFamily: sans,
-              fontSize: 13.5,
-            }}>
-              {t('dilemma.see_trajectory', locale)}
+            <Link
+              href="/account#shifts"
+              className="pixel-press"
+              style={{
+                display: 'inline-block',
+                padding: '10px 16px',
+                background: '#221E18',
+                color: '#FAF6EC',
+                border: '3px solid #221E18',
+                boxShadow: '3px 3px 0 0 #B8862F',
+                borderRadius: 0,
+                fontFamily: 'var(--font-pixel-display)',
+                fontSize: 11,
+                letterSpacing: 0.4,
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+                transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+              }}
+            >
+              ▸ {t('dilemma.see_trajectory', locale).toUpperCase()}
             </Link>
             <span style={{
               fontFamily: sans,
