@@ -103,12 +103,9 @@ export default function LoginPage() {
             </label>
 
             {error ? (
-              <div
-                className="border-2 border-[#7A2E2E] bg-[#F5DCD0] px-3 py-2 text-[13px] text-[#7A2E2E]"
-                style={{ boxShadow: '2px 2px 0 0 #7A2E2E' }}
-              >
+              <p className="pixel-alert pixel-alert--error" role="alert">
                 ▶ {error}
-              </div>
+              </p>
             ) : null}
 
             <button
