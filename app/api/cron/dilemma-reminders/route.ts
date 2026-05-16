@@ -1,9 +1,5 @@
 // Daily dilemma email reminder cron — TIME-ZONE AWARE.
 //
-// SCAFFOLD ONLY — composes the messages and lists who'd be emailed, but does
-// not actually send. Wire up an email provider (Resend, Postmark, SendGrid)
-// then uncomment the `sendEmail()` block at the bottom.
-//
 // How it works (TZ-smart version):
 //   - Cron fires HOURLY (Vercel Cron config below).
 //   - For each opted-in user, compute the current hour in their stored TZ.
@@ -20,17 +16,16 @@
 //   }
 //   (top of every hour, UTC)
 //
-// Required env vars when actually sending:
-//   CRON_SECRET                 — random string, also set in Vercel Cron header
-//   EMAIL_PROVIDER_API_KEY      — Resend / Postmark / etc.
-//   EMAIL_FROM                  — e.g. "Mull <hello@mull.world>"
+// Required env vars when actually sending: CRON_SECRET (auth),
+// EMAIL_PROVIDER_API_KEY, EMAIL_FROM — see .env.example.
 //
-// Required SQL migrations:
-//   20260510_notification_prefs.sql
+// Required SQL migrations: 20260510_notification_prefs.sql
 
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/utils/supabase/admin';
 import { getDailyDilemma } from '@/lib/dilemmas';
+import { requireCronAuth } from '@/lib/cron-auth';
+import { sendEmail, maskEmail } from '@/lib/email';
 
 export const runtime = 'nodejs';
 
@@ -40,17 +35,6 @@ type Pref = {
   reminder_local_hour: number;
   reminder_tz: string;
 };
-
-// Mask an email for log output: keep first char + domain. e.g.
-// "alice@example.com" → "a***@example.com". Vercel logs are
-// queryable, so the full user roster shouldn't sit in plain text.
-function maskEmail(email: string): string {
-  const at = email.indexOf('@');
-  if (at <= 0) return '***';
-  const local = email.slice(0, at);
-  const domain = email.slice(at);
-  return local[0] + '***' + domain;
-}
 
 // Returns the current hour (0–23) in the given IANA time zone.
 // Returns null if the time zone is invalid (we just skip those users).
@@ -73,12 +57,8 @@ function localHourIn(tz: string, when: Date = new Date()): number | null {
 }
 
 export async function GET(req: Request) {
-  // Auth gate.
-  const authHeader = req.headers.get('authorization') || '';
-  const expected = process.env.CRON_SECRET ? `Bearer ${process.env.CRON_SECRET}` : null;
-  if (!expected || authHeader !== expected) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const denied = requireCronAuth(req);
+  if (denied) return denied;
 
   let admin;
   try {
@@ -128,58 +108,36 @@ export async function GET(req: Request) {
   const sent: string[] = [];
   const failed: Array<{ email: string; reason: string }> = [];
 
-  // Live mode if both env vars are set, otherwise dry-run with logging.
-  // Wired via Resend's REST API (no SDK install required) — POST to
-  // https://api.resend.com/emails with a Bearer key.
-  const apiKey = process.env.EMAIL_PROVIDER_API_KEY;
-  const fromAddr = process.env.EMAIL_FROM;
-  const liveMode = !!(apiKey && fromAddr);
-
   for (const cand of candidates) {
     const email = emailById.get(cand.user_id);
     if (!email) continue;
     const body = composeBody({ email, dilemmaPrompt: dilemma.prompt });
-    try {
-      if (liveMode) {
-        const res = await fetch('https://api.resend.com/emails', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${apiKey}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            from: fromAddr,
-            to: email,
-            subject: "Today's dilemma · Mull",
-            html: body.html,
-            text: body.text,
-          }),
-        });
-        if (!res.ok) {
-          const text = await res.text();
-          throw new Error(`Resend ${res.status}: ${text.slice(0, 200)}`);
-        }
-      } else {
-        // Mask email in logs — Vercel logs are queryable; full
-        // addresses there leak the user roster. Show only first
-        // char + domain.
-        console.log(`[cron/dilemma-reminders] (DRY RUN) would email ${maskEmail(email)} (their local ${cand.reminder_local_hour}:00 in ${cand.reminder_tz})`);
-      }
+    const result = await sendEmail({
+      to: email,
+      subject: "Today's dilemma · Mull",
+      html: body.html,
+      text: body.text,
+      logTag: `cron/dilemma-reminders · ${cand.reminder_local_hour}:00 in ${cand.reminder_tz}`,
+    });
+    if (result.ok) {
       sent.push(email);
-    } catch (e) {
-      console.error(`[cron/dilemma-reminders] send failed for ${maskEmail(email)}:`, e);
-      failed.push({ email, reason: (e as Error).message });
+    } else {
+      failed.push({ email, reason: result.message });
     }
   }
 
+  // Re-derive dry-run flag for the response. sendEmail picks it up
+  // from env each call; we report it here for cron telemetry.
+  const dryRun = !(process.env.EMAIL_PROVIDER_API_KEY && process.env.EMAIL_FROM);
+
   return NextResponse.json({
     ok: true,
-    dryRun: !liveMode,
+    dryRun,
     optedInCount: prefs?.length ?? 0,
     candidateCount: candidates.length,
     sentCount: sent.length,
     failedCount: failed.length,
-    failed,
+    failed: failed.map(f => ({ email: maskEmail(f.email), reason: f.reason })),
   });
 }
 

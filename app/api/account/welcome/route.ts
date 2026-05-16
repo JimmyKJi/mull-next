@@ -2,26 +2,20 @@
 // WelcomePinger client component) on first visit. Idempotent: if
 // welcome_emails already has a row for this user, this is a no-op.
 //
-// Falls back to dry-run logging if EMAIL_PROVIDER_API_KEY / EMAIL_FROM
-// aren't set, so it's safe to deploy before the email infra is wired
-// up. Live mode kicks in automatically when both env vars are present.
+// Email sending + dry-run fallback live in lib/email.ts. This route
+// composes the body, gates on the welcome_emails dedupe table, and
+// hands the send off to the shared helper.
 //
-// Required env vars when actually sending:
-//   EMAIL_PROVIDER_API_KEY      — Resend API key
-//   EMAIL_FROM                  — e.g. "Mull <hello@mull.world>"
+// Required env vars when actually sending: EMAIL_PROVIDER_API_KEY
+// and EMAIL_FROM (see .env.example).
 //
 // Required SQL: 20260514_welcome_emails.sql
 
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
+import { sendEmail } from '@/lib/email';
 
 export const runtime = 'nodejs';
-
-function maskEmail(email: string): string {
-  const at = email.indexOf('@');
-  if (at <= 0) return '***';
-  return email[0] + '***' + email.slice(at);
-}
 
 export async function POST() {
   const supabase = await createClient();
@@ -37,40 +31,20 @@ export async function POST() {
     .maybeSingle();
   if (existing) return NextResponse.json({ ok: true, alreadySent: true });
 
-  const apiKey = process.env.EMAIL_PROVIDER_API_KEY;
-  const fromAddr = process.env.EMAIL_FROM;
-  const liveMode = !!(apiKey && fromAddr);
-
   const body = composeWelcome({ email: user.email });
+  const result = await sendEmail({
+    to: user.email,
+    subject: 'Welcome to Mull',
+    html: body.html,
+    text: body.text,
+    logTag: 'welcome',
+  });
 
-  if (liveMode) {
-    try {
-      const res = await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          from: fromAddr,
-          to: user.email,
-          subject: 'Welcome to Mull',
-          html: body.html,
-          text: body.text,
-        }),
-      });
-      if (!res.ok) {
-        const text = await res.text();
-        console.error('[welcome] Resend failed', res.status, text.slice(0, 200));
-        // Don't mark as sent if delivery failed — let next page load retry.
-        return NextResponse.json({ error: 'Send failed.', status: res.status }, { status: 502 });
-      }
-    } catch (e) {
-      console.error('[welcome] Resend threw', e);
-      return NextResponse.json({ error: 'Send threw.' }, { status: 502 });
-    }
-  } else {
-    console.log(`[welcome] (DRY RUN) would email ${maskEmail(user.email)}`);
+  // Don't mark as sent if delivery failed — let the next page load
+  // retry. (Dry-run counts as "sent" for the dedupe purpose since we
+  // don't want to spam the same address with dry-run logs forever.)
+  if (!result.ok) {
+    return NextResponse.json({ error: 'Send failed.', status: result.status }, { status: 502 });
   }
 
   // Mark as sent. If this insert fails (rare), we'd send again next
@@ -84,7 +58,7 @@ export async function POST() {
     console.error('[welcome] mark-sent failed', insertErr);
   }
 
-  return NextResponse.json({ ok: true, sent: liveMode, dryRun: !liveMode });
+  return NextResponse.json({ ok: true, sent: result.sent, dryRun: result.dryRun });
 }
 
 function composeWelcome({ email }: { email: string }): { html: string; text: string } {
