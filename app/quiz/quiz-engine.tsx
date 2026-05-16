@@ -265,46 +265,14 @@ export function QuizEngine({ questions, mode, locale }: Props) {
       questions.length / QUESTIONS_PER_CHAPTER,
     );
     return (
-      <div className="mx-auto flex min-h-[80vh] max-w-[820px] flex-col items-center justify-center px-6 py-16 text-center">
-        <div
-          className="pixel-panel pixel-panel--ink w-full max-w-[560px]"
-        >
-          <div
-            className="border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.24em] text-[#F8EDC8]"
-            style={{ fontFamily: "var(--font-pixel-display)" }}
-          >
-            CHAPTER {chapter + 1} / {totalChapters}
-          </div>
-          <div className="px-8 py-12">
-            <div
-              className="text-[64px] leading-none text-[#B8862F]"
-              aria-hidden
-            >
-              {glyph}
-            </div>
-            <h1
-              className="mt-6 px-2 text-[26px] leading-[1.1] tracking-[0.04em] text-[#F8EDC8] sm:text-[36px]"
-              style={{ fontFamily: "var(--font-pixel-display)" }}
-            >
-              <span style={{ textShadow: "3px 3px 0 #B8862F" }}>
-                {title}
-              </span>
-            </h1>
-            <p className="mx-auto mt-7 max-w-[420px] text-[15px] leading-[1.65] text-[#F8EDC8]/85 sm:text-[16px]">
-              {line}
-            </p>
-            <div className="mt-10">
-              <button
-                type="button"
-                onClick={() => setShowingChapter(false)}
-                className="pixel-button pixel-button--amber"
-              >
-                <span>▶ CONTINUE</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <ChapterTransition
+        title={title}
+        glyph={glyph}
+        line={line}
+        chapter={chapter + 1}
+        totalChapters={totalChapters}
+        onContinue={() => setShowingChapter(false)}
+      />
     );
   }
 
@@ -358,6 +326,17 @@ export function QuizEngine({ questions, mode, locale }: Props) {
               {prompt}
             </h1>
           </div>
+
+          {/* Multi-pick hint — surfaces the "you need to manually
+              continue" instruction so users don't think they're stuck. */}
+          {isMulti && (
+            <p
+              className="mt-6 text-[12.5px] tracking-[0.04em] text-[#8C6520] sm:text-[13px]"
+              style={{ fontFamily: "var(--font-pixel-display)" }}
+            >
+              ▸ TAP UP TO {maxPicks} · THEN CONTINUE →
+            </p>
+          )}
 
           {/* Answer cards */}
           <ul className="mt-8 flex flex-col gap-3">
@@ -413,9 +392,10 @@ export function QuizEngine({ questions, mode, locale }: Props) {
         <button
           type="button"
           onClick={skip}
-          className="text-[13px] text-[#8C6520] underline decoration-[#D6CDB6] decoration-2 underline-offset-4 hover:text-[#221E18] hover:decoration-[#8C6520]"
+          className="border-2 border-[#221E18]/40 bg-transparent px-3 py-2 text-[12px] tracking-[0.06em] text-[#8C6520] hover:border-[#221E18] hover:bg-[#F8EDC8] hover:text-[#221E18]"
+          style={{ fontFamily: "var(--font-pixel-display)" }}
         >
-          {t("quiz.skip", locale)}
+          {t("quiz.skip", locale).toUpperCase()}
         </button>
         {isMulti ? (
           <button
@@ -435,6 +415,160 @@ export function QuizEngine({ questions, mode, locale }: Props) {
           <div className="w-[88px]" aria-hidden />
         )}
       </div>
+    </div>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────
+// ChapterTransition — between-chapter pixel scene. Auto-advances
+// after AUTO_MS so users in flow don't get speed-bumped on every
+// 5-question boundary, but the "▶ CONTINUE" button is always there
+// for someone who wants to read the chapter line carefully.
+//
+// A small pixel countdown bar fills across the bottom of the panel
+// as the timer counts down. Hovering pauses the timer (so a slow
+// reader doesn't feel rushed); moving away resumes. Reduced-motion
+// users get an extended timer and no animation on the countdown bar.
+// ────────────────────────────────────────────────────────────────
+
+const CHAPTER_AUTO_MS = 3500;
+const CHAPTER_AUTO_MS_REDUCED = 6000;
+
+function ChapterTransition({
+  title,
+  glyph,
+  line,
+  chapter,
+  totalChapters,
+  onContinue,
+}: {
+  title: string;
+  glyph: string;
+  line: string;
+  chapter: number;
+  totalChapters: number;
+  onContinue: () => void;
+}) {
+  const [paused, setPaused] = useState(false);
+  const [reduced, setReduced] = useState(false);
+  const totalMsRef = useRef(CHAPTER_AUTO_MS);
+  const startedAtRef = useRef<number>(performance.now());
+  const elapsedAtPauseRef = useRef(0);
+  const [progress, setProgress] = useState(0);
+  const finishedRef = useRef(false);
+
+  // Detect reduced-motion once on mount.
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReduced(mq.matches);
+    totalMsRef.current = mq.matches ? CHAPTER_AUTO_MS_REDUCED : CHAPTER_AUTO_MS;
+  }, []);
+
+  // Tick — RAF loop that advances progress. Pauses are handled by
+  // freezing startedAtRef so elapsed time stops accumulating.
+  useEffect(() => {
+    let raf = 0;
+    function step(now: number) {
+      if (finishedRef.current) return;
+      const total = totalMsRef.current;
+      let elapsed: number;
+      if (paused) {
+        elapsed = elapsedAtPauseRef.current;
+      } else {
+        elapsed = (now - startedAtRef.current) + elapsedAtPauseRef.current;
+      }
+      const ratio = Math.min(1, elapsed / total);
+      setProgress(ratio);
+      if (ratio >= 1) {
+        finishedRef.current = true;
+        onContinue();
+        return;
+      }
+      raf = requestAnimationFrame(step);
+    }
+    if (!paused) {
+      startedAtRef.current = performance.now();
+      raf = requestAnimationFrame(step);
+    } else {
+      // Capture elapsed at pause so resume picks up where we left off.
+      elapsedAtPauseRef.current = elapsedAtPauseRef.current +
+        (performance.now() - startedAtRef.current);
+    }
+    return () => {
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [paused, onContinue]);
+
+  return (
+    <div className="mx-auto flex min-h-[80vh] max-w-[820px] flex-col items-center justify-center px-6 py-16 text-center">
+      <div
+        className="pixel-panel pixel-panel--ink w-full max-w-[560px]"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        onFocus={() => setPaused(true)}
+        onBlur={() => setPaused(false)}
+      >
+        <div
+          className="border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.24em] text-[#F8EDC8]"
+          style={{ fontFamily: "var(--font-pixel-display)" }}
+        >
+          CHAPTER {chapter} / {totalChapters}
+        </div>
+        <div className="px-8 py-12">
+          <div
+            className="text-[64px] leading-none text-[#B8862F]"
+            aria-hidden
+          >
+            {glyph}
+          </div>
+          <h1
+            className="mt-6 px-2 text-[26px] leading-[1.1] tracking-[0.04em] text-[#F8EDC8] sm:text-[36px]"
+            style={{ fontFamily: "var(--font-pixel-display)" }}
+          >
+            <span style={{ textShadow: "3px 3px 0 #B8862F" }}>
+              {title}
+            </span>
+          </h1>
+          <p className="mx-auto mt-7 max-w-[420px] text-[15px] leading-[1.65] text-[#F8EDC8]/85 sm:text-[16px]">
+            {line}
+          </p>
+          <div className="mt-10">
+            <button
+              type="button"
+              onClick={() => {
+                finishedRef.current = true;
+                onContinue();
+              }}
+              className="pixel-button pixel-button--amber"
+            >
+              <span>▶ CONTINUE</span>
+            </button>
+          </div>
+        </div>
+        {/* Pixel countdown bar — fills across the bottom as the
+            auto-advance timer ticks down. Reduced-motion: no
+            transition, just step jumps. */}
+        <div
+          aria-hidden
+          className="border-t-4 border-[#221E18] bg-[#0E0B07]"
+          style={{ height: 6 }}
+        >
+          <div
+            style={{
+              height: '100%',
+              width: `${progress * 100}%`,
+              background: '#B8862F',
+              transition: reduced ? 'none' : 'width 80ms linear',
+            }}
+          />
+        </div>
+      </div>
+      <p
+        className="mt-4 text-[10px] tracking-[0.2em] text-[#8C6520]"
+        style={{ fontFamily: "var(--font-pixel-display)" }}
+      >
+        {paused ? '▸ HOVERED — TIMER PAUSED' : `▸ AUTO-ADVANCE IN ${Math.ceil((1 - progress) * (totalMsRef.current / 1000))}s`}
+      </p>
     </div>
   );
 }
