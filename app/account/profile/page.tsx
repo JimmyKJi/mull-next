@@ -12,6 +12,7 @@ import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
 import { PixelPageHeader } from '@/components/pixel-window';
+import EmbedBadgeSnippet from '@/components/embed-badge-snippet';
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false, nocache: true },
@@ -73,6 +74,11 @@ export default async function ProfileSettingsPage() {
       <p className="mt-9 text-[12px] leading-[1.6] text-[#8C6520] opacity-80">
         {t('profile.privacy_footer', locale)}
       </p>
+
+      {/* Embeddable badge — surfaced only when the user has a handle
+          (otherwise the iframe URL would 404). Adds the badge feature
+          to the user's awareness without making it a separate page. */}
+      {profile?.handle && <EmbedBadgeSnippet handle={profile.handle} />}
 
       <DataControls locale={locale} />
     </main>

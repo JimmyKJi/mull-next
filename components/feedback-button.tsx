@@ -23,11 +23,10 @@ const sans = "'Inter', system-ui, sans-serif";
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
 // Routes where the floating Feedback pill would clash visually with
-// the page (e.g. the redesign sandbox has its own bottom-floating
-// switcher). Keep this list aligned with topbar-mount.tsx where
-// possible — when a route opts out of the top bar it usually also
-// wants a clean bottom edge.
-const HIDDEN_PREFIXES = ['/quiz', '/result'];
+// the page. Quiz + result want a clean bottom edge for focus;
+// /badge, /share, /wrapped are chromeless embed/screenshot pages
+// that shouldn't include our floating UI in the captured frame.
+const HIDDEN_PREFIXES = ['/quiz', '/result', '/badge', '/share', '/wrapped'];
 
 export default function FeedbackButton() {
   const pathname = usePathname() || '/';

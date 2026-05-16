@@ -27,9 +27,23 @@ const NAV_LINKS = [
   { href: "/about", label: "About" },
 ] as const;
 
+// Routes that render inside a third-party iframe (or otherwise want a
+// chromeless full-bleed experience). The nav is suppressed on these
+// paths so the embed isn't cropped by it. Keep this list in sync with
+// the comparable HIDDEN_PREFIXES in components/feedback-button.tsx.
+const CHROMELESS_PREFIXES = ['/badge', '/share', '/wrapped'];
+
 export function SiteNav() {
   const pathname = usePathname() ?? "/";
+  const chromeless = CHROMELESS_PREFIXES.some(
+    p => pathname === p || pathname.startsWith(p + '/'),
+  );
   const [open, setOpen] = useState(false);
+
+  // Cmd-K is still mounted globally below — hide *just* the nav bar
+  // on chromeless routes so the badge / share / wrapped routes
+  // render flush in iframes + screenshot crops.
+  if (chromeless) return null;
 
   // Cmd-K / Ctrl-K opens the palette. Escape closes.
   useEffect(() => {
