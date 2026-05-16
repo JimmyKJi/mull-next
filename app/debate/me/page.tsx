@@ -61,8 +61,9 @@ export default async function DuelPage() {
         <div style={{
           padding: '28px 32px',
           background: '#FFFCF4',
-          border: '1px dashed #D6CDB6',
-          borderRadius: 12,
+          border: '4px solid #221E18',
+          boxShadow: '5px 5px 0 0 #B8862F',
+          borderRadius: 0,
           textAlign: 'center',
         }}>
           <p style={{
@@ -70,22 +71,30 @@ export default async function DuelPage() {
             fontStyle: 'italic',
             fontSize: 18,
             color: '#4A4338',
-            margin: '0 0 16px',
+            margin: '0 0 20px',
           }}>
             {t('duel.need_quiz', locale)}
           </p>
-          <Link href="/" style={{
-            display: 'inline-block',
-            padding: '10px 20px',
-            background: '#221E18',
-            color: '#FAF6EC',
-            borderRadius: 6,
-            textDecoration: 'none',
-            fontFamily: sans,
-            fontSize: 14,
-            fontWeight: 500,
-          }}>
-            {t('account.take_quiz_arrow', locale)}
+          <Link
+            href="/"
+            className="pixel-press"
+            style={{
+              display: 'inline-block',
+              padding: '12px 22px',
+              background: '#B8862F',
+              color: '#1A1612',
+              border: '4px solid #221E18',
+              boxShadow: '4px 4px 0 0 #221E18',
+              borderRadius: 0,
+              fontFamily: 'var(--font-pixel-display)',
+              fontSize: 12,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              textDecoration: 'none',
+              transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+            }}
+          >
+            ▸ {t('account.take_quiz_arrow', locale).toUpperCase()}
           </Link>
         </div>
       ) : (
