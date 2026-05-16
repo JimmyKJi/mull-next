@@ -14,10 +14,13 @@
 //
 // Runs in dry-run mode if EMAIL_PROVIDER_API_KEY / EMAIL_FROM aren't
 // set — same convention as the daily reminder cron.
+// Auth via CRON_SECRET (see .env.example + lib/cron-auth).
 
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/utils/supabase/admin';
 import { DIM_NAMES, DIM_KEYS, topShifts } from '@/lib/dimensions';
+import { requireCronAuth } from '@/lib/cron-auth';
+import { sendEmail, maskEmail } from '@/lib/email';
 
 export const runtime = 'nodejs';
 
@@ -33,12 +36,6 @@ type DilemmaRow = {
   vector_delta: number[] | null;
   created_at: string;
 };
-
-function maskEmail(email: string): string {
-  const at = email.indexOf('@');
-  if (at <= 0) return '***';
-  return email[0] + '***' + email.slice(at);
-}
 
 function escapeHtml(s: string) {
   return s
@@ -67,11 +64,8 @@ function pickBiggestShift(rows: DilemmaRow[]): { row: DilemmaRow; topDim: string
 }
 
 export async function GET(req: Request) {
-  const authHeader = req.headers.get('authorization') || '';
-  const expected = process.env.CRON_SECRET ? `Bearer ${process.env.CRON_SECRET}` : null;
-  if (!expected || authHeader !== expected) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const denied = requireCronAuth(req);
+  if (denied) return denied;
 
   let admin;
   try {
@@ -103,10 +97,6 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'Could not list users.' }, { status: 500 });
   }
   const emailById = new Map(users.map(u => [u.id, u.email]));
-
-  const apiKey = process.env.EMAIL_PROVIDER_API_KEY;
-  const fromAddr = process.env.EMAIL_FROM;
-  const liveMode = !!(apiKey && fromAddr);
 
   const sevenDaysAgo = new Date(Date.now() - 7 * 86400_000).toISOString();
   const sent: string[] = [];
@@ -150,39 +140,25 @@ export async function GET(req: Request) {
       },
     });
 
-    try {
-      if (liveMode) {
-        const res = await fetch('https://api.resend.com/emails', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${apiKey}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            from: fromAddr,
-            to: email,
-            subject: `Your week on Mull · ${count} ${count === 1 ? 'dilemma' : 'dilemmas'}`,
-            html: body.html,
-            text: body.text,
-          }),
-        });
-        if (!res.ok) {
-          const text = await res.text();
-          throw new Error(`Resend ${res.status}: ${text.slice(0, 200)}`);
-        }
-      } else {
-        console.log(`[cron/weekly-digest] (DRY RUN) would email ${maskEmail(email)} · ${count} dilemmas`);
-      }
+    const result = await sendEmail({
+      to: email,
+      subject: `Your week on Mull · ${count} ${count === 1 ? 'dilemma' : 'dilemmas'}`,
+      html: body.html,
+      text: body.text,
+      logTag: `cron/weekly-digest · ${count} dilemmas`,
+    });
+    if (result.ok) {
       sent.push(maskEmail(email));
-    } catch (e) {
-      console.error(`[cron/weekly-digest] send failed for ${maskEmail(email)}:`, e);
-      failed.push({ email: maskEmail(email), reason: (e as Error).message });
+    } else {
+      failed.push({ email: maskEmail(email), reason: result.message });
     }
   }
 
+  const dryRun = !(process.env.EMAIL_PROVIDER_API_KEY && process.env.EMAIL_FROM);
+
   return NextResponse.json({
     ok: true,
-    dryRun: !liveMode,
+    dryRun,
     optedInCount: prefs.length,
     sentCount: sent.length,
     skippedCount: skipped.length,

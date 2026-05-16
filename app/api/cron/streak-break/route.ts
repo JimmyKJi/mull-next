@@ -13,9 +13,12 @@
 // most timezones' "morning chance to do today's dilemma" has passed).
 //
 // Dry-run when EMAIL_PROVIDER_API_KEY / EMAIL_FROM aren't set.
+// Auth via CRON_SECRET (see .env.example + lib/cron-auth).
 
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/utils/supabase/admin';
+import { requireCronAuth } from '@/lib/cron-auth';
+import { sendEmail, maskEmail } from '@/lib/email';
 
 export const runtime = 'nodejs';
 
@@ -27,12 +30,6 @@ type PrefRow = {
 type ResponseDateRow = {
   dilemma_date: string;
 };
-
-function maskEmail(email: string): string {
-  const at = email.indexOf('@');
-  if (at <= 0) return '***';
-  return email[0] + '***' + email.slice(at);
-}
 
 function escapeHtml(s: string) {
   return s
@@ -96,11 +93,8 @@ function lastBrokenStreakInfo(dates: Set<string>, today: Date): {
 }
 
 export async function GET(req: Request) {
-  const authHeader = req.headers.get('authorization') || '';
-  const expected = process.env.CRON_SECRET ? `Bearer ${process.env.CRON_SECRET}` : null;
-  if (!expected || authHeader !== expected) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const denied = requireCronAuth(req);
+  if (denied) return denied;
 
   let admin;
   try {
@@ -129,10 +123,6 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'Could not list users.' }, { status: 500 });
   }
   const emailById = new Map(users.map(u => [u.id, u.email]));
-
-  const apiKey = process.env.EMAIL_PROVIDER_API_KEY;
-  const fromAddr = process.env.EMAIL_FROM;
-  const liveMode = !!(apiKey && fromAddr);
 
   const today = new Date();
   const since = new Date(today.getTime() - 30 * 86400_000).toISOString();
@@ -169,47 +159,34 @@ export async function GET(req: Request) {
     if (existing) { skipped.push('already sent'); continue; }
 
     const body = composeStreakBreak({ email, brokenStreak: info.brokenStreak });
-    try {
-      if (liveMode) {
-        const res = await fetch('https://api.resend.com/emails', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${apiKey}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            from: fromAddr,
-            to: email,
-            subject: `${info.brokenStreak} days · come back when you can`,
-            html: body.html,
-            text: body.text,
-          }),
-        });
-        if (!res.ok) {
-          const text = await res.text();
-          throw new Error(`Resend ${res.status}: ${text.slice(0, 200)}`);
-        }
-      } else {
-        console.log(`[cron/streak-break] (DRY RUN) would email ${maskEmail(email)} · broken ${info.brokenStreak}-day streak`);
-      }
+    const result = await sendEmail({
+      to: email,
+      subject: `${info.brokenStreak} days · come back when you can`,
+      html: body.html,
+      text: body.text,
+      logTag: `cron/streak-break · broken ${info.brokenStreak}-day streak`,
+    });
 
-      // Mark as sent regardless (live or dry) so we don't keep
-      // preparing the same email every day. In dry-run dev that
-      // means re-running the cron picks up new candidates only.
-      await admin.from('streak_break_emails').insert({
-        user_id: pref.user_id,
-        miss_date: info.missDate,
-      });
-      sent.push(maskEmail(email));
-    } catch (e) {
-      console.error(`[cron/streak-break] send failed for ${maskEmail(email)}:`, e);
-      failed.push({ email: maskEmail(email), reason: (e as Error).message });
+    if (!result.ok) {
+      failed.push({ email: maskEmail(email), reason: result.message });
+      continue;
     }
+
+    // Mark as sent regardless (live or dry) so we don't keep
+    // preparing the same email every day. In dry-run dev that
+    // means re-running the cron picks up new candidates only.
+    await admin.from('streak_break_emails').insert({
+      user_id: pref.user_id,
+      miss_date: info.missDate,
+    });
+    sent.push(maskEmail(email));
   }
+
+  const dryRun = !(process.env.EMAIL_PROVIDER_API_KEY && process.env.EMAIL_FROM);
 
   return NextResponse.json({
     ok: true,
-    dryRun: !liveMode,
+    dryRun,
     optedInCount: prefs.length,
     sentCount: sent.length,
     skipped: skipped.length,

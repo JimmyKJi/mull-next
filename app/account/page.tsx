@@ -3,7 +3,6 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import LogoutButton from './logout-button';
-import { DIM_NAMES, DIM_KEYS, topShifts } from '@/lib/dimensions';
 import { getDailyDilemma } from '@/lib/dilemmas';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
@@ -16,6 +15,7 @@ import ReflectionCard from '@/components/reflection-card';
 import WelcomePinger from '@/components/welcome-pinger';
 import WelcomeBackBanner from '@/components/welcome-back-banner';
 import ScrollToTop from '@/components/scroll-to-top';
+import TrajectoryEvents from '@/components/trajectory-events';
 import NextActionCard from '@/components/next-action-card';
 import ReferralCard from '@/components/referral-card';
 import PendingAttemptClaimer from '@/components/pending-attempt-claimer';
@@ -896,226 +896,15 @@ export default async function AccountPage() {
         </section>
       )}
 
-      {trajectoryNewestFirst.length > 0 && (
-        <section id="shifts" style={{ marginBottom: 48, scrollMarginTop: 96 }}>
-          <h2 style={{
-            fontFamily: pixel,
-            fontSize: 16,
-            color: '#221E18',
-            textTransform: 'uppercase',
-            letterSpacing: '0.18em',
-            marginBottom: 8,
-            textShadow: '2px 2px 0 #B8862F',
-          }}>
-            ▸ {t('account.recent_shifts', locale).toUpperCase()}
-          </h2>
-          <p style={{
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 14.5,
-            color: '#4A4338',
-            marginBottom: 22,
-            lineHeight: 1.55,
-          }}>
-            {t('account.recent_shifts_subtitle', locale)}
-          </p>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-            {trajectoryNewestFirst.map(({ event, delta }) => {
-              const shifts = topShifts(delta, 0.3, 3);
-              const ts =
-                event.kind === 'quiz' ? event.taken_at :
-                event.created_at;
-              // Per-kind accent maps to the shadow color so each
-              // event-type reads at-a-glance: amber=quiz, blue=dilemma,
-              // teal=diary, brick=exercise.
-              const accent =
-                event.kind === 'quiz' ? '#B8862F' :
-                event.kind === 'dilemma' ? '#3D7DA8' :
-                event.kind === 'diary' ? '#2F5D5C' :
-                '#7A2E2E';
-              const labelText =
-                event.kind === 'quiz' ? t('account.event_quiz_attempt', locale) :
-                event.kind === 'dilemma' ? t('account.event_daily_dilemma', locale) :
-                event.kind === 'diary' ? t('account.event_diary_entry', locale) :
-                t('account.event_exercise_reflection', locale);
-              return (
-                <li key={event.id} style={{
-                  padding: '18px 20px',
-                  marginBottom: 14,
-                  background: '#FFFCF4',
-                  border: '4px solid #221E18',
-                  boxShadow: `4px 4px 0 0 ${accent}`,
-                  borderRadius: 0,
-                }}>
-                  <div style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'baseline',
-                    flexWrap: 'wrap',
-                    gap: 8,
-                    marginBottom: 8,
-                  }}>
-                    <span style={{
-                      fontFamily: pixel,
-                      fontSize: 11,
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.18em',
-                      color: accent,
-                    }}>
-                      {labelText.toUpperCase()} · {fmtRel(ts).toUpperCase()}
-                    </span>
-                    <span style={{
-                      fontFamily: pixel,
-                      fontSize: 10,
-                      color: '#8C6520',
-                      opacity: 0.85,
-                      letterSpacing: 0.4,
-                      textTransform: 'uppercase',
-                    }}>
-                      {fmt(ts)}
-                    </span>
-                  </div>
-                  {event.kind === 'quiz' && (
-                    <div style={{
-                      fontFamily: serif,
-                      fontSize: 22,
-                      fontWeight: 500,
-                      color: '#221E18',
-                      marginBottom: shifts.length ? 10 : 0,
-                      letterSpacing: '-0.01em',
-                    }}>
-                      {event.flavor ? `${event.flavor} ` : ''}
-                      {event.archetype.replace(/^The /, '')}
-                      <span style={{
-                        fontFamily: pixel,
-                        fontSize: 12,
-                        color: '#8C6520',
-                        marginLeft: 12,
-                        letterSpacing: 0.4,
-                      }}>
-                        {event.alignment_pct}%
-                      </span>
-                    </div>
-                  )}
-                  {event.kind === 'dilemma' && (
-                    <>
-                      <p style={{
-                        fontFamily: serif,
-                        fontStyle: 'italic',
-                        fontSize: 17,
-                        color: '#4A4338',
-                        margin: '0 0 8px',
-                      }}>
-                        &ldquo;{event.question_text}&rdquo;
-                      </p>
-                      {event.analysis && (
-                        <p style={{
-                          fontFamily: serif,
-                          fontSize: 15,
-                          color: '#221E18',
-                          margin: '0 0 10px',
-                          lineHeight: 1.55,
-                        }}>
-                          {event.analysis}
-                        </p>
-                      )}
-                    </>
-                  )}
-                  {event.kind === 'diary' && (
-                    <>
-                      {event.title && (
-                        <div style={{
-                          fontFamily: serif,
-                          fontSize: 19,
-                          fontWeight: 500,
-                          color: '#221E18',
-                          marginBottom: 6,
-                        }}>
-                          {event.title}
-                        </div>
-                      )}
-                      <p style={{
-                        fontFamily: serif,
-                        fontSize: 15.5,
-                        color: '#4A4338',
-                        margin: '0 0 8px',
-                        lineHeight: 1.55,
-                      }}>
-                        {event.content.length > 240 ? event.content.slice(0, 240) + '…' : event.content}
-                      </p>
-                      {event.analysis && (
-                        <p style={{
-                          fontFamily: serif,
-                          fontStyle: 'italic',
-                          fontSize: 14,
-                          color: '#8C6520',
-                          margin: '0 0 10px',
-                          lineHeight: 1.5,
-                        }}>
-                          {event.analysis}
-                        </p>
-                      )}
-                      <a href={`/diary/${event.id}`} style={{
-                        fontFamily: pixel,
-                        fontSize: 11,
-                        color: '#2F5D5C',
-                        textDecoration: 'none',
-                        letterSpacing: 0.4,
-                        textTransform: 'uppercase',
-                        borderBottom: '2px solid #2F5D5C',
-                        paddingBottom: 1,
-                      }}>
-                        ▸ {t('account.read_full_entry', locale).toUpperCase()}
-                      </a>
-                    </>
-                  )}
-                  {shifts.length > 0 ? (
-                    <div style={{
-                      display: 'flex',
-                      gap: 12,
-                      flexWrap: 'wrap',
-                      marginTop: 12,
-                      paddingTop: 12,
-                      borderTop: '2px dashed #D6CDB6',
-                    }}>
-                      {shifts.map(s => (
-                        <span key={s.key} style={{
-                          fontFamily: pixel,
-                          fontSize: 11,
-                          color: s.delta > 0 ? '#2F5D5C' : '#7A2E2E',
-                          letterSpacing: 0.4,
-                          textTransform: 'uppercase',
-                          padding: '4px 10px',
-                          background: s.delta > 0 ? '#E5F0EE' : '#F5E0E0',
-                          border: `2px solid ${s.delta > 0 ? '#2F5D5C' : '#7A2E2E'}`,
-                        }}>
-                          <strong style={{ fontVariantNumeric: 'tabular-nums' }}>
-                            {s.delta > 0 ? '+' : ''}{s.delta.toFixed(1)}
-                          </strong>{' '}
-                          {s.name}
-                        </span>
-                      ))}
-                    </div>
-                  ) : (
-                    event.kind === 'quiz' && (
-                      <div style={{
-                        fontFamily: serif,
-                        fontStyle: 'italic',
-                        fontSize: 13,
-                        color: '#8C6520',
-                        opacity: 0.85,
-                        marginTop: 10,
-                      }}>
-                        {t('account.first_event', locale)}
-                      </div>
-                    )
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-      )}
+      {/* Trajectory event list. Per-card rendering lives in
+          components/trajectory-events.tsx (extracted in the code
+          structure pass — was 220 lines of inline JSX here). */}
+      <TrajectoryEvents
+        trajectory={trajectoryNewestFirst}
+        locale={locale}
+        fmt={fmt}
+        fmtRel={fmtRel}
+      />
 
       {/* Milestones + badges. Always renders, even for brand-new users —
           their progress bars start at zero and the unearned-badges
