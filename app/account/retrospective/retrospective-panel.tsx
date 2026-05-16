@@ -5,6 +5,7 @@
 
 import { useState, useEffect } from 'react';
 import { t, type Locale } from '@/lib/translations';
+import EmptyStateSprite from '@/components/empty-state-sprite';
 
 const serif = "'Cormorant Garamond', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
@@ -108,7 +109,32 @@ export default function RetrospectivePanel({ locale = 'en' }: { locale?: Locale 
         <RetrospectiveTypewriter year={year} />
       )}
 
-      {result && (
+      {result && (() => {
+        // Detect a "no activity for this year" result so we render an
+        // empty-state sprite instead of four "0" stat cards and a
+        // failed-essay paragraph. The API returns counts: { quizzes:
+        // 0, dilemmas: 0, … } when the user has nothing for the year.
+        const noActivity =
+          result.periodSummary.counts.quizzes === 0 &&
+          result.periodSummary.counts.dilemmas === 0 &&
+          result.periodSummary.counts.diaries === 0 &&
+          (result.periodSummary.counts.reflections ?? 0) === 0;
+        if (noActivity) {
+          return (
+            <div style={{
+              padding: '20px 18px',
+              background: '#FFFCF4',
+              border: '3px dashed #8C6520',
+              borderRadius: 0,
+            }}>
+              <EmptyStateSprite
+                variant="book"
+                caption={`Nothing to retrospect on for ${result.year} yet — you haven't taken a quiz, answered a dilemma, written a diary entry, or saved an exercise reflection in that period.`}
+              />
+            </div>
+          );
+        }
+        return (
         <div>
           {/* Numbers strip */}
           <div style={{
@@ -183,7 +209,8 @@ export default function RetrospectivePanel({ locale = 'en' }: { locale?: Locale 
             </p>
           )}
         </div>
-      )}
+        );
+      })()}
     </div>
   );
 }
