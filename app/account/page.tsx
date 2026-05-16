@@ -164,6 +164,43 @@ const statLabelStyle: React.CSSProperties = {
   marginTop: 8,
 };
 
+// Sub-page chip for /account/profile, /retrospective, /curate links
+// in the signed-in card. Slim chunky pixel chrome — 2px ink + 2px
+// hard amber shadow — so they read as feature entry points rather
+// than footnote-text-links.
+const accountSubChip: React.CSSProperties = {
+  display: 'inline-block',
+  padding: '6px 10px',
+  background: '#FFFCF4',
+  color: '#8C6520',
+  border: '2px solid #221E18',
+  boxShadow: '2px 2px 0 0 #B8862F',
+  borderRadius: 0,
+  fontFamily: pixel,
+  fontSize: 10,
+  letterSpacing: 0.4,
+  textDecoration: 'none',
+  transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+};
+
+// Jump-nav chip — same shape as accountSubChip but slightly larger
+// + ink color (more navigation-y) so the two strips don't visually
+// blur together.
+const accountJumpChip: React.CSSProperties = {
+  display: 'inline-block',
+  padding: '8px 12px',
+  background: '#F8EDC8',
+  color: '#221E18',
+  border: '2px solid #221E18',
+  boxShadow: '3px 3px 0 0 #8C6520',
+  borderRadius: 0,
+  fontFamily: pixel,
+  fontSize: 11,
+  letterSpacing: 0.4,
+  textDecoration: 'none',
+  transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+};
+
 // Chunky pixel-button style for the trio of action <Link>s in the
 // "latest result" card. Three configurable colors map to the three
 // surfaces (fill, text, shadow). Hover lift handled via CSS in
@@ -422,7 +459,10 @@ export default async function AccountPage() {
           </span>
         </h1>
 
-        {/* Signed-in card — pixel-bordered with email + admin links */}
+        {/* Signed-in card — pixel-bordered with email + admin links.
+            Sub-page links promoted from underline text to small chunky
+            pixel chips so features like the yearly retrospective don't
+            read as footnotes. */}
         <div
           className="mt-6 border-2 border-[#221E18] bg-[#FFFCF4] p-3 text-[13.5px] text-[#4A4338]"
           style={{ boxShadow: '3px 3px 0 0 #8C6520' }}
@@ -431,30 +471,40 @@ export default async function AccountPage() {
             {t('account.signed_in_as', locale)}{' '}
             <strong className="text-[#221E18]">{user.email}</strong>
           </div>
-          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[13px]">
-            <Link
-              href="/account/profile"
-              className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
-            >
-              {t('nav.public_profile_settings', locale)} →
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Link href="/account/profile" className="pixel-press" style={accountSubChip}>
+              ▸ {t('nav.public_profile_settings', locale).toUpperCase()}
             </Link>
-            <Link
-              href="/account/retrospective"
-              className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
-            >
-              Yearly retrospective →
+            <Link href="/account/retrospective" className="pixel-press" style={accountSubChip}>
+              ▸ YEARLY RETROSPECTIVE
             </Link>
             {isAdminUserId(user.id) ? (
-              <Link
-                href="/account/curate"
-                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
-              >
-                Curate picks →
+              <Link href="/account/curate" className="pixel-press" style={accountSubChip}>
+                ▸ CURATE PICKS
               </Link>
             ) : null}
           </div>
         </div>
       </header>
+
+      {/* Account jump-nav strip — pixel chips that anchor-link to the
+          major sections below. The page is long; on day-180 of usage,
+          finding "where's the map again?" requires scrolling. This
+          strip is the escape valve. Only renders for users with at
+          least one quiz/dilemma/diary so brand-new accounts don't get
+          a wall of "you don't have this yet" anchors. */}
+      {(quizCount > 0 || dilemmaCount > 0 || diaryCount > 0) && (
+        <nav
+          aria-label="Jump to section"
+          className="mb-9 flex flex-wrap gap-2"
+        >
+          <a href="#latest-result" className="pixel-press" style={accountJumpChip}>▸ RESULT</a>
+          {iframeSrc && <a href="#trajectory" className="pixel-press" style={accountJumpChip}>▸ MAP</a>}
+          {trajectoryNewestFirst.length > 0 && <a href="#shifts" className="pixel-press" style={accountJumpChip}>▸ SHIFTS</a>}
+          <a href="#progression" className="pixel-press" style={accountJumpChip}>▸ BADGES</a>
+          <a href="#invite" className="pixel-press" style={accountJumpChip}>▸ INVITE</a>
+        </nav>
+      )}
 
       {/* First-time empty state — shown only before the user has any data
           to display in the stats / trajectory sections below. Three doors
@@ -574,7 +624,13 @@ export default async function AccountPage() {
                 color: '#F8EDC8',
                 lineHeight: 1,
                 letterSpacing: 0.4,
-              }}>{streak}<span style={{ fontSize: 13, opacity: 0.7, marginLeft: 6 }}>{t(streak === 1 ? 'account.stat_day' : 'account.stat_days', locale).toUpperCase()}</span></div>
+              }}>{
+                // Cap displayed streak at "30+" so a 200-day streak
+                // doesn't dominate the stat row visually. The real
+                // number still drives milestones + badges; this is
+                // purely a layout-bound display cap.
+                streak >= 30 ? '30+' : streak
+              }<span style={{ fontSize: 13, opacity: 0.7, marginLeft: 6 }}>{t(streak === 1 ? 'account.stat_day' : 'account.stat_days', locale).toUpperCase()}</span></div>
               <div style={{
                 fontFamily: 'var(--font-pixel-display)',
                 fontSize: 10,
@@ -582,13 +638,13 @@ export default async function AccountPage() {
                 textTransform: 'uppercase',
                 letterSpacing: '0.18em',
                 marginTop: 8,
-              }}>▸ {t('account.stat_current_streak', locale).toUpperCase()}</div>
+              }}>▸ {t('account.stat_current_streak', locale).toUpperCase()}{streak >= 30 ? ` · ${streak} DAYS` : ''}</div>
             </div>
           )}
         </div>
       )}
 
-      <section style={{ marginBottom: 48 }}>
+      <section id="latest-result" style={{ marginBottom: 48, scrollMarginTop: 96 }}>
         <h2 style={{
           fontFamily: pixel,
           fontSize: 16,
@@ -730,7 +786,7 @@ export default async function AccountPage() {
       </section>
 
       {iframeSrc && (
-        <section style={{ marginBottom: 48 }}>
+        <section id="trajectory" style={{ marginBottom: 48, scrollMarginTop: 96 }}>
           <h2 style={{
             fontFamily: pixel,
             fontSize: 16,
@@ -742,19 +798,37 @@ export default async function AccountPage() {
           }}>
             ▸ {t('account.your_trajectory', locale).toUpperCase()}
           </h2>
+          {/* Iframe wrapped in a 540px-tall pixel-shimmer placeholder
+              so the page doesn't jump when the lazy iframe paints.
+              The iframe sits on top with its own background; if it
+              fails to load, the shimmer keeps animating instead of
+              leaving a blank ink rectangle. */}
           <div style={{
             border: '4px solid #221E18',
             boxShadow: '5px 5px 0 0 #2F5D5C',
             borderRadius: 0,
             overflow: 'hidden',
             background: '#FFFCF4',
-            position: 'relative'
+            position: 'relative',
+            height: 540,
           }}>
+            <div
+              aria-hidden
+              className="pixel-shimmer"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                border: 'none',
+                zIndex: 0,
+              }}
+            />
             <iframe
               src={iframeSrc}
               style={{
+                position: 'relative',
+                zIndex: 1,
                 width: '100%',
-                height: 540,
+                height: '100%',
                 border: 'none',
                 display: 'block',
               }}
@@ -793,7 +867,7 @@ export default async function AccountPage() {
       )}
 
       {trajectoryNewestFirst.length > 0 && (
-        <section style={{ marginBottom: 48 }}>
+        <section id="shifts" style={{ marginBottom: 48, scrollMarginTop: 96 }}>
           <h2 style={{
             fontFamily: pixel,
             fontSize: 16,
@@ -1015,8 +1089,11 @@ export default async function AccountPage() {
 
       {/* Milestones + badges. Always renders, even for brand-new users —
           their progress bars start at zero and the unearned-badges
-          preview shows what's coming. */}
-      <ProgressionPanel stats={stats} locale={locale} />
+          preview shows what's coming. Wrapped in a #progression
+          anchor so the jump-nav strip can scroll-to it. */}
+      <div id="progression" style={{ scrollMarginTop: 96 }}>
+        <ProgressionPanel stats={stats} locale={locale} />
+      </div>
 
       {/* Reflection card — surfaces an 8+ week old dilemma response
           back to the user with a follow-up textarea. Returns null
@@ -1039,8 +1116,10 @@ export default async function AccountPage() {
       {/* Friend referral card — generates the user's invite link
           (lazily, via /api/referral/save) and shows a count of
           friends who've joined. Renders nothing until the API
-          responds with a code. */}
-      <ReferralCard initialCode={referralCode} initialCount={referralCount} />
+          responds with a code. Wrapped in #invite for jump-nav. */}
+      <div id="invite" style={{ scrollMarginTop: 96 }}>
+        <ReferralCard initialCode={referralCode} initialCount={referralCount} />
+      </div>
 
       {/* Daily-dilemma email reminder card — opt-in, time-zone aware.
           Sits inside /account so the privacy-respecting opt-in is the

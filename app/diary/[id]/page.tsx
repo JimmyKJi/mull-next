@@ -172,6 +172,66 @@ export default async function DiaryEntryPage({ params }: { params: Promise<{ id:
       )}
 
       <DiaryEntryActions entryId={entry.id} locale={locale} />
+
+      {/* Back-to-account links — explicit escape valve so users who
+          opened this entry from the trajectory list don't have to
+          rely on the browser back button. Two destinations: the
+          full account page (most common return path) and the diary
+          index (for browsing siblings). */}
+      <nav
+        aria-label="Continue elsewhere"
+        style={{
+          marginTop: 56,
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 12,
+          paddingTop: 24,
+          borderTop: '2px dashed #D6CDB6',
+        }}
+      >
+        <Link
+          href="/account#shifts"
+          className="pixel-press"
+          style={{
+            display: 'inline-block',
+            padding: '10px 16px',
+            background: '#221E18',
+            color: '#FAF6EC',
+            border: '3px solid #221E18',
+            boxShadow: '3px 3px 0 0 #B8862F',
+            borderRadius: 0,
+            fontFamily: 'var(--font-pixel-display)',
+            fontSize: 11,
+            letterSpacing: 0.4,
+            textDecoration: 'none',
+            textTransform: 'uppercase',
+            transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+          }}
+        >
+          ◂ BACK TO YOUR TRAJECTORY
+        </Link>
+        <Link
+          href="/diary"
+          className="pixel-press"
+          style={{
+            display: 'inline-block',
+            padding: '10px 16px',
+            background: '#FFFCF4',
+            color: '#2F5D5C',
+            border: '3px solid #221E18',
+            boxShadow: '3px 3px 0 0 #2F5D5C',
+            borderRadius: 0,
+            fontFamily: 'var(--font-pixel-display)',
+            fontSize: 11,
+            letterSpacing: 0.4,
+            textDecoration: 'none',
+            textTransform: 'uppercase',
+            transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+          }}
+        >
+          ▸ ALL DIARY ENTRIES
+        </Link>
+      </nav>
     </main>
   );
 }
