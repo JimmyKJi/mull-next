@@ -484,6 +484,9 @@ export default async function AccountPage() {
             <Link href="/account/profile" className="pixel-press" style={accountSubChip}>
               ▸ {t('nav.public_profile_settings', locale).toUpperCase()}
             </Link>
+            <Link href="/classes" className="pixel-press" style={accountSubChip}>
+              ▸ CLASSES
+            </Link>
             <Link href="/account/retrospective" className="pixel-press" style={accountSubChip}>
               ▸ YEARLY RETROSPECTIVE
             </Link>
