@@ -83,14 +83,23 @@ export default async function SearchPage({
         </div>
       </section>
 
-      <p className="mt-16 text-center text-[12px] text-[#8C6520] opacity-80">
+      {/* "Make yourself searchable" CTA — was a small underline text
+          link; promoted to a chunky pixel chip so users who searched
+          for themselves and found nothing have an obvious next step. */}
+      <div className="mt-16 flex justify-center">
         <Link
           href="/account/profile"
-          className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          className="pixel-press inline-block border-[3px] border-[#221E18] bg-[#F8EDC8] px-4 py-2.5 text-[11px] tracking-[0.08em] text-[#221E18] no-underline"
+          style={{
+            fontFamily: 'var(--font-pixel-display)',
+            boxShadow: '3px 3px 0 0 #B8862F',
+            textTransform: 'uppercase',
+            transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+          }}
         >
-          {t('search.cta_make_profile', locale)}
+          ▸ {t('search.cta_make_profile', locale).toUpperCase()}
         </Link>
-      </p>
+      </div>
     </main>
   );
 }
