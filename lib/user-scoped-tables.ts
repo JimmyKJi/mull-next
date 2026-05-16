@@ -230,6 +230,18 @@ export const USER_SCOPED_TABLES: readonly UserScopedTable[] = [
     note: 'Class memberships — one row per (class, student) pair. Wipe on user delete removes them from every class they joined.',
   },
   {
+    name: 'class_assignments',
+    deleteStrategy: 'wipe',
+    inExport: true,
+    note: 'Assignments the user created as a teacher. Cascades from classes on teacher delete; included here so the export path also surfaces them.',
+  },
+  {
+    name: 'class_assignment_submissions',
+    deleteStrategy: 'wipe',
+    inExport: true,
+    note: 'Student responses to class assignments. One per (assignment, student). Wipe removes the user\'s submissions on delete.',
+  },
+  {
     name: 'friend_challenges',
     deleteStrategy: 'wipe',
     inExport: true,

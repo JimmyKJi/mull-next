@@ -45,6 +45,21 @@ type MemberRow = {
   joined_at: string;
 };
 
+type AssignmentRow = {
+  id: string;
+  kind: string;
+  title: string;
+  prompt: string;
+  due_at: string | null;
+  created_at: string;
+  is_archived: boolean;
+};
+
+type SubmissionRow = {
+  assignment_id: string;
+  submitted_at: string;
+};
+
 export default async function ClassDetailPage({
   params,
 }: {
@@ -77,6 +92,47 @@ export default async function ClassDetailPage({
     .returns<MemberRow[]>();
 
   const studentCount = (roster ?? []).filter(r => r.role === 'student').length;
+
+  // Assignments — visible to both teacher (via own-class RLS) and
+  // students (via membership RLS). Most-recent first; exclude archived.
+  const { data: assignments } = await supabase
+    .from('class_assignments')
+    .select('id, kind, title, prompt, due_at, created_at, is_archived')
+    .eq('class_id', cls.id)
+    .eq('is_archived', false)
+    .order('created_at', { ascending: false })
+    .returns<AssignmentRow[]>();
+
+  // Student view: which assignments has the current user already
+  // submitted? Drives the per-card SUBMITTED/PENDING badge.
+  let mySubmissionIds = new Set<string>();
+  if (!isTeacher && assignments && assignments.length > 0) {
+    const ids = assignments.map(a => a.id);
+    const { data: mine } = await supabase
+      .from('class_assignment_submissions')
+      .select('assignment_id, submitted_at')
+      .in('assignment_id', ids)
+      .eq('student_user_id', user.id)
+      .returns<SubmissionRow[]>();
+    mySubmissionIds = new Set((mine ?? []).map(r => r.assignment_id));
+  }
+
+  // Teacher view: per-assignment submission counts for the roster
+  // summary on each card ("3 / 12 SUBMITTED").
+  let countsByAssignment = new Map<string, number>();
+  if (isTeacher && assignments && assignments.length > 0) {
+    const ids = assignments.map(a => a.id);
+    const { data: subs } = await supabase
+      .from('class_assignment_submissions')
+      .select('assignment_id')
+      .in('assignment_id', ids)
+      .returns<{ assignment_id: string }[]>();
+    const counts = new Map<string, number>();
+    for (const s of subs ?? []) {
+      counts.set(s.assignment_id, (counts.get(s.assignment_id) ?? 0) + 1);
+    }
+    countsByAssignment = counts;
+  }
 
   return (
     <main className="mx-auto max-w-[820px] px-6 pb-32 pt-10 sm:px-10">
@@ -212,34 +268,159 @@ export default async function ClassDetailPage({
         )}
       </section>
 
-      {/* Assignments placeholder — wired up in 20260518 / P2.5. */}
+      {/* Assignments — teacher sees submission counts + "+ New
+          assignment" button; student sees pending / submitted /
+          overdue badges per card. */}
       <section style={{ marginTop: 40 }}>
-        <h2 style={{
-          fontFamily: pixel,
-          fontSize: 14,
-          color: '#221E18',
-          textTransform: 'uppercase',
-          letterSpacing: '0.18em',
-          marginBottom: 14,
-          textShadow: '2px 2px 0 #2F5D5C',
+        <div style={{
+          display: 'flex',
+          alignItems: 'baseline',
+          justifyContent: 'space-between',
+          gap: 12,
+          marginBottom: 16,
+          flexWrap: 'wrap',
         }}>
-          ▸ ASSIGNMENTS
-        </h2>
-        <p style={{
-          fontFamily: serif,
-          fontStyle: 'italic',
-          fontSize: 15,
-          color: '#8C6520',
-          padding: '18px 20px',
-          background: '#FFFCF4',
-          border: '3px dashed #2F5D5C',
-          borderRadius: 0,
-          margin: 0,
-        }}>
-          Assignment system lands in the next slice — teachers will pick a
-          dilemma or exercise, set a due date, and see a roster grid of who
-          submitted what.
-        </p>
+          <h2 style={{
+            fontFamily: pixel,
+            fontSize: 14,
+            color: '#221E18',
+            textTransform: 'uppercase',
+            letterSpacing: '0.18em',
+            margin: 0,
+            textShadow: '2px 2px 0 #2F5D5C',
+          }}>
+            ▸ ASSIGNMENTS ({(assignments ?? []).length})
+          </h2>
+          {isTeacher && (
+            <Link
+              href={`/classes/${cls.id}/assignments/new`}
+              className="pixel-press"
+              style={{
+                display: 'inline-block',
+                padding: '8px 14px',
+                background: '#B8862F',
+                color: '#1A1612',
+                border: '3px solid #221E18',
+                boxShadow: '3px 3px 0 0 #221E18',
+                borderRadius: 0,
+                fontFamily: pixel,
+                fontSize: 11,
+                letterSpacing: 0.4,
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+                transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+              }}
+            >
+              ▸ NEW ASSIGNMENT
+            </Link>
+          )}
+        </div>
+
+        {(!assignments || assignments.length === 0) ? (
+          <p style={{
+            padding: '20px 18px',
+            background: '#FFFCF4',
+            border: '3px dashed #2F5D5C',
+            borderRadius: 0,
+            fontFamily: serif,
+            fontStyle: 'italic',
+            fontSize: 15,
+            color: '#8C6520',
+            margin: 0,
+            textAlign: 'center',
+          }}>
+            {isTeacher
+              ? 'No assignments yet. Click "New Assignment" to post a prompt to the class.'
+              : 'Your instructor hasn\'t posted any assignments yet.'}
+          </p>
+        ) : (
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 12 }}>
+            {assignments.map(a => {
+              const submittedByMe = mySubmissionIds.has(a.id);
+              const submissionCount = countsByAssignment.get(a.id) ?? 0;
+              const overdue =
+                !!a.due_at && new Date(a.due_at).getTime() < Date.now() && !submittedByMe;
+              const shadowColor = submittedByMe ? '#2F5D5C' : (overdue ? '#7A2E2E' : '#B8862F');
+              return (
+                <li key={a.id}>
+                  <Link
+                    href={`/classes/${cls.id}/assignments/${a.id}`}
+                    className="pixel-press"
+                    style={{
+                      display: 'block',
+                      padding: '14px 16px',
+                      background: '#FFFCF4',
+                      border: '3px solid #221E18',
+                      boxShadow: `3px 3px 0 0 ${shadowColor}`,
+                      borderRadius: 0,
+                      textDecoration: 'none',
+                      color: 'inherit',
+                      transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+                    }}
+                  >
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      gap: 12,
+                      alignItems: 'baseline',
+                      flexWrap: 'wrap',
+                      marginBottom: 6,
+                    }}>
+                      <span style={{
+                        fontFamily: serif,
+                        fontSize: 17,
+                        fontWeight: 500,
+                        color: '#221E18',
+                      }}>
+                        {a.title}
+                      </span>
+                      <span style={{
+                        fontFamily: pixel,
+                        fontSize: 10,
+                        color: shadowColor,
+                        letterSpacing: 0.4,
+                        textTransform: 'uppercase',
+                      }}>
+                        {isTeacher
+                          ? `${submissionCount} / ${studentCount} SUBMITTED`
+                          : submittedByMe
+                            ? '✓ SUBMITTED'
+                            : (overdue ? 'OVERDUE' : 'PENDING')}
+                      </span>
+                    </div>
+                    <div style={{
+                      fontFamily: pixel,
+                      fontSize: 10,
+                      color: '#8C6520',
+                      letterSpacing: 0.4,
+                      textTransform: 'uppercase',
+                      marginBottom: 6,
+                    }}>
+                      {a.kind.replace('_', ' ')}
+                      {a.due_at && (
+                        <> · DUE {new Date(a.due_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</>
+                      )}
+                    </div>
+                    <p style={{
+                      fontFamily: serif,
+                      fontStyle: 'italic',
+                      fontSize: 14.5,
+                      color: '#4A4338',
+                      margin: 0,
+                      lineHeight: 1.5,
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical' as const,
+                      overflow: 'hidden',
+                    }}>
+                      {a.prompt}
+                    </p>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </section>
 
       {/* Footer actions */}
