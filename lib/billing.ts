@@ -44,7 +44,7 @@ export const PRICES: Record<Exclude<Plan, 'free'>, PriceConfig> = {
   },
   founding_lifetime: {
     plan: 'founding_lifetime',
-    amountCents: 4900,
+    amountCents: 5900,
     currency: 'usd',
     interval: 'lifetime',
     label: 'Founding Mind (lifetime)',
