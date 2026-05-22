@@ -67,7 +67,9 @@ async function callClaude(
       'anthropic-version': '2023-06-01'
     },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
+      // Haiku in free-mode for cost control — same path as the daily
+      // dilemma submit, just retro-fired against an archived prompt.
+      model: 'claude-haiku-4-6',
       max_tokens: 600,
       system: buildSystemPrompt(),
       messages: [{ role: 'user', content: userMessage }]

@@ -65,7 +65,10 @@ async function callClaude(
     },
     body: JSON.stringify({
       // Bumped max_tokens for the extended diagnosis payload.
-      model: 'claude-sonnet-4-6',
+      // Haiku in free-mode for cost control — analysis quality holds
+      // for single-prompt dilemma reflection. Bump back to sonnet-4-6
+      // if quality slips noticeably.
+      model: 'claude-haiku-4-6',
       max_tokens: 1400,
       system: buildSystemPrompt(),
       messages: [{ role: 'user', content: userMessage }]

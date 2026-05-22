@@ -613,6 +613,19 @@ export default async function HomeV2() {
               <Link href="/methodology" className="hover:text-[#B8862F]">Methodology</Link>
               <Link href="/privacy" className="hover:text-[#B8862F]">Privacy</Link>
               <Link href="/terms" className="hover:text-[#B8862F]">Terms</Link>
+              {/* Tip jar — Mull is free to use; this lets users who want
+                  to chip in cover the AI bill. Replace the href with
+                  your actual Ko-fi (or Buy Me a Coffee / Open Collective)
+                  page once it's set up. Until then the link 404s on
+                  Ko-fi's side which is harmless. */}
+              <a
+                href="https://ko-fi.com/mull"
+                target="_blank"
+                rel="noreferrer"
+                className="text-[#B8862F] hover:text-[#F8EDC8] underline decoration-[#B8862F]/40 underline-offset-2 hover:decoration-[#F8EDC8]"
+              >
+                Support Mull
+              </a>
             </nav>
           </div>
         </footer>

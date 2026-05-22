@@ -16,6 +16,21 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { isEduEmail, isPaidPlan, type Plan } from './billing';
 
+// ─── FREE-MODE TOGGLE ──────────────────────────────────────────────
+//
+// While Mull is run as a free service (no public monetization), this
+// flag short-circuits getUserPlan to grant Mull+ to every signed-in
+// user. The Stripe wiring, webhook, /billing page, and gating helpers
+// all stay in place untouched — flip this to false when monetization
+// is ready (e.g. after visa / business-entity questions are resolved)
+// and everything resumes normal gated behavior with zero other code
+// changes needed.
+//
+// Why a flag instead of removing gating? Two reasons: (1) one-line
+// reversal when ready, (2) the gating code stays exercised + linted
+// so it doesn't bitrot while disabled.
+const FREE_MODE_GRANT_MULL_PLUS = true;
+
 type SubRow = {
   plan: Plan | null;
   status: string | null;
@@ -39,6 +54,13 @@ export async function getUserPlan(
    *  can fire without an extra round-trip to auth.users. */
   emailHint?: string | null,
 ): Promise<PlanResult> {
+  // Free-mode short-circuit. Grants Mull+ to everyone signed in
+  // without touching the subscriptions table. Skips the DB query
+  // entirely — small latency win as a side benefit.
+  if (FREE_MODE_GRANT_MULL_PLUS) {
+    return { plan: 'free', status: 'free_mode', isMullPlus: true, isEduTier: false };
+  }
+
   const { data } = await supabase
     .from('subscriptions')
     .select('plan, status, current_period_end')

@@ -60,7 +60,9 @@ async function callClaude(
     },
     body: JSON.stringify({
       // Larger token budget for the extended payload.
-      model: 'claude-sonnet-4-6',
+      // Haiku in free-mode for cost control — diary entry analysis is
+      // pattern-matching + short summary, well within Haiku's range.
+      model: 'claude-haiku-4-6',
       max_tokens: 1400,
       system: buildSystemPrompt(),
       messages: [{ role: 'user', content: `Diary entry:\n\n${content.trim()}` }]
