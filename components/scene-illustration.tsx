@@ -1,252 +1,299 @@
-// SceneIllustration — pixel-art-style SVG scene illustrations for
-// the /quiz/journey narrative quiz.
+// SceneIllustration — flat-illustration SVG vignettes for the
+// /quiz/journey "Inheritor" prototype.
 //
-// Each illustration is a small viewBox of integer-grid rects, scaled
-// up via image-rendering:pixelated. The result reads as 8-bit pixel
-// art without requiring external image assets.
+// Honest scope: these are PLACEHOLDER illustrations meant to add
+// visual rhythm + atmosphere without pretending to be the final art.
+// Clean geometric shapes, restrained palette, no fake-pixel-art
+// crudeness. If the prototype direction is approved, the production
+// version would either be hand-illustrated by a real artist or
+// upgraded to a much more detailed style.
 //
-// Palette is restrained — a deep night-blue ground, candlelit amber
-// highlights, ink-dark silhouettes. Same palette across all scenes so
-// they read as "shots from the same film".
+// Visual approach: single iconic element per scene (envelope,
+// photograph, brass button, etc.), drawn as a strong dark silhouette
+// on a sepia-warm background, with one accent color (wax-red,
+// candle-amber) for emphasis. Reads as a woodcut or a chapter
+// vignette — dignified, period-appropriate, intentional.
 
 import type { SceneArtKey } from "@/lib/quiz-journey";
 
-// ─── Shared palette ──────────────────────────────────────────────
+// Shared palette — warm, restrained, "estate library" vibe.
 const PAL = {
-  night: "#1A1820",     // deep night sky / room shadow
-  estate: "#0D0C12",    // estate silhouette
-  candle: "#F8C75E",    // candle flame / lamp glow
-  candleSoft: "#B8862F",// candle halo
-  wall: "#3D362B",      // interior wall / wood
-  ink: "#221E18",       // ink dark outlines
-  cream: "#F8EDC8",     // paper, photograph mat
-  bone: "#D6CDB6",      // mid-warm
-  blood: "#7A2E2E",     // accent — rare, dramatic
-  moon: "#EFE6CC",      // moon, mirror glint
+  ground: "#F0E5CB",       // sepia background (warm, paper-like)
+  groundShadow: "#D4C09A", // shadow tint
+  ink: "#2A1F12",          // dark line / silhouette
+  inkSoft: "#5C4528",      // mid-tone wood / mid-shadow
+  wax: "#7A2E2E",          // wax seal, blood red accent — rare
+  flame: "#E8A33D",        // candle flame, single warm accent
+  flameSoft: "#C9842E",
+  white: "#FFFDF5",        // bright paper / candle halo
 } as const;
 
 type Props = {
   scene: SceneArtKey;
-  /** Render width in CSS pixels. Height auto via aspect ratio. */
+  /** Display width in CSS pixels. Height set by aspect ratio. */
   width?: number;
 };
 
-export function SceneIllustration({ scene, width = 320 }: Props) {
-  // Common SVG props — pixelated rendering, integer-grid alignment.
-  const aspectRatio = 5 / 3; // 30×18 viewBox cells
+export function SceneIllustration({ scene, width = 360 }: Props) {
+  const aspectRatio = 5 / 2.5; // 200×100 viewBox
   const height = Math.round(width / aspectRatio);
-  const wrapperStyle: React.CSSProperties = {
-    width,
-    height,
-    imageRendering: "pixelated",
-    display: "block",
-    margin: "0 auto",
-  };
-
   return (
     <svg
-      viewBox="0 0 30 18"
+      viewBox="0 0 200 100"
       width={width}
       height={height}
-      style={wrapperStyle}
+      style={{ display: "block", margin: "0 auto", maxWidth: "100%" }}
       preserveAspectRatio="xMidYMid meet"
-      shapeRendering="crispEdges"
       role="img"
       aria-label={SCENE_ALT[scene]}
     >
+      {/* Sepia ground */}
+      <rect x={0} y={0} width={200} height={100} fill={PAL.ground} />
+      {/* Subtle ground texture — two horizontal bands suggesting a
+          shelf or floor line behind the subject */}
+      <rect x={0} y={75} width={200} height={1} fill={PAL.groundShadow} />
+      <rect x={0} y={76} width={200} height={24} fill={PAL.groundShadow} opacity={0.3} />
+      {/* Scene content */}
       {SCENES[scene]()}
+      {/* Decorative corner ornaments — give it the chapter-vignette feel */}
+      <Corner x={2} y={2} />
+      <Corner x={195} y={2} flipX />
+      <Corner x={2} y={95} flipY />
+      <Corner x={195} y={95} flipX flipY />
     </svg>
   );
 }
 
-// ─── Per-scene rendering ─────────────────────────────────────────
+function Corner({
+  x,
+  y,
+  flipX,
+  flipY,
+}: {
+  x: number;
+  y: number;
+  flipX?: boolean;
+  flipY?: boolean;
+}) {
+  const sx = flipX ? -1 : 1;
+  const sy = flipY ? -1 : 1;
+  return (
+    <g transform={`translate(${x},${y}) scale(${sx},${sy})`}>
+      <path
+        d="M 0 0 L 5 0 L 5 1 L 1 1 L 1 5 L 0 5 Z"
+        fill={PAL.ink}
+      />
+    </g>
+  );
+}
+
+// ─── Per-scene illustrations ─────────────────────────────────────
 
 const SCENES: Record<SceneArtKey, () => React.ReactNode> = {
-  "estate-night": () => (
+  // I · The Invitation — an envelope, sealed in dark red wax.
+  "envelope-seal": () => (
     <>
-      {/* Sky */}
-      <rect x={0} y={0} width={30} height={18} fill={PAL.night} />
-      {/* Stars */}
-      <rect x={3} y={2} width={1} height={1} fill={PAL.moon} />
-      <rect x={7} y={1} width={1} height={1} fill={PAL.bone} />
-      <rect x={11} y={3} width={1} height={1} fill={PAL.moon} />
-      <rect x={26} y={2} width={1} height={1} fill={PAL.bone} />
-      <rect x={22} y={4} width={1} height={1} fill={PAL.moon} />
-      {/* Moon */}
-      <rect x={23} y={2} width={3} height={3} fill={PAL.moon} />
-      <rect x={22} y={3} width={1} height={1} fill={PAL.moon} />
-      <rect x={26} y={3} width={1} height={1} fill={PAL.moon} />
-      {/* Distant tree silhouettes */}
-      <rect x={0} y={11} width={2} height={3} fill={PAL.estate} />
-      <rect x={2} y={12} width={3} height={2} fill={PAL.estate} />
-      <rect x={28} y={11} width={2} height={3} fill={PAL.estate} />
-      {/* Estate silhouette */}
-      <rect x={8} y={7} width={14} height={7} fill={PAL.estate} />
-      <rect x={9} y={6} width={12} height={1} fill={PAL.estate} />
-      <rect x={10} y={5} width={10} height={1} fill={PAL.estate} />
-      {/* Estate windows — lit */}
-      <rect x={10} y={9} width={1} height={1} fill={PAL.candle} />
-      <rect x={13} y={9} width={1} height={1} fill={PAL.candle} />
-      <rect x={16} y={9} width={1} height={1} fill={PAL.candle} />
-      <rect x={19} y={9} width={1} height={1} fill={PAL.candle} />
-      {/* Door */}
-      <rect x={14} y={11} width={2} height={3} fill={PAL.wall} />
-      <rect x={14} y={10} width={2} height={1} fill={PAL.candleSoft} />
-      {/* Ground */}
-      <rect x={0} y={14} width={30} height={4} fill={PAL.estate} />
-      {/* Path */}
-      <rect x={14} y={14} width={2} height={4} fill={PAL.wall} />
+      {/* Envelope body */}
+      <polygon
+        points="60,30 140,30 140,70 60,70"
+        fill={PAL.white}
+        stroke={PAL.ink}
+        strokeWidth={1.5}
+      />
+      {/* Envelope flap */}
+      <polygon
+        points="60,30 100,55 140,30"
+        fill={PAL.ground}
+        stroke={PAL.ink}
+        strokeWidth={1.5}
+      />
+      {/* Wax seal — single red circle, slightly off-center */}
+      <circle cx={100} cy={55} r={6} fill={PAL.wax} stroke={PAL.ink} strokeWidth={1} />
+      {/* Tiny embossed marks on the seal */}
+      <circle cx={100} cy={55} r={2.5} fill="none" stroke={PAL.ink} strokeWidth={0.6} />
+      {/* Handwritten address line suggestion */}
+      <line
+        x1={75}
+        y1={62}
+        x2={92}
+        y2={62}
+        stroke={PAL.inkSoft}
+        strokeWidth={0.6}
+      />
+      <line
+        x1={75}
+        y1={66}
+        x2={88}
+        y2={66}
+        stroke={PAL.inkSoft}
+        strokeWidth={0.6}
+      />
     </>
   ),
 
-  "foyer-photograph": () => (
+  // II · The Foyer — a framed photograph on a panelled wall, single
+  // candle below.
+  "framed-photograph": () => (
     <>
-      {/* Wall */}
-      <rect x={0} y={0} width={30} height={18} fill={PAL.wall} />
-      {/* Wall panel */}
-      <rect x={2} y={1} width={26} height={16} fill={PAL.night} />
-      {/* Photograph frame (outer) */}
-      <rect x={11} y={3} width={8} height={9} fill={PAL.candleSoft} />
-      <rect x={12} y={4} width={6} height={7} fill={PAL.cream} />
-      {/* Photograph content — silhouette of a hand reaching */}
-      <rect x={13} y={5} width={4} height={2} fill={PAL.bone} />
-      <rect x={14} y={7} width={2} height={2} fill={PAL.wall} />
-      <rect x={13} y={9} width={3} height={1} fill={PAL.wall} />
-      {/* Candle below */}
-      <rect x={14} y={13} width={2} height={3} fill={PAL.candleSoft} />
-      <rect x={14} y={12} width={2} height={1} fill={PAL.candle} />
-      {/* Candle glow */}
-      <rect x={13} y={12} width={1} height={1} fill={PAL.candleSoft} opacity={0.6} />
-      <rect x={16} y={12} width={1} height={1} fill={PAL.candleSoft} opacity={0.6} />
-      {/* Envelope on a small ledge */}
-      <rect x={20} y={13} width={5} height={3} fill={PAL.cream} />
-      <rect x={20} y={13} width={5} height={1} fill={PAL.bone} />
-      <rect x={22} y={14} width={1} height={1} fill={PAL.blood} />
+      {/* Wall panel suggestion */}
+      <rect x={20} y={10} width={160} height={75} fill="none" stroke={PAL.inkSoft} strokeWidth={0.6} />
+      {/* Frame — heavier outer, lighter inner */}
+      <rect x={75} y={20} width={50} height={45} fill={PAL.flameSoft} stroke={PAL.ink} strokeWidth={1.5} />
+      <rect x={78} y={23} width={44} height={39} fill={PAL.white} />
+      {/* Photograph content: simple silhouette of a hand reaching up */}
+      <path
+        d="M 95 60 L 95 45 Q 95 40 100 40 Q 105 40 105 45 L 105 55 L 110 55 L 110 60 Z"
+        fill={PAL.ink}
+      />
+      <circle cx={100} cy={37} r={3} fill={PAL.ink} />
+      {/* Candle below frame — single warm light */}
+      <rect x={97} y={70} width={6} height={10} fill={PAL.flameSoft} />
+      <ellipse cx={100} cy={68} rx={2} ry={3} fill={PAL.flame} />
+      {/* Halo glow */}
+      <circle cx={100} cy={68} r={10} fill={PAL.flame} opacity={0.12} />
     </>
   ),
 
+  // III · The Study — desk with an opened letter + inkwell.
   "doctors-letter": () => (
     <>
-      {/* Wall */}
-      <rect x={0} y={0} width={30} height={18} fill={PAL.night} />
-      {/* Bookshelf hint */}
-      <rect x={0} y={0} width={4} height={11} fill={PAL.wall} />
-      <rect x={26} y={0} width={4} height={11} fill={PAL.wall} />
-      <rect x={0} y={2} width={4} height={1} fill={PAL.bone} />
-      <rect x={0} y={5} width={4} height={1} fill={PAL.bone} />
-      <rect x={0} y={8} width={4} height={1} fill={PAL.bone} />
-      <rect x={26} y={2} width={4} height={1} fill={PAL.bone} />
-      <rect x={26} y={5} width={4} height={1} fill={PAL.bone} />
-      <rect x={26} y={8} width={4} height={1} fill={PAL.bone} />
       {/* Desk */}
-      <rect x={4} y={11} width={22} height={4} fill={PAL.wall} />
-      <rect x={5} y={15} width={2} height={3} fill={PAL.estate} />
-      <rect x={23} y={15} width={2} height={3} fill={PAL.estate} />
-      {/* Letter on desk */}
-      <rect x={11} y={9} width={8} height={3} fill={PAL.cream} />
-      {/* Ink lines */}
-      <rect x={12} y={10} width={3} height={1} fill={PAL.ink} />
-      <rect x={16} y={10} width={2} height={1} fill={PAL.ink} />
-      <rect x={12} y={11} width={5} height={1} fill={PAL.ink} />
-      {/* Inkwell */}
-      <rect x={6} y={9} width={2} height={2} fill={PAL.estate} />
-      <rect x={6} y={9} width={2} height={1} fill={PAL.blood} />
-      {/* Fireplace (small, low) */}
-      <rect x={21} y={7} width={5} height={4} fill={PAL.estate} />
-      <rect x={22} y={9} width={3} height={2} fill={PAL.blood} />
-      <rect x={23} y={9} width={1} height={1} fill={PAL.candle} />
+      <rect x={20} y={62} width={160} height={4} fill={PAL.inkSoft} />
+      <rect x={20} y={62} width={160} height={20} fill={PAL.inkSoft} opacity={0.4} />
+      {/* Letter — opened, slightly tilted */}
+      <g transform="translate(80, 30) rotate(-3)">
+        <rect x={0} y={0} width={50} height={36} fill={PAL.white} stroke={PAL.ink} strokeWidth={1} />
+        {/* Lines of writing */}
+        <line x1={5} y1={6} x2={45} y2={6} stroke={PAL.inkSoft} strokeWidth={0.5} />
+        <line x1={5} y1={11} x2={40} y2={11} stroke={PAL.inkSoft} strokeWidth={0.5} />
+        <line x1={5} y1={16} x2={45} y2={16} stroke={PAL.inkSoft} strokeWidth={0.5} />
+        <line x1={5} y1={21} x2={32} y2={21} stroke={PAL.inkSoft} strokeWidth={0.5} />
+        <line x1={5} y1={26} x2={38} y2={26} stroke={PAL.inkSoft} strokeWidth={0.5} />
+        <line x1={5} y1={31} x2={28} y2={31} stroke={PAL.inkSoft} strokeWidth={0.5} />
+      </g>
+      {/* Inkwell — small dark cylinder */}
+      <rect x={38} y={52} width={10} height={10} fill={PAL.ink} />
+      <rect x={36} y={50} width={14} height={3} fill={PAL.ink} />
+      <ellipse cx={43} cy={50} rx={5} ry={1.2} fill={PAL.wax} opacity={0.7} />
+      {/* Quill */}
+      <line x1={43} y1={50} x2={55} y2={32} stroke={PAL.ink} strokeWidth={1.2} />
+      {/* Low fire glow on right edge */}
+      <circle cx={172} cy={68} r={14} fill={PAL.flame} opacity={0.18} />
+      <circle cx={172} cy={70} r={7} fill={PAL.flame} opacity={0.3} />
+      <rect x={170} y={65} width={4} height={6} fill={PAL.wax} />
+      <ellipse cx={172} cy={64} rx={2} ry={3} fill={PAL.flame} />
     </>
   ),
 
-  "library-fire": () => (
+  // IV · The Correspondence — two chairs facing across a low table.
+  "two-chairs": () => (
     <>
-      {/* Wall */}
-      <rect x={0} y={0} width={30} height={18} fill={PAL.night} />
-      {/* Bookshelves on both sides, taller */}
-      <rect x={0} y={0} width={5} height={14} fill={PAL.wall} />
-      <rect x={25} y={0} width={5} height={14} fill={PAL.wall} />
-      {[1, 3, 5, 7, 9, 11].map((y) => (
-        <g key={y}>
-          <rect x={0} y={y} width={5} height={1} fill={PAL.bone} />
-          <rect x={25} y={y} width={5} height={1} fill={PAL.bone} />
-        </g>
-      ))}
-      {/* Two chairs facing each other */}
-      <rect x={7} y={9} width={4} height={5} fill={PAL.wall} />
-      <rect x={7} y={8} width={4} height={1} fill={PAL.wall} />
-      <rect x={19} y={9} width={4} height={5} fill={PAL.wall} />
-      <rect x={19} y={8} width={4} height={1} fill={PAL.wall} />
+      {/* Chair left — silhouette in profile */}
+      <g transform="translate(40, 30)">
+        {/* High back */}
+        <rect x={0} y={0} width={4} height={40} fill={PAL.ink} />
+        {/* Seat */}
+        <rect x={0} y={28} width={28} height={4} fill={PAL.ink} />
+        {/* Front leg */}
+        <rect x={24} y={32} width={4} height={20} fill={PAL.ink} />
+        {/* Back leg */}
+        <rect x={0} y={32} width={4} height={20} fill={PAL.ink} />
+      </g>
+      {/* Chair right — mirrored */}
+      <g transform="translate(160, 30) scale(-1, 1)">
+        <rect x={0} y={0} width={4} height={40} fill={PAL.ink} />
+        <rect x={0} y={28} width={28} height={4} fill={PAL.ink} />
+        <rect x={24} y={32} width={4} height={20} fill={PAL.ink} />
+        <rect x={0} y={32} width={4} height={20} fill={PAL.ink} />
+      </g>
       {/* Low table between */}
-      <rect x={12} y={12} width={6} height={2} fill={PAL.wall} />
-      {/* Two letter stacks on table */}
-      <rect x={13} y={11} width={2} height={1} fill={PAL.cream} />
-      <rect x={15} y={11} width={2} height={1} fill={PAL.cream} />
-      {/* Fire at back, very small / low */}
-      <rect x={14} y={6} width={2} height={2} fill={PAL.blood} />
-      <rect x={14} y={5} width={2} height={1} fill={PAL.candle} />
-      {/* Floor */}
-      <rect x={0} y={14} width={30} height={4} fill={PAL.estate} />
+      <rect x={84} y={55} width={32} height={3} fill={PAL.inkSoft} />
+      <rect x={86} y={58} width={3} height={14} fill={PAL.inkSoft} />
+      <rect x={111} y={58} width={3} height={14} fill={PAL.inkSoft} />
+      {/* Two stacks of letters on table */}
+      <rect x={90} y={50} width={10} height={5} fill={PAL.white} stroke={PAL.ink} strokeWidth={0.5} />
+      <rect x={100} y={50} width={10} height={5} fill={PAL.white} stroke={PAL.ink} strokeWidth={0.5} />
+      {/* String tying letters — single curved line */}
+      <line x1={95} y1={48} x2={95} y2={56} stroke={PAL.wax} strokeWidth={0.5} />
+      <line x1={105} y1={48} x2={105} y2={56} stroke={PAL.wax} strokeWidth={0.5} />
     </>
   ),
 
-  "mirror-room": () => (
+  // V · The Apparatus — wooden box with a brass button.
+  "brass-button": () => (
     <>
-      {/* Walls = mirrors, lighter */}
-      <rect x={0} y={0} width={30} height={18} fill={PAL.night} />
-      {/* Mirror panels */}
-      <rect x={1} y={1} width={6} height={13} fill={PAL.bone} />
-      <rect x={23} y={1} width={6} height={13} fill={PAL.bone} />
-      <rect x={9} y={0} width={12} height={2} fill={PAL.bone} />
-      {/* Mirror reflections — faint figure */}
-      <rect x={3} y={6} width={2} height={4} fill={PAL.wall} />
-      <rect x={25} y={6} width={2} height={4} fill={PAL.wall} />
-      {/* Center table */}
-      <rect x={12} y={11} width={6} height={3} fill={PAL.wall} />
-      {/* Box on table */}
-      <rect x={13} y={9} width={4} height={2} fill={PAL.estate} />
-      {/* Brass button protruding */}
-      <rect x={14} y={8} width={2} height={1} fill={PAL.candleSoft} />
-      {/* Center figure (the user) */}
-      <rect x={14} y={4} width={2} height={4} fill={PAL.estate} />
-      {/* Floor */}
-      <rect x={0} y={14} width={30} height={4} fill={PAL.estate} />
+      {/* Table — simple horizontal line + legs */}
+      <rect x={50} y={65} width={100} height={3} fill={PAL.inkSoft} />
+      <rect x={55} y={68} width={3} height={16} fill={PAL.inkSoft} />
+      <rect x={142} y={68} width={3} height={16} fill={PAL.inkSoft} />
+      {/* Wooden box */}
+      <rect x={80} y={50} width={40} height={15} fill={PAL.inkSoft} stroke={PAL.ink} strokeWidth={1.5} />
+      {/* Wood grain — two faint horizontal lines */}
+      <line x1={82} y1={55} x2={118} y2={55} stroke={PAL.ink} strokeWidth={0.4} opacity={0.5} />
+      <line x1={82} y1={60} x2={118} y2={60} stroke={PAL.ink} strokeWidth={0.4} opacity={0.5} />
+      {/* Brass button — circle on top, with a small protruding stem */}
+      <rect x={97} y={46} width={6} height={4} fill={PAL.flameSoft} />
+      <circle cx={100} cy={43} r={5} fill={PAL.flame} stroke={PAL.ink} strokeWidth={1} />
+      <circle cx={100} cy={43} r={2} fill={PAL.flameSoft} />
+      {/* Tiny shine highlight */}
+      <circle cx={98} cy={41} r={1} fill={PAL.white} opacity={0.7} />
+      {/* Single shadow under the box */}
+      <ellipse cx={100} cy={67} rx={22} ry={1.5} fill={PAL.ink} opacity={0.3} />
     </>
   ),
 
-  "key-in-hand": () => (
+  // VI · The Last Chamber — a single candle and the foot of a bed
+  // in shadow.
+  "candle-deathbed": () => (
     <>
-      {/* Dark space */}
-      <rect x={0} y={0} width={30} height={18} fill={PAL.night} />
-      {/* Single candle glow on right */}
-      <rect x={22} y={3} width={1} height={3} fill={PAL.candleSoft} />
-      <rect x={22} y={2} width={1} height={1} fill={PAL.candle} />
-      {/* Light pool */}
-      <rect x={18} y={5} width={9} height={7} fill={PAL.wall} opacity={0.6} />
-      {/* Hand silhouette holding key */}
-      <rect x={9} y={9} width={5} height={3} fill={PAL.estate} />
-      {/* Fingers */}
-      <rect x={13} y={8} width={1} height={1} fill={PAL.estate} />
-      <rect x={14} y={8} width={1} height={2} fill={PAL.estate} />
-      {/* Key shaft */}
-      <rect x={15} y={9} width={5} height={1} fill={PAL.candleSoft} />
-      {/* Key bow (round end) */}
-      <rect x={6} y={9} width={3} height={3} fill={PAL.estate} />
-      <rect x={5} y={10} width={1} height={1} fill={PAL.estate} />
-      <rect x={9} y={10} width={1} height={1} fill={PAL.estate} />
-      {/* Key teeth */}
-      <rect x={19} y={10} width={1} height={1} fill={PAL.candleSoft} />
-      <rect x={18} y={10} width={1} height={1} fill={PAL.candleSoft} />
-      {/* Floor */}
-      <rect x={0} y={14} width={30} height={4} fill={PAL.estate} />
+      {/* Most of the frame is dark — almost-black with sepia tint */}
+      <rect x={0} y={0} width={200} height={100} fill={PAL.ink} />
+      {/* Candle on the right — primary light source */}
+      <g transform="translate(150, 35)">
+        {/* Candle body */}
+        <rect x={-3} y={10} width={6} height={28} fill={PAL.flameSoft} />
+        {/* Flame */}
+        <ellipse cx={0} cy={6} rx={3} ry={5} fill={PAL.flame} />
+        <ellipse cx={0} cy={4} rx={1.5} ry={3} fill={PAL.white} />
+        {/* Halo */}
+        <circle cx={0} cy={6} r={20} fill={PAL.flame} opacity={0.18} />
+        <circle cx={0} cy={6} r={35} fill={PAL.flame} opacity={0.08} />
+      </g>
+      {/* Bed on the left — only the foot visible, silhouetted */}
+      <g transform="translate(20, 60)">
+        {/* Bedframe */}
+        <rect x={0} y={0} width={80} height={4} fill={PAL.inkSoft} />
+        {/* Footboard */}
+        <rect x={0} y={-15} width={4} height={19} fill={PAL.inkSoft} />
+        <rect x={0} y={-18} width={4} height={3} fill={PAL.flameSoft} />
+        {/* Blanket suggestion */}
+        <rect x={4} y={4} width={76} height={6} fill={PAL.inkSoft} opacity={0.7} />
+        {/* Shape suggesting a person under the blanket — single rise */}
+        <path
+          d="M 4 4 Q 40 -2 80 4"
+          fill="none"
+          stroke={PAL.flameSoft}
+          strokeWidth={0.6}
+          opacity={0.6}
+        />
+      </g>
+      {/* Faint floor line */}
+      <line x1={0} y1={88} x2={200} y2={88} stroke={PAL.flameSoft} strokeWidth={0.3} opacity={0.4} />
     </>
   ),
 };
 
 const SCENE_ALT: Record<SceneArtKey, string> = {
-  "estate-night": "A grand estate at night under a full moon, lit windows glowing amber.",
-  "foyer-photograph": "A candlelit foyer with a framed photograph on the wall and a sealed envelope on a ledge.",
-  "doctors-letter": "A library study with a desk, an opened letter, an inkwell, and a low fire.",
-  "library-fire": "A library with two facing chairs, a low table holding two stacks of letters, and a small fire.",
-  "mirror-room": "A room with mirrored walls, a center table holding a wooden box with a brass button.",
-  "key-in-hand": "A silhouetted hand offering a brass key, candlelight in the background.",
+  "envelope-seal":
+    "An envelope sealed with dark red wax, handwritten address visible.",
+  "framed-photograph":
+    "A framed photograph hanging on a panelled wall, candle below.",
+  "doctors-letter":
+    "A desk with an opened letter, an inkwell and quill, low fire glow on the side.",
+  "two-chairs":
+    "Two chairs facing each other across a low table holding two stacks of bound letters.",
+  "brass-button":
+    "A wooden box on a table, a brass button protruding from its top.",
+  "candle-deathbed":
+    "A single candle illuminating the foot of a bed in deep shadow.",
 };

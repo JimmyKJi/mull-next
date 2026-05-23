@@ -1,31 +1,24 @@
 "use client";
 
-// JourneyEngine — the narrative quiz UX, "The Inheritor" frame.
+// JourneyEngine — "The Inheritor" v3.
 //
-// Scene-by-scene Telltale-style player. Each scene is either a frame
-// (intro/reveal — just prose + advance button) or a chamber (prose
-// + prompt + choice cards + epilogue + optional twist clue).
+// Changes from v2:
+//   - Scene illustration moved INSIDE the cream card (was on dark
+//     background, clashed). Reads as a chapter-page vignette now.
+//   - Illustrations switched from crude pixel-art to clean
+//     iconographic flat SVG — single iconic element per scene on
+//     sepia ground. Less ambitious, more dignified, doesn't pretend.
+//   - Prompt is **bolded** for re-takers / skimmers who want to find
+//     the hinge question without re-reading the prose.
+//   - "Silence" is now a real in-chamber choice in every chamber,
+//     with a small vector delta toward SR/AT/MR (genuine philosophical
+//     stance of withholding judgment). Rendered with subtler styling
+//     so it reads as withdrawal rather than a louder claim.
+//   - Header bail-out simplified — small "Leave" link, click-through,
+//     no longer the visual peer of the alpha badge. Most users will
+//     stay; the in-chamber silence is the diegetic exit.
 //
-// Typography decisions:
-//   - Body prose: Lora (substantial serif, designed for body reads —
-//     replaces Cormorant Garamond which felt too thin)
-//   - Tiny labels only: pixel display font (eyebrow, scene counter,
-//     KEEP SILENT link). Never on the same line as serif.
-//   - Italic for atmospheric epilogues + the prompt; roman for body.
-//
-// Visual decisions:
-//   - Top of each scene: hand-coded SVG pixel-art scene illustration
-//     (estate, photograph, mirrors, etc.). All scenes share a palette
-//     so they read as shots from the same film.
-//   - Background: nearly-black at the page level to create theatre
-//     immersion. The scene "card" sits on cream with chunky ink border.
-//
-// Scoring: same as classic quiz — vector starts at zeros, picks add
-// deltas, finish → /result?v=...&m=quick.
-//
-// "KEEP SILENT" is the diegetic bail-out: refuse the inheritance,
-// leave the estate. Routes back to /quiz?mode=quick (classic) so
-// users who prefer the survey format are never stranded.
+// Scoring + handoff unchanged from v1.
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -95,12 +88,12 @@ export function JourneyEngine({ scenes }: Props) {
   return (
     <div
       style={{
-        background: "#0D0C12",
+        background: "#26201A", // warm dark — feels like night by lamplight, not pure black
         minHeight: "100svh",
-        padding: "28px 16px 48px",
+        padding: "24px 14px 48px",
       }}
     >
-      <div style={{ maxWidth: 680, margin: "0 auto" }}>
+      <div style={{ maxWidth: 700, margin: "0 auto" }}>
         {/* Header chrome */}
         <header
           style={{
@@ -108,7 +101,7 @@ export function JourneyEngine({ scenes }: Props) {
             alignItems: "baseline",
             justifyContent: "space-between",
             gap: 12,
-            marginBottom: 24,
+            marginBottom: 20,
             flexWrap: "wrap",
           }}
         >
@@ -148,22 +141,22 @@ export function JourneyEngine({ scenes }: Props) {
               </span>
             )}
           </div>
-          <KeepSilentLink />
+          <Link
+            href="/quiz?mode=quick"
+            style={{
+              fontFamily: pixel,
+              fontSize: 9,
+              color: "#5C4528",
+              letterSpacing: 0.4,
+              textTransform: "uppercase",
+              textDecoration: "none",
+              opacity: 0.75,
+            }}
+            title="Leave the estate — take the classic quiz instead"
+          >
+            leave
+          </Link>
         </header>
-
-        {/* Scene illustration */}
-        <div
-          style={{
-            background: "#1A1820",
-            border: "3px solid #221E18",
-            padding: 16,
-            marginBottom: 16,
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <SceneIllustration scene={scene.art} width={320} />
-        </div>
 
         {/* Scene body */}
         {scene.kind === "frame" && (
@@ -183,69 +176,6 @@ export function JourneyEngine({ scenes }: Props) {
   );
 }
 
-// ─── Keep Silent link (diegetic bail-out) ────────────────────────
-
-function KeepSilentLink() {
-  const [confirming, setConfirming] = useState(false);
-  if (confirming) {
-    return (
-      <span
-        style={{
-          fontFamily: pixel,
-          fontSize: 10,
-          color: "#D6CDB6",
-          letterSpacing: 0.4,
-          textTransform: "uppercase",
-        }}
-      >
-        <Link
-          href="/quiz?mode=quick"
-          style={{ color: "#F8C75E", textDecoration: "none" }}
-        >
-          ✓ Leave the estate
-        </Link>
-        <button
-          type="button"
-          onClick={() => setConfirming(false)}
-          style={{
-            background: "none",
-            border: "none",
-            color: "#8C6520",
-            font: "inherit",
-            cursor: "pointer",
-            padding: "0 0 0 10px",
-          }}
-        >
-          stay
-        </button>
-      </span>
-    );
-  }
-  return (
-    <button
-      type="button"
-      onClick={() => setConfirming(true)}
-      style={{
-        background: "none",
-        border: "none",
-        fontFamily: pixel,
-        fontSize: 10,
-        color: "#8C6520",
-        letterSpacing: 0.4,
-        textTransform: "uppercase",
-        cursor: "pointer",
-        padding: 0,
-        textDecoration: "underline",
-        textDecorationStyle: "dotted",
-        textUnderlineOffset: 3,
-      }}
-      aria-label="Keep silent — leave the estate, take the classic quiz instead"
-    >
-      ◂ Keep silent
-    </button>
-  );
-}
-
 // ─── Frame scene (intro / reveal) ────────────────────────────────
 
 function FrameScene({
@@ -259,47 +189,37 @@ function FrameScene({
   return (
     <article
       style={{
-        padding: "30px 28px 26px",
         background: "#FFFCF4",
         border: "4px solid #221E18",
         boxShadow: "6px 6px 0 0 #B8862F",
       }}
     >
-      {scene.eyebrow && (
-        <div
-          style={{
-            fontFamily: pixel,
-            fontSize: 10,
-            color: "#8C6520",
-            letterSpacing: "0.22em",
-            textTransform: "uppercase",
-            marginBottom: 18,
-            textAlign: "center",
-          }}
-        >
-          {scene.eyebrow}
-        </div>
-      )}
-      {paragraphs.map((p, i) => (
-        <p
-          key={i}
-          style={{
-            fontFamily: serif,
-            fontSize: 18,
-            color: "#221E18",
-            margin: i === paragraphs.length - 1 ? "0 0 26px" : "0 0 16px",
-            lineHeight: 1.7,
-          }}
-          dangerouslySetInnerHTML={{ __html: italicizeMarkers(p) }}
-        />
-      ))}
-      <button
-        type="button"
-        onClick={onAdvance}
-        style={advanceBtn}
-      >
-        ▶ {scene.advance.toUpperCase()}
-      </button>
+      {/* Illustration sits at the top of the cream card */}
+      <div style={illustrationContainer}>
+        <SceneIllustration scene={scene.art} width={360} />
+      </div>
+
+      <div style={{ padding: "26px 32px 30px" }}>
+        {scene.eyebrow && (
+          <div style={eyebrowStyle}>{scene.eyebrow}</div>
+        )}
+        {paragraphs.map((p, i) => (
+          <p
+            key={i}
+            style={{
+              fontFamily: serif,
+              fontSize: 18,
+              color: "#221E18",
+              margin: i === paragraphs.length - 1 ? "0 0 24px" : "0 0 16px",
+              lineHeight: 1.7,
+            }}
+            dangerouslySetInnerHTML={{ __html: italicizeMarkers(p) }}
+          />
+        ))}
+        <button type="button" onClick={onAdvance} style={advanceBtn}>
+          ▶ {scene.advance.toUpperCase()}
+        </button>
+      </div>
     </article>
   );
 }
@@ -324,53 +244,49 @@ function ChamberScene({
     <article>
       <div
         style={{
-          padding: "26px 28px",
           background: "#FFFCF4",
           border: "4px solid #221E18",
           boxShadow: "5px 5px 0 0 #B8862F",
-          marginBottom: 20,
+          marginBottom: 18,
         }}
       >
-        <div
-          style={{
-            fontFamily: pixel,
-            fontSize: 10,
-            color: "#8C6520",
-            letterSpacing: "0.22em",
-            textTransform: "uppercase",
-            marginBottom: 16,
-            textAlign: "center",
-          }}
-        >
-          {scene.eyebrow}
+        {/* Illustration sits at the top of the cream card */}
+        <div style={illustrationContainer}>
+          <SceneIllustration scene={scene.art} width={360} />
         </div>
-        {paragraphs.map((p, i) => (
+
+        <div style={{ padding: "24px 30px 28px" }}>
+          <div style={eyebrowStyle}>{scene.eyebrow}</div>
+          {paragraphs.map((p, i) => (
+            <p
+              key={i}
+              style={{
+                fontFamily: serif,
+                fontSize: 17.5,
+                color: "#221E18",
+                margin: i === paragraphs.length - 1 ? "0 0 18px" : "0 0 14px",
+                lineHeight: 1.7,
+              }}
+              dangerouslySetInnerHTML={{ __html: italicizeMarkers(p) }}
+            />
+          ))}
+
+          {/* BOLD prompt — easy to find for re-takers and skimmers */}
           <p
-            key={i}
             style={{
               fontFamily: serif,
-              fontSize: 17.5,
+              fontWeight: 600,
+              fontSize: 19,
               color: "#221E18",
-              margin: i === paragraphs.length - 1 ? "0" : "0 0 14px",
-              lineHeight: 1.7,
+              margin: "12px 0 0",
+              lineHeight: 1.55,
+              borderLeft: "3px solid #B8862F",
+              paddingLeft: 14,
             }}
-            dangerouslySetInnerHTML={{ __html: italicizeMarkers(p) }}
-          />
-        ))}
-      </div>
-
-      <div
-        style={{
-          fontFamily: serif,
-          fontStyle: "italic",
-          fontSize: 17,
-          color: "#F8EDC8",
-          margin: "0 0 14px",
-          lineHeight: 1.5,
-          textAlign: "center",
-        }}
-      >
-        {scene.prompt}
+          >
+            {scene.prompt}
+          </p>
+        </div>
       </div>
 
       {/* Choice cards */}
@@ -378,7 +294,7 @@ function ChamberScene({
         style={{
           listStyle: "none",
           padding: 0,
-          margin: "0 0 22px",
+          margin: "0 0 18px",
           display: "grid",
           gap: 8,
         }}
@@ -386,6 +302,7 @@ function ChamberScene({
         {scene.choices.map((c, i) => {
           const isPicked = pickedIdx === i;
           const isDimmed = revealed && pickedIdx !== i;
+          const isSilence = !!c.silence;
           return (
             <li key={i}>
               <button
@@ -396,26 +313,37 @@ function ChamberScene({
                   display: "block",
                   width: "100%",
                   textAlign: "left",
-                  padding: "14px 16px",
+                  padding: isSilence ? "12px 16px" : "14px 16px",
                   background: isPicked
                     ? "#F8C75E"
                     : isDimmed
-                      ? "#2A2630"
-                      : "#FFFCF4",
-                  color: isDimmed ? "#5D5644" : "#221E18",
-                  border: "3px solid #221E18",
+                      ? "#2F261E"
+                      : isSilence
+                        ? "transparent"
+                        : "#FFFCF4",
+                  color: isDimmed
+                    ? "#5D5644"
+                    : isSilence
+                      ? "#D6CDB6"
+                      : "#221E18",
+                  border: isSilence
+                    ? "2px dashed #8C6520"
+                    : "3px solid #221E18",
                   boxShadow: isPicked
                     ? "4px 4px 0 0 #2F5D5C"
                     : isDimmed
                       ? "none"
-                      : "3px 3px 0 0 #B8862F",
+                      : isSilence
+                        ? "none"
+                        : "3px 3px 0 0 #B8862F",
                   cursor: revealed ? "default" : "pointer",
                   opacity: isDimmed ? 0.5 : 1,
                   transition:
                     "background 120ms ease, opacity 220ms ease, box-shadow 120ms ease",
                   fontFamily: serif,
-                  fontSize: 16,
-                  lineHeight: 1.5,
+                  fontStyle: isSilence ? "italic" : "normal",
+                  fontSize: isSilence ? 15 : 16,
+                  lineHeight: 1.55,
                 }}
               >
                 {c.text}
@@ -429,16 +357,16 @@ function ChamberScene({
         <div
           style={{
             padding: "18px 22px",
-            background: "#1A1820",
+            background: "#1F1814",
             border: "3px solid #B8862F",
-            marginBottom: scene.twistClue ? 14 : 22,
+            marginBottom: scene.twistClue ? 14 : 20,
           }}
         >
           <p
             style={{
               fontFamily: serif,
               fontStyle: "italic",
-              fontSize: 16,
+              fontSize: 16.5,
               color: "#F8EDC8",
               margin: 0,
               lineHeight: 1.65,
@@ -454,7 +382,7 @@ function ChamberScene({
             padding: "14px 18px",
             background: "#2A1818",
             border: "2px dashed #7A2E2E",
-            marginBottom: 22,
+            marginBottom: 20,
           }}
         >
           <div
@@ -465,14 +393,15 @@ function ChamberScene({
               letterSpacing: "0.22em",
               textTransform: "uppercase",
               marginBottom: 6,
-            }}>
+            }}
+          >
             something else
           </div>
           <p
             style={{
               fontFamily: serif,
-              fontSize: 15,
-              color: "#D6CDB6",
+              fontSize: 15.5,
+              color: "#E5DCC0",
               margin: 0,
               lineHeight: 1.6,
               fontStyle: "italic",
@@ -492,16 +421,32 @@ function ChamberScene({
   );
 }
 
-// ─── Tiny utilities ──────────────────────────────────────────────
+// ─── Tiny utilities + shared style snippets ──────────────────────
 
-/** Convert `*text*` markers in prose to <em>text</em> tags for
- *  inline italics. Lets the scene data stay readable as plain text. */
 function italicizeMarkers(s: string): string {
   return s.replace(
     /\*([^*]+)\*/g,
     '<em style="font-style: italic; color: inherit;">$1</em>',
   );
 }
+
+const illustrationContainer: React.CSSProperties = {
+  background: "#F0E5CB",
+  borderBottom: "3px solid #221E18",
+  padding: "16px 14px",
+  display: "flex",
+  justifyContent: "center",
+};
+
+const eyebrowStyle: React.CSSProperties = {
+  fontFamily: pixel,
+  fontSize: 10,
+  color: "#8C6520",
+  letterSpacing: "0.22em",
+  textTransform: "uppercase",
+  marginBottom: 16,
+  textAlign: "center",
+};
 
 const advanceBtn: React.CSSProperties = {
   width: "100%",

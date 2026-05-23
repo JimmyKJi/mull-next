@@ -1,94 +1,97 @@
 // /quiz/journey — narrative version of the quiz.
 //
-// FRAME: "The Inheritor"
+// FRAME: "The Inheritor" — v3
 //
 // A letter arrives. A wax seal. A name you don't know. You're asked
 // to come alone, at midnight, to a remote estate. You are, the letter
 // says, an heir.
 //
 // At the estate, an elderly servant leads you through a series of
-// chambers. Each chamber holds an artifact, a question, and a witness.
-// The deceased — whose name you still don't know — designed the
-// chambers as a test. Only one capable of true philosophical integrity
-// may inherit.
+// chambers. Each chamber holds an artifact, a witness, and a question.
+// You answer or you remain silent.
 //
-// As you progress: other claimants are mentioned, the servant calls
-// you by a name that isn't yours, you encounter a photograph of
-// yourself you've never seen. The estate's architecture becomes
-// impossible. The final chamber reveals: the deceased was you —
-// from another life, an older self, a self you didn't become.
+// Multiple small mysteries compound across the chambers:
+//   - C1: six doors, weeping behind one — who else is here?
+//   - C2: a ledger of names by the door, dozens crossed out, dozens
+//     awaiting — what kind of process is this?
+//   - C3: a photograph of someone in your coat, but their face is
+//     not yours — who came before you?
+//   - C4: footsteps overhead, another candidate on the second floor,
+//     "you will not meet"
+//   - Final: the truth is not what you feared. The deceased is alive.
+//     They are dying tonight. The "inheritance" is not wealth — it is
+//     entry into a small, quiet lineage of people who have committed
+//     to a particular kind of moral seriousness. The chambers tested
+//     whether you would accept the weight. The final choice is whether
+//     to sit with the dying teacher through the hours that remain.
 //
-// You inherit by deciding what kind of person to become.
+// The trope-y "you are the deceased" version is gone. The ending now
+// rests on a more grounded stake: real death, real lineage, real
+// choice. The mystery clues all resolve concretely (the weeping is
+// another candidate who failed and is being driven home; the ledger
+// is the lineage roster; the coat photo is a candidate from years
+// past; the footsteps are exactly what they sound like — another
+// person being tested in parallel).
 //
-// SCORING: identical to classic quiz. Each choice's vector delta is
-// the SAME as the corresponding QUICK_QUESTIONS entry — only the
-// surrounding frame changes. /result reads the final 16-D vector
-// unchanged.
-//
-// "KEEP SILENT" is the diegetic bail-out — refuse to answer, leave
-// the estate empty-handed. Same effect as "skip to classic quiz" in
-// the underlying mechanics, but lives inside the world.
+// "SILENCE" is now a real philosophical answer in every chamber, not
+// just a bail-out. It carries a small vector toward Skeptical Reflex
+// + Ascetic Tendency + Mystical Receptivity, reflecting the genuine
+// philosophical stance of withholding judgment. The user can still
+// leave the quiz entirely via the header link if they want, but the
+// in-chamber silence option keeps them inside the world.
 
 import { v } from "./vectors";
 
 export type JourneyChoice = {
   text: string;
   vector: number[];
+  /** Optional flag: this choice is the "silence" / withholding answer
+   *  for the chamber. Rendered with subtler styling so it reads as a
+   *  withdrawal rather than a louder claim. */
+  silence?: boolean;
 };
 
 export type JourneyScene =
   | {
       kind: "frame";
       id: string;
-      /** Scene illustration key — see SceneIllustration component. */
       art: SceneArtKey;
-      /** Optional eyebrow shown above the body ("CHAPTER ONE"). */
       eyebrow?: string;
-      /** Prose body — \n\n between paragraphs. */
       body: string;
-      /** Label for the advance button. */
       advance: string;
     }
   | {
       kind: "chamber";
       id: string;
       art: SceneArtKey;
-      /** Eyebrow shown above the body ("CHAMBER ONE · THE PHOTOGRAPH"). */
       eyebrow: string;
-      /** Setting prose. */
       body: string;
-      /** The artifact-rooted philosophical question. */
       prompt: string;
-      /** 3-5 choices, same vector deltas as the underlying quiz question. */
       choices: JourneyChoice[];
-      /** Brief reaction from the servant (or atmosphere) after the
-       *  choice is made. Same epilogue regardless of pick — the weight
-       *  is in the having-chosen, not in branching. */
       epilogue: string;
-      /** Optional small "twist clue" planted between the answer and
-       *  the next advance — escalating mystery across chambers. */
+      /** Small mystery clue planted between answer and advance. Stays
+       *  oblique — clues resolve only at the final reveal. */
       twistClue?: string;
     };
 
-/** Keys for SVG scene illustrations rendered by SceneIllustration. */
 export type SceneArtKey =
-  | "estate-night"
-  | "foyer-photograph"
+  | "envelope-seal"
+  | "framed-photograph"
   | "doctors-letter"
-  | "library-fire"
-  | "mirror-room"
-  | "key-in-hand";
+  | "two-chairs"
+  | "brass-button"
+  | "candle-deathbed";
 
 export const JOURNEY_SCENES: JourneyScene[] = [
-  // ─── Arrival ───────────────────────────────────────────────────
+  // ─── Arrival ──────────────────────────────────────────────────
   {
     kind: "frame",
     id: "arrival",
-    art: "estate-night",
+    art: "envelope-seal",
     eyebrow: "I · The Invitation",
     body: `You weren't expecting the letter.
 
-Heavy paper. A wax seal. A name you don't know. The address handwritten in a careful, slightly trembling script: *To the one who would inherit. Come alone, at midnight, this Wednesday.*
+Heavy paper. A wax seal in dark red. A name you don't know signed at the bottom. The address is handwritten in a careful, slightly trembling script: *To the one who would inherit. Come alone, at midnight, this Wednesday.*
 
 You almost threw it away. You didn't.
 
@@ -97,22 +100,18 @@ The estate is two hours from the city. The cab driver won't take you past the ga
   },
 
   // ─── Chamber 1 — the photograph ───────────────────────────────
-  // Maps to QUICK_QUESTIONS[0]. Vector deltas identical.
+  // Q1 dimensions (dying friend last words).
   {
     kind: "chamber",
     id: "ch1",
-    art: "foyer-photograph",
+    art: "framed-photograph",
     eyebrow: "II · The Foyer",
     body: `The door opens before you knock. An elderly woman in dark clothes inclines her head and gestures you inside. She does not introduce herself.
 
 The foyer is candlelit. On a single panelled wall hangs one framed photograph — a young woman, perhaps thirty, on what is clearly her deathbed. Her hand reaches for someone outside the frame. Below the photograph rests a sealed envelope. Your name is on it.
 
-Inside: a slip of paper. The handwriting is the same as the letter.
-
-*She had hours, perhaps a day. He was the one with her. What should he have told her?*
-
-The servant watches you read. She has not said a word.`,
-    prompt: "What is the right answer?",
+Inside: a slip of paper. The handwriting is the same as the letter.`,
+    prompt: `She had hours, perhaps a day. He was the one with her. What should he have told her?`,
     choices: [
       {
         text: `"That something lies beyond. He could not be sure — but he could feel it."`,
@@ -130,13 +129,18 @@ The servant watches you read. She has not said a word.`,
         text: `"That they had made beautiful things together. Things that would not vanish because she did."`,
         vector: v({ VA: 2, ES: 1, TD: 1, SS: 1 }),
       },
+      {
+        text: `He didn't know what to say. He held her hand.`,
+        vector: v({ SR: 2, AT: 1, MR: 1, CE: 1 }),
+        silence: true,
+      },
     ],
     epilogue: `The servant takes the envelope from your hand without looking at it. "One has answered," she says, softly. It is the first time you've heard her voice. "Many have stopped here. Follow."`,
-    twistClue: `In the hallway behind her, you notice for the first time: there are six other doors, and behind one, you think you hear someone weeping.`,
+    twistClue: `In the hallway behind her, there are six closed doors. Behind one of them, you are almost certain, someone is weeping.`,
   },
 
   // ─── Chamber 2 — the doctor's letter ──────────────────────────
-  // Maps to QUICK_QUESTIONS[1] (surgeon/transplant trolley).
+  // Q2 dimensions (surgeon trolley reframed).
   {
     kind: "chamber",
     id: "ch2",
@@ -148,13 +152,11 @@ On a desk lies a letter, opened, in old ink. It is from a doctor.
 
 *"Five would have died without a transplant. One healthy patient was in the building, here for an unrelated examination. I was asked, in effect, to take that one life to save the five. I refused. I know how the arithmetic looks. I know what I did. I have not slept in twenty years."*
 
-Below the letter, in the same trembling hand as before:
-
-*The deceased never spoke to this doctor again. Was the doctor right?*`,
-    prompt: "Your answer?",
+Below the letter, in the same trembling hand as before, a note:`,
+    prompt: `The deceased never spoke to this doctor again. Was the doctor right?`,
     choices: [
       {
-        text: `"Yes. Some lines you do not cross, even for the better arithmetic."`,
+        text: `"Yes. Some lines you do not cross, even for better arithmetic."`,
         vector: v({ UI: 3, RT: 1, AT: 1 }),
       },
       {
@@ -169,28 +171,31 @@ Below the letter, in the same trembling hand as before:
         text: `"The question is malformed. No real life ever comes down to such a clean dilemma."`,
         vector: v({ CE: 1, RT: 2, MR: 1, SR: 2 }),
       },
+      {
+        text: `I cannot judge him. I was not there.`,
+        vector: v({ SR: 3, AT: 1, MR: 1 }),
+        silence: true,
+      },
     ],
-    epilogue: `The servant places the letter back exactly where it lay. She does not say whether you are right. She gestures to a small door at the back of the study. "Two have answered," she says. "Most stop here. Follow."`,
-    twistClue: `As you cross the study, you glance at the wall above the fireplace. There is a portrait there. It is too dark to make out the face. You feel, briefly, that the face is one you would recognise if there were more light.`,
+    epilogue: `The servant places the letter back exactly where it lay. She does not say whether you are right. She gestures to a small door at the back of the study. "Two have answered."`,
+    twistClue: `As you cross the study, you notice a leather-bound ledger on a side table by the door. It is open. The page is a list of names. Dozens crossed out. Dozens more, waiting.`,
   },
 
   // ─── Chamber 3 — the library, the argument ─────────────────────
-  // Maps to QUICK_QUESTIONS[2] (lasting moral disagreement).
+  // Q3 dimensions (lasting moral disagreement).
   {
     kind: "chamber",
     id: "ch3",
-    art: "library-fire",
+    art: "two-chairs",
     eyebrow: "IV · The Correspondence",
     body: `The small door opens onto another library — larger than the first, smelling of old paper and rain. Two chairs face one another across a low table. On the table, two stacks of letters, tied with string.
 
-The servant lifts the first stack. "The deceased corresponded with another scholar for thirty years," she says. "They disagreed about something. Not a misunderstanding. An actual moral disagreement, never resolved. Read."
+The servant lifts the first stack. "The deceased corresponded with another scholar for thirty years," she says. "They disagreed about something. Not a misunderstanding. An actual moral disagreement, never resolved."
 
-You don't read the letters. You don't have to. You know already what they were arguing about — you have had your own version of this argument, with someone you respected, who respected you.
+You don't read the letters. You don't have to. You have had your own version of this argument — with someone you respected, who respected you.
 
-A note rests between the stacks:
-
-*What does true moral disagreement deserve?*`,
-    prompt: "Choose.",
+A note rests between the stacks:`,
+    prompt: `What does true moral disagreement deserve?`,
     choices: [
       {
         text: `"Argument, hard. Truth deserves it."`,
@@ -201,36 +206,39 @@ A note rests between the stacks:
         vector: v({ TD: 3, SR: 1, TR: 1 }),
       },
       {
-        text: `"Humility. Decide which of you is more likely right and learn from them."`,
+        text: `"Humility. Decide which of you is more likely right, and learn from them."`,
         vector: v({ SR: 2, RT: 2, TR: 1 }),
-      },
-      {
-        text: `"Silence. Some disagreements are not meant to be resolved."`,
-        vector: v({ MR: 2, AT: 1, SI: 1, TV: 1 }),
       },
       {
         text: `"Distance. Live differently. Let the disagreement breathe."`,
         vector: v({ SS: 3, PO: 1 }),
       },
+      {
+        text: `Some disagreements are not meant to be resolved. I would not try.`,
+        vector: v({ MR: 2, AT: 2, SI: 1, TV: 1 }),
+        silence: true,
+      },
     ],
-    epilogue: `The servant retie the string around the letters. "Three have answered." She does not turn to face you when she next speaks. "May I ask you something not in the testament?"
+    epilogue: `The servant re-ties the string around the letters. "Three have answered." She does not turn to face you when she next speaks.
+
+"May I ask you something not in the testament?"
 
 She turns.
 
-"You have come a long way tonight. Why did you come?"
+"Why did you come?"
 
 You realise you don't have an answer. You opened the letter. You walked through the door. You don't know why.`,
-    twistClue: `She lifts a candle. In its light, on the wall behind her, you see a slip of paper pinned at eye-level. A photograph. You catch only a corner of it — but the figure in the photograph is wearing a coat exactly like yours.`,
+    twistClue: `She lifts a candle and crosses to the wall behind the chairs. There is a photograph pinned there. A person in a coat exactly like yours. Their face is in shadow — but it is not your face. They are smaller than you. They were here. They left.`,
   },
 
   // ─── Chamber 4 — the mirror room ───────────────────────────────
-  // Maps to QUICK_QUESTIONS[3] (experience machine / pleasure button).
+  // Q4 dimensions (experience machine).
   {
     kind: "chamber",
     id: "ch4",
-    art: "mirror-room",
+    art: "brass-button",
     eyebrow: "V · The Apparatus",
-    body: `She brings you to a room with mirrors on every wall. In the centre, a small wooden box rests on a table. From the box, a single brass button protrudes.
+    body: `She brings you to a small room. No mirrors — your reflection of the room from your last imagining was wrong. There is one wooden box on a table, and a single brass button protruding from it.
 
 "The deceased built this in their later years," she says. "It does nothing. But they wished to know what one would say it does, if it did the thing they suspected was possible."
 
@@ -238,17 +246,17 @@ She reads from a small card.
 
 *Press the button: you live a perfect, joyful life — but it is a simulation, complete and undetectable. Don't press: you keep your real life, with all its disappointments, intact.*
 
-She closes the card.
+She closes the card. From somewhere above, you hear footsteps. Slow. Measured. Not hers.
 
-The mirrors show many of you. You can't quite make out, in some of them, which one is yours.`,
-    prompt: "What do you do?",
+"Another candidate," she says, without surprise. "On the second floor. You will not meet."`,
+    prompt: `Press, or refuse?`,
     choices: [
       {
         text: `Press it. Pleasure is real wherever it arises.`,
         vector: v({ ES: 3, VA: 2, TE: 1, SI: 1 }),
       },
       {
-        text: `Refuse. Real life has weight that pleasure cannot replace.`,
+        text: `Refuse. Real life has a weight pleasure cannot replace.`,
         vector: v({ SS: 2, TV: 2, UI: 1, MR: 1 }),
       },
       {
@@ -259,52 +267,54 @@ The mirrors show many of you. You can't quite make out, in some of them, which o
         text: `Press it. Most of "real life" was never what it claimed to be.`,
         vector: v({ TV: 3, SR: 1, SI: 2 }),
       },
+      {
+        text: `Leave my hand at my side. Refuse to choose at all.`,
+        vector: v({ AT: 2, SR: 2, MR: 1 }),
+        silence: true,
+      },
     ],
     epilogue: `The servant nods slowly. "Four have answered. There has not been a fourth in a long time."
 
-She lifts a key from her dress.
+She lifts a small key from her dress.
 
-"There is one chamber left. You may keep silent and turn back, even now. Most have. The estate will let you go, and you will inherit nothing, and you will sleep well in the years to come."
+"There is one chamber left. The one waiting for you in it is not what the chambers suggested. I should tell you that now. You may keep silent and turn back, even now. Most have. The estate will let you go, and you will inherit nothing, and you will sleep well in the years to come.
 
-She extends the key.
-
-"Or you may meet the one who left this to you."`,
+"Or you may meet them."`,
   },
 
-  // ─── Final chamber — the reveal ────────────────────────────────
+  // ─── Final chamber — the real reveal ───────────────────────────
   {
     kind: "frame",
     id: "reveal",
-    art: "key-in-hand",
+    art: "candle-deathbed",
     eyebrow: "VI · The Last Chamber",
     body: `You take the key.
 
-The last chamber is small. No mirrors. One chair, occupied. A figure in shadow, very still, head bowed, hands folded.
+The last chamber is small. A single candle. A bed against the far wall. In it, a person — old, very old. Not your face. Not the servant's. Someone you have never seen.
 
-"I knew you'd take the key," they say. "I always do."
+Their eyes are open. They are watching you.
 
-They lift their head.
+"You came," they say. Their voice is very thin. "Most don't. You are the seventh in eighty years."
 
-It is your face.
+You look at the servant. She does not look back at you.
 
-Older. Tired in a way you have not been tired. But unmistakably yours — the same eyes, the same set of the mouth, the small crooked tooth you never bothered to fix.
+"I am dying tonight," the person on the bed says. "I have been dying for a week. It is now hours. The chambers — what you have just done — they were not a test of whether you deserved my house, or my money. I never had either. They were a test of whether you could be trusted with something smaller, and much heavier."
 
-"I have already lived the answers you've just given," they say. "I left this place for the one who would come next — for the one who, given everything I learned, might choose what I could not.
+They lift one hand. It shakes badly.
 
-"You are the one who came. So choose."
+"There is a name for what I am. There have been people like me for two hundred years. We are not a school, exactly. We are not a religion. We are a small, quiet thread of people who have committed to a particular kind of moral seriousness, and who tend to one another at the end. The servant beside you was the sixth. I was the fifth.
 
-They lift a small wooden box from the floor and set it on a stool between you.
+"You are not inheriting wealth. You are being asked to sit with me, here, until the morning. And then to do the same for the next, when their time comes, decades from now."
 
-"It is not money. It is not a house. It is the shape of a life. Take it, and you will know — when you wake tomorrow — what you must do. The decision you've been carrying for weeks will simply be clear.
+They look at you.
 
-"Or keep silent. Go home. Some answers, you will find later, on your own.
+"You may say yes. You may walk out. Either is a real answer. Neither will be wrong.
 
-"You have done well, either way."`,
-    advance: "Open the box",
+"Take your time."`,
+    advance: "Sit with them",
   },
 ];
 
-/** Convenience for the engine's "Chamber N of M" chip. */
 export function chamberCount(): number {
   return JOURNEY_SCENES.filter((s) => s.kind === "chamber").length;
 }
