@@ -157,29 +157,29 @@ export default async function HomeV2() {
               </div>
 
               <div className="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+                {/* Primary: The Inheritor — narrative 15-min version.
+                    Promoted to default per Jimmy's call: lets curious
+                    visitors land in the immersive experience first.
+                    Quick-quiz seekers still have the 5-min path one
+                    click away. */}
                 <Link
-                  href="/quiz?mode=quick"
+                  href="/quiz/journey"
                   className="pixel-button pixel-button--amber"
                 >
-                  <span>▶ BEGIN THE QUIZ</span>
+                  <span>▶ ENTER THE INHERITOR</span>
                 </Link>
-                {/* Deep-dive: a ghost pixel-button (chunky border,
-                    transparent fill) so the path is discoverable as a
-                    real option rather than a dimmed footnote. The
-                    "fingerprint" framing sells what you get for the
-                    extra 9 minutes — a finer placement on the map. */}
                 <Link
-                  href="/quiz?mode=detailed"
+                  href="/quiz?mode=quick"
                   className="pixel-button pixel-button--ghost"
                 >
-                  <span>▶ 50-QUESTION FINGERPRINT</span>
+                  <span>▶ TAKE THE 5-MIN CLASSIC</span>
                 </Link>
               </div>
 
               <p className="mt-5 max-w-[520px] text-[14px] leading-[1.55] text-[#8C6520]">
                 No right answers. Skip anything. No signup needed.{" "}
                 <span className="text-[#4A4338]">
-                  ~6 minutes quick · ~15 minutes for the fingerprint.
+                  ~15 min for The Inheritor · ~5 min for the classic.
                 </span>
               </p>
 
@@ -560,16 +560,12 @@ export default async function HomeV2() {
                 </span>
               </h2>
               <p className="mx-auto mt-6 max-w-[520px] text-[16px] leading-[1.6] text-[#F8EDC8]/90">
-                Twenty questions, six minutes, no signup. You can skip
-                anything that doesn&rsquo;t fit you.
+                A 15-minute narrative version, or a 5-minute classic.
+                Same model underneath. No signup needed.
               </p>
               <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-                {/* Bigger CTA than the hero version — "PRESS START"
-                    screen energy. Doubles the padding + adds a SAVE
-                    glyph so the second viewing reads as "OK, I'm
-                    ready" rather than "wait, did I scroll up?" */}
                 <Link
-                  href="/quiz?mode=quick"
+                  href="/quiz/journey"
                   className="pixel-button pixel-button--amber pixel-press--lg"
                   style={{
                     fontSize: 16,
@@ -577,7 +573,14 @@ export default async function HomeV2() {
                     boxShadow: '6px 6px 0 0 #221E18',
                   }}
                 >
-                  <span>▶ START NOW · 6 MIN</span>
+                  <span>▶ ENTER THE INHERITOR</span>
+                </Link>
+                <Link
+                  href="/quiz?mode=quick"
+                  className="pixel-button pixel-button--ghost"
+                  style={{ fontSize: 14, padding: '16px 22px' }}
+                >
+                  <span>or the 5-min classic</span>
                 </Link>
               </div>
             </div>

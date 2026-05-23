@@ -558,6 +558,32 @@ export function ResultClient({
             </div>
           </Link>
 
+          {/* The Inheritor — narrative version. Lower-friction
+              re-engagement: the user has already placed themselves
+              once; the narrative version offers the same model from
+              a different angle. ~15 min, opt-in. */}
+          <Link
+            href="/quiz/journey"
+            className="pixel-panel block transition-transform hover:-translate-x-1 hover:-translate-y-1"
+          >
+            <div
+              className="border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
+              style={{ fontFamily: "var(--font-pixel-display)" }}
+            >
+              ▶ AS A STORY
+            </div>
+            <div className="px-5 py-5">
+              <div className="text-[18px] font-medium text-[#221E18]">
+                Take it again as The Inheritor
+              </div>
+              <p className="mt-3 text-[13px] leading-[1.5] text-[#4A4338]">
+                Same model, fully narrative — a midnight at a strange
+                estate. ~15 minutes. For when you want the longer
+                version.
+              </p>
+            </div>
+          </Link>
+
           {isSignedIn && (
             <Link
               href="/account"

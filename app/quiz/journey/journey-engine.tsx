@@ -37,6 +37,12 @@ type Props = {
 
 export function JourneyEngine({ scenes }: Props) {
   const router = useRouter();
+  /** Gate screen — shown before scene 0 to make expectations clear
+   *  (15 min, narrative). Click "Begin" to drop it; click the
+   *  classic link to bounce to /quiz?mode=quick. Solves the "casual
+   *  visitor expected a 5-min quiz, got dropped into atmospheric
+   *  prose" problem. */
+  const [gated, setGated] = useState(true);
   const [idx, setIdx] = useState(0);
   const [vector, setVector] = useState<number[]>(zeros());
   const [revealed, setRevealed] = useState(false);
@@ -59,6 +65,11 @@ export function JourneyEngine({ scenes }: Props) {
 
   const scene = scenes[idx];
   if (!scene) return null;
+
+  // Gate: render the fork-screen before any narrative starts.
+  if (gated) {
+    return <GateScreen onBegin={() => setGated(false)} />;
+  }
 
   function advance() {
     if (idx + 1 < scenes.length) {
@@ -418,6 +429,143 @@ function ChamberScene({
         </button>
       )}
     </article>
+  );
+}
+
+// ─── Gate screen (fork: enter Inheritor vs take 5-min classic) ───
+//
+// Shown as the very first render on /quiz/journey before any of the
+// six narrative scenes. Sets expectations explicitly so casual
+// visitors who landed here expecting a 5-min quiz have a one-click
+// path out, and visitors who came for the immersive version have a
+// clear "yes, I want this" commit before the prose starts.
+
+function GateScreen({ onBegin }: { onBegin: () => void }) {
+  return (
+    <div
+      style={{
+        background: "#26201A",
+        minHeight: "100svh",
+        padding: "60px 18px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <div style={{ maxWidth: 540, width: "100%" }}>
+        <div
+          style={{
+            background: "#FFFCF4",
+            border: "4px solid #221E18",
+            boxShadow: "6px 6px 0 0 #B8862F",
+            padding: "32px 30px",
+            textAlign: "center",
+          }}
+        >
+          <div
+            style={{
+              fontFamily: pixel,
+              fontSize: 10,
+              color: "#8C6520",
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              marginBottom: 22,
+            }}
+          >
+            ▸ The Inheritor
+          </div>
+          <h1
+            style={{
+              fontFamily: pixel,
+              fontSize: 22,
+              color: "#221E18",
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+              lineHeight: 1.2,
+              margin: "0 0 18px",
+              textShadow: "3px 3px 0 #B8862F",
+            }}
+          >
+            A NARRATIVE
+            <br />
+            VERSION OF THE QUIZ
+          </h1>
+          <p
+            style={{
+              fontFamily: serif,
+              fontSize: 17,
+              color: "#221E18",
+              margin: "0 0 12px",
+              lineHeight: 1.65,
+            }}
+          >
+            A midnight at a strange estate. A letter, a wax seal, four
+            chambers, a choice. Same model as the classic quiz —
+            you&rsquo;ll end at the same place on the map. Just a
+            longer, more felt way of getting there.
+          </p>
+          <p
+            style={{
+              fontFamily: serif,
+              fontSize: 15,
+              fontStyle: "italic",
+              color: "#8C6520",
+              margin: "0 0 28px",
+              lineHeight: 1.5,
+            }}
+          >
+            About 15 minutes. You&rsquo;ll need quiet time.
+          </p>
+          <div
+            style={{
+              display: "grid",
+              gap: 10,
+            }}
+          >
+            <button
+              type="button"
+              onClick={onBegin}
+              style={{
+                width: "100%",
+                padding: "16px 20px",
+                background: "#F8C75E",
+                color: "#1A1820",
+                border: "3px solid #221E18",
+                boxShadow: "4px 4px 0 0 #2F5D5C",
+                fontFamily: pixel,
+                fontSize: 13,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                cursor: "pointer",
+                transition: "transform 80ms steps(2, end), box-shadow 80ms steps(2, end)",
+              }}
+            >
+              ▶ Begin the night
+            </button>
+            <Link
+              href="/quiz?mode=quick"
+              style={{
+                width: "100%",
+                padding: "14px 18px",
+                background: "transparent",
+                color: "#4A4338",
+                border: "2px solid #8C6520",
+                fontFamily: pixel,
+                fontSize: 11,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                cursor: "pointer",
+                textDecoration: "none",
+                textAlign: "center",
+                display: "block",
+              }}
+            >
+              ◂ Or take the 5-min classic
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
