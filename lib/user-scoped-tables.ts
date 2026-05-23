@@ -247,6 +247,24 @@ export const USER_SCOPED_TABLES: readonly UserScopedTable[] = [
     inExport: true,
     note: 'Friend-challenge invite codes the user minted. Telemetry on view_count / accept_count is theirs to see.',
   },
+  {
+    name: 'arena_user_ratings',
+    deleteStrategy: 'wipe',
+    inExport: true,
+    note: 'Arena Elo + calibration state. One row per user. Wipe removes their rating; cascades nothing (sessions have their own FK).',
+  },
+  {
+    name: 'arena_sessions',
+    deleteStrategy: 'wipe',
+    inExport: true,
+    note: 'Arena debate sessions (calibration / pve / pvp). One row per session. Wipe removes all the user\'s sessions, cascading to arena_turns via FK.',
+  },
+  {
+    name: 'arena_turns',
+    deleteStrategy: 'fk_cascade',
+    inExport: true,
+    note: 'Individual turns within an arena session. Cascade-deleted when the parent arena_sessions row is removed.',
+  },
 ] as const;
 
 // ─── Derived accessors ──────────────────────────────────────────────
