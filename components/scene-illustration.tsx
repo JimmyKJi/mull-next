@@ -154,34 +154,48 @@ const SCENES: Record<SceneArtKey, () => React.ReactNode> = {
     </>
   ),
 
-  // III · The Study — desk with an opened letter + inkwell.
-  "doctors-letter": () => (
+  // III · The Writing Room — a wooden box, lid open, holding a thick
+  // stack of letters in visibly different handwritings (showing the
+  // child's thirty years). One letter is on top of the box, smaller
+  // and earlier-looking — a child's hand. A folded letter rests beside.
+  "stacked-letters": () => (
     <>
       {/* Desk */}
-      <rect x={20} y={62} width={160} height={4} fill={PAL.inkSoft} />
-      <rect x={20} y={62} width={160} height={20} fill={PAL.inkSoft} opacity={0.4} />
-      {/* Letter — opened, slightly tilted */}
-      <g transform="translate(80, 30) rotate(-3)">
-        <rect x={0} y={0} width={50} height={36} fill={PAL.white} stroke={PAL.ink} strokeWidth={1} />
-        {/* Lines of writing */}
-        <line x1={5} y1={6} x2={45} y2={6} stroke={PAL.inkSoft} strokeWidth={0.5} />
-        <line x1={5} y1={11} x2={40} y2={11} stroke={PAL.inkSoft} strokeWidth={0.5} />
-        <line x1={5} y1={16} x2={45} y2={16} stroke={PAL.inkSoft} strokeWidth={0.5} />
-        <line x1={5} y1={21} x2={32} y2={21} stroke={PAL.inkSoft} strokeWidth={0.5} />
-        <line x1={5} y1={26} x2={38} y2={26} stroke={PAL.inkSoft} strokeWidth={0.5} />
-        <line x1={5} y1={31} x2={28} y2={31} stroke={PAL.inkSoft} strokeWidth={0.5} />
-      </g>
-      {/* Inkwell — small dark cylinder */}
-      <rect x={38} y={52} width={10} height={10} fill={PAL.ink} />
-      <rect x={36} y={50} width={14} height={3} fill={PAL.ink} />
-      <ellipse cx={43} cy={50} rx={5} ry={1.2} fill={PAL.wax} opacity={0.7} />
-      {/* Quill */}
-      <line x1={43} y1={50} x2={55} y2={32} stroke={PAL.ink} strokeWidth={1.2} />
-      {/* Low fire glow on right edge */}
-      <circle cx={172} cy={68} r={14} fill={PAL.flame} opacity={0.18} />
-      <circle cx={172} cy={70} r={7} fill={PAL.flame} opacity={0.3} />
-      <rect x={170} y={65} width={4} height={6} fill={PAL.wax} />
-      <ellipse cx={172} cy={64} rx={2} ry={3} fill={PAL.flame} />
+      <rect x={20} y={66} width={160} height={4} fill={PAL.inkSoft} />
+      <rect x={20} y={66} width={160} height={20} fill={PAL.inkSoft} opacity={0.4} />
+      {/* Window suggestion top-left */}
+      <rect x={15} y={5} width={30} height={28} fill="none" stroke={PAL.inkSoft} strokeWidth={0.6} />
+      <line x1={30} y1={5} x2={30} y2={33} stroke={PAL.inkSoft} strokeWidth={0.6} />
+      <line x1={15} y1={19} x2={45} y2={19} stroke={PAL.inkSoft} strokeWidth={0.6} />
+      {/* Wooden box, lid open behind */}
+      <rect x={75} y={40} width={60} height={26} fill={PAL.inkSoft} stroke={PAL.ink} strokeWidth={1.2} />
+      {/* Box lid (tilted up behind box) */}
+      <polygon
+        points="75,40 78,28 132,28 135,40"
+        fill={PAL.inkSoft}
+        stroke={PAL.ink}
+        strokeWidth={1.2}
+        opacity={0.85}
+      />
+      {/* Letters stacked inside box — different sizes to suggest different ages of writer */}
+      <rect x={80} y={43} width={26} height={4} fill={PAL.white} stroke={PAL.ink} strokeWidth={0.4} />
+      <rect x={82} y={47} width={28} height={4} fill={PAL.ground} stroke={PAL.ink} strokeWidth={0.4} />
+      <rect x={79} y={51} width={30} height={4} fill={PAL.white} stroke={PAL.ink} strokeWidth={0.4} />
+      <rect x={83} y={55} width={26} height={4} fill={PAL.ground} stroke={PAL.ink} strokeWidth={0.4} />
+      <rect x={81} y={59} width={28} height={4} fill={PAL.white} stroke={PAL.ink} strokeWidth={0.4} />
+      {/* Tiny handwriting lines on top letters — short and child-like vs longer + adult */}
+      <line x1={84} y1={45} x2={88} y2={45} stroke={PAL.ink} strokeWidth={0.4} />
+      <line x1={89} y1={45} x2={94} y2={45} stroke={PAL.ink} strokeWidth={0.4} />
+      <line x1={86} y1={49} x2={104} y2={49} stroke={PAL.inkSoft} strokeWidth={0.3} />
+      <line x1={83} y1={53} x2={106} y2={53} stroke={PAL.inkSoft} strokeWidth={0.3} />
+      {/* A small folded letter on the desk beside the box — child's handwriting */}
+      <rect x={140} y={56} width={22} height={10} fill={PAL.white} stroke={PAL.ink} strokeWidth={0.6} />
+      <line x1={143} y1={59} x2={147} y2={59} stroke={PAL.ink} strokeWidth={0.6} />
+      <line x1={148} y1={59} x2={154} y2={59} stroke={PAL.ink} strokeWidth={0.6} />
+      <line x1={143} y1={62} x2={158} y2={62} stroke={PAL.ink} strokeWidth={0.6} />
+      {/* Small inkwell on desk-right */}
+      <rect x={155} y={48} width={6} height={7} fill={PAL.ink} />
+      <ellipse cx={158} cy={48} rx={3} ry={0.8} fill={PAL.wax} opacity={0.7} />
     </>
   ),
 
@@ -219,26 +233,53 @@ const SCENES: Record<SceneArtKey, () => React.ReactNode> = {
     </>
   ),
 
-  // V · The Apparatus — wooden box with a brass button.
-  "brass-button": () => (
+  // V · The Box on the Table — a wooden box, lid open, holding a
+  // ticket and a small photograph of a coastal house. The life that
+  // was not chosen.
+  "ticket-and-photo": () => (
     <>
-      {/* Table — simple horizontal line + legs */}
-      <rect x={50} y={65} width={100} height={3} fill={PAL.inkSoft} />
-      <rect x={55} y={68} width={3} height={16} fill={PAL.inkSoft} />
-      <rect x={142} y={68} width={3} height={16} fill={PAL.inkSoft} />
-      {/* Wooden box */}
-      <rect x={80} y={50} width={40} height={15} fill={PAL.inkSoft} stroke={PAL.ink} strokeWidth={1.5} />
-      {/* Wood grain — two faint horizontal lines */}
-      <line x1={82} y1={55} x2={118} y2={55} stroke={PAL.ink} strokeWidth={0.4} opacity={0.5} />
-      <line x1={82} y1={60} x2={118} y2={60} stroke={PAL.ink} strokeWidth={0.4} opacity={0.5} />
-      {/* Brass button — circle on top, with a small protruding stem */}
-      <rect x={97} y={46} width={6} height={4} fill={PAL.flameSoft} />
-      <circle cx={100} cy={43} r={5} fill={PAL.flame} stroke={PAL.ink} strokeWidth={1} />
-      <circle cx={100} cy={43} r={2} fill={PAL.flameSoft} />
-      {/* Tiny shine highlight */}
-      <circle cx={98} cy={41} r={1} fill={PAL.white} opacity={0.7} />
-      {/* Single shadow under the box */}
-      <ellipse cx={100} cy={67} rx={22} ry={1.5} fill={PAL.ink} opacity={0.3} />
+      {/* Table */}
+      <rect x={40} y={70} width={120} height={3} fill={PAL.inkSoft} />
+      <rect x={48} y={73} width={3} height={14} fill={PAL.inkSoft} />
+      <rect x={149} y={73} width={3} height={14} fill={PAL.inkSoft} />
+      {/* Wooden box — lid open behind */}
+      <rect x={70} y={50} width={60} height={20} fill={PAL.inkSoft} stroke={PAL.ink} strokeWidth={1.2} />
+      {/* Open lid behind */}
+      <polygon
+        points="70,50 73,30 127,30 130,50"
+        fill={PAL.inkSoft}
+        stroke={PAL.ink}
+        strokeWidth={1.2}
+        opacity={0.85}
+      />
+      {/* Wood grain on lid */}
+      <line x1={75} y1={40} x2={125} y2={40} stroke={PAL.ink} strokeWidth={0.3} opacity={0.5} />
+      {/* Inside box: a ticket (slim rectangle, slightly stylised) */}
+      <rect x={75} y={55} width={26} height={10} fill={PAL.white} stroke={PAL.ink} strokeWidth={0.8} />
+      {/* Ticket detail — a circle stamp + line */}
+      <circle cx={94} cy={60} r={2} fill="none" stroke={PAL.wax} strokeWidth={0.6} />
+      <line x1={78} y1={58} x2={88} y2={58} stroke={PAL.inkSoft} strokeWidth={0.4} />
+      <line x1={78} y1={62} x2={88} y2={62} stroke={PAL.inkSoft} strokeWidth={0.4} />
+      {/* Tiny "STEAMSHIP" hint */}
+      <rect x={77} y={56} width={1} height={1} fill={PAL.ink} />
+      {/* Beside the ticket: a small photograph — sepia frame around a
+          simple coastline shape (sky, sea, small house silhouette) */}
+      <g transform="translate(105, 53)">
+        <rect x={0} y={0} width={20} height={15} fill={PAL.white} stroke={PAL.ink} strokeWidth={0.6} />
+        {/* Sky */}
+        <rect x={1} y={1} width={18} height={5} fill={PAL.flameSoft} opacity={0.5} />
+        {/* Sea */}
+        <rect x={1} y={6} width={18} height={5} fill={PAL.inkSoft} opacity={0.6} />
+        {/* House silhouette */}
+        <polygon
+          points="8,5 8,9 12,9 12,5 10,3"
+          fill={PAL.ink}
+        />
+        {/* Coastline */}
+        <rect x={1} y={11} width={18} height={3} fill={PAL.flameSoft} opacity={0.7} />
+      </g>
+      {/* Soft shadow under box */}
+      <ellipse cx={100} cy={71} rx={30} ry={1.5} fill={PAL.ink} opacity={0.3} />
     </>
   ),
 
@@ -287,13 +328,13 @@ const SCENE_ALT: Record<SceneArtKey, string> = {
   "envelope-seal":
     "An envelope sealed with dark red wax, handwritten address visible.",
   "framed-photograph":
-    "A framed photograph hanging on a panelled wall, candle below.",
-  "doctors-letter":
-    "A desk with an opened letter, an inkwell and quill, low fire glow on the side.",
+    "A framed photograph hanging on a panelled wall, a single candle below.",
+  "stacked-letters":
+    "A wooden box opened on a writing desk, holding letters in several different handwritings stacked inside; a small folded child's letter beside the box and an inkwell on the desk.",
   "two-chairs":
     "Two chairs facing each other across a low table holding two stacks of bound letters.",
-  "brass-button":
-    "A wooden box on a table, a brass button protruding from its top.",
+  "ticket-and-photo":
+    "A wooden box opened on a table, holding an unused steamship ticket and a small sepia photograph of a coastal house.",
   "candle-deathbed":
     "A single candle illuminating the foot of a bed in deep shadow.",
 };
