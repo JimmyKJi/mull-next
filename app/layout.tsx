@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Press_Start_2P, VT323 } from "next/font/google";
+import { Cormorant_Garamond, Lora, Press_Start_2P, VT323 } from "next/font/google";
 import "./globals.css";
 import { SiteNav } from "@/components/site-nav";
 import { Analytics } from "@vercel/analytics/next";
@@ -39,6 +39,18 @@ const cormorant = Cormorant_Garamond({
   weight: ["400", "500", "600"],
   style: ["normal", "italic"],
   variable: "--font-cormorant",
+  display: "swap",
+});
+
+// Lora — substantial body serif. Designed for long-form digital
+// reading; warmer and more readable at body sizes than Cormorant.
+// Introduced in the /quiz/journey prototype; if validated, can roll
+// out sitewide to replace Cormorant on body prose surfaces.
+const lora = Lora({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-lora",
   display: "swap",
 });
 
@@ -82,7 +94,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${cormorant.variable} ${pressStart2P.variable} ${vt323.variable}`}
+      className={`${cormorant.variable} ${lora.variable} ${pressStart2P.variable} ${vt323.variable}`}
       style={
         {
           colorScheme: "light",
