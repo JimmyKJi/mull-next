@@ -1,10 +1,13 @@
 // POST /api/arena/turn
 //
-// Submit the user's turn for an active session. The philosopher's
-// rebuttal is generated and returned in the same response.
+// Submit a turn. Behavior depends on session.kind:
+//   - PvE: record user's turn, generate philosopher rebuttal via Haiku
+//     (auto-played), return both turns
+//   - PvP: record the current player's turn (figured out from who
+//     they are vs session.user_id / opponent_user_id), return just
+//     the recorded turn; the other player gets it when they reload
 //
 // Body: { session_id, content }
-// Returns: { user_turn: {...}, opponent_turn: {...}, next_turn_number }
 
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
@@ -12,7 +15,7 @@ import { getArenaPhilosopher, getArenaTopic } from "@/lib/arena/data";
 import { generatePhilosopherTurn } from "@/lib/arena/philosopher-voice";
 
 const MAX_USER_CHARS = 2000;
-const MAX_TURNS_BEFORE_VERDICT = 8; // 4 exchanges = ample for v1
+const MAX_TURNS_BEFORE_VERDICT = 8;
 
 export async function POST(req: Request) {
   const supabase = await createClient();
@@ -24,12 +27,8 @@ export async function POST(req: Request) {
   }
 
   const body = await req.json().catch(() => null);
-  if (!body || typeof body !== "object") {
-    return NextResponse.json({ error: "Bad request." }, { status: 400 });
-  }
-
-  const sessionId = body.session_id as string | undefined;
-  const content = (body.content as string | undefined)?.trim() ?? "";
+  const sessionId = body?.session_id as string | undefined;
+  const content = (body?.content as string | undefined)?.trim() ?? "";
 
   if (!sessionId || !content) {
     return NextResponse.json(
@@ -44,13 +43,11 @@ export async function POST(req: Request) {
     );
   }
 
-  // Load session (RLS scopes to this user).
   const { data: session } = await supabase
     .from("arena_sessions")
     .select("*")
     .eq("id", sessionId)
     .maybeSingle();
-
   if (!session) {
     return NextResponse.json({ error: "Session not found." }, { status: 404 });
   }
@@ -58,18 +55,26 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Session not active." }, { status: 400 });
   }
 
-  // Load current turns.
+  // Authorization: caller must be a participant.
+  const isChallenger = session.user_id === user.id;
+  const isOpponent = session.opponent_user_id === user.id;
+  if (!isChallenger && !isOpponent) {
+    return NextResponse.json(
+      { error: "Not your session." },
+      { status: 403 },
+    );
+  }
+
+  // Load turns.
   const { data: turns } = await supabase
     .from("arena_turns")
     .select("turn_order, speaker, content")
     .eq("session_id", sessionId)
     .order("turn_order", { ascending: true });
-
   if (!turns) {
     return NextResponse.json({ error: "Could not load turns." }, { status: 500 });
   }
 
-  // Cap turn count so the user can't drag a debate forever (cost ceiling).
   if (turns.length >= MAX_TURNS_BEFORE_VERDICT) {
     return NextResponse.json(
       { error: "Debate limit reached — call for the verdict.", code: "max_turns" },
@@ -77,7 +82,35 @@ export async function POST(req: Request) {
     );
   }
 
-  // Validate it's the user's turn (last turn should be opponent).
+  if (session.kind === "pvp") {
+    return handlePvpTurn({
+      supabase,
+      session,
+      turns,
+      isChallenger,
+      content,
+    });
+  }
+  // PvE
+  return handlePveTurn({
+    supabase,
+    session,
+    turns,
+    content,
+  });
+}
+
+async function handlePveTurn(args: {
+  supabase: Awaited<ReturnType<typeof createClient>>;
+  session: {
+    id: string;
+    opponent: string;
+    topic_slug: string;
+  };
+  turns: { turn_order: number; speaker: string; content: string }[];
+  content: string;
+}) {
+  const { supabase, session, turns, content } = args;
   const lastTurn = turns[turns.length - 1];
   if (lastTurn?.speaker === "user") {
     return NextResponse.json(
@@ -89,22 +122,21 @@ export async function POST(req: Request) {
   // Persist user turn.
   const userTurnOrder = turns.length + 1;
   await supabase.from("arena_turns").insert({
-    session_id: sessionId,
+    session_id: session.id,
     turn_order: userTurnOrder,
     speaker: "user",
     content,
   });
 
-  // Generate opponent rebuttal.
+  // Generate Haiku rebuttal.
   const philosopher = getArenaPhilosopher(session.opponent);
   const topic = getArenaTopic(session.topic_slug);
   if (!philosopher || !topic) {
     return NextResponse.json(
-      { error: "Session references unknown opponent/topic." },
+      { error: "Session metadata invalid." },
       { status: 500 },
     );
   }
-
   const transcript = [
     ...turns.map((t) => ({
       speaker: t.speaker as "user" | "opponent",
@@ -112,24 +144,20 @@ export async function POST(req: Request) {
     })),
     { speaker: "user" as const, content },
   ];
-
   const opponentReply = await generatePhilosopherTurn({
     philosopher,
     topicPrompt: topic.prompt,
     transcript,
   });
-
   if (!opponentReply) {
-    // Don't penalize the user for an upstream Anthropic failure.
     return NextResponse.json(
-      { error: "Could not generate opponent rebuttal. Try again in a moment." },
+      { error: "Could not generate opponent rebuttal. Try again." },
       { status: 502 },
     );
   }
-
   const opponentTurnOrder = userTurnOrder + 1;
   await supabase.from("arena_turns").insert({
-    session_id: sessionId,
+    session_id: session.id,
     turn_order: opponentTurnOrder,
     speaker: "opponent",
     content: opponentReply,
@@ -139,6 +167,56 @@ export async function POST(req: Request) {
     user_turn: { turn_order: userTurnOrder, content },
     opponent_turn: { turn_order: opponentTurnOrder, content: opponentReply },
     turns_remaining: MAX_TURNS_BEFORE_VERDICT - opponentTurnOrder,
-    can_call_verdict: opponentTurnOrder >= 4, // ≥ 2 exchanges before verdict allowed
+    can_call_verdict: opponentTurnOrder >= 4,
+  });
+}
+
+async function handlePvpTurn(args: {
+  supabase: Awaited<ReturnType<typeof createClient>>;
+  session: { id: string };
+  turns: { turn_order: number; speaker: string; content: string }[];
+  isChallenger: boolean;
+  content: string;
+}) {
+  const { supabase, session, turns, isChallenger, content } = args;
+  // In PvP, "user" speaker = challenger; "opponent" speaker = accepter.
+  const mySpeaker: "user" | "opponent" = isChallenger ? "user" : "opponent";
+  const lastTurn = turns[turns.length - 1];
+  // Not your turn if the last turn was yours OR (no turns at all and
+  // you're not the challenger — challenger goes first via the create
+  // endpoint, so this case shouldn't happen but we guard anyway).
+  if (lastTurn?.speaker === mySpeaker) {
+    return NextResponse.json(
+      { error: "Not your turn — waiting on the opponent." },
+      { status: 400 },
+    );
+  }
+  if (!lastTurn && !isChallenger) {
+    return NextResponse.json(
+      { error: "Challenger plays the opening turn." },
+      { status: 400 },
+    );
+  }
+
+  const turnOrder = turns.length + 1;
+  await supabase.from("arena_turns").insert({
+    session_id: session.id,
+    turn_order: turnOrder,
+    speaker: mySpeaker,
+    content,
+  });
+
+  // Count how many turns each side has played to compute can_call_verdict.
+  const userTurns =
+    turns.filter((t) => t.speaker === "user").length +
+    (mySpeaker === "user" ? 1 : 0);
+  const oppTurns =
+    turns.filter((t) => t.speaker === "opponent").length +
+    (mySpeaker === "opponent" ? 1 : 0);
+
+  return NextResponse.json({
+    my_turn: { turn_order: turnOrder, speaker: mySpeaker, content },
+    turns_remaining: MAX_TURNS_BEFORE_VERDICT - turnOrder,
+    can_call_verdict: userTurns >= 2 && oppTurns >= 2,
   });
 }

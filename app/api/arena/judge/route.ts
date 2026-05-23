@@ -84,11 +84,21 @@ export async function POST(req: Request) {
     );
   }
 
-  const philosopher = getArenaPhilosopher(session.opponent);
   const topic = getArenaTopic(session.topic_slug);
-  if (!philosopher || !topic) {
-    return NextResponse.json({ error: "Session metadata invalid." }, { status: 500 });
+  if (!topic) {
+    return NextResponse.json({ error: "Session topic invalid." }, { status: 500 });
   }
+  // PvE has a philosopher; PvP has a human opponent.
+  const philosopher =
+    session.kind === "pve" ? getArenaPhilosopher(session.opponent) : null;
+  if (session.kind === "pve" && !philosopher) {
+    return NextResponse.json(
+      { error: "Session philosopher invalid." },
+      { status: 500 },
+    );
+  }
+  const opponentLabel =
+    session.kind === "pvp" ? "Opponent" : philosopher!.name;
 
   // Call the judge.
   const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -112,7 +122,7 @@ export async function POST(req: Request) {
           role: "user",
           content: judgeUserPrompt({
             topicPrompt: topic.prompt,
-            opponentName: philosopher.name,
+            opponentName: opponentLabel,
             transcript: turns.map((t) => ({
               speaker: t.speaker as "user" | "opponent",
               content: t.content,
@@ -171,26 +181,51 @@ export async function POST(req: Request) {
     })
     .eq("id", sessionId);
 
+  // For PvE: user_elo_before is always session.user_elo_at_start.
+  // For PvP: depends on who called — challenger or opponent.
+  const callerIsChallenger = user.id === session.user_id;
+  const callerEloBefore =
+    session.kind === "pvp"
+      ? callerIsChallenger
+        ? session.user_elo_at_start
+        : session.opponent_elo_at_start
+      : session.user_elo_at_start;
+  const otherEloBefore =
+    session.kind === "pvp"
+      ? callerIsChallenger
+        ? session.opponent_elo_at_start
+        : session.user_elo_at_start
+      : session.opponent_elo_at_start;
+
   return NextResponse.json({
     verdict: parsed.verdict,
     judge_output: parsed,
     user_score: totalScore(parsed.user_scores),
     opponent_score: totalScore(parsed.opponent_scores),
-    user_elo_before: session.user_elo_at_start,
+    user_elo_before: callerEloBefore,
     user_elo_after: userEloAfter,
     elo_delta: eloDelta,
-    opponent_elo: session.opponent_elo_at_start,
-    opponent_name: philosopher.name,
+    opponent_elo: otherEloBefore,
+    opponent_name: opponentLabel,
     debates_count: rating.pve_debates_count + 1,
   });
 }
 
-/** Apply the verdict to the user's Elo + increment debate count. */
+/** Apply the verdict to player Elo(s).
+ *
+ *  - PvE / calibration: updates the calling user's pve_elo only.
+ *  - PvP: updates BOTH players' pvp_elo symmetrically (the
+ *    challenger and the opponent_user_id). The judge's `verdict`
+ *    means "user wins" / "opponent wins" from the challenger's
+ *    perspective regardless of who called the verdict.
+ */
 async function applyElo(
   supabase: Awaited<ReturnType<typeof createClient>>,
-  userId: string,
+  callerId: string,
   session: {
     kind: string;
+    user_id: string;
+    opponent_user_id: string | null;
     user_elo_at_start: number;
     opponent_elo_at_start: number;
   },
@@ -205,48 +240,30 @@ async function applyElo(
     judgment.opponent_scores,
   );
 
-  // Load current rating fresh (in case of races).
+  if (session.kind === "pvp" && session.opponent_user_id) {
+    return applyPvpElo(supabase, callerId, session, userScore);
+  }
+
+  // PvE / calibration — single player update.
+  return applyPveElo(supabase, callerId, session, userScore);
+}
+
+/** PvE Elo update — single user's pve_elo bumped. */
+async function applyPveElo(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  userId: string,
+  session: {
+    user_elo_at_start: number;
+    opponent_elo_at_start: number;
+  },
+  userScore: number,
+) {
   const { data: rating } = await supabase
     .from("arena_user_ratings")
     .select("*")
     .eq("user_id", userId)
     .single();
-
-  if (!rating) {
-    throw new Error("Rating row missing");
-  }
-
-  if (session.kind === "calibration") {
-    // For calibration matches, just bump the debate count — the actual
-    // Elo gets set after all 3 calibration matches complete (see the
-    // calibration finalize endpoint, not implemented in v1 prototype).
-    // For now: apply normal Elo update so the user sees movement even
-    // during calibration.
-    const k = kFactorForGames(rating.pve_debates_count);
-    const updated = newElo(
-      rating.pve_elo,
-      session.opponent_elo_at_start,
-      userScore,
-      k,
-    );
-    const delta = updated - rating.pve_elo;
-    await supabase
-      .from("arena_user_ratings")
-      .update({
-        pve_elo: updated,
-        pve_debates_count: rating.pve_debates_count + 1,
-        pve_k_factor: kFactorForGames(rating.pve_debates_count + 1),
-        updated_at: new Date().toISOString(),
-      })
-      .eq("user_id", userId);
-    return {
-      rating: { pve_debates_count: rating.pve_debates_count + 1 },
-      eloDelta: delta,
-      userEloAfter: updated,
-    };
-  }
-
-  // PvE normal flow.
+  if (!rating) throw new Error("Rating row missing");
   const k = kFactorForGames(rating.pve_debates_count);
   const updated = newElo(
     rating.pve_elo,
@@ -268,5 +285,82 @@ async function applyElo(
     rating: { pve_debates_count: rating.pve_debates_count + 1 },
     eloDelta: delta,
     userEloAfter: updated,
+  };
+}
+
+/** PvP Elo update — both players' pvp_elo bumped symmetrically.
+ *  Returns the delta + after-Elo for the CALLING user. */
+async function applyPvpElo(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  callerId: string,
+  session: {
+    user_id: string;
+    opponent_user_id: string | null;
+    user_elo_at_start: number;
+    opponent_elo_at_start: number;
+  },
+  userScoreFromChallengerPerspective: number,
+) {
+  if (!session.opponent_user_id) throw new Error("PvP session missing opponent");
+
+  const { data: challengerRating } = await supabase
+    .from("arena_user_ratings")
+    .select("*")
+    .eq("user_id", session.user_id)
+    .single();
+  const { data: opponentRating } = await supabase
+    .from("arena_user_ratings")
+    .select("*")
+    .eq("user_id", session.opponent_user_id)
+    .single();
+  if (!challengerRating || !opponentRating) throw new Error("Rating row missing");
+
+  const challengerK = kFactorForGames(challengerRating.pvp_debates_count);
+  const opponentK = kFactorForGames(opponentRating.pvp_debates_count);
+
+  const challengerUpdated = newElo(
+    challengerRating.pvp_elo,
+    opponentRating.pvp_elo,
+    userScoreFromChallengerPerspective,
+    challengerK,
+  );
+  const opponentUpdated = newElo(
+    opponentRating.pvp_elo,
+    challengerRating.pvp_elo,
+    1 - userScoreFromChallengerPerspective,
+    opponentK,
+  );
+
+  await supabase
+    .from("arena_user_ratings")
+    .update({
+      pvp_elo: challengerUpdated,
+      pvp_debates_count: challengerRating.pvp_debates_count + 1,
+      pvp_k_factor: kFactorForGames(challengerRating.pvp_debates_count + 1),
+      updated_at: new Date().toISOString(),
+    })
+    .eq("user_id", session.user_id);
+  await supabase
+    .from("arena_user_ratings")
+    .update({
+      pvp_elo: opponentUpdated,
+      pvp_debates_count: opponentRating.pvp_debates_count + 1,
+      pvp_k_factor: kFactorForGames(opponentRating.pvp_debates_count + 1),
+      updated_at: new Date().toISOString(),
+    })
+    .eq("user_id", session.opponent_user_id);
+
+  // Return the delta + after-Elo for the calling user.
+  const callerIsChallenger = callerId === session.user_id;
+  return {
+    rating: {
+      pve_debates_count: callerIsChallenger
+        ? challengerRating.pve_debates_count
+        : opponentRating.pve_debates_count,
+    },
+    eloDelta: callerIsChallenger
+      ? challengerUpdated - challengerRating.pvp_elo
+      : opponentUpdated - opponentRating.pvp_elo,
+    userEloAfter: callerIsChallenger ? challengerUpdated : opponentUpdated,
   };
 }

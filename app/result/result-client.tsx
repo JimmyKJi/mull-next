@@ -584,6 +584,31 @@ export function ResultClient({
             </div>
           </Link>
 
+          {/* Arena — debate a philosopher. The natural next step for
+              a user who's just been placed: "now go test your
+              reasoning against the people you're nearest to." */}
+          <Link
+            href="/arena"
+            className="pixel-panel block transition-transform hover:-translate-x-1 hover:-translate-y-1"
+          >
+            <div
+              className="border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
+              style={{ fontFamily: "var(--font-pixel-display)" }}
+            >
+              ▶ THE ARENA
+            </div>
+            <div className="px-5 py-5">
+              <div className="text-[18px] font-medium text-[#221E18]">
+                Argue a philosopher
+              </div>
+              <p className="mt-3 text-[13px] leading-[1.5] text-[#4A4338]">
+                Debate any of ten thinkers. An impartial judge scores
+                logical rigor, principle, and engagement — not whose
+                side won. Climb the Elo.
+              </p>
+            </div>
+          </Link>
+
           {isSignedIn && (
             <Link
               href="/account"

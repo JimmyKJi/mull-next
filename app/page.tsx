@@ -183,6 +183,33 @@ export default async function HomeV2() {
                 </span>
               </p>
 
+              {/* Secondary surface — Arena (debate a philosopher with
+                  Elo scoring). Pitched as a separate offering, not a
+                  competing quiz: this is for users who already know
+                  themselves and want a sparring partner. */}
+              <div className="mt-7 max-w-[520px]">
+                <Link
+                  href="/arena"
+                  className="block border-2 border-[#221E18] bg-[#FFFCF4] p-4 transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
+                  style={{ boxShadow: "4px 4px 0 0 #2F5D5C" }}
+                >
+                  <div
+                    className="text-[10px] tracking-[0.2em] text-[#2F5D5C]"
+                    style={{ fontFamily: "var(--font-pixel-display)" }}
+                  >
+                    ▶ NEW · THE ARENA
+                  </div>
+                  <div className="mt-1 text-[16px] font-medium text-[#221E18]">
+                    Argue a philosopher. Get scored on rigor.
+                  </div>
+                  <div className="mt-1 text-[13px] leading-[1.5] text-[#4A4338]">
+                    Pick from 10 thinkers across 3 tiers. The judge
+                    grades logical rigor, principle, and engagement —
+                    not whose side won. Elo + leaderboard.
+                  </div>
+                </Link>
+              </div>
+
               {/* Mobile-only inline philosopher sprite. The right-rail
                   HeroSprites column hides on small screens, leaving
                   the hero feeling unusually flat. A single procedural

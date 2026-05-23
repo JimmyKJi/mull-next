@@ -110,11 +110,10 @@ export default async function ArenaPage() {
           }
         />
         <DoorCard
-          href="#"
-          eyebrow="▶ PVP · SOON"
-          title="Debate another player"
-          body="Asynchronous matches against other Arena players. Separate Elo, separate leaderboard. Coming in the next wave."
-          disabled
+          href={user ? "/arena/pvp" : "/login?next=/arena/pvp"}
+          eyebrow="▶ PVP · NEW"
+          title="Debate another human"
+          body="Async player-vs-player matches. Post a challenge or accept one. Same judge + rubric. Separate PvP Elo, separate climb."
         />
         <DoorCard
           href="/arena/leaderboard"

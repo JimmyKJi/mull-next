@@ -9,7 +9,7 @@
 
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
-import { getArenaPhilosopher, getArenaTopic } from "@/lib/arena/data";
+import { getArenaPhilosopher, getArenaTopic, canFace, MAX_ELO_GAP } from "@/lib/arena/data";
 import { generatePhilosopherTurn } from "@/lib/arena/philosopher-voice";
 
 const DAILY_CAP = 3;
@@ -82,6 +82,20 @@ export async function POST(req: Request) {
         code: "daily_cap_reached",
       },
       { status: 429 },
+    );
+  }
+
+  // Elo gate — can't punch up more than MAX_ELO_GAP. Keeps heavy
+  // voices (Nietzsche, Hegel) behind a real climb so newer users
+  // don't lose 60 Elo to a thinker they're not ready for, and the
+  // judge isn't comparing apples to oranges.
+  if (kind === "pve" && !canFace(rating.pve_elo, philosopher.baseElo)) {
+    return NextResponse.json(
+      {
+        error: `${philosopher.name} (Elo ${philosopher.baseElo}) is too far above your current rating of ${rating.pve_elo}. Climb closer first — you can face opponents up to ${MAX_ELO_GAP} Elo above you.`,
+        code: "elo_gap_too_large",
+      },
+      { status: 403 },
     );
   }
 
