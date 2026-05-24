@@ -60,7 +60,7 @@ There's a third camp: libertarians (in the philosophical sense, not the politica
 What's at stake: if there's no free will, do moral responsibility and praise and blame still make sense? Most philosophers think yes, in some form — but the answer reshapes how you think about punishment, addiction, and self-improvement.`,
     relevantDimensions: ['SI', 'CE', 'TR'],
     relatedArchetypes: ['cartographer', 'pilgrim', 'iconoclast'],
-    philosopherNames: ['Spinoza', 'Kant', 'Schopenhauer', 'William James', 'Jean-Paul Sartre', 'Daniel Dennett', 'Galen Strawson'],
+    philosopherNames: ['Spinoza', 'Kant', 'Schopenhauer', 'William James', 'Sartre', 'Daniel Dennett', 'Galen Strawson'],
   },
   {
     slug: 'stoicism',
@@ -73,7 +73,7 @@ The classical Stoics — Marcus Aurelius, Seneca, Epictetus — were practical p
 Modern Stoicism gets criticized for being apolitical (the original Stoics largely accepted Roman slavery), for being too individualistic, for sometimes sliding into bro-grade "be tough" content. The serious version is none of those things — it's a careful framework for keeping your inner life intact while the outer world rearranges itself.`,
     relevantDimensions: ['TR', 'AT', 'TV'],
     relatedArchetypes: ['keel', 'pilgrim', 'hearth'],
-    philosopherNames: ['Marcus Aurelius', 'Seneca', 'Epictetus', 'Zeno of Citium', 'Chrysippus', 'Musonius Rufus'],
+    philosopherNames: ['Marcus Aurelius', 'Seneca', 'Epictetus', 'Chrysippus', 'Musonius Rufus'],
   },
   {
     slug: 'existentialism',
@@ -86,22 +86,22 @@ This is freedom, but it's also a weight. Sartre called it "condemned to be free.
 Existentialists don't agree on much else. Kierkegaard was a Christian; Sartre was an atheist; Camus rejected the label. What they share is a refusal to look away from the fundamental strangeness of being a self-aware creature who has to keep choosing, with finite time, in the dark.`,
     relevantDimensions: ['SS', 'SI', 'TV'],
     relatedArchetypes: ['threshold', 'iconoclast', 'pilgrim'],
-    philosopherNames: ['Søren Kierkegaard', 'Jean-Paul Sartre', 'Simone de Beauvoir', 'Albert Camus', 'Martin Heidegger', 'Karl Jaspers', 'Friedrich Nietzsche'],
+    philosopherNames: ['Kierkegaard', 'Sartre', 'Simone de Beauvoir', 'Camus', 'Heidegger', 'Karl Jaspers', 'Nietzsche'],
   },
   {
     slug: 'trolley-problem',
     title: 'The trolley problem',
     summary: 'A runaway trolley will kill five people unless you pull a lever to divert it onto a track where it kills one. Do you pull?',
-    essay: `The trolley problem was invented by philosopher Philippa Foot in 1967 to expose how messy our moral intuitions are. Most people say yes to the basic version: pull the lever, kill one to save five. Then Judith Jarvis Thomson added the variant: same outcome, but to save the five you have to push a fat man off a bridge into the trolley's path. Now most people say no.
+    essay: `The trolley problem was invented by philosopher Philippa Foot in 1967 to expose how messy our moral intuitions are. Most people say yes to the basic version: pull the lever, kill one to save five. Then Judith Jarvis Thomson added the variant: same outcome, but to save the five you have to push a heavy stranger off a bridge into the trolley's path. Now most people say no.
 
 The numbers are identical. The acts are different. Why does pushing feel categorically worse than pulling?
 
-Consequentialists (who count outcomes) say the intuition is wrong — both should be yes. Deontologists (Kant especially) say the intuition is right — using a person as a mere instrument violates their dignity in a way that pulling a lever doesn't. Virtue ethicists ask a different question: what kind of person are you becoming by pushing or not pushing? Care ethicists ask: what does my relationship to the fat man require?
+Consequentialists (who count outcomes) say the intuition is wrong — both should be yes. Deontologists (Kant especially) say the intuition is right — using a person as a mere instrument violates their dignity in a way that pulling a lever doesn't. Virtue ethicists ask a different question: what kind of person are you becoming by pushing or not pushing? Care ethicists ask: what does my relationship to the stranger on the bridge require?
 
 The trolley problem isn't really about trolleys. It's about whether moral reasoning is fundamentally about consequences, about rules, about character, or about relationships — and most people, when pressed, turn out to be all four at once.`,
     relevantDimensions: ['UI', 'PO', 'CE'],
     relatedArchetypes: ['hammer', 'forge', 'touchstone'],
-    philosopherNames: ['Philippa Foot', 'Judith Jarvis Thomson', 'Immanuel Kant', 'John Stuart Mill', 'Bernard Williams', 'Peter Singer'],
+    philosopherNames: ['Philippa Foot', 'Kant', 'Mill', 'Bernard Williams', 'Peter Singer'],
   },
   {
     slug: 'utilitarianism',
@@ -114,7 +114,7 @@ This is radical. It says your child's broken arm doesn't count more than a stran
 Critics push back hard. Bernard Williams pointed out that utilitarianism asks you to be a happiness-calculating machine in situations where having integrity, loyalty, or love would require you to refuse. Other critics note the famous "utility monster" problem: if one being could derive enormous pleasure from harming others, would utilitarianism endorse the harm? Most utilitarians deny this — but the burden of working out exactly why is heavy.`,
     relevantDimensions: ['UI', 'PO', 'CE'],
     relatedArchetypes: ['hammer', 'forge', 'cartographer'],
-    philosopherNames: ['Jeremy Bentham', 'John Stuart Mill', 'Henry Sidgwick', 'Peter Singer', 'Derek Parfit', 'R. M. Hare'],
+    philosopherNames: ['Jeremy Bentham', 'Mill', 'Henry Sidgwick', 'Peter Singer', 'Derek Parfit'],
   },
   {
     slug: 'virtue-ethics',
@@ -129,7 +129,7 @@ The framework's strength: it makes ethics part of life, not a set of decisions y
 The modern revival — Alasdair MacIntyre, Martha Nussbaum, Rosalind Hursthouse — argues that the framework's apparent weakness is actually its strength: real moral life is messier than any rulebook, and what we need are excellent character, not flowcharts.`,
     relevantDimensions: ['UI', 'TR', 'RT'],
     relatedArchetypes: ['touchstone', 'hearth', 'pilgrim'],
-    philosopherNames: ['Aristotle', 'Confucius', 'Mencius', 'Thomas Aquinas', 'Alasdair MacIntyre', 'Martha Nussbaum', 'Rosalind Hursthouse'],
+    philosopherNames: ['Aristotle', 'Confucius', 'Mencius', 'Thomas Aquinas', 'Alasdair MacIntyre', 'Martha Nussbaum'],
   },
   {
     slug: 'nihilism',
@@ -144,7 +144,7 @@ Twentieth-century existentialists (Sartre, Camus) lived in this aftermath. Camus
 Nihilism gets a bad reputation because it's confused with apathy. Real nihilism is the opposite — it's the lucid recognition that nothing has been settled for you, which means everything is genuinely at stake in how you choose to live.`,
     relevantDimensions: ['SI', 'TV', 'SS'],
     relatedArchetypes: ['iconoclast', 'threshold', 'cartographer'],
-    philosopherNames: ['Friedrich Nietzsche', 'Albert Camus', 'Jean-Paul Sartre', 'Emil Cioran', 'Thomas Ligotti', 'Eugene Thacker'],
+    philosopherNames: ['Nietzsche', 'Camus', 'Sartre', 'Schopenhauer'],
   },
   {
     slug: 'absurdism',
@@ -159,7 +159,7 @@ Absurdism overlaps with existentialism but is more austere. Existentialists buil
 In practice, absurdism looks a lot like comedy. The cosmos doesn't care that you exist; here's a tomato sandwich anyway.`,
     relevantDimensions: ['TV', 'SS', 'SR'],
     relatedArchetypes: ['threshold', 'iconoclast', 'pilgrim'],
-    philosopherNames: ['Albert Camus', 'Søren Kierkegaard', 'Franz Kafka', 'Samuel Beckett', 'Thomas Nagel'],
+    philosopherNames: ['Camus', 'Kierkegaard', 'Nietzsche', 'Schopenhauer'],
   },
   {
     slug: 'consciousness',
@@ -174,7 +174,7 @@ Theories proliferate. Eliminativists say consciousness as we conceive it doesn't
 What's at stake: ethics (do shrimp suffer? do LLMs?), AI (could a machine be conscious?), and the basic question of where you and your inner life fit in physical reality.`,
     relevantDimensions: ['MR', 'TD', 'SI'],
     relatedArchetypes: ['cartographer', 'touchstone', 'threshold'],
-    philosopherNames: ['David Chalmers', 'Daniel Dennett', 'Thomas Nagel', 'Galen Strawson', 'Frank Jackson', 'Patricia Churchland'],
+    philosopherNames: ['David Chalmers', 'Daniel Dennett', 'Galen Strawson', 'Frank Jackson', 'Patricia Churchland'],
   },
   {
     slug: 'meaning-of-life',
@@ -189,7 +189,7 @@ Some traditions give clean teleological answers: serve God, achieve enlightenmen
 Maybe the question's hardest move is realizing it's not one question. Asking for "the meaning of life" is like asking for "the meaning of music" — you can answer for a particular piece, in a particular moment, for a particular listener. The general version dissolves into the specifics.`,
     relevantDimensions: ['SS', 'MR', 'CE'],
     relatedArchetypes: ['pilgrim', 'cartographer', 'hearth'],
-    philosopherNames: ['Friedrich Nietzsche', 'Søren Kierkegaard', 'Albert Camus', 'Viktor Frankl', 'Susan Wolf', 'Thomas Nagel', 'Aristotle'],
+    philosopherNames: ['Nietzsche', 'Kierkegaard', 'Camus', 'Susan Wolf', 'Aristotle', 'Mill'],
   },
   {
     slug: 'personal-identity',
@@ -204,7 +204,7 @@ Derek Parfit pushed this to a famous conclusion: "personal identity" is not what
 Eastern traditions (especially Buddhist) reached similar conclusions millennia earlier: the self is a process, not a substance — anatta, no-self. Whether this is liberating or terrifying depends on what you were hoping the self was in the first place.`,
     relevantDimensions: ['SI', 'TV', 'MR'],
     relatedArchetypes: ['threshold', 'cartographer', 'pilgrim'],
-    philosopherNames: ['John Locke', 'David Hume', 'Derek Parfit', 'Buddha', 'Nāgārjuna', 'Daniel Dennett'],
+    philosopherNames: ['Locke', 'Hume', 'Derek Parfit', 'Buddha', 'Nagarjuna', 'Daniel Dennett'],
   },
   {
     slug: 'justice',
@@ -219,7 +219,7 @@ Rawls argued you'd pick a society where inequalities are only justified if they 
 The argument is alive because the stakes are real: every redistributive policy, every property claim, every reparations debate is a fight about which theory wins.`,
     relevantDimensions: ['CE', 'PO', 'UI'],
     relatedArchetypes: ['forge', 'hammer', 'touchstone'],
-    philosopherNames: ['Plato', 'John Rawls', 'Robert Nozick', 'Amartya Sen', 'Martha Nussbaum', 'Michael Sandel', 'Iris Marion Young'],
+    philosopherNames: ['Plato', 'John Rawls', 'Martha Nussbaum', 'Michael Sandel', 'Alasdair MacIntyre', 'Aristotle'],
   },
 ] as const;
 

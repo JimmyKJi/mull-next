@@ -121,6 +121,44 @@ one push.
 
 ## Translations
 
+### Strategy decision (2026-05-24)
+
+After auditing all translatable surfaces, the explicit call is:
+**don't machine-translate philosophical content.** Bad translations
+of philosophy are worse than honest English-only with a banner.
+For the long-form essays (archetype detail, philosopher detail,
+topic explainers, vs matchups, about, methodology, exercises) the
+plan is:
+
+1. **Keep chrome (nav, buttons, form labels) translated** — already
+   done for all 8 locales.
+2. **Add an explicit "EN only" banner** to the long-form pages
+   for non-English visitors so expectations are clear. The
+   `i18n.content_notice` translation key already exists (used on
+   /account); next translations sub-pass surfaces it on the other
+   long-form surfaces.
+3. **Defer human translation until validated demand** — when a
+   specific page sees significant traffic from a specific locale,
+   commission a human philosophical translator for that page
+   (~$50-200 per page). Don't translate the whole site at once.
+4. **Optional future:** a "translation requested" button on each
+   long-form page lets users vote for which surfaces to translate
+   next. Solves the prioritization problem with real signal.
+
+### Concrete remaining tasks
+
+- [ ] **Surface `content_notice` banner on long-form pages.**
+      Currently only shown on /account. Add to:
+      - /archetype/[slug]
+      - /philosopher/[slug]
+      - /topic/[slug]
+      - /vs/[a]/[b]
+      - /about
+      - /methodology
+      - /exercises/[slug]
+      Implementation: a small `<EnOnlyNotice />` client component
+      that reads the server locale and renders the banner only
+      when locale !== 'en'.
 - [ ] **Translate deep content.** Quiz beyond the 20-question quick
       version, the 50-question detailed quiz, archetype prose, the
       philosopher database keyIdeas, the About + Methodology pages —
