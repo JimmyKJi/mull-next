@@ -28,7 +28,7 @@ import { getArchetypeByKey } from '@/lib/archetypes';
 import { FIGURES } from '@/lib/figures';
 import MullWordmark from '@/components/mull-wordmark';
 
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 

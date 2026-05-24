@@ -18,7 +18,7 @@ import { DIM_KEYS, DIM_NAMES } from '@/lib/dimensions';
 import DiagnosisCard from '@/components/diagnosis-card';
 import type { Kinship } from '@/lib/kinship';
 
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
 
 // Server returns these alongside the vector_delta + analysis. The

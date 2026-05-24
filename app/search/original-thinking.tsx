@@ -19,7 +19,7 @@ import { createClient } from '@/utils/supabase/server';
 import { findExercise } from '@/lib/exercises';
 import EmptyStateSprite from '@/components/empty-state-sprite';
 
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
 
 // ─── Shared shapes ───────────────────────────────────────────────────

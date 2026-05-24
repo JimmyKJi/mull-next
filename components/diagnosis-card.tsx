@@ -15,7 +15,7 @@
 import Link from 'next/link';
 import type { Kinship } from '@/lib/kinship';
 
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 

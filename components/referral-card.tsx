@@ -18,7 +18,7 @@
 
 import { useEffect, useState } from 'react';
 
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
 type Props = {

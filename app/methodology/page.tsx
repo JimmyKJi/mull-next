@@ -40,7 +40,7 @@ export default async function MethodologyPage() {
         eyebrow={`▶ METHODOLOGY · LAST REVIEWED ${LAST_REVIEWED.toUpperCase()}`}
         title="HOW MULL WORKS"
         subtitle={
-          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-prose)' }}>
+          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-editorial)' }}>
             For readers who want more than the About page. The 16-dimensional
             model defended at length, and an enumerated list of every place AI
             sits inside the product.
@@ -357,7 +357,7 @@ function Prose({
         'space-y-4 text-[15.5px] leading-[1.65] text-[#4A4338] [&_strong]:text-[#221E18] ' +
         (className ?? '')
       }
-      style={{ fontFamily: 'var(--font-prose)' }}
+      style={{ fontFamily: 'var(--font-editorial)' }}
     >
       {children}
     </div>

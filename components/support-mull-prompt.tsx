@@ -10,7 +10,7 @@
 import React from "react";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 
 type Props = {
   /** Optional override for the lead line — defaults to a generic

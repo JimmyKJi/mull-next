@@ -38,7 +38,7 @@ export const viewport: Viewport = {
 };
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 
 type ProfileRow = {
   user_id: string;

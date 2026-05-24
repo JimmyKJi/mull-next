@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 };
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 
 type Attempt = {
   archetype: string;

@@ -18,7 +18,7 @@ import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import FocusTrap from './focus-trap';
 
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 

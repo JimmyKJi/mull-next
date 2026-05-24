@@ -89,14 +89,23 @@ constellation positions. Never use an archetype color for chrome
 
 ## 3. Typography
 
-Four faces, four roles. No others.
+Five faces, five roles. No others.
 
-| Variable | Face | Role |
+| CSS variable | Face | Role |
 |---|---|---|
 | `--font-pixel-display` | Press Start 2P | Tiny labels, page titles, button text, eyebrow chips |
 | `--font-pixel-body` | VT323 | In-game body text, tooltips |
-| `--font-cormorant` | Cormorant Garamond | Long-form editorial prose (archetype/philosopher detail pages) |
-| `--font-lora` | Lora | Body serif for narrative surfaces (Inheritor, Arena prose). **Default body serif going forward.** |
+| `--font-prose` | **Pixelify Sans** | **DEFAULT body font sitewide** — pixel-styled sans-serif, readable at body sizes, reads as "of the pixel-game world". Use this for almost everything that isn't a chunky label. |
+| `--font-editorial` | Cormorant Garamond | **Opt-in** for long-form editorial essays — archetype detail, philosopher detail, /about, /methodology, /topic, /vs pages. The "library book inside the game" beat. |
+| `--font-lora` | Lora | Legacy — kept available but no longer the default. Pages that opted into Lora keep working; new surfaces use --font-prose. |
+
+**The 2026-05-24 swap**: previously Cormorant Garamond was the
+default for almost all body text. It clashed with the pixel chrome
+on most surfaces — felt like "editorial book inside a game" rather
+than "pixel game text". Pixelify Sans was added as the bridge: still
+clearly pixel-themed, but readable for body prose. Cormorant stays
+ONLY for the deliberate "library book" pages where the contrast IS
+the design point.
 
 ### Scale (px)
 

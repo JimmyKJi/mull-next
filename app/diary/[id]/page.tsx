@@ -9,7 +9,7 @@ import LanguageSwitcher from '@/components/language-switcher';
 import DiagnosisCard from '@/components/diagnosis-card';
 import type { Kinship } from '@/lib/kinship';
 
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
 
 type DiaryEntry = {

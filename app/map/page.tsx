@@ -17,7 +17,7 @@ import { PHILOSOPHERS } from "@/lib/philosophers";
 import { ARCHETYPES } from "@/lib/archetypes";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 
 export const metadata: Metadata = {
   title: "The map",

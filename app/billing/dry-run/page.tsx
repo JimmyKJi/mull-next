@@ -11,7 +11,7 @@ import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import MullWordmark from '@/components/mull-wordmark';
 
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
 export default async function DryRunCheckoutPage({

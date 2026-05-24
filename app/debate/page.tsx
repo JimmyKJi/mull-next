@@ -7,7 +7,7 @@ import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
 import { PixelPageHeader } from '@/components/pixel-window';
 
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
 
 type SavedDebate = {

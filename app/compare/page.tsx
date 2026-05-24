@@ -19,7 +19,7 @@ import { ARCHETYPES } from '@/lib/archetypes';
 import { FIGURES } from '@/lib/figures';
 import { topDivergences, topConvergences } from '@/lib/dim-narration';
 
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
 
 export const metadata: Metadata = {

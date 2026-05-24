@@ -177,7 +177,7 @@ export default async function HomeV2() {
                   </div>
                   <div
                     className="mt-2 text-[18px] font-medium leading-[1.2] text-[#221E18]"
-                    style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+                    style={{ fontFamily: "var(--font-prose)" }}
                   >
                     The Inheritor
                   </div>
@@ -208,7 +208,7 @@ export default async function HomeV2() {
                   </div>
                   <div
                     className="mt-2 text-[18px] font-medium leading-[1.2] text-[#221E18]"
-                    style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+                    style={{ fontFamily: "var(--font-prose)" }}
                   >
                     The Arena
                   </div>
@@ -472,7 +472,7 @@ export default async function HomeV2() {
           </h2>
           <p
             className="mt-5 max-w-[640px] text-[16px] leading-[1.55] text-[#4A4338]"
-            style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+            style={{ fontFamily: "var(--font-prose)" }}
           >
             Mull has several surfaces. Some are signature features that
             define the product. Some are quieter daily-return things.
@@ -829,7 +829,7 @@ function SurfaceCard({
       </div>
       <div
         className="mt-2 text-[17px] font-medium leading-[1.25] text-[#221E18]"
-        style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+        style={{ fontFamily: "var(--font-prose)" }}
       >
         {title}
       </div>
@@ -855,7 +855,7 @@ function SmallSurface({
     >
       <div
         className="text-[14px] font-medium text-[#221E18]"
-        style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+        style={{ fontFamily: "var(--font-prose)" }}
       >
         {label}
       </div>

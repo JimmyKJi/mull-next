@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Lora, Press_Start_2P, VT323 } from "next/font/google";
+import { Cormorant_Garamond, Lora, Pixelify_Sans, Press_Start_2P, VT323 } from "next/font/google";
 import "./globals.css";
 import { SiteNav } from "@/components/site-nav";
 import { Analytics } from "@vercel/analytics/next";
@@ -42,15 +42,35 @@ const cormorant = Cormorant_Garamond({
   display: "swap",
 });
 
-// Lora — substantial body serif. Designed for long-form digital
-// reading; warmer and more readable at body sizes than Cormorant.
-// Introduced in the /quiz/journey prototype; if validated, can roll
-// out sitewide to replace Cormorant on body prose surfaces.
+// Lora — substantial body serif. Kept available but no longer the
+// default body face (see Pixelify Sans below — 2026-05-24 swap).
+// Pages that have specifically opted into Lora keep working; new
+// surfaces use Pixelify Sans for the "pixel-game world" unity.
 const lora = Lora({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
   style: ["normal", "italic"],
   variable: "--font-lora",
+  display: "swap",
+});
+
+// Pixelify Sans — the bridge font. Modern sans-serif with subtle
+// pixel-art texture; readable at body sizes (16-18px) while still
+// reading as "of the pixel-game world".
+//
+// Added 2026-05-24 after the editorial serif (Cormorant / Lora)
+// felt out of place against the pixel chrome on most surfaces.
+// Becomes the default body font for the BULK of the site.
+//
+// Cormorant Garamond stays for true long-form editorial essays
+// (archetype detail, philosopher detail, /about, /methodology,
+// topic explainers, vs matchups) — the "library book inside the
+// game" beat that those long-read pages were designed around.
+// Everything else picks Pixelify Sans.
+const pixelifySans = Pixelify_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-pixel-sans",
   display: "swap",
 });
 
@@ -94,16 +114,28 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${cormorant.variable} ${lora.variable} ${pressStart2P.variable} ${vt323.variable}`}
+      className={`${cormorant.variable} ${lora.variable} ${pixelifySans.variable} ${pressStart2P.variable} ${vt323.variable}`}
       style={
         {
           colorScheme: "light",
-          // Three font tokens, three roles. See DESIGN-DIRECTION.md.
+          // Font tokens. See STYLE-GUIDE.md §3.
+          //   --font-display  = chunky pixel labels (Press Start 2P)
+          //   --font-body     = pixel monospace (VT323)
+          //   --font-prose    = the DEFAULT body font sitewide
+          //                     (Pixelify Sans — pixel-styled sans,
+          //                     readable at body sizes)
+          //   --font-editorial = long-form essay serif (Cormorant
+          //                     Garamond) — opt-in for archetype /
+          //                     philosopher / about / methodology /
+          //                     topic / vs pages where the "library
+          //                     book inside the game" beat lives
           ["--font-display" as string]:
             "var(--font-pixel-display), 'Courier New', monospace",
           ["--font-body" as string]:
             "var(--font-pixel-body), 'Courier New', monospace",
           ["--font-prose" as string]:
+            "var(--font-pixel-sans), system-ui, sans-serif",
+          ["--font-editorial" as string]:
             "var(--font-cormorant), Georgia, serif",
         } as React.CSSProperties
       }

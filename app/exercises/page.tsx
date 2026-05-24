@@ -14,7 +14,7 @@ import LanguageSwitcher from '@/components/language-switcher';
 import { PixelPageHeader } from '@/components/pixel-window';
 import type { Metadata } from 'next';
 
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
 
 export const metadata: Metadata = {

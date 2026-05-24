@@ -14,7 +14,7 @@ import { createClient } from '@/utils/supabase/server';
 import ReflectionForm from './reflection-form';
 import type { Metadata } from 'next';
 
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
 
 export async function generateStaticParams() {

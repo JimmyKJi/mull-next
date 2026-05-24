@@ -13,7 +13,7 @@
 import { topShifts } from '@/lib/dimensions';
 import { t, type Locale } from '@/lib/translations';
 
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
 // Unified event the UI iterates over. Mirrors the type in

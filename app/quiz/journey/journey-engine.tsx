@@ -30,7 +30,7 @@ import { SceneIllustration } from "@/components/scene-illustration";
 import { SupportMullPrompt } from "@/components/support-mull-prompt";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "var(--font-lora, 'Lora', Georgia, serif)";
+const serif = "var(--font-prose)";
 
 type Props = {
   scenes: JourneyScene[];

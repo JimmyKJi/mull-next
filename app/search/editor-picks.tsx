@@ -12,7 +12,7 @@ import { createClient } from '@/utils/supabase/server';
 import { weekKey, weekRangeLabel } from '@/lib/week';
 import EmptyStateSprite from '@/components/empty-state-sprite';
 
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
 
 type Pick = {

@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 };
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 
 export default async function BillingSuccessPage() {
   const supabase = await createClient();

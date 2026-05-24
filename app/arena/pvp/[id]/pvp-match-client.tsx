@@ -18,7 +18,7 @@ import type { JudgeOutput } from "@/lib/arena/judge";
 import { SupportMullPrompt } from "@/components/support-mull-prompt";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 
 type Turn = { turn_order: number; speaker: "user" | "opponent"; content: string };
 

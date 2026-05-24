@@ -5,7 +5,7 @@ import { matchesPhilosopherSearch, type PhilosopherEntry } from '@/lib/philosoph
 import { FIGURES } from '@/lib/figures';
 import { t, type Locale } from '@/lib/translations';
 
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
 
 const SUGGESTED_TOPICS = [

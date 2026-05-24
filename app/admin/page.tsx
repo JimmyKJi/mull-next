@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 

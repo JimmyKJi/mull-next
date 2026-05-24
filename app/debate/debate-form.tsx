@@ -19,7 +19,7 @@ type SavedDebate = {
   created_at: string;
 };
 
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
 
 const SUGGESTED_TOPICS = [

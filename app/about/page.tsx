@@ -40,7 +40,7 @@ export default async function AboutPage() {
         title="A PASSION PROJECT"
         subtitle={
           <div className="space-y-3">
-            <p className="text-[16px] italic" style={{ fontFamily: "var(--font-prose)" }}>
+            <p className="text-[16px] italic" style={{ fontFamily: "var(--font-editorial)" }}>
               Built on nights and weekends. Funded by nothing in particular.
             </p>
             <p className="text-[14px] text-[#8C6520]">
@@ -306,7 +306,7 @@ function Prose({ children }: { children: React.ReactNode }) {
   return (
     <div
       className="space-y-4 text-[15.5px] leading-[1.65] text-[#4A4338] [&_strong]:text-[#221E18]"
-      style={{ fontFamily: 'var(--font-prose)' }}
+      style={{ fontFamily: 'var(--font-editorial)' }}
     >
       {children}
     </div>
@@ -319,7 +319,7 @@ function Promise({ title, children }: { title: string; children: React.ReactNode
       className="border-l-4 px-4 py-3 text-[14.5px] leading-[1.55] text-[#4A4338]"
       style={{ borderColor: '#B8862F', background: '#FFFCF4' }}
     >
-      <strong className="block text-[15.5px] text-[#221E18]" style={{ fontFamily: 'var(--font-prose)' }}>
+      <strong className="block text-[15.5px] text-[#221E18]" style={{ fontFamily: 'var(--font-editorial)' }}>
         {title}
       </strong>
       <span className="mt-1 inline-block">{children}</span>

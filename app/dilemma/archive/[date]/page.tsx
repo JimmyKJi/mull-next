@@ -18,7 +18,7 @@ import DilemmaArchiveForm from './archive-form';
 
 const LAUNCH_DATE = '2026-01-01';
 
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
 
 export const metadata: Metadata = {

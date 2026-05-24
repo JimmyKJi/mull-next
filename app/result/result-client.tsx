@@ -947,7 +947,7 @@ function ChallengerBanner({
             </span>
             <span
               style={{
-                fontFamily: "'Cormorant Garamond', Georgia, serif",
+                fontFamily: "var(--font-prose)",
                 fontSize: 18,
               }}
             >

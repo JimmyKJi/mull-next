@@ -81,7 +81,7 @@ export default function AssignmentCreateForm({ classId }: { classId: string }) {
                 border: '3px solid #221E18',
                 boxShadow: kind === opt.value ? '3px 3px 0 0 #B8862F' : 'none',
                 cursor: 'pointer',
-                fontFamily: "'Cormorant Garamond', Georgia, serif",
+                fontFamily: "var(--font-prose)",
                 fontSize: 14,
               }}
             >

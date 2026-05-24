@@ -135,7 +135,7 @@ export default function PendingAttemptClaimer() {
         ▸ QUIZ RESULT IMPORTED
       </div>
       <div style={{
-        fontFamily: "'Cormorant Garamond', Georgia, serif",
+        fontFamily: "var(--font-prose)",
         fontSize: 16,
         lineHeight: 1.35,
       }}>

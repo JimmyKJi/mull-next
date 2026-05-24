@@ -14,7 +14,7 @@
 
 import { useEffect } from 'react';
 
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
 export default function GlobalError({

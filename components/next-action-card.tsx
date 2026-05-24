@@ -16,7 +16,7 @@
 
 import Link from 'next/link';
 
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
 type Props = {

@@ -12,7 +12,7 @@ import { CURATED_VS_PAIRS, toCanonicalPair } from '@/lib/vs-pairs';
 import { PixelPageHeader } from '@/components/pixel-window';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 
 export const metadata: Metadata = {
   title: 'Philosopher matchups',

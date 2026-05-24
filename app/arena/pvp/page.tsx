@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 
 type OpenChallenge = {
   id: string;

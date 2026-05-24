@@ -7,7 +7,7 @@
 import { useState } from 'react';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 
 export default function ClassInviteShare({
   inviteCode,

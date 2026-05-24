@@ -19,7 +19,7 @@ import { getUserPlan } from '@/lib/subscription';
 import PlanPicker from './plan-picker';
 import type { Metadata } from 'next';
 
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 

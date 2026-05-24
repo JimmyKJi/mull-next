@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   // intentionally not setting noindex here — daily prompt is public-facing
 };
 
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
 
 type ExistingResponse = {

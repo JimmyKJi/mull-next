@@ -16,7 +16,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import EmptyStateSprite from '@/components/empty-state-sprite';
 
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
 
 type Candidate = {

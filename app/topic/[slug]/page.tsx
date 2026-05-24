@@ -17,7 +17,7 @@ import { ArchetypeSprite } from '@/components/archetype-sprite';
 import { PhilosopherSprite } from '@/components/philosopher-sprite';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-editorial)";
 
 export function generateStaticParams() {
   return TOPICS.map(t => ({ slug: t.slug }));

@@ -19,7 +19,7 @@ import { PixelPageHeader } from '@/components/pixel-window';
 const LAUNCH_DATE = '2026-01-01';
 const PAGE_SIZE = 30;
 
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
 
 // Private to the user — don't surface in search.

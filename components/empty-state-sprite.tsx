@@ -115,7 +115,7 @@ export default function EmptyStateSprite({
       {caption && (
         <p
           style={{
-            fontFamily: "'Cormorant Garamond', Georgia, serif",
+            fontFamily: "var(--font-prose)",
             fontStyle: 'italic',
             fontSize: 15,
             color: '#8C6520',

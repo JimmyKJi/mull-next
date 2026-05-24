@@ -32,7 +32,7 @@ import {
 } from '@/lib/vs-pairs';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-editorial)";
 
 export function generateStaticParams() {
   return curatedPairSlugs();

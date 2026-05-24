@@ -56,7 +56,7 @@ export default function MullWordmark({
   const markSize = Math.round(fontSize * MARK_RATIO);
 
   const textStyle: CSSProperties = {
-    fontFamily: "'Cormorant Garamond', Georgia, serif",
+    fontFamily: "var(--font-prose)",
     fontSize,
     fontWeight: 500,
     color: '#221E18',

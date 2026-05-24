@@ -12,7 +12,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 
 type Phil = {
   name: string;

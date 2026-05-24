@@ -173,7 +173,7 @@ export default async function ArchetypeDetailPage({
             </h1>
             <p
               className="mt-4 text-[18px] italic leading-[1.45] text-[#221E18]"
-              style={{ fontFamily: 'var(--font-prose)' }}
+              style={{ fontFamily: 'var(--font-editorial)' }}
             >
               &ldquo;{archetype.spirit}&rdquo;
             </p>
@@ -186,7 +186,7 @@ export default async function ArchetypeDetailPage({
             style={{
               borderColor: color.deep,
               background: '#FFFCF4',
-              fontFamily: 'var(--font-prose)',
+              fontFamily: 'var(--font-editorial)',
             }}
           >
             {blurb}
@@ -215,7 +215,7 @@ export default async function ArchetypeDetailPage({
               >
                 <p
                   className="text-[16.5px] italic leading-[1.5] text-[#221E18]"
-                  style={{ fontFamily: 'var(--font-prose)' }}
+                  style={{ fontFamily: 'var(--font-editorial)' }}
                 >
                   &ldquo;{q.text}&rdquo;
                 </p>
@@ -231,7 +231,7 @@ export default async function ArchetypeDetailPage({
         <PixelWindow title={t('arch_detail.section_reading', locale).toUpperCase()} badge="▶ READING">
           <p
             className="mb-4 text-[14px] italic leading-[1.6] text-[#4A4338]"
-            style={{ fontFamily: 'var(--font-prose)' }}
+            style={{ fontFamily: 'var(--font-editorial)' }}
           >
             {t('arch_detail.reading_helper', locale)}
           </p>
@@ -248,7 +248,7 @@ export default async function ArchetypeDetailPage({
               >
                 <div
                   className="text-[18px] font-medium leading-tight text-[#221E18]"
-                  style={{ fontFamily: 'var(--font-prose)' }}
+                  style={{ fontFamily: 'var(--font-editorial)' }}
                 >
                   {book.title}
                 </div>
@@ -268,7 +268,7 @@ export default async function ArchetypeDetailPage({
         <PixelWindow title={t('arch_detail.section_kindred', locale).toUpperCase()} badge="▶ KINDRED">
           <p
             className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
-            style={{ fontFamily: 'var(--font-prose)' }}
+            style={{ fontFamily: 'var(--font-editorial)' }}
           >
             {t('arch_detail.kindred_helper', locale)}
           </p>
@@ -314,7 +314,7 @@ export default async function ArchetypeDetailPage({
           <PixelWindow title={t('arch_detail.section_get_right', locale).toUpperCase()} badge="▶ STRENGTH">
             <p
               className="text-[15px] leading-[1.65] text-[#221E18]"
-              style={{ fontFamily: 'var(--font-prose)' }}
+              style={{ fontFamily: 'var(--font-editorial)' }}
             >
               {archetype.whatItGetsRight}
             </p>
@@ -322,7 +322,7 @@ export default async function ArchetypeDetailPage({
           <PixelWindow title={t('arch_detail.section_falter', locale).toUpperCase()} badge="▶ LIMIT">
             <p
               className="text-[15px] leading-[1.65] text-[#221E18]"
-              style={{ fontFamily: 'var(--font-prose)' }}
+              style={{ fontFamily: 'var(--font-editorial)' }}
             >
               {archetype.whereItFalters}
             </p>
@@ -333,7 +333,7 @@ export default async function ArchetypeDetailPage({
         <PixelWindow title={t('arch_detail.section_dayinlife', locale).toUpperCase()} badge="▶ SCENE">
           <p
             className="text-[16px] italic leading-[1.7] text-[#221E18]"
-            style={{ fontFamily: 'var(--font-prose)' }}
+            style={{ fontFamily: 'var(--font-editorial)' }}
           >
             {archetype.dayInTheLife}
           </p>
@@ -343,7 +343,7 @@ export default async function ArchetypeDetailPage({
         <PixelWindow title={t('arch_detail.section_dimensions', locale).toUpperCase()} badge="▶ DIMS">
           <p
             className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
-            style={{ fontFamily: 'var(--font-prose)' }}
+            style={{ fontFamily: 'var(--font-editorial)' }}
           >
             {t('arch_detail.dimensions_helper', locale)}
           </p>
@@ -368,7 +368,7 @@ export default async function ArchetypeDetailPage({
                   </div>
                   <div
                     className="mt-1 text-[17px] font-medium text-[#221E18]"
-                    style={{ fontFamily: 'var(--font-prose)' }}
+                    style={{ fontFamily: 'var(--font-editorial)' }}
                   >
                     {dimName}
                   </div>
@@ -386,7 +386,7 @@ export default async function ArchetypeDetailPage({
           <PixelWindow title={t('arch_detail.section_exercises', locale).toUpperCase()} badge="▶ PRACTICE">
             <p
               className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
-              style={{ fontFamily: 'var(--font-prose)' }}
+              style={{ fontFamily: 'var(--font-editorial)' }}
             >
               {t('arch_detail.exercises_helper', locale)}
             </p>
@@ -404,7 +404,7 @@ export default async function ArchetypeDetailPage({
                   >
                     <div
                       className="text-[17px] font-medium text-[#221E18]"
-                      style={{ fontFamily: 'var(--font-prose)' }}
+                      style={{ fontFamily: 'var(--font-editorial)' }}
                     >
                       {ex.name} →
                     </div>
@@ -422,7 +422,7 @@ export default async function ArchetypeDetailPage({
         <PixelWindow title={t('arch_detail.section_other', locale).toUpperCase()} badge="▶ EXPLORE">
           <p
             className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
-            style={{ fontFamily: 'var(--font-prose)' }}
+            style={{ fontFamily: 'var(--font-editorial)' }}
           >
             {t('arch_detail.other_helper', locale)}
           </p>
@@ -463,7 +463,7 @@ export default async function ArchetypeDetailPage({
       >
         <p
           className="text-[16px] leading-[1.5] text-[#221E18]"
-          style={{ fontFamily: 'var(--font-prose)' }}
+          style={{ fontFamily: 'var(--font-editorial)' }}
         >
           {t('arch_detail.cta_unsure', locale)}
         </p>
@@ -516,7 +516,7 @@ function Prose({ children }: { children: React.ReactNode }) {
   return (
     <div
       className="space-y-4 text-[15.5px] leading-[1.7] text-[#221E18]"
-      style={{ fontFamily: 'var(--font-prose)' }}
+      style={{ fontFamily: 'var(--font-editorial)' }}
     >
       {children}
     </div>

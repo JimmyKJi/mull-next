@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 import { t, type Locale } from '@/lib/translations';
 import EmptyStateSprite from '@/components/empty-state-sprite';
 
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
 
 type Result = {

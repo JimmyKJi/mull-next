@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false, nocache: true },
 };
 
-const serif = "'Cormorant Garamond', Georgia, serif";
+const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
 
 type DiaryEntry = {
