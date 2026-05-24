@@ -27,6 +27,7 @@ import { add, zeros } from "@/lib/vectors";
 import type { JourneyScene } from "@/lib/quiz-journey";
 import { chamberCount } from "@/lib/quiz-journey";
 import { SceneIllustration } from "@/components/scene-illustration";
+import { SupportMullPrompt } from "@/components/support-mull-prompt";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-lora, 'Lora', Georgia, serif)";
@@ -230,6 +231,17 @@ function FrameScene({
         <button type="button" onClick={onAdvance} style={advanceBtn}>
           ▶ {scene.advance.toUpperCase()}
         </button>
+        {/* Tip-jar nudge only on the outro frame ("reveal"), not on
+            the intro. Catches the user at the moment they've finished
+            the work, before they move on to /result. */}
+        {scene.id === "reveal" && (
+          <div style={{ marginTop: 24 }}>
+            <SupportMullPrompt
+              lead="If The Inheritor gave you something, consider keeping it open."
+              detail="The narrative quiz costs nothing to take, but a small AI fee per playthrough. Tips from people who can afford it keep Mull free for everyone else."
+            />
+          </div>
+        )}
       </div>
     </article>
   );

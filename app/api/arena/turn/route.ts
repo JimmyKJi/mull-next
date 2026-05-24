@@ -13,6 +13,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 import { getArenaPhilosopher, getArenaTopic } from "@/lib/arena/data";
 import { generatePhilosopherTurn } from "@/lib/arena/philosopher-voice";
+import { notifyYourTurn } from "@/lib/arena/notifications";
 
 const MAX_USER_CHARS = 2000;
 const MAX_TURNS_BEFORE_VERDICT = 8;
@@ -89,6 +90,7 @@ export async function POST(req: Request) {
       turns,
       isChallenger,
       content,
+      callerId: user.id,
     });
   }
   // PvE
@@ -173,12 +175,18 @@ async function handlePveTurn(args: {
 
 async function handlePvpTurn(args: {
   supabase: Awaited<ReturnType<typeof createClient>>;
-  session: { id: string };
+  session: {
+    id: string;
+    user_id: string;
+    opponent_user_id: string | null;
+    topic_slug: string;
+  };
   turns: { turn_order: number; speaker: string; content: string }[];
   isChallenger: boolean;
   content: string;
+  callerId: string;
 }) {
-  const { supabase, session, turns, isChallenger, content } = args;
+  const { supabase, session, turns, isChallenger, content, callerId } = args;
   // In PvP, "user" speaker = challenger; "opponent" speaker = accepter.
   const mySpeaker: "user" | "opponent" = isChallenger ? "user" : "opponent";
   const lastTurn = turns[turns.length - 1];
@@ -205,6 +213,28 @@ async function handlePvpTurn(args: {
     speaker: mySpeaker,
     content,
   });
+
+  // Fire-and-forget: notify the other player it's their turn now.
+  const recipientUserId = isChallenger
+    ? session.opponent_user_id
+    : session.user_id;
+  const topic = getArenaTopic(session.topic_slug);
+  if (recipientUserId && topic) {
+    const { data: senderProfile } = await supabase
+      .from("public_profiles")
+      .select("display_name, handle")
+      .eq("user_id", callerId)
+      .maybeSingle();
+    const senderLabel =
+      senderProfile?.display_name ||
+      (senderProfile?.handle ? `@${senderProfile.handle}` : "Your opponent");
+    notifyYourTurn({
+      recipientUserId,
+      opponentLabel: senderLabel,
+      topicTitle: topic.title,
+      sessionId: session.id,
+    }).catch((e) => console.error("[arena/turn] notify failed:", e));
+  }
 
   // Count how many turns each side has played to compute can_call_verdict.
   const userTurns =

@@ -14,6 +14,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { JudgeOutput } from "@/lib/arena/judge";
+import { SupportMullPrompt } from "@/components/support-mull-prompt";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "'Cormorant Garamond', Georgia, serif";
@@ -586,6 +587,11 @@ function VerdictPanel({
           ◂ LEADERBOARD
         </Link>
       </div>
+
+      <SupportMullPrompt
+        lead="Loved this match? Help keep the Arena open."
+        detail="Each Arena verdict costs about 15 cents in AI fees. Mull is free to play; tips from people who can afford it keep it free for everyone else."
+      />
     </div>
   );
 }

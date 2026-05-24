@@ -121,6 +121,14 @@ export default async function ArenaPage() {
           title="Who's climbing"
           body="Top PvE debaters this season. Updated after every judged match."
         />
+        {user && (
+          <DoorCard
+            href="/arena/history"
+            eyebrow="▶ YOUR HISTORY"
+            title="Re-read your matches"
+            body="Every judged debate you've played — verdict, scores, kindred philosopher, Elo delta. Click through to re-read any one."
+          />
+        )}
       </ul>
 
       {/* Philosopher roster preview */}

@@ -8,6 +8,8 @@
 
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
+import { notifyChallengeAccepted } from "@/lib/arena/notifications";
+import { getArenaTopic } from "@/lib/arena/data";
 
 export async function POST(req: Request) {
   const supabase = await createClient();
@@ -98,6 +100,27 @@ export async function POST(req: Request) {
       { error: "Could not accept challenge." },
       { status: 500 },
     );
+  }
+
+  // Fire-and-forget notification to the challenger. Doesn't block
+  // the response — if Resend is slow / down, the user still gets
+  // the success.
+  const topic = getArenaTopic(session.topic_slug);
+  if (topic) {
+    const { data: opponentProfile } = await supabase
+      .from("public_profiles")
+      .select("display_name, handle")
+      .eq("user_id", user.id)
+      .maybeSingle();
+    const opponentLabel =
+      opponentProfile?.display_name ||
+      (opponentProfile?.handle ? `@${opponentProfile.handle}` : "Your opponent");
+    notifyChallengeAccepted({
+      challengerUserId: session.user_id,
+      opponentLabel,
+      topicTitle: topic.title,
+      sessionId,
+    }).catch((e) => console.error("[arena/accept] notify failed:", e));
   }
 
   return NextResponse.json({

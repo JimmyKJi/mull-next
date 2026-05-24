@@ -19,6 +19,7 @@ import {
   type JudgeOutput,
 } from "@/lib/arena/judge";
 import { newElo, kFactorForGames } from "@/lib/arena/elo";
+import { notifyVerdict } from "@/lib/arena/notifications";
 
 const SONNET_MODEL = "claude-sonnet-4-6";
 const MIN_EXCHANGES_BEFORE_JUDGE = 2; // 2 user turns + 2 opponent turns
@@ -181,9 +182,52 @@ export async function POST(req: Request) {
     })
     .eq("id", sessionId);
 
+  // PvP: fire-and-forget notify the OTHER player that the verdict
+  // is in. (The caller already sees it inline.)
+  const callerIsChallenger = user.id === session.user_id;
+  if (session.kind === "pvp" && session.opponent_user_id) {
+    const otherUserId = callerIsChallenger
+      ? session.opponent_user_id
+      : session.user_id;
+    const { data: callerProfile } = await supabase
+      .from("public_profiles")
+      .select("display_name, handle")
+      .eq("user_id", user.id)
+      .maybeSingle();
+    const callerLabel =
+      callerProfile?.display_name ||
+      (callerProfile?.handle ? `@${callerProfile.handle}` : "Your opponent");
+    // Verdict from the OTHER user's perspective. We know our score
+    // and our verdict; flip for them.
+    const userTotal = totalScore(parsed.user_scores);
+    const oppTotal = totalScore(parsed.opponent_scores);
+    // For the OTHER user (the recipient):
+    //   - if they're the opponent (caller is challenger), their score = oppTotal
+    //   - if they're the challenger (caller is opponent), their score = userTotal
+    const otherIsChallenger = !callerIsChallenger;
+    const recipientScore = otherIsChallenger ? userTotal : oppTotal;
+    const senderScore = otherIsChallenger ? oppTotal : userTotal;
+    const recipientWon =
+      (parsed.verdict === "user" && otherIsChallenger) ||
+      (parsed.verdict === "opponent" && !otherIsChallenger);
+    const isDraw = parsed.verdict === "draw";
+    const verdictLine = isDraw
+      ? `Draw — you ${recipientScore}, ${callerLabel} ${senderScore}`
+      : recipientWon
+        ? `You won — ${recipientScore}, ${callerLabel} ${senderScore}`
+        : `You lost — ${recipientScore}, ${callerLabel} ${senderScore}`;
+    notifyVerdict({
+      recipientUserId: otherUserId,
+      opponentLabel: callerLabel,
+      topicTitle: topic.title,
+      sessionId,
+      verdictLine,
+    }).catch((e) => console.error("[arena/judge] notify failed:", e));
+  }
+
   // For PvE: user_elo_before is always session.user_elo_at_start.
   // For PvP: depends on who called — challenger or opponent.
-  const callerIsChallenger = user.id === session.user_id;
+  // (callerIsChallenger declared above for the verdict notification.)
   const callerEloBefore =
     session.kind === "pvp"
       ? callerIsChallenger
