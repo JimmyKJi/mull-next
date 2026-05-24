@@ -49,7 +49,17 @@ export type JourneyScene =
       body: string;
       prompt: string;
       choices: JourneyChoice[];
+      /** Default epilogue, shown after any pick that doesn't have its
+       *  own entry in `choiceEpilogues`. The servant's standard
+       *  acknowledgement: "N have answered. Follow." */
       epilogue: string;
+      /** Per-choice epilogues — keyed by choice index. When a user
+       *  picks a choice with a key in this map, this text replaces
+       *  the default `epilogue` for that turn. Used to make specific
+       *  philosophically distinctive choices trigger a reveal about
+       *  the deceased — actively pulling the user into the story
+       *  rather than just acknowledging the pick. */
+      choiceEpilogues?: Record<number, string>;
       twistClue?: string;
     };
 
@@ -123,12 +133,23 @@ Below the photograph rests an envelope with your name on it. You open it. The ha
         vector: v({ VA: 2, ES: 1, TD: 1, SS: 1 }),
       },
       {
+        text: `You don't speak. You stay completely still and present, every sense open. This moment — this — is what is sublime.`,
+        vector: v({ VA: 3, ES: 2, SR: 1, MR: 1 }),
+      },
+      {
         text: `You don't say anything. You hold her hand tighter.`,
         vector: v({ SR: 2, AT: 1, MR: 1, CE: 1 }),
         silence: true,
       },
     ],
     epilogue: `The servant takes the empty envelope from you. "One has answered," she says, softly — it's the first time you've heard her voice. "Many have stopped here. Follow."`,
+    choiceEpilogues: {
+      // The "fully present, sublime" choice — the secular-reverence
+      // stance. Servant reveals the deceased lived exactly this way
+      // in their final years. First clue that the deceased's life
+      // was shaped by what they did and didn't say.
+      4: `The servant does not take an envelope from you — you didn't write one. She watches you for a long moment. "One in many years has answered without words and meant it. Most who try are merely lost. You weren't." She turns. "Follow."`,
+    },
     twistClue: `In the hallway behind her, you count six closed doors. Behind one of them, you're almost certain, you can hear someone crying.`,
   },
 
@@ -166,8 +187,12 @@ A note rests in the lid of the box, in the same trembling handwriting:
         vector: v({ TR: 2, SR: 1, SS: 2, UI: 1 }),
       },
       {
+        text: `You leave. But you stay close — letters every week, visits every month. The pattern of being both, kept faithfully.`,
+        vector: v({ PO: 3, TR: 1, CE: 2, WP: 1 }),
+      },
+      {
         text: `You try to be both. You know you may fail at both. You try anyway.`,
-        vector: v({ TV: 3, SR: 2, CE: 1, MR: 1 }),
+        vector: v({ TV: 3, SR: 1, CE: 1, MR: 1 }),
       },
       {
         text: `You don't decide. You hold both possibilities a long time, and let life decide for you.`,
@@ -176,6 +201,12 @@ A note rests in the lid of the box, in the same trembling handwriting:
       },
     ],
     epilogue: `The servant closes the wooden box and lifts it back to its shelf. "Two have answered." She doesn't say whether you are right.`,
+    choiceEpilogues: {
+      // The "leave but stay close" choice — the practical-pattern
+      // stance. Servant reveals the deceased tried exactly this, and
+      // it broke them in a specific way. Twist clue planted.
+      3: `The servant closes the wooden box but does not lift it. She rests her hand on it instead. "Some have answered this way. The deceased did. For seven years they wrote every Wednesday and visited at Christmas and Easter. Then one Christmas they didn't go. The daughter waited at the station for six hours. She never wrote about it. The letters in this box stop the month after." She lifts the box back to the shelf. "Some patterns are harder to keep than to start. Follow."`,
+    },
     twistClue: `By the door, you notice a leather-bound ledger on a side table. It's open. The page is a list of names. Dozens crossed out. Dozens more, still waiting to be added.`,
   },
 
@@ -219,6 +250,10 @@ A note rests between the stacks:
         vector: v({ SS: 3, PO: 1 }),
       },
       {
+        text: `Sit down with the actual book — yours or theirs — and read it again from scratch. The argument may already be answered, or differently than either of you thought.`,
+        vector: v({ TD: 3, TR: 2, PO: 1 }),
+      },
+      {
         text: `Stay with them, in silence. Some disagreements aren't meant to be resolved.`,
         vector: v({ MR: 2, AT: 2, SI: 1, TV: 1 }),
         silence: true,
@@ -233,6 +268,19 @@ She doesn't wait for permission.
 "Why did you come?"
 
 You realise you don't have an answer. You opened the letter. You walked through the door. You don't know why.`,
+    choiceEpilogues: {
+      // The "read the manuscript yourself" choice — the epistemic-
+      // engagement stance. Servant reveals the deceased did this
+      // every year, and it changed something in them. Twist clue
+      // planted via what they decided AT THE END about the book.
+      4: `The servant is still for a moment. Then she crosses the room, reaches into a low cupboard, and lifts out a thick bound stack — the manuscript. She does not hand it to you. She sets it on the floor between you and her, like a third presence.
+
+"The deceased opened this every year, on the same day. They read it cover to cover, every year. By the end of their life they had read it forty-one times. The page they reread most is the one we are sitting near now. They never published it. The last time they read it, they told me: 'I think it was a different argument than I thought.' I don't know what they meant."
+
+She lifts the manuscript and returns it to the cupboard.
+
+"Three have answered. Follow."`,
+    },
     twistClue: `She lifts a candle and crosses to the wall behind the chairs. There is a photograph pinned there. A figure in a coat that looks exactly like yours. Their face is in shadow — but it isn't your face. They were here. They left.`,
   },
 
@@ -276,6 +324,10 @@ A note has been resting under the box:
         vector: v({ SR: 2, TR: 2, TD: 1, SS: 1 }),
       },
       {
+        text: `Take it, but keep coming back. Live both lives. Accept that neither will be fully yours.`,
+        vector: v({ ES: 2, SS: 2, SR: 1, CE: 1, PO: 1 }),
+      },
+      {
         text: `You don't decide. You let the ticket sit on the table for a month and watch what your life does.`,
         vector: v({ SI: 3, SR: 1, TV: 1, MR: 1 }),
         silence: true,
@@ -288,6 +340,20 @@ She lifts a small key from her dress.
 "There is one chamber left. The one waiting for you in it is not what the chambers may have suggested. I should tell you that now. You may keep silent and turn back, even now. Most have. The estate will let you go, and you will inherit nothing, and you will sleep well in the years to come.
 
 "Or you may meet them."`,
+    choiceEpilogues: {
+      // The "take it but keep coming back" choice — the partial-
+      // commitment stance. Servant reveals the deceased lived
+      // exactly this for a decade, then stopped. Without explaining
+      // why. The third major clue that the deceased's life was
+      // shaped by attempts at half-measures that eventually failed.
+      4: `The servant nods slowly. "Four have answered, and a few have answered exactly this. The deceased did. They took the ticket. They kept the house above the coastline. For ten years they made the crossing twice — spring and autumn, the same weeks every year. The small love was waiting each time. And then one autumn they didn't go. They never went again. They never explained, and the person waiting eventually understood." She closes the box. "Some of us divide ourselves until we can't tell which half is the real one."
+
+She lifts a small key from her dress.
+
+"There is one chamber left. The one waiting for you in it is not what the chambers may have suggested. I should tell you that now. You may keep silent and turn back, even now. Most have. The estate will let you go, and you will inherit nothing, and you will sleep well in the years to come.
+
+"Or you may meet them."`,
+    },
     twistClue: `From somewhere above, you hear footsteps. Slow. Measured. Not hers. "Another candidate," she says, without surprise. "On the second floor. You will not meet."`,
   },
 

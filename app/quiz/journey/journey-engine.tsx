@@ -376,7 +376,18 @@ function ChamberScene({
         })}
       </ul>
 
-      {revealed && (
+      {revealed && (() => {
+        // Per-choice epilogue overrides the scene default when the
+        // picked choice has its own narrative beat (a reveal about
+        // the deceased that the standard "N have answered" line
+        // would flatten). Falls back to scene.epilogue otherwise.
+        const epilogueText =
+          (pickedIdx != null && scene.choiceEpilogues?.[pickedIdx]) ||
+          scene.epilogue;
+        // Multi-paragraph epilogues render with paragraph breaks via
+        // \n\n splitting — the new long-form choice epilogues use this.
+        const paragraphs = epilogueText.split(/\n\n+/);
+        return (
         <div
           style={{
             padding: "18px 22px",
@@ -385,19 +396,22 @@ function ChamberScene({
             marginBottom: scene.twistClue ? 14 : 20,
           }}
         >
-          <p
-            style={{
-              fontFamily: serif,
-              fontStyle: "italic",
-              fontSize: 16.5,
-              color: "#F8EDC8",
-              margin: 0,
-              lineHeight: 1.65,
-            }}
-            dangerouslySetInnerHTML={{ __html: italicizeMarkers(scene.epilogue) }}
-          />
+          {paragraphs.map((p, i) => (
+            <p
+              key={i}
+              style={{
+                fontFamily: serif,
+                fontStyle: "italic",
+                fontSize: 16.5,
+                color: "#F8EDC8",
+                margin: i === paragraphs.length - 1 ? 0 : "0 0 12px",
+                lineHeight: 1.65,
+              }}
+              dangerouslySetInnerHTML={{ __html: italicizeMarkers(p) }}
+            />
+          ))}
         </div>
-      )}
+      );})()}
 
       {revealed && scene.twistClue && (
         <div

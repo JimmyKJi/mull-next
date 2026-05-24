@@ -47,6 +47,7 @@ export const QUICK_QUESTIONS: Question[] = [
     a:[
       { t:"No — some lines you don't cross, even for good outcomes.",              v:v({UI:3,RT:1,AT:1}) },
       { t:"Yes — five lives outweigh one. The math is hard but clear.",            v:v({TR:2,UI:1,PO:2,WP:1}) },
+      { t:"Yes — and society would be better if we had the courage to do this math openly.", v:v({WP:2,TR:2,UI:2}) },
       { t:"No, but for practical reasons — it would destroy trust in medicine.",   v:v({PO:3,TE:2,SR:1}) },
       { t:"The question is malformed. Real ethics doesn't reduce to such cases.",  v:v({CE:1,RT:2,MR:1,SR:2}) }
     ]},
@@ -65,7 +66,7 @@ export const QUICK_QUESTIONS: Question[] = [
       { t:"Press it — pleasure is real wherever it comes from.",                       v:v({ES:3,VA:2,TE:1,SI:1}) },
       { t:"Don't press it — real life has meaning beyond pleasure.",                   v:v({SS:2,TV:2,UI:1,MR:1}) },
       { t:"Don't press it — what would I be losing if I never knew anything was real?",v:v({TR:2,SS:1,SR:2}) },
-      { t:"Probably press it. Most of \"real life\" isn't great anyway.",              v:v({TV:3,SR:1,SI:2}) }
+      { t:"Press it for some experiences, not all. Curate which truths I want to keep.", v:v({ES:2,SS:2,SR:2,TE:1}) }
     ]},
 
   { p:"Someone you love made a free, deliberate decision — no coercion, no addiction, no accident — that ruined their life. Looking back, you think:",
@@ -109,7 +110,7 @@ export const QUICK_QUESTIONS: Question[] = [
       { t:"Direct experience and observation.",                             v:v({TE:3,ES:1,SR:1}) },
       { t:"Traditions and texts that have endured generations.",            v:v({RT:3,CE:1}) },
       { t:"Quiet attention to what's beneath words.",                       v:v({MR:3,SI:1,AT:1}) },
-      { t:"None of these alone — all of them, weighed against each other.", v:v({SR:3,TE:2,RT:1}) }
+      { t:"Whichever holds up under serious scrutiny. The kind of skepticism that refines what survives.", v:v({SR:3,TR:2,TD:1}) }
     ]},
 
   { p:"When you face a hard decision, what's your actual first move?",
@@ -126,6 +127,7 @@ export const QUICK_QUESTIONS: Question[] = [
     a:[
       { t:"Something is there, even if we can't name it.",                              v:v({MR:3,SI:1,RT:1}) },
       { t:"Probably not. The world makes sense without it.",                            v:v({SR:3,TE:2}) },
+      { t:"No god, but the world is sublime enough on its own to deserve reverence.",   v:v({VA:3,ES:2,SR:1,MR:1}) },
       { t:"The question itself matters more than any answer.",                          v:v({TD:2,SS:2,MR:1}) },
       { t:"Whatever I think personally, I respect what people have built around it.",   v:v({CE:2,RT:3,PO:1}) }
     ]},
@@ -136,7 +138,7 @@ export const QUICK_QUESTIONS: Question[] = [
       { t:"No. I'm a different person who shares memories with that one.",              v:v({SI:3,TE:1,MR:1}) },
       { t:"The question is malformed — there's no fixed \"self\" to compare.",         v:v({SI:3,MR:2,SR:1}) },
       { t:"Mostly yes, but a stranger would barely recognize me.",                       v:v({TR:1,TE:2,SR:1}) },
-      { t:"I don't think about it. It doesn't help me live.",                            v:v({PO:3,SR:1}) }
+      { t:"I don't think about it. It doesn't help me live.",                            v:v({PO:2,SR:2,SI:1}) }
     ]},
 
   { p:"Justice — what is it, primarily?",
@@ -154,13 +156,13 @@ export const QUICK_QUESTIONS: Question[] = [
       { t:"Eat with them. Connection in this moment matters more than principle.",  v:v({CE:3,ES:1,PO:1}) },
       { t:"Eat your sides quietly without making a scene.",                         v:v({AT:2,SS:1,SR:1,CE:1}) },
       { t:"Decline politely and explain when asked.",                               v:v({SS:2,UI:2,TR:1}) },
-      { t:"Decline and gently raise the question.",                                 v:v({UI:3,WP:1,SR:1,SS:1}) }
+      { t:"Decline and gently raise the question.",                                 v:v({UI:3,WP:1,SS:1}) }
     ]},
 
   { p:"Beauty in the world — what's it for?",
     a:[
       { t:"Nothing. It just is. That's why it matters.",                             v:v({MR:2,SI:1,AT:1}) },
-      { t:"An evolutionary signal. The rest is decoration we add.",                   v:v({SR:3,TE:2,SI:1}) },
+      { t:"An evolutionary signal. The rest is decoration we add.",                   v:v({SR:3,TE:2}) },
       { t:"It points beyond itself, toward something eternal.",                       v:v({MR:3,UI:2,TD:1,RT:1}) },
       { t:"The highest form of usefulness — pleasure made permanent.",                v:v({ES:3,VA:2}) },
       { t:"A reminder to stay alive to what's already here.",                          v:v({PO:2,ES:2,MR:1,VA:1}) }
@@ -180,7 +182,7 @@ export const QUICK_QUESTIONS: Question[] = [
   { p:"There's a government policy you find harmful. What do you do?",
     a:[
       { t:"Argue, organize, vote. The system can be changed.",                       v:v({WP:2,CE:2,UI:1,VA:1}) },
-      { t:"Withdraw and live according to your own values.",                         v:v({SS:3,AT:1}) },
+      { t:"Withdraw and live according to your own values.",                         v:v({SS:3,AT:2,MR:1}) },
       { t:"Wait. Quick change usually fails. Slow change endures.",                  v:v({RT:2,PO:2,TR:1}) },
       { t:"Question whether you're actually right about it.",                        v:v({SR:3,RT:1,TR:1}) },
       { t:"Build something parallel that doesn't depend on it.",                     v:v({SS:2,WP:2,CE:1}) }
@@ -209,6 +211,6 @@ export const QUICK_QUESTIONS: Question[] = [
       { t:"Recognizing yourself in another person — the soul-meeting.",              v:v({MR:2,CE:2,UI:1,SI:1}) },
       { t:"The shared work of building a life together.",                            v:v({CE:3,PO:2,WP:1,RT:1}) },
       { t:"An attention so complete it dissolves the boundary between you.",         v:v({MR:3,ES:2,SI:2}) },
-      { t:"Mostly biology. The rest is the stories we tell about it.",               v:v({SR:3,TE:2,SI:1}) }
+      { t:"A pattern with biological roots and built-up meaning. Both real, in different ways.", v:v({SR:2,TE:2,SI:1,TR:1}) }
     ]}
 ];
