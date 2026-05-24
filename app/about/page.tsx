@@ -67,10 +67,58 @@ export default async function AboutPage() {
               thought, it asks what <strong>you</strong> think — concretely, on
               real questions — and shows you where that places you in the long
               conversation. The map isn&apos;t a verdict, it&apos;s a mirror.
-              The over 500 thinkers in the constellation are there as company,
-              not as curriculum.
+              The 560 thinkers in the constellation are there as company, not
+              as curriculum.
             </p>
           </Prose>
+        </PixelWindow>
+
+        <PixelWindow title="WHAT MULL ACTUALLY IS" badge="▶ THE PRODUCT">
+          <Prose>
+            <p>
+              The site has grown beyond the original quiz. The pieces, with
+              what each is for:
+            </p>
+          </Prose>
+          <ul className="mt-5 space-y-3">
+            <Promise title="The Quiz — two ways through.">
+              The classic five-minute version (twenty questions, Likert-style)
+              gets you onto the map fast. <strong>The Inheritor</strong> is
+              the same questions wrapped in a fifteen-minute narrative — a
+              midnight at a strange estate, four chambers, a stranger. Same
+              16-dimensional placement underneath; different way of arriving
+              at it. The home page leads with the Inheritor; the classic is
+              one click away.
+            </Promise>
+            <Promise title="The Arena — argue a philosopher, get scored.">
+              Debate any of ten thinkers (Socrates, Nietzsche, Arendt,
+              Confucius, Mill, others — across three difficulty tiers) on
+              everyday or philosophical topics. An impartial judge scores
+              both sides on logical rigor, philosophical principle, and
+              engagement — <em>not</em> on whose side won. Elo system,
+              leaderboard, PvP against other humans. The Arena is Mull&apos;s
+              answer to "what do I do once I know where I sit?"
+            </Promise>
+            <Promise title="560 philosophers, 10 archetypes, 12 topics, 30 matchups.">
+              The constellation is the heart of the site — a 2D map you can
+              wander. Every philosopher page is a small editorial essay; the
+              archetype pages go longer. Topic explainers cover the questions
+              philosophers keep returning to (free will, the trolley problem,
+              meaning of life, what we owe each other). The vs pages are
+              head-to-head comparisons across the 16 dimensions.
+            </Promise>
+            <Promise title="The Dilemma, the Diary, the Exercises.">
+              Smaller surfaces, but the daily-return ones. A philosophical
+              dilemma each day with the option to write a response. A
+              personal philosophical diary. A short library of contemplative
+              exercises. All optional.
+            </Promise>
+            <Promise title="Classes (for educators).">
+              Teachers can spin up a class, share an invite link, and post
+              philosophy assignments to students. Free for anyone with an
+              academic email address (.edu / .ac.* / .k12.*.us auto-detected).
+            </Promise>
+          </ul>
         </PixelWindow>
 
         <PixelWindow title="THE PRINCIPLES" badge="▶ COMMITMENTS">
@@ -149,23 +197,36 @@ export default async function AboutPage() {
             style={{ borderColor: '#B8862F', background: '#FBF6E8' }}
           >
             <strong className="text-[#221E18]">A short note from Jimmy:</strong>{' '}
-            I&apos;m in the middle of exam season right now, so updates will
-            land in bursts rather than steadily for the next few weeks.
-            I&apos;ll keep pushing what I can between revision sessions, and
-            the larger features (subscriptions, properly-translated
-            philosophical content, mobile polish) are queued up for the moment
-            things quiet down. Thanks for using Mull while it&apos;s still
-            finding its shape.
+            Mull is currently running entirely free — no subscriptions, no
+            ads, no data sale. The full Stripe wiring is built and dormant; we&apos;ll
+            flip it on if and when keeping the site running needs it. Until
+            then, the costs come out of my pocket, and anyone who finds Mull
+            useful and can spare anything can{' '}
+            <a
+              href="https://ko-fi.com/mull"
+              target="_blank"
+              rel="noopener"
+              className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+            >
+              tip on Ko-fi
+            </a>{' '}
+            — which materially helps keep the lights on, especially as the
+            Arena adds real AI cost per match.
           </div>
         </PixelWindow>
 
-        <PixelWindow title="THE ECONOMICS, OPENLY" badge="▶ COSTS + REVENUE">
+        <PixelWindow title="THE ECONOMICS, OPENLY" badge="▶ COSTS + WHO PAYS">
           <Prose>
             <p>
-              Real products with real databases and AI analysis cost real
-              money. Here&apos;s what Mull actually costs us each month at
-              different sizes — and what it would earn if 5% of users
-              subscribed to Mull+ at $4.99/month.
+              Real products with real databases and AI inference cost real
+              money. Mull is currently <strong>free for everyone</strong> —
+              there is no paid tier active. The maintainer pays out of pocket,
+              with help from anyone who chooses to tip on Ko-fi.
+            </p>
+            <p>
+              Rough costs at different sizes, assuming the current usage
+              pattern (Arena debates being the dominant AI cost, with the
+              Inheritor and daily dilemma adding smaller amounts):
             </p>
           </Prose>
 
@@ -175,24 +236,24 @@ export default async function AboutPage() {
                 <tr className="border-b-2 border-[#221E18]">
                   <Th>ACTIVE USERS</Th>
                   <Th>MONTHLY COST</Th>
-                  <Th>REVENUE @ 5%</Th>
-                  <Th>NET</Th>
+                  <Th>WHO PAYS</Th>
                 </tr>
               </thead>
               <tbody>
-                <Tr cells={['Under 100', '~$5', '~$25', '+$20 / mo']} netClass="positive" />
-                <Tr cells={['1,000', '$50–200', '~$250', 'break-even']} netClass="neutral" />
-                <Tr cells={['10,000', '$550–1,600', '~$2,500', '+$900–1,950']} netClass="positive" />
-                <Tr cells={['100,000', '$5,000–15,000', '~$25,000', '+$10,000–20,000']} netClass="positive" />
+                <Tr cells={['Under 100', '~$10', 'Maintainer + tips']} netClass="neutral" />
+                <Tr cells={['1,000', '$100–400', 'Tips + maintainer']} netClass="neutral" />
+                <Tr cells={['10,000', '$1,200–4,000', 'Will need real funding']} netClass="neutral" />
+                <Tr cells={['100,000', '$10,000–40,000', 'Will need subscriptions / grants']} netClass="neutral" />
               </tbody>
             </table>
           </div>
 
           <p className="mt-3 text-[13px] leading-[1.55] text-[#8C6520]">
-            Costs scale roughly with three things: hosting (Vercel), the
-            database (Supabase), and AI inference (Claude). The wide ranges
-            reflect how much usage we get from active users — heavy
-            daily-dilemma writers cost more than casual quiz-takers.
+            The dominant variable is AI inference (Claude Sonnet for the
+            Arena judge, Haiku for philosopher voices). A daily-cap of 3
+            debates per user keeps the Arena&apos;s cost bounded; the
+            quiz + map + philosopher pages all serve at near-zero marginal
+            cost.
           </p>
 
           <div
@@ -204,17 +265,23 @@ export default async function AboutPage() {
             }}
           >
             <strong className="text-[#221E18]">
-              Mull+ is $4.99/month or $29/year.
+              How to support Mull right now:
             </strong>{' '}
-            The free tier — quiz, map, archetype, basic daily dilemma — stays
-            free forever. We need paid users to cover infrastructure once we
-            grow past the few-dozen-users phase. Until then, costs come out of
-            the maintainer&apos;s pocket.
-            <br /><br />
-            For early supporters who want to lock things in: a{' '}
-            <strong>Founding Mind lifetime pass at $49</strong> — capped at
-            the first 1,000. This funds roughly the first year of
-            infrastructure outright, in exchange for never paying again.
+            tipping on{' '}
+            <a
+              href="https://ko-fi.com/mull"
+              target="_blank"
+              rel="noopener"
+              className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+            >
+              Ko-fi
+            </a>{' '}
+            is the most direct path. The full subscription system
+            (Mull+ at $4.99/month, $29/year, and a $59 lifetime Founding
+            Mind pass) is built and dormant — we&apos;ll flip it on if Mull
+            grows past the point where tips can cover infrastructure, and
+            never as a way to gate the core features (quiz, map, philosopher
+            pages, daily dilemma stay free forever).
           </div>
         </PixelWindow>
       </div>

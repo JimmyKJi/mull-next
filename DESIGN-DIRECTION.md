@@ -1,5 +1,31 @@
 # Mull · Design direction (v3: pixel-game world)
 
+> **🗂  See also `STYLE-GUIDE.md`** — that's the operational spec
+> (exact tokens, component patterns, anti-patterns). This doc is the
+> *why*; the style guide is the *how*. When they conflict, the style
+> guide wins (it's updated more often).
+>
+> **v3+ additions since the original pivot (logged 2026-05-24):**
+> - **Lora** added as the default body-serif for new narrative
+>   surfaces (Inheritor, Arena prose). Cormorant Garamond is
+>   retained only for long-form editorial essays (archetype +
+>   philosopher detail pages — the "library book inside the game"
+>   beat). The reason: Cormorant runs too thin at body sizes on
+>   modern screens; Lora keeps the editorial feel with more weight.
+> - **`MullMark`** component introduced — the brand glyph ("the
+>   map" — a circle with 8 dots + 1 amber "you" dot). Now appears
+>   beside the wordmark on every page (default `withMark={true}` on
+>   `<MullWordmark />`).
+> - **The Arena** + **The Inheritor** added as major surfaces, both
+>   visually consistent with the pixel-game world. Arena uses chunky
+>   pixel chrome; Inheritor uses the sepia-flat illustration style
+>   for chamber scenes (see `components/scene-illustration.tsx`) +
+>   Lora for prose.
+> - **Information-architecture sweep** (2026-05-24) — home page CTAs
+>   re-prioritized so the most powerful features (Inheritor, Arena)
+>   are most visible; weaker features (exercises, debate-as-watcher)
+>   demoted to a discovery row further down.
+
 **v3 (2026-05-14): pivoted to a deliberate 8-bit pixel-art aesthetic.**
 The reasoning: Mull's thesis is "for the curious, not the credentialed
 — philosophy made accessible." A playful, game-like aesthetic actually

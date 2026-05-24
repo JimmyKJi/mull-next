@@ -156,59 +156,82 @@ export default async function HomeV2() {
                 </div>
               </div>
 
-              <div className="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-                {/* Primary: The Inheritor — narrative 15-min version.
-                    Promoted to default per Jimmy's call: lets curious
-                    visitors land in the immersive experience first.
-                    Quick-quiz seekers still have the 5-min path one
-                    click away. */}
+              {/* Two PEER tier-1 entry points: the Quiz (find where you
+                  sit) and the Arena (argue a philosopher). Equal visual
+                  weight — these are Mull's two signature surfaces. The
+                  Inheritor is the default quiz path; classic is a small
+                  link below for users who want short. */}
+              <div className="mt-10 grid max-w-[640px] grid-cols-1 gap-4 sm:grid-cols-2">
+                {/* — Tier 1: The Quiz — */}
                 <Link
                   href="/quiz/journey"
-                  className="pixel-button pixel-button--amber"
-                >
-                  <span>▶ ENTER THE INHERITOR</span>
-                </Link>
-                <Link
-                  href="/quiz?mode=quick"
-                  className="pixel-button pixel-button--ghost"
-                >
-                  <span>▶ TAKE THE 5-MIN CLASSIC</span>
-                </Link>
-              </div>
-
-              <p className="mt-5 max-w-[520px] text-[14px] leading-[1.55] text-[#8C6520]">
-                No right answers. Skip anything. No signup needed.{" "}
-                <span className="text-[#4A4338]">
-                  ~15 min for The Inheritor · ~5 min for the classic.
-                </span>
-              </p>
-
-              {/* Secondary surface — Arena (debate a philosopher with
-                  Elo scoring). Pitched as a separate offering, not a
-                  competing quiz: this is for users who already know
-                  themselves and want a sparring partner. */}
-              <div className="mt-7 max-w-[520px]">
-                <Link
-                  href="/arena"
-                  className="block border-2 border-[#221E18] bg-[#FFFCF4] p-4 transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
-                  style={{ boxShadow: "4px 4px 0 0 #2F5D5C" }}
+                  className="block border-[4px] border-[#221E18] bg-[#FFFCF4] p-5 transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
+                  style={{ boxShadow: "5px 5px 0 0 #B8862F" }}
                 >
                   <div
-                    className="text-[10px] tracking-[0.2em] text-[#2F5D5C]"
+                    className="text-[10px] tracking-[0.22em] text-[#8C6520]"
                     style={{ fontFamily: "var(--font-pixel-display)" }}
                   >
-                    ▶ NEW · THE ARENA
+                    ▶ FIND YOUR PLACE
                   </div>
-                  <div className="mt-1 text-[16px] font-medium text-[#221E18]">
-                    Argue a philosopher. Get scored on rigor.
+                  <div
+                    className="mt-2 text-[18px] font-medium leading-[1.2] text-[#221E18]"
+                    style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+                  >
+                    The Inheritor
                   </div>
-                  <div className="mt-1 text-[13px] leading-[1.5] text-[#4A4338]">
-                    Pick from 10 thinkers across 3 tiers. The judge
-                    grades logical rigor, principle, and engagement —
-                    not whose side won. Elo + leaderboard.
+                  <p className="mt-2 text-[13.5px] leading-[1.5] text-[#4A4338]">
+                    A 15-min narrative quiz. Midnight at a strange
+                    estate. Four chambers. You leave knowing where you
+                    sit on the philosophical map.
+                  </p>
+                  <div
+                    className="mt-3 inline-block bg-[#F8C75E] px-3 py-1 text-[10px] tracking-[0.18em] text-[#1A1820]"
+                    style={{ fontFamily: "var(--font-pixel-display)" }}
+                  >
+                    ▶ BEGIN
+                  </div>
+                </Link>
+
+                {/* — Tier 1: The Arena — */}
+                <Link
+                  href="/arena"
+                  className="block border-[4px] border-[#221E18] bg-[#FFFCF4] p-5 transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
+                  style={{ boxShadow: "5px 5px 0 0 #2F5D5C" }}
+                >
+                  <div
+                    className="text-[10px] tracking-[0.22em] text-[#2F5D5C]"
+                    style={{ fontFamily: "var(--font-pixel-display)" }}
+                  >
+                    ▶ ARGUE A PHILOSOPHER
+                  </div>
+                  <div
+                    className="mt-2 text-[18px] font-medium leading-[1.2] text-[#221E18]"
+                    style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+                  >
+                    The Arena
+                  </div>
+                  <p className="mt-2 text-[13.5px] leading-[1.5] text-[#4A4338]">
+                    Debate Socrates, Nietzsche, Arendt — or another
+                    person. An impartial judge scores rigor, principle,
+                    and engagement. Elo, leaderboard, PvP.
+                  </p>
+                  <div
+                    className="mt-3 inline-block bg-[#F8C75E] px-3 py-1 text-[10px] tracking-[0.18em] text-[#1A1820]"
+                    style={{ fontFamily: "var(--font-pixel-display)" }}
+                  >
+                    ▶ ENTER
                   </div>
                 </Link>
               </div>
+
+              <p className="mt-5 max-w-[640px] text-[13.5px] leading-[1.55] text-[#8C6520]">
+                No signup needed for either. Skip anything.{" "}
+                <Link href="/quiz?mode=quick" className="text-[#4A4338] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]">
+                  Or take the 5-min classic quiz instead
+                </Link>{" "}
+                — same map placement, faster.
+              </p>
 
               {/* Mobile-only inline philosopher sprite. The right-rail
                   HeroSprites column hides on small screens, leaving
@@ -423,6 +446,116 @@ export default async function HomeV2() {
                 </div>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* ─── What you can do — feature-hierarchy grid ───────────
+            Replaces the implicit "discover by scrolling" with an
+            explicit map of Mull's surfaces in importance order.
+            Tier 1 (Quiz + Arena) already lived in the hero; this
+            section makes the rest of the product navigable so users
+            who skip the hero CTAs still see what's here. */}
+        <section className="mx-auto max-w-[1200px] border-t-4 border-[#221E18] px-6 py-20 sm:px-10 sm:py-24">
+          <div
+            className="flex items-center gap-3 text-[10px] tracking-[0.24em] text-[#8C6520]"
+            style={{ fontFamily: "var(--font-pixel-display)" }}
+          >
+            <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
+            WHAT YOU CAN DO HERE
+          </div>
+          <h2
+            className="mt-5 text-[28px] leading-none tracking-[0.04em] text-[#221E18] sm:text-[40px]"
+            style={{ fontFamily: "var(--font-pixel-display)" }}
+          >
+            <span style={{ textShadow: "4px 4px 0 #B8862F" }}>THE FULL MAP</span>
+          </h2>
+          <p
+            className="mt-5 max-w-[640px] text-[16px] leading-[1.55] text-[#4A4338]"
+            style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+          >
+            Mull has several surfaces. Some are signature features that
+            define the product. Some are quieter daily-return things.
+            Some are reference. All free.
+          </p>
+
+          {/* Tier 2 — substantial features (constellation, daily
+              dilemma, topic explainers, vs matchups). Three columns. */}
+          <div
+            className="mt-10 flex items-center gap-3 text-[10px] tracking-[0.22em] text-[#2F5D5C]"
+            style={{ fontFamily: "var(--font-pixel-display)" }}
+          >
+            <span aria-hidden className="inline-block h-2 w-2 bg-[#2F5D5C]" />
+            EXPLORE
+          </div>
+          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+            <SurfaceCard
+              href="/philosopher"
+              eyebrow="▶ CONSTELLATION"
+              title="Browse the 560 philosophers"
+              body="The 2D map of the philosophical world. Wander, hover, find kindred minds. Search by name or by idea."
+            />
+            <SurfaceCard
+              href="/dilemma"
+              eyebrow="▶ DAILY"
+              title="Today's dilemma"
+              body="One philosophical scenario a day. Respond in writing; the response nudges your map placement over time."
+            />
+            <SurfaceCard
+              href="/topic"
+              eyebrow="▶ READ"
+              title="Topic explainers + matchups"
+              body="Short editorial primers on twelve questions philosophers keep returning to. Plus head-to-head comparisons of thirty thinker pairs."
+            />
+          </div>
+
+          {/* Tier 3 — supporting features. Smaller cards, denser
+              grid. These are real and useful but not where new users
+              should start. */}
+          <div
+            className="mt-12 flex items-center gap-3 text-[10px] tracking-[0.22em] text-[#8C6520]"
+            style={{ fontFamily: "var(--font-pixel-display)" }}
+          >
+            <span aria-hidden className="inline-block h-2 w-2 bg-[#8C6520]" />
+            DEEPEN
+          </div>
+          <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+            <SmallSurface
+              href="/diary"
+              label="Diary"
+              body="Personal philosophical journal."
+            />
+            <SmallSurface
+              href="/compare"
+              label="Compare"
+              body="Stack two thinkers across all 16 dimensions."
+            />
+            <SmallSurface
+              href="/exercises"
+              label="Exercises"
+              body="A short library of contemplative practices."
+            />
+            <SmallSurface
+              href="/debate"
+              label="Simulated debate"
+              body="Watch any two philosophers argue."
+            />
+          </div>
+
+          {/* Tier 4 — utility + social. Quietest row. */}
+          <div className="mt-10 flex flex-wrap items-center gap-4 text-[12px] text-[#8C6520]">
+            <span
+              className="text-[10px] tracking-[0.22em]"
+              style={{ fontFamily: "var(--font-pixel-display)" }}
+            >
+              ▸ ALSO
+            </span>
+            <Link href="/wrapped" className="hover:text-[#221E18]">Mull Wrapped (year in review)</Link>
+            <span>·</span>
+            <Link href="/classes" className="hover:text-[#221E18]">Classes (for educators)</Link>
+            <span>·</span>
+            <Link href="/about" className="hover:text-[#221E18]">About + costs</Link>
+            <span>·</span>
+            <Link href="/methodology" className="hover:text-[#221E18]">Methodology</Link>
           </div>
         </section>
 
@@ -666,4 +799,66 @@ export default async function HomeV2() {
 
 function capitalize(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+// ─── Surface cards (used by the "What you can do" section) ──────
+
+function SurfaceCard({
+  href,
+  eyebrow,
+  title,
+  body,
+}: {
+  href: string;
+  eyebrow: string;
+  title: string;
+  body: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="block border-[3px] border-[#221E18] bg-[#FFFCF4] p-5 transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
+      style={{ boxShadow: "4px 4px 0 0 #B8862F" }}
+    >
+      <div
+        className="text-[10px] tracking-[0.22em] text-[#8C6520]"
+        style={{ fontFamily: "var(--font-pixel-display)" }}
+      >
+        {eyebrow}
+      </div>
+      <div
+        className="mt-2 text-[17px] font-medium leading-[1.25] text-[#221E18]"
+        style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+      >
+        {title}
+      </div>
+      <p className="mt-2 text-[13.5px] leading-[1.5] text-[#4A4338]">{body}</p>
+    </Link>
+  );
+}
+
+function SmallSurface({
+  href,
+  label,
+  body,
+}: {
+  href: string;
+  label: string;
+  body: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="block border-[2px] border-[#221E18] bg-[#FFFCF4] p-3 transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
+      style={{ boxShadow: "3px 3px 0 0 #B8862F" }}
+    >
+      <div
+        className="text-[14px] font-medium text-[#221E18]"
+        style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+      >
+        {label}
+      </div>
+      <p className="mt-1 text-[12.5px] leading-[1.45] text-[#8C6520]">{body}</p>
+    </Link>
+  );
 }

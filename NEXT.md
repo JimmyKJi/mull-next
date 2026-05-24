@@ -3,6 +3,67 @@
 Things flagged during the May 12 polish session that we decided to defer.
 When you ask "what's next?", start here.
 
+## Content calibration — flagged 2026-05-24 (Jimmy's explicit ask after UX/UI sweep)
+
+The following content surfaces need a calibration pass — not new
+features, just deliberate review of what's already there for
+consistency, voice, philosophical accuracy, and tone. Listed in
+descending priority per the discussion:
+
+- [ ] **Quizzes — re-audit every question against the 16-D model.**
+      Highest priority. Both the 20-question quick quiz and the
+      50-question detailed fingerprint. For each question:
+      * Are the choice vectors balanced? (no answer should be
+        philosophically "free" / dominate)
+      * Are the choices distinct enough that the 16-D vector
+        separates them meaningfully?
+      * Does the phrasing nudge the user toward any one answer?
+      * Are there better contemporary scenarios available?
+      Tooling: `scripts/calibration-report.md` already exists; we
+      should extend it to flag questions whose answer-vector deltas
+      cluster suspiciously.
+
+- [ ] **SEO pages — `/topic/[slug]` (12) + `/vs/[a]/[b]` (30 curated).**
+      Each one was written in one shot. Re-read each for:
+      * Voice consistency (per STYLE-GUIDE.md §9)
+      * Updated references — e.g. include current debates around the
+        topic, recent thinkers
+      * Internal-link audit — does every philosopher mentioned link
+        through? Do the related-archetype tags resolve well?
+      * H1 + meta-description punchiness (currently fine but could
+        be sharper for click-through)
+
+- [ ] **Exercises — currently 16, mostly hand-written.** Audit for:
+      * Same voice as elsewhere on Mull (per STYLE-GUIDE.md §9)
+      * Useful, not therapeutic-cliché
+      * Difficulty progression — currently scattered
+      * Are the right exercises tagged to the right archetypes?
+      Consider trimming weakest 3-5 rather than expanding.
+
+- [ ] **Translations — 8 locales for chrome only.**
+      Long content (philosopher entries, archetype essays, topic
+      explainers, vs pages, Arena topics, Inheritor scenes) all
+      English-only. Either commit to translating the most-visited
+      surfaces (probably the 10 archetype pages + ~30 most-popular
+      philosophers + the 12 topics + the 5 highest-traffic vs
+      pairs), or be explicit on those pages with a "EN only for now"
+      banner. Pick a strategy.
+
+- [ ] **Arena topics + philosopher voices — re-audit after first
+      real usage data.** Currently 13 topics + 10 voices, hand-
+      written in single sessions. Once we have ~50+ judged debates
+      against each philosopher, look at:
+      * Are some topics producing one-sided debates? (sign the
+        topic favors one stance — bad)
+      * Are some philosopher voices judged systematically more/less
+        accessible? (sign their voice prompt needs tuning)
+      * Are the kindred-philosopher tags landing accurately?
+
+This whole block is content work, not engineering — most of it is
+"sit with the existing text and rewrite carefully." Time-boxed
+sessions (2-4 hours each) work better than trying to do all five in
+one push.
+
 ## Calibration
 
 - [ ] **Investigate the calibration surprises and propose vector nudges.**
