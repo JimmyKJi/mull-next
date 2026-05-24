@@ -553,6 +553,23 @@ select:focus-visible {
    keyframe animations sitewide; this comment is a reminder that
    we don't bypass it on the new utilities. */
 
+/* Badge tile hover/focus tooltip — paired with the BadgeTile
+   component in components/progression-panel.tsx. Pure CSS, no JS:
+   when the tile is hovered or keyboard-focused, the .badge-tile__tip
+   child fades in. */
+.badge-tile:hover .badge-tile__tip,
+.badge-tile:focus-visible .badge-tile__tip,
+.badge-tile:focus .badge-tile__tip {
+  opacity: 1 !important;
+}
+.badge-tile:hover {
+  transform: translate(-1px, -1px);
+}
+.badge-tile:focus-visible {
+  outline: 3px solid #B8862F !important;
+  outline-offset: 2px;
+}
+
 /* ─── Pixel form container ─────────────────────────────────────
    Wrap any form in <div class="pixel-form">…</div> and its inputs,
    textareas, and labels pick up the v3 pixel chrome styling without

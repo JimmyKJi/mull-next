@@ -74,102 +74,46 @@ export default function ProgressionPanel({
         </p>
       </header>
 
-      {/* Earned badges */}
+      {/* Earned badges — compact lineup, hover to reveal description.
+          Replaces the verbose card-grid version that ate ~half a
+          screen of vertical space. Tooltip slides out below the
+          hovered badge via pure CSS :hover, no JS needed. */}
       <div style={{ marginBottom: 32 }}>
         <h3 style={subhead}>▸ {t('progression.badges_earned', locale).toUpperCase()}</h3>
-        {earned.length > 0 ? (
-          <ul style={{
-            listStyle: 'none', padding: 0, margin: 0,
-            display: 'grid', gap: 12,
-            gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-          }}>
-            {earned.map(b => (
-              <li key={b.key} style={{
-                display: 'flex', alignItems: 'flex-start', gap: 12,
-                padding: '12px 14px',
-                background: '#F8EDC8',
-                border: '3px solid #221E18',
-                boxShadow: '3px 3px 0 0 #B8862F',
-                borderRadius: 0,
-              }}>
-                <span aria-hidden style={{
-                  fontFamily: serif, fontSize: 26,
-                  color: '#8C6520', lineHeight: 1, flexShrink: 0,
-                  minWidth: 28, textAlign: 'center',
-                }}>
-                  {b.glyph}
-                </span>
-                <span>
-                  <strong style={{
-                    display: 'block', color: '#221E18',
-                    fontFamily: serif, fontSize: 16, fontWeight: 500,
-                    marginBottom: 2,
-                  }}>
-                    {b.name}
-                  </strong>
-                  <span style={{
-                    display: 'block', fontFamily: sans, fontSize: 12.5,
-                    color: '#4A4338', lineHeight: 1.4,
-                  }}>
-                    {b.description}
-                  </span>
-                </span>
-              </li>
+        {earned.length > 0 || previewUnearned.length > 0 ? (
+          <ul
+            style={{
+              listStyle: 'none',
+              padding: 0,
+              margin: 0,
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: 10,
+            }}
+          >
+            {earned.map((b) => (
+              <BadgeTile key={b.key} badge={b} earned />
+            ))}
+            {previewUnearned.map((b) => (
+              <BadgeTile key={b.key} badge={b} earned={false} />
             ))}
           </ul>
         ) : (
           <p style={emptyState}>{t('progression.no_badges_yet', locale)}</p>
         )}
-
-        {previewUnearned.length > 0 && (
-          <details style={{ marginTop: 16 }}>
-            <summary style={{
-              cursor: 'pointer', fontFamily: pixel, fontSize: 12,
-              color: '#8C6520', letterSpacing: 0.4,
+        {(earned.length > 0 || previewUnearned.length > 0) && (
+          <p
+            style={{
+              marginTop: 10,
+              fontFamily: pixel,
+              fontSize: 10,
+              color: '#8C6520',
+              letterSpacing: 0.4,
               textTransform: 'uppercase',
-            }}>
-              {t('progression.show_unearned', locale, { n: unearned.length })}
-            </summary>
-            <ul style={{
-              listStyle: 'none', padding: 0, margin: '12px 0 0',
-              display: 'grid', gap: 8,
-              gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-              opacity: 0.7,
-            }}>
-              {previewUnearned.map(b => (
-                <li key={b.key} style={{
-                  display: 'flex', alignItems: 'flex-start', gap: 12,
-                  padding: '10px 14px',
-                  background: '#FFFCF4',
-                  border: '2px dashed #8C6520',
-                  borderRadius: 0,
-                }}>
-                  <span aria-hidden style={{
-                    fontFamily: serif, fontSize: 22,
-                    color: '#A39880', lineHeight: 1, flexShrink: 0,
-                    minWidth: 28, textAlign: 'center',
-                  }}>
-                    {b.glyph}
-                  </span>
-                  <span>
-                    <strong style={{
-                      display: 'block', color: '#4A4338',
-                      fontFamily: serif, fontSize: 15, fontWeight: 500,
-                      marginBottom: 2,
-                    }}>
-                      {b.name}
-                    </strong>
-                    <span style={{
-                      display: 'block', fontFamily: sans, fontSize: 12,
-                      color: '#8C6520', lineHeight: 1.4, fontStyle: 'italic',
-                    }}>
-                      {b.description}
-                    </span>
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </details>
+            }}
+          >
+            ▸ {earned.length} earned · {unearned.length} remaining · hover any badge to read
+          </p>
         )}
       </div>
 
@@ -290,3 +234,144 @@ const emptyState: React.CSSProperties = {
   border: '2px dashed #8C6520', borderRadius: 0,
   margin: 0,
 };
+
+// ─── BadgeTile ───────────────────────────────────────────────────
+//
+// Compact badge in a horizontal lineup. The glyph is the main
+// affordance; the badge name appears below, small. On hover/focus
+// (touch tap-and-hold also fires :hover on mobile), a tooltip
+// reveals the full description below the tile.
+//
+// Pure CSS hover via the .badge-tile / .badge-tile__tip pair. No JS.
+// Tooltip is absolutely positioned and clipped to a higher z-index
+// so it doesn't get blocked by adjacent tiles.
+
+function BadgeTile({
+  badge,
+  earned,
+}: {
+  badge: typeof BADGES[number];
+  earned: boolean;
+}) {
+  return (
+    <li
+      className="badge-tile"
+      tabIndex={0}
+      style={{
+        position: 'relative',
+        width: 72,
+        height: 88,
+        background: earned ? '#F8EDC8' : '#FFFCF4',
+        border: earned ? '3px solid #221E18' : '2px dashed #8C6520',
+        boxShadow: earned ? '3px 3px 0 0 #B8862F' : 'none',
+        borderRadius: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 4,
+        padding: '6px 4px',
+        cursor: 'help',
+        outline: 'none',
+        transition: 'transform 120ms steps(2, end)',
+      }}
+    >
+      <span
+        aria-hidden
+        style={{
+          fontFamily: serif,
+          fontSize: 26,
+          lineHeight: 1,
+          color: earned ? '#8C6520' : '#A39880',
+          textShadow: earned ? '1px 1px 0 #B8862F' : 'none',
+        }}
+      >
+        {badge.glyph}
+      </span>
+      <span
+        style={{
+          fontFamily: pixel,
+          fontSize: 8,
+          color: earned ? '#221E18' : '#8C6520',
+          letterSpacing: 0.4,
+          textTransform: 'uppercase',
+          textAlign: 'center',
+          lineHeight: 1.15,
+          maxWidth: 64,
+          // Two-line clamp so longer names ("first-to-fifth", etc.)
+          // don't overflow the tile.
+          display: '-webkit-box',
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden',
+        }}
+      >
+        {badge.name}
+      </span>
+
+      {/* Tooltip — shows on hover OR keyboard focus. Positioned
+          absolutely below the tile; clipped at the parent's
+          overflow boundary via z-index. */}
+      <span
+        className="badge-tile__tip"
+        role="tooltip"
+        style={{
+          position: 'absolute',
+          top: 'calc(100% + 8px)',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          minWidth: 200,
+          maxWidth: 280,
+          padding: '10px 12px',
+          background: '#1A1820',
+          border: '2px solid #B8862F',
+          boxShadow: '4px 4px 0 0 #2F5D5C',
+          color: '#F8EDC8',
+          opacity: 0,
+          pointerEvents: 'none',
+          transition: 'opacity 140ms steps(3, end)',
+          zIndex: 30,
+          textAlign: 'left',
+        }}
+      >
+        <span
+          style={{
+            display: 'block',
+            fontFamily: pixel,
+            fontSize: 10,
+            color: '#B8862F',
+            letterSpacing: 0.4,
+            textTransform: 'uppercase',
+            marginBottom: 4,
+          }}
+        >
+          {earned ? '▸ EARNED' : '▸ NOT YET EARNED'}
+        </span>
+        <strong
+          style={{
+            display: 'block',
+            fontFamily: serif,
+            fontSize: 15,
+            fontWeight: 500,
+            color: '#F8EDC8',
+            marginBottom: 4,
+          }}
+        >
+          {badge.name}
+        </strong>
+        <span
+          style={{
+            display: 'block',
+            fontFamily: serif,
+            fontSize: 13,
+            fontStyle: 'italic',
+            color: '#D6CDB6',
+            lineHeight: 1.5,
+          }}
+        >
+          {badge.description}
+        </span>
+      </span>
+    </li>
+  );
+}

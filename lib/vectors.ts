@@ -52,20 +52,39 @@ export function cos(a: number[], b: number[]): number {
  *
  *  Tightened relative to a naive [0, 1] → [0, 100] mapping so the
  *  spread between primary and shadow archetype reads honestly.
- *  Empirically:
- *    cos 0.96+ → 100% (essentially this archetype)
- *    cos 0.91  → ~80% (primary archetype, strong)
- *    cos 0.85  → ~58% (close runner-up)
- *    cos 0.78  → ~31% (typical shadow on the opposite pole)
- *    cos 0.70  → 0%  (orthogonal-ish; not aligned)
+ *  v3 (2026-05-24) — recalibrated after Jimmy reported his best-fit
+ *  archetype showed only 38%, which felt wrong. The previous formula
+ *  ((sim - 0.7) / 0.26) was too pessimistic — anyone whose best
+ *  cosine landed below 0.91 saw their primary archetype as <80%.
+ *  In reality cosines of 0.78-0.84 are perfectly normal best-fits;
+ *  they just mean "you're a Touchstone but with some range across
+ *  the model" — which should feel decisive, not weak.
  *
- *  The previous mapping ([0.55, 1.0] → [0, 100]) made shadows read as
- *  ~50%, which felt absurd given they're literally the opposite end
- *  of the model. New mapping squashes the high end where most
- *  archetype distances naturally cluster, expanding distinctions. */
+ *  New mapping: ((sim - 0.55) / 0.4)^0.8, capped [0, 1] and scaled
+ *  to [0, 100]. The 0.8 power gently compresses the high end (so
+ *  cos 0.95 doesn't hit 100 too easily) and expands the middle (so
+ *  cos 0.80 reads as the strong match it actually is). The 0.55
+ *  floor matches "weakest plausible best-fit"; below this the user
+ *  is genuinely scattered across the model and a primary archetype
+ *  is not really meaningful.
+ *
+ *  Empirically (new):
+ *    cos 0.95+ → 100% (essentially this archetype)
+ *    cos 0.90  → ~90% (very strong primary)
+ *    cos 0.85  → ~80% (strong primary)
+ *    cos 0.80  → ~71% (decisive primary, some range)
+ *    cos 0.75  → ~60% (clear primary among several near-misses)
+ *    cos 0.70  → ~47% (eclectic, the algorithm picks the nearest)
+ *    cos 0.65  → ~33% (very mixed — shown but with caveat)
+ *    cos 0.55  → 0%   (no meaningful primary)
+ *
+ *  Runner-ups + shadows are computed via the SAME formula. A typical
+ *  shadow (cos ~0.7) shows ~47%, which is honest — they're not
+ *  "you" but they're not random noise either. */
 export function displayPct(sim: number | null | undefined): number {
   if (sim == null || isNaN(sim)) return 0;
-  return Math.max(0, Math.min(100, Math.round(((sim - 0.7) / 0.26) * 100)));
+  const normalized = Math.max(0, (sim - 0.55) / 0.4);
+  return Math.max(0, Math.min(100, Math.round(Math.pow(normalized, 0.8) * 100)));
 }
 
 /** One-word flavor adjective for each dimension. Used to compute
