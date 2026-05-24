@@ -15,15 +15,19 @@ import { useEffect, useMemo, useState } from "react";
 import { ARCHETYPES } from "@/lib/archetypes";
 import { PHILOSOPHERS } from "@/lib/philosophers";
 import FocusTrap from "./focus-trap";
+import { MullMark } from "./mull-mark";
 
-// Routes pinned to the top nav. Anything else lives in the command
-// palette under "Pages" or "Philosophers".
+// Routes pinned to the top nav. Reflects the same tier-1/2 priority
+// that the home page IA does: signature surfaces first, then map
+// + daily, then about. Tier-3 surfaces (Diary, Exercises, Compare,
+// Simulated debate) live only in the command palette — they're
+// discoverable but don't crowd the top bar.
 const NAV_LINKS = [
   { href: "/", label: "Home" },
+  { href: "/arena", label: "Arena" },
+  { href: "/philosopher", label: "Map" },
   { href: "/archetype", label: "Archetypes" },
   { href: "/dilemma", label: "Today's dilemma" },
-  { href: "/diary", label: "Diary" },
-  { href: "/exercises", label: "Exercises" },
   { href: "/about", label: "About" },
 ] as const;
 
@@ -72,22 +76,14 @@ export function SiteNav() {
           Reads as the title bar of an 8-bit window. */}
       <nav className="sticky top-0 z-40 border-b-4 border-[#221E18] bg-[#FAF6EC]">
         <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-6 px-4 sm:px-8">
-          {/* Wordmark — Press Start 2P pixel typeface */}
+          {/* Wordmark — uses the new MullMark glyph + Press Start 2P
+              text. Replaces the inline diagonal-stripe placeholder
+              that lived here before MullMark existed. */}
           <Link
             href="/"
             className="flex items-center gap-2.5 hover:text-[#8C6520]"
           >
-            {/* Tiny pixel-art "M" tile */}
-            <span
-              aria-hidden
-              className="inline-block h-4 w-4 bg-[#221E18]"
-              style={{
-                backgroundImage:
-                  "linear-gradient(45deg, #B8862F 25%, transparent 25%, transparent 75%, #B8862F 75%), linear-gradient(45deg, #B8862F 25%, transparent 25%, transparent 75%, #B8862F 75%)",
-                backgroundSize: "8px 8px",
-                backgroundPosition: "0 0, 4px 4px",
-              }}
-            />
+            <MullMark size={22} />
             <span
               className="text-[14px] tracking-[0.12em] text-[#221E18]"
               style={{ fontFamily: "var(--font-pixel-display)" }}
@@ -189,16 +185,31 @@ type PaletteItem = {
 };
 
 const PAGE_ITEMS: PaletteItem[] = [
+  // ── Tier 1 — signature surfaces ──
   { group: "Pages", label: "Home", href: "/" },
-  { group: "Pages", label: "Take the quiz", href: "/quiz?mode=quick", hint: "20 questions" },
-  { group: "Pages", label: "Detailed quiz", href: "/quiz?mode=detailed", hint: "50 questions" },
+  { group: "Pages", label: "The Inheritor (narrative quiz)", href: "/quiz/journey", hint: "~15 min" },
+  { group: "Pages", label: "Take the classic quiz", href: "/quiz?mode=quick", hint: "20 questions, ~5 min" },
+  { group: "Pages", label: "Detailed quiz", href: "/quiz?mode=detailed", hint: "50 questions, ~15 min" },
+  { group: "Pages", label: "Arena", href: "/arena", hint: "argue a philosopher" },
+  { group: "Pages", label: "Arena · PvE", href: "/arena/pve", hint: "face a philosopher" },
+  { group: "Pages", label: "Arena · PvP", href: "/arena/pvp", hint: "vs another human" },
+  { group: "Pages", label: "Arena · Leaderboard", href: "/arena/leaderboard" },
+  { group: "Pages", label: "Arena · Your match history", href: "/arena/history" },
+  // ── Tier 2 — explore ──
+  { group: "Pages", label: "Browse the map", href: "/philosopher", hint: "560 philosophers" },
   { group: "Pages", label: "Today's dilemma", href: "/dilemma" },
   { group: "Pages", label: "Dilemma archive", href: "/dilemma/archive" },
+  { group: "Pages", label: "Topic explainers", href: "/topic", hint: "12 evergreen primers" },
+  { group: "Pages", label: "Philosopher matchups", href: "/vs", hint: "head-to-head comparisons" },
+  // ── Tier 3 — deepen ──
   { group: "Pages", label: "Diary", href: "/diary" },
+  { group: "Pages", label: "Compare", href: "/compare", hint: "stack two thinkers" },
   { group: "Pages", label: "Exercises", href: "/exercises" },
-  { group: "Pages", label: "Simulated debate", href: "/debate" },
+  { group: "Pages", label: "Simulated debate", href: "/debate", hint: "watch two philosophers argue" },
   { group: "Pages", label: "Search minds", href: "/search" },
-  { group: "Pages", label: "Compare", href: "/compare" },
+  // ── Tier 4 — also ──
+  { group: "Pages", label: "Mull Wrapped", href: "/wrapped", hint: "year in review" },
+  { group: "Pages", label: "Classes", href: "/classes", hint: "for educators" },
   { group: "Pages", label: "About", href: "/about" },
   { group: "Pages", label: "Methodology", href: "/methodology" },
   { group: "Pages", label: "Account", href: "/account" },

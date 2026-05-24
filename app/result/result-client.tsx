@@ -503,65 +503,90 @@ export function ResultClient({
           </Link>
         )}
 
-        <div className={isSignedIn ? "grid grid-cols-1 gap-4 md:grid-cols-3" : "grid grid-cols-1 gap-4 md:grid-cols-2"}>
-          <Link
-            href={`/archetype/${topKey}`}
-            className="pixel-panel block transition-transform hover:-translate-x-1 hover:-translate-y-1"
+        {/* HERO next-step: the archetype essay. The single most
+            natural continuation — "now read about the kind of mind
+            you turned out to be." Full-width, archetype-themed
+            shadow so it visually anchors. */}
+        <Link
+          href={`/archetype/${topKey}`}
+          className="pixel-panel pixel-press--lg block transition-transform"
+          style={{
+            background: color.soft,
+            borderColor: color.deep,
+            boxShadow: `6px 6px 0 0 ${color.deep}`,
+            marginBottom: 16,
+          }}
+        >
+          <div
+            className="border-b-4 px-5 py-2.5 text-[11px] tracking-[0.22em]"
             style={{
-              background: color.soft,
               borderColor: color.deep,
-              boxShadow: `4px 4px 0 0 ${color.deep}`,
+              background: color.deep,
+              color: color.soft,
+              fontFamily: "var(--font-pixel-display)",
             }}
           >
-            <div
-              className="border-b-4 px-4 py-2 text-[10px] tracking-[0.22em]"
+            ▶ READ ON
+          </div>
+          <div className="grid gap-4 px-6 py-7 md:grid-cols-[1fr_auto] md:items-center sm:px-8">
+            <div>
+              <div className="text-[22px] font-medium sm:text-[24px]" style={{ color: color.deep }}>
+                Read the full essay on the {capitalize(topKey)}
+              </div>
+              <p className="mt-3 text-[14px] leading-[1.55] sm:text-[15px]" style={{ color: '#4A4338' }}>
+                What this archetype gets right that others miss, where
+                it tends to falter, a day in the life, kindred thinkers
+                across history, a starter reading list.
+              </p>
+            </div>
+            <span
+              className="inline-block px-5 py-3 text-[12px] tracking-[0.08em]"
               style={{
-                borderColor: color.deep,
-                background: color.deep,
-                color: color.soft,
                 fontFamily: "var(--font-pixel-display)",
+                color: color.soft,
+                background: color.deep,
+                border: '4px solid #221E18',
+                boxShadow: '4px 4px 0 0 #221E18',
+                textTransform: 'uppercase',
               }}
             >
-              ▶ READ ON
-            </div>
-            <div className="px-5 py-5">
-              <div className="text-[18px] font-medium" style={{ color: color.deep }}>
-                The full essay on the {capitalize(topKey)}
-              </div>
-              <div
-                className="mt-3 text-[12px] tracking-[0.2em]"
-                style={{ color: color.deep, fontFamily: "var(--font-pixel-display)" }}
-              >
-                ▶ OPEN ESSAY
-              </div>
-            </div>
-          </Link>
+              ▶ OPEN ESSAY
+            </span>
+          </div>
+        </Link>
 
+        {/* TIER 2: two peer next-actions — argue a philosopher (Arena)
+            + take the narrative quiz (Inheritor). These are the two
+            "now what" paths after seeing your placement. Same visual
+            weight, color-coded (teal for Arena = "test yourself";
+            amber for Inheritor = "go deeper into who you are"). */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Link
-            href="/quiz?mode=quick"
+            href="/arena"
             className="pixel-panel block transition-transform hover:-translate-x-1 hover:-translate-y-1"
+            style={{
+              borderColor: '#221E18',
+              boxShadow: '4px 4px 0 0 #2F5D5C',
+            }}
           >
             <div
               className="border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
-              ▶ TRY AGAIN
+              ▶ THE ARENA · NOW TEST YOURSELF
             </div>
             <div className="px-5 py-5">
               <div className="text-[18px] font-medium text-[#221E18]">
-                Retake the quiz
+                Argue a philosopher
               </div>
               <p className="mt-3 text-[13px] leading-[1.5] text-[#4A4338]">
-                The same questions; a fresh attempt. Useful when an
-                answer surprised you the first time through.
+                Debate any of ten thinkers — including the ones nearest
+                you on the map. An impartial judge scores logical rigor,
+                principle, and engagement. Climb the Elo.
               </p>
             </div>
           </Link>
 
-          {/* The Inheritor — narrative version. Lower-friction
-              re-engagement: the user has already placed themselves
-              once; the narrative version offers the same model from
-              a different angle. ~15 min, opt-in. */}
           <Link
             href="/quiz/journey"
             className="pixel-panel block transition-transform hover:-translate-x-1 hover:-translate-y-1"
@@ -570,66 +595,40 @@ export function ResultClient({
               className="border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
-              ▶ AS A STORY
+              ▶ THE INHERITOR · GO DEEPER
             </div>
             <div className="px-5 py-5">
               <div className="text-[18px] font-medium text-[#221E18]">
-                Take it again as The Inheritor
+                Take the narrative version
               </div>
               <p className="mt-3 text-[13px] leading-[1.5] text-[#4A4338]">
                 Same model, fully narrative — a midnight at a strange
-                estate. ~15 minutes. For when you want the longer
-                version.
+                estate. Four chambers. ~15 minutes. For when the
+                survey-style quiz wasn&rsquo;t enough.
               </p>
             </div>
           </Link>
+        </div>
 
-          {/* Arena — debate a philosopher. The natural next step for
-              a user who's just been placed: "now go test your
-              reasoning against the people you're nearest to." */}
-          <Link
-            href="/arena"
-            className="pixel-panel block transition-transform hover:-translate-x-1 hover:-translate-y-1"
+        {/* TIER 3: quiet links for the optional actions — retake the
+            classic, or (signed-in) open your trajectory page. */}
+        <div className="mt-6 flex flex-wrap items-center gap-4 text-[13px] text-[#8C6520]">
+          <span
+            className="text-[10px] tracking-[0.22em]"
+            style={{ fontFamily: "var(--font-pixel-display)" }}
           >
-            <div
-              className="border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
-              style={{ fontFamily: "var(--font-pixel-display)" }}
-            >
-              ▶ THE ARENA
-            </div>
-            <div className="px-5 py-5">
-              <div className="text-[18px] font-medium text-[#221E18]">
-                Argue a philosopher
-              </div>
-              <p className="mt-3 text-[13px] leading-[1.5] text-[#4A4338]">
-                Debate any of ten thinkers. An impartial judge scores
-                logical rigor, principle, and engagement — not whose
-                side won. Climb the Elo.
-              </p>
-            </div>
+            ▸ ALSO
+          </span>
+          <Link href="/quiz?mode=quick" className="hover:text-[#221E18] underline decoration-[#D6CDB6] underline-offset-3 hover:decoration-[#8C6520]">
+            Retake the 5-min classic
           </Link>
-
           {isSignedIn && (
-            <Link
-              href="/account"
-              className="pixel-panel block transition-transform hover:-translate-x-1 hover:-translate-y-1"
-            >
-              <div
-                className="border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
-                style={{ fontFamily: "var(--font-pixel-display)" }}
-              >
-                ▶ TRAJECTORY
-              </div>
-              <div className="px-5 py-5">
-                <div className="text-[18px] font-medium text-[#221E18]">
-                  Open your account
-                </div>
-                <p className="mt-3 text-[13px] leading-[1.5] text-[#4A4338]">
-                  See this attempt added to your trajectory map, alongside
-                  your dilemma responses and diary entries.
-                </p>
-              </div>
-            </Link>
+            <>
+              <span>·</span>
+              <Link href="/account" className="hover:text-[#221E18] underline decoration-[#D6CDB6] underline-offset-3 hover:decoration-[#8C6520]">
+                See your trajectory
+              </Link>
+            </>
           )}
         </div>
       </section>
