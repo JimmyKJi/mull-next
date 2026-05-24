@@ -38,7 +38,7 @@ export const DETAILED_QUESTIONS: Question[] = [
     a:[
       { t:"Cleaner. Other people's noise was crowding out something real.",            v:v({SS:3,AT:2,MR:1}) },
       { t:"Hungry to be back. I think with people, not against them.",                  v:v({CE:3,ES:1,VA:1}) },
-      { t:"Both — clearer in some ways, dimmer in others.",                              v:v({SR:1,TV:1,PO:1}) },
+      { t:"Both — clearer in some ways, dimmer in others.",                              v:v({SR:2,TV:1,PO:2,SI:1}) },
       { t:"Restless. Solitude shows me thoughts I'd rather not have.",                   v:v({TV:2,SR:1,SI:1}) },
       { t:"Calmer. Most of what I usually do is performance.",                            v:v({AT:3,SS:2,SI:2}) }
     ]},
@@ -150,7 +150,7 @@ export const DETAILED_QUESTIONS: Question[] = [
       { t:"Belief outruns evidence in most domains. Memory's no different.",                  v:v({SR:3,TE:2,TR:1}) },
       { t:"Some memories are more like prayer than recording.",                                v:v({MR:3,TV:1,TD:1}) },
       { t:"It means I should trust other tools — writing, the people who were there.",        v:v({TE:2,SR:2,PO:2,CE:1}) },
-      { t:"It means the self is more porous than we like to admit.",                          v:v({SI:3,MR:2,SS:-1}) }
+      { t:"It means the self is more porous than we like to admit.",                          v:v({SI:3,MR:2,TV:1}) }
     ]},
 
   { p:"A new way of doing something replaces an old way. The old worked. The new is provably better. Your honest first reaction?",
@@ -204,7 +204,7 @@ export const DETAILED_QUESTIONS: Question[] = [
       { t:"The voice of internalized community — parents, culture, the eyes you carry.",           v:v({CE:3,RT:2,SI:1}) },
       { t:"A real sense of moral order, dim but pointing somewhere.",                                v:v({MR:3,UI:2,RT:1}) },
       { t:"Reason recognizing universal duties.",                                                    v:v({TR:3,UI:2,TD:1}) },
-      { t:"All of those tangled. There isn't one source.",                                            v:v({SR:1,SI:1,PO:1,TD:1}) }
+      { t:"All of those tangled. There isn't one source.",                                            v:v({SR:2,SI:1,PO:1,TD:2}) }
     ]},
 
   { p:"A skill you'll never have, no matter how hard you try. Some people have it; you don't. What's the right relationship to that fact?",
@@ -239,14 +239,14 @@ export const DETAILED_QUESTIONS: Question[] = [
       { t:"Wiser. Regret is a sentimental tax on present action.",                                     v:v({SS:2,WP:2,SR:1,SI:1}) },
       { t:"Hollow. Regret is what makes the past a teacher.",                                          v:v({TV:3,RT:1,VA:1,CE:1}) },
       { t:"Both — wiser in some directions, dimmer in others.",                                        v:v({TR:1,PO:1,SR:1}) },
-      { t:"The question is malformed. There's no 'me' that survives the absence of regret.",          v:v({SI:3,MR:2,SS:-1}) },
+      { t:"The question is malformed. There's no 'me' that survives the absence of regret.",          v:v({SI:3,MR:2,SR:1}) },
       { t:"Hollow. The capacity to regret is the same capacity to love.",                              v:v({MR:2,VA:2,ES:1,TV:1}) }
     ]},
 
   { p:"Your body says one thing, your mind another. Which do you usually trust?",
     a:[
       { t:"The body. It knows things faster than I do.",                                               v:v({ES:3,TE:2,SI:1}) },
-      { t:"The mind. The body's signal is correlation; thought finds the cause.",                      v:v({TR:3,TD:2,ES:-1}) },
+      { t:"The mind. The body's signal is correlation; thought finds the cause.",                      v:v({TR:3,TD:2,SS:1}) },
       { t:"Whichever is louder — and that's information about which has been suppressed.",            v:v({SR:2,ES:2,SI:1}) },
       { t:"The body for the small decisions, the mind for the large.",                                  v:v({PO:3,ES:1,TR:1}) },
       { t:"They're never really separate. The split is a confession.",                                  v:v({MR:2,ES:2,SI:2}) }
@@ -319,7 +319,7 @@ export const DETAILED_QUESTIONS: Question[] = [
     a:[
       { t:"Quiet. People who can do the thing without needing to be seen doing it.",                       v:v({AT:3,MR:1,RT:2}) },
       { t:"Loud. The ones who push through skepticism with sheer force.",                                  v:v({WP:3,VA:2,SS:1}) },
-      { t:"Both, depending on the domain.",                                                                 v:v({PO:2,SR:1}) },
+      { t:"Both, depending on the domain.",                                                                 v:v({PO:3,SR:2,TR:1}) },
       { t:"Neither, really. Excellence in itself is overrated.",                                            v:v({MR:2,SI:2,CE:1}) },
       { t:"Quiet. Loud excellence is usually performance with a real skill underneath.",                    v:v({SR:2,AT:2,TD:1}) }
     ]},
@@ -335,7 +335,7 @@ export const DETAILED_QUESTIONS: Question[] = [
 
   { p:"Statistical lives versus a single named person. Where does your honest moral attention go?",
     a:[
-      { t:"To the statistical lives. The named one is a failure of imagination.",                            v:v({UI:3,TR:2,WP:1}) },
+      { t:"To the statistical lives. The harm is the same; only the salience is different.",                v:v({UI:3,TR:2,WP:1}) },
       { t:"To the named one. Concrete is real; abstract is loud.",                                          v:v({CE:3,ES:2,TE:1}) },
       { t:"Both, but I act on whichever I can actually affect.",                                            v:v({PO:3,UI:1,WP:1}) },
       { t:"To wherever the press isn't. Attention is its own moral economy.",                                v:v({SR:3,TD:1,UI:1}) },
@@ -364,7 +364,7 @@ export const DETAILED_QUESTIONS: Question[] = [
     a:[
       { t:"Real. Some sensibilities don't fit the present.",                                                v:v({TV:3,MR:2,SS:1}) },
       { t:"Excuse. The present is what you make of it.",                                                     v:v({WP:3,VA:2,PO:1}) },
-      { t:"Both — real perception, used as excuse.",                                                          v:v({SR:2,TV:1,SI:1}) },
+      { t:"Both — real perception, used as excuse.",                                                          v:v({SR:2,TV:2,SI:1,TD:1}) },
       { t:"The premise is wrong. There's no 'real era' anyone fits.",                                         v:v({SR:3,SI:2}) },
       { t:"Real, but unhelpful. The era is what you have.",                                                  v:v({TV:2,PO:3,AT:1}) }
     ]},
@@ -389,7 +389,7 @@ export const DETAILED_QUESTIONS: Question[] = [
 
   { p:"Public speech and private thought. Should they match?",
     a:[
-      { t:"Yes. The gap is where corruption lives.",                                                          v:v({SS:3,UI:2,VA:1}) },
+      { t:"Yes. A self that says one thing and thinks another loses both, over time.",                       v:v({SS:3,UI:2,VA:1}) },
       { t:"No. Public speech is a different genre, with different obligations.",                              v:v({CE:3,RT:2,PO:1}) },
       { t:"Mostly yes, with allowances for tact.",                                                            v:v({TR:2,UI:1,SS:1,CE:1}) },
       { t:"The gap is where civilization lives. Total honesty is a hostile demand.",                          v:v({CE:2,RT:2,SR:2,TV:1}) },
