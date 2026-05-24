@@ -464,6 +464,95 @@ select:focus-visible {
   animation: sprite-pop-in 0.32s steps(5, end) both;
 }
 
+/* ─── Movement utilities (added 2026-05-24) ─────────────────────
+   Reusable animation classes for adding controlled movement across
+   the site. Every one of these is `steps()`-based so the motion
+   reads as 8-bit / pixel-game, not smooth-SaaS. None of them auto-
+   apply — pages opt in by adding the class.
+
+   See STYLE-GUIDE.md §6 for the policy: chunky over silky,
+   intentional over decorative. */
+
+/* On-mount entry — a page or hero section "stamps" into place when
+   it first renders. Combined with reveal-on-scroll below for
+   sections further down. */
+@keyframes stamp-in {
+  0%   { transform: translateY(12px) scale(0.96); opacity: 0; }
+  55%  { transform: translateY(-2px) scale(1.01); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+.reveal-on-mount {
+  animation: stamp-in 0.42s steps(6, end) both;
+}
+
+/* Scroll-triggered reveal. The .reveal class starts hidden; the
+   <ScrollReveal> client component adds .revealed when the element
+   enters the viewport. Chunky stepped fade-up, not smooth ease. */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  will-change: opacity, transform;
+}
+.reveal.revealed {
+  animation: stamp-in 0.48s steps(6, end) both;
+}
+
+/* Stagger children — apply to a parent; each direct child gets a
+   small delay so they cascade in. Tops out at 8 children. */
+.reveal.revealed > * {
+  animation: stamp-in 0.4s steps(6, end) both;
+}
+.reveal.revealed > *:nth-child(1) { animation-delay: 0.00s; }
+.reveal.revealed > *:nth-child(2) { animation-delay: 0.06s; }
+.reveal.revealed > *:nth-child(3) { animation-delay: 0.12s; }
+.reveal.revealed > *:nth-child(4) { animation-delay: 0.18s; }
+.reveal.revealed > *:nth-child(5) { animation-delay: 0.24s; }
+.reveal.revealed > *:nth-child(6) { animation-delay: 0.30s; }
+.reveal.revealed > *:nth-child(7) { animation-delay: 0.36s; }
+.reveal.revealed > *:nth-child(8) { animation-delay: 0.42s; }
+
+/* Pulse-amber — slow amber halo behind an element. Use on accent
+   indicators that should subtly draw attention (the "you" dot on
+   the MullMark, a "new" tag, etc.). */
+@keyframes pulse-amber {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(184, 134, 47, 0.45); }
+  50%      { box-shadow: 0 0 0 6px rgba(184, 134, 47, 0); }
+}
+.pulse-amber {
+  animation: pulse-amber 2.4s steps(8, end) infinite;
+  border-radius: 50%;
+}
+
+/* Slow bob — gentler than pixel-float, used for sprites/icons in
+   the global nav and header where a fast bob would be distracting. */
+@keyframes slow-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-2px); }
+}
+.slow-bob {
+  animation: slow-bob 3.6s steps(4, end) infinite;
+}
+
+/* Once-on-hover wiggle — for icons that should give a tiny
+   acknowledgment when the user hovers their parent. Steps so the
+   wiggle is chunky not silky. */
+@keyframes hover-wiggle {
+  0%   { transform: rotate(0deg); }
+  25%  { transform: rotate(-4deg); }
+  50%  { transform: rotate(4deg); }
+  75%  { transform: rotate(-2deg); }
+  100% { transform: rotate(0deg); }
+}
+.parent-hover-wiggle:hover .hover-wiggle-target {
+  animation: hover-wiggle 0.45s steps(5, end) both;
+}
+
+/* Respect prefers-reduced-motion — disables all of the above for
+   users who've asked the OS to reduce motion. The existing
+   reduce-motion rule at the top of this file already covers
+   keyframe animations sitewide; this comment is a reminder that
+   we don't bypass it on the new utilities. */
+
 /* ─── Pixel form container ─────────────────────────────────────
    Wrap any form in <div class="pixel-form">…</div> and its inputs,
    textareas, and labels pick up the v3 pixel chrome styling without

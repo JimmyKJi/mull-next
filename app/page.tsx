@@ -28,6 +28,7 @@ import { PhilosopherSprite } from "@/components/philosopher-sprite";
 import { ArchetypeSprite } from "@/components/archetype-sprite";
 import { PHILOSOPHERS } from "@/lib/philosophers";
 import { ObfuscatedEmail } from "@/components/obfuscated-email";
+import { ScrollReveal } from "@/components/scroll-reveal";
 
 export const metadata: Metadata = {
   title: "Mull · Find your place on the map of how you think",
@@ -261,7 +262,7 @@ export default async function HomeV2() {
         </section>
 
         {/* ─── Today's thinker — sits right under the hero ─────── */}
-        <section className="px-6 pb-16 sm:px-10 sm:pb-20">
+        <ScrollReveal as="section" className="px-6 pb-16 sm:px-10 sm:pb-20">
           <div className="mx-auto max-w-[1200px]">
             <div className="pixel-panel">
               <div
@@ -321,11 +322,11 @@ export default async function HomeV2() {
               </div>
             </div>
           </div>
-        </section>
+        </ScrollReveal>
 
         {/* ─── The constellation — pixel-framed for this slice
             (next slice replaces R3F with a 2D pixel overworld) ─── */}
-        <section className="border-y-4 border-[#221E18] bg-[#FFFCF4] px-6 py-14 sm:px-10 sm:py-20">
+        <ScrollReveal as="section" className="border-y-4 border-[#221E18] bg-[#FFFCF4] px-6 py-14 sm:px-10 sm:py-20">
           <div className="mx-auto max-w-[1200px]">
             <div className="max-w-[800px]">
               <div
@@ -374,7 +375,7 @@ export default async function HomeV2() {
               to yours.
             </p>
           </div>
-        </section>
+        </ScrollReveal>
 
 
         {/* ─── What Mull actually is ──────────────────────────────
@@ -386,7 +387,7 @@ export default async function HomeV2() {
             panel "stat cards" so the section reads as a game-style
             briefing instead of a wall of prose. Each card has a
             pixel-glyph icon, a chunky pixel heading, and short body. */}
-        <section className="mx-auto max-w-[1200px] px-6 py-20 sm:px-10 sm:py-28">
+        <ScrollReveal as="section" className="mx-auto max-w-[1200px] px-6 py-20 sm:px-10 sm:py-28">
           <div
             className="flex items-center gap-3 text-[10px] tracking-[0.24em] text-[#8C6520]"
             style={{ fontFamily: "var(--font-pixel-display)" }}
@@ -447,7 +448,7 @@ export default async function HomeV2() {
               </div>
             ))}
           </div>
-        </section>
+        </ScrollReveal>
 
         {/* ─── What you can do — feature-hierarchy grid ───────────
             Replaces the implicit "discover by scrolling" with an
@@ -455,7 +456,7 @@ export default async function HomeV2() {
             Tier 1 (Quiz + Arena) already lived in the hero; this
             section makes the rest of the product navigable so users
             who skip the hero CTAs still see what's here. */}
-        <section className="mx-auto max-w-[1200px] border-t-4 border-[#221E18] px-6 py-20 sm:px-10 sm:py-24">
+        <ScrollReveal as="section" className="mx-auto max-w-[1200px] border-t-4 border-[#221E18] px-6 py-20 sm:px-10 sm:py-24">
           <div
             className="flex items-center gap-3 text-[10px] tracking-[0.24em] text-[#8C6520]"
             style={{ fontFamily: "var(--font-pixel-display)" }}
@@ -557,14 +558,14 @@ export default async function HomeV2() {
             <span>·</span>
             <Link href="/methodology" className="hover:text-[#221E18]">Methodology</Link>
           </div>
-        </section>
+        </ScrollReveal>
 
         {/* ─── Ten archetypes — pixel character roster ────────────
             Each archetype is a pixel "character card" — the SVG
             figure rendered with image-rendering:pixelated so it
             reads as a sprite, framed in a pixel panel in the
             archetype's color. */}
-        <section className="mx-auto max-w-[1200px] border-t-4 border-[#221E18] px-6 py-20 sm:px-10 sm:py-28">
+        <ScrollReveal as="section" className="mx-auto max-w-[1200px] border-t-4 border-[#221E18] px-6 py-20 sm:px-10 sm:py-28">
           <div className="flex items-baseline justify-between">
             <div>
               <div
@@ -699,10 +700,10 @@ export default async function HomeV2() {
           >
             View all essays →
           </Link>
-        </section>
+        </ScrollReveal>
 
         {/* ─── Tail CTA — pixel "PRESS START" screen ─────────── */}
-        <section className="mx-auto max-w-[920px] px-6 pb-28 pt-12 text-center sm:px-10">
+        <ScrollReveal as="section" className="mx-auto max-w-[920px] px-6 pb-28 pt-12 text-center sm:px-10">
           <div className="pixel-panel pixel-panel--ink mx-auto">
             <div className="px-6 py-10 sm:px-12 sm:py-14">
               <div
@@ -745,7 +746,7 @@ export default async function HomeV2() {
               </div>
             </div>
           </div>
-        </section>
+        </ScrollReveal>
 
         {/* ─── Footer — pixel status bar ─────────────────────── */}
         <footer className="border-t-4 border-[#221E18] bg-[#221E18] px-6 py-5 sm:px-10">

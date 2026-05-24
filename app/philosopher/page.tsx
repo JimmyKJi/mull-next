@@ -55,6 +55,22 @@ export default async function PhilosopherIndexPage() {
         }
       />
 
+      {/* Cross-link to the interactive constellation. This page is the
+          alphabetical browseable list; /map is the explorable
+          visual-first surface. Each linked from the other. */}
+      <div className="mb-8 flex flex-wrap items-center gap-3">
+        <Link
+          href="/map"
+          className="border-2 border-[#221E18] bg-[#F8C75E] px-3 py-1.5 text-[12px] tracking-[0.18em] text-[#1A1820] hover:bg-[#B8862F]"
+          style={{ fontFamily: "var(--font-pixel-display)", textTransform: "uppercase" }}
+        >
+          ▶ EXPLORE THE MAP VISUALLY
+        </Link>
+        <span className="text-[13px] text-[#8C6520]">
+          — or browse alphabetically below, grouped by archetype.
+        </span>
+      </div>
+
       <div className="space-y-8">
         {ARCHETYPES.map((arch) => {
           const list = byArchetype.get(arch.key) || [];

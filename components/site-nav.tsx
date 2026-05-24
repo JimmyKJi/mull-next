@@ -25,7 +25,7 @@ import { MullMark } from "./mull-mark";
 const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/arena", label: "Arena" },
-  { href: "/philosopher", label: "Map" },
+  { href: "/map", label: "Map" },
   { href: "/archetype", label: "Archetypes" },
   { href: "/dilemma", label: "Today's dilemma" },
   { href: "/about", label: "About" },
@@ -83,7 +83,9 @@ export function SiteNav() {
             href="/"
             className="flex items-center gap-2.5 hover:text-[#8C6520]"
           >
-            <MullMark size={22} />
+            <span className="slow-bob inline-block">
+              <MullMark size={22} />
+            </span>
             <span
               className="text-[14px] tracking-[0.12em] text-[#221E18]"
               style={{ fontFamily: "var(--font-pixel-display)" }}
@@ -196,7 +198,8 @@ const PAGE_ITEMS: PaletteItem[] = [
   { group: "Pages", label: "Arena · Leaderboard", href: "/arena/leaderboard" },
   { group: "Pages", label: "Arena · Your match history", href: "/arena/history" },
   // ── Tier 2 — explore ──
-  { group: "Pages", label: "Browse the map", href: "/philosopher", hint: "560 philosophers" },
+  { group: "Pages", label: "The constellation map", href: "/map", hint: "interactive philosophical space" },
+  { group: "Pages", label: "Browse philosophers alphabetically", href: "/philosopher", hint: "560 thinkers, grouped by archetype" },
   { group: "Pages", label: "Today's dilemma", href: "/dilemma" },
   { group: "Pages", label: "Dilemma archive", href: "/dilemma/archive" },
   { group: "Pages", label: "Topic explainers", href: "/topic", hint: "12 evergreen primers" },
