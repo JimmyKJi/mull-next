@@ -28,26 +28,53 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'Admin client misconfigured.' }, { status: 500 });
   }
 
-  // 24-hour cutoff. The longest rate-limit window we use is 5 min;
-  // 24h gives generous headroom in case we add a longer-window
-  // bucket later, while still preventing unbounded growth.
-  const cutoff = new Date(Date.now() - 24 * 3600_000).toISOString();
+  // Two cutoffs now:
+  //   - 24h for non-AI buckets (feedback, welcome) — these are pure
+  //     per-IP spam protection, the rate window is minutes.
+  //   - 31 days for AI-bearing buckets (spar_play, arena_*, diary,
+  //     etc.) — these power the monthly spend ceiling in lib/rate-
+  //     limit.ts's readAiSpend() and must survive a full month.
+  const dayCutoff = new Date(Date.now() - 24 * 3600_000).toISOString();
+  const monthCutoff = new Date(Date.now() - 31 * 24 * 3600_000).toISOString();
 
-  // count: 'exact' returns the number of deleted rows so we can
-  // log meaningful telemetry without selecting them.
-  const { error, count } = await admin
+  const AI_BUCKETS = [
+    'dilemma_submit',
+    'reflection',
+    'diary',
+    'exercise',
+    'spar_play',
+    'arena_turn',
+    'arena_judge',
+    'argument_diary',
+  ];
+
+  // Delete non-AI buckets older than 24h.
+  const { error: e1, count: c1 } = await admin
     .from('rate_limit_events')
     .delete({ count: 'exact' })
-    .lt('created_at', cutoff);
+    .not('bucket', 'in', `(${AI_BUCKETS.map((b) => `"${b}"`).join(',')})`)
+    .lt('created_at', dayCutoff);
 
-  if (error) {
-    console.error('[cron/rate-limit-cleanup] delete failed', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  // Delete AI buckets older than 31 days.
+  const { error: e2, count: c2 } = await admin
+    .from('rate_limit_events')
+    .delete({ count: 'exact' })
+    .in('bucket', AI_BUCKETS)
+    .lt('created_at', monthCutoff);
+
+  if (e1 || e2) {
+    console.error('[cron/rate-limit-cleanup] delete failed', e1, e2);
+    return NextResponse.json(
+      { error: (e1 ?? e2)?.message ?? 'cleanup failed' },
+      { status: 500 },
+    );
   }
 
   return NextResponse.json({
     ok: true,
-    deletedCount: count ?? 0,
-    cutoff,
+    deletedNonAi: c1 ?? 0,
+    deletedAi: c2 ?? 0,
+    dayCutoff,
+    monthCutoff,
   });
 }

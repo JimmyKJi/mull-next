@@ -208,7 +208,7 @@ export const USER_SCOPED_TABLES: readonly UserScopedTable[] = [
     name: 'rate_limit_events',
     deleteStrategy: 'fk_set_null',
     inExport: false,
-    note: 'IP-hashed rate-limit events. Auto-pruned every 24h by a cron. Not worth exporting (it\'s ephemeral ops data and the IPs are already hashed).',
+    note: 'IP-hashed rate-limit events. Two retention windows via app/api/cron/rate-limit-cleanup: non-AI buckets pruned at 24h (just per-IP spam protection), AI-bearing buckets (dilemma_submit / reflection / diary / exercise / spar_play / arena_turn / arena_judge / argument_diary) kept 31 days so readAiSpend() in lib/rate-limit.ts can compute the monthly spend ceiling. Not worth exporting (ephemeral ops data, IPs already hashed).',
   },
 
   // ── Classroom (teacher + student membership) ──────────────────────

@@ -20,6 +20,7 @@ import {
 } from "@/lib/arena/judge";
 import { newElo, kFactorForGames } from "@/lib/arena/elo";
 import { notifyVerdict } from "@/lib/arena/notifications";
+import { aiGate } from "@/lib/rate-limit";
 
 const SONNET_MODEL = "claude-sonnet-4-6";
 const MIN_EXCHANGES_BEFORE_JUDGE = 2; // 2 user turns + 2 opponent turns
@@ -37,6 +38,14 @@ export async function POST(req: Request) {
   const sessionId = body?.session_id as string | undefined;
   if (!sessionId) {
     return NextResponse.json({ error: "Missing session_id." }, { status: 400 });
+  }
+
+  // AI rate limit + spend gate. Bucket: arena_judge (per-user daily
+  // cap of 4 verdicts). The judge is the expensive Sonnet call —
+  // tighter cap than arena_turn.
+  const gate = await aiGate(req, { bucket: "arena_judge", userId: user.id });
+  if (!gate.ok) {
+    return NextResponse.json({ error: gate.message }, { status: gate.status });
   }
 
   // Load session.

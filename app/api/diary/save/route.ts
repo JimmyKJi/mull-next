@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { DIM_KEYS, DIM_NAMES, DIM_DESCRIPTIONS } from '@/lib/dimensions';
+import { aiGate } from '@/lib/rate-limit';
 import {
   buildKinshipPromptFragment,
   parseAndValidateDiagnosis,
@@ -139,6 +140,14 @@ export async function POST(req: Request) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       return NextResponse.json({ error: 'Not signed in.' }, { status: 401 });
+    }
+
+    // AI rate limit + spend gate. Diary entries are cheap (~$0.005
+    // each Haiku call) but uncapped abuse could still drift; the
+    // global ceiling sees these events via the 'diary' bucket.
+    const gate = await aiGate(req, { bucket: 'diary', userId: user.id });
+    if (!gate.ok) {
+      return NextResponse.json({ error: gate.message }, { status: gate.status });
     }
 
     const wordCount = content.trim().split(/\s+/).filter(Boolean).length;

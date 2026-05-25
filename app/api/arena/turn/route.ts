@@ -14,6 +14,7 @@ import { createClient } from "@/utils/supabase/server";
 import { getArenaPhilosopher, getArenaTopic } from "@/lib/arena/data";
 import { generatePhilosopherTurn } from "@/lib/arena/philosopher-voice";
 import { notifyYourTurn } from "@/lib/arena/notifications";
+import { aiGate } from "@/lib/rate-limit";
 
 const MAX_USER_CHARS = 2000;
 const MAX_TURNS_BEFORE_VERDICT = 8;
@@ -42,6 +43,14 @@ export async function POST(req: Request) {
       { error: `Response too long (max ${MAX_USER_CHARS} chars).` },
       { status: 400 },
     );
+  }
+
+  // AI rate limit + spend gate. Bucket: arena_turn (per-user daily
+  // cap of 32 turns ≈ 4 full debates). The judge call has its own
+  // separate, tighter gate in /api/arena/judge.
+  const gate = await aiGate(req, { bucket: "arena_turn", userId: user.id });
+  if (!gate.ok) {
+    return NextResponse.json({ error: gate.message }, { status: gate.status });
   }
 
   const { data: session } = await supabase

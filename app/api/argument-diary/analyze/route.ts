@@ -10,6 +10,8 @@
 // Reuses the Anthropic API key + Haiku model the rest of Mull uses.
 
 import { NextResponse } from "next/server";
+import { aiGate } from "@/lib/rate-limit";
+import { createClient } from "@/utils/supabase/server";
 
 const HAIKU_MODEL = "claude-haiku-4-5";
 
@@ -38,6 +40,14 @@ export async function POST(req: Request) {
       { error: "Account too long (4000 char max)." },
       { status: 400 },
     );
+  }
+
+  // Per-user + global spend gate before the Haiku call.
+  const supabaseForUser = await createClient();
+  const { data: { user } } = await supabaseForUser.auth.getUser();
+  const gate = await aiGate(req, { bucket: "argument_diary", userId: user?.id });
+  if (!gate.ok) {
+    return NextResponse.json({ error: gate.message }, { status: gate.status });
   }
 
   const system = `You are Mull's argument-diary helper. Read a user's account of a real-world argument they had. Return a JSON object with EXACTLY this shape:

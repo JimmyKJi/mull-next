@@ -27,6 +27,8 @@ import {
   parseJudgeJson,
   type JudgeOutput,
 } from "@/lib/arena/judge";
+import { aiGate } from "@/lib/rate-limit";
+import { createClient } from "@/utils/supabase/server";
 
 const SONNET_MODEL = "claude-sonnet-4-6";
 
@@ -56,6 +58,17 @@ export async function POST(req: Request) {
       { error: "Unknown philosopher or topic for today's spar." },
       { status: 400 },
     );
+  }
+
+  // Per-user + global spend gate. Inserts the bucket event on success
+  // so the global ceiling sees this turn even before the API call
+  // completes — a worst-case rapid-fire abuser hits the per-user cap
+  // (3/day) before the second request even returns.
+  const supabaseForUser = await createClient();
+  const { data: { user } } = await supabaseForUser.auth.getUser();
+  const gate = await aiGate(req, { bucket: "spar_play", userId: user?.id });
+  if (!gate.ok) {
+    return NextResponse.json({ error: gate.message }, { status: gate.status });
   }
 
   const apiKey = process.env.ANTHROPIC_API_KEY;

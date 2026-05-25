@@ -17,6 +17,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { DIM_KEYS, DIM_NAMES, DIM_DESCRIPTIONS } from '@/lib/dimensions';
 import { findExercise } from '@/lib/exercises';
+import { aiGate } from '@/lib/rate-limit';
 import {
   buildKinshipPromptFragment,
   parseAndValidateDiagnosis,
@@ -156,6 +157,12 @@ export async function POST(req: Request) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Sign in to save reflections.' }, { status: 401 });
+
+    // AI rate limit + spend gate.
+    const gate = await aiGate(req, { bucket: 'exercise', userId: user.id });
+    if (!gate.ok) {
+      return NextResponse.json({ error: gate.message }, { status: gate.status });
+    }
 
     // Compose the context block we hand to Claude. Includes everything
     // about the exercise that helps Claude interpret a reflection on it.
