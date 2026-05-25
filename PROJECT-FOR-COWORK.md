@@ -87,19 +87,65 @@ Kant, Confucius vs Mencius). Each comparison auto-generates
 "where they sharply disagreed" + "where they overlapped" sections
 from their actual 16-D vectors.
 
-### Tier 3 — deepen
+### Tier 3 — deepen + practice (recurring rhythms)
 
-- **Diary** — personal philosophical journal
-- **Compare** — stack two thinkers side-by-side across all 16
-  dimensions
-- **Exercises** — short library of 16 contemplative + logic +
-  argument practices (premortem, steelmanning, view-from-above,
-  60-second case, etc.)
-- **Simulated debate** — watch any two philosophers from the
-  corpus argue a topic you pick (different from the Arena: here
-  the user observes, not participates)
+These are the retention surfaces. Each fires events into the
+Capability Atlas (six skills, visible level-ups).
 
-### Tier 4 — utility + social
+- **Daily Spar** (`/spar`) — 5-min argument practice. One
+  rotating philosopher + topic per day. One turn each, Sonnet
+  judges. Different from the Arena: it's the fast on-ramp.
+- **The Pilgrimage** (`/pilgrimage`) — 30-day archetype-keyed
+  course. Each of the 10 archetypes has its own arc with
+  per-flavor enrollment lens. The biggest single retention bet.
+- **The Crucible** (`/crucible`) — daily real-world action.
+  60-prompt pool, rotates daily. Tomorrow Mull asks how it went.
+  Stoic evening-review meets daily moral practice.
+- **The Wandering Question** (`/wandering`) — 52 questions, one
+  per ISO week, across 4 beats (Mon Start / Wed Kindred / Fri Far
+  / Sun Synthesis).
+- **Argument Diary** (`/argument-diary`) — log a real argument,
+  get a Haiku-powered analysis (steelman of the other side, 2
+  fallacies in your framing, 3 kindred philosophers' takes).
+- **Personal Anthology** (`/anthology`) — your commonplace book.
+  Save passages from Spar verdicts, Argument Diary takes,
+  philosopher pages. Grouped by source.
+- **Capability Atlas** (`/atlas`) — your six skills (Rigor, Depth,
+  Consistency, Range, Self-Awareness, Synthesis). Every action
+  fires XP events; Stardew-style "+3 RIGOR" toasts pop on
+  completion. The dopamine spine.
+- **Year-in-View** (`/year`) — always-updating annual page. 12×6
+  month/skill heatmap.
+- **Diary** (`/diary`) — personal philosophical journal.
+- **Today's Dilemma** (`/dilemma`) — one philosophical scenario
+  per day, written response → vector drift.
+- **Exercises** (`/exercises`) — 16 contemplative + logic +
+  argument practices.
+- **Compare** (`/compare`) — stack two thinkers across all 16
+  dimensions.
+- **Simulated debate** (`/debate`) — watch two philosophers
+  argue a topic you pick.
+
+### Tier 4 — coming soon (scaffolded landings)
+
+These have proper landing pages explaining what they'll do and
+when. Not built — waiting on infrastructure (cron, content lift,
+or DB schema):
+
+- **Reading Hour** (`/read`) — 60-min timer-bound reading session
+  with a primary text Mull picks for you. Needs ~80 hand-picked
+  excerpts before launch.
+- **Letters Between Inheritors** (`/letters`) — structured letters
+  from the deceased at +1 week, +1 month, +3 months after the
+  Inheritor playthrough. Needs Resend cron + persistent state.
+- **Mull Open** (`/arena/open`) — quarterly PvP tournament.
+  Brackets, single elimination, spectator finals. Needs tournament
+  infra and a real PvP user base.
+- **Long Letter** (`/long-letter`) — annual 2,000+ word letter
+  to yourself, vaulted, resurfaced 5 years later. The slowest
+  retention loop. Earliest ship: Q4 2026.
+
+### Tier 5 — utility + social
 
 - **Mull Wrapped** — annual personalized year-in-review
 - **Classes** — teachers can spin up a class with an invite link,
@@ -318,6 +364,65 @@ discard the rest. Not all of these need to be made.
 
 ---
 
+## Economics + gating (for campaign context)
+
+Mull is currently free for everyone. The full Mull+ subscription
+system is built and dormant (Stripe wired but no signup UI
+exposed). When traffic justifies it, Mull+ flips on at $4.99/mo,
+$29/year, or $59 lifetime "Founding Mind" — and gates only the
+AI-heavy features, never the core ones.
+
+### Per-use AI cost (the real numbers)
+
+- **Arena PvE debate** (4–8 turns + judge): ~$0.15–0.20
+- **Daily Spar** (1 turn + judge): ~$0.05–0.08
+- **Argument Diary** analysis: ~$0.005–0.01
+- **Daily Dilemma / Diary / Exercise**: ~$0.005
+- **Yearly retrospective** (Mull+): ~$0.30–0.50
+- Inheritor mystery / Pilgrimage / Crucible / Wandering /
+  Anthology / Year-in-View / Atlas / Quiz / Map / philosopher
+  pages / topic / vs: **$0** (no AI calls)
+
+### Monthly cost at scale (Anthropic API + infra combined)
+
+- 100 MAU → ~$70
+- 500 MAU → ~$350
+- 1,000 MAU → ~$720 (Vercel Pro kicks in at ~$20/mo)
+- 5,000 MAU → ~$3,500 (Mull+ at 10% conversion covers most)
+- 10,000 MAU → ~$7,200 (needs Mull+ + grants / external)
+
+### Free vs Mull+ (planned gating)
+
+**Free tier** — generous on contemplative features:
+- Unlimited: Quiz, Inheritor, Map, all philosopher / topic / vs
+  pages, Pilgrimage, Crucible, Wandering, Anthology, Atlas,
+  Year-in-View, Dilemma (1/day), Diary (3/day)
+- 1 Daily Spar/day
+- 1 Arena PvE debate/day
+- 3 Argument Diary analyses/week
+
+**Mull+ ($4.99/mo)** — higher volume on AI surfaces:
+- 5 Daily Spars/day
+- Unlimited Arena PvE
+- Unlimited Argument Diary + Diary
+- Yearly retrospective
+- Reading Hour, Long Letter, Mull Open access (when built)
+
+**Hard caps regardless of tier** (cost protection):
+- 10 Spars + 5 Arena debates + 5 Argument Diary calls per day
+  per user
+- Site-wide daily AI-spend ceiling — auto-pauses inference if
+  exceeded. Safety net, not retention squeeze.
+
+### Cost-relevant guardrails missing today
+
+The above caps are currently **client-side only** (localStorage)
+on the new surfaces. Server-side rate-limit middleware is the next
+infra build. Until then, casual abuse is possible; campaign
+traffic spikes should be watched carefully.
+
+---
+
 ## Technical / operational notes (for any agent automating)
 
 - **Stack:** Next.js 16 App Router on Vercel, Supabase
@@ -332,7 +437,12 @@ discard the rest. Not all of these need to be made.
 - **Source of truth for product copy:** in-repo `.md` files —
   AGENTS.md (project rules), CLAUDE.md, DESIGN-DIRECTION.md
   (visual brand), STYLE-GUIDE.md (operational spec),
-  README.md, this file.
+  README.md, RETENTION-NOTES.md (retention strategy), this file.
+- **Capability Atlas (dopamine spine):** every retention surface
+  fires events into `lib/capabilities.ts`. Six skills (Rigor,
+  Depth, Consistency, Range, Self-Awareness, Synthesis) with
+  visible level-up badges. Connects all retention features into
+  one growth narrative.
 - **Maintainer:** Jimmy Ji, philosophy student at King's
   College London. Email: jimmy.kaian.ji@gmail.com.
 
@@ -363,9 +473,11 @@ campaign strategy:)
 
 ---
 
-*Last updated 2026-05-25 (Inheritor reshape into murder mystery
-in progress — current site copy may briefly reflect older "midnight
-at a strange estate" framing until the build ships). Mull is a
-living product; some of the above will be stale within weeks. The
-product surfaces and the mull.world site are the source of truth
-if anything here conflicts.*
+*Last updated 2026-05-25 (after the Capability Atlas + retention
+build shipped: Crucible / Wandering / Anthology / Year-in-View /
+Argument Diary / Atlas all live on mull.world; Reading Hour /
+Letters Between Inheritors / Mull Open / Long Letter scaffolded
+as coming-soon landings.) Mull is a living product; some of the
+above will be stale within weeks. The product surfaces and the
+mull.world site are the source of truth if anything here
+conflicts.*

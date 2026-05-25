@@ -118,6 +118,45 @@ export default async function AboutPage() {
               personal philosophical diary. A short library of contemplative
               exercises. All optional.
             </Promise>
+            <Promise title="Daily Spar.">
+              A 5-minute philosophical sparring match. One philosopher,
+              one topic, one turn each. Sonnet judges in 30 seconds.
+              Rotates daily. Different from the Arena because it&rsquo;s
+              built for the user who doesn&rsquo;t have 20 minutes for a
+              full debate but wants the rigor practice.
+            </Promise>
+            <Promise title="The Pilgrimage — 30 days for your archetype.">
+              A 30-day course shaped for the kind of mind you turned out
+              to be. Ten archetype-specific arcs, each with its own
+              phases, prompts, and per-flavor enrollment lens. One prompt
+              per day. Different from the dilemma in that it has a curve
+              — by Day 30 your map has moved.
+            </Promise>
+            <Promise title="The Crucible — daily real action.">
+              Not a hypothetical. A small actual thing to do today,
+              chosen from a pool of sixty rotating prompts. Tomorrow Mull
+              asks how it went. Stoic evening-review meets daily moral
+              practice.
+            </Promise>
+            <Promise title="The Wandering Question — one question per week.">
+              A single question travels with you Mon-Wed-Fri-Sun. First
+              response, then kindred takes, then far takes, then your
+              own synthesis. Weekly arc, real ending each time.
+            </Promise>
+            <Promise title="Argument Diary.">
+              Log a real argument from your life and Mull returns a
+              steelman of the other side, two specific fallacies in your
+              framing, and three kindred philosophers&rsquo; takes.
+              Journal-with-feedback.
+            </Promise>
+            <Promise title="Personal Anthology + Year-in-View + Capability Atlas.">
+              Three persistent surfaces. The Anthology is your
+              commonplace book — save passages and verdicts from
+              anywhere. Year-in-View is your annual record, updated the
+              day you live it. The Atlas tracks six skills (Rigor,
+              Depth, Consistency, Range, Self-Awareness, Synthesis) with
+              level-up badges that fire on every completed action.
+            </Promise>
             <Promise title="Classes (for educators).">
               Teachers can spin up a class, share an invite link, and post
               philosophy assignments to students. Free for anyone with an
@@ -205,19 +244,47 @@ export default async function AboutPage() {
         <PixelWindow title="THE ECONOMICS, OPENLY" badge="▶ COSTS + WHO PAYS">
           <Prose>
             <p>
-              Real products with real databases and AI inference cost real
-              money. Mull is currently <strong>free for everyone</strong> —
-              there is no paid tier active. The maintainer pays out of pocket,
-              with help from anyone who chooses to tip on Ko-fi.
+              Real products with real databases and AI inference cost
+              real money. Most of Mull is free for everyone and always
+              will be. The features that cost money per use are honest
+              about it below.
             </p>
             <p>
-              Rough costs at different sizes, assuming the current usage
-              pattern (Arena debates being the dominant AI cost, with the
-              Inheritor and daily dilemma adding smaller amounts):
+              <strong>Per-use AI cost — the actual numbers:</strong>
             </p>
           </Prose>
 
           <div className="mt-5 overflow-x-auto">
+            <table className="w-full border-collapse text-[14px]">
+              <thead>
+                <tr className="border-b-2 border-[#221E18]">
+                  <Th>FEATURE</Th>
+                  <Th>COST PER USE</Th>
+                  <Th>WHY</Th>
+                </tr>
+              </thead>
+              <tbody>
+                <Tr cells={['Arena debate (PvE, 4–8 turns + judge)', '~$0.15–0.20', 'Haiku per turn + Sonnet judge']} netClass="neutral" />
+                <Tr cells={['Daily Spar (1 turn + judge)', '~$0.05–0.08', 'Haiku turn + Sonnet judge']} netClass="neutral" />
+                <Tr cells={['Daily dilemma / diary / exercise', '~$0.005', 'Haiku prose→vector']} netClass="neutral" />
+                <Tr cells={['Argument Diary analysis', '~$0.005–0.01', 'Single Haiku call']} netClass="neutral" />
+                <Tr cells={['Yearly retrospective (Mull+)', '~$0.30–0.50', 'Sonnet over your full year']} netClass="neutral" />
+                <Tr cells={['Inheritor mystery / Pilgrimage / Crucible / Wandering / Atlas / Anthology / Year-in-View', '$0', 'No AI calls']} netClass="positive" />
+                <Tr cells={['Quiz / Map / Philosopher pages / Topics / Vs', '$0', 'Static / deterministic']} netClass="positive" />
+              </tbody>
+            </table>
+          </div>
+
+          <Prose className="mt-5">
+            <p>
+              <strong>Estimated monthly cost at different sizes</strong>{' '}
+              — AI inference is the dominant variable. Infrastructure
+              (Supabase + Vercel + Resend) stays free until the low
+              thousands of MAU, then adds ~$65–200/mo.
+            </p>
+          </Prose>
+
+          <div className="mt-3 overflow-x-auto">
             <table className="w-full border-collapse text-[14px]">
               <thead>
                 <tr className="border-b-2 border-[#221E18]">
@@ -227,20 +294,52 @@ export default async function AboutPage() {
                 </tr>
               </thead>
               <tbody>
-                <Tr cells={['Under 100', '~$10', 'Maintainer + tips']} netClass="neutral" />
-                <Tr cells={['1,000', '$100–400', 'Tips + maintainer']} netClass="neutral" />
-                <Tr cells={['10,000', '$1,200–4,000', 'Will need real funding']} netClass="neutral" />
-                <Tr cells={['100,000', '$10,000–40,000', 'Will need subscriptions / grants']} netClass="neutral" />
+                <Tr cells={['Under 100', '~$5–70', 'Maintainer + tips']} netClass="neutral" />
+                <Tr cells={['500', '~$350', 'Tips + maintainer']} netClass="neutral" />
+                <Tr cells={['1,000', '~$720', 'Tips + Mull+ subscribers (when active)']} netClass="neutral" />
+                <Tr cells={['5,000', '~$3,500', 'Mull+ subscriptions cover most']} netClass="neutral" />
+                <Tr cells={['10,000', '~$7,200', 'Mull+ + grants / external funding']} netClass="neutral" />
+              </tbody>
+            </table>
+          </div>
+
+          <Prose className="mt-5">
+            <p>
+              <strong>How features are gated</strong> — designed so the
+              free tier stays generous on contemplative surfaces and
+              only the heavy AI features get per-day caps:
+            </p>
+          </Prose>
+
+          <div className="mt-3 overflow-x-auto">
+            <table className="w-full border-collapse text-[14px]">
+              <thead>
+                <tr className="border-b-2 border-[#221E18]">
+                  <Th>FEATURE</Th>
+                  <Th>FREE</Th>
+                  <Th>MULL+ ($4.99/mo)</Th>
+                </tr>
+              </thead>
+              <tbody>
+                <Tr cells={['Quiz / Inheritor / Map / Philosophers / Topics / Vs', 'Unlimited', 'Unlimited']} netClass="positive" />
+                <Tr cells={['Pilgrimage / Crucible / Wandering / Anthology / Atlas / Year', 'Unlimited', 'Unlimited']} netClass="positive" />
+                <Tr cells={['Daily Dilemma', '1/day', '1/day']} netClass="positive" />
+                <Tr cells={['Diary', '3/day', 'Unlimited']} netClass="neutral" />
+                <Tr cells={['Daily Spar', '1/day', '5/day']} netClass="neutral" />
+                <Tr cells={['Arena PvE', '1/day', 'Unlimited']} netClass="neutral" />
+                <Tr cells={['Argument Diary', '3/week', 'Unlimited']} netClass="neutral" />
+                <Tr cells={['Yearly retrospective', '—', 'Included']} netClass="neutral" />
+                <Tr cells={['Reading Hour / Long Letter / Mull Open (when built)', '—', 'Included']} netClass="neutral" />
               </tbody>
             </table>
           </div>
 
           <p className="mt-3 text-[13px] leading-[1.55] text-[#8C6520]">
-            The dominant variable is AI inference (Claude Sonnet for the
-            Arena judge, Haiku for philosopher voices). A daily-cap of 3
-            debates per user keeps the Arena&apos;s cost bounded; the
-            quiz + map + philosopher pages all serve at near-zero marginal
-            cost.
+            Hard global cap regardless of tier: max 10 Spars + 5 Arena
+            debates + 5 Argument Diary calls per day per user, and a
+            site-wide daily AI-spend ceiling that auto-pauses new
+            inference if exceeded. Cost protection, not retention
+            squeeze.
           </p>
 
           <div
@@ -263,12 +362,12 @@ export default async function AboutPage() {
             >
               Ko-fi
             </a>{' '}
-            is the most direct path. The full subscription system
-            (Mull+ at $4.99/month, $29/year, and a $59 lifetime Founding
-            Mind pass) is built and dormant — we&apos;ll flip it on if Mull
-            grows past the point where tips can cover infrastructure, and
-            never as a way to gate the core features (quiz, map, philosopher
-            pages, daily dilemma stay free forever).
+            is the most direct path. The full Mull+ subscription system
+            ($4.99/month, $29/year, $59 lifetime Founding Mind pass) is
+            built and dormant — it flips on when usage growth makes tips
+            insufficient, and never gates the quiz, map, philosopher
+            pages, the Inheritor murder mystery, or the daily dilemma.
+            Those stay free forever.
           </div>
         </PixelWindow>
       </div>
@@ -289,10 +388,19 @@ export default async function AboutPage() {
 // Local helpers — small atoms used only on /about.
 // ──────────────────────────────────────────────────────────────
 
-function Prose({ children }: { children: React.ReactNode }) {
+function Prose({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
     <div
-      className="space-y-4 text-[15.5px] leading-[1.65] text-[#4A4338] [&_strong]:text-[#221E18]"
+      className={
+        'space-y-4 text-[15.5px] leading-[1.65] text-[#4A4338] [&_strong]:text-[#221E18] ' +
+        (className ?? '')
+      }
       style={{ fontFamily: 'var(--font-editorial)' }}
     >
       {children}

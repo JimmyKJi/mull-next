@@ -39,9 +39,126 @@ In rough order of importance for getting oriented:
 
 **Everything below is LIVE.** Verify in incognito if uncertain.
 
-### What was shipped in the previous session (in commit order)
+### What shipped in THIS session (2026-05-25, commits b05a4ee → 31ee9de, three deploys)
 
-P-tier (Wave 1 features — already shipped before this session
+**Inheritor → murder mystery + 10 archetype-keyed endings**
+- `/quiz/journey` reshaped from quiet narrative to country-house
+  murder mystery. Same 16-D math. Each chamber opens with an
+  anomaly the silent servant points out (Elena's missing death
+  record, the daughter's forgiveness letter Wren never answered,
+  the rival's conceded manuscript, the steamship ticket dated
+  last week). Two twists in the reveal (Wren is alive; the silent
+  servant is the "late" Elena). Ten archetype-keyed endings via
+  `pickEnding()` — each with its own recognition, inheritance,
+  ask, plus per-flavor second-order tuning.
+- Renamed "The Inheritor" → "The Inheritor: A Murder Mystery"
+  across homepage card, gate, metadata, about page.
+
+**Methodology v4 + map embed fix + polish sweep**
+- `/methodology` revamped: TOC strip, 16-dimension grid card,
+  math pipeline schematic, AI integrations restyled as cards,
+  per-section archetype-color accents.
+- `/about` removed the disingenuous "Not an AI app" section.
+- `/embed/map` new route fixes the long-broken iframe on
+  `/account` and `/u/[handle]`.
+- 11 pages: italic Pixelify Sans → italic Cormorant (the "5"
+  glyph rendered as "$"; "552 thinkers" displayed as "$$2").
+- Archetype cards: stacked NO.XX/NAME layout, separators align,
+  no truncation.
+- 8 duplicate philosopher entries removed from Wave 2.
+- EN-only banner on 5 long-form pages.
+
+**Daily Spar + The Pilgrimage**
+- `/spar` — daily rotating philosopher × topic, one turn each,
+  Sonnet judges in 30 seconds. Reuses Arena's philosopher-voice +
+  judge libs via a slim `/api/spar/play` endpoint. Daily limit 3
+  (client-side).
+- `/pilgrimage` — 30-day archetype-personalized course. Ten
+  hand-crafted archetype arcs (300 day cards total) with
+  per-flavor enrollment lenses. State in localStorage.
+- Map bug on `/account` fixed via new chromeless `/embed/map`
+  route.
+- New /account surfaces: ActivityHeatmap (GitHub-style 7×52
+  grid), TrajectoryChart (auto-picks the most-moved dimension),
+  PilgrimageStatusCard (Day X of 30 with 30-segment progress).
+- Arena weekly featured challenge: deterministic rotation per
+  ISO week; dark hero card on `/arena`.
+- Research consent gate: `<ResearchConsentGate>` before first
+  quiz, `/consent` page with toggle, `/api/consent` endpoint.
+
+**The Capability Atlas + 5 retention features + 4 scaffolds**
+- `/atlas` — the dopamine spine. Six skills (Rigor, Depth,
+  Consistency, Range, Self-Awareness, Synthesis), level math
+  (10 + level*5 XP), recent event log.
+- `<CapabilityToast>` mounted globally — Stardew-style "+3 RIGOR"
+  badge fires on every retention action; flips to "LEVEL UP"
+  presentation when crossing a threshold.
+- `lib/capabilities.ts` — typed event log (localStorage), source
+  → skill mapping, level + streak helpers. Cross-tab event bus.
+- `/crucible` (S9) — daily real-world action, 60-prompt pool,
+  yesterday's check-in with kept/tried/skipped buttons.
+- `/anthology` (S18) — commonplace book. `<SaveToAnthology>` pill
+  on Spar verdicts + Argument Diary takes.
+- `/wandering` (S12) — one question per ISO week, 4 beats
+  (Mon/Wed/Fri/Sun).
+- `/year` (S19) — always-updating annual page, 12×6 month/skill
+  heatmap.
+- `/argument-diary` (S10) — Haiku one-shot returns steelman + 2
+  fallacies + 3 kindred takes. `/api/argument-diary/analyze`.
+- Coming-soon scaffolds: `/read` (S13), `/letters` (S14),
+  `/arena/open` (S16), `/long-letter` (S20). Each is a proper
+  landing with eyebrow + pitch + "what it'll do" + when.
+
+**UX rewire so retention surfaces don't require discovery**
+- Homepage: "WHAT TO DO TOMORROW · FIND YOUR RHYTHM" section
+  with 6 RhythmCards across daily/weekly/long-arc cadences.
+- SiteNav: added `/atlas`, `/spar`, `/pilgrimage` as top items;
+  Archetypes + Today's Dilemma moved to Cmd-K.
+- Cmd-K palette: added Crucible, Wandering, Anthology, Argument
+  Diary, Year-in-View, Capability Atlas with hints.
+
+**Existing surfaces now fire Atlas events**
+- Spar emits "spar" event (2× XP if user won verdict). Verdict
+  reasoning has a Save-to-Anthology button.
+- Pilgrimage day-complete emits "pilgrimage" event (3× XP on
+  Day 30 — the arc finish bonus).
+
+**Total session shipped: 3 production deploys, 15 new routes,
+~7,000 lines of new code, ~25,000 words of new content.**
+
+---
+
+### Cost picture (after this session)
+
+**Per-use AI cost:**
+- Arena PvE debate (4–8 turns + judge): ~$0.15–0.20
+- Daily Spar (1 turn + judge): ~$0.05–0.08
+- Argument Diary analysis: ~$0.005–0.01
+- Daily Dilemma / Diary / Exercise: ~$0.005
+- Yearly retrospective (Mull+): ~$0.30–0.50
+- Inheritor / Pilgrimage / Crucible / Wandering / Atlas /
+  Anthology / Year-in-View: **$0** (deterministic)
+
+**Monthly cost at scale:**
+- 100 MAU → ~$70 | 1,000 MAU → ~$720 | 10,000 MAU → ~$7,200
+
+**Gating (documented but NOT yet enforced server-side):**
+- Free: 1 Spar/day, 1 Arena/day, 3 Argument Diary/week.
+- Mull+ ($4.99/mo, dormant): 5 Spars/day, unlimited Arena +
+  Argument Diary, Reading Hour / Long Letter / Mull Open when
+  built.
+- Hard global caps regardless of tier: 10 Spars + 5 Arena + 5
+  Argument Diary per user per day.
+
+**CRITICAL GAP**: caps are currently localStorage-only. Server-side
+rate-limit middleware (using existing `rate_limit_events` table)
+is the next infra build before promoting these features hard.
+
+---
+
+### Older session shipped (for completeness)
+
+P-tier (Wave 1 features — already shipped before previous session
 started but listed here for completeness):
 - P2.1 Challenge-a-friend, P2.2 Mull Wrapped, P2.3 Embed badge,
   P2.4 Classes, P2.5 Assignments, P2.6 EDU tier
