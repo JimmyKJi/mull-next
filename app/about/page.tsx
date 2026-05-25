@@ -278,9 +278,12 @@ export default async function AboutPage() {
           <Prose className="mt-5">
             <p>
               <strong>Estimated monthly cost at different sizes</strong>{' '}
-              — AI inference is the dominant variable. Infrastructure
-              (Supabase + Vercel + Resend) stays free until the low
-              thousands of MAU, then adds ~$65–200/mo.
+              — AI inference is the dominant variable. Anthropic
+              charges 20% VAT on top of the listed API price, so $1
+              of API cost is $1.20 in actual cash out. Numbers below
+              are inclusive of VAT. Infrastructure (Supabase + Vercel
+              + Resend) stays free until the low thousands of MAU,
+              then adds ~$65–200/mo.
             </p>
           </Prose>
 
@@ -289,16 +292,16 @@ export default async function AboutPage() {
               <thead>
                 <tr className="border-b-2 border-[#221E18]">
                   <Th>ACTIVE USERS</Th>
-                  <Th>MONTHLY COST</Th>
+                  <Th>MONTHLY COST (CASH, INC. VAT)</Th>
                   <Th>WHO PAYS</Th>
                 </tr>
               </thead>
               <tbody>
-                <Tr cells={['Under 100', '~$5–70', 'Maintainer + tips']} netClass="neutral" />
-                <Tr cells={['500', '~$350', 'Tips + maintainer']} netClass="neutral" />
-                <Tr cells={['1,000', '~$720', 'Tips + Mull+ subscribers (when active)']} netClass="neutral" />
-                <Tr cells={['5,000', '~$3,500', 'Mull+ subscriptions cover most']} netClass="neutral" />
-                <Tr cells={['10,000', '~$7,200', 'Mull+ + grants / external funding']} netClass="neutral" />
+                <Tr cells={['Under 100', '~$6–85', 'Maintainer + tips']} netClass="neutral" />
+                <Tr cells={['500', '~$420', 'Tips + maintainer']} netClass="neutral" />
+                <Tr cells={['1,000', '~$865', 'Tips + Mull+ subscribers (when active)']} netClass="neutral" />
+                <Tr cells={['5,000', '~$4,200', 'Mull+ subscriptions cover most']} netClass="neutral" />
+                <Tr cells={['10,000', '~$8,640', 'Mull+ + grants / external funding']} netClass="neutral" />
               </tbody>
             </table>
           </div>

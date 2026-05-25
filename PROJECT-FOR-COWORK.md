@@ -383,13 +383,28 @@ AI-heavy features, never the core ones.
   Anthology / Year-in-View / Atlas / Quiz / Map / philosopher
   pages / topic / vs: **$0** (no AI calls)
 
-### Monthly cost at scale (Anthropic API + infra combined)
+### Monthly cost at scale (cash, inclusive of 20% VAT on API)
 
-- 100 MAU → ~$70
-- 500 MAU → ~$350
-- 1,000 MAU → ~$720 (Vercel Pro kicks in at ~$20/mo)
-- 5,000 MAU → ~$3,500 (Mull+ at 10% conversion covers most)
-- 10,000 MAU → ~$7,200 (needs Mull+ + grants / external)
+Anthropic charges 20% VAT on top of the listed per-token price, so
+$1 of API spend = $1.20 of cash out. Numbers below are cash totals.
+
+- 100 MAU → ~$85
+- 500 MAU → ~$420
+- 1,000 MAU → ~$865 (Vercel Pro kicks in at ~$20/mo)
+- 5,000 MAU → ~$4,200 (Mull+ at 10% conversion covers most)
+- 10,000 MAU → ~$8,640 (needs Mull+ + grants / external)
+
+### Spend guard (live as of 2026-05-25)
+
+Server-side rate-limit middleware + global daily/monthly spend
+ceilings live in `lib/rate-limit.ts`. Defaults:
+- Daily AI cap: $17 (≈$20 cash with VAT)
+- Monthly AI cap: $500 (≈$600 cash with VAT, ~£500)
+- Per-user per-day caps on every AI endpoint (Spar 3/day, Arena
+  judge 4/day, etc.)
+- `MULL_KILL_SWITCH=on` env var force-pauses all AI from the
+  Vercel dashboard, no deploy needed
+- Admin dashboard at `/admin/usage` (admin-only) shows live spend
 
 ### Free vs Mull+ (planned gating)
 

@@ -257,8 +257,14 @@ export default async function HomeV2() {
               </div>
             </div>
 
-            {/* ── Right column: floating pixel sprites + mini map ── */}
-            <HeroSprites />
+            {/* ── Right column: floating pixel sprites + mini map ──
+                Hidden on mobile (the inline philosopher sprite in
+                the left column already gives the page visual texture
+                at that size; rendering both leaves a 480px empty gap
+                between hero and the "WHAT TO DO TOMORROW" section). */}
+            <div className="hidden lg:block">
+              <HeroSprites />
+            </div>
           </div>
         </section>
 

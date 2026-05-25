@@ -129,17 +129,20 @@ const BUCKET_COST_CENTS: Record<Bucket, number> = {
   arena_judge: 15,    // Sonnet judge on full transcript, ~$0.15
 };
 
-// Daily ceiling — defaults to $25/day ($750/mo headroom for spikes
-// within Jimmy's ~£500/mo budget = ~$625). Tunable via env.
+// Daily ceiling — defaults to $17/day. Budget math: Jimmy's
+// ~£500/mo ≈ $625/mo cash budget, but Anthropic charges 20% VAT
+// on top of the listed API price, so $1 of cap = $1.20 of cash.
+// $17/day × 30 = $510/mo of API → ~$612 cash after VAT. Sits just
+// inside £500 GBP at current FX.
 const DAILY_SPEND_CAP_CENTS = parseInt(
-  process.env.MULL_DAILY_SPEND_CAP_CENTS || '2500',
+  process.env.MULL_DAILY_SPEND_CAP_CENTS || '1700',
   10,
 );
-// Monthly ceiling — defaults to $600/mo (~£500). Stops the slow
-// drain that would happen if daily spend hovered just under the
-// daily cap every day for a month.
+// Monthly ceiling — defaults to $500/mo of API (~$600 cash with
+// VAT). Hard stop even if daily cap never trips on a given day —
+// catches the slow-grind scenario.
 const MONTHLY_SPEND_CAP_CENTS = parseInt(
-  process.env.MULL_MONTHLY_SPEND_CAP_CENTS || '60000',
+  process.env.MULL_MONTHLY_SPEND_CAP_CENTS || '50000',
   10,
 );
 

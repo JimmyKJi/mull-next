@@ -72,27 +72,57 @@ export default function FeedbackButton() {
           type="button"
           onClick={() => setOpen(true)}
           aria-label="Send feedback"
-          className="pixel-press"
+          title="Send feedback"
+          className="pixel-press mull-feedback-fab"
           style={{
             position: 'fixed',
-            bottom: 18,
-            right: 18,
             zIndex: 60,
-            padding: '10px 16px',
             background: '#221E18',
             color: '#FAF6EC',
-            border: '4px solid #221E18',
-            boxShadow: '4px 4px 0 0 #B8862F',
+            border: '3px solid #221E18',
+            boxShadow: '3px 3px 0 0 #B8862F',
             borderRadius: 0,
             fontFamily: pixel,
-            fontSize: 11,
-            letterSpacing: '0.08em',
             textTransform: 'uppercase',
             cursor: 'pointer',
             transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
           }}
         >
-          ▸ FEEDBACK
+          <span className="mull-feedback-fab-full">▸ FEEDBACK</span>
+          <span className="mull-feedback-fab-mini" aria-hidden>?</span>
+          <style>{`
+            /* Desktop: full pill in the bottom-right. */
+            .mull-feedback-fab {
+              bottom: 18px;
+              right: 18px;
+              padding: 10px 16px;
+              font-size: 11px;
+              letter-spacing: 0.08em;
+            }
+            .mull-feedback-fab-mini { display: none; }
+
+            /* Mobile: small circular icon in the bottom-left so the
+               thumb-friendly scroll edge on the right stays clean
+               and content isn't covered by a 120-px-wide pill. */
+            @media (max-width: 640px) {
+              .mull-feedback-fab {
+                bottom: 12px;
+                left: 12px;
+                right: auto;
+                padding: 0;
+                width: 44px;
+                height: 44px;
+                font-size: 16px;
+                letter-spacing: 0;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 0.85;
+              }
+              .mull-feedback-fab-full { display: none; }
+              .mull-feedback-fab-mini { display: inline; }
+            }
+          `}</style>
         </button>
       )}
 

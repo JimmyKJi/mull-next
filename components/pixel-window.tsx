@@ -149,7 +149,7 @@ export function PixelPageHeader({ eyebrow, title, subtitle, accent }: HeaderProp
         </div>
       ) : null}
       <h1
-        className="mt-5 pr-2 text-[26px] leading-[1.08] tracking-[0.04em] text-[#221E18] sm:text-[36px] md:text-[44px]"
+        className="mt-5 pr-2 text-[20px] leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[32px] md:text-[44px]"
         style={{ fontFamily: "var(--font-pixel-display)" }}
       >
         <span style={{ textShadow: `3px 3px 0 ${shadowColor}` }}>{title}</span>
