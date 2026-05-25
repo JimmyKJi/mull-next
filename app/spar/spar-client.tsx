@@ -15,6 +15,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { SPAR_DAILY_LIMIT, SPAR_LIMIT_KEY, SPAR_MAX_USER_CHARS } from "@/lib/spar";
 import type { JudgeOutput } from "@/lib/arena/judge";
+import { emitFeatureEvent } from "@/lib/capabilities";
+import SaveToAnthology from "@/components/save-to-anthology";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-editorial), Georgia, serif";
@@ -95,6 +97,13 @@ export default function SparClient({
         judgeError: data.judgeError,
         userTurn: text.trim(),
       });
+      // Capability event — bigger XP if the user won the verdict.
+      const won = data.judge?.verdict === "user";
+      emitFeatureEvent(
+        "spar",
+        `Daily Spar vs ${philosopherName}${won ? " · won" : ""}`,
+        won ? 2 : 1,
+      );
       // Increment today's play count.
       const nextCount = playsToday + 1;
       setPlaysToday(nextCount);
@@ -513,6 +522,13 @@ function JudgeVerdict({
         >
           {judge.verdict_reasoning}
         </p>
+        <div style={{ marginBottom: 8 }}>
+          <SaveToAnthology
+            text={judge.verdict_reasoning}
+            source="spar"
+            attribution={`Verdict on ${philosopherName} spar`}
+          />
+        </div>
         <div
           style={{
             marginTop: 10,

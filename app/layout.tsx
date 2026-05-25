@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Lora, Pixelify_Sans, Press_Start_2P, VT323 } from "next/font/google";
 import "./globals.css";
 import { SiteNav } from "@/components/site-nav";
+import CapabilityToast from "@/components/capability-toast";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import FeedbackButton from "@/components/feedback-button";
@@ -176,6 +177,11 @@ export default function RootLayout({
             (admin-readable only). Critical for capturing launch
             sentiment from friends in the first 48 hours. */}
         <FeedbackButton />
+        {/* Capability toast — listens for the cross-tab event and
+            fires a Stardew-style "+3 RIGOR" badge on completion of
+            any retention surface action. Renders nothing until an
+            event arrives. */}
+        <CapabilityToast />
       </body>
     </html>
   );

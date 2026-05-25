@@ -418,3 +418,209 @@ single feature in the addendum, but also the longest build.
 
 S7 (Build-a-Philosopher) is the most distinctive idea on this list
 and should be built when there's time for a project at that scale.
+
+---
+
+## Third pass (2026-05-25, after S1+S5 shipped)
+
+S1 (The Pilgrimage) and S5 (Daily Spar) have shipped. The next
+round needs to keep adding **destinations**, not refinements, and
+should diversify the kinds of return-rhythms Mull supports (daily,
+weekly, monthly, seasonal, life-long). Below are S9 through S20.
+
+### S9 · The Crucible (~2 weeks)
+
+Daily moral commitment + report. Different from Dilemma: Dilemma is
+hypothetical; Crucible is a small **actual action** you commit to
+doing today and report on tomorrow. Generated from your archetype's
+tendencies and the dimension you're weakest on.
+
+- Day's Crucible: *"Today, ask one person whose work you've quietly
+  resented to tell you what they were trying to do. Just listen."*
+- Tomorrow's check-in: *"Did you do it? How did it go?"*
+- Mull tracks completion rate, surfaces a "Crucible streak" alongside
+  the Dilemma streak.
+
+The hook: Stoic evening-review meets Atomic Habits. New route:
+`/crucible`.
+
+### S10 · The Argument Diary (~2 weeks)
+
+Log your real-world arguments and disagreements. When you have one,
+write a brief account (200 words). Mull does three things:
+
+1. Steelmans the other side for you (Haiku)
+2. Identifies fallacies in your own framing (gently)
+3. Pulls 2-3 philosophers from your kindred and shows how they'd
+   approach the disagreement
+
+Less Arena (synthetic opponents), more journal-with-feedback. People
+who have a hard conversation per week become heavy users. New route:
+`/argument-diary`.
+
+### S11 · Constellation Quests (~1 week)
+
+Already in S4 but worth re-listing: curated multi-step journeys
+across the philosopher map. 5-9 thinkers in a deliberate order.
+Quests would include:
+
+- The Stoic trail
+- Women philosophy left out
+- The skeptic's walk
+- The non-Western canon Mull doesn't surface enough
+- The argument against existentialism
+- The mystics' lineage
+
+Completing a quest leaves a small connecting line between the
+philosophers on your personal map. Mostly content-bound; trivial
+code. New route: `/quests`.
+
+### S12 · The Wandering Question (~2 weeks)
+
+A single deep question travels with you across a week. Different
+from Dilemma's daily one-shots.
+
+- Monday: get the question (e.g., "What do you owe the version of
+  yourself five years from now?"). Write what comes.
+- Tuesday: Mull shows you how 2 philosophers near you answered it.
+  React.
+- Wednesday: a new angle from one further on the map.
+- Friday: synthesis — Mull pulls your three responses + the
+  philosophers' frames and writes a short note about how the
+  question moved through you.
+
+A weekly arc, smaller than Pilgrimage, with a real ending each time.
+New route: `/wandering`.
+
+### S13 · The Reading Hour (~2 weeks)
+
+A 60-minute timer-bound reading session with a primary text Mull
+picks for you (from your kindred), broken into 5 prompts that fire
+at intervals during the hour. Like a guided meditation but for
+philosophy text. After: a brief synthesis you can save to your diary.
+
+Differs from Reading Club (S8) because it's solo + on-demand, not
+cohort + scheduled. Lower friction. New route: `/read`.
+
+### S14 · Letters Between Inheritors (~3 weeks)
+
+In-fiction extension of the Inheritor mystery: users who've finished
+the Inheritor can opt-in to receive letters "from the deceased" at
+the rhythm of their archetype's task. (Hearth's task was "visit the
+daughter"; the deceased writes back at +1 week asking how it went.)
+
+Differs from S2 (Salon) because it's 1:1 with a fictional persona,
+not multi-user. Differs from a simple email because it's structured
+correspondence with prompts back to the user.
+
+Heaviest infra cost (Resend cron + persistent conversation state)
+but the emotional pull is uniquely Mull. New route: not really a
+route — the surface is your inbox.
+
+### S15 · The Council (~3 weeks)
+
+When you face a real decision, convene a "council" of 3-5
+philosophers from your map (you pick, or Mull picks). Each one
+weighs in briefly on your specific case. Like the Reflection Wheel
+(S3) but multi-philosopher and decision-focused.
+
+Use case: actual dilemmas in your actual life. The output is a
+multi-voice document you can save, share, return to. New route:
+`/council`.
+
+### S16 · Mull Open (~4 weeks)
+
+Quarterly Arena tournament. Brackets, single elimination, all PvP.
+Top 16 from the season's leaderboard get seeded; the rest enter via
+a play-in qualifier. The finals are spectator-viewable with the judge's
+verdict broken out by round. Annual champion gets a permanent badge
++ a featured "kindred minds" page.
+
+The retention shape: builds toward a quarterly event, gives the Arena
+a season structure. Currently the Arena is open-ended; tournaments
+add narrative arcs. New routes: `/arena/open`, `/arena/open/[year]`.
+
+### S17 · Constellations of Sympathy (~3 weeks)
+
+Show the user **who else on Mull is near them** — anonymized, opt-in,
+geographic if they consent. Could be: "12 users in your city are
+within 0.1 cosine of you. Send a postcard?" The postcard is a
+structured intro message Mull generates from both users' archetypes.
+
+Connection without the toxicity of social media — moderated, bounded,
+purposeful. New route: `/sympathy`.
+
+### S18 · Personal Anthology (~2 weeks)
+
+A user-built collection. As you encounter passages, quotes, or
+exchanges you find significant (in Arena, Pilgrimage, Salon, etc.),
+you can "save to anthology" with a 1-line note. Over months, you
+build a personal commonplace book. Mull surfaces themes as the
+anthology grows.
+
+Borges meets Pinterest, with a 16-D model behind it. New route:
+`/anthology`.
+
+### S19 · The Year-In-View (~1 week + ongoing)
+
+A live, always-updating annual page (different from Mull Wrapped
+which is a frozen December moment). Shows month-by-month:
+
+- Dimension drift
+- Most-cited philosopher on your behalf
+- Open questions you've started but not closed
+- Conversations across people on Mull (anonymized aggregates)
+
+The hook: a personal annual record that updates in real time.
+Replaces seasonal-only emails with an always-on surface. New route:
+`/year`.
+
+### S20 · The Long Letter (~2 weeks)
+
+Once a year (or once per major life event), Mull invites the user
+to write a long letter — 2,000+ words — about something specifically
+hard. Mull provides scaffolding (an outline tuned to the user's
+archetype) and saves the letter to a vault only the user can read.
+Five years later, Mull surfaces the letter for re-reading.
+
+Long-form retention: the user might write only 5-10 letters in their
+lifetime, but each one is a major commitment that bonds them to the
+product permanently. The 5-year resurfacing is the loop. New route:
+`/letters`.
+
+---
+
+### Cadence map of the 20 ideas
+
+| Cadence | Surfaces |
+|---|---|
+| **Daily** | Today's Dilemma · Daily Spar (S5) · The Crucible (S9) |
+| **Weekly** | The Wandering Question (S12) · The Salon (S2) · Arena weekly challenge |
+| **Monthly** | Kindred Minds email (#6) · The Reading Hour (S13) |
+| **Seasonal / Quarterly** | Reading Club (S8) · Mull Open (S16) |
+| **30-day arc** | The Pilgrimage (S1) |
+| **Annual** | Mull Wrapped · The Long Letter (S20) |
+| **On-demand** | The Council (S15) · Reflection Wheel (S3) · Argument Diary (S10) · Personal Anthology (S18) · Constellation Quests (S4/S11) · Letters Between Inheritors (S14) |
+| **Always-on** | Year-In-View (S19) · Build-a-Philosopher (S7) · Constellations of Sympathy (S17) |
+
+The strongest retention picture comes from users having ONE daily
+ritual + ONE weekly ritual + ONE longer commitment they're inside.
+Daily Spar + Wandering Question + Pilgrimage is one combo. Crucible
++ Salon + Build-a-Philosopher is another. Mull doesn't need users
+to do all twenty surfaces; it needs to offer enough that any user
+can find their three.
+
+### Next builds I'd pick
+
+If S1 + S5 are now in production and you're picking the next 2-3:
+
+1. **S9 (Crucible)** — completes the daily ritual menu. Stoic-shaped,
+   distinctively Mull, ~2 weeks.
+2. **S12 (Wandering Question)** — fills the weekly slot with
+   something fresh each Monday; cheap to build, high stickiness.
+3. **S15 (The Council)** — the on-demand surface users will share
+   screenshots of. ~3 weeks but the most viral shape on this list.
+
+S20 (Long Letter) is the most distinctively-Mull idea here and
+should be built when there's time for something that won't move
+metrics for two years but will make Mull permanent for its users.

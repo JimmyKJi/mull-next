@@ -28,8 +28,7 @@ const NAV_LINKS = [
   { href: "/pilgrimage", label: "Pilgrimage" },
   { href: "/arena", label: "Arena" },
   { href: "/map", label: "Map" },
-  { href: "/archetype", label: "Archetypes" },
-  { href: "/dilemma", label: "Today's dilemma" },
+  { href: "/atlas", label: "Atlas" },
   { href: "/about", label: "About" },
 ] as const;
 
@@ -201,7 +200,14 @@ const PAGE_ITEMS: PaletteItem[] = [
   { group: "Pages", label: "Arena · Your match history", href: "/arena/history" },
   { group: "Pages", label: "Daily Spar", href: "/spar", hint: "one turn, one judge, 5 min" },
   { group: "Pages", label: "The Pilgrimage", href: "/pilgrimage", hint: "30-day archetype-personalized course" },
+  { group: "Pages", label: "The Crucible", href: "/crucible", hint: "daily real-life action commitment" },
+  { group: "Pages", label: "The Wandering Question", href: "/wandering", hint: "a question across the week" },
+  { group: "Pages", label: "Personal Anthology", href: "/anthology", hint: "your commonplace book" },
+  { group: "Pages", label: "Argument Diary", href: "/argument-diary", hint: "log real arguments, get fallacy spotting" },
+  { group: "Pages", label: "Year-in-View", href: "/year", hint: "your year, always updating" },
+  { group: "Pages", label: "Capability Atlas", href: "/atlas", hint: "your six skills + level" },
   // ── Tier 2 — explore ──
+  { group: "Pages", label: "Archetypes", href: "/archetype" },
   { group: "Pages", label: "The constellation map", href: "/map", hint: "interactive philosophical space" },
   { group: "Pages", label: "Browse philosophers alphabetically", href: "/philosopher", hint: "560 thinkers, grouped by archetype" },
   { group: "Pages", label: "Today's dilemma", href: "/dilemma" },

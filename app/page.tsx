@@ -287,112 +287,83 @@ export default async function HomeV2() {
               className="mt-3 max-w-[680px] text-[15px] leading-[1.55] text-[#4A4338] sm:text-[16px]"
               style={{ fontFamily: "var(--font-editorial)" }}
             >
-              Mull has three recurring rhythms. Pick the cadence that
-              fits the day you&rsquo;re actually going to have.
+              Mull has six recurring rhythms — daily, weekly, and
+              long-arc. Pick the cadence that fits the day
+              you&rsquo;re actually going to have. Each one builds
+              one of your six skills, tracked in your{" "}
+              <Link
+                href="/atlas"
+                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+              >
+                Atlas
+              </Link>
+              .
             </p>
-            <ul className="mt-7 grid grid-cols-1 gap-4 md:grid-cols-3">
+            {/* Three tiers of cadence stacked into one grid so the
+                user can pick what kind of return-rhythm matches
+                their day. Each row is a different commitment shape:
+                fast daily / weekly / long-arc. */}
+            <ul className="mt-7 grid grid-cols-1 gap-3 md:grid-cols-3">
               <li>
-                <Link
+                <RhythmCard
                   href="/spar"
-                  className="block h-full border-[4px] border-[#221E18] bg-[#1A1612] p-5 text-[#F8EDC8] transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
-                  style={{ boxShadow: "5px 5px 0 0 #8C3717" }}
-                >
-                  <div
-                    className="text-[10px] tracking-[0.22em] text-[#F8C75E]"
-                    style={{ fontFamily: "var(--font-pixel-display)" }}
-                  >
-                    ▶ DAILY · 5 MIN
-                  </div>
-                  <div
-                    className="mt-3 text-[19px] leading-tight"
-                    style={{ fontFamily: "var(--font-editorial)" }}
-                  >
-                    <strong>Daily Spar</strong>
-                  </div>
-                  <p
-                    className="mt-2 text-[14px] leading-[1.5] text-[#E5DCC0]"
-                    style={{ fontFamily: "var(--font-editorial)" }}
-                  >
-                    One philosopher, one topic, one turn each. Judge
-                    calls it in 30 seconds. Different opponent every
-                    day. Wordle for arguments.
-                  </p>
-                  <div
-                    className="mt-3 inline-block bg-[#F8C75E] px-2.5 py-1 text-[10px] tracking-[0.18em] text-[#1A1820]"
-                    style={{ fontFamily: "var(--font-pixel-display)", textTransform: "uppercase" }}
-                  >
-                    ▶ TODAY&rsquo;S SPAR
-                  </div>
-                </Link>
+                  cadence="DAILY · 5 MIN"
+                  title="Daily Spar"
+                  pitch="One philosopher, one topic, one turn each. Judge calls it in 30 seconds."
+                  cta="TODAY'S SPAR"
+                  dark
+                  shadow="#8C3717"
+                />
               </li>
               <li>
-                <Link
+                <RhythmCard
+                  href="/crucible"
+                  cadence="DAILY · REAL ACTION"
+                  title="The Crucible"
+                  pitch="A small actual thing to do today. Tomorrow Mull asks how it went."
+                  cta="TODAY'S CRUCIBLE"
+                  shadow="#2F5D5C"
+                />
+              </li>
+              <li>
+                <RhythmCard
                   href="/dilemma"
-                  className="block h-full border-[4px] border-[#221E18] bg-[#FFFCF4] p-5 transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
-                  style={{ boxShadow: "5px 5px 0 0 #B8862F" }}
-                >
-                  <div
-                    className="text-[10px] tracking-[0.22em] text-[#8C6520]"
-                    style={{ fontFamily: "var(--font-pixel-display)" }}
-                  >
-                    ▶ DAILY · 5 MIN
-                  </div>
-                  <div
-                    className="mt-3 text-[19px] leading-tight text-[#221E18]"
-                    style={{ fontFamily: "var(--font-editorial)" }}
-                  >
-                    <strong>Today&rsquo;s Dilemma</strong>
-                  </div>
-                  <p
-                    className="mt-2 text-[14px] leading-[1.5] text-[#4A4338]"
-                    style={{ fontFamily: "var(--font-editorial)" }}
-                  >
-                    One philosophical scenario per day. Write what you
-                    think; Haiku finds the dimensions you moved on.
-                    Build a streak.
-                  </p>
-                  <div
-                    className="mt-3 inline-block bg-[#F8C75E] px-2.5 py-1 text-[10px] tracking-[0.18em] text-[#1A1820]"
-                    style={{ fontFamily: "var(--font-pixel-display)", textTransform: "uppercase" }}
-                  >
-                    ▶ TODAY&rsquo;S DILEMMA
-                  </div>
-                </Link>
+                  cadence="DAILY · 5 MIN"
+                  title="Today's Dilemma"
+                  pitch="One philosophical scenario. Write what you think. Build a streak."
+                  cta="TODAY'S DILEMMA"
+                  shadow="#B8862F"
+                />
               </li>
               <li>
-                <Link
+                <RhythmCard
+                  href="/wandering"
+                  cadence="WEEKLY · MON → SUN"
+                  title="The Wandering Question"
+                  pitch="One question carried across four beats of the week. Synthesis on Sunday."
+                  cta="THIS WEEK'S QUESTION"
+                  shadow="#5D5777"
+                />
+              </li>
+              <li>
+                <RhythmCard
                   href="/pilgrimage"
-                  className="block h-full border-[4px] border-[#221E18] bg-[#F8EDC8] p-5 transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
-                  style={{ boxShadow: "5px 5px 0 0 #2F5D5C" }}
-                >
-                  <div
-                    className="text-[10px] tracking-[0.22em] text-[#2F5D5C]"
-                    style={{ fontFamily: "var(--font-pixel-display)" }}
-                  >
-                    ▶ 30 DAYS · YOUR ARCHETYPE
-                  </div>
-                  <div
-                    className="mt-3 text-[19px] leading-tight text-[#221E18]"
-                    style={{ fontFamily: "var(--font-editorial)" }}
-                  >
-                    <strong>The Pilgrimage</strong>
-                  </div>
-                  <p
-                    className="mt-2 text-[14px] leading-[1.5] text-[#4A4338]"
-                    style={{ fontFamily: "var(--font-editorial)" }}
-                  >
-                    A 30-day arc shaped for the kind of mind you turned
-                    out to be — different days for Cartographers and
-                    Hammers and Hearths. One prompt per day; visible
-                    drift across the month.
-                  </p>
-                  <div
-                    className="mt-3 inline-block bg-[#2F5D5C] px-2.5 py-1 text-[10px] tracking-[0.18em] text-[#F8EDC8]"
-                    style={{ fontFamily: "var(--font-pixel-display)", textTransform: "uppercase" }}
-                  >
-                    ▶ ENROLL
-                  </div>
-                </Link>
+                  cadence="30 DAYS · YOUR ARCHETYPE"
+                  title="The Pilgrimage"
+                  pitch="A 30-day arc shaped for the kind of mind you turned out to be."
+                  cta="ENROLL"
+                  shadow="#1E3A5F"
+                />
+              </li>
+              <li>
+                <RhythmCard
+                  href="/atlas"
+                  cadence="ALWAYS · YOUR SIX SKILLS"
+                  title="The Atlas"
+                  pitch="Watch your Rigor, Depth, Consistency, Range, Self-Awareness, and Synthesis grow."
+                  cta="SEE YOUR ATLAS"
+                  shadow="#7A8B43"
+                />
               </li>
             </ul>
           </div>
@@ -1003,6 +974,75 @@ function SmallSurface({
         {label}
       </div>
       <p className="mt-1 text-[12.5px] leading-[1.45] text-[#8C6520]">{body}</p>
+    </Link>
+  );
+}
+
+// RhythmCard — uniform card for the "FIND YOUR RHYTHM" grid. One
+// per retention surface; `dark` flips to ink palette for the
+// signature daily surface (Spar).
+function RhythmCard({
+  href,
+  cadence,
+  title,
+  pitch,
+  cta,
+  shadow,
+  dark,
+}: {
+  href: string;
+  cadence: string;
+  title: string;
+  pitch: string;
+  cta: string;
+  shadow: string;
+  dark?: boolean;
+}) {
+  return (
+    <Link
+      href={href}
+      className="block h-full border-[3px] border-[#221E18] p-4 transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
+      style={{
+        background: dark ? "#1A1612" : "#FFFCF4",
+        color: dark ? "#F8EDC8" : "#221E18",
+        boxShadow: `4px 4px 0 0 ${shadow}`,
+      }}
+    >
+      <div
+        className="text-[10px] tracking-[0.22em]"
+        style={{
+          fontFamily: "var(--font-pixel-display)",
+          color: dark ? "#F8C75E" : shadow,
+        }}
+      >
+        ▶ {cadence}
+      </div>
+      <div
+        className="mt-2 text-[18px] leading-tight"
+        style={{ fontFamily: "var(--font-editorial)" }}
+      >
+        <strong>{title}</strong>
+      </div>
+      <p
+        className="mt-1.5 text-[13.5px] leading-[1.5]"
+        style={{
+          fontFamily: "var(--font-editorial)",
+          color: dark ? "#E5DCC0" : "#4A4338",
+        }}
+      >
+        {pitch}
+      </p>
+      <div
+        className="mt-3 inline-block px-2.5 py-1 text-[10px] tracking-[0.18em]"
+        style={{
+          fontFamily: "var(--font-pixel-display)",
+          background: dark ? "#F8C75E" : shadow,
+          color: dark ? "#1A1820" : "#F8EDC8",
+          textTransform: "uppercase",
+        }}
+      >
+        ▶ {cta}
+      </div>
     </Link>
   );
 }

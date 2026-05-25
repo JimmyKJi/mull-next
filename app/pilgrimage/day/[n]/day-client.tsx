@@ -22,6 +22,7 @@ import {
   type PilgrimageState,
 } from "@/lib/pilgrimage";
 import { ARCHETYPE_COLORS } from "@/lib/archetype-colors";
+import { emitFeatureEvent } from "@/lib/capabilities";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-editorial), Georgia, serif";
@@ -145,6 +146,13 @@ export default function PilgrimageDayClient({ day }: Props) {
     }
     setState(next);
     setSubmitted(true);
+    // Capability event — Depth + Consistency. Day 30 fires a bigger
+    // event for the completion arc.
+    emitFeatureEvent(
+      "pilgrimage",
+      `Pilgrimage Day ${day} complete${day === 30 ? " — arc finished" : ""}`,
+      day === 30 ? 3 : 1,
+    );
   }
 
   const done = state.completedDays.includes(day);
