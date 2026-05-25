@@ -47,7 +47,7 @@ export default async function PhilosopherIndexPage() {
         title="THE CONSTELLATION"
         subtitle={
           <div className="space-y-3">
-            <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-prose)' }}>
+            <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-editorial)' }}>
               {t('philindex.subtitle', locale, { n: PHILOSOPHERS.length })}
             </p>
             <p className="text-[14px] text-[#8C6520]">{t('philindex.intro', locale)}</p>

@@ -16,6 +16,9 @@ import WelcomePinger from '@/components/welcome-pinger';
 import WelcomeBackBanner from '@/components/welcome-back-banner';
 import ScrollToTop from '@/components/scroll-to-top';
 import TrajectoryEvents from '@/components/trajectory-events';
+import { ActivityHeatmap } from '@/components/activity-heatmap';
+import { TrajectoryChart } from '@/components/trajectory-chart';
+import PilgrimageStatusCard from '@/components/pilgrimage-status-card';
 import NextActionCard from '@/components/next-action-card';
 import ReferralCard from '@/components/referral-card';
 import PendingAttemptClaimer from '@/components/pending-attempt-claimer';
@@ -605,6 +608,13 @@ export default async function AccountPage() {
         </section>
       )}
 
+      {/* Pilgrimage status — most important returning-user surface,
+          so it sits above the next-action suggestion. Renders an
+          enroll-invite for non-enrolled users and a Day-X-of-30
+          progress card for enrolled ones. Client component (reads
+          localStorage). */}
+      <PilgrimageStatusCard />
+
       {/* Adaptive next-action prompt — shows a single high-value
           suggestion based on user state. Renders nothing for
           brand-new users (the FirstStepCard grid above already covers
@@ -919,6 +929,55 @@ export default async function AccountPage() {
           </div>
         </section>
       )}
+
+      {/* Activity heatmap — GitHub-style 7x52 grid of when you've
+          interacted with Mull. Cheap visual signal that effort over
+          time is being noticed. RETENTION-NOTES.md #11. */}
+      <section style={{ marginTop: 36, marginBottom: 12 }}>
+        <h2
+          style={{
+            fontFamily: pixel,
+            fontSize: 10,
+            color: '#8C6520',
+            letterSpacing: '0.24em',
+            textTransform: 'uppercase',
+            margin: '0 0 12px',
+          }}
+        >
+          ▶ A YEAR OF MULL · YOUR ACTIVITY
+        </h2>
+        <ActivityHeatmap
+          timestamps={events.map((e) => e.timestamp)}
+        />
+      </section>
+
+      {/* Trajectory chart — visualizes the dimension that's moved
+          most across the user's submissions. Makes the dilemma /
+          diary / exercise loop feel CONSEQUENTIAL, which is the
+          gap RETENTION-NOTES.md §2 calls out. Server-rendered SVG;
+          renders nothing if there are <3 trajectory points. */}
+      {trajectory.length >= 3 ? (
+        <section style={{ marginTop: 28, marginBottom: 12 }}>
+          <h2
+            style={{
+              fontFamily: pixel,
+              fontSize: 10,
+              color: '#8C6520',
+              letterSpacing: '0.24em',
+              textTransform: 'uppercase',
+              margin: '0 0 12px',
+            }}
+          >
+            ▶ HOW YOUR MAP HAS MOVED
+          </h2>
+          <TrajectoryChart
+            trajectory={trajectory.map((t) => ({
+              timestamp: t.event.timestamp,
+              after: t.after,
+            }))}
+          />
+        </section>
+      ) : null}
 
       {/* Trajectory event list. Per-card rendering lives in
           components/trajectory-events.tsx (extracted in the code

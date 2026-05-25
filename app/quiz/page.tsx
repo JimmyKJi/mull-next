@@ -8,6 +8,7 @@ import { getServerLocale } from "@/lib/locale-server";
 import { QUICK_QUESTIONS } from "@/lib/quiz-questions";
 import { DETAILED_QUESTIONS } from "@/lib/quiz-questions-detailed";
 import { QuizEngine } from "./quiz-engine";
+import { ResearchConsentGate } from "@/components/research-consent-gate";
 
 export const metadata: Metadata = {
   title: "Quiz · Mull",
@@ -34,7 +35,12 @@ export default async function QuizPage({
 
   return (
     <main className="min-h-[100svh] bg-[#FAF6EC] text-[#221E18]">
-      <QuizEngine questions={questions} mode={mode} locale={locale} />
+      {/* First-time visitors see the research-consent screen; once
+          they've decided (yes or no), the gate becomes a no-op and
+          renders the quiz directly. */}
+      <ResearchConsentGate>
+        <QuizEngine questions={questions} mode={mode} locale={locale} />
+      </ResearchConsentGate>
     </main>
   );
 }

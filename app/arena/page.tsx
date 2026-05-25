@@ -8,7 +8,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { createClient } from "@/utils/supabase/server";
 import { PixelPageHeader } from "@/components/pixel-window";
-import { ARENA_PHILOSOPHERS } from "@/lib/arena/data";
+import { ARENA_PHILOSOPHERS, getWeeklyChallenge } from "@/lib/arena/data";
 
 export const metadata: Metadata = {
   title: "Arena · Mull",
@@ -41,6 +41,12 @@ export default async function ArenaPage() {
   }
 
   const calibrated = !!rating?.calibration_done_at;
+  const weekly = getWeeklyChallenge();
+  // URL deep-link so a click drops you into PvE pre-loaded with the
+  // featured topic + philosopher. /arena/pve already parses these.
+  const weeklyHref = user
+    ? `/arena/pve?topic=${weekly.topic.slug}&opponent=${encodeURIComponent(weekly.philosopher.name)}`
+    : "/login?next=/arena";
 
   return (
     <main className="mx-auto max-w-[760px] px-6 pb-32 pt-10 sm:px-10">
@@ -50,7 +56,7 @@ export default async function ArenaPage() {
         subtitle={
           <p
             style={{
-              fontFamily: serif,
+              fontFamily: "var(--font-editorial)",
               fontStyle: "italic",
               fontSize: 16,
               color: "#4A4338",
@@ -63,6 +69,98 @@ export default async function ArenaPage() {
           </p>
         }
       />
+
+      {/* ─── Weekly featured challenge ─────────────────────────────
+          Rotating philosopher × topic per ISO week. Driver of
+          weekly return — gives the Arena a "today's puzzle" beat.
+          RETENTION-NOTES.md §12. */}
+      <Link
+        href={weeklyHref}
+        style={{
+          display: "block",
+          marginBottom: 28,
+          padding: "18px 20px",
+          background: "#1A1612",
+          color: "#F8EDC8",
+          border: "4px solid #221E18",
+          boxShadow: "5px 5px 0 0 #B8862F",
+          textDecoration: "none",
+        }}
+        className="transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 8,
+            marginBottom: 10,
+          }}
+        >
+          <span
+            style={{
+              fontFamily: pixel,
+              fontSize: 10,
+              color: "#F8C75E",
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+            }}
+          >
+            ▶ CHALLENGE OF THE WEEK · WK {weekly.weekNumber}
+          </span>
+          <span
+            style={{
+              fontFamily: pixel,
+              fontSize: 9,
+              color: "#B8862F",
+              letterSpacing: "0.2em",
+              textTransform: "uppercase",
+            }}
+          >
+            {weekly.philosopher.tier} TIER · ELO {weekly.philosopher.baseElo}
+          </span>
+        </div>
+        <div
+          style={{
+            fontFamily: "var(--font-editorial)",
+            fontSize: 20,
+            color: "#F8EDC8",
+            lineHeight: 1.3,
+            marginBottom: 8,
+          }}
+        >
+          <strong>Argue {weekly.philosopher.name}</strong> on{" "}
+          <em>&ldquo;{weekly.topic.title}&rdquo;</em>
+        </div>
+        <p
+          style={{
+            fontFamily: "var(--font-editorial)",
+            fontSize: 14,
+            color: "#E5DCC0",
+            lineHeight: 1.5,
+            margin: 0,
+          }}
+        >
+          {weekly.topic.prompt}
+        </p>
+        <div
+          style={{
+            marginTop: 14,
+            display: "inline-block",
+            padding: "6px 12px",
+            background: "#F8C75E",
+            color: "#1A1820",
+            border: "2px solid #221E18",
+            fontFamily: pixel,
+            fontSize: 11,
+            letterSpacing: "0.18em",
+            textTransform: "uppercase",
+          }}
+        >
+          ▶ ENTER THE ARENA
+        </div>
+      </Link>
 
       {user && rating && (
         <div

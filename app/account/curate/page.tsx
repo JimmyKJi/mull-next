@@ -28,7 +28,7 @@ export default async function CuratePage() {
         eyebrow="▶ ADMIN · EDITOR PICKS"
         title="CURATE THIS WEEK"
         subtitle={
-          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-prose)' }}>
+          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-editorial)' }}>
             Pick three public entries from the last two weeks. They show up
             on the leaderboard&rsquo;s{' '}
             <Link

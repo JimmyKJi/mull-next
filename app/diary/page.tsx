@@ -79,7 +79,7 @@ export default async function DiaryPage() {
         eyebrow={`▶ ${t('diary.eyebrow', locale).toUpperCase()}`}
         title={t('diary.title', locale).toUpperCase()}
         subtitle={
-          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-prose)' }}>
+          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-editorial)' }}>
             {t('diary.subtitle', locale)}
           </p>
         }

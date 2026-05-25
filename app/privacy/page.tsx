@@ -19,7 +19,7 @@ export default function PrivacyPage() {
         eyebrow={`▶ PRIVACY · UPDATED ${LAST_UPDATED.toUpperCase()}`}
         title="WHAT WE HOLD"
         subtitle={
-          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-prose)' }}>
+          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-editorial)' }}>
             Plain English. If anything below contradicts what you actually
             experience, the experience is the bug — please email me at{' '}
             <a

@@ -32,6 +32,7 @@ import {
 } from "@/lib/quiz-journey";
 import { SceneIllustration } from "@/components/scene-illustration";
 import { SupportMullPrompt } from "@/components/support-mull-prompt";
+import { ResearchConsentGate } from "@/components/research-consent-gate";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-prose)";
@@ -72,8 +73,14 @@ export function JourneyEngine({ scenes }: Props) {
   if (!scene) return null;
 
   // Gate: render the fork-screen before any narrative starts.
+  // Wrapped in ResearchConsentGate so first-time users see the
+  // consent screen first; returning users skip straight through.
   if (gated) {
-    return <GateScreen onBegin={() => setGated(false)} />;
+    return (
+      <ResearchConsentGate>
+        <GateScreen onBegin={() => setGated(false)} />
+      </ResearchConsentGate>
+    );
   }
 
   function advance() {
@@ -575,7 +582,7 @@ function GateScreen({ onBegin }: { onBegin: () => void }) {
               marginBottom: 22,
             }}
           >
-            ▸ The Inheritor
+            ▸ The Inheritor — A Murder Mystery
           </div>
           <h1
             style={{

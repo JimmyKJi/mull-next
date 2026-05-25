@@ -211,3 +211,210 @@ Avoid these even though other apps use them:
 should be moved to NEXT.md before being scheduled. Treat the four
 recommendations as the smallest shippable retention upgrade; treat
 the rest as a brainstorm pool to draw from later.*
+
+---
+
+## Addendum (2026-05-25, second pass)
+
+After the first pass landed, Jimmy pushed back: the twelve ideas
+above were too much polish, not enough genuinely new surfaces. The
+ask was for **new destinations the way Dilemma and Arena are
+destinations** — things a user opens in their browser on purpose,
+not features bolted onto existing pages.
+
+Below are eight new surface candidates. Each could be its own route,
+its own hero in the nav, its own pull. Ranked by leverage + how
+specifically-Mull-shaped it is. Time estimates assume one solo
+builder; treat them as orders of magnitude, not promises.
+
+### S1 · The Pilgrimage (~3 weeks)
+
+A thirty-day personalized course, archetype-keyed. Day 1 starts the
+moment you finish the quiz. Each day brings:
+
+- A short passage from a kindred philosopher (90 seconds)
+- A prompt or exercise tuned to your archetype's strengths and to
+  the dimension you're weakest on
+- A small drift on your map when you respond
+
+By Day 30 you've moved measurably (the chart at the top shows the
+arc), met a dozen thinkers near you, and have a daily ritual that
+isn't *just* one dilemma. Different from the dilemma in that it has
+**momentum and a destination** — Day 17 builds on Day 16, the curve
+matters.
+
+The hook: it's a *course*, not a stream. The same psychological
+shape that makes Headspace work (you're somewhere, you're going
+somewhere) but for philosophy.
+
+New route: `/pilgrimage` — list of available 30-day arcs, each
+themed (the Stoic month, the skeptic's walk, the Hearth's year-
+end). Users can also have one auto-generated.
+
+### S2 · The Salon (~2 weeks)
+
+Async, multi-user weekly question. One question goes live every
+Monday. Users post a 100–250 word position. Other users reply (or
+not). On Friday, an impartial Sonnet judge picks the three most
+rigorous responses and writes a 200-word synthesis. Everyone's
+contribution stays archived under their public profile.
+
+Unlike the Arena (which is 1v1 debate), the Salon is *collective
+inquiry*. Unlike Reddit, the discussions are bounded, judged, and
+brand-mediated. Users develop a reputation over weeks — your archive
+of Salon contributions becomes part of who-you-are-on-Mull.
+
+New route: `/salon` — this week's question, the wall of responses,
+last week's verdict.
+
+### S3 · The Reflection Wheel (~2 weeks)
+
+Pick any philosopher whose vector is close to yours. Mull simulates
+a 20-minute structured conversation: the philosopher (in voice) asks
+you 4–5 questions tuned to their concerns and YOUR current vector.
+Not a debate — closer to a guided session with a wise relative who
+happens to be Spinoza. Each session ends with a short note from them
+about what they noticed.
+
+Different from the Arena because there's no judging, no Elo, no
+right answer. Different from the daily dilemma because YOU pick the
+philosopher and the depth.
+
+New route: `/reflect` — list of available philosophers (gated to
+your closest 20 or so), recent sessions, start-a-new-session.
+
+Cost note: ~$0.05 per session in AI fees; could be Mull+ if it gets
+heavy use.
+
+### S4 · Constellation Quests (~1 week)
+
+Curated multi-step journeys across the philosopher map. Examples:
+
+- *The Stoic trail* — Aurelius → Epictetus → Seneca → Hadot → Pigliucci
+- *The Buddhist path* — Buddha → Nagarjuna → Dogen → Suzuki → modern
+- *The skeptic's walk* — Pyrrho → Sextus → Montaigne → Hume → Bayle
+- *Women philosophy left out* — Hypatia → Christine de Pizan →
+  Astell → Wollstonecraft → Anscombe → Murdoch → de Beauvoir →
+  Nussbaum
+
+Each quest is 5–9 philosophers in a deliberate order with a 1–2
+paragraph "why these, why this order" intro. Users mark themselves
+through. Completing a quest leaves a small visual badge on their
+map (a faint connecting line between the philosophers).
+
+Mostly content-bound (the code to track progress is trivial). High
+leverage for users who like the constellation but don't know where
+to start reading. New route: `/quests`.
+
+### S5 · The Daily Spar (~1.5 weeks)
+
+A 5-minute Arena variant. One micro-topic, one philosopher opponent,
+**one turn each, 200 words max, judge in 30 seconds**. Built for the
+user who doesn't have 20 minutes for a full Arena debate but wants
+the rigor practice.
+
+Daily limit of 3. Separate "Spar Elo" so it doesn't muddy the main
+Arena leaderboard. Today's spar-of-the-day rotates globally, so
+everyone who plays today sees the same matchup — leaderboard for
+"best response of the day" becomes a thing.
+
+The hook: low commitment, high return. Like Wordle for arguments.
+New route: `/spar`.
+
+### S6 · The Inheritor sequels (~3 weeks each)
+
+The Inheritor was a hit shape. The reshape into murder mystery made
+it stronger. There's room for **a small library of narrative
+quizzes**, each a different genre, each using the same 16-D scoring
+engine. Candidates:
+
+- **The Last Crossing** (sci-fi) — you've been selected as ethics
+  officer on a generation ship. The first crisis happens hour one.
+  Four scenarios over the next 100 years (cryosleep transitions
+  collapse the time gap). Same chambers structure, sci-fi clothing.
+- **The Oracle's Choice** (fantasy) — you've been brought to a
+  cliffside monastery. The current oracle is dying; the order needs
+  a successor. Four trials by the four masters.
+- **The Letter Series** (epistolary) — 4 letters arrive over 4
+  weeks. Each contains a moral problem someone you love is facing.
+  You reply. The replies shape who you turn out to be.
+
+Each new genre opens a new user who wouldn't have engaged with the
+mystery. Already-completed users have a reason to play the next.
+The "you've taken 3 of 5" shape is naturally retentive.
+
+Existing engine (JourneyEngine + JOURNEY_REVEALS) was built modular;
+adding sequels is mostly new content (~5,000 words each).
+
+### S7 · Build-a-Philosopher (~3 weeks)
+
+A long-running, slow-accreting feature. Over the year, your daily
+choices on Mull (dilemmas, Inheritor playthroughs, Salon posts) feed
+into a synthetic philosopher Mull is building from your data. They
+get:
+
+- A generated name (in a tradition that matches your archetype)
+- A pixel portrait that evolves as you do
+- A growing one-page manifesto written from your accumulated answers
+- A position on the 560-philosopher map, plotted with the others
+
+At the end of each season (quarter), Mull writes a 400-word "what
+your philosopher became this season" essay. Shareable as a card.
+
+This is the most distinctively-Mull-shaped retention idea on this
+list: nobody else can do it because nobody else has the model. Users
+spend a year here because they want to see what THEIR philosopher
+becomes. New route: `/me/philosopher`.
+
+### S8 · Mull Reading Club (~4 weeks)
+
+Quarterly. One primary text per quarter (Aurelius's *Meditations*,
+Beauvoir's *Ethics of Ambiguity*, Mill's *On Liberty*, Buddha's
+*Dhammapada*, etc.) read on a 12-week schedule alongside other Mull
+users. Each week:
+
+- A reading assignment (1 chapter or ~30 pages)
+- A prompt that ties the reading to a dimension on your map
+- An async thread (Salon-style) for the cohort
+- A small dimension drift on submission
+
+Builds belonging. Users develop reading habits. Mull becomes the
+place you read serious philosophy.
+
+Content + ops heavy — needs a chosen book per quarter, scheduled
+threads, light moderation. But the surface is durable once running.
+New route: `/reading-club`.
+
+---
+
+### What ties these together
+
+All eight share three properties:
+
+1. **Each is a destination.** It has its own URL, its own hero
+   surface, its own reason to open it. They're not bolted onto
+   existing pages.
+2. **Each has its own cadence.** Daily Spar fires daily, Salon
+   fires weekly, Reading Club fires per-chapter, Pilgrimage fires
+   per-day-of-30. Different rhythms compound — a user doesn't have
+   to engage with all of them, but the more they do the more days
+   per week Mull has a reason to be opened.
+3. **Each is recognizably Mull.** Each leans on the 16-D model, the
+   archetype system, or the philosopher corpus. None could be
+   transplanted onto a generic productivity app and still make
+   sense.
+
+### Recommended build order if Jimmy says go
+
+If you pick one to ship next, ship **S5 (Daily Spar)** — it's the
+fastest to build, fits the existing Arena infrastructure, and gives
+the immediate "Wordle for arguments" hook that's screenshot-shareable.
+
+If you pick two, add **S4 (Constellation Quests)** — mostly content,
+high leverage, makes the existing map dramatically more useful.
+
+If you pick three, add **S1 (The Pilgrimage)** — the highest-leverage
+single feature in the addendum, but also the longest build.
+
+S7 (Build-a-Philosopher) is the most distinctive idea on this list
+and should be built when there's time for a project at that scale.

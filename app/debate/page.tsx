@@ -62,7 +62,7 @@ export default async function DebatePage() {
         eyebrow={`▶ ${t('debate.eyebrow', locale).toUpperCase()}`}
         title="SIMULATED DEBATE"
         subtitle={
-          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-prose)' }}>
+          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-editorial)' }}>
             {t('debate.subtitle', locale)}
           </p>
         }

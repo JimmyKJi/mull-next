@@ -36,7 +36,7 @@ export default async function ExercisesPage() {
         eyebrow={`▶ ${t('exercises.eyebrow', locale).toUpperCase()}`}
         title={t('exercises.title', locale).toUpperCase()}
         subtitle={
-          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-prose)' }}>
+          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-editorial)' }}>
             {t('exercises.subtitle', locale)}
           </p>
         }

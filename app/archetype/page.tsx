@@ -73,8 +73,13 @@ export default async function ArchetypeIndexPage() {
                     boxShadow: `4px 4px 0 0 ${color.deep}`,
                   }}
                 >
+                  {/* Title bar — stacked layout (number on top, name
+                      below) keeps the design predictable. The earlier
+                      side-by-side layout broke on long names like
+                      CARTOGRAPHER, TOUCHSTONE, LIGHTHOUSE because
+                      they overflowed the card width. */}
                   <div
-                    className="flex items-center justify-between border-b-4 px-3 py-2 text-[10px] tracking-[0.18em]"
+                    className="flex flex-col items-center border-b-4 px-3 py-2 text-center tracking-[0.16em]"
                     style={{
                       borderColor: color.deep,
                       backgroundColor: color.deep,
@@ -82,8 +87,12 @@ export default async function ArchetypeIndexPage() {
                       fontFamily: 'var(--font-pixel-display)',
                     }}
                   >
-                    <span>NO. {String(ARCHETYPES.indexOf(a) + 1).padStart(2, '0')}</span>
-                    <span>THE {a.key.toUpperCase()}</span>
+                    <span className="text-[9px] opacity-70">
+                      NO. {String(ARCHETYPES.indexOf(a) + 1).padStart(2, '0')}
+                    </span>
+                    <span className="mt-0.5 text-[11px]">
+                      {a.key.toUpperCase()}
+                    </span>
                   </div>
 
                   <div

@@ -173,7 +173,7 @@ export default async function HomeV2() {
                     className="text-[10px] tracking-[0.22em] text-[#8C6520]"
                     style={{ fontFamily: "var(--font-pixel-display)" }}
                   >
-                    ▶ FIND YOUR PLACE
+                    ▶ MURDER MYSTERY · 15 MIN
                   </div>
                   <div
                     className="mt-2 text-[18px] font-medium leading-[1.2] text-[#221E18]"
@@ -182,9 +182,10 @@ export default async function HomeV2() {
                     The Inheritor
                   </div>
                   <p className="mt-2 text-[13.5px] leading-[1.5] text-[#4A4338]">
-                    A 15-min narrative quiz. Midnight at a strange
-                    estate. Four chambers. You leave knowing where you
-                    sit on the philosophical map.
+                    A reclusive philosopher is dead. You&rsquo;re named
+                    in the will, alongside six strangers. Four chambers,
+                    four anomalies, two twists, ten endings — same
+                    16-D map placement, delivered as a mystery.
                   </p>
                   <div
                     className="mt-3 inline-block bg-[#F8C75E] px-3 py-1 text-[10px] tracking-[0.18em] text-[#1A1820]"
@@ -260,6 +261,142 @@ export default async function HomeV2() {
             <HeroSprites />
           </div>
         </section>
+
+        {/* ─── Find Your Rhythm — the retention bridge ───────────
+            Sits between the hero (entry points) and Today's drop
+            (a daily ritual). Makes the recurring surfaces — Daily
+            Spar, Today's Dilemma, The Pilgrimage — visible without
+            requiring discovery. The 5-min/5-min/30-day arc gives
+            users a clear "what to do once you have your archetype"
+            menu. RETENTION-NOTES.md §UX-rewire. */}
+        <ScrollReveal as="section" className="px-6 pb-16 sm:px-10 sm:pb-20">
+          <div className="mx-auto max-w-[1200px]">
+            <div
+              className="text-[10px] tracking-[0.24em] text-[#8C6520]"
+              style={{ fontFamily: "var(--font-pixel-display)" }}
+            >
+              ▸ ONCE YOU&rsquo;RE ON THE MAP · FIND YOUR RHYTHM
+            </div>
+            <h2
+              className="mt-4 text-[26px] leading-[1.05] tracking-[0.04em] text-[#221E18] sm:text-[34px]"
+              style={{ fontFamily: "var(--font-pixel-display)" }}
+            >
+              <span style={{ textShadow: "3px 3px 0 #B8862F" }}>WHAT TO DO TOMORROW</span>
+            </h2>
+            <p
+              className="mt-3 max-w-[680px] text-[15px] leading-[1.55] text-[#4A4338] sm:text-[16px]"
+              style={{ fontFamily: "var(--font-editorial)" }}
+            >
+              Mull has three recurring rhythms. Pick the cadence that
+              fits the day you&rsquo;re actually going to have.
+            </p>
+            <ul className="mt-7 grid grid-cols-1 gap-4 md:grid-cols-3">
+              <li>
+                <Link
+                  href="/spar"
+                  className="block h-full border-[4px] border-[#221E18] bg-[#1A1612] p-5 text-[#F8EDC8] transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
+                  style={{ boxShadow: "5px 5px 0 0 #8C3717" }}
+                >
+                  <div
+                    className="text-[10px] tracking-[0.22em] text-[#F8C75E]"
+                    style={{ fontFamily: "var(--font-pixel-display)" }}
+                  >
+                    ▶ DAILY · 5 MIN
+                  </div>
+                  <div
+                    className="mt-3 text-[19px] leading-tight"
+                    style={{ fontFamily: "var(--font-editorial)" }}
+                  >
+                    <strong>Daily Spar</strong>
+                  </div>
+                  <p
+                    className="mt-2 text-[14px] leading-[1.5] text-[#E5DCC0]"
+                    style={{ fontFamily: "var(--font-editorial)" }}
+                  >
+                    One philosopher, one topic, one turn each. Judge
+                    calls it in 30 seconds. Different opponent every
+                    day. Wordle for arguments.
+                  </p>
+                  <div
+                    className="mt-3 inline-block bg-[#F8C75E] px-2.5 py-1 text-[10px] tracking-[0.18em] text-[#1A1820]"
+                    style={{ fontFamily: "var(--font-pixel-display)", textTransform: "uppercase" }}
+                  >
+                    ▶ TODAY&rsquo;S SPAR
+                  </div>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/dilemma"
+                  className="block h-full border-[4px] border-[#221E18] bg-[#FFFCF4] p-5 transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
+                  style={{ boxShadow: "5px 5px 0 0 #B8862F" }}
+                >
+                  <div
+                    className="text-[10px] tracking-[0.22em] text-[#8C6520]"
+                    style={{ fontFamily: "var(--font-pixel-display)" }}
+                  >
+                    ▶ DAILY · 5 MIN
+                  </div>
+                  <div
+                    className="mt-3 text-[19px] leading-tight text-[#221E18]"
+                    style={{ fontFamily: "var(--font-editorial)" }}
+                  >
+                    <strong>Today&rsquo;s Dilemma</strong>
+                  </div>
+                  <p
+                    className="mt-2 text-[14px] leading-[1.5] text-[#4A4338]"
+                    style={{ fontFamily: "var(--font-editorial)" }}
+                  >
+                    One philosophical scenario per day. Write what you
+                    think; Haiku finds the dimensions you moved on.
+                    Build a streak.
+                  </p>
+                  <div
+                    className="mt-3 inline-block bg-[#F8C75E] px-2.5 py-1 text-[10px] tracking-[0.18em] text-[#1A1820]"
+                    style={{ fontFamily: "var(--font-pixel-display)", textTransform: "uppercase" }}
+                  >
+                    ▶ TODAY&rsquo;S DILEMMA
+                  </div>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/pilgrimage"
+                  className="block h-full border-[4px] border-[#221E18] bg-[#F8EDC8] p-5 transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
+                  style={{ boxShadow: "5px 5px 0 0 #2F5D5C" }}
+                >
+                  <div
+                    className="text-[10px] tracking-[0.22em] text-[#2F5D5C]"
+                    style={{ fontFamily: "var(--font-pixel-display)" }}
+                  >
+                    ▶ 30 DAYS · YOUR ARCHETYPE
+                  </div>
+                  <div
+                    className="mt-3 text-[19px] leading-tight text-[#221E18]"
+                    style={{ fontFamily: "var(--font-editorial)" }}
+                  >
+                    <strong>The Pilgrimage</strong>
+                  </div>
+                  <p
+                    className="mt-2 text-[14px] leading-[1.5] text-[#4A4338]"
+                    style={{ fontFamily: "var(--font-editorial)" }}
+                  >
+                    A 30-day arc shaped for the kind of mind you turned
+                    out to be — different days for Cartographers and
+                    Hammers and Hearths. One prompt per day; visible
+                    drift across the month.
+                  </p>
+                  <div
+                    className="mt-3 inline-block bg-[#2F5D5C] px-2.5 py-1 text-[10px] tracking-[0.18em] text-[#F8EDC8]"
+                    style={{ fontFamily: "var(--font-pixel-display)", textTransform: "uppercase" }}
+                  >
+                    ▶ ENROLL
+                  </div>
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </ScrollReveal>
 
         {/* ─── Today's thinker — sits right under the hero ─────── */}
         <ScrollReveal as="section" className="px-6 pb-16 sm:px-10 sm:pb-20">
@@ -625,9 +762,11 @@ export default async function HomeV2() {
                         } as React.CSSProperties
                       }
                     >
-                      {/* Title bar */}
+                      {/* Title bar — stacked layout (number on top,
+                          name below). The horizontal "NO. NN  NAME"
+                          version broke on long names. */}
                       <div
-                        className="flex items-center justify-between border-b-4 px-3 py-2 text-[10px] tracking-[0.18em]"
+                        className="flex flex-col items-center border-b-4 px-3 py-2 text-center tracking-[0.16em]"
                         style={{
                           borderColor: color.deep,
                           backgroundColor: color.deep,
@@ -635,8 +774,12 @@ export default async function HomeV2() {
                           fontFamily: "var(--font-pixel-display)",
                         }}
                       >
-                        <span>NO. {String(ARCHETYPES.indexOf(a) + 1).padStart(2, "0")}</span>
-                        <span>THE {capitalize(a.key).toUpperCase()}</span>
+                        <span className="text-[9px] opacity-70">
+                          NO. {String(ARCHETYPES.indexOf(a) + 1).padStart(2, "0")}
+                        </span>
+                        <span className="mt-0.5 text-[11px]">
+                          {capitalize(a.key).toUpperCase()}
+                        </span>
                       </div>
 
                       {/* Hand-crafted 16×16 pixel sprite for this

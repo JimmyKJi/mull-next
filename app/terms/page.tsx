@@ -19,7 +19,7 @@ export default function TermsPage() {
         eyebrow={`▶ TERMS · UPDATED ${LAST_UPDATED.toUpperCase()}`}
         title="THE RULES, PLAINLY"
         subtitle={
-          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-prose)' }}>
+          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-editorial)' }}>
             By using Mull you agree to the below. If anything is unclear,
             email{' '}
             <a

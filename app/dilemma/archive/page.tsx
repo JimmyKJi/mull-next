@@ -104,7 +104,7 @@ export default async function DilemmaArchivePage({
         eyebrow={`▶ ${t('archive.eyebrow', locale).toUpperCase()}`}
         title="DILEMMA ARCHIVE"
         subtitle={
-          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-prose)' }}>
+          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-editorial)' }}>
             {t('archive.subtitle', locale)}
           </p>
         }

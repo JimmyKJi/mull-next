@@ -41,7 +41,7 @@ export default async function DuelPage() {
         eyebrow={`▶ ${t('duel.eyebrow', locale).toUpperCase()}`}
         title="DEBATE YOURSELF"
         subtitle={
-          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-prose)' }}>
+          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-editorial)' }}>
             {t('duel.subtitle', locale)}
           </p>
         }

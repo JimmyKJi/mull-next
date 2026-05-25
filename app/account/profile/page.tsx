@@ -61,7 +61,7 @@ export default async function ProfileSettingsPage() {
         eyebrow={`▶ ${t('profile.eyebrow', locale).toUpperCase()}`}
         title="PUBLIC PROFILE"
         subtitle={
-          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-prose)' }}>
+          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-editorial)' }}>
             {t('profile.subtitle_html', locale, {
               code: 'mull.world/u/<your-handle>',
             })}

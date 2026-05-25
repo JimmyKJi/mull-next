@@ -45,7 +45,7 @@ export default async function SearchPage({
         eyebrow={`▶ ${t('search.eyebrow', locale).toUpperCase()}`}
         title={t('search.h1', locale).toUpperCase()}
         subtitle={
-          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-prose)' }}>
+          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-editorial)' }}>
             {t('search.h1_subtitle', locale)}
           </p>
         }

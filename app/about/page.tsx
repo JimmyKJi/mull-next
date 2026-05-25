@@ -87,11 +87,13 @@ export default async function AboutPage() {
             <Promise title="The Quiz — two ways through.">
               The classic five-minute version (twenty questions, Likert-style)
               gets you onto the map fast. <strong>The Inheritor</strong> is
-              the same questions wrapped in a fifteen-minute narrative — a
-              midnight at a strange estate, four chambers, a stranger. Same
-              16-dimensional placement underneath; different way of arriving
-              at it. The home page leads with the Inheritor; the classic is
-              one click away.
+              a fifteen-minute country-house murder mystery — a reclusive
+              philosopher is dead, you&apos;re one of seven inheritors,
+              four chambers each hide an anomaly, two unexpected twists,
+              ten distinct endings based on your archetype. Same
+              16-dimensional placement underneath; delivered as genre
+              fiction. The home page leads with the Inheritor; the classic
+              is one click away.
             </Promise>
             <Promise title="The Arena — argue a philosopher, get scored.">
               Debate any of ten thinkers (Socrates, Nietzsche, Arendt,

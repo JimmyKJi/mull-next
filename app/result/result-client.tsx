@@ -229,6 +229,62 @@ export function ResultClient({
         </div>
       </section>
 
+      {/* ─── Pilgrimage CTA — "your arc is ready" ──────────────
+          Inserted right after the archetype reveal because that's
+          the moment of highest engagement — the user just learned
+          who they are; offer the 30-day arc shaped for that. */}
+      <section className="mx-auto max-w-[1100px] px-6 pb-2 sm:px-10">
+        <Link
+          href="/pilgrimage"
+          className="block border-[4px] p-5 transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5 sm:p-6"
+          style={{
+            background: "#1A1612",
+            color: "#F8EDC8",
+            borderColor: color.deep,
+            boxShadow: `6px 6px 0 0 ${color.deep}`,
+          }}
+        >
+          <div
+            className="text-[10px] tracking-[0.22em]"
+            style={{
+              color: color.primary,
+              fontFamily: "var(--font-pixel-display)",
+              textTransform: "uppercase",
+            }}
+          >
+            ▶ YOUR 30-DAY ARC IS READY
+          </div>
+          <div
+            className="mt-3 text-[22px] leading-tight sm:text-[26px]"
+            style={{ fontFamily: "var(--font-editorial)" }}
+          >
+            The Pilgrimage — shaped for {flavor ? <em>{flavor.toLowerCase()}</em> : null}{" "}
+            <strong>{capitalize(topKey)}s</strong>.
+          </div>
+          <p
+            className="mt-3 max-w-[680px] text-[15.5px] leading-[1.55]"
+            style={{ fontFamily: "var(--font-editorial)", color: "#E5DCC0" }}
+          >
+            Thirty days of daily prompts tuned to the kind of mind
+            you turned out to be. Different from the daily dilemma:
+            this one has a curve. By Day 30 you&rsquo;ll see how your
+            map moved across the arc.
+          </p>
+          <div
+            className="mt-4 inline-block px-3 py-1 text-[10px] tracking-[0.18em]"
+            style={{
+              fontFamily: "var(--font-pixel-display)",
+              textTransform: "uppercase",
+              background: "#F8C75E",
+              color: "#1A1820",
+              border: "2px solid #221E18",
+            }}
+          >
+            ▶ BEGIN DAY 1
+          </div>
+        </Link>
+      </section>
+
       {/* ─── Radar: your 16-D fingerprint ───────────────────────
           Pure SVG radar chart, pixel-bordered frame, sans labels. */}
       <section className="px-6 py-12 sm:px-10 sm:py-16">
@@ -328,8 +384,11 @@ export function ResultClient({
                         boxShadow: `4px 4px 0 0 ${pc.deep}`,
                       }}
                     >
+                      {/* Same min-h fix as /archetype index — keeps
+                          the title bar aligned across cards even when
+                          archetype names wrap differently. */}
                       <div
-                        className="flex items-center justify-between border-b-4 px-3 py-2 text-[10px] tracking-[0.2em]"
+                        className="flex min-h-[44px] items-center justify-between border-b-4 px-3 py-2 text-[10px] tracking-[0.2em]"
                         style={{
                           borderColor: pc.deep,
                           background: pc.deep,

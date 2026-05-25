@@ -24,6 +24,8 @@ import { MullMark } from "./mull-mark";
 // discoverable but don't crowd the top bar.
 const NAV_LINKS = [
   { href: "/", label: "Home" },
+  { href: "/spar", label: "Daily Spar" },
+  { href: "/pilgrimage", label: "Pilgrimage" },
   { href: "/arena", label: "Arena" },
   { href: "/map", label: "Map" },
   { href: "/archetype", label: "Archetypes" },
@@ -197,6 +199,8 @@ const PAGE_ITEMS: PaletteItem[] = [
   { group: "Pages", label: "Arena · PvP", href: "/arena/pvp", hint: "vs another human" },
   { group: "Pages", label: "Arena · Leaderboard", href: "/arena/leaderboard" },
   { group: "Pages", label: "Arena · Your match history", href: "/arena/history" },
+  { group: "Pages", label: "Daily Spar", href: "/spar", hint: "one turn, one judge, 5 min" },
+  { group: "Pages", label: "The Pilgrimage", href: "/pilgrimage", hint: "30-day archetype-personalized course" },
   // ── Tier 2 — explore ──
   { group: "Pages", label: "The constellation map", href: "/map", hint: "interactive philosophical space" },
   { group: "Pages", label: "Browse philosophers alphabetically", href: "/philosopher", hint: "560 thinkers, grouped by archetype" },

@@ -34,7 +34,7 @@ export default async function RetrospectivePage() {
         eyebrow={`▶ ${t('retro.eyebrow', locale).toUpperCase()}`}
         title="YEARLY RETROSPECTIVE"
         subtitle={
-          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-prose)' }}>
+          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-editorial)' }}>
             {t('retro.subtitle', locale)}
           </p>
         }

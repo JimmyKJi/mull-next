@@ -246,6 +246,74 @@ export function philosophersByTier(): {
   };
 }
 
+/** ─── Weekly featured challenge ─────────────────────────────────
+ *
+ *  Mull's "challenge of the week": a deterministically rotating
+ *  philosopher × topic pairing surfaced on the Arena landing page
+ *  (and optionally the home page). Designed to give returning users
+ *  something fresh each Monday without requiring content-team work.
+ *
+ *  Algorithm: ISO week number (1..53) seeds two independent rotations
+ *  through ARENA_PHILOSOPHERS and ARENA_TOPICS. The two are offset so
+ *  the same pairing doesn't recur within a year. Falls within each
+ *  philosopher's `topicCategories` constraint when set.
+ *
+ *  Retention design intent (RETENTION-NOTES.md §12): light, low-cost,
+ *  gives Sunday-email and home-page surfaces a fresh weekly hook.
+ */
+
+/** ISO 8601 week number — week 1 contains the year's first Thursday. */
+function isoWeek(date: Date): { year: number; week: number } {
+  const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+  const dayNum = (d.getUTCDay() + 6) % 7; // Mon=0, Sun=6
+  d.setUTCDate(d.getUTCDate() - dayNum + 3); // nearest Thursday
+  const firstThursday = new Date(Date.UTC(d.getUTCFullYear(), 0, 4));
+  const week = 1 + Math.round(
+    ((d.getTime() - firstThursday.getTime()) / 86400000 - 3 + ((firstThursday.getUTCDay() + 6) % 7)) / 7,
+  );
+  return { year: d.getUTCFullYear(), week };
+}
+
+export type WeeklyChallenge = {
+  philosopher: ArenaPhilosopher;
+  topic: ArenaTopic;
+  /** Week number (ISO 8601) the challenge is keyed to. */
+  weekNumber: number;
+  /** The Monday that opens this week, for display. */
+  weekStart: Date;
+};
+
+export function getWeeklyChallenge(now: Date = new Date()): WeeklyChallenge {
+  const { week } = isoWeek(now);
+
+  // Pick philosopher by week, but bias toward friendly/sharp tiers
+  // (heavy tier is Elo-gated; surfacing a Hegel challenge to a brand
+  // new user is the wrong nudge). 7 non-heavy philosophers; heavy
+  // philosophers appear on a longer rotation (every 9th week).
+  const nonHeavy = ARENA_PHILOSOPHERS.filter((p) => p.tier !== "heavy");
+  const heavy = ARENA_PHILOSOPHERS.filter((p) => p.tier === "heavy");
+  const philosopher =
+    week % 9 === 0 && heavy.length > 0
+      ? heavy[Math.floor(week / 9) % heavy.length]
+      : nonHeavy[week % nonHeavy.length];
+
+  // Pick a topic — respecting the philosopher's category constraint
+  // when set, otherwise any topic. Offset by 3 so consecutive weeks
+  // don't share an obvious pattern.
+  const allowed = philosopher.topicCategories
+    ? ARENA_TOPICS.filter((t) => philosopher.topicCategories!.includes(t.category))
+    : ARENA_TOPICS;
+  const topic = allowed[(week + 3) % allowed.length];
+
+  // Monday of the current ISO week.
+  const monday = new Date(now);
+  monday.setUTCHours(0, 0, 0, 0);
+  const dow = (monday.getUTCDay() + 6) % 7;
+  monday.setUTCDate(monday.getUTCDate() - dow);
+
+  return { philosopher, topic, weekNumber: week, weekStart: monday };
+}
+
 /** Elo-gap gate. Users can't face an opponent more than this above
  *  their current Elo — keeps the heavy voices behind a real climb. */
 export const MAX_ELO_GAP = 300;
