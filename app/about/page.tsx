@@ -11,6 +11,7 @@ import type { Metadata } from 'next';
 import { getServerLocale } from '@/lib/locale-server';
 import LanguageSwitcher from '@/components/language-switcher';
 import { PixelWindow, PixelPageHeader } from '@/components/pixel-window';
+import { ContentLanguageNotice } from '@/components/content-language-notice';
 
 export const metadata: Metadata = {
   title: 'About',
@@ -34,6 +35,8 @@ export default async function AboutPage() {
       <div className="mb-6 flex justify-end">
         <LanguageSwitcher initial={locale} />
       </div>
+
+      <ContentLanguageNotice locale={locale} />
 
       <PixelPageHeader
         eyebrow="▶ ABOUT MULL"
@@ -146,24 +149,6 @@ export default async function AboutPage() {
               No investors, no growth quotas, no board demanding a 10× return.
               The product changes when we decide it should change, not when a
               quarterly review demands traction.
-            </Promise>
-            <Promise title='Not an "AI app".'>
-              AI is used in a few specific, bounded places — turning your
-              written daily dilemma, diary entry, or exercise reflection into
-              a small dimensional shift on your map; generating the back-and-
-              forth in simulated philosopher debates; and (Mull+) writing your
-              end-of-year retrospective from your own data. The 16-dimensional
-              model, the archetype system, the philosopher positions, the
-              figures, the quiz questions — all hand-designed by humans who
-              care about getting philosophy right. The full list, with prompts
-              and data flows, is on the{' '}
-              <Link
-                href="/methodology"
-                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
-              >
-                methodology page
-              </Link>
-              .
             </Promise>
             <Promise title="The free tier stays generous.">
               If Mull grows past break-even, every dollar of margin goes back

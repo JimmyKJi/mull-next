@@ -5171,32 +5171,6 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     "aliases": ["Philo", "Alexandria"]
   },
   {
-    "name": "Plotinus",
-    "dates": "204–270",
-    "keyIdea": "The One overflows into Intellect, Soul, and Nature — Neoplatonic mysticism.",
-    "vector": [
-      5,
-      5,
-      4,
-      7,
-      4,
-      7,
-      10,
-      3,
-      5,
-      5,
-      5,
-      9,
-      7,
-      3,
-      7,
-      6
-    ],
-    "archetypeKey": "lighthouse",
-    "archetypeName": "The Lighthouse",
-    "aliases": []
-  },
-  {
     "name": "Porphyry",
     "dates": "~234–305",
     "keyIdea": "Editor of Plotinus; Isagoge framed medieval logic for a thousand years.",
@@ -5350,32 +5324,6 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "lighthouse",
     "archetypeName": "The Lighthouse",
-    "aliases": []
-  },
-  {
-    "name": "Cicero",
-    "dates": "106–43 BCE",
-    "keyIdea": "Eclectic synthesizer — duty, friendship, and the just commonwealth.",
-    "vector": [
-      7,
-      6,
-      5,
-      7,
-      6,
-      7,
-      3,
-      4,
-      6,
-      5,
-      8,
-      5,
-      8,
-      3,
-      7,
-      4
-    ],
-    "archetypeKey": "keel",
-    "archetypeName": "The Keel",
     "aliases": []
   },
   {
@@ -5795,58 +5743,6 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     "aliases": ["Duns", "Scotus"]
   },
   {
-    "name": "Catherine of Siena",
-    "dates": "1347–1380",
-    "keyIdea": "Mystic activist — the bridge of Christ; political letters to popes.",
-    "vector": [
-      7,
-      6,
-      6,
-      5,
-      5,
-      8,
-      9,
-      3,
-      7,
-      5,
-      5,
-      6,
-      7,
-      4,
-      6,
-      6
-    ],
-    "archetypeKey": "threshold",
-    "archetypeName": "The Threshold",
-    "aliases": ["Catherine", "Siena"]
-  },
-  {
-    "name": "Julian of Norwich",
-    "dates": "~1342–1416",
-    "keyIdea": "All shall be well — Showings of divine love beyond suffering.",
-    "vector": [
-      7,
-      7,
-      3,
-      5,
-      5,
-      7,
-      9,
-      3,
-      5,
-      5,
-      5,
-      6,
-      8,
-      4,
-      5,
-      6
-    ],
-    "archetypeKey": "threshold",
-    "archetypeName": "The Threshold",
-    "aliases": ["Julian", "Norwich"]
-  },
-  {
     "name": "Marguerite Porete",
     "dates": "~1250–1310",
     "keyIdea": "Mirror of Simple Souls — the soul annihilated into divine love.",
@@ -5923,32 +5819,6 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     "archetypeKey": "forge",
     "archetypeName": "The Forge",
     "aliases": ["Marsilius", "Padua"]
-  },
-  {
-    "name": "Nicholas of Cusa",
-    "dates": "1401–1464",
-    "keyIdea": "Learned ignorance — the coincidence of opposites in the infinite.",
-    "vector": [
-      7,
-      6,
-      3,
-      7,
-      5,
-      7,
-      8,
-      3,
-      6,
-      5,
-      5,
-      9,
-      8,
-      4,
-      7,
-      6
-    ],
-    "archetypeKey": "lighthouse",
-    "archetypeName": "The Lighthouse",
-    "aliases": ["Nicholas", "Cusa"]
   },
   {
     "name": "Marsilio Ficino",
@@ -6599,32 +6469,6 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     "archetypeKey": "lighthouse",
     "archetypeName": "The Lighthouse",
     "aliases": ["Isaac", "Luria"]
-  },
-  {
-    "name": "Mulla Sadra",
-    "dates": "~1571–1640",
-    "keyIdea": "Transcendent Theosophy — existence precedes essence; reality moves.",
-    "vector": [
-      5,
-      6,
-      4,
-      7,
-      6,
-      7,
-      9,
-      4,
-      6,
-      5,
-      6,
-      9,
-      5,
-      4,
-      6,
-      5
-    ],
-    "archetypeKey": "lighthouse",
-    "archetypeName": "The Lighthouse",
-    "aliases": ["Mulla", "Sadra"]
   },
   {
     "name": "Bhartrihari",
@@ -7459,32 +7303,6 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     "aliases": []
   },
   {
-    "name": "Francis Bacon",
-    "dates": "1561–1626",
-    "keyIdea": "Novum Organum — induction as the engine of useful knowledge.",
-    "vector": [
-      4,
-      6,
-      7,
-      6,
-      9,
-      4,
-      1,
-      6,
-      5,
-      6,
-      8,
-      5,
-      3,
-      7,
-      4,
-      5
-    ],
-    "archetypeKey": "garden",
-    "archetypeName": "The Garden",
-    "aliases": ["Francis", "Bacon"]
-  },
-  {
     "name": "Galileo Galilei",
     "dates": "1564–1642",
     "keyIdea": "Mathematics as the language nature is written in — and recanted under threat.",
@@ -7561,32 +7379,6 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     "archetypeKey": "cartographer",
     "archetypeName": "The Cartographer",
     "aliases": ["Hugo", "Grotius"]
-  },
-  {
-    "name": "Hobbes",
-    "dates": "1588–1679",
-    "keyIdea": "Leviathan — war of all against all averted only by absolute sovereignty.",
-    "vector": [
-      8,
-      6,
-      7,
-      7,
-      7,
-      5,
-      2,
-      6,
-      5,
-      6,
-      7,
-      6,
-      4,
-      4,
-      5,
-      3
-    ],
-    "archetypeKey": "pilgrim",
-    "archetypeName": "The Pilgrim",
-    "aliases": []
   },
   {
     "name": "Margaret Cavendish",

@@ -17,6 +17,7 @@ import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
 import { PixelWindow } from '@/components/pixel-window';
+import { ContentLanguageNotice } from '@/components/content-language-notice';
 
 export function generateStaticParams() {
   return archetypeKeys().map((slug) => ({ slug }));
@@ -134,6 +135,8 @@ export default async function ArchetypeDetailPage({
         </Link>
         <LanguageSwitcher initial={locale} />
       </div>
+
+      <ContentLanguageNotice locale={locale} />
 
       {/* ─── Hero — pixel sprite + name + spirit ─── */}
       <PixelWindow

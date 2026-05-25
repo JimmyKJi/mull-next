@@ -35,7 +35,7 @@ const NAV_LINKS = [
 // chromeless full-bleed experience). The nav is suppressed on these
 // paths so the embed isn't cropped by it. Keep this list in sync with
 // the comparable HIDDEN_PREFIXES in components/feedback-button.tsx.
-const CHROMELESS_PREFIXES = ['/badge', '/share', '/wrapped'];
+const CHROMELESS_PREFIXES = ['/badge', '/share', '/wrapped', '/embed'];
 
 export function SiteNav() {
   const pathname = usePathname() ?? "/";

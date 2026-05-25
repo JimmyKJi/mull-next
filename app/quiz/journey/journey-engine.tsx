@@ -24,8 +24,12 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { add, zeros } from "@/lib/vectors";
-import type { JourneyScene } from "@/lib/quiz-journey";
-import { chamberCount } from "@/lib/quiz-journey";
+import type { JourneyScene, RevealEnding } from "@/lib/quiz-journey";
+import {
+  chamberCount,
+  JOURNEY_REVEALS,
+  pickEnding,
+} from "@/lib/quiz-journey";
 import { SceneIllustration } from "@/components/scene-illustration";
 import { SupportMullPrompt } from "@/components/support-mull-prompt";
 
@@ -183,8 +187,92 @@ export function JourneyEngine({ scenes }: Props) {
             onAdvance={advance}
           />
         )}
+        {scene.kind === "reveal" && (
+          <RevealScene scene={scene} vector={vector} onAdvance={advance} />
+        )}
       </div>
     </div>
+  );
+}
+
+// ─── Reveal scene (branching ending) ──────────────────────────────
+//
+// Calls pickEnding(vector) to choose one of the 10 archetype-keyed
+// endings, then splices the shared cold-open prose with the picked
+// recognition + flavor beat + inheritance + ask. Falls back to the
+// Cartographer ending if the picker somehow returns an archetype
+// that's not in JOURNEY_REVEALS (shouldn't happen — both come from
+// the same archetype-targets source).
+
+function RevealScene({
+  scene,
+  vector,
+  onAdvance,
+}: {
+  scene: Extract<JourneyScene, { kind: "reveal" }>;
+  vector: number[];
+  onAdvance: () => void;
+}) {
+  const { archetypeKey, flavor } = useMemo(() => pickEnding(vector), [vector]);
+  const ending: RevealEnding =
+    JOURNEY_REVEALS[archetypeKey] ?? JOURNEY_REVEALS.cartographer;
+
+  // Compose body: cold-open + recognition + flavor beat + inheritance
+  // + ask, joined by paragraph breaks. The shared cold-open already
+  // ends with "He looks at you steadily." — the recognition picks up
+  // from that beat as Wren's first archetype-specific line.
+  const flavorBeat =
+    (flavor != null && ending.flavorDetails[flavor]) ||
+    ending.flavorDetailDefault;
+  const body = [
+    scene.coldOpen,
+    ending.recognition,
+    flavorBeat,
+    ending.inheritance,
+    ending.ask,
+  ].join("\n\n");
+  const paragraphs = body.split(/\n\n+/);
+
+  return (
+    <article
+      style={{
+        background: "#FFFCF4",
+        border: "4px solid #221E18",
+        boxShadow: "6px 6px 0 0 #B8862F",
+      }}
+    >
+      <div style={illustrationContainer}>
+        <SceneIllustration scene={scene.art} width={360} />
+      </div>
+
+      <div style={{ padding: "26px 32px 30px" }}>
+        <div style={eyebrowStyle}>{scene.eyebrow}</div>
+        {paragraphs.map((p, i) => (
+          <p
+            key={i}
+            style={{
+              fontFamily: serif,
+              fontSize: 18,
+              color: "#221E18",
+              margin: i === paragraphs.length - 1 ? "0 0 24px" : "0 0 16px",
+              lineHeight: 1.7,
+            }}
+            dangerouslySetInnerHTML={{ __html: italicizeMarkers(p) }}
+          />
+        ))}
+        <button type="button" onClick={onAdvance} style={advanceBtn}>
+          ▶ {ending.advance.toUpperCase()}
+        </button>
+        {/* Tip-jar nudge on the reveal — catches the user at the
+            moment they've finished the work, before /result. */}
+        <div style={{ marginTop: 24 }}>
+          <SupportMullPrompt
+            lead="If The Inheritor gave you something, consider keeping it open."
+            detail="The narrative quiz costs nothing to take, but a small AI fee per playthrough. Tips from people who can afford it keep Mull free for everyone else."
+          />
+        </div>
+      </div>
+    </article>
   );
 }
 
@@ -231,17 +319,6 @@ function FrameScene({
         <button type="button" onClick={onAdvance} style={advanceBtn}>
           ▶ {scene.advance.toUpperCase()}
         </button>
-        {/* Tip-jar nudge only on the outro frame ("reveal"), not on
-            the intro. Catches the user at the moment they've finished
-            the work, before they move on to /result. */}
-        {scene.id === "reveal" && (
-          <div style={{ marginTop: 24 }}>
-            <SupportMullPrompt
-              lead="If The Inheritor gave you something, consider keeping it open."
-              detail="The narrative quiz costs nothing to take, but a small AI fee per playthrough. Tips from people who can afford it keep Mull free for everyone else."
-            />
-          </div>
-        )}
       </div>
     </article>
   );
@@ -512,9 +589,9 @@ function GateScreen({ onBegin }: { onBegin: () => void }) {
               textShadow: "3px 3px 0 #B8862F",
             }}
           >
-            A NARRATIVE
+            A 15-MIN
             <br />
-            VERSION OF THE QUIZ
+            MURDER MYSTERY
           </h1>
           <p
             style={{
@@ -525,10 +602,12 @@ function GateScreen({ onBegin }: { onBegin: () => void }) {
               lineHeight: 1.65,
             }}
           >
-            A midnight at a strange estate. A letter, a wax seal, four
-            chambers, a choice. Same model as the classic quiz —
-            you&rsquo;ll end at the same place on the map. Just a
-            longer, more felt way of getting there.
+            A reclusive philosopher is dead. You&rsquo;re named in the
+            will, alongside six strangers. Tonight you&rsquo;ll walk
+            four chambers of the estate, examine the evidence, and make
+            the choices that reveal who you actually are. Same rigorous
+            scoring as the classic quiz, delivered as a country-house
+            mystery with two twists and ten endings.
           </p>
           <p
             style={{
@@ -540,7 +619,7 @@ function GateScreen({ onBegin }: { onBegin: () => void }) {
               lineHeight: 1.5,
             }}
           >
-            About 15 minutes. You&rsquo;ll need quiet time.
+            About 15 minutes. You&rsquo;ll want quiet time.
           </p>
           <div
             style={{

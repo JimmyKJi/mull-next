@@ -10,6 +10,7 @@ import { localizeExercise } from '@/lib/exercises-i18n';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
+import { ContentLanguageNotice } from '@/components/content-language-notice';
 import { createClient } from '@/utils/supabase/server';
 import ReflectionForm from './reflection-form';
 import type { Metadata } from 'next';
@@ -60,6 +61,8 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
         </Link>
         <LanguageSwitcher initial={locale} />
       </div>
+
+      <ContentLanguageNotice locale={locale} />
 
       <div
         className="flex flex-wrap items-center gap-3 text-[10px] tracking-[0.22em] text-[#8C6520]"

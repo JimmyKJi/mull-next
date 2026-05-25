@@ -10,8 +10,8 @@ import { JOURNEY_SCENES } from "@/lib/quiz-journey";
 import { JourneyEngine } from "./journey-engine";
 
 export const metadata: Metadata = {
-  title: "The Vigil · Mull",
-  description: "A narrative way through the Mull quiz. Find your place on the map by replaying moments of choice.",
+  title: "The Inheritor · Mull",
+  description: "A 15-minute country-house murder mystery that doubles as a rigorous philosophical placement. Two twists, ten endings.",
   robots: { index: false, follow: false },
 };
 

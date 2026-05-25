@@ -274,14 +274,14 @@ const ENTRIES = [
   { n:`Carneades`, d:`~214–129 BCE`, i:`Pithanon — the persuasive — as guide where certainty fails.`, v:{SR:9,PO:6,TR:5,SI:4} },
   { n:`Aenesidemus`, d:`1st c. BCE`, i:`Revived Pyrrhonism — the ten tropes against dogmatic claims.`, v:{SR:10,SI:5,MR:3,TR:3} },
   { n:`Philo of Alexandria`, d:`~20 BCE–50 CE`, i:`Allegorical reading; bridges Jewish scripture and Greek philosophy.`, v:{MR:8,RT:7,TR:6,UI:6,TD:6} },
-  { n:`Plotinus`, d:`204–270`, i:`The One overflows into Intellect, Soul, and Nature — Neoplatonic mysticism.`, v:{MR:10,TD:9,TR:7,AT:7,SI:6,UI:7} },
+  { n:`Plotinus (re-noted)`, d:`204–270`, i:`(already in db — skip)`, v:{} }, // dupe of Wave 1 Plotinus
   { n:`Porphyry`, d:`~234–305`, i:`Editor of Plotinus; Isagoge framed medieval logic for a thousand years.`, v:{TR:8,TD:8,RT:7,MR:6} },
   { n:`Iamblichus`, d:`~245–325`, i:`Theurgy — ritual practice as the soul's ascent to the divine.`, v:{MR:9,RT:8,AT:7,TD:6,ES:3} },
   { n:`Proclus`, d:`412–485`, i:`Systematic Neoplatonism — every cause overflows itself; reality is graded triads.`, v:{TR:8,TD:10,MR:8,UI:8} },
   { n:`Hypatia`, d:`~360–415`, i:`Alexandrian mathematician and Neoplatonist; pagan martyr at Christian hands.`, v:{TR:9,TD:9,UI:7,MR:6,SS:7,AT:6} },
   { n:`Damascius`, d:`~458–538`, i:`Last head of the Athenian Academy — the Ineffable beyond even the One.`, v:{MR:10,TD:9,SI:7,AT:7,UI:6} },
   { n:`Boethius`, d:`~480–524`, i:`Consolation of Philosophy — fortune's wheel turned in a death cell.`, v:{TV:8,RT:7,TR:7,MR:6,AT:7,UI:7} },
-  { n:`Cicero`, d:`106–43 BCE`, tr:'stoic', i:`Eclectic synthesizer — duty, friendship, and the just commonwealth.`, v:{TR:7,PO:8,UI:7,RT:7,CE:6,WP:5} },
+  { n:`Cicero (re-noted)`, d:`106–43 BCE`, i:`(already in db — skip)`, v:{} }, // dupe of Wave 1 Cicero
   { n:`Plutarch`, d:`~46–119`, tr:'stoic', i:`Lives in parallel — character revealed through moral comparison.`, v:{RT:7,CE:6,PO:7,VA:6,MR:5} },
   { n:`Lucian of Samosata`, d:`~125–180`, tr:'skeptic', i:`Satirist of dogma — laughter as a corrosive on pretension.`, v:{SR:9,VA:6,SS:7,SI:5} },
   { n:`Marcus Tullius Varro`, d:`116–27 BCE`, tr:'stoic', i:`Encyclopedist — three hundred theologies catalogued before judgment.`, v:{TR:6,RT:7,SR:6,TD:7} },
@@ -300,12 +300,12 @@ const ENTRIES = [
   { n:`Anselm of Canterbury`, d:`1033–1109`, i:`Faith seeking understanding; the ontological argument from definition.`, v:{TR:9,RT:8,MR:6,TD:8,UI:7} },
   { n:`Albertus Magnus`, d:`~1200–1280`, i:`Aristotle baptized — natural philosophy as a path to divine wisdom.`, v:{TR:7,TE:7,RT:7,TD:7,UI:6} },
   { n:`Duns Scotus`, d:`~1266–1308`, i:`Univocity of being; haecceitas — the "thisness" that individuates.`, v:{TR:9,TD:9,RT:7,MR:5,SS:5} },
-  { n:`Catherine of Siena`, d:`1347–1380`, i:`Mystic activist — the bridge of Christ; political letters to popes.`, v:{MR:9,RT:8,WP:6,AT:7,CE:7,UI:6} },
-  { n:`Julian of Norwich`, d:`~1342–1416`, i:`All shall be well — Showings of divine love beyond suffering.`, v:{MR:9,VA:7,TV:7,RT:7,CE:5} },
+  { n:`Catherine of Siena (re-noted)`, d:`1347–1380`, i:`(already in db — skip)`, v:{} }, // dupe of Wave 1
+  { n:`Julian of Norwich (re-noted)`, d:`~1342–1416`, i:`(already in db — skip)`, v:{} }, // dupe of Wave 1
   { n:`Marguerite Porete`, d:`~1250–1310`, i:`Mirror of Simple Souls — the soul annihilated into divine love.`, v:{MR:10,SI:8,AT:8,SS:7,VA:5} },
   { n:`Christine de Pizan`, d:`1364–1430`, i:`City of Ladies — virtue is not gendered; reason is the common ground.`, v:{UI:8,WP:6,TR:7,CE:6,SS:6} },
   { n:`Marsilius of Padua`, d:`~1275–1342`, tr:'social-contract', i:`Defender of the Peace — secular sovereignty over spiritual authority.`, v:{WP:7,UI:7,PO:7,SR:6,TR:6} },
-  { n:`Nicholas of Cusa`, d:`1401–1464`, i:`Learned ignorance — the coincidence of opposites in the infinite.`, v:{MR:8,TD:9,TR:7,SI:6,UI:7} },
+  { n:`Nicholas of Cusa (re-noted)`, d:`1401–1464`, i:`(already in db — skip)`, v:{} }, // dupe of Wave 1
   { n:`Marsilio Ficino`, d:`1433–1499`, i:`Renaissance Neoplatonism — soul as the bond between God and matter.`, v:{MR:8,TD:8,RT:6,UI:6,ES:4} },
   { n:`Pico della Mirandola`, d:`1463–1494`, tr:'platonist', i:`Oration on the Dignity of Man — self-fashioning as the human birthright.`, v:{SS:8,WP:7,TR:7,UI:7,VA:6} },
   { n:`Pietro Pomponazzi`, d:`1462–1525`, tr:'aristotelian', i:`Mortality of the soul — virtue worth pursuing for its own sake.`, v:{TR:6,TE:7,SR:7,SS:6,AT:5} },
@@ -333,7 +333,7 @@ const ENTRIES = [
   { n:`Judah Halevi`, d:`~1075–1141`, i:`Kuzari — Jewish particularity over universal philosophy.`, v:{RT:9,CE:7,MR:6,UI:3} },
   { n:`Hasdai Crescas`, d:`~1340–1410`, i:`Critique of Aristotle — divine love as primary, the will as free.`, v:{TR:6,MR:7,RT:7,VA:6} },
   { n:`Isaac Luria`, d:`1534–1572`, i:`Lurianic Kabbalah — divine contraction, the shattering, and repair (tikkun).`, v:{MR:10,TD:8,RT:8,UI:6,SI:6} },
-  { n:`Mulla Sadra`, d:`~1571–1640`, i:`Transcendent Theosophy — existence precedes essence; reality moves.`, v:{MR:9,TR:7,TD:9,UI:6,SI:5} },
+  { n:`Mulla Sadra (re-noted)`, d:`~1571–1640`, i:`(already in db — skip)`, v:{} }, // dupe of Wave 1
   { n:`Bhartrihari`, d:`~5th c.`, tr:'vedanta-advaita', i:`Sphota theory — meaning flashes whole; language as world-disclosing.`, v:{MR:7,TD:8,SI:7,TR:6,UI:5} },
   { n:`Dharmakirti`, d:`~600–660`, i:`Buddhist logic and epistemology — perception and inference rebuilt.`, v:{TR:9,TE:8,SR:8,SI:7,TD:8} },
   { n:`Dignaga`, d:`~480–540`, i:`Pramanasamuccaya — the founder of Buddhist epistemology.`, v:{TR:8,TE:7,TD:8,SR:7,SI:6} },
@@ -369,11 +369,11 @@ const ENTRIES = [
 
   // ─── RENAISSANCE & EARLY MODERN GAPS ─────────────────────────────
   { n:`Montaigne`, d:`1533–1592`, i:`Essays — Que sais-je? Skepticism turned into self-portrait.`, v:{SR:9,VA:6,SS:6,ES:6,PO:6,RT:5} },
-  { n:`Francis Bacon`, d:`1561–1626`, i:`Novum Organum — induction as the engine of useful knowledge.`, v:{TE:9,SR:6,WP:7,PO:8,TR:6} },
+  { n:`Francis Bacon (re-noted)`, d:`1561–1626`, i:`(already in db — skip)`, v:{} }, // dupe of Wave 1
   { n:`Galileo Galilei`, d:`1564–1642`, i:`Mathematics as the language nature is written in — and recanted under threat.`, v:{TR:9,TE:9,SR:6,UI:7,WP:7} },
   { n:`Johannes Kepler`, d:`1571–1630`, i:`Planets dance to laws — mysticism and precise measurement together.`, v:{TR:8,TE:7,MR:6,UI:7,TD:8} },
   { n:`Hugo Grotius`, d:`1583–1645`, i:`Natural law and international right — peace built on shared reason.`, v:{TR:7,UI:8,RT:6,PO:7,CE:6} },
-  { n:`Hobbes`, d:`1588–1679`, i:`Leviathan — war of all against all averted only by absolute sovereignty.`, v:{TV:8,TE:7,WP:7,SR:6,UI:5,CE:5} },
+  { n:`Hobbes (re-noted)`, d:`1588–1679`, i:`(already in db — skip)`, v:{} }, // dupe of Wave 1
   { n:`Mary Astell`, d:`1666-1731`, i:`(already in db — skip)`, v:{} }, // mark to skip
   { n:`Margaret Cavendish`, d:`1623–1673`, tr:'empiricist', i:`Vitalist materialism — matter perceives and reasons throughout.`, v:{TE:7,ES:7,SS:7,MR:5,SR:6} },
   { n:`Anne Conway`, d:`1631–1679`, i:`Principles — one substance with infinite gradations; influenced Leibniz.`, v:{MR:7,TR:7,TD:7,UI:6,SI:5} },

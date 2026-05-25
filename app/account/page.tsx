@@ -366,7 +366,7 @@ export default async function AccountPage() {
     ? encodeURIComponent(Buffer.from(JSON.stringify(trailVectors)).toString('base64'))
     : null;
   const iframeSrc = encodedVec
-    ? `/?embed=map&v=${encodedVec}${encodedHist ? `&h=${encodedHist}` : ''}`
+    ? `/embed/map?v=${encodedVec}${encodedHist ? `&h=${encodedHist}` : ''}`
     : null;
 
   // Has the user already responded to today's dilemma?

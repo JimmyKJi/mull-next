@@ -213,7 +213,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
     ? encodeURIComponent(Buffer.from(JSON.stringify(trailVectors)).toString('base64'))
     : null;
   const iframeSrc = encodedVec
-    ? `/?embed=map&v=${encodedVec}${encodedHist ? `&h=${encodedHist}` : ''}`
+    ? `/embed/map?v=${encodedVec}${encodedHist ? `&h=${encodedHist}` : ''}`
     : null;
 
   const headline = profile.show_archetype && latest

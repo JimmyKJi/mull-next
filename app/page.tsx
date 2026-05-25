@@ -276,7 +276,7 @@ export default async function HomeV2() {
                 <div className="px-6 py-7 sm:px-10 sm:py-9">
                   <p
                     className="text-[24px] leading-[1.35] text-[#221E18] sm:text-[30px]"
-                    style={{ fontFamily: "var(--font-prose)", paddingRight: 56 }}
+                    style={{ fontFamily: "var(--font-editorial)", paddingRight: 56 }}
                   >
                     <em>&ldquo;{philosopher.keyIdea}&rdquo;</em>
                   </p>

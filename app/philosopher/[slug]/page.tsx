@@ -19,6 +19,7 @@ import { getArchetypeByKey } from '@/lib/archetypes';
 import { getArchetypeColor } from '@/lib/archetype-colors';
 import { ArchetypeSprite } from '@/components/archetype-sprite';
 import { PhilosopherSprite } from '@/components/philosopher-sprite';
+import { ContentLanguageNotice } from '@/components/content-language-notice';
 import { EXERCISES } from '@/lib/exercises';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
@@ -124,6 +125,8 @@ export default async function PhilosopherDetailPage({
             ← {t('philindex.eyebrow', locale)}
           </Link>
         </div>
+
+        <ContentLanguageNotice locale={locale} />
 
         {/* Hero */}
         <PixelWindow

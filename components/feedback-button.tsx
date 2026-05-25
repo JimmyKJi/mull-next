@@ -26,7 +26,7 @@ const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 // the page. Quiz + result want a clean bottom edge for focus;
 // /badge, /share, /wrapped are chromeless embed/screenshot pages
 // that shouldn't include our floating UI in the captured frame.
-const HIDDEN_PREFIXES = ['/quiz', '/result', '/badge', '/share', '/wrapped'];
+const HIDDEN_PREFIXES = ['/quiz', '/result', '/badge', '/share', '/wrapped', '/embed'];
 
 export default function FeedbackButton() {
   const pathname = usePathname() || '/';

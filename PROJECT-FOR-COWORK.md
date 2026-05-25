@@ -26,13 +26,19 @@ no data sold; runs on tips.
 ### Tier 1 — signature surfaces (what defines the product)
 
 **The Quiz (two flavours).**
-- **The Inheritor** (`/quiz/journey`) — a 15-minute narrative quiz
-  framed as a midnight at a strange estate. Four chambers, an
-  elderly servant who reveals what each artifact meant in the
-  deceased's life, a final chamber meeting. Each choice subtly
-  reveals more about the deceased; pick the right options and you
-  build a full secondary portrait of them before you meet them.
-  The same 16-D scoring as the classic quiz, but as story.
+- **The Inheritor** (`/quiz/journey`) — a 15-minute interactive
+  country-house murder mystery. A reclusive philosopher is found
+  dead in their estate. You are one of seven inheritors named in
+  the strange will — and the only one who actually came tonight.
+  A silent servant guides you through four chambers of the estate,
+  each containing an artifact from the deceased's life AND a small
+  anomaly that doesn't fit. As you investigate, you make choices
+  about what you'd do in each situation. Two unexpected twists
+  (no spoilers — but neither is "the butler did it" or "you are
+  the killer"). Ten distinct endings — one per philosophical
+  archetype — where the conclusion of the mystery is also the
+  reveal of who you are. Same rigorous 16-D scoring as the
+  classic quiz, delivered as genre fiction.
 - **The classic quiz** (`/quiz?mode=quick`) — 20 questions, ~5
   minutes, Likert-style. For people who want the result fast.
 - **The detailed quiz** (`/quiz?mode=detailed`) — 50 questions,
@@ -180,14 +186,18 @@ itself. Doesn't perform warmth.
    (NOT stance), Elo system, leaderboard. It's a real product
    shape that doesn't exist elsewhere.
 
-3. **The Inheritor is a narrative quiz that respects you.**
+3. **The Inheritor is a murder mystery that respects you.**
    Personality quizzes are usually fluff (BuzzFeed, "which Hogwarts
    house"). Serious-philosophy quizzes are usually surveys
-   (Big Five). The Inheritor is a 15-minute narrative experience —
-   a midnight at a strange estate, four chambers, a dying teacher,
-   revelations about who they were — that doubles as a rigorous
-   16-D placement. It's the rare product where the wrapping IS the
-   value, not a coat of paint over the value.
+   (Big Five). The Inheritor is a 15-minute country-house mystery —
+   an investigation into the strange death of a reclusive
+   philosopher, anomalies in each chamber that slowly suggest the
+   death isn't what it seems, two unexpected twists, and ten
+   distinct endings depending on the archetype you turn out to be —
+   that doubles as a rigorous 16-D placement. It's the rare product
+   where the wrapping IS the value, not a coat of paint over the
+   value. And it's the rare mystery game where the reveal isn't
+   "who did it" — it's "who you turned out to be while solving it."
 
 4. **Free + not VC-funded + not an AI app.**
    Mull uses AI in specific bounded places (Arena judging, daily
@@ -257,9 +267,13 @@ discard the rest. Not all of these need to be made.
 - **"This is the chess.com for philosophy nobody is talking
   about."** Quote tweet bait.
 
-- **"The Inheritor"** — pitch the narrative quiz as a 15-minute
-  short story you can play through that doubles as a philosophical
-  placement. Lit-Twitter and games-as-text crowd.
+- **"The Inheritor"** — pitch as a 15-minute interactive country-
+  house murder mystery with ten distinct endings, that doubles as
+  a rigorous philosophical placement. Hooks lit-Twitter, the games-
+  as-text crowd, AND the much larger mystery-genre audience (cozy
+  mystery readers, Knives Out fans, escape-room people). The genre
+  framing makes it shareable in places "narrative philosophy quiz"
+  never would have reached.
 
 ### Value-shape hooks (sustained interest)
 
@@ -336,14 +350,22 @@ campaign strategy:)
    community first** (e.g., Stoicism Reddit, Effective Altruism,
    academic-philosophy Twitter), or go broad? Default: broad, with
    a few targeted threads to specific communities as experiments.
-3. **Should the Inheritor's narrative ending become a piece of
-   content itself?** Spoiler risk vs viral potential.
+3. **Should the Inheritor's mystery twists become a piece of
+   content itself?** Spoiler risk is real (revealing either twist
+   would gut the playthrough), but the twists are also genuinely
+   strong viral hooks. Possible compromise: tease ONE artifact
+   anomaly per post (the steamship ticket dated last week, the
+   forgiveness letter from the daughter) without revealing where
+   they lead — let curiosity pull people in.
 4. **Is there a launch moment?** Mull doesn't have a "v1 launch"
    announcement post yet — most of the product was built in the
    open without ceremony. The campaign could be the launch.
 
 ---
 
-*Last updated 2026-05-24. Mull is a living product; some of the
-above will be stale within weeks. The product surfaces and the
-mull.world site are the source of truth if anything here conflicts.*
+*Last updated 2026-05-25 (Inheritor reshape into murder mystery
+in progress — current site copy may briefly reflect older "midnight
+at a strange estate" framing until the build ships). Mull is a
+living product; some of the above will be stale within weeks. The
+product surfaces and the mull.world site are the source of truth
+if anything here conflicts.*

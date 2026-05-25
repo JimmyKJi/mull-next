@@ -355,7 +355,7 @@ export function ResultClient({
                         </div>
                         <p
                           className="mt-4 text-[14px] leading-[1.5] text-[#4A4338]"
-                          style={{ fontFamily: "var(--font-prose)" }}
+                          style={{ fontFamily: "var(--font-editorial)" }}
                         >
                           <em>&ldquo;{p.keyIdea}&rdquo;</em>
                         </p>

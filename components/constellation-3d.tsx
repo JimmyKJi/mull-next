@@ -535,7 +535,7 @@ function HoverCard({
           >
             <p
               className="text-[14px] leading-[1.45] text-[#F8EDC8]/90"
-              style={{ fontFamily: "var(--font-prose)" }}
+              style={{ fontFamily: "var(--font-editorial)" }}
             >
               <em>&ldquo;{p.keyIdea}&rdquo;</em>
             </p>

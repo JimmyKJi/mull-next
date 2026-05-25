@@ -1,10 +1,10 @@
 # Philosopher calibration report
 
-Generated: 2026-05-12T16:47:03.747Z.  Corpus size: 560.
+Generated: 2026-05-25T00:25:33.168Z.  Corpus size: 552.
 
 Top-1 nearest-kin similarity — mean 0.992, median 0.994.
 Entries below the isolation threshold (0.92): **0**.
-Entries below the archetype-margin threshold (0.02): **359**.
+Entries below the archetype-margin threshold (0.02): **355**.
 
 ## Archetype distribution
 
@@ -12,13 +12,13 @@ Entries below the archetype-margin threshold (0.02): **359**.
 |---|---|
 | The Cartographer | 130 |
 | The Forge | 100 |
-| The Pilgrim | 71 |
-| The Threshold | 68 |
-| The Lighthouse | 58 |
+| The Pilgrim | 70 |
+| The Threshold | 66 |
 | The Touchstone | 57 |
-| The Keel | 30 |
+| The Lighthouse | 55 |
+| The Keel | 29 |
 | The Hearth | 28 |
-| The Garden | 10 |
+| The Garden | 9 |
 | The Hammer | 8 |
 
 ## Most isolated entries
@@ -47,7 +47,7 @@ These have a low top-1 nearest-kin similarity. Isolation is sometimes legitimate
 | Diogenes of Sinope | ~412–323 BCE | 0.978 | The Hammer | Antisthenes (98%); Emma Goldman (95%); Max Stirner (95%); Mikhail Bakunin (95%); Paul Feyerabend (95%) |
 | Antisthenes | ~445–365 BCE | 0.978 | The Hammer | Diogenes of Sinope (98%); Emma Goldman (95%); Linji Yixuan (95%); Auguste Blanqui (94%); Paul Feyerabend (94%) |
 | Heraclitus | ~535–475 BCE | 0.978 | The Pilgrim | Bergson (98%); Galen Strawson (98%); Anaxagoras (97%); Edith Wyschogrod (97%); Niels Bohr (97%) |
-| Machiavelli | 1469–1527 | 0.979 | The Pilgrim | Hobbes (98%); Han Feizi (98%); Walter Mignolo (97%); Hobbes (97%); Francis Bacon (97%) |
+| Machiavelli | 1469–1527 | 0.979 | The Pilgrim | Hobbes (98%); Han Feizi (98%); Walter Mignolo (97%); Francis Hutcheson (97%); Achille Mbembe (96%) |
 | Rumi | 1207–1273 | 0.979 | The Threshold | Julian of Norwich (98%); Anandamayi Ma (98%); Lalleshwari (Lal Ded) (98%); Baal Shem Tov (98%); Hildegard of Bingen (97%) |
 | Joseph de Maistre | 1753–1821 | 0.979 | The Keel | Judah Halevi (98%); René Guénon (98%); Bahya ibn Paquda (98%); Edmund Burke (98%); A.K. Coomaraswamy (97%) |
 | Mill | 1806–1873 | 0.979 | The Garden | Locke (98%); Mary Wollstonecraft (98%); Anthony Ashley Cooper (Shaftesbury) (97%); Voltaire (97%); Jeremy Bentham (97%) |
