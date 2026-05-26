@@ -24,6 +24,8 @@ import { EXERCISES } from '@/lib/exercises';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import { PixelWindow } from '@/components/pixel-window';
+import { philosopherBio } from '@/lib/philosopher-bios';
+import { topicsForPhilosopher, matchupsForPhilosopher } from '@/lib/philosopher-cross-links';
 
 export function generateStaticParams() {
   return philosopherSlugs().map((slug) => ({ slug }));
@@ -85,6 +87,15 @@ export default async function PhilosopherDetailPage({
     .filter((x): x is NonNullable<typeof x> => !!x)
     .slice(0, 3);
 
+  // Editorial bio (top 25 only). Renders as the page's main content
+  // body when present; otherwise the page falls back to chrome-only.
+  const bio = philosopherBio(slug);
+
+  // Reverse-index cross-links — surfaces topic + matchup SEO pages
+  // from the philosopher page (internal-link gold).
+  const relatedTopics = topicsForPhilosopher(slug).slice(0, 6);
+  const matchups = matchupsForPhilosopher(slug).slice(0, 8);
+
   const personSchema = {
     '@context': 'https://schema.org',
     '@type': 'Person',
@@ -101,11 +112,53 @@ export default async function PhilosopherDetailPage({
     ].filter(Boolean),
   };
 
+  // FAQ JSON-LD — eligible for Google's FAQ rich result. Answers are
+  // pulled from real page content so we don't ship snippet bait that
+  // doesn't match the body.
+  const nearestName = nearest[0]?.name;
+  const dimNamesForFaq = dims.slice(0, 3).map(d => {
+    const key = Object.keys(DIM_NAMES)[d.idx] as keyof typeof DIM_NAMES;
+    return DIM_NAMES[key];
+  }).join(', ');
+  const faqEntries: { q: string; a: string }[] = [
+    {
+      q: `Who was ${p.name}?`,
+      a: `${p.name} (${p.dates}) was a philosopher classified on Mull under the ${p.archetypeName} archetype. ${p.keyIdea}`,
+    },
+    {
+      q: `When did ${p.name} live?`,
+      a: `${p.name}'s dates are ${p.dates}.`,
+    },
+    {
+      q: `What is ${p.name} known for?`,
+      a: `${p.keyIdea} On Mull's 16-dimensional map, ${p.name} scores highest on ${dimNamesForFaq}.`,
+    },
+  ];
+  if (nearestName) {
+    faqEntries.push({
+      q: `Which philosophers are similar to ${p.name}?`,
+      a: `By Mull's dimensional analysis, ${p.name} sits closest to ${nearest.slice(0, 3).map(n => n.name).join(', ')}.`,
+    });
+  }
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqEntries.map(({ q, a }) => ({
+      '@type': 'Question',
+      name: q,
+      acceptedAnswer: { '@type': 'Answer', text: a },
+    })),
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <main
         className="mx-auto max-w-[860px] px-6 pb-32 pt-12 sm:px-10 sm:pt-16"
@@ -179,6 +232,21 @@ export default async function PhilosopherDetailPage({
         </PixelWindow>
 
         <div className="mt-8 space-y-8">
+          {/* Extended bio — only present for top 25 most-searched
+              philosophers (hand-written prose, 200-400 words). */}
+          {bio ? (
+            <PixelWindow title="ABOUT" badge="▶ PROFILE">
+              <div
+                className="space-y-4 text-[15.5px] leading-[1.65] text-[#221E18]"
+                style={{ fontFamily: 'var(--font-editorial)' }}
+              >
+                {bio.split('\n\n').map((para, i) => (
+                  <p key={i}>{para}</p>
+                ))}
+              </div>
+            </PixelWindow>
+          ) : null}
+
           {/* Archetype card */}
           {archetype ? (
             <PixelWindow title={t('phil.section_archetype', locale).toUpperCase()} badge="▶ KIN">
@@ -339,6 +407,81 @@ export default async function PhilosopherDetailPage({
               })}
             </ul>
           </PixelWindow>
+
+          {/* Topics this philosopher is listed under — internal SEO
+              link gold. Reverse-indexed from lib/topics.ts. */}
+          {relatedTopics.length > 0 ? (
+            <PixelWindow title="TOPICS" badge="▶ EXPLORE">
+              <p
+                className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
+                style={{ fontFamily: 'var(--font-editorial)' }}
+              >
+                Concepts where {p.name} sits in the conversation. Each links to a primer.
+              </p>
+              <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                {relatedTopics.map(rt => (
+                  <li key={rt.slug}>
+                    <Link
+                      href={`/topic/${rt.slug}`}
+                      className="block border-2 px-3 py-2.5 transition-all hover:translate-x-[-1px] hover:translate-y-[-1px]"
+                      style={{
+                        borderColor: '#EBE3CA',
+                        background: '#FFFCF4',
+                        boxShadow: `2px 2px 0 0 ${color.deep}`,
+                      }}
+                    >
+                      <div
+                        className="text-[15px] font-medium text-[#221E18]"
+                        style={{ fontFamily: 'var(--font-editorial)' }}
+                      >
+                        {rt.title}
+                      </div>
+                      <div
+                        className="mt-1 text-[12.5px] italic leading-[1.5] text-[#4A4338]"
+                        style={{ fontFamily: 'var(--font-editorial)' }}
+                      >
+                        {rt.summary}
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </PixelWindow>
+          ) : null}
+
+          {/* Curated matchups featuring this philosopher. */}
+          {matchups.length > 0 ? (
+            <PixelWindow title="MATCHUPS" badge="▶ COMPARE">
+              <p
+                className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
+                style={{ fontFamily: 'var(--font-editorial)' }}
+              >
+                Side-by-side with other philosophers, dimension by dimension.
+              </p>
+              <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                {matchups.map(m => (
+                  <li key={m.href}>
+                    <Link
+                      href={m.href}
+                      className="block border-2 px-3 py-2.5 transition-all hover:translate-x-[-1px] hover:translate-y-[-1px]"
+                      style={{
+                        borderColor: '#EBE3CA',
+                        background: '#FFFCF4',
+                        boxShadow: `2px 2px 0 0 ${color.deep}`,
+                      }}
+                    >
+                      <div
+                        className="text-[15px] font-medium text-[#221E18]"
+                        style={{ fontFamily: 'var(--font-editorial)' }}
+                      >
+                        {p.name} <span style={{ color: '#8C6520', fontFamily: 'var(--font-pixel-display)', fontSize: 10 }}>VS</span> {m.partner}
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </PixelWindow>
+          ) : null}
 
           {/* Suggested exercises */}
           {suggestedExercises.length > 0 ? (

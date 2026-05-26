@@ -20,7 +20,7 @@
 // The pair entries here use the philosopher's full name; the slug
 // computation runs through philosopherSlug() at build time.
 
-import { philosopherSlug, PHILOSOPHERS } from './philosophers';
+import { philosopherSlug, PHILOSOPHERS, getPhilosopherBySlug } from './philosophers';
 
 /** Pairs we explicitly want indexed + prerendered. Order within each
  *  pair doesn't matter — canonicalisation happens in toCanonicalPair.
@@ -73,7 +73,6 @@ export const CURATED_VS_PAIRS: readonly [string, string][] = [
   ['Spinoza', 'Hume'],
   ['Kant', 'Mill'],
   ['Marx', 'Mill'],
-  ['Plato', 'Socrates'],
   ['Heraclitus', 'Parmenides'],
   ['Epicurus', 'Marcus Aurelius'],
 
@@ -82,8 +81,8 @@ export const CURATED_VS_PAIRS: readonly [string, string][] = [
   ['Laozi', 'Zhuangzi'],
   ['Mencius', 'Xunzi'],
   ['Wang Yangming', 'Zhu Xi'],
-  ['Avicenna', 'Averroes'],
-  ['Al-Ghazali', 'Avicenna'],
+  // Note: Avicenna and Averroes intentionally omitted — neither is in
+  // PHILOSOPHERS. Add them to the corpus first, then reinstate the pair.
   ['Maimonides', 'Thomas Aquinas'],
   ['Dogen', 'Hakuin'],
   ['Ramanuja', 'Madhva'],
@@ -92,7 +91,7 @@ export const CURATED_VS_PAIRS: readonly [string, string][] = [
   ['Iris Murdoch', 'Philippa Foot'],
   ['Martha Nussbaum', 'Bernard Williams'],
   ['Charles Taylor', 'Alasdair MacIntyre'],
-  ['Judith Butler', 'Michel Foucault'],
+  ['Judith Butler', 'Foucault'],
   ['Frantz Fanon', 'W.E.B. Du Bois'],
   ['bell hooks', 'Audre Lorde'],
 ] as const;
@@ -122,20 +121,22 @@ function buildCuratedSet(): Set<string> {
   return s;
 }
 
-/** All canonical pair tuples — used by generateStaticParams + sitemap. */
+/** All canonical pair tuples — used by generateStaticParams + sitemap.
+ *  Filters out any pair where either name doesn't resolve in the
+ *  corpus, so the sitemap never emits a URL that would 404.
+ *  De-dupes in case the curated list has overlaps. */
 export function curatedPairSlugs(): { a: string; b: string }[] {
+  const seen = new Set<string>();
   const out: { a: string; b: string }[] = [];
   for (const [n1, n2] of CURATED_VS_PAIRS) {
-    out.push(toCanonicalPair(n1, n2));
-  }
-  // De-dupe in case the curated list has overlaps.
-  const seen = new Set<string>();
-  return out.filter(p => {
-    const k = `${p.a}|${p.b}`;
-    if (seen.has(k)) return false;
+    const canonical = toCanonicalPair(n1, n2);
+    if (!getPhilosopherBySlug(canonical.a) || !getPhilosopherBySlug(canonical.b)) continue;
+    const k = `${canonical.a}|${canonical.b}`;
+    if (seen.has(k)) continue;
     seen.add(k);
-    return true;
-  });
+    out.push(canonical);
+  }
+  return out;
 }
 
 export function isCuratedPair(a: string, b: string): boolean {
@@ -178,8 +179,7 @@ export const VS_CATEGORIES: {
       ['Nietzsche', 'Kant'],
       ['Sartre', 'Camus'],
       ['Hume', 'Kant'],
-      ['Plato', 'Socrates'],
-      ['Kierkegaard', 'Nietzsche'],
+          ['Kierkegaard', 'Nietzsche'],
       ['Schopenhauer', 'Nietzsche'],
       ['Nietzsche', 'Plato'],
       ['Descartes', 'Spinoza'],
@@ -201,8 +201,6 @@ export const VS_CATEGORIES: {
       ['Laozi', 'Zhuangzi'],
       ['Mencius', 'Xunzi'],
       ['Wang Yangming', 'Zhu Xi'],
-      ['Avicenna', 'Averroes'],
-      ['Al-Ghazali', 'Avicenna'],
       ['Maimonides', 'Thomas Aquinas'],
       ['Dogen', 'Hakuin'],
       ['Ramanuja', 'Madhva'],
@@ -229,7 +227,7 @@ export const VS_CATEGORIES: {
       ['Iris Murdoch', 'Philippa Foot'],
       ['Martha Nussbaum', 'Bernard Williams'],
       ['Charles Taylor', 'Alasdair MacIntyre'],
-      ['Judith Butler', 'Michel Foucault'],
+      ['Judith Butler', 'Foucault'],
       ['Frantz Fanon', 'W.E.B. Du Bois'],
       ['bell hooks', 'Audre Lorde'],
     ],
