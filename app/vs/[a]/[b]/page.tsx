@@ -30,6 +30,8 @@ import {
   agreementPhrase,
   type DimComparison,
 } from '@/lib/vs-pairs';
+import { PathwayNext } from '@/components/pathway-next';
+import { pathwayForVs } from '@/lib/pathway';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-editorial)";
@@ -309,34 +311,13 @@ export default async function VsPage({
           </div>
         </section>
 
-        {/* Quiz CTA — where do YOU sit */}
-        <div style={{
-          padding: '24px 26px',
-          background: '#F8EDC8',
-          border: '4px solid #221E18',
-          boxShadow: '6px 6px 0 0 #B8862F',
-          borderRadius: 0,
-          textAlign: 'center',
-        }}>
-          <p style={{
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 17,
-            color: '#221E18',
-            margin: '0 0 18px',
-            lineHeight: 1.55,
-          }}>
-            Where do you sit between {pa.name} and {pb.name}? The quiz
-            places you in 16-D space — closer to one or the other, or
-            somewhere they never thought to look.
-          </p>
-          <Link
-            href="/quiz?mode=quick"
-            className="pixel-button pixel-button--amber"
-          >
-            <span>▶ TAKE THE QUIZ · 6 MIN</span>
-          </Link>
-        </div>
+        {/* Pathway — three illustrated stations leading onward.
+            Cold visitor: quiz → bridging philosopher → argue one in Arena.
+            Warm visitor: argue both in Arena + daily Spar. */}
+        <PathwayNext
+          pathway={pathwayForVs(a, b)}
+          heading={`Where do you sit between ${pa.name} and ${pb.name}?`}
+        />
       </main>
     </>
   );

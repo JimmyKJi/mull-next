@@ -15,6 +15,8 @@ import { ARCHETYPES } from '@/lib/archetypes';
 import { getArchetypeColor } from '@/lib/archetype-colors';
 import { ArchetypeSprite } from '@/components/archetype-sprite';
 import { PhilosopherSprite } from '@/components/philosopher-sprite';
+import { PathwayNext } from '@/components/pathway-next';
+import { pathwayForTopic } from '@/lib/pathway';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-editorial)";
@@ -353,34 +355,11 @@ export default async function TopicDetailPage({
           </section>
         )}
 
-        {/* Closing CTA — where you sit */}
-        <div style={{
-          padding: '24px 26px',
-          background: '#F8EDC8',
-          border: '4px solid #221E18',
-          boxShadow: '6px 6px 0 0 #B8862F',
-          borderRadius: 0,
-          textAlign: 'center',
-        }}>
-          <p style={{
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 17,
-            color: '#221E18',
-            margin: '0 0 18px',
-            lineHeight: 1.55,
-          }}>
-            Want to know where you sit on questions like this? The quiz
-            places you in 16-D space, near the philosophers whose pattern
-            yours most resembles.
-          </p>
-          <Link
-            href="/quiz?mode=quick"
-            className="pixel-button pixel-button--amber"
-          >
-            <span>▶ TAKE THE QUIZ · 6 MIN</span>
-          </Link>
-        </div>
+        {/* Pathway — three illustrated stations leading onward.
+            Replaces the old single-CTA quiz panel; the quiz still
+            appears as Station 01 for cold visitors, but warm visitors
+            now see a pilgrimage + spar trail instead. */}
+        <PathwayNext pathway={pathwayForTopic(topic.slug)} />
       </main>
     </>
   );

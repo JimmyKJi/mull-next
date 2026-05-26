@@ -12,6 +12,8 @@ import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
 import { ContentLanguageNotice } from '@/components/content-language-notice';
 import { createClient } from '@/utils/supabase/server';
+import { PathwayNext } from '@/components/pathway-next';
+import { pathwayForExercise } from '@/lib/pathway';
 import ReflectionForm from './reflection-form';
 import type { Metadata } from 'next';
 
@@ -192,6 +194,11 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
       {EXERCISE_EXTRAS[slug] && (
         <ExerciseExtrasSection slug={slug} extras={EXERCISE_EXTRAS[slug]} locale={locale} />
       )}
+
+      {/* Pathway — three illustrated stations.
+          Cold visitor: quiz → sibling exercise (same category) → Crucible.
+          Warm visitor: Crucible → Anthology → Spar (retention loop). */}
+      <PathwayNext pathway={pathwayForExercise(slug)} />
 
       {/* Back-navigation footer — paired pixel chips so users coming
           from the trajectory list, the exercise index, or the

@@ -13,6 +13,11 @@
 import { useEffect, useRef } from "react";
 
 const STASH_KEY = "mull.pending_quiz_attempt";
+// Lightweight archetype-only key for fast client-side personalization
+// across the site (PathwayNext widget, retention nudges, etc.).
+// Set alongside the heavier STASH_KEY so any page can do a single
+// localStorage.getItem('mull.archetype') without parsing JSON.
+const ARCHETYPE_KEY = "mull.archetype";
 
 type Props = {
   vector: number[];
@@ -34,6 +39,13 @@ export function ResultSave({
   useEffect(() => {
     if (fired.current) return;
     fired.current = true;
+
+    // Write the lightweight archetype marker first — synchronous +
+    // independent of the network call. Even if /api/quiz/save fails,
+    // the rest of the site gets the personalization signal.
+    try {
+      if (archetype) window.localStorage.setItem(ARCHETYPE_KEY, archetype);
+    } catch { /* storage disabled */ }
 
     const payload = {
       vector,

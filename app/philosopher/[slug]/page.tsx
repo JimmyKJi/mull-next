@@ -26,6 +26,8 @@ import { t } from '@/lib/translations';
 import { PixelWindow } from '@/components/pixel-window';
 import { philosopherBio } from '@/lib/philosopher-bios';
 import { topicsForPhilosopher, matchupsForPhilosopher } from '@/lib/philosopher-cross-links';
+import { PathwayNext } from '@/components/pathway-next';
+import { pathwayForPhilosopher } from '@/lib/pathway';
 
 export function generateStaticParams() {
   return philosopherSlugs().map((slug) => ({ slug }));
@@ -521,60 +523,43 @@ export default async function PhilosopherDetailPage({
           ) : null}
         </div>
 
-        {/* CTA */}
-        <div
-          className="mt-10 border-4 px-6 py-7 text-center"
-          style={{
-            borderColor: color.deep,
-            background: color.soft,
-            boxShadow: `4px 4px 0 0 ${color.deep}`,
-          }}
-        >
-          <p
-            className="text-[16px] leading-[1.5] text-[#221E18]"
-            style={{ fontFamily: 'var(--font-editorial)' }}
+        {/* Pathway — three illustrated stations leading onward.
+            Replaces the old single quiz-CTA panel; the quiz still
+            appears as Station 01 for cold visitors, but warm visitors
+            see Pilgrimage → Spar → exercise instead. Share button kept
+            below as a secondary action. */}
+        <PathwayNext pathway={pathwayForPhilosopher(slug)} />
+
+        {/* Share — small secondary action, kept from the old CTA panel. */}
+        <div className="mt-8 flex justify-center">
+          <a
+            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+              `${p.name} on Mull — ${p.keyIdea.length > 120 ? p.keyIdea.slice(0, 117).trimEnd() + '…' : p.keyIdea}`
+            )}&url=${encodeURIComponent(`https://mull.world/philosopher/${slug}`)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="pixel-press"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              padding: '8px 14px',
+              background: 'transparent',
+              color: color.deep,
+              border: `2px solid ${color.deep}`,
+              boxShadow: `2px 2px 0 0 ${color.deep}`,
+              borderRadius: 0,
+              fontFamily: "var(--font-pixel-display, 'Courier New', monospace)",
+              fontSize: 10,
+              letterSpacing: 0.4,
+              textTransform: 'uppercase',
+              textDecoration: 'none',
+              transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+            }}
           >
-            {t('phil.cta_text', locale, { name: p.name })}
-          </p>
-          <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
-            <Link
-              href="/quiz?mode=quick"
-              className="pixel-button pixel-button--amber"
-            >
-              <span>▶ {t('phil.cta_button', locale).toUpperCase()}</span>
-            </Link>
-            {/* Share this philosopher — X compose intent. Same pattern
-                as /archetype/[slug]; lets readers pass along a profile
-                of a thinker that struck them. */}
-            <a
-              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                `${p.name} on Mull — ${p.keyIdea.length > 120 ? p.keyIdea.slice(0, 117).trimEnd() + '…' : p.keyIdea}`
-              )}&url=${encodeURIComponent(`https://mull.world/philosopher/${slug}`)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="pixel-press"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 8,
-                padding: '10px 16px',
-                background: 'transparent',
-                color: color.deep,
-                border: `3px solid ${color.deep}`,
-                boxShadow: `3px 3px 0 0 ${color.deep}`,
-                borderRadius: 0,
-                fontFamily: "var(--font-pixel-display, 'Courier New', monospace)",
-                fontSize: 11,
-                letterSpacing: 0.4,
-                textTransform: 'uppercase',
-                textDecoration: 'none',
-                transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
-              }}
-            >
-              <span aria-hidden>𝕏</span>
-              <span>SHARE</span>
-            </a>
-          </div>
+            <span aria-hidden>𝕏</span>
+            <span>SHARE {p.name.toUpperCase()}</span>
+          </a>
         </div>
       </main>
     </>

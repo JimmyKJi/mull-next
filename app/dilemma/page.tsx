@@ -9,6 +9,8 @@ import { t, type Locale } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
 import DiagnosisCard from '@/components/diagnosis-card';
 import type { Kinship } from '@/lib/kinship';
+import { PathwayNext } from '@/components/pathway-next';
+import { pathwayForDilemma } from '@/lib/pathway';
 
 // Daily dilemma page is OK to index (the question itself is shareable),
 // but the user's response is private — only meta is open. Index allowed,
@@ -487,11 +489,15 @@ export default async function DilemmaPage() {
         </section>
       )}
 
+      {/* Pathway — cold visitors get the quiz; warm visitors get
+          Spar → Crucible → Argument Diary. */}
+      <PathwayNext pathway={pathwayForDilemma()} />
+
       <p style={{
         fontFamily: sans,
         fontSize: 12,
         color: '#8C6520',
-        marginTop: 48,
+        marginTop: 32,
         opacity: 0.75,
         textAlign: 'center',
         letterSpacing: 0.3,

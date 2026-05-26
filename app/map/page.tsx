@@ -15,6 +15,8 @@ import type { Metadata } from "next";
 import { ConstellationMount } from "@/components/constellation-mount";
 import { PHILOSOPHERS } from "@/lib/philosophers";
 import { ARCHETYPES } from "@/lib/archetypes";
+import { PathwayNext } from "@/components/pathway-next";
+import { pathwayForMap } from "@/lib/pathway";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-prose)";
@@ -159,6 +161,10 @@ export default function MapPage() {
           </ul>
         </div>
       </section>
+
+      {/* Pathway — quiz → dilemma → spar for cold visitors;
+          spar → dilemma → anthology for warm visitors. */}
+      <PathwayNext pathway={pathwayForMap()} />
     </main>
   );
 }

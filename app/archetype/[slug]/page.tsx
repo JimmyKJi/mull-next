@@ -18,6 +18,8 @@ import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
 import { PixelWindow } from '@/components/pixel-window';
 import { ContentLanguageNotice } from '@/components/content-language-notice';
+import { PathwayNext } from '@/components/pathway-next';
+import { pathwayForArchetype } from '@/lib/pathway';
 
 export function generateStaticParams() {
   return archetypeKeys().map((slug) => ({ slug }));
@@ -455,60 +457,42 @@ export default async function ArchetypeDetailPage({
         </PixelWindow>
       </div>
 
-      {/* ─── CTA ─── */}
-      <div
-        className="mt-10 border-4 px-6 py-7 text-center"
-        style={{
-          borderColor: color.deep,
-          background: color.soft,
-          boxShadow: `4px 4px 0 0 ${color.deep}`,
-        }}
-      >
-        <p
-          className="text-[16px] leading-[1.5] text-[#221E18]"
-          style={{ fontFamily: 'var(--font-editorial)' }}
+      {/* Pathway — three illustrated stations.
+          Cold visitor: quiz → flagship philosopher → archetype's exercise.
+          Warm visitor (already has this archetype or another): Pilgrimage
+          for *their* archetype + Spar + Diary. */}
+      <PathwayNext pathway={pathwayForArchetype(slug)} />
+
+      {/* Share — small secondary action below the trail. */}
+      <div className="mt-8 flex justify-center">
+        <a
+          href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+            `The ${name} on Mull — ${archetype.spirit}`
+          )}&url=${encodeURIComponent(`https://mull.world/archetype/${slug}`)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="pixel-press"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            padding: '8px 14px',
+            background: 'transparent',
+            color: color.deep,
+            border: `2px solid ${color.deep}`,
+            boxShadow: `2px 2px 0 0 ${color.deep}`,
+            borderRadius: 0,
+            fontFamily: "var(--font-pixel-display, 'Courier New', monospace)",
+            fontSize: 10,
+            letterSpacing: 0.4,
+            textTransform: 'uppercase',
+            textDecoration: 'none',
+            transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+          }}
         >
-          {t('arch_detail.cta_unsure', locale)}
-        </p>
-        <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
-          <Link
-            href="/quiz?mode=quick"
-            className="pixel-button pixel-button--amber"
-          >
-            <span>▶ {t('arch_detail.cta_take_quiz', locale).toUpperCase()}</span>
-          </Link>
-          {/* Share this archetype — X intent. Lets readers who feel
-              the page applies to a friend pass the link along without
-              hunting for the URL. */}
-          <a
-            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-              `The ${name} on Mull — ${archetype.spirit}`
-            )}&url=${encodeURIComponent(`https://mull.world/archetype/${slug}`)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="pixel-press"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 8,
-              padding: '10px 16px',
-              background: 'transparent',
-              color: color.deep,
-              border: `3px solid ${color.deep}`,
-              boxShadow: `3px 3px 0 0 ${color.deep}`,
-              borderRadius: 0,
-              fontFamily: "var(--font-pixel-display, 'Courier New', monospace)",
-              fontSize: 11,
-              letterSpacing: 0.4,
-              textTransform: 'uppercase',
-              textDecoration: 'none',
-              transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
-            }}
-          >
-            <span aria-hidden>𝕏</span>
-            <span>SHARE THIS ARCHETYPE</span>
-          </a>
-        </div>
+          <span aria-hidden>𝕏</span>
+          <span>SHARE THIS ARCHETYPE</span>
+        </a>
       </div>
     </main>
     </>
