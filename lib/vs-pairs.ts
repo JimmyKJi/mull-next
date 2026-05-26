@@ -56,6 +56,45 @@ export const CURATED_VS_PAIRS: readonly [string, string][] = [
   ['Karl Popper', 'Thomas Kuhn'],
   ['John Rawls', 'Peter Singer'],
   ['Peter Singer', 'Bernard Williams'],
+
+  // ─── 2026-05-26 expansion: 30 more matchups ─────────────────────
+  // Focus: high-search philosopher pairs we hadn't covered, plus
+  // some non-Western and women-philosopher matchups underrepresented
+  // in the original 30.
+
+  // Western canon — modern + contemporary
+  ['Foucault', 'Habermas'],
+  ['Derrida', 'Foucault'],
+  ['Heidegger', 'Sartre'],
+  ['Hannah Arendt', 'Simone de Beauvoir'],
+  ['Wittgenstein', 'Russell'],
+  ['Kierkegaard', 'Sartre'],
+  ['Thomas Aquinas', 'Aristotle'],
+  ['Spinoza', 'Hume'],
+  ['Kant', 'Mill'],
+  ['Marx', 'Mill'],
+  ['Plato', 'Socrates'],
+  ['Heraclitus', 'Parmenides'],
+  ['Epicurus', 'Marcus Aurelius'],
+
+  // Non-Western canon
+  ['Buddha', 'Nagarjuna'],
+  ['Laozi', 'Zhuangzi'],
+  ['Mencius', 'Xunzi'],
+  ['Wang Yangming', 'Zhu Xi'],
+  ['Avicenna', 'Averroes'],
+  ['Al-Ghazali', 'Avicenna'],
+  ['Maimonides', 'Thomas Aquinas'],
+  ['Dogen', 'Hakuin'],
+  ['Ramanuja', 'Madhva'],
+
+  // Modern / contemporary critical theory + ethics
+  ['Iris Murdoch', 'Philippa Foot'],
+  ['Martha Nussbaum', 'Bernard Williams'],
+  ['Charles Taylor', 'Alasdair MacIntyre'],
+  ['Judith Butler', 'Michel Foucault'],
+  ['Frantz Fanon', 'W.E.B. Du Bois'],
+  ['bell hooks', 'Audre Lorde'],
 ] as const;
 
 /** Canonicalises a pair by sorting alphabetically by slug. Returns the
@@ -102,6 +141,186 @@ export function curatedPairSlugs(): { a: string; b: string }[] {
 export function isCuratedPair(a: string, b: string): boolean {
   const sorted = a < b ? `${a}|${b}` : `${b}|${a}`;
   return buildCuratedSet().has(sorted);
+}
+
+// ─── Index-page categorisation ──────────────────────────────────────
+//
+// Buckets for the /vs index. A pair can live in one bucket only —
+// pick the most useful filing for browsers. Pairs not in any bucket
+// fall into "More matchups" at the bottom.
+//
+// Keys are the two philosopher names as written in CURATED_VS_PAIRS
+// (canonicalisation isn't needed here — this is just a lookup table).
+
+export type VsCategoryKey =
+  | 'greatest-hits'
+  | 'eastern'
+  | 'twentieth'
+  | 'ethics-politics'
+  | 'ancient-medieval';
+
+export const VS_CATEGORIES: {
+  key: VsCategoryKey;
+  label: string;
+  blurb: string;
+  icon: string;
+  accent: string;
+  pairs: [string, string][];
+}[] = [
+  {
+    key: 'greatest-hits',
+    label: 'Greatest hits',
+    blurb: 'The matchups everyone wants to read first.',
+    icon: '★',
+    accent: '#B8862F',
+    pairs: [
+      ['Plato', 'Aristotle'],
+      ['Nietzsche', 'Kant'],
+      ['Sartre', 'Camus'],
+      ['Hume', 'Kant'],
+      ['Plato', 'Socrates'],
+      ['Kierkegaard', 'Nietzsche'],
+      ['Schopenhauer', 'Nietzsche'],
+      ['Nietzsche', 'Plato'],
+      ['Descartes', 'Spinoza'],
+      ['Wittgenstein', 'Heidegger'],
+    ],
+  },
+  {
+    key: 'eastern',
+    label: 'Eastern & Islamic thinkers',
+    blurb: 'The non-Western canon — China, India, Japan, the Islamic golden age.',
+    icon: '◯',
+    accent: '#A65846',
+    pairs: [
+      ['Confucius', 'Laozi'],
+      ['Confucius', 'Mencius'],
+      ['Buddha', 'Confucius'],
+      ['Aristotle', 'Confucius'],
+      ['Buddha', 'Nagarjuna'],
+      ['Laozi', 'Zhuangzi'],
+      ['Mencius', 'Xunzi'],
+      ['Wang Yangming', 'Zhu Xi'],
+      ['Avicenna', 'Averroes'],
+      ['Al-Ghazali', 'Avicenna'],
+      ['Maimonides', 'Thomas Aquinas'],
+      ['Dogen', 'Hakuin'],
+      ['Ramanuja', 'Madhva'],
+    ],
+  },
+  {
+    key: 'twentieth',
+    label: '20th & 21st century',
+    blurb: 'The modern arguments — phenomenology, analytic, critical theory, post-structuralism.',
+    icon: '◆',
+    accent: '#3D5A7E',
+    pairs: [
+      ['Bertrand Russell', 'Wittgenstein'],
+      ['Foucault', 'Habermas'],
+      ['Derrida', 'Foucault'],
+      ['Heidegger', 'Sartre'],
+      ['Hannah Arendt', 'Simone de Beauvoir'],
+      ['Hannah Arendt', 'Heidegger'],
+      ['Wittgenstein', 'Russell'],
+      ['Kierkegaard', 'Sartre'],
+      ['Karl Popper', 'Thomas Kuhn'],
+      ['William James', 'John Dewey'],
+      ['Simone de Beauvoir', 'Sartre'],
+      ['Iris Murdoch', 'Philippa Foot'],
+      ['Martha Nussbaum', 'Bernard Williams'],
+      ['Charles Taylor', 'Alasdair MacIntyre'],
+      ['Judith Butler', 'Michel Foucault'],
+      ['Frantz Fanon', 'W.E.B. Du Bois'],
+      ['bell hooks', 'Audre Lorde'],
+    ],
+  },
+  {
+    key: 'ethics-politics',
+    label: 'Ethics & politics',
+    blurb: 'What we owe each other, and how the state fits in.',
+    icon: '✦',
+    accent: '#7C5A8C',
+    pairs: [
+      ['Hobbes', 'Locke'],
+      ['Marx', 'Adam Smith'],
+      ['Mill', 'Jeremy Bentham'],
+      ['Hegel', 'Marx'],
+      ['Rousseau', 'Hobbes'],
+      ['Mary Wollstonecraft', 'Mill'],
+      ['John Rawls', 'Peter Singer'],
+      ['Peter Singer', 'Bernard Williams'],
+      ['Kant', 'Mill'],
+      ['Marx', 'Mill'],
+    ],
+  },
+  {
+    key: 'ancient-medieval',
+    label: 'Ancient & medieval',
+    blurb: 'Pre-Enlightenment — Greek, Roman, Christian scholastic.',
+    icon: '▲',
+    accent: '#6B7F4F',
+    pairs: [
+      ['Thomas Aquinas', 'Augustine'],
+      ['Thomas Aquinas', 'Aristotle'],
+      ['Heraclitus', 'Parmenides'],
+      ['Epicurus', 'Marcus Aurelius'],
+    ],
+  },
+];
+
+type VsBucket = {
+  key: string;
+  label: string;
+  blurb: string;
+  icon: string;
+  accent: string;
+  pairs: { name1: string; name2: string; href: string }[];
+};
+
+/** Returns categorised pairs ready for the /vs index. Each pair is
+ *  canonicalised + name-resolved against the philosopher corpus
+ *  (skipped if a name doesn't match — defensive against renames). */
+export function vsPairsByCategory(
+  resolveName: (n: string) => { name: string } | undefined,
+): VsBucket[] {
+  const seen = new Set<string>();
+  const buckets: VsBucket[] = VS_CATEGORIES.map(cat => {
+    const pairs: { name1: string; name2: string; href: string }[] = [];
+    for (const [n1, n2] of cat.pairs) {
+      const p1 = resolveName(n1);
+      const p2 = resolveName(n2);
+      if (!p1 || !p2) continue;
+      const canonical = toCanonicalPair(n1, n2);
+      const href = `/vs/${canonical.a}/${canonical.b}`;
+      if (seen.has(href)) continue;
+      seen.add(href);
+      pairs.push({ name1: p1.name, name2: p2.name, href });
+    }
+    return { key: cat.key, label: cat.label, blurb: cat.blurb, icon: cat.icon, accent: cat.accent, pairs };
+  });
+  // Fallback bucket: any curated pair we didn't sort.
+  const leftover: { name1: string; name2: string; href: string }[] = [];
+  for (const [n1, n2] of CURATED_VS_PAIRS) {
+    const p1 = resolveName(n1);
+    const p2 = resolveName(n2);
+    if (!p1 || !p2) continue;
+    const canonical = toCanonicalPair(n1, n2);
+    const href = `/vs/${canonical.a}/${canonical.b}`;
+    if (seen.has(href)) continue;
+    seen.add(href);
+    leftover.push({ name1: p1.name, name2: p2.name, href });
+  }
+  if (leftover.length > 0) {
+    buckets.push({
+      key: 'more',
+      label: 'More matchups',
+      blurb: 'Recently added — not yet sorted.',
+      icon: '○',
+      accent: '#8C6520',
+      pairs: leftover,
+    });
+  }
+  return buckets;
 }
 
 // ─── Comparison analytics ────────────────────────────────────────────

@@ -8,6 +8,7 @@ import type { MetadataRoute } from 'next';
 import { philosopherSlugs } from '@/lib/philosophers';
 import { TOPICS } from '@/lib/topics';
 import { curatedPairSlugs } from '@/lib/vs-pairs';
+import { EXERCISES } from '@/lib/exercises';
 
 const SITE = 'https://mull.world';
 
@@ -30,11 +31,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE}/debate`,   lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${SITE}/exercises`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
     { url: `${SITE}/compare`,   lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-    ...[
-      'premortem','negative-visualization','socratic-self-questioning','view-from-above','memento-mori','examen',
-      'fallacy-hunt','steelmanning','counterexample-drill','argument-map','reductio',
-      'sixty-second-case','anticipating-objections','translation-under-constraint','dialectical-loop','switch-sides',
-    ].map(slug => ({ url: `${SITE}/exercises/${slug}`, lastModified: now, changeFrequency: 'monthly' as const, priority: 0.5 })),
+    ...EXERCISES.map(ex => ({
+      url: `${SITE}/exercises/${ex.slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.5,
+    })),
     { url: `${SITE}/archetype`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     ...[
       'cartographer','keel','threshold','pilgrim','touchstone',

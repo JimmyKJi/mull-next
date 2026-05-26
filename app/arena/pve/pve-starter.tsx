@@ -213,11 +213,59 @@ export default function PveStarter({
       {/* Step 2: topic */}
       <section>
         <SectionHead n={2} title="Pick a topic" />
+        <div style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: 14,
+          flexWrap: "wrap",
+          gap: 10,
+        }}>
+          <p
+            style={{
+              fontFamily: serif,
+              fontStyle: "italic",
+              fontSize: 13,
+              color: "#4A4338",
+              margin: 0,
+              lineHeight: 1.5,
+            }}
+          >
+            {topics.length} topics — pick one that genuinely puzzles you, or shuffle.
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              const pick = topics[Math.floor(Math.random() * topics.length)];
+              if (pick) {
+                setTopicSlug(pick.slug);
+                // Smooth-scroll the picked card into view.
+                setTimeout(() => {
+                  document.getElementById(`topic-${pick.slug}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+                }, 50);
+              }
+            }}
+            style={{
+              fontFamily: pixel,
+              fontSize: 10,
+              padding: "6px 12px",
+              background: "#FFFCF4",
+              border: "2px solid #221E18",
+              boxShadow: "2px 2px 0 0 #B8862F",
+              cursor: "pointer",
+              color: "#221E18",
+              letterSpacing: 0.5,
+              textTransform: "uppercase",
+            }}
+          >
+            ⚄ SHUFFLE
+          </button>
+        </div>
         {(["philosophical", "everyday"] as const).map((cat) => {
           const list = topicsGrouped[cat];
           if (list.length === 0) return null;
           return (
-            <div key={cat} style={{ marginBottom: 16 }}>
+            <div key={cat} style={{ marginBottom: 18 }}>
               <div
                 style={{
                   fontFamily: pixel,
@@ -228,21 +276,29 @@ export default function PveStarter({
                   marginBottom: 8,
                 }}
               >
-                ▸ {cat === "philosophical" ? "Philosophical" : "Everyday life"}
+                ▸ {cat === "philosophical" ? "Philosophical" : "Everyday life"} · {list.length}
               </div>
               <ul
-                style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 8 }}
+                style={{
+                  listStyle: "none",
+                  padding: 0,
+                  margin: 0,
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+                  gap: 8,
+                }}
               >
                 {list.map((t) => {
                   const picked = topicSlug === t.slug;
                   return (
-                    <li key={t.slug}>
+                    <li key={t.slug} id={`topic-${t.slug}`}>
                       <button
                         type="button"
                         onClick={() => setTopicSlug(t.slug)}
                         style={{
                           display: "block",
                           width: "100%",
+                          height: "100%",
                           textAlign: "left",
                           padding: "12px 14px",
                           background: picked ? "#F8C75E" : "#FFFCF4",
@@ -255,17 +311,17 @@ export default function PveStarter({
                         }}
                       >
                         <div
-                          style={{ fontSize: 16, fontWeight: 500, color: "#221E18" }}
+                          style={{ fontSize: 15.5, fontWeight: 500, color: "#221E18", lineHeight: 1.25 }}
                         >
                           {t.title}
                         </div>
                         <div
                           style={{
-                            fontSize: 14,
+                            fontSize: 13.5,
                             fontStyle: "italic",
                             color: picked ? "#1A1820" : "#4A4338",
                             marginTop: 4,
-                            lineHeight: 1.5,
+                            lineHeight: 1.45,
                           }}
                         >
                           {t.primer}

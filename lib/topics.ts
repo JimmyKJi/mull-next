@@ -221,8 +221,373 @@ The argument is alive because the stakes are real: every redistributive policy, 
     relatedArchetypes: ['forge', 'hammer', 'touchstone'],
     philosopherNames: ['Plato', 'John Rawls', 'Martha Nussbaum', 'Michael Sandel', 'Alasdair MacIntyre', 'Aristotle'],
   },
+
+  // ─── Expansion batch (2026-05-26): 20 new topics ─────────────────
+
+  {
+    slug: 'skepticism',
+    title: 'Skepticism',
+    summary: 'How sure can we really be of anything — and what should we do with the uncertainty?',
+    essay: `Skepticism is the discipline of withholding belief when the evidence doesn't earn it. Ancient skeptics — Pyrrho, Sextus Empiricus — went further: they suspended belief on almost everything, hoping the suspension itself would lead to tranquility. Their target wasn't truth but the anxious certainty of dogmatists who claimed to have it.
+
+Modern skepticism narrowed. Descartes used radical doubt as a method: doubt everything that could be doubted, then see what's left. He concluded *cogito ergo sum* — at minimum, the doubter must exist. Hume pushed harder: even basic inferences (the sun will rise tomorrow because it always has) rest on a habit, not a proof. We act as if induction works because we couldn't function otherwise.
+
+The serious version of skepticism today is calibration, not paralysis. Believe in proportion to evidence. Hold strong opinions weakly. Be ready to revise. The cost of failing at this is everywhere — in conspiracy theories, in political tribalism, in the confident asserting of things the asserter hasn't actually checked. The skeptic's discipline is not "doubt everything" but "doubt yourself first."`,
+    relevantDimensions: ['SR', 'TR', 'SI'],
+    relatedArchetypes: ['touchstone', 'cartographer'],
+    philosopherNames: ['Pyrrho', 'Sextus Empiricus', 'Descartes', 'Hume', 'Montaigne', 'Bayle', 'Wittgenstein'],
+  },
+  {
+    slug: 'empiricism-vs-rationalism',
+    title: 'Empiricism vs rationalism',
+    summary: 'Does knowledge come from experience or from reason? The 350-year argument.',
+    essay: `Rationalists (Descartes, Spinoza, Leibniz) thought the most important truths — math, logic, the structure of reality — could be derived by pure reason. The mind has innate concepts; experience just triggers them. Empiricists (Locke, Berkeley, Hume) thought the mind starts blank. Everything we know comes through the senses, and concepts are built up from sensory impressions.
+
+The disagreement isn't academic. It shapes what counts as evidence, what counts as proof, what kinds of claims are even possible. A rationalist will accept a mathematical demonstration as final; an empiricist will ask what observation could falsify it. A rationalist will trust intuition; an empiricist will demand the data.
+
+Kant tried to resolve the fight: some knowledge is *a priori* (independent of experience, like math) but applies to experience through the categories the mind imposes. Most contemporary philosophy of science is empiricist in spirit but quietly rationalist about logic and mathematics. The argument never ends because both sides catch something true — most of what you know about chairs is empirical, most of what you know about 2+2 is not.`,
+    relevantDimensions: ['TR', 'TE', 'SR'],
+    relatedArchetypes: ['cartographer', 'touchstone'],
+    philosopherNames: ['Descartes', 'Spinoza', 'Leibniz', 'Locke', 'Berkeley', 'Hume', 'Kant', 'W. V. O. Quine'],
+  },
+  {
+    slug: 'phenomenology',
+    title: 'Phenomenology',
+    summary: 'The careful description of experience as experience — before any theory about what it really is.',
+    essay: `Phenomenology asks a strange-sounding question: what is it actually like, from the inside, to perceive a tree, to grieve, to remember childhood? Edmund Husserl founded the movement in the early 1900s by insisting that philosophy should describe experience in its own terms — not reduce it to neuroscience or behavior, not jump immediately to "what's really there."
+
+The method is "bracketing": set aside, temporarily, the question of whether your experience corresponds to reality. Just look at the structure of the experience itself. What's at the center? What's at the periphery? What's the temporal flow? What's the body's role? The resulting descriptions can be surprisingly rich — and they often reveal that the casual things we say about consciousness (it's "in" the head, we "have" experiences) are theories, not observations.
+
+Heidegger turned phenomenology into existential analysis: what is it like to be a creature aware of its own mortality, thrown into a world it didn't choose? Merleau-Ponty insisted that perception is embodied — you don't have a mind looking out of a body; you ARE a body-knowing-the-world. Phenomenology still shapes how we talk about consciousness, art, embodiment, and the limits of objective description.`,
+    relevantDimensions: ['MR', 'ES', 'TD'],
+    relatedArchetypes: ['threshold', 'lighthouse', 'garden'],
+    philosopherNames: ['Edmund Husserl', 'Heidegger', 'Merleau-Ponty', 'Sartre', 'Simone de Beauvoir', 'Emmanuel Levinas'],
+  },
+  {
+    slug: 'pragmatism',
+    title: 'Pragmatism',
+    summary: 'Truth is what works under inquiry. Ideas earn their keep by their consequences for action.',
+    essay: `Pragmatism is the most distinctively American philosophical tradition. Peirce, James, and Dewey, working in the late 1800s, were suspicious of the grand metaphysical disputes European philosophers had been having for centuries. Their move: treat ideas as tools. An idea's meaning is the difference its truth would make to practice. An idea is "true" if it survives the inquiries we put it through.
+
+This isn't relativism. Pragmatists believe in disciplined inquiry, in evidence, in being responsive to facts. What they reject is the picture of truth as a perfect correspondence between propositions and a mind-independent reality — a picture they think generates pseudo-problems. Instead: what would have to be the case for this idea to do its job? Does the idea hold up when we try?
+
+The practical bite is enormous. William James used pragmatism to defend religious belief (if it works in your life, it earns a place). John Dewey used it to reshape education and democracy. Contemporary neo-pragmatists like Richard Rorty pushed further — denying that "truth" is a useful concept beyond what works for whom. The continuing influence is most visible in pluralist political theory, in empirical philosophy, and in the deep suspicion among American philosophers of any system claiming a god's-eye view.`,
+    relevantDimensions: ['PO', 'TE', 'VA'],
+    relatedArchetypes: ['keel', 'forge', 'touchstone'],
+    philosopherNames: ['Charles Sanders Peirce', 'William James', 'John Dewey', 'Richard Rorty', 'Hilary Putnam', 'Cornel West'],
+  },
+  {
+    slug: 'determinism',
+    title: 'Determinism',
+    summary: 'If everything follows from prior causes, what room is left for freedom — or for blame?',
+    essay: `Determinism is the claim that every event, including every choice you make, is the necessary consequence of prior conditions plus the laws of nature. If you rewound the universe to last Tuesday with everything identical, the same Wednesday would unfold. There's no genuine alternative; the future is fixed.
+
+The thesis is surprisingly hard to dismiss. Most of what we know about the physical world looks deterministic. Even quantum mechanics, which introduces randomness, doesn't obviously help — random isn't the same as free. And the evidence from neuroscience increasingly suggests that the brain commits to a decision milliseconds before consciousness catches up.
+
+What's at stake is moral responsibility. If you couldn't have done otherwise, can you really be blamed? Compatibilists (the majority position in academic philosophy) say yes — "could have done otherwise" should be understood as "would have done otherwise if you'd wanted to." That's enough for praise, blame, and the practices that hold society together. Hard determinists say no, the whole apparatus of guilt and merit is built on an illusion, and we should reorient our institutions accordingly — focusing on rehabilitation rather than punishment. The debate has real-world consequences for criminal justice, addiction policy, and how we treat people who fail.`,
+    relevantDimensions: ['TR', 'TV', 'SR'],
+    relatedArchetypes: ['cartographer', 'lighthouse', 'threshold'],
+    philosopherNames: ['Spinoza', 'Laplace', 'Daniel Dennett', 'Galen Strawson', 'Sam Harris', 'Robert Sapolsky'],
+  },
+  {
+    slug: 'buddhism',
+    title: 'Buddhism (philosophical)',
+    summary: 'A 2,500-year tradition built around three claims about the self, suffering, and attention.',
+    essay: `Stripped to its philosophical bones, Buddhism makes three claims that have weathered 2,500 years of refinement. First: the unified, persisting "self" we casually assume we have is a construction — what's actually there is a stream of experiences, mistakenly bundled. Second: most suffering comes from clinging to things (including the constructed self) as if they were stable when they aren't. Third: there's a discipline of attention that loosens the clinging.
+
+This isn't escapism. Serious Buddhist philosophy — Nagarjuna on emptiness, Dharmakirti on perception, Dogen on time — is some of the most subtle metaphysics ever written. The arguments rival anything in the Western analytic tradition for rigor. They just start from different premises about what's worth analyzing.
+
+The practical core: there's a difference between pain (unavoidable, the cost of being alive) and suffering (avoidable, the result of resisting pain). Mindfulness practice trains the gap between stimulus and response, where you can notice the resistance rather than being it. Modern Western psychology has absorbed enormous amounts of this without always crediting the source. Whether you treat Buddhism as religion, philosophy, or practical psychology, its claims about how minds actually work hold up under inspection.`,
+    relevantDimensions: ['MR', 'SI', 'AT'],
+    relatedArchetypes: ['threshold', 'pilgrim', 'lighthouse'],
+    philosopherNames: ['Buddha', 'Nagarjuna', 'Dharmakirti', 'Dogen', 'Padmasambhava', 'Asanga', 'Vasubandhu'],
+  },
+  {
+    slug: 'daoism',
+    title: 'Daoism',
+    summary: 'Live in accord with the way things move. Stop forcing. Notice what your interference produces.',
+    essay: `Daoism (Taoism) is the philosophical tradition that grew around the Daodejing — eighty-one short chapters of cryptic poetry attributed to Laozi, plus the playful, antic essays of Zhuangzi. The central concept, *dao*, means "way" or "path" but expands to mean the underlying pattern by which things spontaneously occur. To act *wu wei* — without forcing — is to align with this pattern, not against it.
+
+The pictures are vivid. Water wears down stone not by violence but by yielding. A skilled cook cuts an ox by finding the natural joints. A wise ruler governs by stepping back. Most of what we call effort, the Daoists noticed, is interference — pushing where push isn't needed, naming what doesn't need a name, drawing lines where reality is continuous.
+
+There's a sharper critique underneath the imagery: when you try to impose categories on the world (good/bad, useful/useless, success/failure), you generate the opposite of what you intended. Force "good" and you create new evils. Pursue "success" and you guarantee a particular kind of failure. The Daoist way isn't passivity; it's the difficult discipline of acting only when action is needed, and learning to recognize when it isn't.`,
+    relevantDimensions: ['MR', 'VA', 'SR'],
+    relatedArchetypes: ['threshold', 'garden', 'pilgrim'],
+    philosopherNames: ['Laozi', 'Zhuangzi', 'Liezi', 'Wang Bi', 'Guo Xiang'],
+  },
+  {
+    slug: 'confucianism',
+    title: 'Confucianism',
+    summary: 'The self is constituted by its relationships. Ritual + role + cultivation, not freedom from these.',
+    essay: `Confucius (Kongzi, 551–479 BCE) and his successors built an ethics around a single conviction: a human being is not a free-floating individual who happens to have relationships, but a creature constituted by them. You are a child to your parents, a sibling to your siblings, a friend to your friends, a citizen of your community. To become a good person is to become good at being all of these — in the right ways, with the right feeling, at the right time.
+
+The technical word is *ren* (humaneness, fellow-feeling). It can't be taught as a rule. It's cultivated through ritual (*li*) — the practices that, repeated, shape what feels right. A Western ethicist might ask "what's the rule for being kind to strangers?" A Confucian asks "what practices, over years, will make kindness toward strangers your second nature?"
+
+Modern philosophy often dismisses Confucianism as conservative, role-bound, hierarchical — and there are versions that are. The serious tradition is something else. Mencius argued every human has innate moral sprouts that, watered by good practice, grow into virtue. Wang Yangming insisted that genuine knowledge and action can't be separated — to know the good and not do it is to not really know it. Contemporary virtue ethicists (Aristotle's heirs) keep rediscovering what Confucius worked out: a good life is a long apprenticeship in the company of others.`,
+    relevantDimensions: ['CE', 'RT', 'PO'],
+    relatedArchetypes: ['hearth', 'keel', 'pilgrim'],
+    philosopherNames: ['Confucius', 'Mencius', 'Xunzi', 'Wang Yangming', 'Cheng Yi', 'Cheng Hao', 'Tu Weiming'],
+  },
+  {
+    slug: 'problem-of-evil',
+    title: 'The problem of evil',
+    summary: 'If God is all-powerful and all-good, why does suffering exist? The hardest question in theology.',
+    essay: `The problem is ancient and brutal. If a creator god is all-powerful, all-knowing, and all-good, then suffering shouldn't exist — or, where it exists, it should serve a purpose proportionate to its cost. Yet children die of cancer, earthquakes bury villages, and millions starve. Either God isn't all-powerful, or isn't all-good, or has reasons we can't see. Each option costs something significant.
+
+The standard defenses are old and refined. The free-will defense (Augustine, Plantinga): evil comes from human choice, not God; a world with genuine freedom is worth the cost. The soul-making defense (Hick): suffering forms character that couldn't form otherwise. The skeptical theist: God's reasons exceed our grasp; we have no standing to call the picture incoherent.
+
+David Hume, Voltaire, and Dostoevsky each found these defenses wanting. Hume noted that a competent designer could have built a world with the same moral lessons and less unnecessary cruelty. Voltaire's *Candide* made the soul-making defense look obscene in the face of actual mass death. Dostoevsky's Ivan Karamazov returns the ticket of admission — declines a salvation built on the suffering of even one tortured child. The problem is not solved; the most honest theists treat it as a wound that lives alongside faith, rather than a puzzle that yields to argument.`,
+    relevantDimensions: ['TV', 'MR', 'TR'],
+    relatedArchetypes: ['threshold', 'cartographer', 'pilgrim'],
+    philosopherNames: ['Epicurus', 'Augustine', 'Hume', 'Voltaire', 'Dostoevsky', 'Alvin Plantinga', 'Marilyn McCord Adams'],
+  },
+  {
+    slug: 'mind-body-problem',
+    title: 'The mind-body problem',
+    summary: 'How does the wet electrical mass between your ears produce the experience of being you?',
+    essay: `Stare at your hand and try to notice the experience of red. Now try to describe, in the language of neurons and chemistry, what that experience IS. You'll find a strange gap. Brain states are publicly observable, made of physical stuff, locatable in space. Experience is private, subjective, and seemingly not locatable in any obvious physical sense. How do they connect?
+
+Descartes thought they couldn't, really — mind and body must be distinct substances, somehow interacting at the pineal gland. Contemporary philosophers mostly reject substance dualism but disagree on what to put in its place. Physicalists say mental states ARE brain states — qualia (the redness of red) is just a way the brain processes information. Property dualists, like David Chalmers, say physical processes generate experience but experience isn't reducible to them. The "hard problem" of consciousness is exactly this irreducibility.
+
+Eliminativists (the Churchlands) go further: maybe our folk-psychological talk about beliefs, desires, and qualia is just wrong — like talk of phlogiston was wrong — and a mature neuroscience will replace it. Functionalists say it doesn't matter what mental states are made of, as long as they play the right role in cognition. Each view costs something — and no one currently knows how to close the explanatory gap between objective brain and subjective mind.`,
+    relevantDimensions: ['TD', 'TR', 'SI'],
+    relatedArchetypes: ['cartographer', 'lighthouse', 'threshold'],
+    philosopherNames: ['Descartes', 'Spinoza', 'Gilbert Ryle', 'Thomas Nagel', 'David Chalmers', 'Daniel Dennett', 'Paul Churchland'],
+  },
+  {
+    slug: 'solipsism',
+    title: 'Solipsism',
+    summary: 'How do you know other minds exist? The challenge that\'s philosophically harder than it looks.',
+    essay: `Solipsism is the view that only your own mind is certain to exist. Other people might be philosophical zombies — outwardly indistinguishable from the conscious, but with nothing going on inside. The position sounds obviously crazy, but it's surprisingly hard to refute on its own terms.
+
+You can't introspect another person's experience. All you have access to is behavior — what they do, what they say, how they react. You infer minds behind the behavior because behavior matches what you'd do if you had a mind. But the inference is exactly the kind of inductive leap Hume warned about: just because the pattern has held so far doesn't prove it generalizes.
+
+Most philosophers don't take solipsism as a serious metaphysical position. They take it as a useful boundary case that reveals something about the limits of proof. Wittgenstein argued that the very meaning of "mind" or "pain" depends on a community of users; a private language doesn't make sense, so radical solipsism is incoherent on its own terms. Levinas turned the problem upside down: the encounter with the *face* of the other is the foundational moral fact, prior to any inferred metaphysics. Whether you find any of these convincing is itself a test of how seriously you take the question.`,
+    relevantDimensions: ['SR', 'SI', 'CE'],
+    relatedArchetypes: ['threshold', 'cartographer'],
+    philosopherNames: ['Descartes', 'Berkeley', 'Wittgenstein', 'Emmanuel Levinas', 'Bertrand Russell'],
+  },
+  {
+    slug: 'authenticity',
+    title: 'Authenticity',
+    summary: 'What would it mean to actually be yourself — and is "yourself" even a coherent thing to be?',
+    essay: `"Be yourself" is one of the most common pieces of moral advice and one of the most underexamined. Existentialists were the first to take it seriously as a philosophical problem. Sartre, Heidegger, and Beauvoir all argued that most of what we do is *inauthentic* — we let "the they" (Heidegger's term for impersonal social pressure) decide what we want, what we believe, who we become.
+
+Authenticity, on this view, isn't a fixed self you discover. It's a stance you take toward your own life: claiming the choices you make as YOURS, not blaming circumstance or social role, owning the freedom and the responsibility together. Bad faith — Sartre's term — is the move where you pretend you couldn't have done otherwise, or that your role required it. Authentic action faces the freedom squarely.
+
+Critics push back hard. Charles Taylor and Bernard Williams asked: authentic to WHAT? There's no neutral self underneath the social roles, no preference-list waiting to be revealed. We're constituted by our communities, our languages, our histories. The advice to "be yourself" can become its own form of bad faith — pretending you can stand outside your situation and pick a true self. The honest version asks something harder: not who are you, but who do you keep choosing to become, and is the choosing yours?`,
+    relevantDimensions: ['SS', 'TV', 'SI'],
+    relatedArchetypes: ['threshold', 'pilgrim', 'iconoclast'],
+    philosopherNames: ['Kierkegaard', 'Heidegger', 'Sartre', 'Simone de Beauvoir', 'Charles Taylor', 'Bernard Williams'],
+  },
+  {
+    slug: 'eudaimonia',
+    title: 'Eudaimonia — the good life',
+    summary: 'Aristotle\'s answer: not pleasure, not virtue alone, but the activity of a whole life lived well.',
+    essay: `*Eudaimonia* is usually translated "happiness" but means something closer to "flourishing" or "a life going well." For Aristotle, who put the concept at the center of his ethics, eudaimonia isn't a feeling. It's the activity of a soul living in accordance with its excellences (*aretai*) — virtues — over a complete life.
+
+This sounds abstract until you notice what it isn't. It isn't moment-to-moment pleasure (you can have a string of pleasures and still be living badly). It isn't external success (you can have wealth and fame and be miserable, or be cheated of them by bad luck and still be flourishing). It isn't a permanent psychological state (you can flourish while grieving, while struggling, while old). It's something more like: a person living rightly is doing what a flourishing human does, and the flourishing is constituted by the doing.
+
+The Aristotelian tradition matured into modern virtue ethics (MacIntyre, Foot, Nussbaum, Hursthouse). The core insight survives: the question "what's the good life?" can't be answered by looking at any single moment or feeling. It has to be answered by what you'd recognize, watching from outside, as a life that was good to live, that was good for others, and that was good to have been. Most other ethical frameworks (deontology, consequentialism) presuppose an answer to this question and then ask how to achieve it. Virtue ethics goes after the question itself.`,
+    relevantDimensions: ['VA', 'PO', 'RT'],
+    relatedArchetypes: ['garden', 'hearth', 'keel'],
+    philosopherNames: ['Aristotle', 'Alasdair MacIntyre', 'Philippa Foot', 'Martha Nussbaum', 'Rosalind Hursthouse'],
+  },
+  {
+    slug: 'social-contract',
+    title: 'The social contract',
+    summary: 'Why submit to political authority? Because a rational agent would have agreed to.',
+    essay: `Social contract theory is the dominant Western framework for justifying political authority. The basic move: imagine humans before government — Hobbes\' "state of nature," Locke\'s pre-political community, Rousseau\'s natural innocence. Ask what arrangement those people, reasoning carefully about their interests, would have agreed to. Whatever they would have agreed to, you (today) have implicitly consented to by participating in the arrangement.
+
+The three founders disagree sharply. Hobbes thought the state of nature was so brutal — "solitary, poor, nasty, brutish, and short" — that rational agents would consent to almost any sovereign capable of keeping order. Locke had a friendlier view: even in the state of nature, people have rights to life, liberty, and property; legitimate government protects these, and loses legitimacy when it violates them. Rousseau argued that civilization itself had corrupted us, and only a radical reconstruction (the general will) could restore freedom.
+
+John Rawls revived the tradition in the twentieth century with his "veil of ignorance" — imagine choosing the basic structure of society without knowing what role you'd play in it. Rawls argued you\'d pick a society where the worst-off were as well-off as possible. Robert Nozick fired back that any pattern enforced by the state inevitably violates individual rights to free transaction. The argument continues because the question is unavoidable: every state demands obedience; every state owes its citizens a story for why.`,
+    relevantDimensions: ['UI', 'PO', 'CE'],
+    relatedArchetypes: ['forge', 'cartographer', 'touchstone'],
+    philosopherNames: ['Hobbes', 'Locke', 'Rousseau', 'Kant', 'John Rawls', 'Robert Nozick', 'Hugo Grotius'],
+  },
+  {
+    slug: 'aesthetics',
+    title: 'Aesthetics — what is beauty?',
+    summary: 'Is beauty in the eye of the beholder, in the object, in the relationship between them, or somewhere else?',
+    essay: `Aesthetics asks what makes something beautiful, sublime, ugly, kitsch, or great. The puzzle that keeps the field alive: aesthetic judgments feel both deeply personal AND somehow shareable. When you call a sunset beautiful, you're not just reporting a private feeling — you'd be surprised to find someone who thought it ugly. Yet there's no fact about the sunset that PROVES beauty.
+
+Kant gave the most influential modern answer. Beauty is what produces in us a disinterested pleasure — we don't want to consume the beautiful object, we want to keep contemplating it. The pleasure feels universal because it tracks the harmony between our imagination and our understanding, which all humans share. This is why we expect others to see beauty when we do, even though we can't prove they should.
+
+Other traditions diverge. The Confucian aesthetic ties beauty to moral character — the brushstroke reveals the person. Romantic aesthetics (Schopenhauer, Nietzsche) tied beauty to access to deeper realities than concept could reach. Contemporary aesthetics has expanded to include everyday aesthetics (the beauty of a well-set table), environmental aesthetics, and aesthetic appreciation of nature on its own terms. The big practical takeaway: aesthetic taste is trainable, judgments improve with attention, and a culture that treats all aesthetic claims as mere preference loses something important.`,
+    relevantDimensions: ['ES', 'VA', 'MR'],
+    relatedArchetypes: ['garden', 'threshold', 'lighthouse'],
+    philosopherNames: ['Plato', 'Kant', 'Schopenhauer', 'Nietzsche', 'John Dewey', 'Susanne Langer', 'Arthur Danto'],
+  },
+  {
+    slug: 'epistemology',
+    title: 'Epistemology — what is knowledge?',
+    summary: 'The classical answer: justified true belief. The four-decade argument over whether that\'s enough.',
+    essay: `For most of philosophical history, "knowledge" was defined as *justified true belief*. To know that the cat is on the mat, three things had to be true: the cat IS on the mat (truth), you BELIEVE the cat is on the mat (belief), and you have GOOD REASONS for the belief (justification). Simple enough — until 1963.
+
+Edmund Gettier published a three-page paper that broke the field. He constructed cases where someone has a justified true belief that doesn't intuitively count as knowledge. A standard example: you look at a clock that, unbeknownst to you, stopped exactly twelve hours ago; it currently reads 3:00, and the actual time IS 3:00. You believe it's 3:00 (true), you\'re justified (clocks usually work), and the belief is true — but you don\'t know what time it is. You got lucky.
+
+Sixty years of "Gettier responses" tried to add a fourth condition. None has held. Some philosophers (Williamson) gave up on analyzing knowledge into parts and treated it as basic. Others (virtue epistemologists like Linda Zagzebski) argued that knowledge is a kind of cognitive achievement — knowing requires success that's CREDITABLE to the knower\'s competence, not luck. Whichever direction the field eventually settles, Gettier permanently changed what philosophers think they\'re doing when they say "I know."`,
+    relevantDimensions: ['TR', 'SR', 'TD'],
+    relatedArchetypes: ['cartographer', 'touchstone', 'lighthouse'],
+    philosopherNames: ['Plato', 'Descartes', 'Hume', 'Kant', 'Edmund Gettier', 'Timothy Williamson', 'Linda Zagzebski', 'Alvin Goldman'],
+  },
+  {
+    slug: 'truth',
+    title: 'Truth',
+    summary: 'Is truth a relationship between sentences and reality, or something built up inside our practices?',
+    essay: `What makes a sentence true? The intuitive answer is the correspondence theory: a sentence is true if it accurately describes the world. "Snow is white" is true if and only if snow is, in fact, white. This is so obvious it feels like a triviality — but spelling it out has been one of the harder projects in twentieth-century philosophy.
+
+Tarski showed how to give a formal theory of truth for limited languages, treating "is true" as a relation between sentences and the world. But for natural languages, correspondence runs into problems: what does "corresponds" actually MEAN? What corresponds to abstract truths like "torture is wrong"? Coherentists (Hegel, Brand Blanshard) said truth is a property of whole systems of belief — a sentence is true if it fits with the rest of what we accept. Pragmatists (James, Dewey) said truth is what works — what survives inquiry.
+
+The contemporary picture is humbler. Deflationists like Paul Horwich argue "true" is just a useful device: to say "snow is white is true" is to say snow is white. There's no deep theory of truth, only a logical convenience. Anti-realists in particular domains (mathematics, ethics) argue you can have a useful concept of truth without metaphysical realism. The fight matters because what you think truth IS shapes what you think disagreement amounts to, and how seriously you take rival worldviews.`,
+    relevantDimensions: ['TR', 'TD', 'SR'],
+    relatedArchetypes: ['cartographer', 'touchstone', 'lighthouse'],
+    philosopherNames: ['Plato', 'Aristotle', 'Aquinas', 'Frege', 'Russell', 'Alfred Tarski', 'Paul Horwich', 'Hilary Putnam'],
+  },
+  {
+    slug: 'hedonism',
+    title: 'Hedonism',
+    summary: 'Pleasure is the only thing intrinsically good. Everything else is good only insofar as it leads there.',
+    essay: `Hedonism — the claim that pleasure is the only ultimate good and pain the only ultimate bad — has a worse reputation than it deserves. Its serious advocates weren't decadent libertines. Epicurus, the founding figure, lived simply in a garden with friends, ate mostly bread and water, and thought the most reliable pleasures were the absence of pain, anxiety, and want.
+
+The interesting hedonist move is to keep asking "good for what?" until you hit something self-justifying. Most things we value (money, fame, achievement) are valuable instrumentally — they lead to states we like. The hedonist insists that what makes any of this valuable in the end is the experience it produces. Even the satisfaction of knowing you\'ve done good is, ultimately, a kind of pleasure (a refined one, but still).
+
+Nozick\'s "experience machine" thought experiment hit hedonism hard. Imagine a machine that could give you any pleasurable experience you wanted, indistinguishable from real life, for the rest of your life — would you plug in? Most people say no. They want to actually accomplish things, actually be in relationships, actually know reality. If pleasure were the only good, plugging in would be the obvious choice. The fact that most of us refuse suggests pleasure isn't the only thing we value — though figuring out what else IS valued, and why, turns out to be much harder than the hedonist made it look.`,
+    relevantDimensions: ['VA', 'ES', 'PO'],
+    relatedArchetypes: ['garden', 'pilgrim'],
+    philosopherNames: ['Epicurus', 'Lucretius', 'Jeremy Bentham', 'Mill', 'Sidgwick', 'Robert Nozick'],
+  },
+  {
+    slug: 'moral-luck',
+    title: 'Moral luck',
+    summary: 'Should chance affect how blameworthy you are? Our intuitions say one thing; our principles another.',
+    essay: `Two drivers are equally careless. One arrives home safely. The other, by sheer bad luck, hits a child who runs into the road. We treat them very differently — the first faces no consequences; the second may face years in prison and a lifetime of grief. Yet the act was identical, the choice was identical, the character was identical. Should the difference in outcome change the moral judgment?
+
+Bernard Williams and Thomas Nagel sharpened the question in the 1970s. Our intuition says yes — the unlucky driver IS worse off morally, blameworthy in a way the lucky driver isn\'t. But our principle says no — what\'s under your control is what makes you praiseworthy or blameworthy, and outcomes (especially when they hinge on luck) aren\'t fully under your control. Something has to give.
+
+Nagel identified several kinds of moral luck. Resultant luck: the outcome of your choice. Circumstantial luck: the situations you find yourself in (a German in 1939 had moral choices forced on them an American didn't). Constitutive luck: the character you happened to develop. Causal luck: the very fact that you have any agency at all, in a universe of prior causes. Once you start counting, the supposedly luck-free domain of moral responsibility shrinks alarmingly. The contemporary picture: either we revise our intuitions, our principles, or our concept of responsibility itself. None of the three is comfortable.`,
+    relevantDimensions: ['TV', 'SR', 'CE'],
+    relatedArchetypes: ['touchstone', 'threshold', 'cartographer'],
+    philosopherNames: ['Bernard Williams', 'Thomas Nagel', 'Aristotle', 'Kant', 'Susan Wolf', 'Dana Nelkin'],
+  },
+  {
+    slug: 'philosophy-of-love',
+    title: 'Philosophy of love',
+    summary: 'Is romantic love a feeling, a choice, a virtue, a contract — or something stranger than any of these?',
+    essay: `Philosophy of love is younger than you might expect. Plato wrote about it in the Symposium — love as a ladder ascending from particular beautiful bodies to the Form of Beauty itself — but the systematic philosophy of romantic love really begins in the twentieth century, when the assumption that love was a feeling outside the scope of rational analysis started to give way.
+
+Harry Frankfurt argues love is a *volitional* state, not just an emotional one — to love someone is to be committed to caring about their good for their own sake, in a way that organizes your other commitments. This makes love continuous with what you do, not just what you feel. Robert Solomon (and the long tradition behind him) treated love as a kind of project — you and the other person create something together, and the relationship\'s quality reflects the quality of the creating.
+
+Other traditions push back. Iris Murdoch, drawing on Plato and Buddhism, treated love as a particular kind of attention — the discipline of seeing the other person as they actually are, without your own ego distorting the picture. Care ethicists insist that love isn\'t reducible to either feeling or choice — it lives in patterns of responsive attention that come from being-in-relationship over time. The philosophical interest is partly diagnostic: what we think love IS shapes what we expect from it, and many modern unhappinesses come from importing one tradition\'s picture into a relationship built on another.`,
+    relevantDimensions: ['CE', 'VA', 'MR'],
+    relatedArchetypes: ['hearth', 'garden', 'threshold'],
+    philosopherNames: ['Plato', 'Augustine', 'Kierkegaard', 'Heloise of Argenteuil', 'Iris Murdoch', 'Harry Frankfurt', 'bell hooks'],
+  },
 ] as const;
 
 export function findTopic(slug: string): Topic | undefined {
   return TOPICS.find(t => t.slug === slug);
+}
+
+// ─── Index-page categorisation ──────────────────────────────────────
+//
+// Topics are categorized for the /topic index page only — the data
+// itself stays flat. If you add a new topic, also add its slug to
+// the right bucket here, or it falls into the "More" bucket as a
+// fallback.
+
+export type TopicCategoryKey =
+  | 'big-questions'
+  | 'schools'
+  | 'eastern'
+  | 'ethics'
+  | 'knowledge-beauty';
+
+export const TOPIC_CATEGORIES: {
+  key: TopicCategoryKey;
+  label: string;
+  blurb: string;
+  icon: string;
+  accent: string;
+  slugs: string[];
+}[] = [
+  {
+    key: 'big-questions',
+    label: 'The big questions',
+    blurb: 'The puzzles philosophers keep returning to — about freedom, mind, identity, and what is.',
+    icon: '◆',
+    accent: '#B8862F',
+    slugs: ['free-will', 'consciousness', 'meaning-of-life', 'personal-identity', 'mind-body-problem', 'solipsism', 'determinism', 'problem-of-evil'],
+  },
+  {
+    key: 'schools',
+    label: 'Schools of thought',
+    blurb: 'The named movements — stoicism, existentialism, pragmatism. Different starting points, different answers.',
+    icon: '▲',
+    accent: '#6B7F4F',
+    slugs: ['stoicism', 'existentialism', 'nihilism', 'absurdism', 'skepticism', 'empiricism-vs-rationalism', 'phenomenology', 'pragmatism', 'hedonism'],
+  },
+  {
+    key: 'eastern',
+    label: 'Eastern traditions',
+    blurb: 'Three traditions that shaped half the world — and got mostly cut from the Western syllabus.',
+    icon: '◯',
+    accent: '#A65846',
+    slugs: ['buddhism', 'daoism', 'confucianism'],
+  },
+  {
+    key: 'ethics',
+    label: 'Ethics & how to live',
+    blurb: 'What we owe each other. What makes a life good. How to act when the rules run out.',
+    icon: '✦',
+    accent: '#7C5A8C',
+    slugs: ['utilitarianism', 'virtue-ethics', 'trolley-problem', 'justice', 'social-contract', 'moral-luck', 'philosophy-of-love', 'authenticity', 'eudaimonia'],
+  },
+  {
+    key: 'knowledge-beauty',
+    label: 'Knowledge & beauty',
+    blurb: 'How we know what we know. What makes something beautiful. The theory side of the map.',
+    icon: '✧',
+    accent: '#3D5A7E',
+    slugs: ['truth', 'epistemology', 'aesthetics'],
+  },
+];
+
+type TopicBucket = {
+  key: string;
+  label: string;
+  blurb: string;
+  icon: string;
+  accent: string;
+  topics: Topic[];
+};
+
+/** Helper: returns topics grouped by category, with any uncategorized
+ *  ones placed in a trailing "More" bucket so the page never silently
+ *  drops content if a slug isn't registered above. */
+export function topicsByCategory(): TopicBucket[] {
+  const seen = new Set<string>();
+  const buckets: TopicBucket[] = TOPIC_CATEGORIES.map(cat => {
+    const topics = cat.slugs
+      .map(slug => {
+        const t = TOPICS.find(x => x.slug === slug);
+        if (t) seen.add(slug);
+        return t;
+      })
+      .filter((x): x is Topic => !!x);
+    return { key: cat.key, label: cat.label, blurb: cat.blurb, icon: cat.icon, accent: cat.accent, topics };
+  });
+  const leftover = TOPICS.filter(t => !seen.has(t.slug));
+  if (leftover.length > 0) {
+    buckets.push({
+      key: 'more',
+      label: 'More topics',
+      blurb: 'Recently added — not yet sorted into a section.',
+      icon: '○',
+      accent: '#8C6520',
+      topics: [...leftover],
+    });
+  }
+  return buckets;
 }

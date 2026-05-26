@@ -138,6 +138,117 @@ export const ARENA_TOPICS: ArenaTopic[] = [
     prompt: "You're with someone good who could be the one. You suspect there might be someone better. What's the right move?",
     primer: "The economists call this the secretary problem and have a math answer (37%). The romantics call it betrayal of the present partner. The pragmatists ask what \"better\" even means after the first five years together.",
   },
+
+  // ─── 2026-05-26 expansion: 15 new Arena topics ────────────────
+
+  // Philosophical (8)
+  {
+    slug: "future-generations",
+    category: "philosophical",
+    title: "What we owe future generations",
+    prompt: "How much should you sacrifice now to benefit people who don't yet exist?",
+    primer: "Derek Parfit and the longtermists argue future people count fully — there are vastly more of them than us, so the math is overwhelming. Critics call this an evasion of duties to the present: real children are suffering now while we optimize for hypothetical children in 2300.",
+  },
+  {
+    slug: "lying-to-protect",
+    category: "philosophical",
+    title: "Lying to protect",
+    prompt: "Is it ever right to lie to save someone — including from a hard truth they couldn't bear?",
+    primer: "Kant said no, ever, even to a murderer asking where his target is hiding. Most subsequent ethicists disagreed. The hard cases aren't murder-at-the-door; they're the partner who can't handle the diagnosis, the parent who can't handle the failure, the friend who needs the comforting fiction.",
+  },
+  {
+    slug: "anger-virtue",
+    category: "philosophical",
+    title: "Anger as virtue",
+    prompt: "Is anger a moral failing to be overcome, or a moral response that ought to be cultivated?",
+    primer: "The Stoics treated anger as a disease — always disproportionate, always destructive. Aristotle thought anger at the right things, in the right amount, at the right time, was a virtue. Modern feminists and anti-racists have argued anger is what makes moral perception possible at all.",
+  },
+  {
+    slug: "duty-to-vote",
+    category: "philosophical",
+    title: "Duty to vote",
+    prompt: "If your individual vote has near-zero chance of changing an outcome, do you still have a duty to cast it?",
+    primer: "Brennan and others have argued voting badly is worse than not voting — the well-informed have an obligation, the rest a duty to abstain. Most political philosophers disagree: voting is constitutive of citizenship, not just consequential. The math of impact misses the act.",
+  },
+  {
+    slug: "art-from-bad-people",
+    category: "philosophical",
+    title: "Art from bad people",
+    prompt: "Can you separate the art from the artist when the artist did something monstrous?",
+    primer: "Some say yes — the work has its own life once made. Some say no — engaging with the work is engaging with the maker, who deserves no support. Others split the difference: separate from the dead, refuse the still-living. The lines move depending on what counts as 'monstrous' and what counts as 'support.'",
+  },
+  {
+    slug: "moral-progress",
+    category: "philosophical",
+    title: "Moral progress",
+    prompt: "Are humans morally better than we were in 1700? In 1900? If so, in what does the progress consist?",
+    primer: "Steven Pinker says yes, unambiguously: less violence, more rights, broader moral circle. Critics say his metrics are cherry-picked or beg the question. Others ask whether progress is even the right frame — whether moral history is one of trade-offs rather than improvement.",
+  },
+  {
+    slug: "happiness-vs-meaning",
+    category: "philosophical",
+    title: "Happiness vs meaning",
+    prompt: "If you had to choose between a happy life and a meaningful one, which should you pick?",
+    primer: "Most accounts of the good life try to combine them; the Aristotelian answer is that they're not really separable when done right. But research keeps surfacing the gap: people pursuing meaning often report less moment-to-moment pleasure, and people pursuing happiness often report shallower satisfaction.",
+  },
+  {
+    slug: "ai-personhood",
+    category: "philosophical",
+    title: "AI personhood",
+    prompt: "If a future AI passes every behavioral test for consciousness, does it have moral status?",
+    primer: "The functionalist answer is yes — if it walks like consciousness and quacks like consciousness, the only thing that could deny it moral status is something we don't have access to. The biological-naturalist answer (Searle) is no — consciousness depends on the specific physical substrate, not just the functions. The honest answer is: we don't know how to tell.",
+  },
+
+  // Everyday (7)
+  {
+    slug: "wedding-no-rsvp",
+    category: "everyday",
+    title: "The friend who didn't show",
+    prompt: "Your good friend skipped your wedding without explanation. How should you handle the next text from them?",
+    primer: "Pretending it didn't happen preserves the friendship but lets a wound fester. Confronting it might end the friendship but is the only path to repair. The middle path — light reference, leaving room for them to bring it up — depends on whether they would.",
+  },
+  {
+    slug: "money-friend",
+    category: "everyday",
+    title: "The friend in money trouble",
+    prompt: "A close friend is in serious financial trouble and asks to borrow more than you can comfortably afford. What do you do?",
+    primer: "Lending might preserve the friendship and risk the money; refusing preserves the money and risks the friendship. The conventional advice — only lend what you can afford to never see again — sidesteps the real question, which is what the friend's pattern says about whether the loan helps.",
+  },
+  {
+    slug: "promotion-over-mentor",
+    category: "everyday",
+    title: "Promotion over your mentor",
+    prompt: "You're offered the promotion your mentor expected. They told you in confidence they wanted it. Do you take it?",
+    primer: "Taking it advances your career and respects your employer's choice. Refusing it respects the mentor and possibly betrays your own competence. Mentioning the conflict to the employer probably forces them to revoke the offer. There's no version where everyone's interests are preserved.",
+  },
+  {
+    slug: "social-media-quiet",
+    category: "everyday",
+    title: "Going silent online",
+    prompt: "A friend you've known for years has been quietly deleting their social media. Should you check in, or honor the silence?",
+    primer: "Checking in might be intrusive, might be the lifeline they need, might land between. Honoring the silence respects autonomy but can leave someone alone who would have welcomed contact. The right move probably depends on what you already know about them — and most of us don't know enough.",
+  },
+  {
+    slug: "parent-needs-care",
+    category: "everyday",
+    title: "When the parent needs care",
+    prompt: "Your aging parent needs more care than you can give without disrupting your own life. What do you owe?",
+    primer: "Filial duty is one of the oldest moral categories — and one of the least clarified. You owe SOMETHING; you don't owe everything; the line moves depending on what they did for you, what they need, and what other support is available. There's no formula that works.",
+  },
+  {
+    slug: "small-deception-cv",
+    category: "everyday",
+    title: "Small deception on a CV",
+    prompt: "Slightly stretching a job title or date on your résumé would give you a serious advantage. Where's the line?",
+    primer: "Industry conventions sometimes treat small stretching as expected; most ethics frameworks treat it as a lie regardless of expectation. The honest version of the question isn't 'is this legal' but 'what would the version of myself I want to be feel about it on the day it works.'",
+  },
+  {
+    slug: "estrangement",
+    category: "everyday",
+    title: "Cutting off family",
+    prompt: "Is it ever right to permanently cut off a family member — and how would you know it was time?",
+    primer: "The cultural pendulum on this swings: 'blood is thicker than water' meets 'protect your peace.' The serious version isn't either extreme. The question is what the relationship has actually been, what it's likely to become, and what your continued presence is costing you and them.",
+  },
 ];
 
 export function getArenaTopic(slug: string): ArenaTopic | undefined {
