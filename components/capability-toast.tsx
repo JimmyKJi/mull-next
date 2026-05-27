@@ -84,7 +84,10 @@ export default function CapabilityToast() {
     <div
       style={{
         position: "fixed",
-        bottom: 24,
+        // Stack the iPhone home-indicator inset onto the base 24px
+        // so capability toasts don't disappear behind the indicator
+        // when the PWA is installed standalone.
+        bottom: "calc(24px + env(safe-area-inset-bottom, 0px))",
         right: 24,
         zIndex: 100,
         display: "flex",

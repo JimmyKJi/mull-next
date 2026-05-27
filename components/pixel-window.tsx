@@ -148,12 +148,28 @@ export function PixelPageHeader({ eyebrow, title, subtitle, accent }: HeaderProp
           {eyebrow}
         </div>
       ) : null}
+      {/* Title uses clamp() so very narrow viewports (<360px, e.g.
+          iPhone SE / Android compact) drop to 16px before the pixel
+          font starts wrapping awkwardly on long titles like
+          "PHILOSOPHER VS PHILOSOPHER". The Tailwind classes still
+          set the upper breakpoints (sm/md) so wider screens keep the
+          chunkier 32px / 44px the design intends. */}
       <h1
-        className="mt-5 pr-2 text-[20px] leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[32px] md:text-[44px]"
+        className="mull-pixel-title mt-5 pr-2 leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[32px] md:text-[44px]"
         style={{ fontFamily: "var(--font-pixel-display)" }}
       >
-        <span style={{ textShadow: `3px 3px 0 ${shadowColor}` }}>{title}</span>
+        <span className="mull-pixel-title-shadow" style={{ ['--mull-shadow-color' as string]: shadowColor } as React.CSSProperties}>
+          {title}
+        </span>
       </h1>
+      <style>{`
+        .mull-pixel-title { font-size: 20px; }
+        .mull-pixel-title-shadow { text-shadow: 3px 3px 0 var(--mull-shadow-color); }
+        @media (max-width: 360px) {
+          .mull-pixel-title { font-size: 16px; letter-spacing: 0.02em; }
+          .mull-pixel-title-shadow { text-shadow: 2px 2px 0 var(--mull-shadow-color); }
+        }
+      `}</style>
       {subtitle ? (
         <div className="mt-5 max-w-[680px] text-[15px] leading-[1.6] text-[#4A4338] sm:text-[16px]">
           {subtitle}

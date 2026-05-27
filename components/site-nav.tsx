@@ -144,18 +144,22 @@ export function SiteNav() {
         </div>
       </nav>
 
-      {/* Mobile-only floating Cmd-K trigger. Sits bottom-left so it
-          doesn't collide with the Feedback button (bottom-right).
-          Hidden on sm+ since the inline Search button in the nav
-          already covers desktop. The pixel "⌘" button is small and
+      {/* Mobile-only floating Cmd-K trigger. Sits bottom-RIGHT —
+          the FeedbackButton's mobile icon lives bottom-LEFT, so the
+          two thumb-zone corners are split between them. Hidden on
+          sm+ since the inline Search button in the navbar already
+          covers desktop. The pixel "⌘" button is small and
           unobtrusive — discoverable for someone tapping around without
-          dominating the viewport. */}
+          dominating the viewport.
+          Safe-area inset stacks on the base offset so the button
+          clears the iPhone home-indicator when installed as a PWA. */}
       <button
         type="button"
         onClick={() => setOpen(true)}
         aria-label="Open command palette"
-        className="pixel-press fixed bottom-[18px] left-[18px] z-[60] flex h-12 w-12 items-center justify-center border-4 border-[#221E18] bg-[#221E18] text-[#FAF6EC] shadow-[3px_3px_0_0_#B8862F] sm:hidden"
+        className="pixel-press fixed right-[18px] z-[60] flex h-12 w-12 items-center justify-center border-4 border-[#221E18] bg-[#221E18] text-[#FAF6EC] shadow-[3px_3px_0_0_#B8862F] sm:hidden"
         style={{
+          bottom: 'calc(18px + env(safe-area-inset-bottom, 0px))',
           fontFamily: "var(--font-pixel-display)",
           fontSize: 14,
           letterSpacing: 0,
@@ -223,6 +227,7 @@ const PAGE_ITEMS: PaletteItem[] = [
   // ── Tier 4 — also ──
   { group: "Pages", label: "Mull Wrapped", href: "/wrapped", hint: "year in review" },
   { group: "Pages", label: "Classes", href: "/classes", hint: "for educators" },
+  { group: "Pages", label: "Add to home screen", href: "/install", hint: "iOS + Android install guide" },
   { group: "Pages", label: "About", href: "/about" },
   { group: "Pages", label: "Methodology", href: "/methodology" },
   { group: "Pages", label: "Account", href: "/account" },

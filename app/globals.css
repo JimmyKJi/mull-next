@@ -71,6 +71,32 @@ body {
   overflow-x: clip;
 }
 
+/* iOS safe-area utility for elements pinned to the bottom edge.
+   On iPhones with home-indicators the bottom 34px overlaps any
+   `position: fixed; bottom: 0` element. This shim adds env() padding
+   so fixed buttons / toasts / dialogs sit just above the indicator.
+   Requires <meta name="viewport" content="...,viewport-fit=cover"> —
+   set in app/layout.tsx via the Next.js viewport export. The max()
+   keeps a minimum offset on devices without an inset (Android, older
+   iPhones) so the layout doesn't collapse to the screen edge.
+   Apply via inline style or class — both supported. */
+.safe-bottom {
+  padding-bottom: max(var(--mull-bottom-offset, 12px), env(safe-area-inset-bottom, 0px));
+}
+.safe-bottom--lg {
+  padding-bottom: max(var(--mull-bottom-offset, 18px), env(safe-area-inset-bottom, 0px));
+}
+/* Variant for elements that need the inset added to an existing
+   `bottom: Npx` rather than padding — e.g. position:fixed widgets.
+   Use as: style={{ bottom: 'calc(18px + env(safe-area-inset-bottom, 0px))' }}
+   or apply this utility class which does the same thing. */
+.safe-bottom-fixed {
+  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+}
+.safe-bottom-fixed--sm {
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+}
+
 /* Visible focus ring for keyboard navigation. Uses :focus-visible so it
    doesn't show on mouse clicks (which feels noisy) but does show on Tab.
    Square ring (border-radius: 0) so it matches the pixel chrome of the

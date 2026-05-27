@@ -1,0 +1,58 @@
+{
+  "name": "Mull — the philosophical map",
+  "short_name": "Mull",
+  "description": "Find your place on the map of how you think.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#FAF6EC",
+  "theme_color": "#FAF6EC",
+  "categories": ["education", "lifestyle"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "type": "image/png",
+      "sizes": "180x180",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Daily Spar",
+      "short_name": "Spar",
+      "description": "Today's 5-minute philosophical debate.",
+      "url": "/spar"
+    },
+    {
+      "name": "Pilgrimage",
+      "short_name": "Pilgrimage",
+      "description": "Continue your 30-day archetype arc.",
+      "url": "/pilgrimage"
+    },
+    {
+      "name": "The Inheritor",
+      "short_name": "Quiz",
+      "description": "Find your archetype.",
+      "url": "/quiz/journey"
+    }
+  ]
+}

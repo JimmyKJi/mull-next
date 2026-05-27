@@ -78,9 +78,17 @@ const pixelifySans = Pixelify_Sans({
 // Critical for mobile — without this iOS Safari renders at desktop
 // scale and the layout looks zoomed-out and broken. mull.html has
 // the meta tag inline; this covers every Next.js route.
+//
+// viewportFit: 'cover' is the trigger that enables env(safe-area-inset-*)
+// values to be non-zero on iPhones with home-indicators. Without it,
+// the inset values resolve to 0 and the .safe-bottom utilities have
+// no effect. Pair this with the `themeColor` so iOS gives the
+// standalone PWA a matching status-bar background when installed.
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#FAF6EC",
   // Don't lock max-scale; users zooming for accessibility is fine.
 };
 
@@ -91,6 +99,32 @@ export const metadata: Metadata = {
     template: "%s — Mull",
   },
   description: "Find your place on the map of how you think.",
+  manifest: "/manifest.webmanifest",
+  // appleWebApp tells iOS Safari "this site is a standalone app
+  // when installed" — strips the URL bar, gives it the home-screen
+  // title we choose, and uses the touch icon for the home grid.
+  appleWebApp: {
+    capable: true,
+    title: "Mull",
+    statusBarStyle: "default",
+  },
+  // Next.js's appleWebApp.capable: true emits the title + status-bar
+  // tags but no longer emits the `*-capable` meta (deprecated in
+  // favour of manifest display: standalone). Older iOS versions and
+  // some Android launchers still read these — set both the Apple +
+  // generic forms explicitly so the install experience is identical
+  // across the install matrix.
+  other: {
+    "apple-mobile-web-app-capable": "yes",
+    "mobile-web-app-capable": "yes",
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+  },
   openGraph: {
     title: "Mull",
     description: "Find your place on the map of how you think.",

@@ -91,9 +91,11 @@ export default function FeedbackButton() {
           <span className="mull-feedback-fab-full">▸ FEEDBACK</span>
           <span className="mull-feedback-fab-mini" aria-hidden>?</span>
           <style>{`
-            /* Desktop: full pill in the bottom-right. */
+            /* Desktop: full pill in the bottom-right.
+               iOS safe-area: env() resolves to 0 on devices without
+               a home-indicator, so this is a no-op on desktop. */
             .mull-feedback-fab {
-              bottom: 18px;
+              bottom: calc(18px + env(safe-area-inset-bottom, 0px));
               right: 18px;
               padding: 10px 16px;
               font-size: 11px;
@@ -103,10 +105,12 @@ export default function FeedbackButton() {
 
             /* Mobile: small circular icon in the bottom-left so the
                thumb-friendly scroll edge on the right stays clean
-               and content isn't covered by a 120-px-wide pill. */
+               and content isn't covered by a 120-px-wide pill.
+               Safe-area inset stacks above the 12px base offset so
+               the button sits above the iPhone home-indicator. */
             @media (max-width: 640px) {
               .mull-feedback-fab {
-                bottom: 12px;
+                bottom: calc(12px + env(safe-area-inset-bottom, 0px));
                 left: 12px;
                 right: auto;
                 padding: 0;
@@ -135,7 +139,9 @@ export default function FeedbackButton() {
           className="pixel-form"
           style={{
             position: 'fixed',
-            bottom: 18,
+            // Stack the safe-area inset onto the base 18px so the
+            // open dialog also clears the iPhone home-indicator.
+            bottom: 'calc(18px + env(safe-area-inset-bottom, 0px))',
             right: 18,
             zIndex: 60,
             width: 320,

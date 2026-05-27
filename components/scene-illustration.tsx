@@ -34,20 +34,80 @@ type Props = {
   width?: number;
 };
 
+// Per-scene tighter viewBox for mobile (≤640px). The desktop SVG uses
+// the full 200×100 frame with decorative corners; on mobile we drop
+// the corners and crop to the subject so the illustration actually
+// reads on a 360px-wide phone instead of floating in sepia margins.
+// Format: "minX minY width height".
+const MOBILE_VIEWBOX: Record<SceneArtKey, string> = {
+  "envelope-seal": "55 25 90 55",
+  "framed-photograph": "55 8 90 78",
+  "stacked-letters": "55 25 90 50",
+  "two-chairs": "30 25 140 55",
+  "ticket-and-photo": "55 28 90 50",
+  "candle-deathbed": "0 30 200 70",
+};
+
 export function SceneIllustration({ scene, width = 360 }: Props) {
   const aspectRatio = 5 / 2.5; // 200×100 viewBox
   const height = Math.round(width / aspectRatio);
+  const mobileVB = MOBILE_VIEWBOX[scene];
+  // Parse mobile viewBox to compute mobile aspect ratio + display
+  // height. We render the mobile SVG at the same CSS max-width as
+  // desktop so the layout doesn't shift; CSS hides the wrong one.
+  const [, , mw, mh] = mobileVB.split(" ").map(Number);
+  const mobileAspect = mw / mh;
   return (
-    <svg
-      viewBox="0 0 200 100"
-      width={width}
-      height={height}
+    <div
+      className="mull-scene-wrap"
       style={{ display: "block", margin: "0 auto", maxWidth: "100%" }}
-      preserveAspectRatio="xMidYMid meet"
-      role="img"
-      aria-label={SCENE_ALT[scene]}
     >
-      {/* Sepia ground */}
+      {/* Desktop / wide: original 200×100 frame with corner ornaments. */}
+      <svg
+        className="mull-scene-desktop"
+        viewBox="0 0 200 100"
+        width={width}
+        height={height}
+        style={{ display: "block", margin: "0 auto", maxWidth: "100%" }}
+        preserveAspectRatio="xMidYMid meet"
+        role="img"
+        aria-label={SCENE_ALT[scene]}
+      >
+        <SceneInner scene={scene} withCorners />
+      </svg>
+      {/* Mobile (≤640px): cropped to the subject, no corner ornaments.
+          Aspect ratio adapts per scene so each one fills its frame. */}
+      <svg
+        className="mull-scene-mobile"
+        viewBox={mobileVB}
+        style={{
+          display: "none",
+          margin: "0 auto",
+          width: "100%",
+          maxWidth: width,
+          aspectRatio: `${mobileAspect}`,
+        }}
+        preserveAspectRatio="xMidYMid meet"
+        role="img"
+        aria-label={SCENE_ALT[scene]}
+      >
+        <SceneInner scene={scene} withCorners={false} />
+      </svg>
+      <style>{`
+        @media (max-width: 640px) {
+          .mull-scene-desktop { display: none !important; }
+          .mull-scene-mobile { display: block !important; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+function SceneInner({ scene, withCorners }: { scene: SceneArtKey; withCorners: boolean }) {
+  return (
+    <>
+      {/* Sepia ground — fills the full 200×100; the mobile viewBox
+          windows in on a subset of it. */}
       <rect x={0} y={0} width={200} height={100} fill={PAL.ground} />
       {/* Subtle ground texture — two horizontal bands suggesting a
           shelf or floor line behind the subject */}
@@ -55,12 +115,17 @@ export function SceneIllustration({ scene, width = 360 }: Props) {
       <rect x={0} y={76} width={200} height={24} fill={PAL.groundShadow} opacity={0.3} />
       {/* Scene content */}
       {SCENES[scene]()}
-      {/* Decorative corner ornaments — give it the chapter-vignette feel */}
-      <Corner x={2} y={2} />
-      <Corner x={195} y={2} flipX />
-      <Corner x={2} y={95} flipY />
-      <Corner x={195} y={95} flipX flipY />
-    </svg>
+      {/* Decorative corner ornaments — desktop only. The mobile crop
+          deliberately drops these so the subject fills the frame. */}
+      {withCorners ? (
+        <>
+          <Corner x={2} y={2} />
+          <Corner x={195} y={2} flipX />
+          <Corner x={2} y={95} flipY />
+          <Corner x={195} y={95} flipX flipY />
+        </>
+      ) : null}
+    </>
   );
 }
 

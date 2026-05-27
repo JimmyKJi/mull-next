@@ -668,6 +668,8 @@ export default async function HomeV2() {
             <span>·</span>
             <Link href="/classes" className="hover:text-[#221E18]">Classes (for educators)</Link>
             <span>·</span>
+            <Link href="/install" className="hover:text-[#221E18]">Add to home screen</Link>
+            <span>·</span>
             <Link href="/about" className="hover:text-[#221E18]">About + costs</Link>
             <span>·</span>
             <Link href="/methodology" className="hover:text-[#221E18]">Methodology</Link>
@@ -894,6 +896,7 @@ export default async function HomeV2() {
               <Link href="/about" className="hover:text-[#B8862F]">About</Link>
               <Link href="/topic" className="hover:text-[#B8862F]">Topics</Link>
               <Link href="/vs" className="hover:text-[#B8862F]">Matchups</Link>
+              <Link href="/install" className="hover:text-[#B8862F]">Add to home screen</Link>
               <Link href="/methodology" className="hover:text-[#B8862F]">Methodology</Link>
               <Link href="/privacy" className="hover:text-[#B8862F]">Privacy</Link>
               <Link href="/terms" className="hover:text-[#B8862F]">Terms</Link>
