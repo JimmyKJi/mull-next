@@ -3,6 +3,42 @@
 Notable changes to Mull, newest first. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) loosely — we only call out
 things a future maintainer would actually want to find when grepping.
 
+## 2026-05-27 — Arena view security + admin panel on /account
+
+### Added
+- **`components/account-admin-panel.tsx`** — admin-only at-a-glance
+  section that renders at the top of `/account` for users in
+  `ADMIN_USER_IDS`. Surfaces 6 cells (users total + 24h delta, quiz
+  attempts last 24h, dilemma responses today, AI spend today + month
+  with % of cap, errors in the last hour) plus deep-link buttons to
+  `/admin` and `/admin/usage`. Pauses-banner shows if the kill
+  switch fires. Renders the dashboard-links fallback if the inline
+  queries fail so the section never 500s.
+- **`supabase/migrations/20260527_arena_view_security.sql`** — fixes
+  the three "Security Definer View" CRITICAL warnings from Supabase
+  Database Advisor on `arena_leaderboard`, `arena_open_challenges`,
+  and `arena_my_active_pvp`. The views previously inherited the
+  Postgres default `SECURITY DEFINER` semantics (queries run as the
+  view creator, bypassing RLS). The migration:
+    1. adds narrow row-level read policies on `arena_user_ratings`
+       and `arena_sessions` matching exactly what each view exposes
+       (calibrated + active raters for leaderboard, pending PvP
+       sessions for open challenges, opponent visibility on PvP
+       sessions and turns)
+    2. recreates each view `WITH (security_invoker = true)` so the
+       underlying queries run as the calling user under RLS
+  The views return identical data; the access path now goes through
+  RLS, the advisor warnings clear, and the new RLS policies grant
+  read only to the rows already publicly visible through the views
+  (no new exposure).
+
+  **Runbook note:** this migration must be pasted into the Supabase
+  Dashboard SQL Editor (Project → SQL Editor → New Query) and run.
+  We don't have the Supabase CLI wired up, so the file in
+  `supabase/migrations/` is documentation of the schema-shipped
+  state, not auto-applied. After running, re-run the Database
+  Advisor — the three CRITICAL warnings should clear.
+
 ## 2026-05-27 — Calibration audit + persona harness
 
 ### Added

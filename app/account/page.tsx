@@ -24,6 +24,7 @@ import ReferralCard from '@/components/referral-card';
 import PendingAttemptClaimer from '@/components/pending-attempt-claimer';
 import { FIGURES } from '@/lib/figures';
 import { isAdminUserId } from '@/lib/admin';
+import { AccountAdminPanel } from '@/components/account-admin-panel';
 
 // Account pages should never be indexed by search engines — belt and braces
 // alongside the disallow directive in app/robots.ts.
@@ -443,6 +444,12 @@ export default async function AccountPage() {
           or on click. Renders nothing on first visit + same-session
           revisits. */}
       <WelcomeBackBanner />
+
+      {/* Admin at-a-glance panel — renders only for admins. Surfaces
+          users, AI spend (today + month with cap %), quiz/dilemma
+          counts, and errors-in-last-hour. Links through to /admin and
+          /admin/usage for the full dashboards. */}
+      <AccountAdminPanel isAdmin={isAdminUserId(user.id)} />
 
       {locale !== 'en' && (
         <div
