@@ -38,6 +38,13 @@ yarn-error.log*
 # vercel
 .vercel
 
+# supabase CLI working directory (created by `supabase link` / `db pull` /
+# `migration new`). Never contains the project ref or our schema —
+# safe to ignore. The committed source-of-truth is supabase/migrations/
+# and supabase/config.toml.
+.supabase/
+supabase/.temp/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

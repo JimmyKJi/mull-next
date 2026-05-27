@@ -32,12 +32,15 @@ things a future maintainer would actually want to find when grepping.
   read only to the rows already publicly visible through the views
   (no new exposure).
 
-  **Runbook note:** this migration must be pasted into the Supabase
-  Dashboard SQL Editor (Project → SQL Editor → New Query) and run.
-  We don't have the Supabase CLI wired up, so the file in
-  `supabase/migrations/` is documentation of the schema-shipped
-  state, not auto-applied. After running, re-run the Database
-  Advisor — the three CRITICAL warnings should clear.
+  **Runbook note:** this migration must be applied to the remote DB
+  before the SECURITY DEFINER warnings clear. Two paths:
+    - **Manual:** paste the SQL into Supabase Dashboard → SQL Editor →
+      New Query → Run.
+    - **CLI:** see `SUPABASE-CLI.md` for the one-time setup. Once
+      linked + baselined, `supabase db push` applies any new
+      migration files automatically.
+  After applying, re-run Database Advisor — the three CRITICAL
+  warnings should clear.
 
 ## 2026-05-27 — Calibration audit + persona harness
 
