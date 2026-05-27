@@ -50,8 +50,8 @@
       "reason": "Nearest is Aenesidemus + Sextus Empiricus the Younger + the rest of the academic-skeptical school. Exactly the right kin."
     },
     "Joseph Butler": {
-      "verdict": "review",
-      "reason": "98% sim to Sara Heinämaa is genuinely uncomfortable — Butler is an 18th-century natural-law moralist, Heinämaa is a contemporary phenomenologist of sexual difference. The high sim comes from both having 'moderate everything' vectors (most dims 5-7), where cosine sim over-weights direction agreement and under-weights magnitude. Both vectors probably need stronger signature dimensions to differentiate — Butler should lean harder on RT + SR + SI (conscience as inner sovereign + 18th-century natural-law tradition), Heinämaa should lean harder on ES + CE (embodiment + communal/intersubjective). Not blocking. Spin off a Wave 3 nudge pass when there's time."
+      "verdict": "nudge:applied:2026-05-27",
+      "reason": "Wave 3 nudge applied 2026-05-27. Pre-nudge: 98% sim to Sara Heinämaa with both having 'moderate everything' vectors. Post-nudge override `{RT:8, UI:8, CE:7, SS:3, SI:4, AT:6, SR:5, TR:7, TV:6, MR:5}` pushes Butler into a sharper conscience-rooted-in-tradition signature. New top-5 kin: Philippa Foot, Tu Weiming, Cheng Yi, Paulin Hountondji, Liang Shuming — all virtue + tradition + community thinkers. Reclassified Touchstone → Hearth, which is the right archetype for an Anglican natural-law moralist."
     },
     "Marx": {
       "verdict": "accepted",
@@ -110,8 +110,8 @@
       "reason": "Mirror of Nietzsche — same cluster, same verdict."
     },
     "Zeno of Elea": {
-      "verdict": "review",
-      "reason": "Nearest = Freud, Anaxagoras, Anaximander, Turing, Quentin Meillassoux. The Anaxagoras / Anaximander cluster is right (pre-Socratic cosmologists). The Freud + Turing + Meillassoux trio is less obvious — they're all 'systematic puzzle-builders' which captures Zeno's paradox-style, but the cross-era jump is suspicious. Not a fix, but worth a closer Wave 3 pass."
+      "verdict": "nudge:applied:2026-05-27",
+      "reason": "Wave 3 nudge applied 2026-05-27. Pre-nudge: Freud/Anaxagoras/Anaximander/Turing/Meillassoux — only Anaxagoras + Anaximander were era-appropriate; the rest were cross-era systematic-puzzle-builders. Post-nudge override `{TR:10, TD:10, TE:1, UI:9, ES:2, WP:2, VA:4, SR:5, MR:5, SI:5}` aligns him with the Parmenidean rationalist-idealist profile — high TR + TD + UI, very low TE + ES (his whole point: reason undermines the senses). New top-5: Parmenides (his actual teacher, 98.6%), Plato, Hypatia, Spinoza, Nicholas of Cusa. The Eleatic school is reunited."
     },
     "Krishnamurti": {
       "verdict": "accepted",

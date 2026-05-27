@@ -1,10 +1,10 @@
 # Philosopher calibration report
 
-Generated: 2026-05-27T19:00:07.657Z.  Corpus size: 552.
+Generated: 2026-05-27T22:34:35.756Z.  Corpus size: 552.
 
 Top-1 nearest-kin similarity — mean 0.992, median 0.994.
 Entries below the isolation threshold (0.92): **0**.
-Entries below the archetype-margin threshold (0.02): **355**.
+Entries below the archetype-margin threshold (0.02): **354**.
 
 ## Archetype distribution
 
@@ -14,11 +14,11 @@ Entries below the archetype-margin threshold (0.02): **355**.
 | The Forge | 100 |
 | The Pilgrim | 70 |
 | The Threshold | 66 |
-| The Touchstone | 57 |
 | The Lighthouse | 55 |
+| The Touchstone | 55 |
 | The Keel | 29 |
-| The Hearth | 28 |
-| The Garden | 9 |
+| The Hearth | 29 |
+| The Garden | 10 |
 | The Hammer | 8 |
 
 ## Most isolated entries
@@ -30,7 +30,6 @@ The **Status** column reflects `scripts/calibration-decisions.json` — entries 
 | Name | Dates | Top-1 sim | Classified | Status | Top 5 nearest kin |
 |---|---|---|---|---|---|
 | Ayn Rand | 1905–1982 | 0.938 | The Hammer | ✓ accepted | Mary Wollstonecraft (94%); Mill (92%); Sartre (91%); Voltaire (91%); Emma Goldman (91%) |
-| Parmenides | ~515–450 BCE | 0.957 | The Lighthouse | ✓ accepted | Nicholas of Cusa (96%); Proclus (95%); Plotinus (95%); Plato (95%); Hypatia (95%) |
 | Pyrrho | ~360–270 BCE | 0.959 | The Touchstone | ✓ accepted | Krishnamurti (96%); Sextus Empiricus (95%); Aenesidemus (95%); Wittgenstein (95%); Bodhidharma (94%) |
 | Descartes | 1596–1650 | 0.966 | The Lighthouse | ✓ accepted | Christine Korsgaard (97%); Adrian Piper (96%); Ruth Barcan Marcus (96%); Alonzo Church (96%); Anton Wilhelm Amo (96%) |
 | Derek Parfit | 1942–2017 | 0.967 | The Cartographer | ✓ accepted | Spinoza (97%); Gottlob Frege (96%); David Lewis (96%); Jenann Ismael (96%); Nick Bostrom (96%) |
@@ -41,7 +40,6 @@ The **Status** column reflects `scripts/calibration-decisions.json` — entries 
 | Kant | 1724–1804 | 0.973 | The Lighthouse | ✓ accepted | Christine Korsgaard (97%); Plato (96%); Anton Wilhelm Amo (96%); Chrysippus (95%); Al-Farabi (95%) |
 | Wittgenstein | 1889–1951 | 0.974 | The Touchstone | ✓ accepted | Walter Benjamin (97%); Frank Jackson (97%); Heidegger (97%); Wang Bi (97%); Derrida (97%) |
 | Sextus Empiricus | ~160–210 CE | 0.974 | The Touchstone | ✓ accepted | Aenesidemus (97%); Sextus Empiricus the Younger (97%); Arcesilaus (97%); Carneades (97%); Lucian of Samosata (97%) |
-| Joseph Butler | 1692–1752 | 0.976 | The Touchstone | ⚠ review | Sara Heinämaa (98%); Octavio Paz (98%); Nkiru Nzegwu (98%); Edward Said (98%); Sally Haslanger (97%) |
 | Marx | 1818–1883 | 0.976 | The Forge | ✓ accepted | Angela Davis (98%); Chen Duxiu (98%); Rosa Luxemburg (97%); Frantz Fanon (97%); Stuart Hall (96%) |
 | Sartre | 1905–1980 | 0.976 | The Pilgrim | ✓ accepted | Emma Goldman (98%); Simone de Beauvoir (98%); Mikhail Bakunin (97%); Camus (97%); Alain Badiou (97%) |
 | Plato | ~428–348 BCE | 0.977 | The Lighthouse | ✓ accepted | Diotima of Mantinea (98%); Hegel (97%); Plotinus (97%); Leibniz (97%); Proclus (96%) |
@@ -56,19 +54,17 @@ The **Status** column reflects `scripts/calibration-decisions.json` — entries 
 | Kierkegaard | 1813–1855 | 0.980 | The Pilgrim | ✓ accepted | Lev Tolstoy (98%); Karl Jaspers (98%); Pascal (98%); Sergei Bulgakov (98%); Heidegger (97%) |
 | Nietzsche | 1844–1900 | 0.980 | The Hammer | ✓ accepted | Max Stirner (98%); Emma Goldman (96%); Paul Feyerabend (96%); Mikhail Bakunin (96%); Sartre (96%) |
 | Max Stirner | 1806–1856 | 0.980 | The Hammer | ✓ accepted | Nietzsche (98%); Paul Feyerabend (97%); Emma Goldman (97%); Sartre (96%); Mikhail Bakunin (96%) |
-| Zeno of Elea | ~490–430 BCE | 0.980 | The Lighthouse | ⚠ review | Sigmund Freud (98%); Anaxagoras (98%); Anaximander (97%); Alan Turing (97%); Quentin Meillassoux (97%) |
 | Krishnamurti | 1895–1986 | 0.980 | The Threshold | ✓ accepted | Zhuangzi (98%); Nisargadatta Maharaj (98%); Laozi (97%); Toni Packer (97%); Robert Aitken (97%) |
 | Zhuangzi | ~369–286 BCE | 0.980 | The Pilgrim | ✓ accepted | Krishnamurti (98%); Wang Bi (98%); Liezi (98%); Toni Packer (97%); U.G. Krishnamurti (97%) |
+| Aristotle | 384–322 BCE | 0.981 | The Cartographer |  | Michael Sandel (98%); Philippa Foot (98%); Bernard Williams (98%); Peirce (98%); Pietro Pomponazzi (98%) |
+| Mozi | ~470–391 BCE | 0.981 | The Forge |  | Peter Singer (98%); John Rawls (97%); Condorcet (97%); Chen Duxiu (97%); Comte (96%) |
+| Krishna Chandra Bhattacharya | 1875–1949 | 0.981 | The Cartographer |  | Heloise of Argenteuil (98%); Karen Armstrong (98%); Bahya ibn Paquda (98%); Edith Stein (98%); A.K. Coomaraswamy (98%) |
 
 ### Decision notes
 
 **Ayn Rand** — *accepted*
 
 > Rand 0.94 sim to Wollstonecraft is a model feature. The 16-D model captures *style* of reasoning (assertive, reason-trusting, sovereign-self, rejecting inherited gender/social roles) not political content. Both score high on VA/WP/TR/SS/PO/UI — the divergence is CE (Rand 1 vs Wollstonecraft 6), which the model encodes correctly. Politics-as-conclusion is content the model deliberately doesn't fingerprint.
-
-**Parmenides** — *accepted*
-
-> Nearest = Nicholas of Cusa, Proclus, Plotinus, Plato — all rationalist/idealist Lighthouse thinkers in the One-is-real lineage. Sensible kinship.
 
 **Pyrrho** — *accepted*
 
@@ -109,10 +105,6 @@ The **Status** column reflects `scripts/calibration-decisions.json` — entries 
 **Sextus Empiricus** — *accepted*
 
 > Nearest is Aenesidemus + Sextus Empiricus the Younger + the rest of the academic-skeptical school. Exactly the right kin.
-
-**Joseph Butler** — *review*
-
-> 98% sim to Sara Heinämaa is genuinely uncomfortable — Butler is an 18th-century natural-law moralist, Heinämaa is a contemporary phenomenologist of sexual difference. The high sim comes from both having 'moderate everything' vectors (most dims 5-7), where cosine sim over-weights direction agreement and under-weights magnitude. Both vectors probably need stronger signature dimensions to differentiate — Butler should lean harder on RT + SR + SI (conscience as inner sovereign + 18th-century natural-law tradition), Heinämaa should lean harder on ES + CE (embodiment + communal/intersubjective). Not blocking. Spin off a Wave 3 nudge pass when there's time.
 
 **Marx** — *accepted*
 
@@ -170,10 +162,6 @@ The **Status** column reflects `scripts/calibration-decisions.json` — entries 
 
 > Mirror of Nietzsche — same cluster, same verdict.
 
-**Zeno of Elea** — *review*
-
-> Nearest = Freud, Anaxagoras, Anaximander, Turing, Quentin Meillassoux. The Anaxagoras / Anaximander cluster is right (pre-Socratic cosmologists). The Freud + Turing + Meillassoux trio is less obvious — they're all 'systematic puzzle-builders' which captures Zeno's paradox-style, but the cross-era jump is suspicious. Not a fix, but worth a closer Wave 3 pass.
-
 **Krishnamurti** — *accepted*
 
 > Nearest = Zhuangzi, Nisargadatta Maharaj, Laozi, Toni Packer, Robert Aitken. The Daoist + Advaita + Zen contemplative cluster. Exactly right.
@@ -217,4 +205,4 @@ These sit nearly equidistant between two archetypes. A small margin is honest fo
 | Iris Murdoch | The Keel | The Cartographer | 0.0008 |
 | Cheng Hao | The Keel | The Cartographer | 0.0009 |
 | Hildegard of Bingen | The Lighthouse | The Hearth | 0.0009 |
-| Sara Heinämaa | The Touchstone | The Cartographer | 0.0009 |
+| Al-Farabi | The Lighthouse | The Cartographer | 0.0009 |

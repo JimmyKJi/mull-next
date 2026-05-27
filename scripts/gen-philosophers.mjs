@@ -259,7 +259,7 @@ const ENTRIES = [
   { n:`Anaximander`, d:`~610–546 BCE`, i:`The boundless (apeiron) is the source of all things — pre-Socratic first physics.`, v:{TR:7,TE:6,TD:8,MR:5,SI:4} },
   { n:`Anaximenes`, d:`~586–526 BCE`, i:`Air is the underlying substance, condensing and rarefying into all phenomena.`, v:{TR:6,TE:7,TD:6,ES:5} },
   { n:`Xenophanes`, d:`~570–478 BCE`, i:`Skepticism toward anthropomorphic gods; truth as approximation, not certainty.`, v:{TR:6,SR:8,UI:6,MR:3} },
-  { n:`Zeno of Elea`, d:`~490–430 BCE`, i:`Paradoxes of motion — reason undermines the senses; reality is one and unchanging.`, v:{TR:9,TD:8,TE:2,SR:6,SI:5} },
+  { n:`Zeno of Elea`, d:`~490–430 BCE`, i:`Paradoxes of motion — reason undermines the senses; reality is one and unchanging.`, v:{TR:10,TD:10,TE:1,UI:9,ES:2,WP:2,VA:4,SR:5,MR:5,SI:5} },
   { n:`Anaxagoras`, d:`~500–428 BCE`, i:`Nous (mind) orders an infinite mixture of seeds into a cosmos.`, v:{TR:7,TD:8,MR:5,UI:6} },
   { n:`Leucippus`, d:`~5th c. BCE`, i:`First atomist — reality is void plus indivisible atoms in motion.`, v:{TR:7,TE:8,TD:7,SI:5,MR:1} },
   { n:`Democritus`, d:`~460–370 BCE`, i:`Atomism + cheerful tranquility; nothing exists but atoms and void.`, v:{TR:7,TE:8,VA:7,SR:6,SI:5,MR:1} },
@@ -388,7 +388,7 @@ const ENTRIES = [
   { n:`Francis Hutcheson`, d:`1694–1746`, i:`Moral sense school — benevolence as the proper object of approval.`, v:{VA:6,UI:6,CE:6,TR:5} },
   { n:`Bernard Mandeville`, d:`1670–1733`, i:`Fable of the Bees — private vices, public benefits.`, v:{SR:7,TE:7,SS:6,UI:3,VA:6} },
   { n:`Adam Smith`, d:`1723–1790`, i:`Theory of Moral Sentiments — the impartial spectator inside each of us.`, v:{TR:6,TE:7,CE:7,UI:6,PO:7} },
-  { n:`Joseph Butler`, d:`1692–1752`, i:`Conscience as the rightful sovereign of human nature.`, v:{RT:7,UI:6,TR:6,SS:5} },
+  { n:`Joseph Butler`, d:`1692–1752`, i:`Conscience as the rightful sovereign of human nature.`, v:{RT:8,UI:8,CE:7,SS:3,SI:4,AT:6,SR:5,TR:7,TV:6,MR:5} },
   { n:`Thomas Reid`, d:`1710–1796`, i:`Common sense — the principles every philosophy must already presume.`, v:{TE:8,RT:7,SR:5,TR:6,CE:6} },
   { n:`Dugald Stewart`, d:`1753–1828`, i:`Scottish common sense made systematic — philosophy of the mind.`, v:{TE:7,TR:6,RT:6,CE:5} },
   { n:`Maine de Biran`, d:`1766–1824`, i:`Effort and willing as the felt origin of the self.`, v:{TE:7,ES:7,SS:7,SR:5} },
@@ -484,7 +484,7 @@ const ENTRIES = [
   { n:`Miranda Fricker`, d:`b. 1966`, i:`Epistemic Injustice — the wrongs done to people as knowers.`, v:{SR:7,UI:7,CE:6,VA:5} },
   { n:`Rae Langton`, d:`b. 1961`, i:`Pornography as silencing — speech-act theory turned to ethics.`, v:{SR:7,UI:6,TR:6} },
   { n:`Linda Zagzebski`, d:`b. 1946`, i:`Virtues of the Mind — epistemic and moral virtue as one fabric.`, v:{TR:7,RT:7,UI:6,VA:5} },
-  { n:`Sara Heinämaa`, d:`b. 1960`, i:`Sexual difference as a phenomenology of embodiment after Beauvoir.`, v:{ES:7,SR:6,MR:5,SS:5} },
+  { n:`Sara Heinämaa`, d:`b. 1960`, i:`Sexual difference as a phenomenology of embodiment after Beauvoir.`, v:{ES:9,CE:8,TE:9,SS:7,WP:6,UI:3,TR:4,MR:5,SR:5} },
   { n:`Sara Ruddick`, d:`1935–2011`, i:`Maternal Thinking — practices of mothering as cognitive labor.`, v:{CE:8,VA:6,ES:5,UI:4} },
   { n:`Gloria Anzaldúa`, d:`1942–2004`, i:`Borderlands/La Frontera — the mestiza consciousness of bridging selves.`, v:{CE:7,ES:6,SS:7,SI:6,VA:6} },
   { n:`Maria Lugones`, d:`1944–2020`, i:`World-traveling — playful pluralism against the logic of purity.`, v:{CE:6,SS:6,VA:6,UI:5,SR:6} },
@@ -837,6 +837,10 @@ if (APPLY) {
   console.error(`Wrote public/mull.html (${out.length} Wave 2 entries between sentinels).`);
 
   console.error(`\nDone. Both files updated. To verify: \`git diff lib/philosophers.ts public/mull.html\``);
+  console.error(`\n⚠  This regenerates the public/mull.html PHILOSOPHERS block wholesale,`);
+  console.error(`   which wipes the per-entry \`aliases:[...]\` fields previously injected by`);
+  console.error(`   sync-mull-html-aliases.mjs. Re-run that script now to restore them:`);
+  console.error(`     node scripts/sync-mull-html-aliases.mjs --apply\n`);
 }
 
 // ─── Legacy stdout modes (kept for backwards compat) ──────────────────
