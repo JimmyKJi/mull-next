@@ -1,0 +1,59 @@
+name: build
+
+# Fail fast on broken builds before they ship to Vercel.
+#
+# Vercel already runs `next build` on every push to a connected branch,
+# but we don't ship from Vercel auto-deploys — production goes out via
+# direct `vercel deploy --prod` from a clean worktree. That bypasses
+# the auto-deploy build check, so we need our own gate to catch type
+# errors and Next.js build failures before they hit prod.
+#
+# Runs on every push and PR. Lightweight: install + typecheck + build.
+# No tests yet (none exist) — when we add them, append a `test` job.
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+# Skip duplicate runs when a PR pushes to a branch that's also pushed
+# (the most common case during development).
+concurrency:
+  group: build-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: typecheck + next build
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      # Next.js needs a base URL even at build time for OG image rendering
+      # and the metadataBase in app/layout.tsx. Use the prod domain so
+      # generated absolute URLs match what ships.
+      NEXT_PUBLIC_SITE_URL: https://mull.world
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          # Pin to the Vercel-compatible major. If Vercel's runtime moves,
+          # bump this in lockstep.
+          node-version: '22'
+          cache: npm
+
+      - name: install dependencies
+        # `npm ci` is the deterministic install for CI — faster than
+        # `npm install` and fails if package-lock.json is out of sync.
+        run: npm ci
+
+      - name: typecheck
+        # Standalone tsc pass — surfaces type errors before `next build`
+        # does, with a cleaner error report.
+        run: npx tsc --noEmit
+
+      - name: build
+        # The actual gate. If this fails, the production deploy would
+        # have failed too.
+        run: npm run build

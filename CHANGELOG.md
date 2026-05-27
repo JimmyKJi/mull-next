@@ -3,6 +3,47 @@
 Notable changes to Mull, newest first. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) loosely — we only call out
 things a future maintainer would actually want to find when grepping.
 
+## 2026-05-27 — Tooling + voice pass
+
+### Added
+- **`.github/workflows/build.yml`** — CI runs `npm ci`, `npx tsc
+  --noEmit`, `npm run build` on every push + PR. Vercel auto-deploys
+  are NOT how we ship (production goes out via direct `vercel deploy
+  --prod`), so the workflow exists as an independent gate against
+  type errors and build-time failures.
+- **`scripts/sync-mull-html-aliases.mjs`** — codegen script that
+  injects philosopher `aliases` from `lib/philosophers.ts` into
+  `public/mull.html`'s standalone PHILOSOPHERS array, then patches
+  the homepage search filter to query them. 494 entries augmented.
+  Re-run with `--apply` whenever either source drifts. Dry-run by
+  default.
+- **`scripts/voice-lint.mjs`** — linter for STYLE-GUIDE §9 voice
+  rules across `lib/topics.ts`, `lib/exercises.ts`, and
+  `lib/philosopher-bios.ts`. Errors on performative warmth, AI
+  marketing-speak, untranslated Latin, therapy register. Warns on
+  long sentences, em-dash flurries, semicolon flurries, apologetic
+  phrasing, tired clichés. First run on the 90 long-form entries:
+  0 errors, 22 warnings (all long-sentence borderlines).
+- **`scripts/check-quiz-calibration.mjs`** — companion to
+  `check-philosopher-calibration.mjs`. For each quiz question, checks
+  whether the answer vectors cluster (cosine sim ≥ 0.90 — picking
+  between them changes nothing), whether one answer dominates the
+  vector budget (>1.8× the average magnitude), and whether the
+  question spans <3 dimensions (under-probes). Output goes to
+  `scripts/quiz-calibration-report.md`. First run: 1 cluster flagged
+  in the quick quiz (Q13), 1 in the detailed (Q32) — both 70-question
+  quizzes well within tolerance.
+
+### Changed
+- **Voice rewrites of 4 long-sentence offenders:** `topic/phenomenology`
+  Husserl paragraph, `topic/philosophy-of-love` opener, `bio/augustine`
+  empire-cracked sentence, `bio/hobbes` Leviathan setup, `bio/camus`
+  Sisyphus three-responses chain. None bordered on incomprehensible
+  before — these are tightening passes, not corrections.
+- **`public/mull.html`** — 494 PHILOSOPHERS entries gained an
+  `aliases:[...]` field. Search filter at line ~9228 now includes
+  alias matching alongside name + keyIdea.
+
 ## 2026-05-27
 
 ### Added

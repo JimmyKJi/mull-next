@@ -254,7 +254,7 @@ Kant tried to resolve the fight: some knowledge is *a priori* (independent of ex
     slug: 'phenomenology',
     title: 'Phenomenology',
     summary: 'The careful description of experience as experience — before any theory about what it really is.',
-    essay: `Phenomenology asks a strange-sounding question: what is it actually like, from the inside, to perceive a tree, to grieve, to remember childhood? Edmund Husserl founded the movement in the early 1900s by insisting that philosophy should describe experience in its own terms — not reduce it to neuroscience or behavior, not jump immediately to "what's really there."
+    essay: `Phenomenology asks a strange-sounding question: what is it actually like, from the inside, to perceive a tree, to grieve, to remember childhood? Edmund Husserl founded the movement in the early 1900s. His insistence: philosophy should describe experience in its own terms. No reducing it to neuroscience or behavior. No jumping immediately to "what's really there."
 
 The method is "bracketing": set aside, temporarily, the question of whether your experience corresponds to reality. Just look at the structure of the experience itself. What's at the center? What's at the periphery? What's the temporal flow? What's the body's role? The resulting descriptions can be surprisingly rich — and they often reveal that the casual things we say about consciousness (it's "in" the head, we "have" experiences) are theories, not observations.
 
@@ -475,7 +475,7 @@ Nagel identified several kinds of moral luck. Resultant luck: the outcome of you
     slug: 'philosophy-of-love',
     title: 'Philosophy of love',
     summary: 'Is romantic love a feeling, a choice, a virtue, a contract — or something stranger than any of these?',
-    essay: `Philosophy of love is younger than you might expect. Plato wrote about it in the Symposium — love as a ladder ascending from particular beautiful bodies to the Form of Beauty itself — but the systematic philosophy of romantic love really begins in the twentieth century, when the assumption that love was a feeling outside the scope of rational analysis started to give way.
+    essay: `Philosophy of love is younger than you might expect. Plato wrote about it in the Symposium — love as a ladder ascending from particular beautiful bodies to the Form of Beauty itself. But the systematic philosophy of romantic love really begins in the twentieth century, when the assumption that love sits outside rational analysis started to give way.
 
 Harry Frankfurt argues love is a *volitional* state, not just an emotional one — to love someone is to be committed to caring about their good for their own sake, in a way that organizes your other commitments. This makes love continuous with what you do, not just what you feel. Robert Solomon (and the long tradition behind him) treated love as a kind of project — you and the other person create something together, and the relationship\'s quality reflects the quality of the creating.
 

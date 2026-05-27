@@ -48,18 +48,19 @@ features, just deliberate review of what's already there for
 consistency, voice, philosophical accuracy, and tone. Listed in
 descending priority per the discussion:
 
-- [ ] **Quizzes — re-audit every question against the 16-D model.**
-      Highest priority. Both the 20-question quick quiz and the
-      50-question detailed fingerprint. For each question:
-      * Are the choice vectors balanced? (no answer should be
-        philosophically "free" / dominate)
-      * Are the choices distinct enough that the 16-D vector
-        separates them meaningfully?
-      * Does the phrasing nudge the user toward any one answer?
-      * Are there better contemporary scenarios available?
-      Tooling: `scripts/calibration-report.md` already exists; we
-      should extend it to flag questions whose answer-vector deltas
-      cluster suspiciously.
+- [x] ~~**Quizzes — re-audit every question against the 16-D model.**~~
+      Tooling shipped 2026-05-27: `scripts/check-quiz-calibration.mjs`
+      programmatically flags clustered answers (cosine sim ≥ 0.90),
+      dominant answers (one carrying >1.8× the avg magnitude), and
+      narrow-span questions (touching <3 dimensions). Output goes to
+      `scripts/quiz-calibration-report.md`. First run: 1 cluster
+      flagged in the 20-question quick quiz (Q13 Justice, answers
+      2 ↔ 5 at 0.912), 1 in the 50-question detailed (Q32, answers
+      1 ↔ 4 at 0.926). Every dimension touched ≥8 times in quick
+      and ≥21 in detailed — no under-probed axes. The phrasing-audit
+      half (nudging language, contemporary scenarios) is still a
+      human-eye job; spin off a focused review session if you want
+      to do it.
 
 - [ ] **SEO pages — `/topic/[slug]` (12) + `/vs/[a]/[b]` (30 curated).**
       Each one was written in one shot. Re-read each for:
@@ -138,12 +139,12 @@ one push.
 
 ## UI and search parity
 
-- [ ] **Add aliases support to public/mull.html.** Right now
-      `lib/philosophers.ts` has aliases but mull.html's PHILOSOPHERS
-      table doesn't — client-side search on the static homepage is
-      name-only. Either add an `aliases:` field to mull.html entries
-      and update its search code, or refactor the static page to fetch
-      from a JSON endpoint shared with the Next routes.
+- [x] ~~**Add aliases support to public/mull.html.**~~ Done 2026-05-27.
+      `scripts/sync-mull-html-aliases.mjs` reads aliases from
+      `lib/philosophers.ts` and injects them inline into mull.html's
+      PHILOSOPHERS entries; the homepage search filter was patched to
+      include them. 494 entries updated. Re-run the script if either
+      side drifts.
 
 ## Major features (from synopsis "Known gaps")
 
@@ -206,11 +207,11 @@ plan is:
 
 ## House-keeping items
 
-- [ ] **Build the `npm run build` step into CI** so deploy-time failures
-      surface before they hit Vercel.
-- [ ] **Add a CHANGELOG.md** with the account-export schema bump
-      (`v2` → `v3`) noted, so anyone parsing exports knows what
-      changed and when.
+- [x] ~~**Build the `npm run build` step into CI**~~ Done 2026-05-27.
+      `.github/workflows/build.yml` runs `npm ci` + `npx tsc --noEmit`
+      + `npm run build` on every push and PR.
+- [x] ~~**Add a CHANGELOG.md**~~ Done 2026-05-27. Schema bumps captured
+      in the file's tail section.
 
 ---
 
