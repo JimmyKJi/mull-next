@@ -98,6 +98,23 @@ async function loadArchetypes() {
   return loadArchetypeTargets();
 }
 
+// Decisions log: surprises that have been human-reviewed and either
+// accepted (calibration feature, not bug) or flagged for review
+// (deferred work). Loaded so the report can badge reviewed entries
+// instead of re-flagging them every run. Optional — missing file is
+// not an error.
+async function loadDecisions() {
+  try {
+    const src = await readFile(join(REPO, 'scripts/calibration-decisions.json'), 'utf8');
+    const parsed = JSON.parse(src);
+    return parsed.isolatedEntries ?? {};
+  } catch (e) {
+    if (e.code === 'ENOENT') return {};
+    console.warn(`Could not load calibration-decisions.json: ${e.message}`);
+    return {};
+  }
+}
+
 const DIM_KEYS = ['TV','VA','WP','TR','TE','RT','MR','SR','CE','SS','PO','TD','AT','ES','UI','SI'];
 
 function expandSignature(sigObj) {
@@ -109,7 +126,8 @@ function expandSignature(sigObj) {
 async function main() {
   const philosophers = await loadPhilosophers();
   const archetypes = await loadArchetypes();
-  console.log(`Loaded ${philosophers.length} philosophers and ${archetypes.length} archetypes.`);
+  const decisions = await loadDecisions();
+  console.log(`Loaded ${philosophers.length} philosophers, ${archetypes.length} archetypes, ${Object.keys(decisions).length} reviewed-surprise decisions.`);
 
   // Expand each archetype's partial dim signature into a full 16-D vector.
   const archVecs = archetypes.map(a => ({
@@ -203,13 +221,43 @@ async function main() {
   md.push('');
   md.push('These have a low top-1 nearest-kin similarity. Isolation is sometimes legitimate (Buddha is genuinely far from anyone) and sometimes a calibration bug (a Wave 2 vector that needs nudging). Review each by inspecting the top-5 kin — if they make sense, the entry is fine; if they look totally unrelated, the vector probably needs work.');
   md.push('');
-  md.push('| Name | Dates | Top-1 sim | Classified | Top 5 nearest kin |');
-  md.push('|---|---|---|---|---|');
+  md.push('The **Status** column reflects `scripts/calibration-decisions.json` — entries that have been human-reviewed get a verdict (✓ accepted = model feature; ⚠ review = vector probably needs work, deferred; ✦ nudge = decided change not yet applied). Entries with no status are unreviewed.');
+  md.push('');
+  md.push('| Name | Dates | Top-1 sim | Classified | Status | Top 5 nearest kin |');
+  md.push('|---|---|---|---|---|---|');
   for (const r of sortedByIsolation.slice(0, REPORT_MAX_ISOLATED)) {
     const kinList = r.topKin.map(k => `${k.name} (${(k.sim * 100).toFixed(0)}%)`).join('; ');
-    md.push(`| ${r.name} | ${r.dates} | ${r.top1Sim.toFixed(3)} | ${r.classifiedAs} | ${kinList} |`);
+    const decision = decisions[r.name];
+    let status = '';
+    if (decision) {
+      const badge = decision.verdict === 'accepted' ? '✓ accepted'
+                  : decision.verdict === 'review' ? '⚠ review'
+                  : decision.verdict?.startsWith('nudge') ? `✦ ${decision.verdict}`
+                  : decision.verdict ?? '';
+      status = badge;
+    }
+    md.push(`| ${r.name} | ${r.dates} | ${r.top1Sim.toFixed(3)} | ${r.classifiedAs} | ${status} | ${kinList} |`);
   }
   md.push('');
+
+  // Render the full decision reasoning per reviewed entry, so the
+  // report stands alone (no need to open the JSON to understand
+  // why a surprise was accepted or deferred).
+  const reviewedNames = sortedByIsolation
+    .slice(0, REPORT_MAX_ISOLATED)
+    .map(r => r.name)
+    .filter(n => decisions[n]);
+  if (reviewedNames.length > 0) {
+    md.push('### Decision notes');
+    md.push('');
+    for (const name of reviewedNames) {
+      const d = decisions[name];
+      md.push(`**${name}** — *${d.verdict}*`);
+      md.push('');
+      md.push(`> ${d.reason}`);
+      md.push('');
+    }
+  }
   md.push('## Most archetype-ambiguous entries');
   md.push('');
   md.push('These sit nearly equidistant between two archetypes. A small margin is honest for paradoxical thinkers (Spinoza, Pascal, Wittgenstein) and a red flag for everyone else — if a thinker should clearly be one archetype, the vector may need to lean more in that direction.');

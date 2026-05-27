@@ -3,6 +3,38 @@
 Notable changes to Mull, newest first. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) loosely — we only call out
 things a future maintainer would actually want to find when grepping.
 
+## 2026-05-27 — Calibration audit + persona harness
+
+### Added
+- **`scripts/calibration-decisions.json`** — human-reviewed verdicts on
+  the 30 most-isolated philosopher entries. Each: name + verdict
+  (`accepted` / `review` / `nudge:<dim>:<delta>`) + reasoning. Loaded
+  by `scripts/check-philosopher-calibration.mjs` and rendered as
+  ✓/⚠/✦ badges in the regenerated report. 28 accepted (calibration
+  features — the 16-D model groups by reasoning style, not content),
+  2 deferred for Wave 3 vector work (Joseph Butler, Zeno of Elea).
+- **`scripts/run-persona-tests.mjs`** — persona stress-test harness for
+  the quiz scoring + archetype model. 19 personas: 10 canonical (one
+  per archetype's clearest exemplar), 5 edge (sitting on documented
+  classification boundaries), 4 paradox (intentionally hybrid — must
+  produce low-margin tension signal). Exits non-zero on canonical or
+  edge failure. First run: 19/19 pass including Conservative
+  Anarchist (margin 0.0134, well under the 0.04 tension threshold).
+  Output to `scripts/persona-test-report.md`.
+- **Tradition-sovereignty decision: Option C confirmed.** The
+  /methodology Open Questions paragraph documenting the high-RT +
+  high-SS quadrant gap was already live before this session;
+  re-verified that it reads cleanly, that the Conservative Anarchist
+  persona test fires the expected low-margin signal, and that the
+  next session has the work plan for Option A (add an 11th archetype)
+  if launch feedback shows real demand. NEXT.md marked done.
+
+### Changed
+- **`scripts/check-philosopher-calibration.mjs`** — loads
+  `calibration-decisions.json` and adds a Status column + "Decision
+  notes" section to the rendered report so verdicts are visible
+  without opening the JSON.
+
 ## 2026-05-27 — Tooling + voice pass
 
 ### Added

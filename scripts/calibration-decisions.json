@@ -1,0 +1,125 @@
+{
+  "$comment": "Reviewed calibration surprises. Each entry: { name, verdict, reason }. Loaded by scripts/check-philosopher-calibration.mjs and surfaced in the report so future runs see 'reviewed: acceptable' instead of re-flagging. Verdicts: 'accepted' (calibration feature, not bug), 'review' (vector probably needs work, deferred), 'nudge:<dim>:<delta>' (decided change, not yet applied).",
+  "isolatedEntries": {
+    "Ayn Rand": {
+      "verdict": "accepted",
+      "reason": "Rand 0.94 sim to Wollstonecraft is a model feature. The 16-D model captures *style* of reasoning (assertive, reason-trusting, sovereign-self, rejecting inherited gender/social roles) not political content. Both score high on VA/WP/TR/SS/PO/UI — the divergence is CE (Rand 1 vs Wollstonecraft 6), which the model encodes correctly. Politics-as-conclusion is content the model deliberately doesn't fingerprint."
+    },
+    "Parmenides": {
+      "verdict": "accepted",
+      "reason": "Nearest = Nicholas of Cusa, Proclus, Plotinus, Plato — all rationalist/idealist Lighthouse thinkers in the One-is-real lineage. Sensible kinship."
+    },
+    "Pyrrho": {
+      "verdict": "accepted",
+      "reason": "Nearest = Sextus Empiricus, Aenesidemus, Krishnamurti, Wittgenstein, Bodhidharma. Sextus + Aenesidemus are direct successors. The Krishnamurti / Bodhidharma / Wittgenstein clustering captures the 'what can be said? nothing' contemplative-skeptical stance that crosses East/West."
+    },
+    "Descartes": {
+      "verdict": "accepted",
+      "reason": "97% sim to Korsgaard is legitimate. Both rigorous rationalist Lighthouse thinkers; Korsgaard's whole project is constructivist Kantianism which inherits the Cartesian commitment to reason as the route to certainty. The vector groups by reasoning style, which is exactly what we'd want here."
+    },
+    "Derek Parfit": {
+      "verdict": "accepted",
+      "reason": "Nearest = Spinoza, Frege, David Lewis, Jenann Ismael, Nick Bostrom. All cool-rationalist Cartographer thinkers arguing for monism / impersonal identity / analytical-system-building. Defensible."
+    },
+    "Hume": {
+      "verdict": "accepted",
+      "reason": "Nearest = Montaigne, Rorty, Arcesilaus, Mandeville, Sextus the Younger. Empirical-skeptical-essayistic Touchstone lineage. The pairing with Rorty in particular is exactly the kind of dimensional kinship the model is designed to surface."
+    },
+    "Nagarjuna": {
+      "verdict": "accepted",
+      "reason": "Nearest = Vasubandhu, Mahavira, Adi Shankara, Asanga, Tsongkhapa. All Madhyamaka / Yogacara / Advaita non-dualist Threshold thinkers. The vector captures the apophatic emptiness orientation correctly."
+    },
+    "Schopenhauer": {
+      "verdict": "accepted",
+      "reason": "Nearest = Pascal, Wittgenstein, Kierkegaard, Heidegger, Bhartrihari. Surprising surface diversity (Catholic mystic, analytic, Lutheran existentialist, Heideggerian, Indian linguistic philosopher) but all share the 'reason has limits, the deep questions resist resolution' Threshold profile. Sensible."
+    },
+    "Buddha": {
+      "verdict": "accepted",
+      "reason": "Nearest = Dogen, Mahavira, Laozi, Kumarajila, Patanjali. Eastern contemplative-traditions founders. Exactly the cluster we'd expect."
+    },
+    "Kant": {
+      "verdict": "accepted",
+      "reason": "97% sim to Korsgaard, 96% to Plato. Both unsurprising: Korsgaard's project is explicitly neo-Kantian, and Kant's transcendental idealism shares structural moves with Platonism (Forms-style universal reason)."
+    },
+    "Wittgenstein": {
+      "verdict": "accepted",
+      "reason": "97% to Walter Benjamin is surprising at first but defensible — both wrote in fragments, both wrestled with the limits of language and the mystical-adjacent edge of expression (Witt's 'showing what cannot be said' / Benjamin's 'Theological-Political Fragment'), both melancholic outsiders to their dominant schools. The big difference is AT (Witt 7 vs Benjamin 4) — Witt's monastic asceticism — which is captured. Cosine sim still high because so many other dimensions align."
+    },
+    "Sextus Empiricus": {
+      "verdict": "accepted",
+      "reason": "Nearest is Aenesidemus + Sextus Empiricus the Younger + the rest of the academic-skeptical school. Exactly the right kin."
+    },
+    "Joseph Butler": {
+      "verdict": "review",
+      "reason": "98% sim to Sara Heinämaa is genuinely uncomfortable — Butler is an 18th-century natural-law moralist, Heinämaa is a contemporary phenomenologist of sexual difference. The high sim comes from both having 'moderate everything' vectors (most dims 5-7), where cosine sim over-weights direction agreement and under-weights magnitude. Both vectors probably need stronger signature dimensions to differentiate — Butler should lean harder on RT + SR + SI (conscience as inner sovereign + 18th-century natural-law tradition), Heinämaa should lean harder on ES + CE (embodiment + communal/intersubjective). Not blocking. Spin off a Wave 3 nudge pass when there's time."
+    },
+    "Marx": {
+      "verdict": "accepted",
+      "reason": "Nearest = Angela Davis, Chen Duxiu, Rosa Luxemburg, Frantz Fanon, Stuart Hall. All Marxist-tradition Forge thinkers. The vector is doing its job."
+    },
+    "Sartre": {
+      "verdict": "accepted",
+      "reason": "Nearest = Emma Goldman, Simone de Beauvoir, Bakunin, Camus, Badiou. Sartre's existentialist-anarchist-Marxist lineage neighbors. Sensible."
+    },
+    "Plato": {
+      "verdict": "accepted",
+      "reason": "Nearest = Diotima, Hegel, Plotinus, Leibniz, Proclus. The grand rationalist-idealist Lighthouse cluster. Exactly the kin we'd expect to see."
+    },
+    "U.G. Krishnamurti": {
+      "verdict": "accepted",
+      "reason": "Nearest = Osho, Zhuangzi, Toni Packer, Robert Aitken, José Esteban Muñoz. Non-dualist contemplative cluster + Muñoz's queer-utopian dis-identification. The Muñoz inclusion is the most surprising but defensible — both reject the prepackaged self."
+    },
+    "Diogenes of Sinope": {
+      "verdict": "accepted",
+      "reason": "Nearest = Antisthenes (his Cynic teacher), Emma Goldman, Max Stirner, Bakunin, Feyerabend. The 'sovereign individual against convention' Hammer cluster. Antisthenes is the lineage; Goldman/Stirner/Bakunin are the modern echoes; Feyerabend is the methodological Hammer in epistemology."
+    },
+    "Antisthenes": {
+      "verdict": "accepted",
+      "reason": "Mirror of Diogenes (his student) — same Cynic-anarchist cluster, same verdict."
+    },
+    "Heraclitus": {
+      "verdict": "accepted",
+      "reason": "Nearest = Bergson, Galen Strawson, Anaxagoras, Edith Wyschogrod, Niels Bohr. The 'reality is process / flux / dynamic-not-substance' cluster across ancient + modern + scientific. Sensible."
+    },
+    "Machiavelli": {
+      "verdict": "accepted",
+      "reason": "Nearest = Hobbes, Han Feizi, Walter Mignolo, Francis Hutcheson, Achille Mbembe. Realist/legalist/power-analysis political philosophy across cultures. Han Feizi is the perfect East Asian Machiavelli analog."
+    },
+    "Rumi": {
+      "verdict": "accepted",
+      "reason": "Nearest = Julian of Norwich, Anandamayi Ma, Lalleshwari, Baal Shem Tov, Hildegard of Bingen. Mystical-devotional poets across Christian, Hindu, Kashmiri Shaiva, Hasidic, Christian mystic traditions. The cross-traditional mystical Threshold cluster — exactly right."
+    },
+    "Joseph de Maistre": {
+      "verdict": "accepted",
+      "reason": "Nearest = Judah Halevi, René Guénon, Bahya ibn Paquda, Edmund Burke, Coomaraswamy. Traditionalist + perennial-philosophy + counter-Enlightenment Keel cluster. Politically uncomfortable assemblage but philosophically coherent."
+    },
+    "Mill": {
+      "verdict": "accepted",
+      "reason": "Nearest = Locke, Wollstonecraft, Shaftesbury, Voltaire, Bentham. The 18th-19th C British liberal Garden cluster. Sensible."
+    },
+    "Kierkegaard": {
+      "verdict": "accepted",
+      "reason": "Nearest = Tolstoy, Jaspers, Pascal, Sergei Bulgakov, Heidegger. Anguished religious-existential Pilgrim cluster — the lineage from Pascal forward, with Heidegger as the secular existential heir."
+    },
+    "Nietzsche": {
+      "verdict": "accepted",
+      "reason": "Nearest = Max Stirner, Emma Goldman, Feyerabend, Bakunin, Sartre. Sovereign-individualist Hammer cluster. Stirner is the philosophical predecessor."
+    },
+    "Max Stirner": {
+      "verdict": "accepted",
+      "reason": "Mirror of Nietzsche — same cluster, same verdict."
+    },
+    "Zeno of Elea": {
+      "verdict": "review",
+      "reason": "Nearest = Freud, Anaxagoras, Anaximander, Turing, Quentin Meillassoux. The Anaxagoras / Anaximander cluster is right (pre-Socratic cosmologists). The Freud + Turing + Meillassoux trio is less obvious — they're all 'systematic puzzle-builders' which captures Zeno's paradox-style, but the cross-era jump is suspicious. Not a fix, but worth a closer Wave 3 pass."
+    },
+    "Krishnamurti": {
+      "verdict": "accepted",
+      "reason": "Nearest = Zhuangzi, Nisargadatta Maharaj, Laozi, Toni Packer, Robert Aitken. The Daoist + Advaita + Zen contemplative cluster. Exactly right."
+    },
+    "Zhuangzi": {
+      "verdict": "accepted",
+      "reason": "Mirror of Krishnamurti — Daoist core, same cluster, same verdict."
+    }
+  }
+}

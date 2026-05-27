@@ -105,24 +105,32 @@ one push.
 
 ## Calibration
 
-- [ ] **Investigate the calibration surprises and propose vector nudges.**
-      From `scripts/calibration-report.md`: Ayn Rand sits near Mary
-      Wollstonecraft (94% cosine sim) and Descartes near Christine
-      Korsgaard (97%). Both pairings share surface signals
-      (individualism / Kantian-style reason) but not deep stance.
-      Worth a closer look at the full "Most isolated entries" table
-      and proposing specific dim adjustments. Outcome: either confirm
-      they're acceptable or list specific `tr:` / per-entry override
-      changes to `scripts/gen-philosophers.mjs` ENTRIES followed by a
-      `--apply` run.
+- [x] ~~**Investigate the calibration surprises and propose vector nudges.**~~
+      Done 2026-05-27. Reviewed all 30 entries on the "Most isolated"
+      table. Verdicts captured in `scripts/calibration-decisions.json`
+      and rendered as ✓ accepted / ⚠ review badges in the regenerated
+      `scripts/calibration-report.md`. 28 entries accepted (calibration
+      feature: the 16-D model groups by *reasoning style* not political
+      content — Rand/Wollstonecraft 94% sim reflects shared assertive
+      reason-trusting individualism, with CE 1 vs 6 encoding the
+      political divergence correctly). 2 entries flagged for deferred
+      review (Joseph Butler 98% to Sara Heinämaa — both have "moderate
+      everything" vectors that need stronger signature dims; Zeno of
+      Elea's Freud/Turing/Meillassoux trio — defensible but worth a
+      cross-era second look). Neither blocks. Spin into a Wave 3 vector
+      pass when there's time.
 
-- [ ] **Build the persona-based stress-test harness.** The synopsis
-      describes `outputs/calibrate.mjs`, `personas.mjs`,
-      `edge-personas.mjs`, `paradox-personas.mjs`, `run-*.mjs` — these
-      files don't exist in the repo. Building them would let us verify
-      Wave 2 against canonical / edge / paradox personas (the way Wave
-      1 was verified). Roughly a few hundred lines of test
-      infrastructure plus the personas themselves.
+- [x] ~~**Build the persona-based stress-test harness.**~~ Shipped
+      2026-05-27 as a single file `scripts/run-persona-tests.mjs`
+      rather than the multi-file layout the synopsis described —
+      simpler to maintain. 19 personas seeded (10 canonical, 5 edge,
+      4 paradox). Output to `scripts/persona-test-report.md`. Exits
+      non-zero on canonical or edge failure. First run: 19/19 pass
+      including the Conservative Anarchist (tradition-sovereignty
+      gap), which fires a margin of 0.0134 — well under the 0.04
+      tension threshold, so the gap is being flagged correctly by
+      the math even without a dedicated archetype. Add more personas
+      over time by extending the CANONICAL/EDGE/PARADOX arrays.
 
 - [ ] **Run the full skill-creator eval workflow on `calibration-check`.**
       Right now `skills/calibration-check/SKILL.md` is a description
@@ -132,10 +140,16 @@ one push.
 
 ## Tradition + sovereignty archetype gap
 
-- [ ] **Pick A / B / C** (see `scripts/tradition-sovereignty-analysis.md`
-      and chat history for the elaboration). If you pick A (new
-      archetype), the work plan is in section "If you want Option A
-      now" of that doc — ~1–2 days of focused work.
+- [x] ~~**Pick A / B / C**~~ Decided 2026-05-27: **Option C** (document
+      the gap honestly, defer the archetype add until launch signal
+      shows real demand). The methodology paragraph is already live at
+      `/methodology` §07 Open Questions — last bullet in the NotItem
+      list, lines 526-546 of `app/methodology/page.tsx`. If three or
+      more launch-feedback messages flag the Burkean mis-classification,
+      escalate to Option A using the work plan in
+      `scripts/tradition-sovereignty-analysis.md` §"If you want Option A
+      now". Until then, the close-call language on `/methodology`
+      carries the load.
 
 ## UI and search parity
 
