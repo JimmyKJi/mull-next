@@ -17,6 +17,8 @@ import { ArchetypeSprite } from '@/components/archetype-sprite';
 import { PhilosopherSprite } from '@/components/philosopher-sprite';
 import { PathwayNext } from '@/components/pathway-next';
 import { pathwayForTopic } from '@/lib/pathway';
+import { ContentLanguageNotice } from '@/components/content-language-notice';
+import { getServerLocale } from '@/lib/locale-server';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-editorial)";
@@ -67,6 +69,7 @@ export default async function TopicDetailPage({
   const { slug } = await params;
   const topic = findTopic(slug);
   if (!topic) notFound();
+  const locale = await getServerLocale();
 
   // Resolve curated philosopher names to entries in the 560 corpus.
   // We tolerate misses silently (typo or new addition) and just skip
@@ -127,6 +130,8 @@ export default async function TopicDetailPage({
             ◂ ALL TOPICS
           </Link>
         </div>
+
+        <ContentLanguageNotice locale={locale} />
 
         <div style={{
           fontFamily: pixel,

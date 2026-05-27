@@ -79,13 +79,19 @@ a starter reading list.
 day. Optional written response analyzed by Haiku and turned into a
 small dimensional shift on your map. Daily ritual.
 
-**Topic explainers + Vs matchups** (`/topic`, `/vs`) — 12 short
-SEO-targeted topic essays (free will, stoicism, the trolley
-problem, what we owe each other, etc.) and 30 head-to-head
-philosopher comparison pages (Plato vs Aristotle, Nietzsche vs
-Kant, Confucius vs Mencius). Each comparison auto-generates
-"where they sharply disagreed" + "where they overlapped" sections
-from their actual 16-D vectors.
+**Topic explainers + Vs matchups** (`/topic`, `/vs`) — 32 short
+SEO-targeted topic essays (free will, stoicism, the trolley problem,
+phenomenology, buddhism, daoism, problem of evil, etc.) and 53
+unique head-to-head philosopher comparison pages (Plato vs Aristotle,
+Nietzsche vs Kant, Confucius vs Mencius, Foucault vs Habermas,
+Buddha vs Nagarjuna, bell hooks vs Audre Lorde). Each comparison
+auto-generates "where they sharply disagreed" + "where they
+overlapped" sections from their actual 16-D vectors. Index pages
+group by theme (Big questions / Schools of thought / Eastern
+traditions / Ethics & how to live / Knowledge & beauty for
+topics; Greatest hits / Eastern & Islamic thinkers / 20th & 21st
+century / Ethics & politics / Ancient & medieval for matchups)
+with a daily-rotating featured card at the top of each index.
 
 ### Tier 3 — deepen + practice (recurring rhythms)
 
@@ -119,8 +125,9 @@ Capability Atlas (six skills, visible level-ups).
 - **Diary** (`/diary`) — personal philosophical journal.
 - **Today's Dilemma** (`/dilemma`) — one philosophical scenario
   per day, written response → vector drift.
-- **Exercises** (`/exercises`) — 16 contemplative + logic +
-  argument practices.
+- **Exercises** (`/exercises`) — 36 contemplative + logic +
+  argument practices, each with a featured-of-the-day card on
+  the index + per-card duration chip (Quick/Medium/Long).
 - **Compare** (`/compare`) — stack two thinkers across all 16
   dimensions.
 - **Simulated debate** (`/debate`) — watch two philosophers
@@ -147,6 +154,12 @@ or DB schema):
 
 ### Tier 5 — utility + social
 
+- **Add to home screen** (`/install`) — guided iOS / Android /
+  desktop install of the PWA. Manifest, apple-touch icons, and
+  `display: standalone` are all wired, so the install on either
+  OS produces a full-screen app with a Mull tile on the home
+  grid + shortcut quick-actions to Daily Spar, Pilgrimage, and
+  the Inheritor.
 - **Mull Wrapped** — annual personalized year-in-review
 - **Classes** — teachers can spin up a class with an invite link,
   post philosophy assignments; free for any academic email

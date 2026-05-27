@@ -32,6 +32,8 @@ import {
 } from '@/lib/vs-pairs';
 import { PathwayNext } from '@/components/pathway-next';
 import { pathwayForVs } from '@/lib/pathway';
+import { ContentLanguageNotice } from '@/components/content-language-notice';
+import { getServerLocale } from '@/lib/locale-server';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-editorial)";
@@ -92,6 +94,7 @@ export default async function VsPage({
   params: Promise<{ a: string; b: string }>;
 }) {
   const { a, b } = await params;
+  const locale = await getServerLocale();
 
   // Canonicalise: alphabetical by slug. Redirect non-canonical orders
   // to the canonical URL so we don't split SEO weight across both
@@ -172,6 +175,8 @@ export default async function VsPage({
             ◂ ALL MATCHUPS
           </Link>
         </div>
+
+        <ContentLanguageNotice locale={locale} />
 
         <div style={{
           fontFamily: pixel, fontSize: 12,

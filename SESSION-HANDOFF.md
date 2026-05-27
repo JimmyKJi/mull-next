@@ -3,10 +3,67 @@
 The previous session was long and accomplished a lot. This doc
 hands off enough state for the next session to pick up cold.
 
-**Last session ended:** 2026-05-25.
+**Last session ended:** 2026-05-27.
 **Branch:** `claude/zen-wu-4cd09b` (also live on `mull.world` via
 direct Vercel CLI deploys — production deploys do NOT come from
 git auto-deploy; see "How to ship" below).
+
+---
+
+## Updates from the 2026-05-27 session
+
+Five deploys this session, all live on production. Commits in
+chronological order with a one-line summary; details below.
+
+| Commit | Title | Shape of change |
+|---|---|---|
+| `6ca1db8` | Big content fill | Topics 12 → 32, vs pairs 30 → 58, exercises 16 → 36, arena topics 13 → 28, plus categorised index UIs with daily-rotating featured cards on `/topic`, `/vs`, `/exercises`, `/arena/pve` |
+| `2742235` | Philosopher SEO enrichment | 22 hand-written long-form bios for the most-searched philosophers (lives in `lib/philosopher-bios.ts`), reverse-indexed topic + matchup cross-links (`lib/philosopher-cross-links.ts`), FAQ JSON-LD per page, featured-profile-of-the-day on `/philosopher` index |
+| `524a161` | UX pathway widget | Illustrated quest-trail at the bottom of every hook surface (`/topic/[slug]`, `/philosopher/[slug]`, `/archetype/[slug]`, `/vs/[a]/[b]`, `/exercises/[slug]`, `/dilemma`, `/map`). Cold visitors see Quiz → Discovery → Daily; warm visitors (archetype set in localStorage) see Pilgrimage → Spar → Diary. `/result` writes `mull.archetype` synchronously so the next page personalises immediately |
+| `7993ee5` | Mobile pass | iOS safe-area inset on every fixed-bottom element via `env(safe-area-inset-bottom)`, narrow-viewport (<360px) title sizing, PWA manifest + `apple-mobile-web-app-capable` + `viewport-fit: cover`, dedicated `/install` route with iOS/Android/desktop step cards + native Android install prompt hook + standalone-detection, tighter mobile crop on Inheritor chamber illustrations (per-scene viewBox + dropped corner ornaments at ≤640px), fixed Cmd-K vs Feedback button collision (both were bottom-left) |
+| (this batch) | EN-only banner + docs sync | `ContentLanguageNotice` now on `/topic/[slug]` + `/vs/[a]/[b]` (the other long-form pages already had it), NEXT.md updated, this section added, CHANGELOG.md created |
+
+### New files worth knowing about
+
+- `lib/pathway.ts` + `components/pathway-next.tsx` — the trail widget
+  and its per-surface data
+- `lib/philosopher-bios.ts` + `lib/philosopher-cross-links.ts` — the
+  enriched-bio system + reverse-index lookups for topic/matchup cards
+  on philosopher pages
+- `app/install/page.tsx` + `app/install/install-client.tsx` — the
+  add-to-home-screen guide. Read this if you want to understand the
+  PWA install model (it's mostly platform-detection + UA branching)
+- `public/manifest.webmanifest` — PWA manifest with three home-tile
+  shortcuts (Daily Spar, Pilgrimage, Inheritor)
+- Generator-owned categorisation tables in `lib/topics.ts`
+  (`TOPIC_CATEGORIES` + `topicsByCategory()`) and `lib/vs-pairs.ts`
+  (`VS_CATEGORIES` + `vsPairsByCategory()`)
+
+### Where archetype state lives now
+
+The pathway widget personalises on a new lightweight localStorage key:
+`mull.archetype` (e.g. `"keel"`). Set synchronously by `/result` on
+quiz completion alongside the existing `mull.pending_quiz_attempt`.
+Reading it is a single `localStorage.getItem` — no JSON parse — so
+any client component can cheaply branch on it.
+
+### Bugs fixed in passing
+
+- Cmd-K floating button + Feedback button mobile collision (both
+  bottom-left). Cmd-K is now bottom-right on mobile.
+- `curatedPairSlugs()` in `lib/vs-pairs.ts` now filters out pairs
+  where either name doesn't resolve in `PHILOSOPHERS`, so the
+  sitemap can never emit URLs that 404. Removed Socrates/Avicenna/
+  Averroes pairs that would have shipped broken.
+- Renamed `Michel Foucault` → `Foucault` in vs-pairs to match the
+  corpus slug.
+
+### What ships next
+
+See NEXT.md. The biggest unblocked items are the deferred quiz
+calibration audit and adding aliases to `public/mull.html` for
+search parity with `lib/philosophers.ts`. Lower priority but
+substantial: Stripe/Mull+ subscriptions and the Mo coach UI.
 
 ---
 

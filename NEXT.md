@@ -3,6 +3,44 @@
 Things flagged during the May 12 polish session that we decided to defer.
 When you ask "what's next?", start here.
 
+## Shipped 2026-05-27 (this session)
+
+Cleaned out of the backlog because the work landed:
+
+- ✅ **Big content fill** — topics 12 → 32, vs pairs 30 → 58, exercises
+      16 → 36, arena topics 13 → 28, plus per-section index UIs
+      (featured-of-the-day + categorisation + quick-jump nav) on
+      `/topic`, `/vs`, `/exercises`, `/arena/pve`. Commit `6ca1db8`.
+- ✅ **Philosopher SEO enrichment** — 22 long-form hand-written bios
+      for the most-searched philosophers (Plato, Aristotle, Nietzsche,
+      Kant, …), reverse-indexed topic + matchup cross-links, FAQ JSON-LD
+      schema for snippet eligibility, featured-profile-of-the-day on
+      `/philosopher` index. Closes the "Enrich philosopher detail pages"
+      item below. Commit `2742235`.
+- ✅ **UX pathway** — illustrated quest-trail widget on every hook
+      surface (`/topic/[slug]`, `/philosopher/[slug]`, `/archetype/[slug]`,
+      `/vs/[a]/[b]`, `/exercises/[slug]`, `/dilemma`, `/map`) with
+      sprite + dashed connector + animated arrow. Cold visitors see
+      Quiz → Discovery → Daily; warm visitors (archetype set in
+      localStorage) see Pilgrimage → Spar → Diary. `/result` now
+      writes `mull.archetype` so the next page personalises immediately.
+      Commit `524a161`.
+- ✅ **Mobile pass** — iOS safe-area padding on every fixed-bottom
+      element via `env(safe-area-inset-bottom)`, narrow-viewport (<360px)
+      title sizing in `PixelPageHeader`, PWA manifest + apple/theme
+      meta + `viewport-fit: cover`, dedicated `/install` guide with
+      iOS/Android/desktop step cards + native Android install prompt
+      hook + standalone-detection. Tighter mobile crop on Inheritor
+      chamber illustrations via per-scene viewBox + dropped corner
+      ornaments at ≤640px. Also fixed a Cmd-K vs Feedback button
+      collision (both were bottom-left → Cmd-K moved to bottom-right).
+      Commit `7993ee5`.
+- ✅ **EN-only content notice on long-form pages** — added to
+      `/topic/[slug]` and `/vs/[a]/[b]`. The other long-form pages
+      (`/archetype/[slug]`, `/philosopher/[slug]`, `/exercises/[slug]`,
+      `/about`, `/methodology`) already had it. The first item in
+      §Translations §Concrete remaining tasks is now done.
+
 ## Content calibration — flagged 2026-05-24 (Jimmy's explicit ask after UX/UI sweep)
 
 The following content surfaces need a calibration pass — not new
@@ -114,10 +152,17 @@ one push.
 - [ ] **Mo (personal AI coach).** Schema exists, no UI.
 - [ ] **Forum upvote/downvote leaderboard.** TODO #38 in
       `app/search/leaderboard.tsx`.
-- [ ] **Enrich philosopher detail pages.** Currently one-line
-      `keyIdea` + vector + nearest kin. Could add longer biography +
-      "why this matters today."
-- [ ] **Enrich archetype detail pages.** Same shape as above.
+- [x] ~~**Enrich philosopher detail pages.**~~ Done 2026-05-27 (commit
+      `2742235`): 22 hand-written long-form bios + reverse-indexed
+      topic + matchup cross-links + FAQ JSON-LD. The other ~540
+      philosophers still fall back to the chrome-only layout; expanding
+      bios beyond the top 22 is a slow content task — pick the next
+      tranche by search-volume signal.
+- [ ] **Enrich archetype detail pages.** The 10 archetype essays are
+      already substantial (5+ paragraphs each, kindred thinkers,
+      reading list, exercises, dimensional fingerprint, day-in-the-life).
+      The new PathwayNext widget added a "what to do next" trail.
+      Lower priority than other items.
 
 ## Translations
 
@@ -147,18 +192,10 @@ plan is:
 
 ### Concrete remaining tasks
 
-- [ ] **Surface `content_notice` banner on long-form pages.**
-      Currently only shown on /account. Add to:
-      - /archetype/[slug]
-      - /philosopher/[slug]
-      - /topic/[slug]
-      - /vs/[a]/[b]
-      - /about
-      - /methodology
-      - /exercises/[slug]
-      Implementation: a small `<EnOnlyNotice />` client component
-      that reads the server locale and renders the banner only
-      when locale !== 'en'.
+- [x] ~~**Surface `content_notice` banner on long-form pages.**~~
+      Done 2026-05-27. All seven long-form pages now render the
+      banner via `<ContentLanguageNotice locale={locale} />`. Renders
+      nothing when locale === 'en', so no English-visitor noise.
 - [ ] **Translate deep content.** Quiz beyond the 20-question quick
       version, the 50-question detailed quiz, archetype prose, the
       philosopher database keyIdeas, the About + Methodology pages —
