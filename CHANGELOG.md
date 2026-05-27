@@ -33,12 +33,9 @@ things a future maintainer would actually want to find when grepping.
   (no new exposure).
 
   **Runbook note:** this migration must be applied to the remote DB
-  before the SECURITY DEFINER warnings clear. Two paths:
-    - **Manual:** paste the SQL into Supabase Dashboard → SQL Editor →
-      New Query → Run.
-    - **CLI:** see `SUPABASE-CLI.md` for the one-time setup. Once
-      linked + baselined, `supabase db push` applies any new
-      migration files automatically.
+  before the SECURITY DEFINER warnings clear. Paste the SQL into
+  Supabase Dashboard → SQL Editor → New Query → Run. (Or use the
+  Supabase CLI: `supabase db push` once the project is linked.)
   After applying, re-run Database Advisor — the three CRITICAL
   warnings should clear.
 
