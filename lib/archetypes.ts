@@ -21,6 +21,34 @@ export type ArchetypeReading = {
   note: string;              // why this book, in one line
 };
 
+// Cross-archetype productive friction. Where this archetype's
+// orientation clashes (usefully) with another. Surfaces "if you're
+// a Keel, you'll feel this kind of difficulty around a Hammer" —
+// less about "who am I" and more about "how do I converse with
+// people who aren't me." 2-4 entries per archetype.
+export type ArchetypeTension = {
+  withKey: string;     // archetype key (cartographer, keel, ...)
+  spark: string;       // one sharp sentence on where the friction lives
+};
+
+// Contemporary public figure whose orientation matches. Deliberately
+// not just philosophers — scientists, writers, jurists, activists —
+// because the historical kindred-thinkers list can read as ivory-tower.
+// 2-3 entries per archetype.
+export type ArchetypeExemplar = {
+  name: string;        // person's name
+  role: string;        // what they're known for, in 3-5 words
+  note: string;        // one sentence: why this orientation reads as theirs
+};
+
+// Specific failure modes with the corrective. Tighter than
+// whereItFalters — these are the moments where the archetype's
+// instinct breaks down + what to do instead. 2-3 entries per archetype.
+export type ArchetypeMistake = {
+  mistake: string;     // the failure mode, named concretely
+  antidote: string;    // the corrective, also concrete
+};
+
 export type Archetype = {
   key: string;               // matches FIGURES key + arch.<key>.* i18n
   // Short, evocative phrase usable as a subtitle. NOT a full sentence.
@@ -50,6 +78,12 @@ export type Archetype = {
   // The dimension(s) this archetype most strongly leans on, in priority
   // order. Keys from lib/dimensions.ts (TV, VA, WP, ...).
   dominantDimensions: string[];
+  // Cross-archetype tensions. New 2026-05-27.
+  tensions: ArchetypeTension[];
+  // Contemporary public-figure exemplars. New 2026-05-27.
+  modernExemplars: ArchetypeExemplar[];
+  // Common failure modes + correctives. New 2026-05-27.
+  commonMistakes: ArchetypeMistake[];
 };
 
 export const ARCHETYPES: Archetype[] = [
@@ -93,6 +127,20 @@ export const ARCHETYPES: Archetype[] = [
     suggestedExercises: ['argument-map', 'reductio', 'counterexample-drill', 'translation-under-constraint'],
     dilemmaThemes: ['Belief and certainty', 'Knowledge and learning', 'Doubt and uncertainty'],
     dominantDimensions: ['TR', 'TD', 'UI'],
+    tensions: [
+      { withKey: 'hammer', spark: "The Cartographer wants to understand the structure before reshaping it; the Hammer doesn't see why the map matters if the structure is bad." },
+      { withKey: 'threshold', spark: "The Cartographer believes the map can eventually be complete; the Threshold knows there are territories no map can hold." },
+      { withKey: 'garden', spark: "The Cartographer wants to understand life from above; the Garden insists it's only understood by being in it." },
+    ],
+    modernExemplars: [
+      { name: 'David Deutsch', role: 'physicist + philosopher of science', note: "His insistence that all problems are soluble through better explanations is Cartographer creed in physicist form." },
+      { name: 'Daniel Dennett', role: 'philosopher of mind', note: "Built a full model of consciousness piece by piece, always asking what the architecture has to be like." },
+      { name: 'Susan Wolf', role: 'philosopher of meaning', note: "Cartographic to the bone — lays out the conditions a meaningful life would have to satisfy before claiming any of them." },
+    ],
+    commonMistakes: [
+      { mistake: "Mistaking 'I haven't finished the map' for 'no one can act yet.' Practical decisions don't always wait for theoretical completeness.", antidote: "Treat acting as part of mapping. The world's response to your move is data the map needed." },
+      { mistake: "Treating people as data points to be classified. The map of someone's life is not their life.", antidote: "Map for service to understanding, not as a substitute for relating. Sometimes the right move is to put the notebook down." },
+    ],
   },
 
   // ─── Keel ───────────────────────────────────────────────────────────
@@ -135,6 +183,20 @@ export const ARCHETYPES: Archetype[] = [
     suggestedExercises: ['premortem', 'negative-visualization', 'memento-mori', 'examen', 'view-from-above'],
     dilemmaThemes: ['Time and mortality', 'Power and autonomy', 'Pleasure and suffering'],
     dominantDimensions: ['TV', 'AT', 'SS'],
+    tensions: [
+      { withKey: 'hammer', spark: "The Keel accepts what can't be changed; the Hammer asks whether the line between 'can' and 'can't' is itself a story you've inherited." },
+      { withKey: 'garden', spark: "The Keel disciplines pleasure; the Garden suspects discipline-for-its-own-sake of being a quiet form of life-refusal." },
+      { withKey: 'forge', spark: "Both work hard, but the Keel's labour is inward — training the mind to meet difficulty. The Forge's is outward — building structures that prevent difficulty for others." },
+    ],
+    modernExemplars: [
+      { name: 'Viktor Frankl', role: 'psychiatrist + author of Man’s Search for Meaning', note: "Concentration-camp survivor who turned the keelboat-in-storm into clinical practice. Logotherapy is Stoicism in modern clothes." },
+      { name: 'Admiral James Stockdale', role: 'POW, philosopher in uniform', note: "Captive for seven years, kept his mind by reading Epictetus from memory. The Stockdale Paradox names the discipline directly." },
+      { name: 'Ryan Holiday', role: 'modern Stoicism writer', note: "Has done more than any contemporary figure to popularise Stoicism as a practice. The serious version of what \"productivity Stoicism\" sometimes flattens into." },
+    ],
+    commonMistakes: [
+      { mistake: "Using equanimity as emotional avoidance. If a friend's grief moves you and you respond with 'consider what's in your control,' you've used the doctrine to evade the moment.", antidote: "Stoics felt grief; they weren't controlled by it. The test is whether you're present, not whether you're composed." },
+      { mistake: "Mistaking discipline for goodness. You can be a perfectly composed person who's also coldly indifferent to others' suffering.", antidote: "Equanimity is necessary but not sufficient. Pair the practice with one that orients you outward — justice, gratitude, friendship." },
+    ],
   },
 
   // ─── Threshold ──────────────────────────────────────────────────────
@@ -178,6 +240,20 @@ export const ARCHETYPES: Archetype[] = [
     suggestedExercises: ['view-from-above', 'memento-mori', 'examen', 'negative-visualization'],
     dilemmaThemes: ['Spirituality / the unseen', 'Solitude and silence', 'Beauty and aesthetics'],
     dominantDimensions: ['MR', 'SI', 'AT'],
+    tensions: [
+      { withKey: 'cartographer', spark: "The Threshold has met the end of what language can hold; the Cartographer keeps believing the next level of abstraction will get there." },
+      { withKey: 'forge', spark: "The Threshold pulls inward toward silence; the Forge can't see how silence helps when so much needs building." },
+      { withKey: 'hammer', spark: "The Hammer breaks idols to free the self; the Threshold breaks idols to find no self was there to be freed." },
+    ],
+    modernExemplars: [
+      { name: 'Pema Chödrön', role: 'Buddhist nun, writer', note: "Modern teacher of the apophatic in plain American English. 'Things falling apart is the truth.'" },
+      { name: 'Christian Wiman', role: 'poet + essayist', note: "My Bright Abyss writes the threshold experience without religious certainty — faith as the practice of not knowing." },
+      { name: 'John O’Donohue', role: 'Irish poet-priest (Anam Cara)', note: "Taught the threshold as a way of life rather than a moment. The Celtic-Christian mystical tradition rendered in unhurried prose." },
+    ],
+    commonMistakes: [
+      { mistake: "Confusing mystical intuition with private certainty. 'I just know' isn't evidence; it's a feeling that can be wrong.", antidote: "The Threshold knows this in principle and forgets it under pressure. Keep an interlocutor — a friend, a teacher, a tradition — who can push back on what feels self-evident." },
+      { mistake: "Using apophatic depth to dodge ordinary obligations. There are dishes to do; staying in silence indefinitely can be escape disguised as practice.", antidote: "Schedule the silence. Then schedule the dishes. The path has both, in turn, on purpose." },
+    ],
   },
 
   // ─── Pilgrim ────────────────────────────────────────────────────────
@@ -221,6 +297,20 @@ export const ARCHETYPES: Archetype[] = [
     suggestedExercises: ['memento-mori', 'examen', 'view-from-above', 'sixty-second-case', 'switch-sides'],
     dilemmaThemes: ['Time and mortality', 'Loneliness and connection', 'Hope and despair'],
     dominantDimensions: ['TV', 'SS', 'SR'],
+    tensions: [
+      { withKey: 'hearth', spark: "The Pilgrim walks alone with the question; the Hearth insists the question only makes sense in the company of others over time." },
+      { withKey: 'lighthouse', spark: "The Pilgrim doubts the destination exists; the Lighthouse can't see how you walk without one." },
+      { withKey: 'garden', spark: "The Pilgrim refuses the comfort of arrival; the Garden suspects this refusal is itself a kind of vanity." },
+    ],
+    modernExemplars: [
+      { name: 'Anne Lamott', role: 'novelist + memoirist', note: "Pilgrim in plain American. Faith as walking, doubt as walking, both with the same feet." },
+      { name: 'Ta-Nehisi Coates', role: 'essayist', note: "Between the World and Me is the Pilgrim's letter — no comfort, no consolation, the walk continues." },
+      { name: 'Cheryl Strayed', role: 'memoirist (Wild)', note: "Pilgrim made literal on the Pacific Crest Trail. The book is about what the road actually does to a person, which is harder than it sounds." },
+    ],
+    commonMistakes: [
+      { mistake: "Romanticising the open question into a stance. Sometimes you actually do know; refusing to commit can be a way of avoiding the cost of being wrong in public.", antidote: "Notice when 'I'm still searching' has stopped being inquiry and started being insurance. Commit to what you've come to know, even provisionally." },
+      { mistake: "Treating solitude as a virtue in itself. Pilgrimage is a phase, not a permanent condition.", antidote: "Build a return into the walk. People who don't come back from the road sometimes stopped walking and didn't notice." },
+    ],
   },
 
   // ─── Touchstone ─────────────────────────────────────────────────────
@@ -264,6 +354,20 @@ export const ARCHETYPES: Archetype[] = [
     suggestedExercises: ['fallacy-hunt', 'counterexample-drill', 'steelmanning', 'reductio'],
     dilemmaThemes: ['Belief and certainty', 'Knowledge and learning', 'Doubt and uncertainty'],
     dominantDimensions: ['SR', 'TE', 'TR'],
+    tensions: [
+      { withKey: 'lighthouse', spark: "The Touchstone tests every claim against experience; the Lighthouse trusts reason to reach truths experience can't verify." },
+      { withKey: 'threshold', spark: "Both know the limits of language. The Touchstone stays at the limit; the Threshold steps over it." },
+      { withKey: 'hammer', spark: "The Touchstone suspends judgment when evidence is thin; the Hammer suspects this suspension is itself a way of preserving the status quo." },
+    ],
+    modernExemplars: [
+      { name: 'Richard Rorty', role: 'philosopher (Contingency, Irony, and Solidarity)', note: "Late-Hume in late-20th-century clothes. 'Truth is what your contemporaries let you get away with.'" },
+      { name: 'Nassim Nicholas Taleb', role: 'writer + risk theorist', note: "Empirical-skeptical Touchstone in financial markets. Every claim gets tested against tail risk; certainty is the most dangerous belief." },
+      { name: 'Brian Eno', role: 'musician + thinker (Oblique Strategies)', note: "Oblique Strategies is a deck of Touchstone cards: try this; see what happens; don't commit too soon." },
+    ],
+    commonMistakes: [
+      { mistake: "Treating skepticism as a conclusion rather than a discipline. 'We can't be sure' is a method, not a stable belief.", antidote: "If everything is uncertain including your skepticism, you have to act anyway. Pick the best-supported provisional commitment and act on it; keep the door open to revising." },
+      { mistake: "Mistaking the absence of belief for neutrality. Not picking a side is also picking — it leaves the existing arrangement in place.", antidote: "Notice when 'I'm withholding judgment' is doing political work. If it favours the status quo, name that, and decide whether you actually want to favour it." },
+    ],
   },
 
   // ─── Hearth ─────────────────────────────────────────────────────────
@@ -307,6 +411,20 @@ export const ARCHETYPES: Archetype[] = [
     suggestedExercises: ['examen', 'switch-sides', 'anticipating-objections'],
     dilemmaThemes: ['Relationships', 'Childhood and inheritance', 'Friendship'],
     dominantDimensions: ['CE', 'RT', 'PO'],
+    tensions: [
+      { withKey: 'hammer', spark: "The Hearth preserves what the Hammer wants to break. The argument is usually about which practices carry wisdom and which carry only inertia." },
+      { withKey: 'pilgrim', spark: "The Hearth lives within a community across time; the Pilgrim suspects that community is sometimes how we avoid the questions only we can face." },
+      { withKey: 'cartographer', spark: "The Hearth knows the meaning through living the practice; the Cartographer wants to understand the meaning before practising. Each thinks the other has the order wrong." },
+    ],
+    modernExemplars: [
+      { name: 'Wendell Berry', role: 'essayist + farmer', note: "Hearth in agrarian-Christian form. Practices that bind generations, place that holds memory, work as devotion." },
+      { name: 'Tu Weiming', role: 'philosopher (modern Confucian)', note: "Making the case for the Hearth in a globalised world. Confucian humanism as a serious contender for how to organise modern lives." },
+      { name: 'Marilynne Robinson', role: 'novelist (Gilead)', note: "The Protestant tradition rendered as the work of attention across generations. Hearth in literary form." },
+    ],
+    commonMistakes: [
+      { mistake: "Defending the practice past its expiry. Some inherited things really shouldn't be passed on; 'this is old' isn't the same as 'this is wise.'", antidote: "Ask whether you'd start the practice fresh today, with the same justification. If not, ask what's actually holding it in place." },
+      { mistake: "Conflating community with conformity. A real community can hold disagreement; a community that can only hold agreement is something else with a community-shaped name.", antidote: "Notice whether the loudest voice in your community is the one that says 'we don't do that here.' If so, the community has narrowed; widen it on purpose." },
+    ],
   },
 
   // ─── Forge ──────────────────────────────────────────────────────────
@@ -350,6 +468,20 @@ export const ARCHETYPES: Archetype[] = [
     suggestedExercises: ['premortem', 'steelmanning', 'switch-sides', 'argument-map', 'anticipating-objections'],
     dilemmaThemes: ['Justice and fairness', 'Power and autonomy', 'Politics (personal stake)'],
     dominantDimensions: ['UI', 'WP', 'PO'],
+    tensions: [
+      { withKey: 'hearth', spark: "The Forge wants to improve the inherited institution; the Hearth fears the improvement breaks something the improver didn't understand was load-bearing." },
+      { withKey: 'keel', spark: "The Forge organises external conditions to reduce suffering; the Keel trains internal conditions to bear it. Both think the other has the priority wrong." },
+      { withKey: 'threshold', spark: "The Forge can't see what apophatic silence does for the kids who need lunch; the Threshold can't see how lunch alone is enough." },
+    ],
+    modernExemplars: [
+      { name: 'Martha Nussbaum', role: 'philosopher (capability approach)', note: "Forge in policy-philosophical form. What conditions does a flourishing life require, and how do we build them at scale?" },
+      { name: 'Ezra Klein', role: 'journalist + podcaster', note: "Forge thinking on policy. Tracks how an abstract commitment translates into actual outcomes through institutional design." },
+      { name: 'Greta Thunberg', role: 'climate organiser', note: "Forge under thirty. The institutions are inadequate; the work is to build the political conditions that would make them adequate." },
+    ],
+    commonMistakes: [
+      { mistake: "Treating the institution as if it always knows what it's optimising. Bureaucracies that started as solutions can become the problem.", antidote: "Periodically ask what the institution was for, not just what it currently does. The Forge sometimes defends the system because it helped build it." },
+      { mistake: "Mistaking activity for progress. Building forward implies a direction; if the direction is unclear, more building is just more building.", antidote: "Before the next initiative, write the one-paragraph statement of what success would look like in five years. If you can't, the initiative isn't ready." },
+    ],
   },
 
   // ─── Hammer ─────────────────────────────────────────────────────────
@@ -393,6 +525,20 @@ export const ARCHETYPES: Archetype[] = [
     suggestedExercises: ['fallacy-hunt', 'reductio', 'counterexample-drill', 'switch-sides'],
     dilemmaThemes: ['Anger and grievance', 'Authority and obedience', 'Truth-telling and lying'],
     dominantDimensions: ['SS', 'WP', 'SR'],
+    tensions: [
+      { withKey: 'hearth', spark: "The classic clash. The Hammer breaks what the Hearth preserves. Both think the other is the saboteur." },
+      { withKey: 'keel', spark: "The Hammer suspects the Keel's acceptance of 'what can't be changed' is the inherited boundary; the Keel suspects the Hammer's transformative will is the inherited illusion." },
+      { withKey: 'threshold', spark: "Surface alliance — both reject the comforts of the herd. Deep tension: the Hammer keeps the sovereign self after breaking the rest; the Threshold knew there was no self to keep." },
+    ],
+    modernExemplars: [
+      { name: 'Christopher Hitchens', role: 'essayist + polemicist', note: "Hammer in rhetorical form. Breaking religious + political pieties with prose sharp enough to draw blood." },
+      { name: 'David Graeber', role: 'anthropologist + activist', note: "Bullshit Jobs is a Hammer's report from inside the bureaucracy. Debt: The First 5,000 Years is the larger swing." },
+      { name: 'Camille Paglia', role: 'cultural critic', note: "Hammer against contemporary academic feminism. Whatever you think of the targets, the swing is unmistakable." },
+    ],
+    commonMistakes: [
+      { mistake: "Mistaking destruction for creation. Breaking the inherited idol leaves a space — what fills it?", antidote: "Ask the question deliberately. If you don't, something will fill it for you, and it might be worse than what you broke." },
+      { mistake: "Treating sovereignty as solitude. The Hammer can mistake 'I'm not bound by inherited values' for 'I owe nothing to anyone.'", antidote: "Those are different claims. Choose your obligations on purpose rather than by inheritance — but choose them; the alternative is not freedom but isolation." },
+    ],
   },
 
   // ─── Garden ─────────────────────────────────────────────────────────
@@ -436,6 +582,20 @@ export const ARCHETYPES: Archetype[] = [
     suggestedExercises: ['examen', 'view-from-above', 'memento-mori'],
     dilemmaThemes: ['Pleasure and suffering', 'The body', 'Beauty and aesthetics'],
     dominantDimensions: ['VA', 'ES', 'TE'],
+    tensions: [
+      { withKey: 'keel', spark: "The Garden notices what's beautiful in this hour; the Keel reminds you the hour is finite. Both are right, in different breaths." },
+      { withKey: 'threshold', spark: "The Garden cultivates small pleasures as the point; the Threshold passes through them on the way somewhere else. Each thinks the other missed the level." },
+      { withKey: 'cartographer', spark: "The Garden has met the actual peach; the Cartographer has the theory of fruit. The Garden suspects the theorist will starve." },
+    ],
+    modernExemplars: [
+      { name: 'Mary Oliver', role: 'poet', note: "Garden in seven syllables. 'Pay attention. Be astonished. Tell about it.' That's the whole creed." },
+      { name: 'Anthony Bourdain', role: 'food writer + traveller', note: "Garden as practised across continents. Eat what they eat, sit where they sit, let the meal be the meal." },
+      { name: 'Yuriko Saito', role: 'philosopher of everyday aesthetics', note: "Built an academic case for what the Garden has always known: ordinary things deserve attention." },
+    ],
+    commonMistakes: [
+      { mistake: "Mistaking pleasure for cultivation. Epicurus didn't mean indulgence; he meant the small steady pleasures that don't carry their own hangover.", antidote: "Ask whether the pleasure leaves you grateful or jittery. Cultivation produces the first; consumption produces the second." },
+      { mistake: "Treating beauty as politically neutral. What's beautiful was sometimes cleaned for someone else's labour, on someone else's stolen ground.", antidote: "The Garden owes some attention to where its pleasures came from. The attention doesn't have to ruin the pleasure; it might deepen it." },
+    ],
   },
 
   // ─── Lighthouse ─────────────────────────────────────────────────────
@@ -479,6 +639,20 @@ export const ARCHETYPES: Archetype[] = [
     suggestedExercises: ['view-from-above', 'sixty-second-case', 'argument-map', 'memento-mori'],
     dilemmaThemes: ['Beauty and aesthetics', 'Spirituality / the unseen', 'Knowledge and learning'],
     dominantDimensions: ['UI', 'TD', 'AT'],
+    tensions: [
+      { withKey: 'touchstone', spark: "The Lighthouse trusts reason can grasp truths experience can't verify; the Touchstone treats this as the oldest philosophical mistake." },
+      { withKey: 'garden', spark: "The Lighthouse insists the eternal forms are what matter; the Garden has the actual peach in their hand and is unimpressed." },
+      { withKey: 'hammer', spark: "The Lighthouse holds universal moral laws to be discoverable; the Hammer suspects the discovery is just the universalisation of one person's preferences." },
+    ],
+    modernExemplars: [
+      { name: 'Derek Parfit', role: 'philosopher (Reasons and Persons)', note: "Lighthouse in pure form. Treats personal identity, morality, population ethics as questions reason can settle if pushed hard enough." },
+      { name: 'Christine Korsgaard', role: 'philosopher (Sources of Normativity)', note: "Contemporary constructivist Kantianism — building the universal from the structure of agency itself. Lighthouse working in present tense." },
+      { name: 'Brian Greene', role: 'theoretical physicist', note: "Physics-as-Lighthouse. The Elegant Universe makes the case that mathematical elegance tracks something real about the world." },
+    ],
+    commonMistakes: [
+      { mistake: "Mistaking the elegance of the theory for evidence of its truth. Beautiful systems can be wrong; formal elegance is suggestive, not conclusive.", antidote: "Hold the system accountable to the world it claims to describe. If the empirical check keeps failing, the elegance was a feature of the model, not of reality." },
+      { mistake: "Treating those who don't see the universal as defective. Different people see different things; the Lighthouse can drift into a quiet conviction that disagreement is failure-to-think.", antidote: "Notice when 'they don't understand' is doing the work that 'I haven't explained well enough' should be doing. The universal has to be argued for in particulars." },
+    ],
   },
 ];
 

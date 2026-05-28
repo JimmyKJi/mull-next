@@ -20,6 +20,7 @@ import { PixelWindow } from '@/components/pixel-window';
 import { ContentLanguageNotice } from '@/components/content-language-notice';
 import { PathwayNext } from '@/components/pathway-next';
 import { pathwayForArchetype } from '@/lib/pathway';
+import { topicsForArchetype } from '@/lib/archetype-cross-links';
 
 export function generateStaticParams() {
   return archetypeKeys().map((slug) => ({ slug }));
@@ -334,6 +335,100 @@ export default async function ArchetypeDetailPage({
           </PixelWindow>
         </div>
 
+        {/* ─── Common mistakes ─── */}
+        {archetype.commonMistakes.length > 0 ? (
+          <PixelWindow title="COMMON MISTAKES" badge="▶ FAILURE MODES">
+            <p
+              className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
+              style={{ fontFamily: 'var(--font-editorial)' }}
+            >
+              Specific moments where this archetype&apos;s instinct breaks down — and what to do instead.
+            </p>
+            <ul className="space-y-3">
+              {archetype.commonMistakes.map((m, i) => (
+                <li
+                  key={i}
+                  className="border-2 px-4 py-3"
+                  style={{
+                    borderColor: '#EBE3CA',
+                    background: '#FFFCF4',
+                    boxShadow: `2px 2px 0 0 ${color.deep}`,
+                  }}
+                >
+                  <div className="mb-2 flex items-start gap-3">
+                    <span
+                      className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center border-2 text-[11px] font-bold"
+                      style={{ borderColor: '#7A2E2E', color: '#7A2E2E', background: '#FFFCF4', fontFamily: 'var(--font-pixel-display)' }}
+                    >✗</span>
+                    <p
+                      className="text-[14.5px] leading-[1.55] text-[#221E18]"
+                      style={{ fontFamily: 'var(--font-editorial)' }}
+                    >
+                      {m.mistake}
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-3 border-t-2 border-dashed border-[#D6CDB6] pt-3">
+                    <span
+                      className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center border-2 text-[11px] font-bold"
+                      style={{ borderColor: '#2F5D5C', color: '#2F5D5C', background: '#FFFCF4', fontFamily: 'var(--font-pixel-display)' }}
+                    >✓</span>
+                    <p
+                      className="text-[14.5px] leading-[1.55] text-[#4A4338]"
+                      style={{ fontFamily: 'var(--font-editorial)', fontStyle: 'italic' }}
+                    >
+                      {m.antidote}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </PixelWindow>
+        ) : null}
+
+        {/* ─── Modern exemplars ─── */}
+        {archetype.modernExemplars.length > 0 ? (
+          <PixelWindow title="MODERN EXEMPLARS" badge="▶ LIVING">
+            <p
+              className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
+              style={{ fontFamily: 'var(--font-editorial)' }}
+            >
+              Contemporary figures whose orientation reads as this archetype. Not just philosophers — the type is older than the discipline.
+            </p>
+            <ul className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
+              {archetype.modernExemplars.map((ex, i) => (
+                <li
+                  key={i}
+                  className="border-2 px-4 py-3"
+                  style={{
+                    borderColor: '#EBE3CA',
+                    background: '#FFFCF4',
+                    boxShadow: `2px 2px 0 0 ${color.deep}`,
+                  }}
+                >
+                  <div
+                    className="text-[16px] font-medium text-[#221E18]"
+                    style={{ fontFamily: 'var(--font-editorial)' }}
+                  >
+                    {ex.name}
+                  </div>
+                  <div
+                    className="mt-0.5 text-[12px] italic text-[#8C6520]"
+                    style={{ fontFamily: 'var(--font-editorial)' }}
+                  >
+                    {ex.role}
+                  </div>
+                  <p
+                    className="mt-2 text-[13.5px] leading-[1.55] text-[#4A4338]"
+                    style={{ fontFamily: 'var(--font-editorial)' }}
+                  >
+                    {ex.note}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </PixelWindow>
+        ) : null}
+
         {/* ─── A day in the life ─── */}
         <PixelWindow title={t('arch_detail.section_dayinlife', locale).toUpperCase()} badge="▶ SCENE">
           <p
@@ -419,6 +514,110 @@ export default async function ArchetypeDetailPage({
                   </Link>
                 </li>
               ))}
+            </ul>
+          </PixelWindow>
+        ) : null}
+
+        {/* ─── Topics that cluster here — reverse-indexed from
+            lib/topics.ts via relatedArchetypes. Internal-link gold +
+            surfaces the philosophical questions this archetype
+            naturally inhabits. */}
+        {(() => {
+          const related = topicsForArchetype(slug);
+          if (related.length === 0) return null;
+          return (
+            <PixelWindow title="TOPICS THAT CLUSTER HERE" badge="▶ QUESTIONS">
+              <p
+                className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
+                style={{ fontFamily: 'var(--font-editorial)' }}
+              >
+                Philosophical questions where {name}-typed minds tend to find themselves.
+              </p>
+              <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                {related.map(rt => (
+                  <li key={rt.slug}>
+                    <Link
+                      href={`/topic/${rt.slug}`}
+                      className="block border-2 px-3 py-2.5 transition-all hover:translate-x-[-1px] hover:translate-y-[-1px]"
+                      style={{
+                        borderColor: '#EBE3CA',
+                        background: '#FFFCF4',
+                        boxShadow: `2px 2px 0 0 ${color.deep}`,
+                      }}
+                    >
+                      <div
+                        className="text-[15px] font-medium text-[#221E18]"
+                        style={{ fontFamily: 'var(--font-editorial)' }}
+                      >
+                        {rt.title}
+                      </div>
+                      <div
+                        className="mt-1 text-[12.5px] italic leading-[1.5] text-[#4A4338]"
+                        style={{ fontFamily: 'var(--font-editorial)' }}
+                      >
+                        {rt.summary}
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </PixelWindow>
+          );
+        })()}
+
+        {/* ─── Tensions with other archetypes — the productive frictions.
+            Renders each tension as a card with the OTHER archetype's
+            sprite + name + the one-sentence spark. Builds the
+            "archetypes-in-conversation" feeling. */}
+        {archetype.tensions.length > 0 ? (
+          <PixelWindow title="WHERE THIS ARCHETYPE PUSHES BACK" badge="▶ FRICTIONS">
+            <p
+              className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
+              style={{ fontFamily: 'var(--font-editorial)' }}
+            >
+              Productive disagreements with other archetypes. Each is a place where the orientations genuinely differ — and where the difference is worth hearing.
+            </p>
+            <ul className="space-y-3">
+              {archetype.tensions.map((tension, i) => {
+                const other = getArchetypeByKey(tension.withKey);
+                const otherColor = getArchetypeColor(tension.withKey);
+                const otherName = t(`arch.${tension.withKey}.name`, locale) || tension.withKey;
+                return (
+                  <li key={i}>
+                    <Link
+                      href={`/archetype/${tension.withKey}`}
+                      className="flex items-start gap-3.5 border-2 px-4 py-3 transition-all hover:translate-x-[-1px] hover:translate-y-[-1px]"
+                      style={{
+                        borderColor: otherColor.deep,
+                        background: '#FFFCF4',
+                        boxShadow: `2px 2px 0 0 ${otherColor.deep}`,
+                      }}
+                    >
+                      <div
+                        className="shrink-0 border-2 p-1"
+                        style={{ borderColor: otherColor.deep, background: otherColor.soft }}
+                        aria-hidden
+                      >
+                        <ArchetypeSprite archetypeKey={tension.withKey} size={40} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div
+                          className="text-[12px] uppercase tracking-[0.18em]"
+                          style={{ fontFamily: 'var(--font-pixel-display)', color: otherColor.deep }}
+                        >
+                          vs {otherName}
+                        </div>
+                        <p
+                          className="mt-1.5 text-[14.5px] leading-[1.55] text-[#221E18]"
+                          style={{ fontFamily: 'var(--font-editorial)' }}
+                        >
+                          {tension.spark}
+                        </p>
+                      </div>
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </PixelWindow>
         ) : null}
