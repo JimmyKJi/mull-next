@@ -28,6 +28,13 @@ type Stash = {
   alignment_pct: number;
   taken_at?: string;
   version?: number;
+  // Research riders deposited by <ResultSave>. Forwarded verbatim to
+  // claim-attempt, which syncs consent + (if opted in) persists the
+  // per-question trail. Absent for older stashes / shared-link results.
+  mode?: 'quick' | 'detailed';
+  research_consent?: 'yes' | 'no' | null;
+  research_answers?: unknown[] | null;
+  research_question_count?: number | null;
 };
 
 export default function PendingAttemptClaimer() {

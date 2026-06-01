@@ -179,6 +179,12 @@ export default async function AdminPage() {
         </div>
       </header>
 
+      {/* Cross-links to the deeper admin surfaces. */}
+      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 22 }}>
+        <a href="/admin/research" style={adminNavLink}>▸ RESEARCH CONSOLE</a>
+        <a href="/admin/usage" style={adminNavLink}>▸ AI USAGE</a>
+      </div>
+
       {/* Service health — chunky pixel chips, square corners. Green
           when reachable, brick when down. */}
       <div style={{
@@ -457,6 +463,20 @@ function cardStyle(accent: string): React.CSSProperties {
     marginBottom: 24,
   };
 }
+
+const adminNavLink: React.CSSProperties = {
+  display: 'inline-block',
+  padding: '8px 14px',
+  background: '#221E18',
+  color: '#F8EBC9',
+  border: '2px solid #221E18',
+  boxShadow: '3px 3px 0 0 #B8862F',
+  fontFamily: pixel,
+  fontSize: 11,
+  letterSpacing: '0.12em',
+  textTransform: 'uppercase',
+  textDecoration: 'none',
+};
 
 const sectionTitle: React.CSSProperties = {
   fontFamily: pixel, fontSize: 16,

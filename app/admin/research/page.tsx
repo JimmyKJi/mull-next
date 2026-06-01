@@ -1,0 +1,716 @@
+// /admin/research — the research console. Everything the maintainer
+// (Jimmy) needs to turn Mull's quiz data into a paper, in one place:
+//
+//   - Consent overview: who opted in, opt-in rate, the corpus size.
+//   - Overall archetype distribution (ALL attempts — operational, aggregate).
+//   - The consented research corpus (research_quiz_responses):
+//       · 16-D dimension means across opted-in vectors
+//       · per-question answer distributions for the quick + detailed sets
+//       · mode split
+//   - A one-click anonymized export (JSON / CSV) for offline analysis.
+//
+// Gated to ADMIN_USER_IDS. Reads aggregates via the SERVICE-ROLE client
+// (bypasses RLS); never surfaces a user_id. The per-question + dimension
+// figures are drawn ONLY from research_quiz_responses, which holds rows
+// for opted-in users exclusively — so this view is consent-clean by
+// construction. The "overall archetype distribution" is the one figure
+// computed over all attempts; it's aggregate and non-identifying, and
+// answers the maintainer's "how is everyone landing?" question.
+
+import { redirect } from 'next/navigation';
+import type { Metadata } from 'next';
+import { createClient } from '@/utils/supabase/server';
+import { createAdminClient } from '@/utils/supabase/admin';
+import { isAdminUserId } from '@/lib/admin';
+import { DIM_KEYS, DIM_NAMES } from '@/lib/dimensions';
+import { QUICK_QUESTIONS } from '@/lib/quiz-questions';
+import { DETAILED_QUESTIONS } from '@/lib/quiz-questions-detailed';
+import type { Question } from '@/lib/quiz-questions';
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+  title: 'Research · Admin · Mull',
+};
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+const serif = 'var(--font-prose)';
+const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
+
+// One element of a stored answer trail (research_quiz_responses.answers).
+type AnswerEl =
+  | { q: number; kind: 'single'; a: number }
+  | { q: number; kind: 'multi'; indices: number[] }
+  | { q: number; kind: 'skip' };
+
+// Per-question aggregate.
+type QStat = { counts: number[]; skip: number; responders: number };
+
+type ResearchRow = {
+  mode: string | null;
+  answers: unknown;
+  archetype: string | null;
+  vector: unknown;
+};
+
+function buildQStats(trails: unknown[], questionCount: number): QStat[] {
+  const stats: QStat[] = Array.from({ length: questionCount }, () => ({
+    counts: [],
+    skip: 0,
+    responders: 0,
+  }));
+  for (const trail of trails) {
+    if (!Array.isArray(trail)) continue;
+    for (const raw of trail) {
+      const el = raw as AnswerEl;
+      const q = el?.q;
+      if (typeof q !== 'number' || q < 0 || q >= questionCount) continue;
+      const s = stats[q];
+      s.responders++;
+      if (el.kind === 'single' && typeof el.a === 'number') {
+        s.counts[el.a] = (s.counts[el.a] || 0) + 1;
+      } else if (el.kind === 'multi' && Array.isArray(el.indices)) {
+        for (const i of el.indices) s.counts[i] = (s.counts[i] || 0) + 1;
+      } else if (el.kind === 'skip') {
+        s.skip++;
+      }
+    }
+  }
+  return stats;
+}
+
+async function loadResearch() {
+  const admin = createAdminClient();
+
+  const [
+    usersRes,
+    consentRows,
+    attemptsArch,
+    attemptsTotal,
+    researchRows,
+    researchTotal,
+  ] = await Promise.all([
+    admin.auth.admin.listUsers({ page: 1, perPage: 1000 }),
+    admin.from('research_consent').select('consent').limit(5000),
+    admin.from('quiz_attempts').select('archetype').limit(20000),
+    admin.from('quiz_attempts').select('*', { count: 'exact', head: true }),
+    admin
+      .from('research_quiz_responses')
+      .select('mode, answers, archetype, vector')
+      .limit(20000),
+    admin
+      .from('research_quiz_responses')
+      .select('*', { count: 'exact', head: true }),
+  ]);
+
+  // ── Consent overview ──────────────────────────────────────────────
+  let optIn = 0;
+  let optOut = 0;
+  for (const r of (consentRows.data as { consent: string }[] | null) || []) {
+    if (r.consent === 'yes') optIn++;
+    else if (r.consent === 'no') optOut++;
+  }
+  const decided = optIn + optOut;
+  const totalUsers = usersRes.data?.users?.length ?? 0;
+  const undecided = Math.max(0, totalUsers - decided);
+  const optInRate = decided > 0 ? Math.round((optIn / decided) * 100) : 0;
+
+  // ── Overall archetype distribution (all attempts) ─────────────────
+  const archCounts: Record<string, number> = {};
+  for (const row of (attemptsArch.data as { archetype: string }[] | null) || []) {
+    const k = (row.archetype || 'unknown').toLowerCase();
+    archCounts[k] = (archCounts[k] || 0) + 1;
+  }
+  const overallArch = Object.entries(archCounts).sort((a, b) => b[1] - a[1]);
+
+  // ── Consented research corpus ─────────────────────────────────────
+  const rows = (researchRows.data as ResearchRow[] | null) || [];
+  const quickTrails: unknown[] = [];
+  const detailedTrails: unknown[] = [];
+  const dimSums = new Array(16).fill(0);
+  let dimN = 0;
+  for (const row of rows) {
+    if (row.mode === 'quick') quickTrails.push(row.answers);
+    else if (row.mode === 'detailed') detailedTrails.push(row.answers);
+    if (Array.isArray(row.vector) && row.vector.length === 16) {
+      for (let i = 0; i < 16; i++) dimSums[i] += Number(row.vector[i]) || 0;
+      dimN++;
+    }
+  }
+  const dimMeans = dimSums.map((s) => (dimN > 0 ? s / dimN : 0));
+
+  return {
+    consent: { optIn, optOut, undecided, decided, totalUsers, optInRate },
+    corpus: {
+      total: researchTotal.count ?? rows.length,
+      quick: quickTrails.length,
+      detailed: detailedTrails.length,
+    },
+    attemptsTotal: attemptsTotal.count ?? 0,
+    overallArch,
+    dimMeans,
+    dimN,
+    quickStats: buildQStats(quickTrails, QUICK_QUESTIONS.length),
+    detailedStats: buildQStats(detailedTrails, DETAILED_QUESTIONS.length),
+    fetchedAt: new Date().toISOString(),
+  };
+}
+
+export default async function ResearchAdminPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect('/login?next=/admin/research');
+  if (!isAdminUserId(user.id)) redirect('/account');
+
+  const d = await loadResearch();
+
+  return (
+    <main style={{ maxWidth: 960, margin: '0 auto', padding: '40px 24px 120px' }}>
+      <header style={{ marginBottom: 28 }}>
+        <div
+          style={{
+            fontFamily: pixel,
+            fontSize: 11,
+            color: '#8C6520',
+            textTransform: 'uppercase',
+            letterSpacing: '0.18em',
+            marginBottom: 8,
+          }}
+        >
+          ▸ ADMIN · RESEARCH
+        </div>
+        <h1
+          style={{
+            fontFamily: pixel,
+            fontSize: 28,
+            margin: 0,
+            color: '#221E18',
+            letterSpacing: '0.06em',
+            textTransform: 'uppercase',
+            textShadow: '3px 3px 0 #B8862F',
+          }}
+        >
+          RESEARCH CONSOLE
+        </h1>
+        <p
+          style={{
+            fontFamily: serif,
+            fontStyle: 'italic',
+            fontSize: 15,
+            color: '#4A4338',
+            margin: '12px 0 0',
+            maxWidth: 640,
+            lineHeight: 1.55,
+          }}
+        >
+          The consented research corpus — per-question answer distributions,
+          dimension means, and the opt-in dataset behind any paper. Per-question
+          and dimension figures are drawn only from users who opted in; the
+          overall archetype distribution is aggregate across all attempts.
+        </p>
+        <div style={{ marginTop: 16, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          <ExportLink href="/api/admin/research/export?format=json" label="▼ EXPORT JSON" />
+          <ExportLink href="/api/admin/research/export?format=csv" label="▼ EXPORT CSV" />
+          <ExportLink href="/admin" label="← LAUNCH DASHBOARD" muted />
+        </div>
+      </header>
+
+      {/* ── Consent overview ─────────────────────────────────────── */}
+      <section style={cardStyle('#2F5D5C')}>
+        <h2 style={sectionTitle}>▸ RESEARCH CONSENT</h2>
+        <p style={sectionSub}>
+          Opt-in is explicit and reversible. Undecided = signed-in users who
+          haven&rsquo;t answered the consent gate yet.
+        </p>
+        <div
+          style={{
+            marginTop: 16,
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+            gap: 12,
+          }}
+        >
+          <BigStat label="Opted in" value={d.consent.optIn} accent="#2F5D5C" />
+          <BigStat label="Opted out" value={d.consent.optOut} accent="#7A2E2E" />
+          <BigStat label="Undecided" value={d.consent.undecided} accent="#8C6520" />
+          <BigStat label="Opt-in rate" value={`${d.consent.optInRate}%`} accent="#B8862F" />
+        </div>
+      </section>
+
+      {/* ── Corpus size ──────────────────────────────────────────── */}
+      <section style={cardStyle('#B8862F')}>
+        <h2 style={sectionTitle}>▸ RESEARCH CORPUS</h2>
+        <p style={sectionSub}>
+          Consented quiz completions captured with their full per-question
+          trail. This is the dataset the distributions below are computed from.
+        </p>
+        <div
+          style={{
+            marginTop: 16,
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+            gap: 12,
+          }}
+        >
+          <BigStat label="Total responses" value={d.corpus.total} accent="#B8862F" />
+          <BigStat label="Quick (20Q)" value={d.corpus.quick} accent="#7A4A2E" />
+          <BigStat label="Detailed (50Q)" value={d.corpus.detailed} accent="#5A3A6A" />
+          <BigStat label="All attempts" value={d.attemptsTotal} accent="#4A4338" />
+        </div>
+        {d.corpus.total === 0 && (
+          <p
+            style={{
+              fontFamily: serif,
+              fontStyle: 'italic',
+              color: '#8C6520',
+              margin: '16px 0 0',
+              fontSize: 14,
+            }}
+          >
+            No consented responses captured yet. Once opted-in users complete the
+            quiz, their per-question answers appear here. (Capture began with the
+            20260601_research migration — it&rsquo;s forward-looking from opt-in.)
+          </p>
+        )}
+      </section>
+
+      {/* ── Overall archetype distribution (all attempts) ────────── */}
+      {d.overallArch.length > 0 && (
+        <section style={cardStyle('#7A4A2E')}>
+          <h2 style={sectionTitle}>▸ OVERALL ARCHETYPE DISTRIBUTION</h2>
+          <p style={sectionSub}>
+            How every quiz taker lands across the ten archetypes (all attempts,
+            aggregate). {d.attemptsTotal.toLocaleString()} total.
+          </p>
+          <div style={{ marginTop: 18 }}>
+            {d.overallArch.map(([key, count]) => {
+              const max = d.overallArch[0][1] || 1;
+              const total = d.overallArch.reduce((s, [, c]) => s + c, 0) || 1;
+              const pct = Math.round((count / total) * 100);
+              const barPct = Math.round((count / max) * 100);
+              return (
+                <DistRow
+                  key={key}
+                  label={key}
+                  barPct={barPct}
+                  right={`${count} · ${pct}%`}
+                  color="#7A4A2E"
+                  capitalize
+                />
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* ── 16-D dimension means (consented) ─────────────────────── */}
+      <section style={cardStyle('#5A3A6A')}>
+        <h2 style={sectionTitle}>▸ DIMENSION MEANS</h2>
+        <p style={sectionSub}>
+          Average position on each of the 16 dimensions across{' '}
+          {d.dimN.toLocaleString()} consented vectors. Signed — teal leans
+          positive, brick leans negative.
+        </p>
+        {d.dimN === 0 ? (
+          <p
+            style={{
+              fontFamily: serif,
+              fontStyle: 'italic',
+              color: '#8C6520',
+              margin: '16px 0 0',
+              fontSize: 14,
+            }}
+          >
+            No consented vectors yet.
+          </p>
+        ) : (
+          <div style={{ marginTop: 18 }}>
+            {(() => {
+              const maxAbs = Math.max(...d.dimMeans.map((m) => Math.abs(m)), 0.01);
+              return DIM_KEYS.map((k, i) => {
+                const mean = d.dimMeans[i];
+                const barPct = Math.round((Math.abs(mean) / maxAbs) * 100);
+                const positive = mean >= 0;
+                return (
+                  <div
+                    key={k}
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: '170px 1fr 64px',
+                      alignItems: 'center',
+                      gap: 12,
+                      marginBottom: 8,
+                    }}
+                  >
+                    <span style={{ fontFamily: serif, fontSize: 14, color: '#221E18' }}>
+                      <strong>{k}</strong>{' '}
+                      <span style={{ color: '#8C6520', fontSize: 12.5 }}>
+                        {DIM_NAMES[k]}
+                      </span>
+                    </span>
+                    <div
+                      style={{
+                        height: 10,
+                        background: '#FAF6EC',
+                        border: '2px solid #221E18',
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: `${barPct}%`,
+                          height: '100%',
+                          background: positive ? '#2F5D5C' : '#7A2E2E',
+                        }}
+                      />
+                    </div>
+                    <span
+                      style={{
+                        fontFamily: pixel,
+                        fontSize: 12,
+                        color: '#221E18',
+                        textAlign: 'right',
+                        fontVariantNumeric: 'tabular-nums',
+                      }}
+                    >
+                      {mean >= 0 ? '+' : ''}
+                      {mean.toFixed(2)}
+                    </span>
+                  </div>
+                );
+              });
+            })()}
+          </div>
+        )}
+      </section>
+
+      {/* ── Per-question distributions: QUICK ────────────────────── */}
+      <QuestionSet
+        title="PER-QUESTION · QUICK SET"
+        subtitle={`What opted-in takers picked, question by question (${d.corpus.quick} responses).`}
+        questions={QUICK_QUESTIONS}
+        stats={d.quickStats}
+        empty={d.corpus.quick === 0}
+        open
+      />
+
+      {/* ── Per-question distributions: DETAILED (collapsed) ─────── */}
+      <QuestionSet
+        title="PER-QUESTION · DETAILED SET"
+        subtitle={`The 50-question deep version (${d.corpus.detailed} responses). Click to expand.`}
+        questions={DETAILED_QUESTIONS}
+        stats={d.detailedStats}
+        empty={d.corpus.detailed === 0}
+        open={false}
+      />
+
+      <p
+        style={{
+          fontFamily: pixel,
+          fontSize: 10,
+          color: '#8C6520',
+          letterSpacing: 0.4,
+          textTransform: 'uppercase',
+          marginTop: 28,
+        }}
+      >
+        ▸ FETCHED {new Date(d.fetchedAt).toLocaleString('en-GB')} · AGGREGATES
+        ONLY · NO USER IDS
+      </p>
+    </main>
+  );
+}
+
+// ── Per-question section, wrapped in a native <details> so the long
+//    detailed set can stay folded. ───────────────────────────────────
+function QuestionSet({
+  title,
+  subtitle,
+  questions,
+  stats,
+  empty,
+  open,
+}: {
+  title: string;
+  subtitle: string;
+  questions: Question[];
+  stats: QStat[];
+  empty: boolean;
+  open: boolean;
+}) {
+  return (
+    <section style={cardStyle('#2F5D5C')}>
+      <details open={open}>
+        <summary
+          style={{
+            cursor: 'pointer',
+            listStyle: 'none',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 4,
+          }}
+        >
+          <span style={{ ...sectionTitle, margin: 0 }}>▸ {title}</span>
+          <span style={sectionSub}>{subtitle}</span>
+        </summary>
+        {empty ? (
+          <p
+            style={{
+              fontFamily: serif,
+              fontStyle: 'italic',
+              color: '#8C6520',
+              margin: '16px 0 0',
+              fontSize: 14,
+            }}
+          >
+            No consented responses for this set yet.
+          </p>
+        ) : (
+          <div style={{ marginTop: 20 }}>
+            {questions.map((q, qi) => (
+              <QuestionDistribution key={qi} index={qi} question={q} stat={stats[qi]} />
+            ))}
+          </div>
+        )}
+      </details>
+    </section>
+  );
+}
+
+function QuestionDistribution({
+  index,
+  question,
+  stat,
+}: {
+  index: number;
+  question: Question;
+  stat: QStat | undefined;
+}) {
+  const responders = stat?.responders ?? 0;
+  const isMulti = !!question.multi;
+  return (
+    <div
+      style={{
+        padding: '14px 0 16px',
+        borderBottom: '2px dashed #D6CDB6',
+      }}
+    >
+      <div
+        style={{
+          fontFamily: pixel,
+          fontSize: 10,
+          color: '#8C6520',
+          letterSpacing: 0.4,
+          textTransform: 'uppercase',
+          marginBottom: 6,
+        }}
+      >
+        Q{String(index + 1).padStart(2, '0')}
+        {isMulti ? ` · MULTI (≤${question.multi?.max})` : ''} · {responders} answered
+        {stat && stat.skip > 0 ? ` · ${stat.skip} skipped` : ''}
+      </div>
+      <p
+        style={{
+          fontFamily: serif,
+          fontSize: 15.5,
+          color: '#221E18',
+          margin: '0 0 10px',
+          lineHeight: 1.4,
+        }}
+      >
+        {question.p}
+      </p>
+      <div>
+        {question.a.map((ans, ai) => {
+          const count = stat?.counts[ai] ?? 0;
+          const pct = responders > 0 ? Math.round((count / responders) * 100) : 0;
+          return (
+            <DistRow
+              key={ai}
+              label={ans.t}
+              barPct={pct}
+              right={`${count} · ${pct}%`}
+              color="#2F5D5C"
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// A single labeled bar row. Used by both the archetype distribution and
+// the per-answer breakdowns.
+function DistRow({
+  label,
+  barPct,
+  right,
+  color,
+  capitalize,
+}: {
+  label: string;
+  barPct: number;
+  right: string;
+  color: string;
+  capitalize?: boolean;
+}) {
+  return (
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 90px',
+        alignItems: 'center',
+        gap: 12,
+        marginBottom: 7,
+      }}
+    >
+      <div>
+        <div
+          style={{
+            fontFamily: serif,
+            fontSize: 14,
+            color: '#221E18',
+            marginBottom: 3,
+            textTransform: capitalize ? 'capitalize' : 'none',
+            lineHeight: 1.35,
+          }}
+        >
+          {label}
+        </div>
+        <div
+          style={{
+            height: 8,
+            background: '#FAF6EC',
+            border: '2px solid #221E18',
+          }}
+        >
+          <div
+            style={{
+              width: `${Math.min(100, barPct)}%`,
+              height: '100%',
+              background: color,
+            }}
+          />
+        </div>
+      </div>
+      <span
+        style={{
+          fontFamily: pixel,
+          fontSize: 11.5,
+          color: '#8C6520',
+          textAlign: 'right',
+          fontVariantNumeric: 'tabular-nums',
+          letterSpacing: 0.3,
+        }}
+      >
+        {right}
+      </span>
+    </div>
+  );
+}
+
+function BigStat({
+  label,
+  value,
+  accent,
+}: {
+  label: string;
+  value: number | string;
+  accent: string;
+}) {
+  return (
+    <div
+      style={{
+        padding: '14px 16px',
+        background: '#FFFCF4',
+        border: '3px solid #221E18',
+        boxShadow: `3px 3px 0 0 ${accent}`,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: pixel,
+          fontSize: 10,
+          color: accent,
+          textTransform: 'uppercase',
+          letterSpacing: '0.16em',
+          marginBottom: 8,
+        }}
+      >
+        ▸ {label}
+      </div>
+      <div
+        style={{
+          fontFamily: pixel,
+          fontSize: 28,
+          color: '#221E18',
+          lineHeight: 1,
+          fontVariantNumeric: 'tabular-nums',
+        }}
+      >
+        {typeof value === 'number' ? value.toLocaleString() : value}
+      </div>
+    </div>
+  );
+}
+
+function ExportLink({
+  href,
+  label,
+  muted,
+}: {
+  href: string;
+  label: string;
+  muted?: boolean;
+}) {
+  return (
+    <a
+      href={href}
+      style={{
+        display: 'inline-block',
+        padding: '8px 14px',
+        background: muted ? 'transparent' : '#221E18',
+        color: muted ? '#8C6520' : '#F8EDC8',
+        border: `2px solid ${muted ? '#8C6520' : '#221E18'}`,
+        boxShadow: muted ? 'none' : '3px 3px 0 0 #B8862F',
+        fontFamily: pixel,
+        fontSize: 11,
+        letterSpacing: '0.12em',
+        textTransform: 'uppercase',
+        textDecoration: 'none',
+      }}
+    >
+      {label}
+    </a>
+  );
+}
+
+function cardStyle(accent: string): React.CSSProperties {
+  return {
+    padding: '24px 26px',
+    background: '#FFFCF4',
+    border: '4px solid #221E18',
+    boxShadow: `4px 4px 0 0 ${accent}`,
+    borderRadius: 0,
+    marginBottom: 24,
+  };
+}
+
+const sectionTitle: React.CSSProperties = {
+  fontFamily: pixel,
+  fontSize: 16,
+  color: '#221E18',
+  margin: '0 0 6px',
+  letterSpacing: '0.18em',
+  textTransform: 'uppercase',
+};
+
+const sectionSub: React.CSSProperties = {
+  fontFamily: serif,
+  fontStyle: 'italic',
+  fontSize: 14,
+  color: '#4A4338',
+  margin: 0,
+};

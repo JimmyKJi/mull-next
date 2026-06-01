@@ -1,22 +1,24 @@
 // POST /api/consent — record a user's research-consent decision.
 //
-// v1 behavior: best-effort. If the user is signed in, write the
-// preference to a 'research_consent' column on the public.profiles
-// row (if the column exists). Otherwise, accept the request and
-// return 204 without persisting — the client-side localStorage is
-// the authoritative store for anonymous users.
+// Body: { research_consent: "yes" | "no" | null }
+//   "yes" / "no"  → upsert the choice into research_consent.
+//   null          → reset (delete the row); the user goes back to
+//                   "undecided" and the gate will ask again next time.
 //
-// Why best-effort: this endpoint is called from a fire-and-forget
-// fetch in <ResearchConsentGate>. Returning success even when DB
-// write isn't possible keeps the UX smooth. A future migration can
-// add the column + start enforcing it server-side; until then this
-// keeps the integration point in place.
+// Anonymous users: there's no row to attach a decision to, so we accept
+// the request and return 204 without persisting. localStorage on the
+// client (key `mull.research_consent`) is the source of truth for them —
+// and anonymous quiz attempts aren't saved server-side anyway (the
+// save route 401s for guests), so there's nothing to gate.
 //
-// Schema TODO (deferred — flagged in NEXT.md):
-//   ALTER TABLE public.profiles
-//     ADD COLUMN research_consent TEXT
-//       CHECK (research_consent IN ('yes', 'no'));
-//   GRANT UPDATE (research_consent) ON public.profiles TO authenticated;
+// Signed-in users: we upsert research_consent (RLS-bound, one row per
+// user). This is what /admin/research counts as "opted in", and what
+// /api/quiz/save reads to decide whether to capture per-question answers.
+//
+// Best-effort by design: this is called from a fire-and-forget fetch in
+// <ResearchConsentGate> and <ConsentToggle>. We still surface a 500 on a
+// genuine DB error so the rare failure is observable, but the client
+// never awaits the result — the localStorage write already happened.
 
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
@@ -41,20 +43,46 @@ export async function POST(req: Request) {
     );
   }
 
-  // Try to persist for signed-in users. We're tolerant of the column
-  // not existing yet — the update will error and we return ok anyway.
-  // localStorage on the client is the v1 source of truth.
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (user) {
-    try {
-      await supabase
-        .from("profiles")
-        .update({ research_consent: choice })
-        .eq("user_id", user.id);
-    } catch {
-      // Column may not exist yet — see schema TODO above. Swallow.
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // Anonymous — nothing to persist. localStorage is authoritative.
+  if (!user) {
+    return new NextResponse(null, { status: 204 });
+  }
+
+  if (choice === null) {
+    // Reset → remove the row entirely. Next gate view asks again.
+    const { error } = await supabase
+      .from("research_consent")
+      .delete()
+      .eq("user_id", user.id);
+    if (error) {
+      console.error("[consent] delete failed", error);
+      return NextResponse.json({ error: "could not reset" }, { status: 500 });
     }
+    return new NextResponse(null, { status: 204 });
+  }
+
+  // Upsert. On insert, decided_at defaults to now(); on conflict we only
+  // touch consent + updated_at, so decided_at keeps the original first
+  // decision time. onConflict on the user_id PK.
+  const { error } = await supabase
+    .from("research_consent")
+    .upsert(
+      {
+        user_id: user.id,
+        consent: choice,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "user_id" },
+    );
+
+  if (error) {
+    console.error("[consent] upsert failed", error);
+    return NextResponse.json({ error: "could not save" }, { status: 500 });
   }
 
   return new NextResponse(null, { status: 204 });

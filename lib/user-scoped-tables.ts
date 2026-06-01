@@ -265,6 +265,27 @@ export const USER_SCOPED_TABLES: readonly UserScopedTable[] = [
     inExport: true,
     note: 'Individual turns within an arena session. Cascade-deleted when the parent arena_sessions row is removed.',
   },
+
+  // ── Research consent + capture ────────────────────────────────────
+  // The server-side mirror of the localStorage research-consent choice,
+  // plus the per-question answer dataset it gates. research_consent is a
+  // singleton (one decision per user); research_quiz_responses holds one
+  // row per consented quiz completion. Both wipe on delete and appear in
+  // export so a user can see (and erase) exactly what we captured for
+  // research. See supabase/migrations/20260601_research.sql.
+  {
+    name: 'research_consent',
+    deleteStrategy: 'wipe',
+    inExport: true,
+    singleton: true,
+    note: "User's research-data consent decision ('yes'/'no'). Mirror of the mull.research_consent localStorage key. One row per user; gates whether research_quiz_responses rows get written.",
+  },
+  {
+    name: 'research_quiz_responses',
+    deleteStrategy: 'wipe',
+    inExport: true,
+    note: 'Per-question quiz answer trail, captured only for opted-in users. Backs the /admin/research distributions. Wiped on delete; included in export so users can audit what was recorded.',
+  },
 ] as const;
 
 // ─── Derived accessors ──────────────────────────────────────────────

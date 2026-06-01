@@ -7,7 +7,10 @@
 //
 // Body (validated):
 //   { vector: number[16], archetype: string, flavor?: string,
-//     alignment_pct: number }
+//     alignment_pct: number, mode?: "quick"|"detailed",
+//     research_consent?: "yes"|"no"|null,
+//     research_answers?: ResearchAnswer[]|null,
+//     research_question_count?: number|null }
 //
 // Auth: requires a signed-in user. Returns 401 otherwise — the client
 // is expected to stash to localStorage instead (then PendingAttemptClaimer
@@ -16,9 +19,17 @@
 // Idempotency: the same 5-minute dedupe window as claim-attempt — if
 // the user has a quiz attempt saved in the last 5 minutes, we treat
 // this as a duplicate (rapid retry / double-mount) and skip.
+//
+// Research capture: when the caller is opted in (research_consent
+// "yes", synced to the research_consent table), we ALSO write a row to
+// research_quiz_responses with the per-question answer trail. This is
+// best-effort and never blocks or fails the core attempt save. Opted-out
+// users never get a research row written — the table holds consented
+// data only. See app/admin/research/page.tsx for where this is consumed.
 
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
+import { captureResearchResponse, syncConsent } from "@/lib/research-capture";
 
 export const runtime = "nodejs";
 
@@ -27,6 +38,10 @@ type Payload = {
   archetype?: unknown;
   flavor?: unknown;
   alignment_pct?: unknown;
+  mode?: unknown;
+  research_consent?: unknown;
+  research_answers?: unknown;
+  research_question_count?: unknown;
 };
 
 export async function POST(req: Request) {
@@ -60,6 +75,8 @@ export async function POST(req: Request) {
     ? Math.max(0, Math.min(100, Math.round(pctRaw)))
     : 0;
 
+  const mode = body.mode === "detailed" ? "detailed" : "quick";
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -69,6 +86,12 @@ export async function POST(req: Request) {
     // PendingAttemptClaimer handle it after signup.
     return NextResponse.json({ error: "Not signed in." }, { status: 401 });
   }
+
+  // Keep the server-side consent record in step with the client's
+  // localStorage choice (best-effort; never blocks the save). Returns
+  // the effective consent — the client's choice if given, else whatever
+  // we already have on file.
+  const consent = await syncConsent(supabase, user.id, body.research_consent);
 
   // 5-minute dedupe — matches claim-attempt's behavior. Protects
   // against double-mounts, fast retries, or the user navigating away
@@ -106,10 +129,25 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Could not save attempt." }, { status: 500 });
   }
 
+  // Consent-gated research capture. Best-effort: a failure here is logged
+  // but never surfaced to the user — the attempt is already safely saved.
+  const captured = await captureResearchResponse(supabase, {
+    userId: user.id,
+    attemptId: inserted.id,
+    consent,
+    mode,
+    answers: body.research_answers,
+    questionCount: body.research_question_count,
+    vector,
+    archetype,
+    alignmentPct: alignment_pct,
+  });
+
   return NextResponse.json({
     ok: true,
     saved: true,
     id: inserted.id,
     taken_at: inserted.taken_at,
+    research_captured: captured,
   });
 }

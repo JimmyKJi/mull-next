@@ -13,10 +13,18 @@
 //
 // Body (validated):
 //   { vector: number[16], archetype: string, flavor?: string,
-//     alignment_pct: number, taken_at?: string (ISO) }
+//     alignment_pct: number, taken_at?: string (ISO),
+//     mode?: "quick"|"detailed", research_consent?, research_answers?,
+//     research_question_count? }
+//
+// Research riders: a guest who opted in before signing up carries their
+// per-question trail + consent through the stash. Once they have an
+// account we sync consent and (if opted in) write the research row, just
+// like the authed /api/quiz/save path. Best-effort — never blocks the claim.
 
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
+import { captureResearchResponse, syncConsent } from '@/lib/research-capture';
 
 export const runtime = 'nodejs';
 
@@ -26,6 +34,10 @@ type Payload = {
   flavor?: unknown;
   alignment_pct?: unknown;
   taken_at?: unknown;
+  mode?: unknown;
+  research_consent?: unknown;
+  research_answers?: unknown;
+  research_question_count?: unknown;
 };
 
 export async function POST(req: Request) {
@@ -53,9 +65,15 @@ export async function POST(req: Request) {
     ? Math.max(0, Math.min(100, Math.round(alignmentPctRaw)))
     : 0;
 
+  const mode = body.mode === 'detailed' ? 'detailed' : 'quick';
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Not signed in.' }, { status: 401 });
+
+  // Sync the now-signed-in user's consent with whatever they chose as a
+  // guest (carried in the stash). Returns the effective consent.
+  const consent = await syncConsent(supabase, user.id, body.research_consent);
 
   // Defensive dedupe: skip if this user already has any quiz_attempt
   // saved in the past 5 minutes. Rules out duplicate posts from
@@ -106,10 +124,24 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Could not save attempt.' }, { status: 500 });
   }
 
+  // Consent-gated research capture (best-effort; never blocks the claim).
+  const captured = await captureResearchResponse(supabase, {
+    userId: user.id,
+    attemptId: inserted.id,
+    consent,
+    mode,
+    answers: body.research_answers,
+    questionCount: body.research_question_count,
+    vector,
+    archetype,
+    alignmentPct: alignment_pct,
+  });
+
   return NextResponse.json({
     ok: true,
     claimed: true,
     id: inserted.id,
     taken_at: inserted.taken_at,
+    research_captured: captured,
   });
 }

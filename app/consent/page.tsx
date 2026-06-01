@@ -61,9 +61,11 @@ export default function ConsentPage() {
           </Prose>
           <ul className="mt-3 space-y-2.5">
             <Bullet>
-              Your <strong>quiz answer vector</strong> (a 16-D
-              point in the philosophical space) and which archetype it
-              landed in.
+              Your <strong>individual question answers</strong> — which
+              option you chose for each quiz question — together with the{" "}
+              <strong>16-D vector</strong> they sum to and which archetype
+              it landed in. (Per-question answers are only recorded if you
+              opt in; opting out keeps just the anonymous final result.)
             </Bullet>
             <Bullet>
               Your <strong>daily dilemma responses</strong>, diary

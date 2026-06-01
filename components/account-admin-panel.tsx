@@ -106,6 +106,7 @@ export async function AccountAdminPanel({ isAdmin }: Props) {
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
           <AdminLink href="/admin" label="LAUNCH DASHBOARD" />
           <AdminLink href="/admin/usage" label="AI USAGE" />
+          <AdminLink href="/admin/research" label="RESEARCH" />
         </div>
       </section>
     );
@@ -191,6 +192,7 @@ export async function AccountAdminPanel({ isAdmin }: Props) {
 
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 14 }}>
         <AdminLink href="/admin" label="LAUNCH DASHBOARD ▶" />
+        <AdminLink href="/admin/research" label="RESEARCH CONSOLE ▶" />
         <AdminLink href="/admin/usage" label="AI USAGE DEEP DIVE ▶" />
         <AdminLink href="/account/curate" label="CURATE PICKS ▶" />
       </div>

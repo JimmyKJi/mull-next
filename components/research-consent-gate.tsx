@@ -159,9 +159,10 @@ function ConsentScreen({
             </p>
             <p style={{ margin: "0 0 12px" }}>
               <strong style={{ color: "#221E18" }}>What this means:</strong>{" "}
-              your answer vectors might appear in academic papers, in
-              model refinements, or in aggregate plots. Never tied to
-              your email, never sold to third parties, never used for
+              your answers — including which option you choose for each
+              question — might appear in academic papers, in model
+              refinements, or in aggregate plots. Never tied to your
+              email, never sold to third parties, never used for
               advertising. Academic research only.
             </p>
             <p style={{ margin: "0 0 4px" }}>

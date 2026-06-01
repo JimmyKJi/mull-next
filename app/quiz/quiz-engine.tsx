@@ -44,6 +44,40 @@ type PersistedState = {
 
 const STORAGE_PREFIX = "mull.quiz.progress.";
 
+// Per-question answer trail, handed to <ResultSave> after the quiz so it
+// can be persisted to research_quiz_responses (for opted-in users only).
+// Written at finish(); read + cleared on the /result page. Short-lived —
+// it carries the just-finished attempt across the route hop, nothing more.
+const RESEARCH_ANSWERS_KEY = "mull.quiz.research_answers";
+
+// Normalize the in-engine answer history into the compact, position-keyed
+// shape research_quiz_responses stores: one element per question, with the
+// answer index(es) or a skip marker. See the migration for the schema.
+type ResearchAnswer =
+  | { q: number; kind: "single"; a: number }
+  | { q: number; kind: "multi"; indices: number[] }
+  | { q: number; kind: "skip" };
+
+function stashResearchAnswers(
+  mode: "quick" | "detailed",
+  questionCount: number,
+  history: AnswerHistoryEntry[],
+) {
+  try {
+    const answers: ResearchAnswer[] = history.map((entry, q) => {
+      if (entry.kind === "single") return { q, kind: "single", a: entry.index };
+      if (entry.kind === "multi") return { q, kind: "multi", indices: entry.indices };
+      return { q, kind: "skip" };
+    });
+    window.localStorage.setItem(
+      RESEARCH_ANSWERS_KEY,
+      JSON.stringify({ mode, questionCount, answers, ts: Date.now() }),
+    );
+  } catch {
+    /* storage disabled — research capture just doesn't happen, no harm */
+  }
+}
+
 // ─── Chapter metadata ──────────────────────────────────────────
 // Every 5 questions = 1 chapter. We show a transition screen between
 // chapters with a thematic title + a small pixel glyph. Themes are
@@ -239,7 +273,10 @@ export function QuizEngine({ questions, mode, locale }: Props) {
   }
   function advance(newVector: number[], newAnswers: AnswerHistoryEntry[]) {
     if (idx + 1 >= questions.length) {
-      finish(newVector);
+      // newAnswers already includes this final answer; the `answers`
+      // state does not (we only setAnswers in the non-finish branch),
+      // so hand the complete trail straight to finish().
+      finish(newVector, newAnswers);
       return;
     }
     setVector(newVector);
@@ -271,12 +308,15 @@ export function QuizEngine({ questions, mode, locale }: Props) {
     setIdx(idx - 1);
     setMultiPicks([]);
   }
-  function finish(finalVector: number[]) {
+  function finish(finalVector: number[], finalAnswers: AnswerHistoryEntry[]) {
     try {
       window.sessionStorage.removeItem(STORAGE_PREFIX + mode);
     } catch {
       /* ignore */
     }
+    // Stash the per-question trail for <ResultSave> to persist (only
+    // used if the user has opted in to research). Best-effort.
+    stashResearchAnswers(mode, questions.length, finalAnswers);
     const v = btoa(JSON.stringify(finalVector.map((n) => +n.toFixed(3))));
     // Show the computing screen first so the moment of submission
     // feels weighty; fire the navigation in parallel so the route
