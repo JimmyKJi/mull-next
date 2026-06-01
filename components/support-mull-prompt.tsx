@@ -8,6 +8,7 @@
 // the account.
 
 import React from "react";
+import { TIPPING_ENABLED } from "@/lib/feature-flags";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-prose)";
@@ -27,6 +28,12 @@ export function SupportMullPrompt({
   detail = "Mull is free to use. Each Arena verdict costs about 15 cents in AI fees; The Inheritor and the daily dilemma have their own small costs. A tip — any size — helps keep them open to everyone.",
   accent = "#B8862F",
 }: Props) {
+  // Tip jar temporarily hidden pending a legal constraint on accepting
+  // tips/donations — see TIPPING_ENABLED in lib/feature-flags.ts. While
+  // off, this renders nothing on all three surfaces (quiz-journey reveal
+  // + both Arena match screens). Flip the flag to bring it back.
+  if (!TIPPING_ENABLED) return null;
+
   return (
     <aside
       style={{

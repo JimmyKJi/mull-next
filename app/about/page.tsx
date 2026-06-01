@@ -12,6 +12,7 @@ import { getServerLocale } from '@/lib/locale-server';
 import LanguageSwitcher from '@/components/language-switcher';
 import { PixelWindow, PixelPageHeader } from '@/components/pixel-window';
 import { ContentLanguageNotice } from '@/components/content-language-notice';
+import { TIPPING_ENABLED } from '@/lib/feature-flags';
 
 export const metadata: Metadata = {
   title: 'About',
@@ -226,18 +227,28 @@ export default async function AboutPage() {
             Mull is currently running entirely free — no subscriptions, no
             ads, no data sale. The full Stripe wiring is built and dormant; we&apos;ll
             flip it on if and when keeping the site running needs it. Until
-            then, the costs come out of my pocket, and anyone who finds Mull
-            useful and can spare anything can{' '}
-            <a
-              href="https://ko-fi.com/mull"
-              target="_blank"
-              rel="noopener"
-              className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
-            >
-              tip on Ko-fi
-            </a>{' '}
-            — which materially helps keep the lights on, especially as the
-            Arena adds real AI cost per match.
+            then, the costs come out of my pocket
+            {/* Ko-fi tip ask hidden via TIPPING_ENABLED (legal hold on
+                accepting tips). The "Mull is free" reassurance above stays;
+                only the solicitation is gated. Flip the flag to restore. */}
+            {TIPPING_ENABLED ? (
+              <>
+                , and anyone who finds Mull useful and can spare anything
+                can{' '}
+                <a
+                  href="https://ko-fi.com/mull"
+                  target="_blank"
+                  rel="noopener"
+                  className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                >
+                  tip on Ko-fi
+                </a>{' '}
+                — which materially helps keep the lights on, especially as
+                the Arena adds real AI cost per match.
+              </>
+            ) : (
+              '.'
+            )}
           </div>
         </PixelWindow>
 
@@ -345,33 +356,39 @@ export default async function AboutPage() {
             squeeze.
           </p>
 
-          <div
-            className="mt-6 border-2 px-5 py-4 text-[14px] leading-[1.65] text-[#4A4338]"
-            style={{
-              borderColor: '#E2D8B6',
-              background: '#F5EFDC',
-              boxShadow: '3px 3px 0 0 #B8862F',
-            }}
-          >
-            <strong className="text-[#221E18]">
-              How to support Mull right now:
-            </strong>{' '}
-            tipping on{' '}
-            <a
-              href="https://ko-fi.com/mull"
-              target="_blank"
-              rel="noopener"
-              className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          {/* "How to support Mull / tip on Ko-fi" box — hidden for now
+              via TIPPING_ENABLED (legal hold on accepting tips). The whole
+              box is a tip solicitation, so it's gated wholesale; flip the
+              flag in lib/feature-flags.ts to bring it back verbatim. */}
+          {TIPPING_ENABLED && (
+            <div
+              className="mt-6 border-2 px-5 py-4 text-[14px] leading-[1.65] text-[#4A4338]"
+              style={{
+                borderColor: '#E2D8B6',
+                background: '#F5EFDC',
+                boxShadow: '3px 3px 0 0 #B8862F',
+              }}
             >
-              Ko-fi
-            </a>{' '}
-            is the most direct path. The full Mull+ subscription system
-            ($4.99/month, $29/year, $59 lifetime Founding Mind pass) is
-            built and dormant — it flips on when usage growth makes tips
-            insufficient, and never gates the quiz, map, philosopher
-            pages, the Inheritor murder mystery, or the daily dilemma.
-            Those stay free forever.
-          </div>
+              <strong className="text-[#221E18]">
+                How to support Mull right now:
+              </strong>{' '}
+              tipping on{' '}
+              <a
+                href="https://ko-fi.com/mull"
+                target="_blank"
+                rel="noopener"
+                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+              >
+                Ko-fi
+              </a>{' '}
+              is the most direct path. The full Mull+ subscription system
+              ($4.99/month, $29/year, $59 lifetime Founding Mind pass) is
+              built and dormant — it flips on when usage growth makes tips
+              insufficient, and never gates the quiz, map, philosopher
+              pages, the Inheritor murder mystery, or the daily dilemma.
+              Those stay free forever.
+            </div>
+          )}
         </PixelWindow>
       </div>
 

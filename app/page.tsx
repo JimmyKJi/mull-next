@@ -29,6 +29,7 @@ import { ArchetypeSprite } from "@/components/archetype-sprite";
 import { PHILOSOPHERS } from "@/lib/philosophers";
 import { ObfuscatedEmail } from "@/components/obfuscated-email";
 import { ScrollReveal } from "@/components/scroll-reveal";
+import { TIPPING_ENABLED } from "@/lib/feature-flags";
 
 export const metadata: Metadata = {
   title: "Mull · Find your place on the map of how you think",
@@ -901,18 +902,19 @@ export default async function HomeV2() {
               <Link href="/privacy" className="hover:text-[#B8862F]">Privacy</Link>
               <Link href="/terms" className="hover:text-[#B8862F]">Terms</Link>
               {/* Tip jar — Mull is free to use; this lets users who want
-                  to chip in cover the AI bill. Replace the href with
-                  your actual Ko-fi (or Buy Me a Coffee / Open Collective)
-                  page once it's set up. Until then the link 404s on
-                  Ko-fi's side which is harmless. */}
-              <a
-                href="https://ko-fi.com/mull"
-                target="_blank"
-                rel="noreferrer"
-                className="text-[#B8862F] hover:text-[#F8EDC8] underline decoration-[#B8862F]/40 underline-offset-2 hover:decoration-[#F8EDC8]"
-              >
-                Support Mull
-              </a>
+                  to chip in cover the AI bill. Hidden for now via
+                  TIPPING_ENABLED (legal hold on accepting tips); flip the
+                  flag in lib/feature-flags.ts to bring the link back. */}
+              {TIPPING_ENABLED && (
+                <a
+                  href="https://ko-fi.com/mull"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[#B8862F] hover:text-[#F8EDC8] underline decoration-[#B8862F]/40 underline-offset-2 hover:decoration-[#F8EDC8]"
+                >
+                  Support Mull
+                </a>
+              )}
             </nav>
           </div>
         </footer>
