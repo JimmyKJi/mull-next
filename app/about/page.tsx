@@ -356,39 +356,44 @@ export default async function AboutPage() {
             squeeze.
           </p>
 
-          {/* "How to support Mull / tip on Ko-fi" box — hidden for now
-              via TIPPING_ENABLED (legal hold on accepting tips). The whole
-              box is a tip solicitation, so it's gated wholesale; flip the
-              flag in lib/feature-flags.ts to bring it back verbatim. */}
-          {TIPPING_ENABLED && (
-            <div
-              className="mt-6 border-2 px-5 py-4 text-[14px] leading-[1.65] text-[#4A4338]"
-              style={{
-                borderColor: '#E2D8B6',
-                background: '#F5EFDC',
-                boxShadow: '3px 3px 0 0 #B8862F',
-              }}
-            >
-              <strong className="text-[#221E18]">
-                How to support Mull right now:
-              </strong>{' '}
-              tipping on{' '}
-              <a
-                href="https://ko-fi.com/mull"
-                target="_blank"
-                rel="noopener"
-                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
-              >
-                Ko-fi
-              </a>{' '}
-              is the most direct path. The full Mull+ subscription system
-              ($4.99/month, $29/year, $59 lifetime Founding Mind pass) is
-              built and dormant — it flips on when usage growth makes tips
-              insufficient, and never gates the quiz, map, philosopher
-              pages, the Inheritor murder mystery, or the daily dilemma.
-              Those stay free forever.
-            </div>
-          )}
+          {/* Economics box — always visible. The Mull+ subscription /
+              "free forever" copy stays up regardless; only the Ko-fi tip
+              lead is gated behind TIPPING_ENABLED (legal hold on accepting
+              tips). Flip the flag in lib/feature-flags.ts to restore the
+              tip ask and swap the heading back. */}
+          <div
+            className="mt-6 border-2 px-5 py-4 text-[14px] leading-[1.65] text-[#4A4338]"
+            style={{
+              borderColor: '#E2D8B6',
+              background: '#F5EFDC',
+              boxShadow: '3px 3px 0 0 #B8862F',
+            }}
+          >
+            <strong className="text-[#221E18]">
+              {TIPPING_ENABLED
+                ? 'How to support Mull right now:'
+                : 'How Mull stays free:'}
+            </strong>{' '}
+            {TIPPING_ENABLED && (
+              <>
+                tipping on{' '}
+                <a
+                  href="https://ko-fi.com/mull"
+                  target="_blank"
+                  rel="noopener"
+                  className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                >
+                  Ko-fi
+                </a>{' '}
+                is the most direct path.{' '}
+              </>
+            )}
+            The full Mull+ subscription system ($4.99/month, $29/year,
+            $59 lifetime Founding Mind pass) is built and dormant — it
+            flips on when running costs require it, and never gates the
+            quiz, map, philosopher pages, the Inheritor murder mystery,
+            or the daily dilemma. Those stay free forever.
+          </div>
         </PixelWindow>
       </div>
 
