@@ -37,6 +37,8 @@ import { PHILOSOPHERS, philosopherSlug } from '../lib/philosophers';
 import { PHILOSOPHERS_I18N } from '../lib/philosophers-i18n';
 import { DETAILED_QUESTIONS } from '../lib/quiz-questions-detailed';
 import { DETAILED_QUIZ_I18N } from '../lib/quiz-detailed-i18n';
+import { DIM_NARRATIONS } from '../lib/dim-narration';
+import { DIM_NARRATION_I18N } from '../lib/dim-narration-i18n';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const SEP = '␟'; // ␟ — unlikely to appear in content; used as a path separator
@@ -130,6 +132,19 @@ const DOMAINS = {
     constName: 'DETAILED_QUIZ_I18N',
     recordType: 'Record<string, Partial<Record<Locale, DetailedQuestionI18nFields>>>',
     fields: ['p', { array: 'a', subfields: ['t'] }],
+  },
+  dimNarration: {
+    data: DIM_NARRATIONS,
+    existing: DIM_NARRATION_I18N,
+    shape: 'record', // DIM_NARRATIONS is Record<dimKey, …>; key by dim key (TV, VA, …)
+    overlayFile: 'lib/dim-narration-i18n.ts',
+    constName: 'DIM_NARRATION_I18N',
+    recordType: 'Record<string, Partial<Record<Locale, DimNarrationI18nFields>>>',
+    fields: ['label', 'high', 'low'],
+    // The `high`/`low` values are rendered on /compare with a degree adverb
+    // prefixed (e.g. zh 强烈地/较为/略微 — "strongly"/"moderately"/"barely").
+    // So each must read naturally with such a prefix.
+    hint: 'The "high" and "low" values are sentence FRAGMENTS describing a leaning on a scale. At render time a degree adverb is prefixed to each (in Chinese: 强烈地 / 较为 / 略微 = "strongly" / "moderately" / "just barely"). Translate each so it reads naturally with that adverb in front: lead with a single GRADABLE predicate verb (信任…, 重视…, 倾向于…), NOT with a temporal/conditional clause and NOT with a comparative like 更 (which clashes with the prefixed adverb). The "label" is a short noun-phrase dimension name and takes no adverb. Keep the em-dash "——" clause structure where present.',
   },
 };
 
@@ -349,10 +364,14 @@ function getExisting(existing, flatKey, loc) {
 }
 
 // ── Claude translation of one batch ({key: english}) → {key: translated} ──
-async function translateBatch(loc, batch) {
+// `hint` (optional, per-domain) is appended to the system prompt — used when a
+// domain's strings will be recomposed at render time and the translator needs
+// to know the grammatical frame (e.g. dim-narration fragments get a degree
+// adverb prefixed, so each must lead with a gradable predicate).
+async function translateBatch(loc, batch, hint) {
   const desc = LOCALE_DESC[loc];
   const system = `You are a professional literary translator for Mull, a philosophy-mapping web app. Translate the given English content into ${desc}. The register is contemplative, plain, warm but not cute — match literary translation (Penguin Classics / 商务印书馆 «汉译世界学术名著»), not corporate UI.
-
+${hint ? `\nDomain note: ${hint}\n` : ''}
 Rules:
 - Return STRICT JSON only: an object mapping each input key to its translation. No prose, no markdown fences. Start with { and end with }.
 - Keep every key EXACTLY as given. Only translate the value.
@@ -472,7 +491,7 @@ async function run() {
       let attempt = 0;
       while (true) {
         try {
-          const result = await translateBatch(locale, batches[i]);
+          const result = await translateBatch(locale, batches[i], domain.hint);
           applyTranslations(map, result, locale);
           persist(domain, map); // persist after EACH batch → resumable
           process.stdout.write(' ✓\n');

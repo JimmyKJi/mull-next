@@ -7,6 +7,13 @@
 // pole each user is closer to and stitch the two together.
 
 import { DIM_KEYS } from './dimensions';
+import type { Locale } from './translations';
+import {
+  getLocalizedDimNarration,
+  NARRATION_QUALIFIERS,
+  type DimNarrationI18nFields,
+  type NarrationQualifiers,
+} from './dim-narration-i18n';
 
 export type DimNarration = {
   // Short human label (mirrors DIM_NAMES but kept here for the
@@ -120,16 +127,49 @@ export type CompareLine = {
 // sentence. "strongly", "moderately", "leans" gives us same-side
 // gradation so two users who both score "high" on Practical Orientation
 // but with different magnitudes (9 vs 7) read as DIFFERENT sentences.
-function poleSentence(value: number, narration: DimNarration): string {
+//
+// Two rendering paths:
+//   - English splices the qualifier in after the leading verb
+//     ("is grounded" → "is strongly grounded") — grammar that's specific
+//     to English and doesn't carry elsewhere.
+//   - Non-English locales that have BOTH a translated pole fragment and a
+//     qualifier table use a simple prefix template (qualifier + fragment),
+//     e.g. zh "强烈地" + "认为苦难是根本的". If either piece is missing for
+//     a given dimension we fall back to the English splice — never prefix
+//     a localized qualifier onto English text.
+function poleSentence(
+  value: number,
+  narration: DimNarration,
+  locale: Locale,
+  localized: DimNarrationI18nFields | undefined,
+): string {
   const high = value >= MIDPOINT;
-  const pole = high ? narration.high : narration.low;
   // Distance from the midpoint, capped at 6 (the max it can be on
-  // either side). Buckets: 0-1 "leans", 1-3 "moderately", 3+ "strongly".
+  // either side). Buckets: 0-1 "barely", 1-3 "moderate", 3+ "strong".
   const dist = Math.abs(value - MIDPOINT);
-  let qualifier: string;
-  if (dist >= 3) qualifier = 'strongly';
-  else if (dist >= 1) qualifier = 'moderately';
-  else qualifier = 'just barely';
+  let bucket: keyof NarrationQualifiers;
+  if (dist >= 3) bucket = 'strong';
+  else if (dist >= 1) bucket = 'moderate';
+  else bucket = 'barely';
+
+  // Non-English prefix path.
+  if (locale !== 'en') {
+    const quals = NARRATION_QUALIFIERS[locale];
+    const localizedPole = high ? localized?.high : localized?.low;
+    if (quals && localizedPole) {
+      return `${quals[bucket]}${localizedPole}`;
+    }
+    // else fall through to the English splice below.
+  }
+
+  // English (or per-dimension fallback) path.
+  const pole = high ? narration.high : narration.low;
+  const qualifier =
+    bucket === 'strong'
+      ? 'strongly'
+      : bucket === 'moderate'
+        ? 'moderately'
+        : 'just barely';
   // Splice the qualifier in: "is grounded" → "is strongly grounded".
   // For pole sentences starting with "is/sees/trusts/affirms/..." we
   // inject after the verb. Otherwise we prefix.
@@ -144,20 +184,22 @@ function buildLine(
   key: string,
   aValue: number,
   bValue: number,
+  locale: Locale,
 ): CompareLine {
   const meta = DIM_NARRATIONS[key];
+  const localized = getLocalizedDimNarration(key, locale);
   const diff = Math.abs(aValue - bValue);
   const aHigh = aValue >= MIDPOINT;
   const bHigh = bValue >= MIDPOINT;
   return {
     key,
-    label: meta?.label ?? key,
+    label: localized?.label ?? meta?.label ?? key,
     aValue,
     bValue,
     diff,
     poleFlip: aHigh !== bHigh,
-    aText: meta ? poleSentence(aValue, meta) : '',
-    bText: meta ? poleSentence(bValue, meta) : '',
+    aText: meta ? poleSentence(aValue, meta, locale, localized) : '',
+    bText: meta ? poleSentence(bValue, meta, locale, localized) : '',
   };
 }
 
@@ -170,11 +212,12 @@ export function topDivergences(
   vecA: number[],
   vecB: number[],
   n = 3,
+  locale: Locale = 'en',
 ): CompareLine[] {
   if (!Array.isArray(vecA) || !Array.isArray(vecB) || vecA.length !== 16 || vecB.length !== 16) {
     return [];
   }
-  const rows = DIM_KEYS.map((key, i) => buildLine(key, vecA[i], vecB[i]));
+  const rows = DIM_KEYS.map((key, i) => buildLine(key, vecA[i], vecB[i], locale));
   rows.sort((a, b) => {
     // Pole-flips first (a divergence across the midpoint reads as a
     // real disagreement, not just a magnitude gap).
@@ -193,11 +236,12 @@ export function topConvergences(
   vecA: number[],
   vecB: number[],
   n = 3,
+  locale: Locale = 'en',
 ): CompareLine[] {
   if (!Array.isArray(vecA) || !Array.isArray(vecB) || vecA.length !== 16 || vecB.length !== 16) {
     return [];
   }
-  const rows = DIM_KEYS.map((key, i) => buildLine(key, vecA[i], vecB[i]));
+  const rows = DIM_KEYS.map((key, i) => buildLine(key, vecA[i], vecB[i], locale));
   rows.sort((a, b) => {
     // Same-pole first (real convergence puts you on the same side of
     // the midpoint), then by smallest |a-b|.

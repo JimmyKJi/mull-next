@@ -16,7 +16,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { DIM_KEYS, DIM_NAMES } from '@/lib/dimensions';
 import { getServerLocale } from '@/lib/locale-server';
-import { t } from '@/lib/translations';
+import { t, type Locale } from '@/lib/translations';
 import { ARCHETYPES } from '@/lib/archetypes';
 import { FIGURES } from '@/lib/figures';
 import { topDivergences, topConvergences } from '@/lib/dim-narration';
@@ -106,7 +106,7 @@ export default async function ComparePage({
 
   // No params yet → show the entry form.
   if (!youHandle || !themHandle) {
-    return <ComparePicker initialYou={youHandle} initialThem={themHandle} />;
+    return <ComparePicker initialYou={youHandle} initialThem={themHandle} locale={locale} />;
   }
 
   const [you, them] = await Promise.all([
@@ -141,7 +141,7 @@ export default async function ComparePage({
             letterSpacing: '0.18em',
             marginBottom: 16,
           }}>
-            HANDLE NOT FOUND
+            {t('compare.not_found_eyebrow', locale)}
           </div>
           <h1 style={{
             fontFamily: serif,
@@ -151,7 +151,7 @@ export default async function ComparePage({
             letterSpacing: '-0.5px',
             lineHeight: 1.15,
           }}>
-            We couldn&rsquo;t find {missing}.
+            {t('compare.not_found_title', locale, { missing })}
           </h1>
           <p style={{
             fontFamily: serif,
@@ -161,10 +161,7 @@ export default async function ComparePage({
             margin: '0 0 28px',
             lineHeight: 1.55,
           }}>
-            Common reasons: a typo, the profile isn&rsquo;t public yet, or the
-            account hasn&rsquo;t taken the quiz. Both sides need a public
-            profile (Account → Public profile settings → toggle on)
-            for the comparison to render.
+            {t('compare.not_found_body', locale)}
           </p>
           <Link
             href="/compare"
@@ -185,15 +182,18 @@ export default async function ComparePage({
               transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
             }}
           >
-            ◂ TRY DIFFERENT HANDLES
+            {t('compare.not_found_cta', locale)}
           </Link>
         </div>
       </main>
     );
   }
 
-  const divergences = topDivergences(you.position, them.position, 3);
-  const convergences = topConvergences(you.position, them.position, 3);
+  const divergences = topDivergences(you.position, them.position, 3, locale);
+  const convergences = topConvergences(you.position, them.position, 3, locale);
+  // Sentence terminal: the narration fragments carry no end punctuation, so
+  // we append it here. zh fragments are fully translated, so use a CJK 。
+  const period = locale === 'zh' ? '。' : '.';
   const youName = you.profile.display_name || `@${you.profile.handle}`;
   const themName = them.profile.display_name || `@${them.profile.handle}`;
   const youSlug = archetypeKey(you.archetype?.archetype);
@@ -206,7 +206,7 @@ export default async function ComparePage({
         style={{ fontFamily: 'var(--font-pixel-display)' }}
       >
         <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
-        ▶ COMPARE TWO MINDS
+        ▶ {t('compare.eyebrow', locale)}
       </div>
       <h1
         className="mt-5 pr-2 text-[24px] leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[32px] md:text-[40px]"
@@ -220,8 +220,7 @@ export default async function ComparePage({
         className="mt-5 text-[16px] italic leading-[1.55] text-[#4A4338]"
         style={{ fontFamily: 'var(--font-prose)' }}
       >
-        Two worldviews, sixteen dimensions. Where you converge, and where
-        you don&rsquo;t.
+        {t('compare.intro', locale)}
       </p>
       <div className="mb-8" />
 
@@ -238,6 +237,7 @@ export default async function ComparePage({
           archetype={you.profile.show_archetype ? you.archetype?.archetype ?? null : null}
           flavor={you.profile.show_archetype ? you.archetype?.flavor ?? null : null}
           slug={you.profile.show_archetype ? youSlug : null}
+          locale={locale}
         />
         <UserHeroCard
           name={themName}
@@ -245,6 +245,7 @@ export default async function ComparePage({
           archetype={them.profile.show_archetype ? them.archetype?.archetype ?? null : null}
           flavor={them.profile.show_archetype ? them.archetype?.flavor ?? null : null}
           slug={them.profile.show_archetype ? themSlug : null}
+          locale={locale}
         />
       </div>
 
@@ -257,11 +258,11 @@ export default async function ComparePage({
         boxShadow: '5px 5px 0 0 #B8862F',
         borderRadius: 0,
       }}>
-        <div style={{ ...eyebrow, color: '#B8862F' }}>▸ WHERE YOU DIVERGE MOST</div>
+        <div style={{ ...eyebrow, color: '#B8862F' }}>▸ {t('compare.diverge_most', locale)}</div>
         <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 16 }}>
           {divergences.length === 0 ? (
             <li style={{ fontFamily: serif, fontStyle: 'italic', color: '#8C6520' }}>
-              Not enough data to compute divergence — one of you may not have taken the quiz yet.
+              {t('compare.no_data', locale)}
             </li>
           ) : divergences.map((d, i) => (
             <li key={d.key}>
@@ -270,7 +271,7 @@ export default async function ComparePage({
                 color: '#8C6520', textTransform: 'uppercase',
                 letterSpacing: '0.18em', marginBottom: 8,
               }}>
-                {(i === 0 ? 'Biggest divergence' : `#${i + 1}`).toUpperCase()} · {d.label}
+                {(i === 0 ? t('compare.biggest_divergence', locale) : `#${i + 1}`).toUpperCase()} · {d.label}
                 {d.poleFlip && (
                   <span style={{
                     marginLeft: 10,
@@ -280,16 +281,16 @@ export default async function ComparePage({
                     border: '2px solid #221E18',
                     fontSize: 9,
                     letterSpacing: '0.18em',
-                  }}>↔ OPPOSITE POLES</span>
+                  }}>↔ {t('compare.opposite_poles', locale)}</span>
                 )}
               </div>
               <p style={{
                 fontFamily: serif, fontSize: 16, color: '#221E18',
                 margin: 0, lineHeight: 1.55,
               }}>
-                <strong style={{ fontWeight: 500 }}>{youName}</strong> {d.aText}.
+                <strong style={{ fontWeight: 500 }}>{youName}</strong> {d.aText}{period}
                 <br />
-                <strong style={{ fontWeight: 500 }}>{themName}</strong> {d.bText}.
+                <strong style={{ fontWeight: 500 }}>{themName}</strong> {d.bText}{period}
               </p>
             </li>
           ))}
@@ -309,7 +310,7 @@ export default async function ComparePage({
           boxShadow: '5px 5px 0 0 #2F5D5C',
           borderRadius: 0,
         }}>
-          <div style={{ ...eyebrow, color: '#2F5D5C' }}>▸ WHERE YOU CONVERGE MOST</div>
+          <div style={{ ...eyebrow, color: '#2F5D5C' }}>▸ {t('compare.converge_most', locale)}</div>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 16 }}>
             {convergences.map((c, i) => (
               <li key={c.key}>
@@ -318,15 +319,15 @@ export default async function ComparePage({
                   color: '#2F5D5C', textTransform: 'uppercase',
                   letterSpacing: '0.18em', marginBottom: 8,
                 }}>
-                  {(i === 0 ? 'Strongest agreement' : `#${i + 1}`).toUpperCase()} · {c.label}
+                  {(i === 0 ? t('compare.strongest_agreement', locale) : `#${i + 1}`).toUpperCase()} · {c.label}
                 </div>
                 <p style={{
                   fontFamily: serif, fontSize: 16, color: '#221E18',
                   margin: 0, lineHeight: 1.55,
                 }}>
-                  <strong style={{ fontWeight: 500 }}>{youName}</strong> {c.aText}.
+                  <strong style={{ fontWeight: 500 }}>{youName}</strong> {c.aText}{period}
                   <br />
-                  <strong style={{ fontWeight: 500 }}>{themName}</strong> {c.bText}.
+                  <strong style={{ fontWeight: 500 }}>{themName}</strong> {c.bText}{period}
                 </p>
               </li>
             ))}
@@ -336,7 +337,7 @@ export default async function ComparePage({
 
       {/* Full 16-dim side-by-side table */}
       <section style={{ marginBottom: 36 }}>
-        <div style={eyebrow}>▸ ALL SIXTEEN DIMENSIONS</div>
+        <div style={eyebrow}>▸ {t('compare.all_dimensions', locale)}</div>
         <div style={{
           background: '#FFFCF4',
           border: '4px solid #221E18',
@@ -361,8 +362,8 @@ export default async function ComparePage({
                 alignItems: 'center',
               }}>
                 <div style={{ fontWeight: 500 }}>{t(`dim.${k}.name`, locale) || DIM_NAMES[k as keyof typeof DIM_NAMES]}</div>
-                <DimBar value={showA ? va : null} />
-                <DimBar value={showB ? vb : null} />
+                <DimBar value={showA ? va : null} locale={locale} />
+                <DimBar value={showB ? vb : null} locale={locale} />
               </div>
             );
           })}
@@ -371,7 +372,7 @@ export default async function ComparePage({
           fontFamily: sans, fontSize: 12, color: '#8C6520',
           margin: '10px 4px 0', opacity: 0.85, lineHeight: 1.55,
         }}>
-          Bars show position on each dimension (0–12). Hidden when a user has turned <em>show dimensions</em> off in their public profile settings.
+          {t('compare.bars_caption', locale)}
         </p>
       </section>
 
@@ -381,7 +382,7 @@ export default async function ComparePage({
         fontFamily: sans, fontSize: 13, color: '#8C6520',
       }}>
         <Link href="/compare" style={{ color: '#8C6520', textDecoration: 'underline', textUnderlineOffset: 3 }}>
-          Compare different handles →
+          {t('compare.try_different', locale)}
         </Link>
       </p>
     </main>
@@ -395,13 +396,14 @@ function archetypeKey(name?: string | null): string | null {
 }
 
 function UserHeroCard({
-  name, handle, archetype, flavor, slug,
+  name, handle, archetype, flavor, slug, locale,
 }: {
   name: string;
   handle: string;
   archetype: string | null;
   flavor: string | null;
   slug: string | null;
+  locale: Locale;
 }) {
   const figure = slug ? FIGURES[slug] || '' : '';
   return (
@@ -454,21 +456,21 @@ function UserHeroCard({
           fontFamily: sans, fontSize: 12.5,
           color: '#8C6520', fontStyle: 'italic',
         }}>
-          Archetype hidden by user
+          {t('compare.archetype_hidden', locale)}
         </div>
       )}
     </div>
   );
 }
 
-function DimBar({ value }: { value: number | null }) {
+function DimBar({ value, locale }: { value: number | null; locale: Locale }) {
   if (value == null) {
     return (
       <span style={{
         fontFamily: sans, fontSize: 11, fontStyle: 'italic',
         color: '#8C6520', opacity: 0.6,
       }}>
-        hidden
+        {t('compare.dim_hidden', locale)}
       </span>
     );
   }
@@ -491,7 +493,7 @@ function DimBar({ value }: { value: number | null }) {
   );
 }
 
-function ComparePicker({ initialYou, initialThem }: { initialYou: string; initialThem: string }) {
+function ComparePicker({ initialYou, initialThem, locale }: { initialYou: string; initialThem: string; locale: Locale }) {
   return (
     <main className="mx-auto max-w-[640px] px-6 pb-32 pt-10 sm:px-10">
       <div
@@ -499,21 +501,19 @@ function ComparePicker({ initialYou, initialThem }: { initialYou: string; initia
         style={{ fontFamily: 'var(--font-pixel-display)' }}
       >
         <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
-        ▶ COMPARE TWO MINDS
+        ▶ {t('compare.eyebrow', locale)}
       </div>
       <h1
         className="mt-5 pr-2 text-[26px] leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[34px]"
         style={{ fontFamily: 'var(--font-pixel-display)' }}
       >
-        <span style={{ textShadow: '3px 3px 0 #B8862F' }}>WHICH TWO PROFILES?</span>
+        <span style={{ textShadow: '3px 3px 0 #B8862F' }}>{t('compare.picker_title', locale)}</span>
       </h1>
       <p
         className="mt-5 text-[16px] italic leading-[1.55] text-[#4A4338]"
         style={{ fontFamily: 'var(--font-prose)' }}
       >
-        Enter two public-profile handles. The page lays them side by side,
-        calls out the three biggest divergences in plain language, and shows
-        all sixteen dimensions for both.
+        {t('compare.picker_intro', locale)}
       </p>
 
       <div
@@ -531,7 +531,7 @@ function ComparePicker({ initialYou, initialThem }: { initialYou: string; initia
             className="flex flex-col gap-1.5 text-[12px] tracking-[0.18em] text-[#8C6520]"
             style={{ fontFamily: 'var(--font-pixel-display)' }}
           >
-            YOUR HANDLE
+            {t('compare.your_handle', locale)}
             <input
               type="text"
               name="you"
@@ -546,7 +546,7 @@ function ComparePicker({ initialYou, initialThem }: { initialYou: string; initia
             className="flex flex-col gap-1.5 text-[12px] tracking-[0.18em] text-[#8C6520]"
             style={{ fontFamily: 'var(--font-pixel-display)' }}
           >
-            THEIR HANDLE
+            {t('compare.their_handle', locale)}
             <input
               type="text"
               name="them"
@@ -558,15 +558,13 @@ function ComparePicker({ initialYou, initialThem }: { initialYou: string; initia
             />
           </label>
           <button type="submit" className="pixel-button pixel-button--amber justify-center">
-            <span>▶ COMPARE</span>
+            <span>▶ {t('compare.submit', locale)}</span>
           </button>
         </form>
       </div>
 
       <p className="mt-6 text-[12.5px] leading-[1.55] text-[#8C6520] opacity-90">
-        Both users need a public profile (Account → Public profile settings →
-        toggle on) for the comparison to work. Per-field visibility
-        (archetype, dimensions, etc.) is respected.
+        {t('compare.picker_footer', locale)}
       </p>
     </main>
   );

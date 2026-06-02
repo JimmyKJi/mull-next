@@ -789,7 +789,34 @@ export const TRANSLATIONS: TranslationMap = {
   "duel.search_placeholder": { en: "Search by name, first name, or idea…", es: "Busca por nombre, nombre de pila o idea…", fr: "Recherche par nom, prénom ou idée…", pt: "Pesquise por nome, primeiro nome ou ideia…", ru: "Поиск по фамилии, имени или идее…", zh: "按姓名、名字或思想关键词搜索……", ja: "氏名・名前・思想で検索…", ko: "이름, 성, 또는 아이디어로 검색…" },
   "duel.matching": { en: "{count} matching \"{q}\"", es: "{count} con \"{q}\"", fr: "{count} pour « {q} »", pt: "{count} para \"{q}\"", ru: "{count} по запросу «{q}»", zh: "符合「{q}」的 {count} 位", ja: "「{q}」に該当 {count} 名", ko: "\"{q}\"에 일치하는 {count}명" },
   "duel.no_matches": { en: "No matches.", es: "Sin coincidencias.", fr: "Aucun résultat.", pt: "Sem resultados.", ru: "Совпадений нет.", zh: "无匹配结果。", ja: "該当なし。", ko: "일치 항목 없음." },
-  "duel.pick_thinker": { en: "Pick a thinker.", es: "Elige un pensador.", fr: "Choisis un penseur.", pt: "Escolha um pensador.", ru: "Выберите мыслителя.", zh: "请选择一位思想家。", ja: "思想家を選んでください。", ko: "사상가를 한 명 고르세요." }
+  "duel.pick_thinker": { en: "Pick a thinker.", es: "Elige un pensador.", fr: "Choisis un penseur.", pt: "Escolha um pensador.", ru: "Выберите мыслителя.", zh: "请选择一位思想家。", ja: "思想家を選んでください。", ko: "사상가를 한 명 고르세요." },
+
+  // ── /compare page. en + zh set here; other locales fall back to en
+  //    via t(). Divergence/convergence SENTENCES + dim labels come from
+  //    lib/dim-narration(-i18n); these are the page chrome only. ──
+  "compare.eyebrow":            { en: "COMPARE TWO MINDS", zh: "对照两种心智" },
+  "compare.intro":              { en: "Two worldviews, sixteen dimensions. Where you converge, and where you don't.", zh: "两种世界观，十六个维度。你们在哪里相合，又在哪里分歧。" },
+  "compare.diverge_most":       { en: "WHERE YOU DIVERGE MOST", zh: "你们分歧最大之处" },
+  "compare.no_data":            { en: "Not enough data to compute divergence — one of you may not have taken the quiz yet.", zh: "数据不足，无法计算分歧 —— 你们当中可能有人尚未完成测验。" },
+  "compare.biggest_divergence": { en: "Biggest divergence", zh: "最大分歧" },
+  "compare.opposite_poles":     { en: "OPPOSITE POLES", zh: "两极相对" },
+  "compare.converge_most":      { en: "WHERE YOU CONVERGE MOST", zh: "你们最为相合之处" },
+  "compare.strongest_agreement":{ en: "Strongest agreement", zh: "最强共识" },
+  "compare.all_dimensions":     { en: "ALL SIXTEEN DIMENSIONS", zh: "全部十六个维度" },
+  "compare.bars_caption":       { en: "Bars show position on each dimension (0–12). Hidden when a user has turned “show dimensions” off in their public profile settings.", zh: "条形显示在每个维度上的位置（0–12）。当用户在公开资料设置中关闭「显示维度」时则隐藏。" },
+  "compare.try_different":      { en: "Compare different handles →", zh: "对照其他用户 →" },
+  "compare.archetype_hidden":   { en: "Archetype hidden by user", zh: "用户已隐藏原型" },
+  "compare.dim_hidden":         { en: "hidden", zh: "已隐藏" },
+  "compare.not_found_eyebrow":  { en: "HANDLE NOT FOUND", zh: "未找到用户名" },
+  "compare.not_found_title":    { en: "We couldn't find {missing}.", zh: "我们找不到 {missing}。" },
+  "compare.not_found_body":     { en: "Common reasons: a typo, the profile isn't public yet, or the account hasn't taken the quiz. Both sides need a public profile (Account → Public profile settings → toggle on) for the comparison to render.", zh: "常见原因：拼写有误、资料尚未公开，或该账户还没做过测验。双方都需要公开资料（账户 → 公开资料设置 → 开启）才能生成对照。" },
+  "compare.not_found_cta":      { en: "◂ TRY DIFFERENT HANDLES", zh: "◂ 换一组用户名" },
+  "compare.picker_title":       { en: "WHICH TWO PROFILES?", zh: "对照哪两位？" },
+  "compare.picker_intro":       { en: "Enter two public-profile handles. The page lays them side by side, calls out the three biggest divergences in plain language, and shows all sixteen dimensions for both.", zh: "输入两个公开资料的用户名。页面会将二者并排，用平实的语言指出三处最大分歧，并展示双方全部十六个维度。" },
+  "compare.your_handle":        { en: "YOUR HANDLE", zh: "你的用户名" },
+  "compare.their_handle":       { en: "THEIR HANDLE", zh: "对方的用户名" },
+  "compare.submit":             { en: "COMPARE", zh: "对照" },
+  "compare.picker_footer":      { en: "Both users need a public profile (Account → Public profile settings → toggle on) for the comparison to work. Per-field visibility (archetype, dimensions, etc.) is respected.", zh: "双方都需要公开资料（账户 → 公开资料设置 → 开启）才能进行对照。按字段的可见性（原型、维度等）将被尊重。" }
 };
 
 export function t(key: string, locale: Locale = 'en', vars?: Record<string, string | number>): string {
