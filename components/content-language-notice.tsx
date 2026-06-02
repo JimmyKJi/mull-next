@@ -42,6 +42,11 @@ type Props = {
   locale?: Locale;
   /** Optional margin-bottom override (in px). Defaults to 24. */
   marginBottom?: number;
+  /** Locales whose page content is already fully translated. The notice
+   *  hides for these (no point telling a zh visitor the content is
+   *  English-only when this surface ships a complete zh render) while
+   *  staying honest for every other non-English locale. */
+  translatedLocales?: Locale[];
 };
 
 function readCookieLocale(): Locale {
@@ -52,7 +57,11 @@ function readCookieLocale(): Locale {
   return isLocale(raw) ? raw : "en";
 }
 
-export function ContentLanguageNotice({ locale, marginBottom = 24 }: Props) {
+export function ContentLanguageNotice({
+  locale,
+  marginBottom = 24,
+  translatedLocales,
+}: Props) {
   // Start with the server-supplied locale (or 'en' if not provided).
   // On hydration, swap to the locale read from document.cookie so
   // statically-generated pages still show the notice to non-EN users.
@@ -63,6 +72,7 @@ export function ContentLanguageNotice({ locale, marginBottom = 24 }: Props) {
   }, [resolved]);
 
   if (resolved === "en") return null;
+  if (translatedLocales?.includes(resolved)) return null;
   return (
     <div
       style={{
