@@ -26,6 +26,12 @@ import { DIM_KEYS, DIM_NAMES } from '@/lib/dimensions';
 import { QUICK_QUESTIONS } from '@/lib/quiz-questions';
 import { DETAILED_QUESTIONS } from '@/lib/quiz-questions-detailed';
 import type { Question } from '@/lib/quiz-questions';
+import {
+  localeRegion,
+  REGION_LABELS,
+  REGION_LOCALES,
+  type LocaleRegion,
+} from '@/lib/locale-region';
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
@@ -52,7 +58,43 @@ type ResearchRow = {
   answers: unknown;
   archetype: string | null;
   vector: unknown;
+  locale: string | null;
 };
+
+// Aggregate figures for one language-region bucket (Western/Eastern/Unknown).
+type RegionAgg = {
+  region: LocaleRegion;
+  label: string;
+  total: number;
+  quick: number;
+  detailed: number;
+  dimMeans: number[];
+  dimN: number;
+  arch: [string, number][];
+};
+
+// Roll a slice of research rows up into the aggregate figures the region
+// comparison renders. Mirrors the overall-corpus math, scoped to a bucket.
+function aggregateRows(rows: ResearchRow[]): Omit<RegionAgg, 'region' | 'label'> {
+  let quick = 0;
+  let detailed = 0;
+  const dimSums = new Array(16).fill(0);
+  let dimN = 0;
+  const archCounts: Record<string, number> = {};
+  for (const row of rows) {
+    if (row.mode === 'quick') quick++;
+    else if (row.mode === 'detailed') detailed++;
+    if (Array.isArray(row.vector) && row.vector.length === 16) {
+      for (let i = 0; i < 16; i++) dimSums[i] += Number(row.vector[i]) || 0;
+      dimN++;
+    }
+    const k = (row.archetype || 'unknown').toLowerCase();
+    archCounts[k] = (archCounts[k] || 0) + 1;
+  }
+  const dimMeans = dimSums.map((s) => (dimN > 0 ? s / dimN : 0));
+  const arch = Object.entries(archCounts).sort((a, b) => b[1] - a[1]);
+  return { total: rows.length, quick, detailed, dimMeans, dimN, arch };
+}
 
 function buildQStats(trails: unknown[], questionCount: number): QStat[] {
   const stats: QStat[] = Array.from({ length: questionCount }, () => ({
@@ -97,7 +139,7 @@ async function loadResearch() {
     admin.from('quiz_attempts').select('*', { count: 'exact', head: true }),
     admin
       .from('research_quiz_responses')
-      .select('mode, answers, archetype, vector')
+      .select('mode, answers, archetype, vector, locale')
       .limit(20000),
     admin
       .from('research_quiz_responses')
@@ -140,8 +182,26 @@ async function loadResearch() {
   }
   const dimMeans = dimSums.map((s) => (dimN > 0 ? s / dimN : 0));
 
+  // ── Language-region split (Western / Eastern / Unknown) ───────────
+  // Bucket the consented corpus by the UI language captured on each row,
+  // then aggregate each bucket. `locale` is NULL on rows captured before
+  // the 20260602_research_locale migration — those land in "Unknown".
+  const buckets: Record<LocaleRegion, ResearchRow[]> = {
+    western: [],
+    eastern: [],
+    unknown: [],
+  };
+  for (const row of rows) buckets[localeRegion(row.locale)].push(row);
+  const regionOrder: LocaleRegion[] = ['western', 'eastern', 'unknown'];
+  const regions: RegionAgg[] = regionOrder.map((region) => ({
+    region,
+    label: REGION_LABELS[region],
+    ...aggregateRows(buckets[region]),
+  }));
+
   return {
     consent: { optIn, optOut, undecided, decided, totalUsers, optInRate },
+    regions,
     corpus: {
       total: researchTotal.count ?? rows.length,
       quick: quickTrails.length,
@@ -276,6 +336,34 @@ export default async function ResearchAdminPage() {
           </p>
         )}
       </section>
+
+      {/* ── By language region (Western / Eastern / Unknown) ─────── */}
+      <section style={cardStyle('#3A5A6A')}>
+        <h2 style={sectionTitle}>▸ BY LANGUAGE REGION</h2>
+        <p style={sectionSub}>
+          The consented corpus split by UI language at capture time.{' '}
+          <strong>Western</strong> = {REGION_LOCALES.western.join(' · ')}.{' '}
+          <strong>Eastern</strong> = {REGION_LOCALES.eastern.join(' · ')}.{' '}
+          <strong>Unknown</strong> = captured before language tracking (not
+          backfilled). A coarse cut on interface language — not a claim about
+          who anyone is.
+        </p>
+        <div
+          style={{
+            marginTop: 16,
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+            gap: 14,
+          }}
+        >
+          {d.regions.map((r) => (
+            <RegionCard key={r.region} region={r} />
+          ))}
+        </div>
+      </section>
+
+      {/* ── Dimension means: Western vs Eastern ──────────────────── */}
+      <RegionDimCompare regions={d.regions} />
 
       {/* ── Overall archetype distribution (all attempts) ────────── */}
       {d.overallArch.length > 0 && (
@@ -653,6 +741,258 @@ function BigStat({
         {typeof value === 'number' ? value.toLocaleString() : value}
       </div>
     </div>
+  );
+}
+
+// Accent color per region — teal (Western), plum (Eastern), gold (Unknown).
+function regionAccent(region: LocaleRegion): string {
+  if (region === 'western') return '#2F5D5C';
+  if (region === 'eastern') return '#7A2E5A';
+  return '#8C6520';
+}
+
+// One summary card per language region: total responses, the quick/detailed
+// split, and the region's top archetypes.
+function RegionCard({ region }: { region: RegionAgg }) {
+  const accent = regionAccent(region.region);
+  const locales =
+    region.region === 'unknown'
+      ? null
+      : REGION_LOCALES[region.region];
+  const top = region.arch.slice(0, 3);
+  return (
+    <div
+      style={{
+        padding: '16px 18px',
+        background: '#FFFCF4',
+        border: '3px solid #221E18',
+        boxShadow: `3px 3px 0 0 ${accent}`,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: pixel,
+          fontSize: 11,
+          color: accent,
+          textTransform: 'uppercase',
+          letterSpacing: '0.16em',
+          marginBottom: 4,
+        }}
+      >
+        ▸ {region.label}
+      </div>
+      <div
+        style={{
+          fontFamily: serif,
+          fontStyle: 'italic',
+          fontSize: 12,
+          color: '#8C6520',
+          marginBottom: 12,
+        }}
+      >
+        {locales ? locales.join(' · ') : 'pre-tracking · no locale'}
+      </div>
+      <div
+        style={{
+          fontFamily: pixel,
+          fontSize: 30,
+          color: '#221E18',
+          lineHeight: 1,
+          fontVariantNumeric: 'tabular-nums',
+        }}
+      >
+        {region.total.toLocaleString()}
+      </div>
+      <div style={{ fontFamily: serif, fontSize: 13, color: '#4A4338', marginTop: 6 }}>
+        {region.quick.toLocaleString()} quick · {region.detailed.toLocaleString()} detailed
+      </div>
+      {top.length > 0 ? (
+        <div style={{ marginTop: 12, borderTop: '2px dashed #D6CDB6', paddingTop: 10 }}>
+          <div
+            style={{
+              fontFamily: pixel,
+              fontSize: 9,
+              color: '#8C6520',
+              textTransform: 'uppercase',
+              letterSpacing: '0.18em',
+              marginBottom: 6,
+            }}
+          >
+            Top archetypes
+          </div>
+          {top.map(([k, c]) => {
+            const pct = region.total > 0 ? Math.round((c / region.total) * 100) : 0;
+            return (
+              <div
+                key={k}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  fontFamily: serif,
+                  fontSize: 13,
+                  color: '#221E18',
+                  textTransform: 'capitalize',
+                  marginBottom: 3,
+                }}
+              >
+                <span>{k}</span>
+                <span style={{ color: '#8C6520', fontVariantNumeric: 'tabular-nums' }}>
+                  {c} · {pct}%
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div
+          style={{
+            marginTop: 12,
+            fontFamily: serif,
+            fontStyle: 'italic',
+            fontSize: 13,
+            color: '#8C6520',
+          }}
+        >
+          No responses yet.
+        </div>
+      )}
+    </div>
+  );
+}
+
+// A single signed mini-bar (one region's mean on one dimension), tagged
+// W/E. Positive leans teal, negative leans brick — same convention as the
+// overall dimension-means panel.
+function MiniSignedBar({
+  tag,
+  mean,
+  maxAbs,
+  na,
+}: {
+  tag: string;
+  mean: number;
+  maxAbs: number;
+  na: boolean;
+}) {
+  const barPct = na ? 0 : Math.round((Math.abs(mean) / maxAbs) * 100);
+  const positive = mean >= 0;
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      <span
+        style={{
+          fontFamily: pixel,
+          fontSize: 9,
+          color: '#8C6520',
+          width: 12,
+          flexShrink: 0,
+        }}
+      >
+        {tag}
+      </span>
+      <div
+        style={{
+          flex: 1,
+          height: 9,
+          background: '#FAF6EC',
+          border: '2px solid #221E18',
+        }}
+      >
+        <div
+          style={{
+            width: `${barPct}%`,
+            height: '100%',
+            background: positive ? '#2F5D5C' : '#7A2E2E',
+          }}
+        />
+      </div>
+      <span
+        style={{
+          fontFamily: pixel,
+          fontSize: 11,
+          color: na ? '#B8AE96' : '#221E18',
+          width: 46,
+          textAlign: 'right',
+          fontVariantNumeric: 'tabular-nums',
+          flexShrink: 0,
+        }}
+      >
+        {na ? '—' : `${mean >= 0 ? '+' : ''}${mean.toFixed(2)}`}
+      </span>
+    </div>
+  );
+}
+
+// Western-vs-Eastern dimension-means comparison: for each of the 16
+// dimensions, the two regions' mean positions side by side on a shared
+// scale. The single most research-relevant cross-cultural readout.
+function RegionDimCompare({ regions }: { regions: RegionAgg[] }) {
+  const western = regions.find((r) => r.region === 'western');
+  const eastern = regions.find((r) => r.region === 'eastern');
+  const wN = western?.dimN ?? 0;
+  const eN = eastern?.dimN ?? 0;
+
+  const maxAbs = Math.max(
+    ...(western?.dimMeans ?? []).map((m) => Math.abs(m)),
+    ...(eastern?.dimMeans ?? []).map((m) => Math.abs(m)),
+    0.01,
+  );
+
+  return (
+    <section style={cardStyle('#7A2E5A')}>
+      <h2 style={sectionTitle}>▸ DIMENSION MEANS · WESTERN vs EASTERN</h2>
+      <p style={sectionSub}>
+        Average position on each dimension, Western (W, {wN.toLocaleString()}{' '}
+        vectors) beside Eastern (E, {eN.toLocaleString()} vectors). Shared
+        scale; teal leans positive, brick negative. A dash means no vectors in
+        that region yet.
+      </p>
+      {wN === 0 && eN === 0 ? (
+        <p
+          style={{
+            fontFamily: serif,
+            fontStyle: 'italic',
+            color: '#8C6520',
+            margin: '16px 0 0',
+            fontSize: 14,
+          }}
+        >
+          No consented vectors in either region yet. Once opted-in users quiz
+          with a Western- or Eastern-language UI, the comparison fills in here.
+        </p>
+      ) : (
+        <div style={{ marginTop: 18 }}>
+          {DIM_KEYS.map((k, i) => (
+            <div
+              key={k}
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '160px 1fr 1fr',
+                alignItems: 'center',
+                gap: 14,
+                marginBottom: 10,
+              }}
+            >
+              <span style={{ fontFamily: serif, fontSize: 13.5, color: '#221E18' }}>
+                <strong>{k}</strong>{' '}
+                <span style={{ color: '#8C6520', fontSize: 12 }}>{DIM_NAMES[k]}</span>
+              </span>
+              <MiniSignedBar
+                tag="W"
+                mean={western?.dimMeans[i] ?? 0}
+                maxAbs={maxAbs}
+                na={wN === 0}
+              />
+              <MiniSignedBar
+                tag="E"
+                mean={eastern?.dimMeans[i] ?? 0}
+                maxAbs={maxAbs}
+                na={eN === 0}
+              />
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
   );
 }
 

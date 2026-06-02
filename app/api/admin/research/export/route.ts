@@ -21,6 +21,7 @@ import { createClient } from '@/utils/supabase/server';
 import { createAdminClient } from '@/utils/supabase/admin';
 import { isAdminUserId } from '@/lib/admin';
 import { DIM_KEYS } from '@/lib/dimensions';
+import { localeRegion } from '@/lib/locale-region';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -33,6 +34,7 @@ type Row = {
   archetype: string | null;
   alignment_pct: number | null;
   created_at: string | null;
+  locale: string | null;
 };
 
 export async function GET(req: Request) {
@@ -49,9 +51,11 @@ export async function GET(req: Request) {
 
   const admin = createAdminClient();
   // Note: NO user_id in the select — the export is deliberately anonymized.
+  // `locale` is the UI language at capture time (NULL on pre-tracking rows);
+  // we derive a coarse Western/Eastern/Unknown `region` from it below.
   const { data, error } = await admin
     .from('research_quiz_responses')
-    .select('mode, question_count, answers, vector, archetype, alignment_pct, created_at')
+    .select('mode, question_count, answers, vector, archetype, alignment_pct, created_at, locale')
     .order('created_at', { ascending: true })
     .limit(50000);
 
@@ -65,12 +69,12 @@ export async function GET(req: Request) {
 
   if (format === 'json') {
     const payload = {
-      schema: 'mull/research-corpus@v1',
+      schema: 'mull/research-corpus@v2',
       exported_at: new Date().toISOString(),
-      note: 'Anonymized consented quiz responses. No user identifiers. Per-question answer trails + 16-D vectors.',
+      note: 'Anonymized consented quiz responses. No user identifiers. Per-question answer trails + 16-D vectors. `locale` is the UI language at capture time (null = pre-tracking); `region` is a coarse western/eastern/unknown bucket derived from it.',
       dimension_order: DIM_KEYS,
       count: rows.length,
-      responses: rows,
+      responses: rows.map((r) => ({ ...r, region: localeRegion(r.locale) })),
     };
     return new NextResponse(JSON.stringify(payload, null, 2), {
       headers: {
@@ -85,6 +89,8 @@ export async function GET(req: Request) {
   const header = [
     'created_at',
     'mode',
+    'locale',
+    'region',
     'question_count',
     'archetype',
     'alignment_pct',
@@ -108,6 +114,8 @@ export async function GET(req: Request) {
     const cells = [
       esc(r.created_at),
       esc(r.mode),
+      esc(r.locale),
+      esc(localeRegion(r.locale)),
       esc(r.question_count),
       esc(r.archetype),
       esc(r.alignment_pct),

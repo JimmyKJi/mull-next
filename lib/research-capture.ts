@@ -14,6 +14,7 @@
 // save must succeed regardless of whether research capture does.
 
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { isLocale } from "./translations";
 
 export type Consent = "yes" | "no";
 
@@ -117,7 +118,25 @@ export type CaptureArgs = {
   vector: number[];
   archetype: string;
   alignmentPct: number;
+  /** UI language at capture time (mull_locale). Used by /admin/research
+   *  to split the corpus into Western/Eastern regions. Validated against
+   *  the known locale set; anything else (or undefined) is stored NULL. */
+  locale?: string | null;
 };
+
+/** True when a Supabase insert error is the "locale column doesn't exist
+ *  yet" case — i.e. the 20260602_research_locale migration hasn't been
+ *  applied. Lets us retry the insert without the column so research
+ *  capture keeps working in the deploy-before-migrate window. */
+function isMissingLocaleColumn(error: { code?: string; message?: string }): boolean {
+  // 42703 = Postgres undefined_column; PGRST204 = PostgREST schema-cache
+  // miss on a column. Belt-and-suspenders with a message check.
+  return (
+    error?.code === "42703" ||
+    error?.code === "PGRST204" ||
+    /locale/i.test(error?.message ?? "")
+  );
+}
 
 /**
  * Write one research_quiz_responses row — but only for opted-in users
@@ -140,17 +159,45 @@ export async function captureResearchResponse(
   const question_count =
     Number.isInteger(qcRaw) && qcRaw > 0 ? qcRaw : answers.length;
 
+  // Only persist a locale we actually recognize; an unknown/missing value
+  // becomes NULL ("Unknown" region in the admin view) rather than noise.
+  const locale = isLocale(args.locale) ? args.locale : null;
+
+  const baseRow = {
+    user_id: args.userId,
+    attempt_id: args.attemptId,
+    mode: args.mode,
+    question_count,
+    answers,
+    vector: args.vector,
+    archetype: args.archetype,
+    alignment_pct: args.alignmentPct,
+  };
+
   try {
-    const { error } = await supabase.from("research_quiz_responses").insert({
-      user_id: args.userId,
-      attempt_id: args.attemptId,
-      mode: args.mode,
-      question_count,
-      answers,
-      vector: args.vector,
-      archetype: args.archetype,
-      alignment_pct: args.alignmentPct,
-    });
+    // Try with locale first. If the column isn't there yet (migration not
+    // applied), retry without it so we never silently drop a consented
+    // row during the deploy-before-migrate window.
+    //
+    // The cast: the generated Supabase types don't know about `locale`
+    // until the 20260602 migration lands and types are regenerated, so we
+    // tell TS to treat the augmented payload as the base row shape. The
+    // `locale` property is still a real key on the object and IS sent to
+    // PostgREST at runtime — a cast strips nothing.
+    const withLocale = { ...baseRow, locale } as typeof baseRow;
+    let { error } = await supabase
+      .from("research_quiz_responses")
+      .insert(locale ? withLocale : baseRow);
+
+    if (error && locale && isMissingLocaleColumn(error)) {
+      console.warn(
+        "[research] locale column missing — run 20260602_research_locale; inserting without it",
+      );
+      ({ error } = await supabase
+        .from("research_quiz_responses")
+        .insert(baseRow));
+    }
+
     if (error) {
       console.warn("[research] capture insert failed", error.message);
       return false;

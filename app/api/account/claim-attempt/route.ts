@@ -25,6 +25,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { captureResearchResponse, syncConsent } from '@/lib/research-capture';
+import { getServerLocale } from '@/lib/locale-server';
 
 export const runtime = 'nodejs';
 
@@ -125,6 +126,7 @@ export async function POST(req: Request) {
   }
 
   // Consent-gated research capture (best-effort; never blocks the claim).
+  const locale = await getServerLocale();
   const captured = await captureResearchResponse(supabase, {
     userId: user.id,
     attemptId: inserted.id,
@@ -135,6 +137,7 @@ export async function POST(req: Request) {
     vector,
     archetype,
     alignmentPct: alignment_pct,
+    locale,
   });
 
   return NextResponse.json({
