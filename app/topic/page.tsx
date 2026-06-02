@@ -11,6 +11,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { TOPICS, topicsByCategory } from '@/lib/topics';
+import { localizeTopic } from '@/lib/topics-i18n';
 import { PixelPageHeader } from '@/components/pixel-window';
 import LanguageSwitcher from '@/components/language-switcher';
 import { getServerLocale } from '@/lib/locale-server';
@@ -45,7 +46,7 @@ function pickFeaturedTopic() {
 export default async function TopicIndexPage() {
   const locale = await getServerLocale();
   const groups = topicsByCategory();
-  const featured = pickFeaturedTopic();
+  const featured = localizeTopic(pickFeaturedTopic(), locale);
 
   return (
     <main className="mx-auto max-w-[920px] px-5 pb-32 pt-10 sm:px-10">
@@ -236,7 +237,7 @@ export default async function TopicIndexPage() {
                     color: '#221E18',
                     lineHeight: 1.2,
                   }}>
-                    {t.title}
+                    {localizeTopic(t, locale).title}
                   </h3>
                   <p style={{
                     fontFamily: serif,
@@ -246,7 +247,7 @@ export default async function TopicIndexPage() {
                     margin: 0,
                     lineHeight: 1.45,
                   }}>
-                    {t.summary}
+                    {localizeTopic(t, locale).summary}
                   </p>
                 </Link>
               </li>

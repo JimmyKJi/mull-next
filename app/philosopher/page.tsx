@@ -5,6 +5,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { PHILOSOPHERS, philosopherSlug, getPhilosopherBySlug, type PhilosopherEntry } from '@/lib/philosophers';
+import { localizePhilosopher } from '@/lib/philosophers-i18n';
 import { ARCHETYPES } from '@/lib/archetypes';
 import { getArchetypeColor } from '@/lib/archetype-colors';
 import { ArchetypeSprite } from '@/components/archetype-sprite';
@@ -43,6 +44,9 @@ function pickFeaturedProfile(): PhilosopherEntry | null {
 
 export default async function PhilosopherIndexPage() {
   const locale = await getServerLocale();
+  // Localize display fields (name/dates/keyIdea); the English name still
+  // drives the URL slug, the sprite seed, and the alphabetical sort.
+  const loc = (e: PhilosopherEntry) => localizePhilosopher(e, philosopherSlug(e.name), locale);
   const featured = pickFeaturedProfile();
   const bioSlugs = philosophersWithBios();
   const featuredList = bioSlugs
@@ -116,19 +120,19 @@ export default async function PhilosopherIndexPage() {
                 className="text-[24px] font-medium leading-[1.1] text-[#221E18] sm:text-[30px]"
                 style={{ fontFamily: 'var(--font-editorial)' }}
               >
-                {featured.name}
+                {loc(featured).name}
               </h2>
               <div
                 className="mt-1 text-[11px] tracking-[0.18em] text-[#8C6520]"
                 style={{ fontFamily: 'var(--font-pixel-display)' }}
               >
-                {featured.dates}
+                {loc(featured).dates}
               </div>
               <p
                 className="mt-3 text-[14.5px] italic leading-[1.55] text-[#4A4338]"
                 style={{ fontFamily: 'var(--font-editorial)' }}
               >
-                {featured.keyIdea}
+                {loc(featured).keyIdea}
               </p>
               <div
                 className="mt-3 text-[10px] tracking-[0.18em] text-[#8C6520]"
@@ -167,10 +171,10 @@ export default async function PhilosopherIndexPage() {
                   }}
                 >
                   <div className="text-[13.5px] font-medium text-[#221E18]" style={{ fontFamily: 'var(--font-editorial)' }}>
-                    {fp.name}
+                    {loc(fp).name}
                   </div>
                   <div className="mt-0.5 text-[10.5px] tracking-wide text-[#8C6520]">
-                    {fp.dates}
+                    {loc(fp).dates}
                   </div>
                 </Link>
               </li>
@@ -254,10 +258,10 @@ export default async function PhilosopherIndexPage() {
                         className="text-[15px] font-medium text-[#221E18]"
                         style={{ fontFamily: 'var(--font-prose)' }}
                       >
-                        {p.name}
+                        {loc(p).name}
                       </div>
                       <div className="mt-0.5 text-[11.5px] tracking-wide text-[#8C6520]">
-                        {p.dates}
+                        {loc(p).dates}
                       </div>
                     </Link>
                   </li>

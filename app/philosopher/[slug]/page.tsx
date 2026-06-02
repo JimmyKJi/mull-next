@@ -19,13 +19,16 @@ import { getArchetypeByKey } from '@/lib/archetypes';
 import { getArchetypeColor } from '@/lib/archetype-colors';
 import { ArchetypeSprite } from '@/components/archetype-sprite';
 import { PhilosopherSprite } from '@/components/philosopher-sprite';
-import { ContentLanguageNotice } from '@/components/content-language-notice';
+import { localizePhilosopher } from '@/lib/philosophers-i18n';
+import { localizeTopic } from '@/lib/topics-i18n';
+import { localizeExercise } from '@/lib/exercises-i18n';
 import { EXERCISES } from '@/lib/exercises';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import { PixelWindow } from '@/components/pixel-window';
 import { philosopherBio } from '@/lib/philosopher-bios';
 import { topicsForPhilosopher, matchupsForPhilosopher } from '@/lib/philosopher-cross-links';
+import { findTopic } from '@/lib/topics';
 import { PathwayNext } from '@/components/pathway-next';
 import { pathwayForPhilosopher } from '@/lib/pathway';
 
@@ -39,8 +42,10 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const p = getPhilosopherBySlug(slug);
-  if (!p) return { title: 'Philosopher not found' };
+  const rawP = getPhilosopherBySlug(slug);
+  if (!rawP) return { title: 'Philosopher not found' };
+  const locale = await getServerLocale();
+  const p = localizePhilosopher(rawP, slug, locale);
 
   const desc =
     p.keyIdea.length > 155 ? p.keyIdea.slice(0, 152).trimEnd() + '…' : p.keyIdea;
@@ -74,20 +79,31 @@ export default async function PhilosopherDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const p = getPhilosopherBySlug(slug);
-  if (!p) notFound();
+  const rawP = getPhilosopherBySlug(slug);
+  if (!rawP) notFound();
 
   const locale = await getServerLocale();
+  // Localized view for display text; rawP keeps the English name for the
+  // procedural sprite seed, the URL slug, and (English) structured data.
+  const p = localizePhilosopher(rawP, slug, locale);
   const archetype = getArchetypeByKey(p.archetypeKey);
   const color = getArchetypeColor(p.archetypeKey);
   const dims = topDimensions(p, 4);
-  const nearest = nearestPhilosophers(p, 6);
+  const nearest = nearestPhilosophers(rawP, 6);
+
+  // Resolve a display name from an English name string: keeps slugs/sprites
+  // English while showing the localized label (e.g. matchup partners).
+  const displayName = (name: string) => {
+    const e = getPhilosopherBySlug(philosopherSlug(name));
+    return e ? localizePhilosopher(e, philosopherSlug(name), locale).name : name;
+  };
 
   const suggestedExerciseSlugs = archetype?.suggestedExercises ?? [];
   const suggestedExercises = suggestedExerciseSlugs
     .map((s) => EXERCISES.find((e) => e.slug === s))
     .filter((x): x is NonNullable<typeof x> => !!x)
-    .slice(0, 3);
+    .slice(0, 3)
+    .map((ex) => localizeExercise(ex, locale));
 
   // Editorial bio (top 25 only). Renders as the page's main content
   // body when present; otherwise the page falls back to chrome-only.
@@ -95,15 +111,22 @@ export default async function PhilosopherDetailPage({
 
   // Reverse-index cross-links — surfaces topic + matchup SEO pages
   // from the philosopher page (internal-link gold).
-  const relatedTopics = topicsForPhilosopher(slug).slice(0, 6);
+  // topicsForPhilosopher returns a light {slug,title,summary} link; look
+  // up the full Topic so the i18n overlay (keyed by slug) can localize it.
+  const relatedTopics = topicsForPhilosopher(slug)
+    .slice(0, 6)
+    .map((rt) => {
+      const full = findTopic(rt.slug);
+      return full ? localizeTopic(full, locale) : rt;
+    });
   const matchups = matchupsForPhilosopher(slug).slice(0, 8);
 
   const personSchema = {
     '@context': 'https://schema.org',
     '@type': 'Person',
-    name: p.name,
-    alternateName: p.aliases,
-    description: p.keyIdea,
+    name: rawP.name,
+    alternateName: rawP.aliases,
+    description: rawP.keyIdea,
     url: `https://mull.world/philosopher/${slug}`,
     image: `https://mull.world/philosopher/${slug}/opengraph-image`,
     jobTitle: 'Philosopher',
@@ -124,22 +147,22 @@ export default async function PhilosopherDetailPage({
   }).join(', ');
   const faqEntries: { q: string; a: string }[] = [
     {
-      q: `Who was ${p.name}?`,
-      a: `${p.name} (${p.dates}) was a philosopher classified on Mull under the ${p.archetypeName} archetype. ${p.keyIdea}`,
+      q: `Who was ${rawP.name}?`,
+      a: `${rawP.name} (${rawP.dates}) was a philosopher classified on Mull under the ${rawP.archetypeName} archetype. ${rawP.keyIdea}`,
     },
     {
-      q: `When did ${p.name} live?`,
-      a: `${p.name}'s dates are ${p.dates}.`,
+      q: `When did ${rawP.name} live?`,
+      a: `${rawP.name}'s dates are ${rawP.dates}.`,
     },
     {
-      q: `What is ${p.name} known for?`,
-      a: `${p.keyIdea} On Mull's 16-dimensional map, ${p.name} scores highest on ${dimNamesForFaq}.`,
+      q: `What is ${rawP.name} known for?`,
+      a: `${rawP.keyIdea} On Mull's 16-dimensional map, ${rawP.name} scores highest on ${dimNamesForFaq}.`,
     },
   ];
   if (nearestName) {
     faqEntries.push({
-      q: `Which philosophers are similar to ${p.name}?`,
-      a: `By Mull's dimensional analysis, ${p.name} sits closest to ${nearest.slice(0, 3).map(n => n.name).join(', ')}.`,
+      q: `Which philosophers are similar to ${rawP.name}?`,
+      a: `By Mull's dimensional analysis, ${rawP.name} sits closest to ${nearest.slice(0, 3).map(n => n.name).join(', ')}.`,
     });
   }
   const faqSchema = {
@@ -181,8 +204,6 @@ export default async function PhilosopherDetailPage({
           </Link>
         </div>
 
-        <ContentLanguageNotice locale={locale} />
-
         {/* Hero */}
         <PixelWindow
           title={`▶ ${t('phil.eyebrow', locale).toUpperCase()}`}
@@ -200,7 +221,7 @@ export default async function PhilosopherDetailPage({
               aria-hidden
             >
               <PhilosopherSprite
-                name={p.name}
+                name={rawP.name}
                 archetypeKey={p.archetypeKey}
                 size={104}
                 floating
@@ -360,6 +381,7 @@ export default async function PhilosopherDetailPage({
             <ul className="space-y-2.5">
               {nearest.map((other) => {
                 const otherColor = getArchetypeColor(other.archetypeKey);
+                const ol = localizePhilosopher(other, philosopherSlug(other.name), locale);
                 return (
                   <li key={other.name}>
                     <Link
@@ -384,7 +406,7 @@ export default async function PhilosopherDetailPage({
                             className="text-[16px] font-medium text-[#221E18]"
                             style={{ fontFamily: 'var(--font-editorial)' }}
                           >
-                            {other.name}
+                            {ol.name}
                           </span>
                           <span
                             className="text-[10px] tracking-[0.16em]"
@@ -400,7 +422,7 @@ export default async function PhilosopherDetailPage({
                           className="mt-1 text-[13px] leading-[1.5] text-[#4A4338]"
                           style={{ fontFamily: 'var(--font-editorial)' }}
                         >
-                          {other.keyIdea}
+                          {ol.keyIdea}
                         </p>
                       </div>
                     </Link>
@@ -418,7 +440,7 @@ export default async function PhilosopherDetailPage({
                 className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
                 style={{ fontFamily: 'var(--font-editorial)' }}
               >
-                Concepts where {p.name} sits in the conversation. Each links to a primer.
+                {t('phil.topics_helper', locale, { name: p.name })}
               </p>
               <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {relatedTopics.map(rt => (
@@ -458,7 +480,7 @@ export default async function PhilosopherDetailPage({
                 className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
                 style={{ fontFamily: 'var(--font-editorial)' }}
               >
-                Side-by-side with other philosophers, dimension by dimension.
+                {t('phil.matchups_helper', locale)}
               </p>
               <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {matchups.map(m => (
@@ -476,7 +498,7 @@ export default async function PhilosopherDetailPage({
                         className="text-[15px] font-medium text-[#221E18]"
                         style={{ fontFamily: 'var(--font-editorial)' }}
                       >
-                        {p.name} <span style={{ color: '#8C6520', fontFamily: 'var(--font-pixel-display)', fontSize: 10 }}>VS</span> {m.partner}
+                        {p.name} <span style={{ color: '#8C6520', fontFamily: 'var(--font-pixel-display)', fontSize: 10 }}>VS</span> {displayName(m.partner)}
                       </div>
                     </Link>
                   </li>

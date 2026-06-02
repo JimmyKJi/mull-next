@@ -8,7 +8,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { PHILOSOPHERS, philosopherSlug } from '@/lib/philosophers';
+import { PHILOSOPHERS, philosopherSlug, type PhilosopherEntry } from '@/lib/philosophers';
 import { findTopic, TOPICS } from '@/lib/topics';
 import { DIM_NAMES, type DimKey } from '@/lib/dimensions';
 import { ARCHETYPES } from '@/lib/archetypes';
@@ -17,8 +17,11 @@ import { ArchetypeSprite } from '@/components/archetype-sprite';
 import { PhilosopherSprite } from '@/components/philosopher-sprite';
 import { PathwayNext } from '@/components/pathway-next';
 import { pathwayForTopic } from '@/lib/pathway';
-import { ContentLanguageNotice } from '@/components/content-language-notice';
 import { getServerLocale } from '@/lib/locale-server';
+import { t } from '@/lib/translations';
+import { localizeTopic } from '@/lib/topics-i18n';
+import { localizePhilosopher } from '@/lib/philosophers-i18n';
+import { localizeArchetype } from '@/lib/archetypes-i18n';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-editorial)";
@@ -33,8 +36,10 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const topic = findTopic(slug);
-  if (!topic) return { title: 'Topic not found' };
+  const rawTopic = findTopic(slug);
+  if (!rawTopic) return { title: 'Topic not found' };
+  const locale = await getServerLocale();
+  const topic = localizeTopic(rawTopic, locale);
   const url = `https://mull.world/topic/${slug}`;
   const description = topic.summary;
   return {
@@ -67,9 +72,15 @@ export default async function TopicDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const topic = findTopic(slug);
-  if (!topic) notFound();
+  const rawTopic = findTopic(slug);
+  if (!rawTopic) notFound();
   const locale = await getServerLocale();
+  // Localized view for visible prose; rawTopic feeds the (English) JSON-LD.
+  const topic = localizeTopic(rawTopic, locale);
+
+  // Localize a related philosopher's display name while keeping the English
+  // name for its URL slug and procedural sprite seed.
+  const loc = (e: PhilosopherEntry) => localizePhilosopher(e, philosopherSlug(e.name), locale);
 
   // Resolve curated philosopher names to entries in the 560 corpus.
   // We tolerate misses silently (typo or new addition) and just skip
@@ -80,7 +91,8 @@ export default async function TopicDetailPage({
 
   const archetypeEntries = topic.relatedArchetypes
     .map(key => ARCHETYPES.find(a => a.key === key))
-    .filter((a): a is NonNullable<typeof a> => !!a);
+    .filter((a): a is NonNullable<typeof a> => !!a)
+    .map(a => localizeArchetype(a, locale));
 
   // JSON-LD: Article + embedded DefinedTerm. Search engines use this
   // to disambiguate from the other things called "Stoicism" on the
@@ -88,14 +100,14 @@ export default async function TopicDetailPage({
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: topic.title,
-    description: topic.summary,
+    headline: rawTopic.title,
+    description: rawTopic.summary,
     url: `https://mull.world/topic/${slug}`,
     inLanguage: 'en',
     mainEntity: {
       '@type': 'DefinedTerm',
-      name: topic.title,
-      description: topic.summary,
+      name: rawTopic.title,
+      description: rawTopic.summary,
       inDefinedTermSet: {
         '@type': 'DefinedTermSet',
         name: 'Topics in philosophy on Mull',
@@ -127,11 +139,9 @@ export default async function TopicDetailPage({
             color: '#4A4338', textDecoration: 'none',
             letterSpacing: 0.4, textTransform: 'uppercase',
           }}>
-            ◂ ALL TOPICS
+            ◂ {t('topic.back_all', locale)}
           </Link>
         </div>
-
-        <ContentLanguageNotice locale={locale} />
 
         <div style={{
           fontFamily: pixel,
@@ -141,7 +151,7 @@ export default async function TopicDetailPage({
           letterSpacing: '0.18em',
           marginBottom: 14,
         }}>
-          ▸ TOPIC
+          ▸ {t('topic.eyebrow', locale)}
         </div>
 
         <h1 style={{
@@ -194,15 +204,14 @@ export default async function TopicDetailPage({
         {/* Related dimensions */}
         {topic.relevantDimensions.length > 0 && (
           <section style={{ marginBottom: 36 }}>
-            <h2 style={sectionH2}>▸ DIMENSIONS THIS LIVES ON</h2>
+            <h2 style={sectionH2}>▸ {t('topic.section_dimensions', locale)}</h2>
             <p style={subtitle}>
-              When you take the quiz, the dimensions most relevant to
-              {' '}{topic.title.toLowerCase()} are:
+              {t('topic.dimensions_helper', locale, { title: topic.title })}
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 14 }}>
               {topic.relevantDimensions.map(key => (
                 <span key={key} style={dimChip}>
-                  {DIM_NAMES[key as DimKey] || key}
+                  {t(`dim.${key}.name`, locale) || DIM_NAMES[key as DimKey] || key}
                 </span>
               ))}
             </div>
@@ -212,11 +221,9 @@ export default async function TopicDetailPage({
         {/* Related philosophers */}
         {philosophers.length > 0 && (
           <section style={{ marginBottom: 36 }}>
-            <h2 style={sectionH2}>▸ THINKERS ON THIS QUESTION</h2>
+            <h2 style={sectionH2}>▸ {t('topic.section_thinkers', locale)}</h2>
             <p style={subtitle}>
-              From the {PHILOSOPHERS.length}-philosopher corpus on Mull —
-              click through for each one&rsquo;s position + their place on the
-              map.
+              {t('topic.thinkers_helper', locale, { n: PHILOSOPHERS.length })}
             </p>
             <ul style={{
               listStyle: 'none',
@@ -268,7 +275,7 @@ export default async function TopicDetailPage({
                         textOverflow: 'ellipsis',
                         whiteSpace: 'nowrap',
                       }}>
-                        {p.name}
+                        {loc(p).name}
                       </div>
                       <div style={{
                         fontFamily: pixel,
@@ -278,7 +285,7 @@ export default async function TopicDetailPage({
                         textTransform: 'uppercase',
                         marginTop: 2,
                       }}>
-                        {p.dates}
+                        {loc(p).dates}
                       </div>
                     </div>
                   </Link>
@@ -291,10 +298,9 @@ export default async function TopicDetailPage({
         {/* Related archetypes — visual hook for the quiz CTA */}
         {archetypeEntries.length > 0 && (
           <section style={{ marginBottom: 36 }}>
-            <h2 style={sectionH2}>▸ ARCHETYPES THAT CLUSTER HERE</h2>
+            <h2 style={sectionH2}>▸ {t('topic.section_archetypes', locale)}</h2>
             <p style={subtitle}>
-              Among Mull&rsquo;s ten archetypes, the ones most likely to wrestle
-              with {topic.title.toLowerCase()} are:
+              {t('topic.archetypes_helper', locale, { title: topic.title })}
             </p>
             <ul style={{
               listStyle: 'none',
