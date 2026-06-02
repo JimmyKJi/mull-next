@@ -8,6 +8,7 @@
 
 import { createClient } from '@/utils/supabase/server';
 import { getDailyDilemma } from '@/lib/dilemmas';
+import { localizeDilemma } from '@/lib/dilemmas-i18n';
 import { getUserPlan } from '@/lib/subscription';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
@@ -69,7 +70,7 @@ export default async function DilemmaArchivePage({
   const items = pageKeys.map(key => {
     const d = new Date(`${key}T12:00:00Z`);
     const { dilemma, index } = getDailyDilemma(d);
-    return { dateKey: key, dilemma, index };
+    return { dateKey: key, dilemma: localizeDilemma(dilemma, index, locale), index };
   });
 
   // Look up which of those the user has already answered.

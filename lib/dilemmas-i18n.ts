@@ -12,7 +12,7 @@
 // below are hand-maintained.
 
 import type { Dilemma } from './dilemmas';
-import type { Locale } from './translations';
+import { t, type Locale } from './translations';
 
 export type DilemmaI18nFields = {
   prompt?: string;
@@ -2299,14 +2299,32 @@ export const DILEMMAS_I18N: Record<string, Partial<Record<Locale, DilemmaI18nFie
 // ─── END gen-translate DILEMMAS_I18N ───
 
 /** Overlay translated fields onto a Dilemma (addressed by its array index)
- *  for the given locale. Falls back to English for any missing field. */
+ *  for the given locale. Two translation sources, in precedence order:
+ *
+ *  1. DILEMMAS_I18N — the systematic overlay above. Currently zh-only, but
+ *     covers ALL dilemmas (every index), so it's the primary source.
+ *  2. The older `dil.<index>.{prompt,hint}` keys in translations.ts — these
+ *     cover all 8 locales but only the first ~30 dilemmas. They're the only
+ *     source for non-zh locales, and the fallback for any index the overlay
+ *     misses. t() echoes the key string back when there's no entry, so we
+ *     compare against the key to detect a real hit.
+ *
+ *  Anything still unresolved falls back to the English source field. */
 export function localizeDilemma(d: Dilemma, index: number, locale: Locale): Dilemma {
   if (locale === 'en') return d;
+
   const o = DILEMMAS_I18N[String(index)]?.[locale];
-  if (!o) return d;
-  return {
-    ...d,
-    prompt: o.prompt ?? d.prompt,
-    hint: o.hint ?? d.hint,
-  };
+
+  const promptKey = `dil.${index}.prompt`;
+  const hintKey = `dil.${index}.hint`;
+  const tPrompt = t(promptKey, locale);
+  const tHint = t(hintKey, locale);
+  const keyedPrompt = tPrompt !== promptKey ? tPrompt : undefined;
+  const keyedHint = tHint !== hintKey ? tHint : undefined;
+
+  const prompt = o?.prompt ?? keyedPrompt ?? d.prompt;
+  const hint = o?.hint ?? keyedHint ?? d.hint;
+
+  if (prompt === d.prompt && hint === d.hint) return d;
+  return { ...d, prompt, hint };
 }

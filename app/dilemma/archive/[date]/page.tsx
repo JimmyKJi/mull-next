@@ -7,6 +7,7 @@
 
 import { createClient } from '@/utils/supabase/server';
 import { getDailyDilemma } from '@/lib/dilemmas';
+import { localizeDilemma } from '@/lib/dilemmas-i18n';
 import { getUserPlan } from '@/lib/subscription';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
@@ -78,7 +79,8 @@ export default async function DilemmaArchiveDatePage({
   }
 
   const dilemmaDate = new Date(`${date}T12:00:00Z`);
-  const { dilemma } = getDailyDilemma(dilemmaDate);
+  const { dilemma: rawDilemma, index: dilemmaIndex } = getDailyDilemma(dilemmaDate);
+  const dilemma = localizeDilemma(rawDilemma, dilemmaIndex, locale);
 
   const dateFmt = locale === 'en' ? 'en-GB' : locale;
   const dateLabel = dilemmaDate.toLocaleDateString(dateFmt, {

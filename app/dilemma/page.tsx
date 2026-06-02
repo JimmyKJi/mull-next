@@ -1,5 +1,6 @@
 import { createClient } from '@/utils/supabase/server';
 import { getDailyDilemma } from '@/lib/dilemmas';
+import { localizeDilemma } from '@/lib/dilemmas-i18n';
 import { topShifts } from '@/lib/dimensions';
 import Link from 'next/link';
 import type { Metadata } from 'next';
@@ -49,23 +50,12 @@ export default async function DilemmaPage() {
   const locale = await getServerLocale();
   const { data: { user } } = await supabase.auth.getUser();
   const today = getDailyDilemma();
-  // Localize today's dilemma question + hint via the dil.N.* keys.
-  // t() returns the key itself when no entry exists (so it's always
-  // truthy — `||` fallback won't trigger). We expanded DILEMMAS to 379
-  // but the dil.N.* translation keys only cover the original ~90, so
-  // for any newer index we need to fall through to the English source
-  // string explicitly. Detect "no translation" by comparing against the
-  // key string.
-  const promptKey = `dil.${today.index}.prompt`;
-  const hintKey = `dil.${today.index}.hint`;
-  const promptLookup = t(promptKey, locale);
-  const hintLookup = t(hintKey, locale);
-  const localizedPrompt = (promptLookup && promptLookup !== promptKey)
-    ? promptLookup
-    : today.dilemma.prompt;
-  const localizedHint = (hintLookup && hintLookup !== hintKey)
-    ? hintLookup
-    : (today.dilemma.hint || '');
+  // Localize today's dilemma question + hint. localizeDilemma prefers the
+  // full zh overlay (all 379 dilemmas), falls back to the dil.N.* keys
+  // (8 locales, first ~30), then to the English source.
+  const localizedDilemma = localizeDilemma(today.dilemma, today.index, locale);
+  const localizedPrompt = localizedDilemma.prompt;
+  const localizedHint = localizedDilemma.hint || '';
 
   let existing: ExistingResponse | null = null;
   let streak = 0;
