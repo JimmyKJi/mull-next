@@ -21,6 +21,7 @@ import {
   getLocalizedQuickQuestion,
   type SupportedQuizLocale,
 } from "@/lib/quiz-i18n";
+import { getLocalizedDetailedQuestion } from "@/lib/quiz-detailed-i18n";
 import type { Locale } from "@/lib/translations";
 import { t } from "@/lib/translations";
 
@@ -210,8 +211,16 @@ export function QuizEngine({ questions, mode, locale }: Props) {
   const isMulti = !!question?.multi;
   const maxPicks = question?.multi?.max ?? 1;
 
+  // Per-question translation overlay. Quick + detailed sets live in
+  // separate overlay files but normalize to the same { p?, a:[...] } shape,
+  // so the prompt/answer fallbacks below treat them identically. Missing
+  // entries (untranslated locale/question) return undefined → English
+  // source shows through.
   const localized = useMemo(() => {
-    if (mode === "detailed" || locale === "en") return null;
+    if (locale === "en") return null;
+    if (mode === "detailed") {
+      return getLocalizedDetailedQuestion(idx, locale);
+    }
     return getLocalizedQuickQuestion(idx, locale as SupportedQuizLocale);
   }, [idx, locale, mode]);
 

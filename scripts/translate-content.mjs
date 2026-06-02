@@ -35,6 +35,8 @@ import { TOPICS } from '../lib/topics';
 import { TOPICS_I18N } from '../lib/topics-i18n';
 import { PHILOSOPHERS, philosopherSlug } from '../lib/philosophers';
 import { PHILOSOPHERS_I18N } from '../lib/philosophers-i18n';
+import { DETAILED_QUESTIONS } from '../lib/quiz-questions-detailed';
+import { DETAILED_QUIZ_I18N } from '../lib/quiz-detailed-i18n';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const SEP = '␟'; // ␟ — unlikely to appear in content; used as a path separator
@@ -119,6 +121,15 @@ const DOMAINS = {
     constName: 'PHILOSOPHERS_I18N',
     recordType: 'Record<string, Partial<Record<Locale, PhilosopherI18nFields>>>',
     fields: ['name', 'dates', 'keyIdea'],
+  },
+  quizDetailed: {
+    data: DETAILED_QUESTIONS,
+    existing: DETAILED_QUIZ_I18N,
+    keyField: null, // no id field — key by array index (mirrors dilemmas)
+    overlayFile: 'lib/quiz-detailed-i18n.ts',
+    constName: 'DETAILED_QUIZ_I18N',
+    recordType: 'Record<string, Partial<Record<Locale, DetailedQuestionI18nFields>>>',
+    fields: ['p', { array: 'a', subfields: ['t'] }],
   },
 };
 
