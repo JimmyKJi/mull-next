@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { ARCHETYPES, archetypeKeys, getArchetypeByKey } from '@/lib/archetypes';
+import { localizeArchetype } from '@/lib/archetypes-i18n';
 import { getArchetypeColor } from '@/lib/archetype-colors';
 import { ArchetypeSprite } from '@/components/archetype-sprite';
 import { DIM_NAMES } from '@/lib/dimensions';
@@ -17,7 +18,6 @@ import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
 import { PixelWindow } from '@/components/pixel-window';
-import { ContentLanguageNotice } from '@/components/content-language-notice';
 import { PathwayNext } from '@/components/pathway-next';
 import { pathwayForArchetype } from '@/lib/pathway';
 import { topicsForArchetype } from '@/lib/archetype-cross-links';
@@ -64,10 +64,11 @@ export default async function ArchetypeDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const archetype = getArchetypeByKey(slug);
-  if (!archetype) notFound();
+  const rawArchetype = getArchetypeByKey(slug);
+  if (!rawArchetype) notFound();
 
   const locale = await getServerLocale();
+  const archetype = localizeArchetype(rawArchetype, locale);
   const color = getArchetypeColor(archetype.key);
   const name = t(`arch.${archetype.key}.name`, locale) || archetype.key;
   const blurb = t(`arch.${archetype.key}.blurb`, locale) || '';
@@ -78,10 +79,12 @@ export default async function ArchetypeDetailPage({
 
   const dimensions = archetype.dominantDimensions.map((k) => ({
     key: k,
-    name: DIM_NAMES[k as keyof typeof DIM_NAMES] || k,
+    name: t(`dim.${k}.name`, locale) || DIM_NAMES[k as keyof typeof DIM_NAMES] || k,
   }));
 
-  const others = ARCHETYPES.filter((a) => a.key !== archetype.key);
+  const others = ARCHETYPES.filter((a) => a.key !== archetype.key).map((a) =>
+    localizeArchetype(a, locale)
+  );
 
   // Structured data — Schema.org Article since each archetype page
   // is an editorial essay on a philosophical pattern. Search engines
@@ -138,8 +141,6 @@ export default async function ArchetypeDetailPage({
         </Link>
         <LanguageSwitcher initial={locale} />
       </div>
-
-      <ContentLanguageNotice locale={locale} />
 
       {/* ─── Hero — pixel sprite + name + spirit ─── */}
       <PixelWindow
@@ -337,12 +338,12 @@ export default async function ArchetypeDetailPage({
 
         {/* ─── Common mistakes ─── */}
         {archetype.commonMistakes.length > 0 ? (
-          <PixelWindow title="COMMON MISTAKES" badge="▶ FAILURE MODES">
+          <PixelWindow title={t('arch_detail.section_mistakes', locale).toUpperCase()} badge="▶ FAILURE MODES">
             <p
               className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
               style={{ fontFamily: 'var(--font-editorial)' }}
             >
-              Specific moments where this archetype&apos;s instinct breaks down — and what to do instead.
+              {t('arch_detail.mistakes_helper', locale)}
             </p>
             <ul className="space-y-3">
               {archetype.commonMistakes.map((m, i) => (
@@ -387,12 +388,12 @@ export default async function ArchetypeDetailPage({
 
         {/* ─── Modern exemplars ─── */}
         {archetype.modernExemplars.length > 0 ? (
-          <PixelWindow title="MODERN EXEMPLARS" badge="▶ LIVING">
+          <PixelWindow title={t('arch_detail.section_exemplars', locale).toUpperCase()} badge="▶ LIVING">
             <p
               className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
               style={{ fontFamily: 'var(--font-editorial)' }}
             >
-              Contemporary figures whose orientation reads as this archetype. Not just philosophers — the type is older than the discipline.
+              {t('arch_detail.exemplars_helper', locale)}
             </p>
             <ul className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
               {archetype.modernExemplars.map((ex, i) => (
@@ -526,12 +527,12 @@ export default async function ArchetypeDetailPage({
           const related = topicsForArchetype(slug);
           if (related.length === 0) return null;
           return (
-            <PixelWindow title="TOPICS THAT CLUSTER HERE" badge="▶ QUESTIONS">
+            <PixelWindow title={t('arch_detail.section_topics', locale).toUpperCase()} badge="▶ QUESTIONS">
               <p
                 className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
                 style={{ fontFamily: 'var(--font-editorial)' }}
               >
-                Philosophical questions where {name}-typed minds tend to find themselves.
+                {t('arch_detail.topics_helper', locale, { name })}
               </p>
               <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {related.map(rt => (
@@ -570,12 +571,12 @@ export default async function ArchetypeDetailPage({
             sprite + name + the one-sentence spark. Builds the
             "archetypes-in-conversation" feeling. */}
         {archetype.tensions.length > 0 ? (
-          <PixelWindow title="WHERE THIS ARCHETYPE PUSHES BACK" badge="▶ FRICTIONS">
+          <PixelWindow title={t('arch_detail.section_tensions', locale).toUpperCase()} badge="▶ FRICTIONS">
             <p
               className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
               style={{ fontFamily: 'var(--font-editorial)' }}
             >
-              Productive disagreements with other archetypes. Each is a place where the orientations genuinely differ — and where the difference is worth hearing.
+              {t('arch_detail.tensions_helper', locale)}
             </p>
             <ul className="space-y-3">
               {archetype.tensions.map((tension, i) => {

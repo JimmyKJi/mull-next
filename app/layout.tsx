@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Lora, Pixelify_Sans, Press_Start_2P, VT323 } from "next/font/google";
 import "./globals.css";
 import { SiteNav } from "@/components/site-nav";
+import { getServerLocale } from "@/lib/locale-server";
 import CapabilityToast from "@/components/capability-toast";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -141,14 +142,19 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Per-request locale (mull_locale cookie). Reading it here opts the
+  // root layout into dynamic rendering — already the norm across the
+  // app (27+ pages call getServerLocale) — and lets the global SiteNav
+  // render in the right language server-side, with no hydration flash.
+  const locale = await getServerLocale();
   return (
     <html
-      lang="en"
+      lang={locale === "zh" ? "zh-Hans" : locale}
       className={`${cormorant.variable} ${lora.variable} ${pixelifySans.variable} ${pressStart2P.variable} ${vt323.variable}`}
       style={
         {
@@ -196,7 +202,7 @@ export default function RootLayout({
             Cmd-K command palette, Account button. Visible on every
             route. Replaces the old GlobalTopBar / TopBarMount pair
             (kept in repo for now in case anything still imports them). */}
-        <SiteNav />
+        <SiteNav locale={locale} />
         <div id="main-content">{children}</div>
         {/* Vercel Web Analytics — page views, referrers, locations.
             Custom events fire from individual pages via the `track()`

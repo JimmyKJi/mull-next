@@ -22,6 +22,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getServerLocale } from '@/lib/locale-server';
+import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
 import { PixelWindow, PixelPageHeader } from '@/components/pixel-window';
 import { ContentLanguageNotice } from '@/components/content-language-notice';
@@ -161,13 +162,13 @@ export default async function MethodologyPage() {
                       className="text-[14px] font-medium leading-tight text-[#221E18]"
                       style={{ fontFamily: 'var(--font-editorial)' }}
                     >
-                      {DIM_NAMES[k]}
+                      {t(`dim.${k}.name`, locale) || DIM_NAMES[k]}
                     </div>
                     <div
                       className="mt-1 text-[12.5px] leading-[1.45] text-[#4A4338]"
                       style={{ fontFamily: 'var(--font-editorial)' }}
                     >
-                      {DIM_DESCRIPTIONS[k]}
+                      {t(`dim.${k}.desc`, locale) || DIM_DESCRIPTIONS[k]}
                     </div>
                   </div>
                 </div>

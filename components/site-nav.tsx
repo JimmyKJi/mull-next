@@ -1,36 +1,93 @@
 "use client";
 
-// SiteNav — slim sticky top navigation. Always visible, scrolls with
-// the page. Wordmark on the left, nav links in the center, Cmd-K
-// search on the right. Opens a command palette overlay on Cmd-K (or
-// Ctrl-K on non-Mac) for fuzzy-jumping to any of the ~40 routes
-// without scrolling to a footer.
+// SiteNav — sticky pixel top bar with GROUPED umbrella dropdowns.
 //
-// Replaces the per-page slim headers in the v2 redesign so navigation
-// is consistent and "where am I" is always one glance away.
+// The wordmark sits left; the center holds a handful of umbrella menus
+// (Quiz · Daily · Practice · Explore · About) that reveal their sub-pages
+// on hover / focus / tap. This replaces the old flat list of links, so
+// deep surfaces (Exercises, the Crucible, Argument Diary, the Wandering
+// Question…) are reachable in one move instead of hiding in the command
+// palette. Cmd-K search + Account sit on the right.
+//
+// On <md the umbrella row collapses into a single "Menu" button that
+// opens a full-screen grouped sheet — hover doesn't exist on touch, so
+// the dropdowns wouldn't be reachable otherwise.
+//
+// Labels are localized via t(key, locale). The locale is passed down
+// from the root layout (a server component that reads the cookie), so
+// the bar renders in the right language on the server with no hydration
+// flash.
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ARCHETYPES } from "@/lib/archetypes";
 import { PHILOSOPHERS } from "@/lib/philosophers";
+import { t, type Locale } from "@/lib/translations";
 import FocusTrap from "./focus-trap";
 import { MullMark } from "./mull-mark";
 
-// Routes pinned to the top nav. Reflects the same tier-1/2 priority
-// that the home page IA does: signature surfaces first, then map
-// + daily, then about. Tier-3 surfaces (Diary, Exercises, Compare,
-// Simulated debate) live only in the command palette — they're
-// discoverable but don't crowd the top bar.
-const NAV_LINKS = [
-  { href: "/", label: "Home" },
-  { href: "/spar", label: "Daily Spar" },
-  { href: "/pilgrimage", label: "Pilgrimage" },
-  { href: "/arena", label: "Arena" },
-  { href: "/map", label: "Map" },
-  { href: "/atlas", label: "Atlas" },
-  { href: "/about", label: "About" },
-] as const;
+// Umbrella groups. `key` is a translation key (nav.group.*); each item's
+// `key` is a nav.* translation key. Order follows the funnel: assess →
+// return daily → train → browse → meta. Every substantive route lives in
+// exactly one group, so nothing is orphaned to the palette alone.
+type NavItem = { href: string; key: string };
+type NavGroup = { key: string; items: NavItem[] };
+
+const NAV_GROUPS: NavGroup[] = [
+  {
+    key: "nav.group.quiz",
+    items: [
+      { href: "/quiz/journey", key: "nav.quiz_journey" },
+      { href: "/quiz?mode=quick", key: "nav.quiz_classic" },
+      { href: "/quiz?mode=detailed", key: "nav.quiz_detailed" },
+      { href: "/result", key: "nav.result" },
+    ],
+  },
+  {
+    key: "nav.group.daily",
+    items: [
+      { href: "/spar", key: "nav.spar" },
+      { href: "/dilemma", key: "nav.dilemma" },
+      { href: "/diary", key: "nav.diary" },
+      { href: "/crucible", key: "nav.crucible" },
+      { href: "/wandering", key: "nav.wandering" },
+      { href: "/year", key: "nav.year" },
+    ],
+  },
+  {
+    key: "nav.group.practice",
+    items: [
+      { href: "/exercises", key: "nav.exercises" },
+      { href: "/arena", key: "nav.arena" },
+      { href: "/pilgrimage", key: "nav.pilgrimage" },
+      { href: "/argument-diary", key: "nav.argument_diary" },
+      { href: "/debate", key: "nav.debate" },
+    ],
+  },
+  {
+    key: "nav.group.explore",
+    items: [
+      { href: "/map", key: "nav.map" },
+      { href: "/atlas", key: "nav.atlas" },
+      { href: "/archetype", key: "nav.archetypes" },
+      { href: "/philosopher", key: "nav.philosophers" },
+      { href: "/topic", key: "nav.topics" },
+      { href: "/vs", key: "nav.matchups" },
+      { href: "/compare", key: "nav.compare" },
+      { href: "/anthology", key: "nav.anthology" },
+    ],
+  },
+  {
+    key: "nav.group.about",
+    items: [
+      { href: "/about", key: "nav.about" },
+      { href: "/methodology", key: "nav.methodology" },
+      { href: "/classes", key: "nav.classes" },
+      { href: "/install", key: "nav.install" },
+    ],
+  },
+];
 
 // Routes that render inside a third-party iframe (or otherwise want a
 // chromeless full-bleed experience). The nav is suppressed on these
@@ -38,19 +95,22 @@ const NAV_LINKS = [
 // the comparable HIDDEN_PREFIXES in components/feedback-button.tsx.
 const CHROMELESS_PREFIXES = ['/badge', '/share', '/wrapped', '/embed'];
 
-export function SiteNav() {
+export function SiteNav({ locale = "en" }: { locale?: Locale }) {
   const pathname = usePathname() ?? "/";
+  const [open, setOpen] = useState(false); // command palette
+  const [openGroup, setOpenGroup] = useState<string | null>(null); // desktop dropdown
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const chromeless = CHROMELESS_PREFIXES.some(
-    p => pathname === p || pathname.startsWith(p + '/'),
+    (p) => pathname === p || pathname.startsWith(p + "/"),
   );
-  const [open, setOpen] = useState(false);
 
-  // Cmd-K is still mounted globally below — hide *just* the nav bar
-  // on chromeless routes so the badge / share / wrapped routes
-  // render flush in iframes + screenshot crops.
-  if (chromeless) return null;
-
-  // Cmd-K / Ctrl-K opens the palette. Escape closes.
+  // Cmd-K / Ctrl-K toggles the palette; Escape closes whatever is open.
+  // NB: every hook runs unconditionally — BEFORE the chromeless early
+  // return below — so hook order stays stable when navigating between a
+  // chromeless and a normal route (the old code returned null between
+  // two hooks, which violated the rules of hooks).
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       const isPaletteShortcut =
@@ -58,31 +118,62 @@ export function SiteNav() {
       if (isPaletteShortcut) {
         e.preventDefault();
         setOpen((v) => !v);
-      } else if (e.key === "Escape" && open) {
+      } else if (e.key === "Escape") {
         setOpen(false);
+        setOpenGroup(null);
+        setMobileOpen(false);
       }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open]);
+  }, []);
+
+  // Close any open menu when the route changes (a link was followed).
+  useEffect(() => {
+    setOpenGroup(null);
+    setMobileOpen(false);
+  }, [pathname]);
+
+  if (chromeless) return null;
 
   const isMac =
     typeof navigator !== "undefined" &&
     /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform || navigator.userAgent);
 
+  function isItemActive(href: string) {
+    const base = href.split("?")[0];
+    if (base === "/") return pathname === "/";
+    return pathname === base || pathname.startsWith(base + "/");
+  }
+  function isGroupActive(g: NavGroup) {
+    return g.items.some((it) => isItemActive(it.href));
+  }
+
+  // A short close delay lets the cursor cross the small gap between the
+  // trigger and its panel without the menu flickering shut.
+  function openNow(key: string) {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+    setOpenGroup(key);
+  }
+  function scheduleClose() {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => setOpenGroup(null), 140);
+  }
+
   return (
     <>
-      {/* Pixel-game top nav — chunky 4px ink border on the bottom,
-          flat cream surface, no rounded corners, no smooth shadows.
-          Reads as the title bar of an 8-bit window. */}
+      {/* Pixel-game top nav — chunky 4px ink border on the bottom, flat
+          cream surface, hard shadows, no rounded corners. Reads as the
+          title bar of an 8-bit window. */}
       <nav className="sticky top-0 z-40 border-b-4 border-[#221E18] bg-[#FAF6EC]">
-        <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-6 px-4 sm:px-8">
-          {/* Wordmark — uses the new MullMark glyph + Press Start 2P
-              text. Replaces the inline diagonal-stripe placeholder
-              that lived here before MullMark existed. */}
+        <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-4 px-4 sm:px-8">
+          {/* Wordmark → home */}
           <Link
             href="/"
-            className="flex items-center gap-2.5 hover:text-[#8C6520]"
+            className="flex shrink-0 items-center gap-2.5 hover:text-[#8C6520]"
           >
             <span className="slow-bob inline-block">
               <MullMark size={22} />
@@ -95,64 +186,135 @@ export function SiteNav() {
             </span>
           </Link>
 
-          {/* Center links — VT323 pixel font, hidden on small */}
-          <ul className="hidden items-center gap-5 md:flex">
-            {NAV_LINKS.map((link) => {
-              const active =
-                link.href === "/"
-                  ? pathname === "/"
-                  : pathname === link.href ||
-                    pathname.startsWith(link.href + "/");
+          {/* Center — umbrella dropdowns (md+). Each opens on hover, on
+              keyboard focus, and on click/tap. */}
+          <ul className="hidden items-center gap-1 md:flex">
+            {NAV_GROUPS.map((g) => {
+              const active = isGroupActive(g);
+              const expanded = openGroup === g.key;
               return (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
+                <li
+                  key={g.key}
+                  className="relative"
+                  onMouseEnter={() => openNow(g.key)}
+                  onMouseLeave={scheduleClose}
+                >
+                  <button
+                    type="button"
+                    aria-haspopup="true"
+                    aria-expanded={expanded}
+                    onClick={() => setOpenGroup(expanded ? null : g.key)}
+                    onFocus={() => openNow(g.key)}
                     className={
-                      "text-[14px] font-medium leading-none transition-colors " +
-                      (active
-                        ? "text-[#221E18] underline decoration-[3px] decoration-[#B8862F] underline-offset-[6px]"
+                      "flex items-center gap-1.5 px-2.5 py-1.5 text-[14px] font-medium leading-none transition-colors " +
+                      (active || expanded
+                        ? "text-[#221E18]"
                         : "text-[#4A4338] hover:text-[#221E18]")
                     }
                   >
-                    {link.label}
-                  </Link>
+                    <span
+                      className={
+                        active
+                          ? "underline decoration-[3px] decoration-[#B8862F] underline-offset-[6px]"
+                          : ""
+                      }
+                    >
+                      {t(g.key, locale)}
+                    </span>
+                    <span aria-hidden className="text-[8px] leading-none opacity-70">
+                      {expanded ? "▲" : "▼"}
+                    </span>
+                  </button>
+
+                  {expanded ? (
+                    <div
+                      role="menu"
+                      aria-label={t(g.key, locale)}
+                      className="absolute left-0 top-full z-50 mt-[6px] min-w-[210px] border-4 border-[#221E18] bg-[#FFFCF4] p-1.5 shadow-[6px_6px_0_0_#8C6520]"
+                    >
+                      <ul>
+                        {g.items.map((it) => {
+                          const itActive = isItemActive(it.href);
+                          return (
+                            <li key={it.href} role="none">
+                              <Link
+                                role="menuitem"
+                                href={it.href}
+                                onClick={() => setOpenGroup(null)}
+                                className={
+                                  "block whitespace-nowrap px-3 py-2 text-[14px] leading-none transition-none " +
+                                  (itActive
+                                    ? "bg-[#B8862F] text-[#1A1612]"
+                                    : "text-[#221E18] hover:bg-[#F8EDC8]")
+                                }
+                              >
+                                {t(it.key, locale)}
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  ) : null}
                 </li>
               );
             })}
           </ul>
 
-          {/* Cmd-K trigger + Account button */}
-          <div className="flex items-center gap-2.5">
+          {/* Right cluster — search, account, and (mobile) the menu toggle */}
+          <div className="flex shrink-0 items-center gap-2.5">
             <button
               type="button"
               onClick={() => setOpen(true)}
               className="hidden items-center gap-2 border-2 border-[#221E18] bg-[#FFFCF4] px-3 py-1.5 text-[13px] font-medium leading-none text-[#221E18] hover:bg-[#F8EDC8] sm:inline-flex"
-              aria-label="Open command palette"
+              aria-label={t("nav.search_short", locale)}
             >
-              <span>Search</span>
-              <kbd className="pixel-kbd">
-                {isMac ? "⌘K" : "^K"}
-              </kbd>
+              <span>{t("nav.search_short", locale)}</span>
+              <kbd className="pixel-kbd">{isMac ? "⌘K" : "^K"}</kbd>
             </button>
             <Link
               href="/account"
-              className="border-2 border-[#221E18] bg-[#221E18] px-3.5 py-1.5 text-[13px] font-medium leading-none text-[#FAF6EC] hover:bg-[#8C6520] hover:border-[#8C6520]"
+              className="hidden border-2 border-[#221E18] bg-[#221E18] px-3.5 py-1.5 text-[13px] font-medium leading-none text-[#FAF6EC] hover:border-[#8C6520] hover:bg-[#8C6520] sm:inline-block"
             >
-              Account
+              {t("nav.account_btn", locale)}
             </Link>
+            {/* Mobile menu toggle */}
+            <button
+              type="button"
+              onClick={() => setMobileOpen((v) => !v)}
+              aria-haspopup="true"
+              aria-expanded={mobileOpen}
+              aria-label={t("nav.menu", locale)}
+              className="inline-flex items-center gap-1.5 border-2 border-[#221E18] bg-[#FFFCF4] px-2.5 py-1.5 text-[12px] font-medium leading-none text-[#221E18] hover:bg-[#F8EDC8] md:hidden"
+              style={{ fontFamily: "var(--font-pixel-display)" }}
+            >
+              <span aria-hidden>{mobileOpen ? "✕" : "☰"}</span>
+              <span>{t("nav.menu", locale)}</span>
+            </button>
           </div>
         </div>
       </nav>
 
-      {/* Mobile-only floating Cmd-K trigger. Sits bottom-RIGHT —
-          the FeedbackButton's mobile icon lives bottom-LEFT, so the
-          two thumb-zone corners are split between them. Hidden on
-          sm+ since the inline Search button in the navbar already
-          covers desktop. The pixel "⌘" button is small and
-          unobtrusive — discoverable for someone tapping around without
-          dominating the viewport.
-          Safe-area inset stacks on the base offset so the button
-          clears the iPhone home-indicator when installed as a PWA. */}
+      {/* Mobile grouped sheet — full-bleed drawer under the bar. Rendered
+          outside the sticky <nav> so it overlays content (fixed) instead
+          of growing the bar and reflowing the page. */}
+      {mobileOpen ? (
+        <MobileMenu
+          locale={locale}
+          isItemActive={isItemActive}
+          onClose={() => setMobileOpen(false)}
+          onOpenSearch={() => {
+            setMobileOpen(false);
+            setOpen(true);
+          }}
+        />
+      ) : null}
+
+      {/* Mobile-only floating Cmd-K trigger. Sits bottom-RIGHT — the
+          FeedbackButton's mobile icon lives bottom-LEFT, so the two
+          thumb-zone corners are split between them. Safe-area inset
+          stacks on the base offset so it clears the iPhone home
+          indicator when installed as a PWA. */}
       <button
         type="button"
         onClick={() => setOpen(true)}
@@ -171,6 +333,91 @@ export function SiteNav() {
 
       {open ? <CommandPalette onClose={() => setOpen(false)} /> : null}
     </>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────
+// MobileMenu — touch drawer. Lists every umbrella group as a labelled
+// section of tap targets (hover dropdowns don't work on touch). Closes
+// on backdrop tap, Escape, or following a link. Search + Account live at
+// the bottom since they're hidden from the mobile bar.
+// ────────────────────────────────────────────────────────────────
+function MobileMenu({
+  locale,
+  isItemActive,
+  onClose,
+  onOpenSearch,
+}: {
+  locale: Locale;
+  isItemActive: (href: string) => boolean;
+  onClose: () => void;
+  onOpenSearch: () => void;
+}) {
+  return (
+    <div
+      className="fixed inset-x-0 bottom-0 top-16 z-50 bg-[#221E18]/50 md:hidden"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label={t("nav.menu", locale)}
+    >
+      <FocusTrap onEscape={onClose}>
+        <div
+          className="max-h-full overflow-y-auto border-b-4 border-[#221E18] bg-[#FAF6EC] px-4 py-4"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {NAV_GROUPS.map((g) => (
+            <div key={g.key} className="mb-4">
+              <div
+                className="mb-1.5 px-1 text-[11px] uppercase tracking-[0.2em] text-[#8C6520]"
+                style={{ fontFamily: "var(--font-pixel-display)" }}
+              >
+                {t(g.key, locale)}
+              </div>
+              <ul className="grid grid-cols-2 gap-1.5">
+                {g.items.map((it) => {
+                  const active = isItemActive(it.href);
+                  return (
+                    <li key={it.href}>
+                      <Link
+                        href={it.href}
+                        onClick={onClose}
+                        className={
+                          "block border-2 px-3 py-2.5 text-[14px] leading-none " +
+                          (active
+                            ? "border-[#221E18] bg-[#B8862F] text-[#1A1612]"
+                            : "border-[#EBE3CA] bg-[#FFFCF4] text-[#221E18] hover:bg-[#F8EDC8]")
+                        }
+                      >
+                        {t(it.key, locale)}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
+
+          {/* Utilities — hidden from the mobile bar, surfaced here. */}
+          <div className="flex gap-1.5 pb-[env(safe-area-inset-bottom,0px)]">
+            <button
+              type="button"
+              onClick={onOpenSearch}
+              className="flex-1 border-2 border-[#221E18] bg-[#FFFCF4] px-3 py-2.5 text-[14px] font-medium leading-none text-[#221E18] hover:bg-[#F8EDC8]"
+            >
+              {t("nav.search_short", locale)}
+            </button>
+            <Link
+              href="/account"
+              onClick={onClose}
+              className="flex-1 border-2 border-[#221E18] bg-[#221E18] px-3 py-2.5 text-center text-[14px] font-medium leading-none text-[#FAF6EC] hover:border-[#8C6520] hover:bg-[#8C6520]"
+            >
+              {t("nav.account_btn", locale)}
+            </Link>
+          </div>
+        </div>
+      </FocusTrap>
+    </div>
   );
 }
 

@@ -12,6 +12,8 @@ import {
 } from "@/lib/archetype-targets";
 import { getArchetypeColor } from "@/lib/archetype-colors";
 import { DIM_KEYS, DIM_NAMES, type DimKey } from "@/lib/dimensions";
+import { getServerLocale } from "@/lib/locale-server";
+import { t } from "@/lib/translations";
 import { PHILOSOPHERS } from "@/lib/philosophers";
 import {
   cos,
@@ -121,11 +123,15 @@ export default async function ResultPage({
     .sort((a, b) => b.sim - a.sim)
     .slice(0, 3);
 
+  // Per-request locale — localizes the dimension names that flow into
+  // the client reveal (radar axis labels + tendency chips).
+  const locale = await getServerLocale();
+
   // Dimensions data for the radar — normalize each value to 0..1
   // (vectors come in roughly 0..10 range).
   const dimRadar = DIM_KEYS.map((k, i) => ({
     key: k,
-    name: DIM_NAMES[k],
+    name: t(`dim.${k}.name`, locale) || DIM_NAMES[k],
     value: Math.max(0, Math.min(1, (vector[i] ?? 0) / 10)),
   }));
 
@@ -151,7 +157,7 @@ export default async function ResultPage({
       runnerUpPct={runnerUpPct}
       closest={closest}
       dimRadar={dimRadar}
-      userTop3={userTop3.map((d) => ({ key: d.key, name: DIM_NAMES[d.key] }))}
+      userTop3={userTop3.map((d) => ({ key: d.key, name: t(`dim.${d.key}.name`, locale) || DIM_NAMES[d.key] }))}
       isSignedIn={isSignedIn}
       challengerHandle={challengerHandle}
       challengerName={challengerName}

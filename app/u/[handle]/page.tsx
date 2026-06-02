@@ -201,7 +201,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   const latest = latestArch;
 
   const topDims = position
-    .map((v, i) => ({ key: DIM_KEYS[i], name: DIM_NAMES[DIM_KEYS[i]], v }))
+    .map((v, i) => ({ key: DIM_KEYS[i], name: t(`dim.${DIM_KEYS[i]}.name`, locale) || DIM_NAMES[DIM_KEYS[i]], v }))
     .sort((a, b) => b.v - a.v)
     .slice(0, 5);
 

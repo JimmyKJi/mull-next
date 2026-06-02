@@ -15,6 +15,8 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { DIM_KEYS, DIM_NAMES } from '@/lib/dimensions';
+import { getServerLocale } from '@/lib/locale-server';
+import { t } from '@/lib/translations';
 import { ARCHETYPES } from '@/lib/archetypes';
 import { FIGURES } from '@/lib/figures';
 import { topDivergences, topConvergences } from '@/lib/dim-narration';
@@ -98,6 +100,7 @@ export default async function ComparePage({
   searchParams: Promise<{ you?: string; them?: string }>;
 }) {
   const sp = await searchParams;
+  const locale = await getServerLocale();
   const youHandle = (sp.you || '').trim().toLowerCase();
   const themHandle = (sp.them || '').trim().toLowerCase();
 
@@ -357,7 +360,7 @@ export default async function ComparePage({
                 color: '#221E18',
                 alignItems: 'center',
               }}>
-                <div style={{ fontWeight: 500 }}>{DIM_NAMES[k as keyof typeof DIM_NAMES]}</div>
+                <div style={{ fontWeight: 500 }}>{t(`dim.${k}.name`, locale) || DIM_NAMES[k as keyof typeof DIM_NAMES]}</div>
                 <DimBar value={showA ? va : null} />
                 <DimBar value={showB ? vb : null} />
               </div>

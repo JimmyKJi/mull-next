@@ -297,7 +297,7 @@ export default async function PhilosopherDetailPage({
             <ul className="space-y-2">
               {dims.map((d) => {
                 const key = Object.keys(DIM_NAMES)[d.idx] as keyof typeof DIM_NAMES;
-                const name = DIM_NAMES[key];
+                const name = t(`dim.${key}.name`, locale) || DIM_NAMES[key];
                 const pct = (d.value / 10) * 100;
                 return (
                   <li
