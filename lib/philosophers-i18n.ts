@@ -135,7 +135,7 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
     "zh": {
       "name": "伊本·西那（阿维森纳）",
       "dates": "980–1037",
-      "keyIdea": "必然存在者的上帝论证。\"悬浮人\"说明灵魂是独立于身体的实体。"
+      "keyIdea": "必然存在者的上帝论证。“悬浮人”说明灵魂是独立于身体的实体。"
     }
   },
   "al-ghazali": {
@@ -351,7 +351,7 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "carneades": {
     "zh": {
       "dates": "约公元前214—前129年",
-      "keyIdea": "或然性——\"可信者\"——在确定性缺失时充当行动的向导。",
+      "keyIdea": "或然性——“可信者”——在确定性缺失时充当行动的向导。",
       "name": "卡尔内阿德斯"
     }
   },
@@ -520,7 +520,7 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
     "zh": {
       "name": "邓斯·司各脱",
       "dates": "~1266–1308",
-      "keyIdea": "存在的单义性；此性——使个体成其所是的\"这个性\"。"
+      "keyIdea": "存在的单义性；此性——使个体成其所是的“这个性”。"
     }
   },
   "marguerite-porete": {
@@ -1003,7 +1003,7 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
     "zh": {
       "name": "纳尔逊·古德曼",
       "dates": "1906–1998",
-      "keyIdea": "《事实、虚构与预测》——\"绿蓝\"悖论，以及世界构建的诸种方式。"
+      "keyIdea": "《事实、虚构与预测》——“绿蓝”悖论，以及世界构建的诸种方式。"
     }
   },
   "donald-davidson": {
@@ -1458,7 +1458,7 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
     "zh": {
       "name": "爱德华·萨义德",
       "dates": "1935–2003",
-      "keyIdea": "《东方主义》——关于\"他者\"的知识，作为帝国的谋划。"
+      "keyIdea": "《东方主义》——关于“他者”的知识，作为帝国的谋划。"
     }
   },
   "paul-gilroy": {
@@ -1819,7 +1819,7 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
     "zh": {
       "name": "拉玛那·马哈希",
       "dates": "1879–1950",
-      "keyIdea": "我是谁？追溯\"我念\"至其根源。唯有自我是真实的。"
+      "keyIdea": "我是谁？追溯“我念”至其根源。唯有自我是真实的。"
     }
   },
   "nisargadatta-maharaj": {
@@ -1946,7 +1946,7 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
     "zh": {
       "name": "大卫·查默斯",
       "dates": "生于1966年",
-      "keyIdea": "意识的难题：为何存在某种\"身为某物的感受\"？属性二元论。"
+      "keyIdea": "意识的难题：为何存在某种“身为某物的感受”？属性二元论。"
     }
   },
   "bernard-williams": {
@@ -2000,7 +2000,7 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
     "zh": {
       "name": "乔治·赫伯特·米德",
       "dates": "1863–1931",
-      "keyIdea": "自我生成于社会互动之中。\"主我\"与\"客我\"。泛化的他者。"
+      "keyIdea": "自我生成于社会互动之中。“主我”与“客我”。泛化的他者。"
     }
   },
   "judith-butler": {
@@ -2035,7 +2035,7 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
     "zh": {
       "name": "西尔维娅·温特",
       "dates": "生于1928年",
-      "keyIdea": "我们必须动摇殖民式的\"人\"之范畴，重新书写人的定义。一门关于混杂人性的存在科学。"
+      "keyIdea": "我们必须动摇殖民式的“人”之范畴，重新书写人的定义。一门关于混杂人性的存在科学。"
     }
   },
   "cornel-west": {
@@ -2483,7 +2483,7 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
     "zh": {
       "name": "蒙田",
       "dates": "1533–1592",
-      "keyIdea": "《随笔集》——\"我知道什么？\"——怀疑主义化为自我画像。"
+      "keyIdea": "《随笔集》——“我知道什么？”——怀疑主义化为自我画像。"
     }
   },
   "galileo-galilei": {
@@ -3337,7 +3337,7 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
     "zh": {
       "name": "约翰·姆比提",
       "dates": "1931–2019",
-      "keyIdea": "《非洲宗教与哲学》——\"我存在，因为我们存在。\""
+      "keyIdea": "《非洲宗教与哲学》——“我存在，因为我们存在。”"
     }
   },
   "paulin-hountondji": {

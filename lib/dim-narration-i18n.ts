@@ -138,8 +138,8 @@ export const DIM_NARRATION_I18N: Record<string, Partial<Record<Locale, DimNarrat
   "SI": {
     "zh": {
       "label": "自我作为幻象",
-      "high": "视自我为一种有用的虚构——其下并无固定的\"你\"",
-      "low": "体验到自我的真实与连续——有一个\"你\"在发出追问"
+      "high": "视自我为一种有用的虚构——其下并无固定的“你”",
+      "low": "体验到自我的真实与连续——有一个“你”在发出追问"
     }
   }
 };

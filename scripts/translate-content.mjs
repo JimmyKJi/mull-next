@@ -39,9 +39,64 @@ import { DETAILED_QUESTIONS } from '../lib/quiz-questions-detailed';
 import { DETAILED_QUIZ_I18N } from '../lib/quiz-detailed-i18n';
 import { DIM_NARRATIONS } from '../lib/dim-narration';
 import { DIM_NARRATION_I18N } from '../lib/dim-narration-i18n';
+import { PHILOSOPHER_BIOS } from '../lib/philosopher-bios';
+import { PHILOSOPHER_BIOS_I18N } from '../lib/philosopher-bios-i18n';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const SEP = '␟'; // ␟ — unlikely to appear in content; used as a path separator
+
+// Locales whose quotations use paired full-width marks. The model is asked to
+// emit these, but for long passages it often falls back to ASCII " (which the
+// anchor recoverer then preserves verbatim). ASCII quotes inside CJK prose read
+// as a quality defect, so we normalize balanced ASCII double-quote pairs to the
+// locale's marks deterministically at write time — idempotent, and independent
+// of whether the model cooperated.
+const CJK_QUOTES = {
+  zh: ['“', '”'],
+  ja: ['「', '」'],
+};
+function normalizeQuotes(str, loc) {
+  const q = CJK_QUOTES[loc];
+  if (!q || typeof str !== 'string') return str;
+  // Pair ASCII double quotes greedily-but-minimally (the char class excludes ")
+  // so each "…" maps to one open/close pair. An unpaired stray " is left alone.
+  return str.replace(/"([^"]*)"/g, `${q[0]}$1${q[1]}`);
+}
+
+// Recursively normalize every string leaf under `node` (a field object, which
+// may hold nested arrays of field objects). Returns the count of changed leaves.
+function normalizeNode(node, loc) {
+  let changed = 0;
+  for (const [k, v] of Object.entries(node)) {
+    if (typeof v === 'string') {
+      const n = normalizeQuotes(v, loc);
+      if (n !== v) { node[k] = n; changed++; }
+    } else if (Array.isArray(v)) {
+      for (const el of v) if (el && typeof el === 'object') changed += normalizeNode(el, loc);
+    } else if (v && typeof v === 'object') {
+      changed += normalizeNode(v, loc);
+    }
+  }
+  return changed;
+}
+
+// Normalize quotes across a whole overlay map's `loc` subtree, in place. Handles
+// both flatValue overlays (entry[loc] is a string) and field overlays
+// (entry[loc] is an object of fields). Returns the count of changed leaves.
+function deepNormalizeLocale(existing, loc) {
+  let changed = 0;
+  for (const entry of Object.values(existing || {})) {
+    const sub = entry?.[loc];
+    if (sub == null) continue;
+    if (typeof sub === 'string') {
+      const n = normalizeQuotes(sub, loc);
+      if (n !== sub) { entry[loc] = n; changed++; }
+    } else if (typeof sub === 'object') {
+      changed += normalizeNode(sub, loc);
+    }
+  }
+  return changed;
+}
 
 // ── env ──
 function loadEnv() {
@@ -146,6 +201,16 @@ const DOMAINS = {
     // So each must read naturally with such a prefix.
     hint: 'The "high" and "low" values are sentence FRAGMENTS describing a leaning on a scale. At render time a degree adverb is prefixed to each (in Chinese: 强烈地 / 较为 / 略微 = "strongly" / "moderately" / "just barely"). Translate each so it reads naturally with that adverb in front: lead with a single GRADABLE predicate verb (信任…, 重视…, 倾向于…), NOT with a temporal/conditional clause and NOT with a comparative like 更 (which clashes with the prefixed adverb). The "label" is a short noun-phrase dimension name and takes no adverb. Keep the em-dash "——" clause structure where present.',
   },
+  philosopherBios: {
+    data: PHILOSOPHER_BIOS,
+    existing: PHILOSOPHER_BIOS_I18N,
+    shape: 'record', // PHILOSOPHER_BIOS is Record<slug, string>; key by slug
+    flatValue: true, // …and the record VALUE is the whole essay (no field objects)
+    overlayFile: 'lib/philosopher-bios-i18n.ts',
+    constName: 'PHILOSOPHER_BIOS_I18N',
+    recordType: 'Record<string, Partial<Record<Locale, string>>>',
+    hint: 'Each value is a multi-paragraph editorial essay — a philosopher biography. Preserve the paragraph structure exactly: keep every blank-line "\\n\\n" break between paragraphs. The English wraps book/work titles and the occasional foreign term in *asterisks* (e.g. *Republic*, *Being and Nothingness*, *telos*, *eudaimonia*). Do NOT emit literal asterisks in the translation. Instead: render book/work titles with Chinese 《》 title marks (e.g. 《理想国》, 《存在与虚无》); for an emphasized foreign/technical term, give the established Chinese term and, on first mention where it aids the reader, append the romanized word in parentheses (e.g. 目的（telos）, 幸福（eudaimonia）). Keep years and parenthetical citations like "(1781)" verbatim. The register is an erudite, plain literary essay.',
+  },
 };
 
 // ── args ──
@@ -156,6 +221,11 @@ const force = args.includes('--force');
 // targeted fix for damage left by the old lossy recovery, without re-sweeping
 // the hundreds of good batches a --force run would redo.
 const repair = args.includes('--repair');
+// --renormalize: no API calls. Walk the EXISTING overlay values for `locale`
+// and re-persist them through normalizeQuotes (ASCII " → locale quotation
+// marks for CJK). Cheap, idempotent quote-quality cleanup that preserves the
+// already-translated prose. Works across all domains/shapes.
+const renormalize = args.includes('--renormalize');
 // --dry-run: compute what WOULD be translated/repaired and print it, but make
 // no API calls and write nothing. Lets us validate the --repair detector
 // cheaply before spending tokens.
@@ -201,6 +271,15 @@ function entries(domain) {
 // ── flatten: build { flatKey -> englishText } for a domain ──
 function extract(domain) {
   const out = {};
+  // flatValue: the record VALUE is the translatable string itself (no fields).
+  // flatKey is just the entry key (e.g. the slug).
+  if (domain.flatValue) {
+    for (const [k, entry] of entries(domain)) {
+      if (k == null) continue;
+      if (typeof entry === 'string' && entry.trim()) out[k] = entry;
+    }
+    return out;
+  }
   for (const [k, entry] of entries(domain)) {
     if (k == null) continue;
     for (const f of domain.fields) {
@@ -224,7 +303,8 @@ function extract(domain) {
 }
 
 // ── does the existing overlay already hold this flatKey for `locale`? ──
-function hasExisting(existing, flatKey, loc) {
+function hasExisting(existing, flatKey, loc, domain) {
+  if (domain?.flatValue) return typeof existing?.[flatKey]?.[loc] === 'string';
   const parts = flatKey.split(SEP);
   const node = existing?.[parts[0]]?.[loc];
   if (!node) return false;
@@ -235,7 +315,19 @@ function hasExisting(existing, flatKey, loc) {
 }
 
 // ── merge translated flatKeys back into a nested overlay map ──
-function applyTranslations(map, translations, loc) {
+function applyTranslations(map, translations, loc, domain) {
+  // Normalize CJK quotation marks up front, so both code paths below store the
+  // cleaned value (see normalizeQuotes / CJK_QUOTES).
+  translations = Object.fromEntries(
+    Object.entries(translations).map(([k, v]) => [k, normalizeQuotes(v, loc)]),
+  );
+  if (domain?.flatValue) {
+    for (const [flatKey, val] of Object.entries(translations)) {
+      (map[flatKey] ||= {});
+      map[flatKey][loc] = val;
+    }
+    return map;
+  }
   for (const [flatKey, val] of Object.entries(translations)) {
     const parts = flatKey.split(SEP);
     const entryKey = parts[0];
@@ -353,7 +445,11 @@ function isSuspectTruncation(en, zh) {
 
 // ── read the persisted translation string for a flatKey (mirror of
 //    hasExisting, but returns the value) ──
-function getExisting(existing, flatKey, loc) {
+function getExisting(existing, flatKey, loc, domain) {
+  if (domain?.flatValue) {
+    const v = existing?.[flatKey]?.[loc];
+    return typeof v === 'string' ? v : undefined;
+  }
   const parts = flatKey.split(SEP);
   const node = existing?.[parts[0]]?.[loc];
   if (!node) return undefined;
@@ -448,17 +544,24 @@ async function run() {
   for (const name of domainNames) {
     const domain = DOMAINS[name];
     if (!domain) { console.warn(`  ✗ unknown domain "${name}" — skipping`); continue; }
+    if (renormalize) {
+      const map = JSON.parse(JSON.stringify(domain.existing || {}));
+      const changed = deepNormalizeLocale(map, locale);
+      if (changed && !dryRun) persist(domain, map);
+      console.log(`  ${name}: ${dryRun ? 'would normalize' : 'normalized'} ${changed} value(s) for ${locale}`);
+      continue;
+    }
     const all = extract(domain);
     const pending = {};
     if (repair) {
       // re-translate only existing values that look truncated
       for (const [k, v] of Object.entries(all)) {
-        const cur = getExisting(domain.existing, k, locale);
+        const cur = getExisting(domain.existing, k, locale, domain);
         if (cur != null && isSuspectTruncation(v, cur)) pending[k] = v;
       }
     } else {
       for (const [k, v] of Object.entries(all)) {
-        if (!force && hasExisting(domain.existing, k, locale)) continue;
+        if (!force && hasExisting(domain.existing, k, locale, domain)) continue;
         pending[k] = v;
       }
     }
@@ -472,7 +575,7 @@ async function run() {
     if (dryRun) {
       for (const k of Object.keys(pending)) {
         if (repair) {
-          const cur = getExisting(domain.existing, k, locale);
+          const cur = getExisting(domain.existing, k, locale, domain);
           console.log(`      • ${k}\n          en: ${String(all[k]).slice(0, 80).replace(/\n/g, '⏎')}\n          zh: ${String(cur).slice(0, 80).replace(/\n/g, '⏎')}`);
         } else {
           console.log(`      • ${k}`);
@@ -492,7 +595,7 @@ async function run() {
       while (true) {
         try {
           const result = await translateBatch(locale, batches[i], domain.hint);
-          applyTranslations(map, result, locale);
+          applyTranslations(map, result, locale, domain);
           persist(domain, map); // persist after EACH batch → resumable
           process.stdout.write(' ✓\n');
           break;

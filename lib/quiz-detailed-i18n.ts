@@ -397,7 +397,7 @@ export const DETAILED_QUIZ_I18N: Record<string, Partial<Record<Locale, DetailedQ
           "t": "兴奋。更好就是更好。"
         },
         {
-          "t": "好奇，同时对\"更好\"所衡量的标准持审慎态度。"
+          "t": "好奇，同时对“更好”所衡量的标准持审慎态度。"
         },
         {
           "t": "迟疑。旧的方式解决了我们未曾意识到的问题。"
@@ -406,7 +406,7 @@ export const DETAILED_QUIZ_I18N: Record<string, Partial<Record<Locale, DetailedQ
           "t": "谨慎采纳，留意何处会出现裂痕。"
         },
         {
-          "t": "漠然。大多数所谓的\"进步\"不过是横向的位移。"
+          "t": "漠然。大多数所谓的“进步”不过是横向的位移。"
         }
       ]
     }
@@ -535,7 +535,7 @@ export const DETAILED_QUIZ_I18N: Record<string, Partial<Record<Locale, DetailedQ
           "t": "拒绝接受。许多局限，往往在执意追问之下悄然消散。"
         },
         {
-          "t": "好好哀悼它。并非每一次失去都该被\"优化\"着熬过去。"
+          "t": "好好哀悼它。并非每一次失去都该被“优化”着熬过去。"
         },
         {
           "t": "留意绕行的路教会了我什么。弯路本身，通常才是藏着功课的地方。"
@@ -582,7 +582,7 @@ export const DETAILED_QUIZ_I18N: Record<string, Partial<Record<Locale, DetailedQ
           "t": "两者兼而有之——有些地方向善，有些地方衰退。历史的轨迹，从来不是一条直线。"
         },
         {
-          "t": "这个前提本身就错了。所谓道德\"进步\"，不过意味着当下的偏好胜出了而已。"
+          "t": "这个前提本身就错了。所谓道德“进步”，不过意味着当下的偏好胜出了而已。"
         }
       ]
     }
@@ -601,7 +601,7 @@ export const DETAILED_QUIZ_I18N: Record<string, Partial<Record<Locale, DetailedQ
           "t": "两者皆有——在某些方向上更为明智，在另一些方向上却更为蒙昧。"
         },
         {
-          "t": "这个问题本身就有缺陷。没有悔恨的\"我\"，根本无从存续。"
+          "t": "这个问题本身就有缺陷。没有悔恨的“我”，根本无从存续。"
         },
         {
           "t": "徒具空壳。能够悔恨的能力，与能够爱的能力，本为同一。"
@@ -909,7 +909,7 @@ export const DETAILED_QUIZ_I18N: Record<string, Partial<Record<Locale, DetailedQ
           "t": "二者皆是——真实的感知，却被用作推脱的借口。"
         },
         {
-          "t": "问题本身就错了。世上并不存在某个人真正归属的\"理想时代\"。"
+          "t": "问题本身就错了。世上并不存在某个人真正归属的“理想时代”。"
         },
         {
           "t": "真实，却无济于事。时代是你所拥有的一切。"
@@ -1113,7 +1113,7 @@ export const DETAILED_QUIZ_I18N: Record<string, Partial<Record<Locale, DetailedQ
           "t": "与他人的疏离。我所放弃的，大多是社会性的，而非个人性的。"
         },
         {
-          "t": "大多什么也没有。\"自律\"这个框架，比我愿意承认的更像是一种审美姿态。"
+          "t": "大多什么也没有。“自律”这个框架，比我愿意承认的更像是一种审美姿态。"
         },
         {
           "t": "一种不同质感的专注。失去缓冲之后，世界变得愈发清晰锐利。"

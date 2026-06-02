@@ -20,6 +20,9 @@
 // Slugs match philosopherSlug() output from lib/philosophers.ts. If a
 // slug doesn't resolve, the page silently skips the bio — never errors.
 
+import type { Locale } from './translations';
+import { getLocalizedPhilosopherBio } from './philosopher-bios-i18n';
+
 export const PHILOSOPHER_BIOS: Record<string, string> = {
   plato: `Plato is the philosopher Western philosophy keeps arguing with — Whitehead's "footnotes to Plato" line is overused because it's basically true. The dialogues read like theatre: Socrates in conversation with friends, sophists, generals, slaves, working through a question by pressing it until the easy answers collapse.
 
@@ -220,7 +223,13 @@ His enemy was Hegel — or more precisely, the System, the assumption that philo
 Twentieth-century existentialism — Sartre, Marcel, Jaspers, Tillich, the early Heidegger — all run through Kierkegaard. So does dialectical theology (Barth). The pseudonymous strategy makes him hard to quote responsibly; what *Kierkegaard* thinks and what *Anti-Climacus* says are not necessarily the same thing, and this is by design.`,
 };
 
-export function philosopherBio(slug: string): string | null {
+export function philosopherBio(slug: string, locale: Locale = 'en'): string | null {
+  // Localized essay when present; otherwise fall back to the English source
+  // (every bio exists in English, so a slug that has a bio always renders one).
+  if (locale !== 'en') {
+    const loc = getLocalizedPhilosopherBio(slug, locale);
+    if (loc) return loc;
+  }
   return PHILOSOPHER_BIOS[slug] ?? null;
 }
 

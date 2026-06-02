@@ -228,7 +228,7 @@ export const DILEMMAS_I18N: Record<string, Partial<Record<Locale, DilemmaI18nFie
   "34": {
     "zh": {
       "prompt": "说出你自己身上某个你不愿意长大后失去的部分。",
-      "hint": "即便超越它本可算作\"进步\"。"
+      "hint": "即便超越它本可算作“进步”。"
     }
   },
   "35": {
@@ -383,7 +383,7 @@ export const DILEMMAS_I18N: Record<string, Partial<Record<Locale, DilemmaI18nFie
   },
   "60": {
     "zh": {
-      "prompt": "你上一次在想说\"不\"时却说了\"好\"，是什么时候？是什么拦住了那个\"不\"？",
+      "prompt": "你上一次在想说“不”时却说了“好”，是什么时候？是什么拦住了那个“不”？",
       "hint": "是善意、恐惧、习惯，还是别的什么？"
     }
   },
@@ -504,7 +504,7 @@ export const DILEMMAS_I18N: Record<string, Partial<Record<Locale, DilemmaI18nFie
   "80": {
     "zh": {
       "prompt": "对你来说，多少钱才算够？你又凭什么知道？",
-      "hint": "说具体些。\"很多\"不是答案。"
+      "hint": "说具体些。“很多”不是答案。"
     }
   },
   "81": {
@@ -695,7 +695,7 @@ export const DILEMMAS_I18N: Record<string, Partial<Record<Locale, DilemmaI18nFie
   },
   "112": {
     "zh": {
-      "prompt": "你上一次说\"我不知道\"，并且真的坦然承认、毫不回避，是什么时候？",
+      "prompt": "你上一次说“我不知道”，并且真的坦然承认、毫不回避，是什么时候？",
       "hint": "那一丝退缩，才是值得深思的地方。"
     }
   },
@@ -888,7 +888,7 @@ export const DILEMMAS_I18N: Record<string, Partial<Record<Locale, DilemmaI18nFie
   "144": {
     "zh": {
       "prompt": "最少需要得到多少认可，才会让你觉得足够？",
-      "hint": "比\"一些\"更具体一点。"
+      "hint": "比“一些”更具体一点。"
     }
   },
   "145": {
@@ -996,7 +996,7 @@ export const DILEMMAS_I18N: Record<string, Partial<Record<Locale, DilemmaI18nFie
   "162": {
     "zh": {
       "prompt": "你上一次恰当地表达愤怒是什么时候？是什么使那成为可能？",
-      "hint": "\"恰当的愤怒\"远比\"愤怒本身\"更为罕见。"
+      "hint": "“恰当的愤怒”远比“愤怒本身”更为罕见。"
     }
   },
   "163": {
@@ -1385,7 +1385,7 @@ export const DILEMMAS_I18N: Record<string, Partial<Record<Locale, DilemmaI18nFie
   },
   "227": {
     "zh": {
-      "prompt": "你上一次\"败得其所\"是什么时候——也就是说，那次失败没有引发连锁的崩塌？",
+      "prompt": "你上一次“败得其所”是什么时候——也就是说，那次失败没有引发连锁的崩塌？",
       "hint": "善于承受失败，是一种可以习得的能力。"
     }
   },
@@ -1734,7 +1734,7 @@ export const DILEMMAS_I18N: Record<string, Partial<Record<Locale, DilemmaI18nFie
   "285": {
     "zh": {
       "prompt": "自然世界向你索取什么，而你尚未给予？",
-      "hint": "请具体描述\"给予\"究竟意味着什么样的行动。"
+      "hint": "请具体描述“给予”究竟意味着什么样的行动。"
     }
   },
   "286": {
@@ -1847,7 +1847,7 @@ export const DILEMMAS_I18N: Record<string, Partial<Record<Locale, DilemmaI18nFie
   },
   "304": {
     "zh": {
-      "prompt": "\"亲密\"这个词对你来说意味着什么——那些这个词通常无法言尽的部分？",
+      "prompt": "“亲密”这个词对你来说意味着什么——那些这个词通常无法言尽的部分？",
       "hint": "这个词太小了。试着让它更大一些。"
     }
   },
@@ -1890,7 +1890,7 @@ export const DILEMMAS_I18N: Record<string, Partial<Record<Locale, DilemmaI18nFie
   "311": {
     "zh": {
       "prompt": "描述一个瞬间——你感到某种比自身更宏大的存在靠近了你。",
-      "hint": "不必去命名那个\"某种东西\"——描述那种感受就好。"
+      "hint": "不必去命名那个“某种东西”——描述那种感受就好。"
     }
   },
   "312": {
@@ -1913,7 +1913,7 @@ export const DILEMMAS_I18N: Record<string, Partial<Record<Locale, DilemmaI18nFie
   },
   "315": {
     "zh": {
-      "prompt": "用具体的语言描述，\"神圣\"对你而言究竟意味着什么。",
+      "prompt": "用具体的语言描述，“神圣”对你而言究竟意味着什么。",
       "hint": "具体的：一个时刻、一件器物、一段关系——而非一个抽象的范畴。"
     }
   },

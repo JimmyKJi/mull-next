@@ -107,7 +107,7 @@ export default async function PhilosopherDetailPage({
 
   // Editorial bio (top 25 only). Renders as the page's main content
   // body when present; otherwise the page falls back to chrome-only.
-  const bio = philosopherBio(slug);
+  const bio = philosopherBio(slug, locale);
 
   // Reverse-index cross-links — surfaces topic + matchup SEO pages
   // from the philosopher page (internal-link gold).
@@ -258,7 +258,7 @@ export default async function PhilosopherDetailPage({
           {/* Extended bio — only present for top 25 most-searched
               philosophers (hand-written prose, 200-400 words). */}
           {bio ? (
-            <PixelWindow title="ABOUT" badge="▶ PROFILE">
+            <PixelWindow title={t('phil.section_about', locale).toUpperCase()} badge="▶ PROFILE">
               <div
                 className="space-y-4 text-[15.5px] leading-[1.65] text-[#221E18]"
                 style={{ fontFamily: 'var(--font-editorial)' }}
