@@ -131,6 +131,32 @@ async function main() {
   await writeFile(path.join(PUB, "favicon.svg"), svg);
   console.log("wrote public/favicon.svg (embedded 128px tile)");
 
+  // 5. og.png — 1200×630 social-share card. We keep the existing card's
+  //    typeset chrome (the "Mull." wordmark, tagline, and footer are baked
+  //    into scripts/assets/og-base-clean.png — the original card with the
+  //    old constellation graphic blurred away) and composite the new
+  //    globe-reader logo into the right-hand space. Re-typesetting in SVG
+  //    isn't an option here: sharp's librsvg won't load the local Cormorant
+  //    Garamond TTF, so any regenerated wordmark falls back to a sans.
+  const ogBase = path.join(ROOT, "scripts/assets/og-base-clean.png");
+  const OG_LOGO_H = 400; // logo height on the card
+  const OG_CX = 967; // horizontal center of the right-hand space
+  const OG_CY = 300; // vertical center, aligned with the text block
+  const ogLogo = await sharp(path.join(PUB, "mull-logo.png")).resize({ height: OG_LOGO_H }).toBuffer();
+  const om = await sharp(ogLogo).metadata();
+  await sharp(ogBase)
+    .composite([
+      {
+        input: ogLogo,
+        left: Math.round(OG_CX - om.width / 2),
+        top: Math.round(OG_CY - om.height / 2),
+      },
+    ])
+    .removeAlpha() // the card is fully opaque; OG scrapers prefer no alpha
+    .png()
+    .toFile(path.join(PUB, "og.png"));
+  console.log("wrote public/og.png (1200×630 social card)");
+
   console.log("\nMullMark aspect ratio (width/height):", (width / height).toFixed(4));
 }
 
