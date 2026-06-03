@@ -1,100 +1,57 @@
 // MullMark — the brand glyph.
 //
-// Concept: "The Map." A circle (the philosophical space), eight small
-// dots scattered around its inside (positions / philosophers across
-// history), and one larger amber dot offset inside the ring (your
-// place, after you've taken the quiz).
+// The mark is a hand-drawn globe-headed figure reading an open book:
+// the world as a mind, philosophy as reading the world. It ships as a
+// transparent-ink PNG (public/mull-logo.png) generated from the source
+// art by scripts/gen-logo-assets.mjs — white paper is knocked out to
+// transparency so the glyph sits cleanly on any parchment/cream surface
+// (nav, wordmark, share cards) and shows the page color through the
+// figure's open interior.
 //
-// The metaphor is exactly what Mull does — show you where you sit on
-// a 16-D map of philosophical positions, near specific thinkers.
+// It works as a brand mark alone (favicon, app icon) and paired with the
+// "Mull." wordmark (see MullWordmark). The art is portrait, so `size` is
+// interpreted as the glyph HEIGHT in CSS px; width follows the intrinsic
+// aspect ratio.
 //
-// Works as a brand mark alone (favicon, app icon, share badges) and
-// paired with the "Mull." wordmark (header, footer, share cards).
-//
-// Two variants:
-//   - `color`: dark ink ring + dots, amber "you" dot
-//   - `mono`:  dark ink everywhere (for favicons, single-color contexts)
+// The `variant` / `ink` / `accent` props are retained for backward
+// compatibility with existing callers but are now no-ops: the artwork is
+// a single fixed ink color baked into the PNG.
 
 import React from "react";
 
+// Intrinsic dimensions of public/mull-logo.png (see gen-logo-assets.mjs).
+// Used to derive width from the requested height.
+const LOGO_W = 377;
+const LOGO_H = 600;
+
 type Props = {
-  /** Render size in CSS px. Square. Default 32. */
+  /** Render HEIGHT in CSS px (width follows aspect). Default 32. */
   size?: number;
-  /** Color variant — `color` (default) shows the amber "you" dot;
-   *  `mono` uses dark ink throughout. */
+  /** Retained for API compatibility; no longer affects rendering. */
   variant?: "color" | "mono";
-  /** Override the ink color. Default `#221E18`. */
+  /** Retained for API compatibility; no longer affects rendering. */
   ink?: string;
-  /** Override the accent color (only applies if variant='color').
-   *  Default `#B8862F`. */
+  /** Retained for API compatibility; no longer affects rendering. */
   accent?: string;
 };
 
-export function MullMark({
-  size = 32,
-  variant = "color",
-  ink = "#221E18",
-  accent = "#B8862F",
-}: Props) {
-  const youColor = variant === "color" ? accent : ink;
+export function MullMark({ size = 32 }: Props) {
+  const width = Math.round((size * LOGO_W) / LOGO_H);
   return (
-    <svg
-      width={size}
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src="/mull-logo.png"
+      alt="Mull"
+      aria-label="Mull — a globe-headed reader"
+      width={width}
       height={size}
-      viewBox="0 0 32 32"
-      role="img"
-      aria-label="Mull — the philosophical map"
-      style={{ display: "block", flexShrink: 0 }}
-    >
-      {/* Outer ring — the philosophical space.
-          Thin enough to feel like a horizon line, thick enough to read
-          at favicon sizes (16-32 px). */}
-      <circle
-        cx={16}
-        cy={16}
-        r={14}
-        fill="none"
-        stroke={ink}
-        strokeWidth={1.6}
-      />
-
-      {/* Eight small dots — positions/philosophers around the inside
-          edge. Slightly irregular spacing to feel hand-placed rather
-          than mathematical. Each ~1.6px radius. */}
-      {POSITIONS.map(([x, y], i) => (
-        <circle key={i} cx={x} cy={y} r={1.4} fill={ink} />
-      ))}
-
-      {/* "You" dot — larger, in accent color, offset inward so it
-          reads as "near a philosopher but distinct from them". */}
-      <circle cx={19} cy={12} r={2.6} fill={youColor} />
-      {/* Subtle ink ring on the you-dot to give it weight at small
-          sizes. Only shown in color variant where the amber fill
-          gives the contrast naturally. */}
-      {variant === "color" && (
-        <circle
-          cx={19}
-          cy={12}
-          r={2.6}
-          fill="none"
-          stroke={ink}
-          strokeWidth={0.5}
-        />
-      )}
-    </svg>
+      draggable={false}
+      style={{
+        display: "block",
+        flexShrink: 0,
+        objectFit: "contain",
+        userSelect: "none",
+      }}
+    />
   );
 }
-
-// Hand-placed dot positions. Approximate compass points but
-// deliberately uneven — feels less like a clock face, more like a
-// constellation. Each pair is [x, y] in the 32×32 viewBox.
-const POSITIONS: [number, number][] = [
-  [16, 4.5],   // N
-  [25, 8],     // NE
-  [27.5, 17],  // E
-  [23, 25],    // SE
-  [15, 27],    // S (slight wobble off-center)
-  [7, 24],     // SW
-  [4.5, 16],   // W
-  [7.5, 8],    // NW
-];
