@@ -20,6 +20,12 @@ import type { Metadata } from 'next';
 const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
 
+// Locales whose CORE exercise content (summary, about, steps, reflection)
+// ships fully translated — the page-level language notice hides for these.
+// The deeper EXERCISE_EXTRAS content stays English-only for every non-English
+// locale, so its own section notice (further down) is independent of this list.
+const CORE_TRANSLATED: Locale[] = ['zh'];
+
 export async function generateStaticParams() {
   return EXERCISES.map(e => ({ slug: e.slug }));
 }
@@ -64,7 +70,7 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
         <LanguageSwitcher initial={locale} />
       </div>
 
-      <ContentLanguageNotice locale={locale} />
+      <ContentLanguageNotice locale={locale} translatedLocales={CORE_TRANSLATED} />
 
       <div
         className="flex flex-wrap items-center gap-3 text-[10px] tracking-[0.22em] text-[#8C6520]"
@@ -95,7 +101,7 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
       <div className="mt-8" />
 
       <Section title={t('exercises.about', locale)}>
-        {locale !== 'en' && (
+        {locale !== 'en' && ex.about === original.about && (
           <p style={{
             fontSize: 12.5,
             color: '#8C6520',

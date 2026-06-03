@@ -41,6 +41,8 @@ import { DIM_NARRATIONS } from '../lib/dim-narration';
 import { DIM_NARRATION_I18N } from '../lib/dim-narration-i18n';
 import { PHILOSOPHER_BIOS } from '../lib/philosopher-bios';
 import { PHILOSOPHER_BIOS_I18N } from '../lib/philosopher-bios-i18n';
+import { EXERCISES } from '../lib/exercises';
+import { EXERCISES_I18N } from '../lib/exercises-i18n';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const SEP = '␟'; // ␟ — unlikely to appear in content; used as a path separator
@@ -211,6 +213,26 @@ const DOMAINS = {
     recordType: 'Record<string, Partial<Record<Locale, string>>>',
     hint: 'Each value is a multi-paragraph editorial essay — a philosopher biography. Preserve the paragraph structure exactly: keep every blank-line "\\n\\n" break between paragraphs. The English wraps book/work titles and the occasional foreign term in *asterisks* (e.g. *Republic*, *Being and Nothingness*, *telos*, *eudaimonia*). Do NOT emit literal asterisks in the translation. Instead: render book/work titles with Chinese 《》 title marks (e.g. 《理想国》, 《存在与虚无》); for an emphasized foreign/technical term, give the established Chinese term and, on first mention where it aids the reader, append the romanized word in parentheses (e.g. 目的（telos）, 幸福（eudaimonia）). Keep years and parenthetical citations like "(1781)" verbatim. The register is an erudite, plain literary essay.',
   },
+  exercises: {
+    data: EXERCISES,
+    existing: EXERCISES_I18N,
+    keyField: 'slug',
+    overlayFile: 'lib/exercises-i18n.ts',
+    constName: 'EXERCISES_I18N',
+    // Reuse the overlay's own ExerciseI18N alias (defined above the sentinels)
+    // so the rewritten declaration keeps the existing, hand-authored type.
+    recordType: 'Record<string, ExerciseI18N>',
+    fields: [
+      'name',
+      'summary',
+      'tradition',
+      'duration',
+      'reflection',
+      'about',
+      { stringArray: 'steps' },
+    ],
+    hint: 'These are short contemplative/philosophical PRACTICE exercises. "name" is the practice title. "tradition" names the school it comes from (e.g. Stoic→斯多葛, Zen→禅, Existentialist→存在主义) — use the established target-language school name. "duration" is a short time estimate like "10–15 min": keep the digits and en-dash, translate only the unit (min→分钟). "summary" is one inviting sentence. "about" is a short paragraph of rationale. "steps" are imperative, second-person instructions to the practitioner — keep them concrete and direct. "reflection" is a closing prompt, usually a question. Plain, warm, direct second person — instructions a thoughtful guide would give, not corporate copy.',
+  },
 };
 
 // ── args ──
@@ -286,6 +308,16 @@ function extract(domain) {
       if (typeof f === 'string') {
         const v = entry[f];
         if (typeof v === 'string' && v.trim()) out[`${k}${SEP}${f}`] = v;
+      } else if (f.stringArray) {
+        // string[] field (e.g. exercise `steps`): translate each element by
+        // index. flatKey is the 3-part `key␟field␟i` (vs the 4-part
+        // array-of-objects form in the else branch below).
+        const arr = entry[f.stringArray];
+        if (!Array.isArray(arr)) continue;
+        arr.forEach((v, i) => {
+          if (typeof v === 'string' && v.trim())
+            out[`${k}${SEP}${f.stringArray}${SEP}${i}`] = v;
+        });
       } else {
         const arr = entry[f.array];
         if (!Array.isArray(arr)) continue;
@@ -309,6 +341,11 @@ function hasExisting(existing, flatKey, loc, domain) {
   const node = existing?.[parts[0]]?.[loc];
   if (!node) return false;
   if (parts.length === 2) return typeof node[parts[1]] === 'string';
+  if (parts.length === 3) {
+    // 3-part `key␟field␟i` → a string[] element.
+    const el = node[parts[1]]?.[+parts[2]];
+    return typeof el === 'string';
+  }
   const [, arrName, idxStr, sf] = parts;
   const el = node[arrName]?.[+idxStr];
   return !!el && typeof el[sf] === 'string';
@@ -336,6 +373,15 @@ function applyTranslations(map, translations, loc, domain) {
     const node = map[entryKey][loc];
     if (parts.length === 2) {
       node[parts[1]] = val;
+    } else if (parts.length === 3) {
+      // 3-part `key␟field␟i` → a string[] element. A batch boundary can deliver
+      // indices out of order, so fill any lower holes with '' first; never
+      // clobber an already-translated element.
+      const arrName = parts[1];
+      const idx = +parts[2];
+      (node[arrName] ||= []);
+      for (let j = 0; j < idx; j++) node[arrName][j] ??= '';
+      node[arrName][idx] = val;
     } else {
       const [, arrName, idxStr, sf] = parts;
       const idx = +idxStr;
@@ -454,6 +500,11 @@ function getExisting(existing, flatKey, loc, domain) {
   const node = existing?.[parts[0]]?.[loc];
   if (!node) return undefined;
   if (parts.length === 2) return typeof node[parts[1]] === 'string' ? node[parts[1]] : undefined;
+  if (parts.length === 3) {
+    // 3-part `key␟field␟i` → a string[] element.
+    const el = node[parts[1]]?.[+parts[2]];
+    return typeof el === 'string' ? el : undefined;
+  }
   const [, arrName, idxStr, sf] = parts;
   const el = node[arrName]?.[+idxStr];
   return el && typeof el[sf] === 'string' ? el[sf] : undefined;
