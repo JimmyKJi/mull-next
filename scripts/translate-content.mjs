@@ -43,6 +43,8 @@ import { PHILOSOPHER_BIOS } from '../lib/philosopher-bios';
 import { PHILOSOPHER_BIOS_I18N } from '../lib/philosopher-bios-i18n';
 import { EXERCISES } from '../lib/exercises';
 import { EXERCISES_I18N } from '../lib/exercises-i18n';
+import { EXERCISE_EXTRAS } from '../lib/exercises-extras';
+import { EXERCISE_EXTRAS_I18N } from '../lib/exercises-extras-i18n';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const SEP = '␟'; // ␟ — unlikely to appear in content; used as a path separator
@@ -232,6 +234,24 @@ const DOMAINS = {
       { stringArray: 'steps' },
     ],
     hint: 'These are short contemplative/philosophical PRACTICE exercises. "name" is the practice title. "tradition" names the school it comes from (e.g. Stoic→斯多葛, Zen→禅, Existentialist→存在主义) — use the established target-language school name. "duration" is a short time estimate like "10–15 min": keep the digits and en-dash, translate only the unit (min→分钟). "summary" is one inviting sentence. "about" is a short paragraph of rationale. "steps" are imperative, second-person instructions to the practitioner — keep them concrete and direct. "reflection" is a closing prompt, usually a question. Plain, warm, direct second person — instructions a thoughtful guide would give, not corporate copy.',
+  },
+  exerciseExtras: {
+    data: EXERCISE_EXTRAS,
+    existing: EXERCISE_EXTRAS_I18N,
+    shape: 'record', // EXERCISE_EXTRAS is Record<slug, ExerciseExtras>; key by slug
+    overlayFile: 'lib/exercises-extras-i18n.ts',
+    constName: 'EXERCISE_EXTRAS_I18N',
+    // Reuse the overlay's own ExtrasI18N alias (defined above the sentinels).
+    recordType: 'Record<string, ExtrasI18N>',
+    fields: [
+      'longerAbout',
+      'workedExample',
+      { stringArray: 'commonPitfalls' },
+      { array: 'relatedThinkers', subfields: ['name', 'note'] },
+      { array: 'furtherReading', subfields: ['title', 'note'] },
+      { array: 'kindredPractices', subfields: ['name', 'note'] },
+    ],
+    hint: 'These are deep-dive supplements to a contemplative/philosophical practice exercise. "longerAbout" is 2–3 paragraphs of history and lineage — preserve the blank-line "\\n\\n" paragraph breaks exactly. "commonPitfalls" are short cautionary notes (ways people get the practice wrong). "workedExample" is one concrete scenario paragraph. relatedThinkers: "name" is a thinker — use the established target-language rendering for well-known figures (e.g. Seneca→塞内卡, Marcus Aurelius→马可·奥勒留, Confucius→孔子; transliterate modern names like Gary Klein→加里·克莱因), "note" is why they matter (render work titles with 《》 for Chinese, e.g. Meditations→《沉思录》; keep years and parenthetical citations verbatim). furtherReading: "title" is a book/essay title — use the standard published target-language title when well known (e.g. Thinking, Fast and Slow→《思考，快与慢》), otherwise translate the sense and wrap in 《》 for Chinese; "note" is why to read it. kindredPractices: "name" is an allied practice, "note" is a one-line description. Plain, erudite, literary register.',
   },
 };
 

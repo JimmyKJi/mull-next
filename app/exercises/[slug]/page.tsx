@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { findExercise, EXERCISES } from '@/lib/exercises';
 import { EXERCISE_EXTRAS } from '@/lib/exercises-extras';
 import { localizeExercise } from '@/lib/exercises-i18n';
+import { localizeExtras } from '@/lib/exercises-extras-i18n';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import LanguageSwitcher from '@/components/language-switcher';
@@ -22,9 +23,11 @@ const sans = "'Inter', system-ui, sans-serif";
 
 // Locales whose CORE exercise content (summary, about, steps, reflection)
 // ships fully translated — the page-level language notice hides for these.
-// The deeper EXERCISE_EXTRAS content stays English-only for every non-English
-// locale, so its own section notice (further down) is independent of this list.
 const CORE_TRANSLATED: Locale[] = ['zh'];
+// Locales whose deeper EXERCISE_EXTRAS content (longerAbout, pitfalls, worked
+// example, thinkers, reading, kindred practices) is fully translated — the
+// extras-section notice hides for these.
+const EXTRAS_TRANSLATED: Locale[] = ['zh'];
 
 export async function generateStaticParams() {
   return EXERCISES.map(e => ({ slug: e.slug }));
@@ -195,10 +198,10 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
       <ReflectionForm slug={ex.slug} isAuthed={isAuthed} locale={locale} />
 
       {/* Deeper content — only renders when present in EXERCISE_EXTRAS.
-          English-only for now (matches the policy for archetype detail
-          pages and philosopher entries). */}
+          Localized via localizeExtras (zh complete; other locales fall back
+          per field to English, flagged by the extras-section notice). */}
       {EXERCISE_EXTRAS[slug] && (
-        <ExerciseExtrasSection slug={slug} extras={EXERCISE_EXTRAS[slug]} locale={locale} />
+        <ExerciseExtrasSection slug={slug} extras={localizeExtras(slug, EXERCISE_EXTRAS[slug], locale)} locale={locale} />
       )}
 
       {/* Pathway — three illustrated stations.
@@ -287,7 +290,7 @@ function ExerciseExtrasSection({
 
   return (
     <div style={{ marginTop: 48 }}>
-      {locale !== 'en' && (
+      {locale !== 'en' && !EXTRAS_TRANSLATED.includes(locale) && (
         <p style={{
           fontFamily: sans, fontSize: 12.5, color: '#8C6520',
           fontStyle: 'italic', opacity: 0.85, marginBottom: 18,
