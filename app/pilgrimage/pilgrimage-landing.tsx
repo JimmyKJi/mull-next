@@ -16,12 +16,15 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   PILGRIMAGE_KEY,
-  getPilgrimageArc,
-  getEnrollmentMessage,
   type PilgrimageState,
 } from "@/lib/pilgrimage";
+import {
+  localizePilgrimageArc,
+  getEnrollmentMessageLocalized,
+} from "@/lib/pilgrimage-i18n";
 import type { DimKey } from "@/lib/dimensions";
 import { ARCHETYPE_COLORS } from "@/lib/archetype-colors";
+import { t, type Locale } from "@/lib/translations";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-editorial), Georgia, serif";
@@ -31,6 +34,7 @@ const PENDING_QUIZ_KEY = "mull.pending_quiz_attempt";
 type Props = {
   initialArchetype: string | null;
   initialFlavor: string | null;
+  locale: Locale;
 };
 
 type Phase =
@@ -42,6 +46,7 @@ type Phase =
 export function PilgrimageLanding({
   initialArchetype,
   initialFlavor,
+  locale,
 }: Props) {
   const [phase, setPhase] = useState<Phase>({ kind: "loading" });
 
@@ -128,7 +133,7 @@ export function PilgrimageLanding({
         className="text-center text-[14px] text-[#8C6520]"
         style={{ fontFamily: serif }}
       >
-        Loading your pilgrimage…
+        {t("pilgrimage.loading_landing", locale)}
       </div>
     );
   }
@@ -143,22 +148,19 @@ export function PilgrimageLanding({
           className="text-[10px] tracking-[0.22em] text-[#8C6520]"
           style={{ fontFamily: pixel }}
         >
-          ▶ NEED YOUR ARCHETYPE FIRST
+          {t("pilgrimage.need_arch", locale)}
         </div>
         <h2
           className="mt-3 text-[20px] leading-tight text-[#221E18]"
           style={{ fontFamily: serif }}
         >
-          The pilgrimage is shaped around the kind of mind you turned
-          out to be.
+          {t("pilgrimage.need_arch_title", locale)}
         </h2>
         <p
           className="mt-3 text-[15px] leading-[1.55] text-[#4A4338]"
           style={{ fontFamily: serif }}
         >
-          Take the quiz first — five minutes, no signup. Once you have
-          an archetype, this page will offer you a 30-day arc tuned to
-          it.
+          {t("pilgrimage.need_arch_body", locale)}
         </p>
         <div className="mt-5 flex flex-wrap gap-3">
           <Link
@@ -170,14 +172,14 @@ export function PilgrimageLanding({
               boxShadow: "3px 3px 0 0 #2F5D5C",
             }}
           >
-            ▶ TAKE THE INHERITOR (15 MIN)
+            {t("pilgrimage.cta_inheritor", locale)}
           </Link>
           <Link
             href="/quiz?mode=quick"
             className="border-[3px] border-[#221E18] bg-[#FFFCF4] px-4 py-2 text-[11px] tracking-[0.18em] text-[#221E18] hover:bg-[#F8EDC8]"
             style={{ fontFamily: pixel, textTransform: "uppercase" }}
           >
-            ◂ OR THE 5-MIN CLASSIC
+            {t("pilgrimage.cta_classic", locale)}
           </Link>
         </div>
       </div>
@@ -185,9 +187,17 @@ export function PilgrimageLanding({
   }
 
   if (phase.kind === "ready") {
-    const arc = getPilgrimageArc(phase.archetype);
-    const welcome = getEnrollmentMessage(phase.archetype, phase.flavor);
+    const arc = localizePilgrimageArc(phase.archetype, locale);
+    const welcome = getEnrollmentMessageLocalized(
+      phase.archetype,
+      phase.flavor,
+      locale,
+    );
     const color = ARCHETYPE_COLORS[phase.archetype] ?? ARCHETYPE_COLORS.cartographer;
+    const archName = t(`arch.${arc.archetypeKey}.name`, locale).replace(
+      /^The\s+/i,
+      "",
+    );
     return (
       <div className="space-y-5">
         <div
@@ -206,7 +216,7 @@ export function PilgrimageLanding({
               textTransform: "uppercase",
             }}
           >
-            ▶ YOUR ARC · THE {phase.archetype.toUpperCase()}
+            {t("pilgrimage.your_arc", locale, { arch: archName })}
           </div>
           <h2
             className="mt-3 text-[22px] leading-tight text-[#221E18]"
@@ -235,7 +245,7 @@ export function PilgrimageLanding({
                   textTransform: "uppercase",
                 }}
               >
-                <div className="opacity-60">DAYS {i * 10 + 1}–{(i + 1) * 10}</div>
+                <div className="opacity-60">{t("pilgrimage.days_range", locale, { a: i * 10 + 1, b: (i + 1) * 10 })}</div>
                 <div className="mt-1" style={{ fontFamily: serif, fontSize: 13, color: "#221E18", textTransform: "none", letterSpacing: 0 }}>
                   {p}
                 </div>
@@ -253,31 +263,39 @@ export function PilgrimageLanding({
               boxShadow: "4px 4px 0 0 #2F5D5C",
             }}
           >
-            ▶ BEGIN DAY 1
+            {t("pilgrimage.begin_day1", locale)}
           </button>
         </div>
         <p
           className="text-center text-[13px] text-[#8C6520]"
           style={{ fontFamily: serif, fontStyle: "italic" }}
         >
-          The pilgrimage is one prompt per day. You decide the pace —
-          it&rsquo;ll wait. Not signed in? Your enrollment lives on
-          this device until you create an account.
+          {t("pilgrimage.pace_note", locale)}
         </p>
       </div>
     );
   }
 
   // Enrolled.
-  return <EnrolledView state={phase.state} />;
+  return <EnrolledView state={phase.state} locale={locale} />;
 }
 
-function EnrolledView({ state }: { state: PilgrimageState }) {
-  const arc = getPilgrimageArc(state.archetype);
+function EnrolledView({
+  state,
+  locale,
+}: {
+  state: PilgrimageState;
+  locale: Locale;
+}) {
+  const arc = localizePilgrimageArc(state.archetype, locale);
   const color = ARCHETYPE_COLORS[state.archetype] ?? ARCHETYPE_COLORS.cartographer;
   const today = arc.days[state.currentDay - 1];
   const completed = state.completedDays.length;
   const phase = state.currentDay <= 10 ? 0 : state.currentDay <= 20 ? 1 : 2;
+  const archName = t(`arch.${arc.archetypeKey}.name`, locale).replace(
+    /^The\s+/i,
+    "",
+  );
 
   return (
     <div className="space-y-5">
@@ -296,13 +314,16 @@ function EnrolledView({ state }: { state: PilgrimageState }) {
               className="text-[10px] tracking-[0.22em]"
               style={{ fontFamily: pixel, color: color.deep, textTransform: "uppercase" }}
             >
-              ▶ THE {state.archetype.toUpperCase()} · ARC IN PROGRESS
+              {t("pilgrimage.arc_in_progress", locale, { arch: archName })}
             </div>
             <div
               className="mt-1 text-[18px] leading-tight text-[#221E18]"
               style={{ fontFamily: serif }}
             >
-              {arc.phases[phase]} — Day {state.currentDay} of 30
+              {t("pilgrimage.phase_day", locale, {
+                phase: arc.phases[phase],
+                n: state.currentDay,
+              })}
             </div>
           </div>
           <div
@@ -313,7 +334,7 @@ function EnrolledView({ state }: { state: PilgrimageState }) {
               textTransform: "uppercase",
             }}
           >
-            {completed} / 30 COMPLETED
+            {t("pilgrimage.completed_count", locale, { n: completed })}
           </div>
         </div>
         {/* 30-segment progress bar */}
@@ -325,7 +346,14 @@ function EnrolledView({ state }: { state: PilgrimageState }) {
             return (
               <div
                 key={i}
-                title={`Day ${day}${done ? " · done" : isToday ? " · today" : ""}`}
+                title={
+                  t("pilgrimage.bar_day", locale, { n: day }) +
+                  (done
+                    ? t("pilgrimage.bar_done", locale)
+                    : isToday
+                      ? t("pilgrimage.bar_today", locale)
+                      : "")
+                }
                 style={{
                   flex: 1,
                   height: 10,
@@ -356,7 +384,7 @@ function EnrolledView({ state }: { state: PilgrimageState }) {
           className="text-[10px] tracking-[0.22em] text-[#8C6520]"
           style={{ fontFamily: pixel, textTransform: "uppercase" }}
         >
-          ▶ TODAY · DAY {state.currentDay}
+          {t("pilgrimage.today_day", locale, { n: state.currentDay })}
         </div>
         <h3
           className="mt-2 text-[22px] leading-tight text-[#221E18]"
@@ -374,7 +402,7 @@ function EnrolledView({ state }: { state: PilgrimageState }) {
           className="mt-4 inline-block bg-[#F8C75E] px-3 py-1 text-[10px] tracking-[0.18em] text-[#1A1820]"
           style={{ fontFamily: pixel, textTransform: "uppercase" }}
         >
-          ▶ OPEN TODAY&rsquo;S PROMPT
+          {t("pilgrimage.open_prompt", locale)}
         </div>
       </Link>
 
@@ -387,7 +415,7 @@ function EnrolledView({ state }: { state: PilgrimageState }) {
           className="cursor-pointer text-[12px] text-[#8C6520]"
           style={{ fontFamily: pixel, letterSpacing: "0.18em", textTransform: "uppercase" }}
         >
-          ▸ BROWSE ALL 30 DAYS
+          {t("pilgrimage.browse_all", locale)}
         </summary>
         <ol className="mt-3 grid grid-cols-1 gap-1 sm:grid-cols-2">
           {arc.days.map((d) => {

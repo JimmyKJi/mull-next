@@ -18,11 +18,12 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   PILGRIMAGE_KEY,
-  getPilgrimageArc,
   type PilgrimageState,
 } from "@/lib/pilgrimage";
+import { localizePilgrimageArc } from "@/lib/pilgrimage-i18n";
 import { ARCHETYPE_COLORS } from "@/lib/archetype-colors";
 import { emitFeatureEvent } from "@/lib/capabilities";
+import { t, type Locale } from "@/lib/translations";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-editorial), Georgia, serif";
@@ -31,9 +32,10 @@ const RESPONSE_KEY_PREFIX = "mull.pilgrimage.response.";
 
 type Props = {
   day: number;
+  locale: Locale;
 };
 
-export default function PilgrimageDayClient({ day }: Props) {
+export default function PilgrimageDayClient({ day, locale }: Props) {
   const [state, setState] = useState<PilgrimageState | null | "loading">("loading");
   const [text, setText] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -63,8 +65,11 @@ export default function PilgrimageDayClient({ day }: Props) {
   }, [day]);
 
   const arc = useMemo(
-    () => (state && state !== "loading" ? getPilgrimageArc(state.archetype) : null),
-    [state],
+    () =>
+      state && state !== "loading"
+        ? localizePilgrimageArc(state.archetype, locale)
+        : null,
+    [state, locale],
   );
   const dayData = arc?.days[day - 1];
   const color = state && state !== "loading"
@@ -74,7 +79,7 @@ export default function PilgrimageDayClient({ day }: Props) {
   if (state === "loading") {
     return (
       <div className="text-center text-[14px] text-[#8C6520]" style={{ fontFamily: serif }}>
-        Loading…
+        {t("pilgrimage.loading", locale)}
       </div>
     );
   }
@@ -89,14 +94,13 @@ export default function PilgrimageDayClient({ day }: Props) {
           className="text-[10px] tracking-[0.22em] text-[#8C6520]"
           style={{ fontFamily: pixel }}
         >
-          ▶ NOT ENROLLED YET
+          {t("pilgrimage.not_enrolled", locale)}
         </div>
         <p
           className="mt-3 text-[15px] leading-[1.6] text-[#221E18]"
           style={{ fontFamily: serif }}
         >
-          You haven&rsquo;t started a pilgrimage yet. Begin on the
-          landing page — it&rsquo;ll match the arc to your archetype.
+          {t("pilgrimage.not_enrolled_body", locale)}
         </p>
         <Link
           href="/pilgrimage"
@@ -107,7 +111,7 @@ export default function PilgrimageDayClient({ day }: Props) {
             boxShadow: "3px 3px 0 0 #2F5D5C",
           }}
         >
-          ▶ TO THE LANDING
+          {t("pilgrimage.to_landing", locale)}
         </Link>
       </div>
     );
@@ -116,7 +120,7 @@ export default function PilgrimageDayClient({ day }: Props) {
   if (!arc || !dayData) {
     return (
       <div className="text-[14px] text-[#8C6520]" style={{ fontFamily: serif }}>
-        Day not found.
+        {t("pilgrimage.day_not_found", locale)}
       </div>
     );
   }
@@ -156,6 +160,10 @@ export default function PilgrimageDayClient({ day }: Props) {
   }
 
   const done = state.completedDays.includes(day);
+  const archName = t(`arch.${arc.archetypeKey}.name`, locale).replace(
+    /^The\s+/i,
+    "",
+  );
 
   return (
     <div className="space-y-5">
@@ -175,7 +183,7 @@ export default function PilgrimageDayClient({ day }: Props) {
             textTransform: "uppercase",
           }}
         >
-          ▶ THE {state.archetype.toUpperCase()} ARC
+          {t("pilgrimage.the_arc", locale, { arch: archName })}
         </div>
         <h2
           className="mt-2 text-[28px] leading-tight text-[#221E18]"
@@ -219,14 +227,14 @@ export default function PilgrimageDayClient({ day }: Props) {
             className="text-[10px] tracking-[0.22em] text-[#8C6520]"
             style={{ fontFamily: pixel, textTransform: "uppercase" }}
           >
-            ▶ YOUR RESPONSE
+            {t("pilgrimage.your_response", locale)}
           </label>
           <textarea
             id="pilgrim-response"
             value={text}
             onChange={(e) => setText(e.target.value)}
             rows={9}
-            placeholder="Write as much or as little as serves. There is no length expected."
+            placeholder={t("pilgrimage.response_placeholder", locale)}
             style={{
               marginTop: 8,
               width: "100%",
@@ -255,7 +263,7 @@ export default function PilgrimageDayClient({ day }: Props) {
               cursor: text.trim() ? "pointer" : "default",
             }}
           >
-            ▶ MARK DAY {day} COMPLETE
+            {t("pilgrimage.mark_complete", locale, { n: day })}
           </button>
         </div>
       ) : (
@@ -275,15 +283,13 @@ export default function PilgrimageDayClient({ day }: Props) {
               textTransform: "uppercase",
             }}
           >
-            ✓ DAY {day} COMPLETE
+            {t("pilgrimage.day_complete", locale, { n: day })}
           </div>
           <p
             className="mt-3 text-[15px] leading-[1.6] text-[#221E18]"
             style={{ fontFamily: serif }}
           >
-            Saved to your device. Come back tomorrow for Day{" "}
-            {Math.min(30, day + 1)} — or read your response here any
-            time.
+            {t("pilgrimage.saved_note", locale, { n: Math.min(30, day + 1) })}
           </p>
           <div className="mt-4 flex flex-wrap gap-3">
             {day < 30 && (
@@ -296,7 +302,7 @@ export default function PilgrimageDayClient({ day }: Props) {
                   boxShadow: "3px 3px 0 0 #2F5D5C",
                 }}
               >
-                ▶ DAY {day + 1} →
+                {t("pilgrimage.next_day", locale, { n: day + 1 })}
               </Link>
             )}
             <Link
@@ -304,7 +310,7 @@ export default function PilgrimageDayClient({ day }: Props) {
               className="border-[3px] border-[#221E18] bg-[#FFFCF4] px-4 py-2 text-[11px] tracking-[0.18em] text-[#221E18] hover:bg-[#F8EDC8]"
               style={{ fontFamily: pixel, textTransform: "uppercase" }}
             >
-              ◂ BACK TO PROGRESS
+              {t("pilgrimage.back_progress", locale)}
             </Link>
           </div>
           {done && (
@@ -312,9 +318,7 @@ export default function PilgrimageDayClient({ day }: Props) {
               className="mt-4 text-[13px] italic text-[#8C6520]"
               style={{ fontFamily: serif }}
             >
-              You can edit and resubmit by changing the text above and
-              clicking again. Your response stays on this device until
-              you sign in and we add server-side sync.
+              {t("pilgrimage.edit_note", locale)}
             </p>
           )}
         </div>
@@ -328,7 +332,7 @@ export default function PilgrimageDayClient({ day }: Props) {
             className="text-[#8C6520] hover:text-[#221E18]"
             style={{ textTransform: "uppercase" }}
           >
-            ◂ DAY {day - 1}
+            {t("pilgrimage.prev_day_nav", locale, { n: day - 1 })}
           </Link>
         ) : (
           <span />
@@ -339,7 +343,7 @@ export default function PilgrimageDayClient({ day }: Props) {
             className="text-[#8C6520] hover:text-[#221E18]"
             style={{ textTransform: "uppercase" }}
           >
-            DAY {day + 1} ▸
+            {t("pilgrimage.next_day_nav", locale, { n: day + 1 })}
           </Link>
         ) : (
           <span />

@@ -11,16 +11,21 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
 import { PixelPageHeader } from "@/components/pixel-window";
+import { getServerLocale } from "@/lib/locale-server";
+import { t } from "@/lib/translations";
 import { PilgrimageLanding } from "./pilgrimage-landing";
 
-export const metadata: Metadata = {
-  title: "The Pilgrimage · Mull",
-  description:
-    "A 30-day course personalized to your philosophical archetype. Daily prompts, slow drift, real momentum.",
-  alternates: { canonical: "https://mull.world/pilgrimage" },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getServerLocale();
+  return {
+    title: t("pilgrimage.meta_title", locale),
+    description: t("pilgrimage.meta_desc", locale),
+    alternates: { canonical: "https://mull.world/pilgrimage" },
+  };
+}
 
 export default async function PilgrimagePage() {
+  const locale = await getServerLocale();
   // Server-side: try to pull the user's latest quiz attempt for the
   // initial render. Client can also fall back to localStorage for
   // anonymous users with a stashed pending quiz.
@@ -54,18 +59,14 @@ export default async function PilgrimagePage() {
   return (
     <main className="mx-auto max-w-[820px] px-6 pb-32 pt-12 sm:px-10 sm:pt-16">
       <PixelPageHeader
-        eyebrow="▶ THE PILGRIMAGE · 30 DAYS"
-        title="A 30-DAY COURSE FOR YOU"
+        eyebrow={t("pilgrimage.header_eyebrow", locale)}
+        title={t("pilgrimage.header_title", locale)}
         subtitle={
           <p
             className="text-[16px] italic"
             style={{ fontFamily: "var(--font-editorial)" }}
           >
-            Most reflection apps give the same prompts to everyone.
-            This one gives you an arc shaped for your archetype, with
-            a lens tuned to your secondary flavor. Thirty days of
-            daily prompts that move with you — and a visible chart
-            of how your map shifts across them.
+            {t("pilgrimage.header_subtitle", locale)}
           </p>
         }
       />
@@ -73,6 +74,7 @@ export default async function PilgrimagePage() {
       <PilgrimageLanding
         initialArchetype={initialArchetype}
         initialFlavor={initialFlavor}
+        locale={locale}
       />
 
       <p className="mt-12 text-center text-[13px] text-[#8C6520]">
@@ -80,7 +82,7 @@ export default async function PilgrimagePage() {
           href="/"
           className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
         >
-          ← Back to Mull
+          {t("pilgrimage.back_mull", locale)}
         </Link>
       </p>
     </main>

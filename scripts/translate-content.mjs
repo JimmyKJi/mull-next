@@ -47,6 +47,20 @@ import { EXERCISE_EXTRAS } from '../lib/exercises-extras';
 import { EXERCISE_EXTRAS_I18N } from '../lib/exercises-extras-i18n';
 import { JOURNEY_SCENES, JOURNEY_REVEALS } from '../lib/quiz-journey';
 import { JOURNEY_SCENES_I18N, JOURNEY_REVEALS_I18N } from '../lib/quiz-journey-i18n';
+import { PILGRIMAGE_ARCS, FLAVOR_LENSES } from '../lib/pilgrimage';
+import { PILGRIMAGE_I18N } from '../lib/pilgrimage-i18n';
+
+// Merge the ten arcs with their per-flavor enrollment lenses into one
+// record keyed by archetype, so a single domain pass covers both the
+// 30-day arc content and the lenses. The synthetic `lens` field holds
+// FLAVOR_LENSES[key] (a Record<DimKey,string>); the overlay getter in
+// lib/pilgrimage-i18n.ts reads it back from the same place.
+const PILGRIMAGE_MERGED = Object.fromEntries(
+  Object.entries(PILGRIMAGE_ARCS).map(([k, arc]) => [
+    k,
+    { ...arc, lens: FLAVOR_LENSES[k] || {} },
+  ]),
+);
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const SEP = '␟'; // ␟ — unlikely to appear in content; used as a path separator
@@ -291,6 +305,22 @@ const DOMAINS = {
       { stringRecord: 'flavorDetails' },
     ],
     hint: 'These are the ten endings of "The Inheritor", a country-house murder mystery. In each, the dying philosopher WREN (雷恩) speaks directly to the player ("you"), recognizes what kind of mind they have, and gives + asks something. Register: literary, intimate, the measured speech of an old dying man — match a good Chinese literary translation, not UI copy. The pieces (recognition → a flavor beat → inheritance → ask) are spliced into one continuous speech at render time, so keep each self-contained but tonally seamless. CRITICAL: (1) Preserve every "\\n\\n" paragraph break EXACTLY. (2) *Single asterisks* wrap italicized passages — lines quoted from letters (e.g. *Publish it. Publish it this year…*) and emphasized phrases (e.g. *late-summer attention*, *change the disagreement*). KEEP the literal asterisks around the translated span; never drop them. (3) Keep digits, em-dashes "——", and ▶ arrows verbatim. Names, every time: Wren→雷恩; his wife Elena→埃莱娜; the daughter, the rival (论敌/对手), the correspondents Margaret→玛格丽特, Imre→伊姆雷, Sasha→萨沙; the solicitor Hargreaves→哈格里夫斯. Keep initials/signatures (M., A. K.) in Latin. Archetype words appear ("Cartographer", "Keel", "Threshold", "Pilgrim", "Touchstone", "Hearth", "Forge", "Hammer", "Garden", "Lighthouse") — render with the SAME Chinese archetype names Mull uses elsewhere: Cartographer→制图师, Keel→龙骨, Threshold→门槛, Pilgrim→朝圣者, Touchstone→试金石, Hearth→炉火, Forge→熔炉, Hammer→铁锤, Garden→花园, Lighthouse→灯塔. Field notes: "recognition" names the player\'s cast of mind; "flavorDetails" values are short mid-speech beats (one keyed per DimKey); "flavorDetailDefault" is the fallback beat; "inheritance" is what Wren leaves; "ask" is what he wants done; "advance" is a short imperative button label (e.g. "Take the manuscript").',
+  },
+  pilgrimage: {
+    data: PILGRIMAGE_MERGED,
+    existing: PILGRIMAGE_I18N,
+    shape: 'record', // keyed by archetype (cartographer, keel, … lighthouse)
+    overlayFile: 'lib/pilgrimage-i18n.ts',
+    constName: 'PILGRIMAGE_I18N',
+    recordType: 'Record<string, ArcI18N>',
+    fields: [
+      'spirit',
+      'welcomeDefault',
+      { stringArray: 'phases' },
+      { array: 'days', subfields: ['title', 'framing', 'prompt', 'expect'] },
+      { stringRecord: 'lens' },
+    ],
+    hint: 'This is "The Pilgrimage" — a 30-day personalized reflection course, one arc per archetype. Register: contemplative, plain, direct second person ("you"); spare and a little austere — a wise guide\'s daily instructions, never corporate or therapy-speak. Match the same Chinese literary register as the rest of Mull. Field notes: "spirit" is the one-line shape of the 30-day arc (e.g. "Thirty days redrawing what you thought was settled."). "welcomeDefault" is the enrollment welcome — one warm paragraph addressed to the reader. "phases" are three short ten-day PHASE NAMES (title-case noun phrases like "The Edges of Your Framework", "Other Maps, Other Mappers"); keep them short noun phrases. Each day has: "title" (a sharp 3–5 word day title — keep it terse and evocative), "framing" (1–2 sentences of theme), "prompt" (the single question/instruction the reader writes against — keep it a direct question or imperative), and "expect" (a one-line hint about a substantive answer, OFTEN A TERSE FRAGMENT like "Cost — not promise.", "Three steps deep.", "Drift has a price." — keep these clipped, do not pad into full sentences). "lens" values are per-flavor enrollment notes (2–3 sentences) calibrating the arc to a secondary leaning — same warm-but-spare register as welcomeDefault. CRITICAL: (1) Preserve every "\\n\\n" paragraph break EXACTLY. (2) Keep em-dashes "——", arrows (▶ ◂ ▸), and digits verbatim (e.g. "Day 1", "twenty days", "20-year view", "five years"). (3) The archetype NAME recurs throughout (sometimes lower-case, plural, or possessive: "the Keel", "Cartographers", "forge-people", "the hammer\'s", "Garden", "Threshold-people") — render with Mull\'s canonical Chinese archetype names every time: Cartographer→制图师, Keel→龙骨, Threshold→门槛, Pilgrim→朝圣者, Touchstone→试金石, Hearth→炉火, Forge→熔炉, Hammer→铁锤, Garden→花园, Lighthouse→灯塔. (4) Greek/technical terms appear with glosses — render the established Chinese term and keep the romanization in parentheses on first mention: phronesis→实践智慧（phronesis）, episteme→理论知识（episteme）, apophatic→否定之道, asceticism→苦修. Philosopher names use the established Chinese rendering (Aristotle→亚里士多德, Hume→休谟, Epictetus→爱比克泰德). Do NOT translate the lens subkeys (TV, CE, RT, …) — they are DimKey identifiers and are kept verbatim by the pipeline.',
   },
 };
 
