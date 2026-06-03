@@ -25,11 +25,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { add, zeros } from "@/lib/vectors";
 import type { JourneyScene, RevealEnding } from "@/lib/quiz-journey";
-import {
-  chamberCount,
-  JOURNEY_REVEALS,
-  pickEnding,
-} from "@/lib/quiz-journey";
+import { chamberCount, pickEnding } from "@/lib/quiz-journey";
+import { t, type Locale } from "@/lib/translations";
 import { SceneIllustration } from "@/components/scene-illustration";
 import { SupportMullPrompt } from "@/components/support-mull-prompt";
 import { ResearchConsentGate } from "@/components/research-consent-gate";
@@ -39,9 +36,12 @@ const serif = "var(--font-prose)";
 
 type Props = {
   scenes: JourneyScene[];
+  /** The ten reveal endings, already localized server-side. */
+  reveals: Record<string, RevealEnding>;
+  locale: Locale;
 };
 
-export function JourneyEngine({ scenes }: Props) {
+export function JourneyEngine({ scenes, reveals, locale }: Props) {
   const router = useRouter();
   /** Gate screen — shown before scene 0 to make expectations clear
    *  (15 min, narrative). Click "Begin" to drop it; click the
@@ -78,7 +78,7 @@ export function JourneyEngine({ scenes }: Props) {
   if (gated) {
     return (
       <ResearchConsentGate>
-        <GateScreen onBegin={() => setGated(false)} />
+        <GateScreen onBegin={() => setGated(false)} locale={locale} />
       </ResearchConsentGate>
     );
   }
@@ -148,7 +148,7 @@ export function JourneyEngine({ scenes }: Props) {
                 padding: "3px 8px",
               }}
             >
-              THE INHERITOR · ALPHA
+              {t("journey.badge", locale)}
             </span>
             {scene.kind === "chamber" && (
               <span
@@ -160,7 +160,10 @@ export function JourneyEngine({ scenes }: Props) {
                   textTransform: "uppercase",
                 }}
               >
-                Chamber {currentChamberNumber} of {totalChambers}
+                {t("journey.chamber_of", locale, {
+                  n: currentChamberNumber,
+                  m: totalChambers,
+                })}
               </span>
             )}
           </div>
@@ -175,9 +178,9 @@ export function JourneyEngine({ scenes }: Props) {
               textDecoration: "none",
               opacity: 0.75,
             }}
-            title="Leave the estate — take the classic quiz instead"
+            title={t("journey.leave_title", locale)}
           >
-            leave
+            {t("journey.leave", locale)}
           </Link>
         </header>
 
@@ -192,10 +195,16 @@ export function JourneyEngine({ scenes }: Props) {
             pickedIdx={pickedIdx}
             onPick={pick}
             onAdvance={advance}
+            locale={locale}
           />
         )}
         {scene.kind === "reveal" && (
-          <RevealScene scene={scene} vector={vector} onAdvance={advance} />
+          <RevealScene
+            scene={scene}
+            vector={vector}
+            reveals={reveals}
+            onAdvance={advance}
+          />
         )}
       </div>
     </div>
@@ -214,15 +223,17 @@ export function JourneyEngine({ scenes }: Props) {
 function RevealScene({
   scene,
   vector,
+  reveals,
   onAdvance,
 }: {
   scene: Extract<JourneyScene, { kind: "reveal" }>;
   vector: number[];
+  reveals: Record<string, RevealEnding>;
   onAdvance: () => void;
 }) {
   const { archetypeKey, flavor } = useMemo(() => pickEnding(vector), [vector]);
   const ending: RevealEnding =
-    JOURNEY_REVEALS[archetypeKey] ?? JOURNEY_REVEALS.cartographer;
+    reveals[archetypeKey] ?? reveals.cartographer;
 
   // Compose body: cold-open + recognition + flavor beat + inheritance
   // + ask, joined by paragraph breaks. The shared cold-open already
@@ -339,12 +350,14 @@ function ChamberScene({
   pickedIdx,
   onPick,
   onAdvance,
+  locale,
 }: {
   scene: Extract<JourneyScene, { kind: "chamber" }>;
   revealed: boolean;
   pickedIdx: number | null;
   onPick: (i: number) => void;
   onAdvance: () => void;
+  locale: Locale;
 }) {
   const paragraphs = scene.body.split(/\n\n+/);
   return (
@@ -516,7 +529,7 @@ function ChamberScene({
               marginBottom: 6,
             }}
           >
-            something else
+            {t("journey.something_else", locale)}
           </div>
           <p
             style={{
@@ -535,7 +548,7 @@ function ChamberScene({
 
       {revealed && (
         <button type="button" onClick={onAdvance} style={advanceBtn}>
-          ▶ CONTINUE
+          ▶ {t("journey.continue", locale)}
         </button>
       )}
     </article>
@@ -550,7 +563,13 @@ function ChamberScene({
 // path out, and visitors who came for the immersive version have a
 // clear "yes, I want this" commit before the prose starts.
 
-function GateScreen({ onBegin }: { onBegin: () => void }) {
+function GateScreen({
+  onBegin,
+  locale,
+}: {
+  onBegin: () => void;
+  locale: Locale;
+}) {
   return (
     <div
       style={{
@@ -582,7 +601,7 @@ function GateScreen({ onBegin }: { onBegin: () => void }) {
               marginBottom: 22,
             }}
           >
-            ▸ The Inheritor — A Murder Mystery
+            {t("journey.gate_eyebrow", locale)}
           </div>
           <h1
             style={{
@@ -596,9 +615,7 @@ function GateScreen({ onBegin }: { onBegin: () => void }) {
               textShadow: "3px 3px 0 #B8862F",
             }}
           >
-            A 15-MIN
-            <br />
-            MURDER MYSTERY
+            {t("journey.gate_title", locale)}
           </h1>
           <p
             style={{
@@ -609,12 +626,7 @@ function GateScreen({ onBegin }: { onBegin: () => void }) {
               lineHeight: 1.65,
             }}
           >
-            A reclusive philosopher is dead. You&rsquo;re named in the
-            will, alongside six strangers. Tonight you&rsquo;ll walk
-            four chambers of the estate, examine the evidence, and make
-            the choices that reveal who you actually are. Same rigorous
-            scoring as the classic quiz, delivered as a country-house
-            mystery with two twists and ten endings.
+            {t("journey.gate_desc", locale)}
           </p>
           <p
             style={{
@@ -626,7 +638,7 @@ function GateScreen({ onBegin }: { onBegin: () => void }) {
               lineHeight: 1.5,
             }}
           >
-            About 15 minutes. You&rsquo;ll want quiet time.
+            {t("journey.gate_time", locale)}
           </p>
           <div
             style={{
@@ -652,7 +664,7 @@ function GateScreen({ onBegin }: { onBegin: () => void }) {
                 transition: "transform 80ms steps(2, end), box-shadow 80ms steps(2, end)",
               }}
             >
-              ▶ Begin the night
+              {t("journey.gate_begin", locale)}
             </button>
             <Link
               href="/quiz?mode=quick"
@@ -672,7 +684,7 @@ function GateScreen({ onBegin }: { onBegin: () => void }) {
                 display: "block",
               }}
             >
-              ◂ Or take the 5-min classic
+              {t("journey.gate_classic", locale)}
             </Link>
           </div>
         </div>

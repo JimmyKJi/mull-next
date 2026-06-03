@@ -817,7 +817,25 @@ export const TRANSLATIONS: TranslationMap = {
   "compare.your_handle":        { en: "YOUR HANDLE", zh: "你的用户名" },
   "compare.their_handle":       { en: "THEIR HANDLE", zh: "对方的用户名" },
   "compare.submit":             { en: "COMPARE", zh: "对照" },
-  "compare.picker_footer":      { en: "Both users need a public profile (Account → Public profile settings → toggle on) for the comparison to work. Per-field visibility (archetype, dimensions, etc.) is respected.", zh: "双方都需要公开资料（账户 → 公开资料设置 → 开启）才能进行对照。按字段的可见性（原型、维度等）将被尊重。" }
+  "compare.picker_footer":      { en: "Both users need a public profile (Account → Public profile settings → toggle on) for the comparison to work. Per-field visibility (archetype, dimensions, etc.) is respected.", zh: "双方都需要公开资料（账户 → 公开资料设置 → 开启）才能进行对照。按字段的可见性（原型、维度等）将被尊重。" },
+
+  // ─── /quiz/journey — "The Inheritor" narrative-quiz chrome ───
+  // (The scenes + the ten reveal endings themselves live in
+  //  lib/quiz-journey-i18n.ts; these are only the surrounding UI.)
+  "journey.meta_title":     { en: "The Inheritor — A Murder Mystery · Mull", zh: "继承者 —— 一场谋杀谜案 · Mull" },
+  "journey.meta_desc":      { en: "A 15-minute country-house murder mystery that doubles as a rigorous philosophical placement. A reclusive philosopher is dead; you're one of seven inheritors. Two twists, ten endings.", zh: "一桩 15 分钟的乡间庄园谋杀谜案，同时也是一次严谨的哲学定位。一位隐居的哲学家死了；你是七位继承人之一。两重反转，十种结局。" },
+  "journey.badge":          { en: "THE INHERITOR · ALPHA", zh: "继承者 · 内测" },
+  "journey.chamber_of":     { en: "Chamber {n} of {m}", zh: "第 {n} 间 · 共 {m} 间" },
+  "journey.leave":          { en: "leave", zh: "离开" },
+  "journey.leave_title":    { en: "Leave the estate — take the classic quiz instead", zh: "离开庄园 —— 改做经典测验" },
+  "journey.continue":       { en: "CONTINUE", zh: "继续" },
+  "journey.something_else": { en: "something else", zh: "另有蹊跷" },
+  "journey.gate_eyebrow":   { en: "▸ The Inheritor — A Murder Mystery", zh: "▸ 继承者 · 一场谋杀谜案" },
+  "journey.gate_title":     { en: "A 15-Minute Murder Mystery", zh: "一场 15 分钟的谋杀谜案" },
+  "journey.gate_desc":      { en: "A reclusive philosopher is dead. You're named in the will, alongside six strangers. Tonight you'll walk four rooms of the estate, examine the evidence, and make the choices that reveal who you actually are. Same rigorous scoring as the classic quiz, delivered as a country-house mystery with two twists and ten endings.", zh: "一位隐居的哲学家死了。你与六位陌生人一同被列入遗嘱。今夜，你将穿过庄园的四间屋子，查验证据，做出那些揭示你究竟是谁的抉择。评分与经典测验同样严谨，只是化作了一桩乡间庄园谜案——两重反转，十种结局。" },
+  "journey.gate_time":      { en: "About 15 minutes. You'll want quiet time.", zh: "大约 15 分钟。你会想留出一段安静的时光。" },
+  "journey.gate_begin":     { en: "▶ Begin the night", zh: "▶ 步入今夜" },
+  "journey.gate_classic":   { en: "◂ Or take the 5-min classic", zh: "◂ 或选择 5 分钟经典版" }
 };
 
 export function t(key: string, locale: Locale = 'en', vars?: Record<string, string | number>): string {

@@ -45,6 +45,8 @@ import { EXERCISES } from '../lib/exercises';
 import { EXERCISES_I18N } from '../lib/exercises-i18n';
 import { EXERCISE_EXTRAS } from '../lib/exercises-extras';
 import { EXERCISE_EXTRAS_I18N } from '../lib/exercises-extras-i18n';
+import { JOURNEY_SCENES, JOURNEY_REVEALS } from '../lib/quiz-journey';
+import { JOURNEY_SCENES_I18N, JOURNEY_REVEALS_I18N } from '../lib/quiz-journey-i18n';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const SEP = '␟'; // ␟ — unlikely to appear in content; used as a path separator
@@ -253,6 +255,43 @@ const DOMAINS = {
     ],
     hint: 'These are deep-dive supplements to a contemplative/philosophical practice exercise. "longerAbout" is 2–3 paragraphs of history and lineage — preserve the blank-line "\\n\\n" paragraph breaks exactly. "commonPitfalls" are short cautionary notes (ways people get the practice wrong). "workedExample" is one concrete scenario paragraph. relatedThinkers: "name" is a thinker — use the established target-language rendering for well-known figures (e.g. Seneca→塞内卡, Marcus Aurelius→马可·奥勒留, Confucius→孔子; transliterate modern names like Gary Klein→加里·克莱因), "note" is why they matter (render work titles with 《》 for Chinese, e.g. Meditations→《沉思录》; keep years and parenthetical citations verbatim). furtherReading: "title" is a book/essay title — use the standard published target-language title when well known (e.g. Thinking, Fast and Slow→《思考，快与慢》), otherwise translate the sense and wrap in 《》 for Chinese; "note" is why to read it. kindredPractices: "name" is an allied practice, "note" is a one-line description. Plain, erudite, literary register.',
   },
+  quizJourneyScenes: {
+    data: JOURNEY_SCENES,
+    existing: JOURNEY_SCENES_I18N,
+    keyField: 'id', // each scene has a stable id (arrival, ch1…ch4, reveal)
+    overlayFile: 'lib/quiz-journey-i18n.ts',
+    constName: 'JOURNEY_SCENES_I18N',
+    recordType: 'Record<string, SceneI18N>',
+    fields: [
+      'eyebrow',
+      'body',
+      'advance',
+      'prompt',
+      'epilogue',
+      'coldOpen',
+      'twistClue',
+      { array: 'choices', subfields: ['text'] },
+      { stringRecord: 'choiceEpilogues' },
+    ],
+    hint: 'This is "The Inheritor" — an immersive narrative quiz written as a country-house MURDER MYSTERY in close second person ("you"). Register: literary, atmospheric, a little gothic — match a good Chinese translation of a Penguin Classics novel, never UI copy. Keep the suspense and restraint; do not explain or flatten the prose. CRITICAL formatting: (1) Preserve every blank-line "\\n\\n" paragraph break EXACTLY. (2) The text uses *single asterisks* to wrap italicized passages — the will excerpt, lines quoted from letters, and emphasized words. KEEP the literal asterisks in place around the translated span (e.g. *I forgive you for all of it.* → *我原谅你所做的一切。*); never drop or convert them. (3) Keep ▶ ◂ arrows, em-dashes "——", and any digits verbatim. Recurring proper nouns — render these CONSISTENTLY every time so batches agree: Wren→雷恩 (his given name Andrew→安德鲁); Elena→埃莱娜; Margaret→玛格丽特; Imre→伊姆雷; Sasha→萨沙; Hargreaves→哈格里夫斯; Shortheath Estate→肖特希思庄园. Keep single-letter initials/signatures (M., A. K.) in Latin. Recurring terms: inheritor→继承人, the will→遗嘱, solicitor→事务律师, estate→庄园, the housekeeper / the servant→管家 (she), registry→登记处. Field notes: "eyebrow" is a chapter label like "II · The Foyer" — translate the room name but keep the Roman numeral and "·" (e.g. "II · 门厅"). "body"/"epilogue"/"coldOpen"/"twistClue" are narrative prose. "prompt" is the hinge question put to the player. "choices.text" are the player\'s first-person options (some are an action described in second person rather than speech). "advance" is a short imperative button label (e.g. "Walk to the door"). "choiceEpilogues" values are longer narrative beats that replace the default epilogue for a specific choice.',
+  },
+  quizJourneyReveals: {
+    data: JOURNEY_REVEALS,
+    existing: JOURNEY_REVEALS_I18N,
+    shape: 'record', // JOURNEY_REVEALS is Record<archetypeKey, RevealEnding>
+    overlayFile: 'lib/quiz-journey-i18n.ts',
+    constName: 'JOURNEY_REVEALS_I18N',
+    recordType: 'Record<string, RevealI18N>',
+    fields: [
+      'recognition',
+      'flavorDetailDefault',
+      'inheritance',
+      'ask',
+      'advance',
+      { stringRecord: 'flavorDetails' },
+    ],
+    hint: 'These are the ten endings of "The Inheritor", a country-house murder mystery. In each, the dying philosopher WREN (雷恩) speaks directly to the player ("you"), recognizes what kind of mind they have, and gives + asks something. Register: literary, intimate, the measured speech of an old dying man — match a good Chinese literary translation, not UI copy. The pieces (recognition → a flavor beat → inheritance → ask) are spliced into one continuous speech at render time, so keep each self-contained but tonally seamless. CRITICAL: (1) Preserve every "\\n\\n" paragraph break EXACTLY. (2) *Single asterisks* wrap italicized passages — lines quoted from letters (e.g. *Publish it. Publish it this year…*) and emphasized phrases (e.g. *late-summer attention*, *change the disagreement*). KEEP the literal asterisks around the translated span; never drop them. (3) Keep digits, em-dashes "——", and ▶ arrows verbatim. Names, every time: Wren→雷恩; his wife Elena→埃莱娜; the daughter, the rival (论敌/对手), the correspondents Margaret→玛格丽特, Imre→伊姆雷, Sasha→萨沙; the solicitor Hargreaves→哈格里夫斯. Keep initials/signatures (M., A. K.) in Latin. Archetype words appear ("Cartographer", "Keel", "Threshold", "Pilgrim", "Touchstone", "Hearth", "Forge", "Hammer", "Garden", "Lighthouse") — render with the SAME Chinese archetype names Mull uses elsewhere: Cartographer→制图师, Keel→龙骨, Threshold→门槛, Pilgrim→朝圣者, Touchstone→试金石, Hearth→炉火, Forge→熔炉, Hammer→铁锤, Garden→花园, Lighthouse→灯塔. Field notes: "recognition" names the player\'s cast of mind; "flavorDetails" values are short mid-speech beats (one keyed per DimKey); "flavorDetailDefault" is the fallback beat; "inheritance" is what Wren leaves; "ask" is what he wants done; "advance" is a short imperative button label (e.g. "Take the manuscript").',
+  },
 };
 
 // ── args ──
@@ -310,6 +349,20 @@ function entries(domain) {
   ]);
 }
 
+// ── Disambiguate a 3-part flatKey `key␟field␟sub`. Two field shapes
+//    both produce 3-part keys: {stringArray} (sub = numeric index →
+//    stored in an array) and {stringRecord} (sub = arbitrary string
+//    key → stored in an object). Resolve by the field's declaration in
+//    the domain. Defaults to 'stringArray' (the legacy 3-part shape) so
+//    any caller without a matching field decl keeps old behavior. ──
+function field3Shape(domain, fieldName) {
+  for (const f of domain?.fields || []) {
+    if (typeof f === 'object' && f.stringArray === fieldName) return 'stringArray';
+    if (typeof f === 'object' && f.stringRecord === fieldName) return 'stringRecord';
+  }
+  return 'stringArray';
+}
+
 // ── flatten: build { flatKey -> englishText } for a domain ──
 function extract(domain) {
   const out = {};
@@ -338,6 +391,18 @@ function extract(domain) {
           if (typeof v === 'string' && v.trim())
             out[`${k}${SEP}${f.stringArray}${SEP}${i}`] = v;
         });
+      } else if (f.stringRecord) {
+        // Record<string|number, string> field (e.g. journey
+        // `choiceEpilogues` keyed by choice index, or reveal
+        // `flavorDetails` keyed by DimKey): translate each value by its
+        // record key. flatKey is the 3-part `key␟field␟subkey` — same
+        // arity as stringArray, disambiguated by field3Shape at merge.
+        const rec = entry[f.stringRecord];
+        if (!rec || typeof rec !== 'object') continue;
+        for (const [sk, v] of Object.entries(rec)) {
+          if (typeof v === 'string' && v.trim())
+            out[`${k}${SEP}${f.stringRecord}${SEP}${sk}`] = v;
+        }
       } else {
         const arr = entry[f.array];
         if (!Array.isArray(arr)) continue;
@@ -362,7 +427,11 @@ function hasExisting(existing, flatKey, loc, domain) {
   if (!node) return false;
   if (parts.length === 2) return typeof node[parts[1]] === 'string';
   if (parts.length === 3) {
-    // 3-part `key␟field␟i` → a string[] element.
+    // 3-part `key␟field␟sub` → either a string[] element (stringArray)
+    // or an object value (stringRecord), by the field's declared shape.
+    if (field3Shape(domain, parts[1]) === 'stringRecord') {
+      return typeof node[parts[1]]?.[parts[2]] === 'string';
+    }
     const el = node[parts[1]]?.[+parts[2]];
     return typeof el === 'string';
   }
@@ -394,14 +463,23 @@ function applyTranslations(map, translations, loc, domain) {
     if (parts.length === 2) {
       node[parts[1]] = val;
     } else if (parts.length === 3) {
-      // 3-part `key␟field␟i` → a string[] element. A batch boundary can deliver
-      // indices out of order, so fill any lower holes with '' first; never
-      // clobber an already-translated element.
-      const arrName = parts[1];
-      const idx = +parts[2];
-      (node[arrName] ||= []);
-      for (let j = 0; j < idx; j++) node[arrName][j] ??= '';
-      node[arrName][idx] = val;
+      // 3-part `key␟field␟sub` → stringArray element OR stringRecord
+      // value, by the field's declared shape.
+      const fieldName = parts[1];
+      if (field3Shape(domain, fieldName) === 'stringRecord') {
+        // Object value keyed by an arbitrary subkey (choice index as a
+        // string, or a DimKey). Store the subkey verbatim.
+        (node[fieldName] ||= {});
+        node[fieldName][parts[2]] = val;
+      } else {
+        // string[] element. A batch boundary can deliver indices out of
+        // order, so fill any lower holes with '' first; never clobber an
+        // already-translated element.
+        const idx = +parts[2];
+        (node[fieldName] ||= []);
+        for (let j = 0; j < idx; j++) node[fieldName][j] ??= '';
+        node[fieldName][idx] = val;
+      }
     } else {
       const [, arrName, idxStr, sf] = parts;
       const idx = +idxStr;
@@ -521,7 +599,11 @@ function getExisting(existing, flatKey, loc, domain) {
   if (!node) return undefined;
   if (parts.length === 2) return typeof node[parts[1]] === 'string' ? node[parts[1]] : undefined;
   if (parts.length === 3) {
-    // 3-part `key␟field␟i` → a string[] element.
+    // 3-part `key␟field␟sub` → string[] element OR stringRecord value.
+    if (field3Shape(domain, parts[1]) === 'stringRecord') {
+      const v = node[parts[1]]?.[parts[2]];
+      return typeof v === 'string' ? v : undefined;
+    }
     const el = node[parts[1]]?.[+parts[2]];
     return typeof el === 'string' ? el : undefined;
   }
