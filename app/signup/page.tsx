@@ -70,7 +70,9 @@ export default function SignupPage() {
           className="flex items-center justify-between border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
           style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
-          <span>▶ {confirmSent ? 'CHECK YOUR EMAIL' : 'CREATE ACCOUNT'}</span>
+          <span>▶ {confirmSent
+            ? t('auth.check_email', locale).toUpperCase()
+            : t('auth.create_account', locale).toUpperCase()}</span>
           <span className="text-[#B8862F]">AUTH.SYS</span>
         </div>
 
