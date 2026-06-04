@@ -68,7 +68,7 @@ export default function RetrospectivePanel({ locale = 'en' }: { locale?: Locale 
               background: '#FFFCF4',
               color: '#221E18',
             }}
-            aria-label="Select year for retrospective"
+            aria-label={t('a11y.select_year', locale)}
           >
             {years.map(y => <option key={y} value={y}>{y}</option>)}
           </select>

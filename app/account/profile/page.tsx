@@ -59,7 +59,7 @@ export default async function ProfileSettingsPage() {
 
       <PixelPageHeader
         eyebrow={`▶ ${t('profile.eyebrow', locale).toUpperCase()}`}
-        title="PUBLIC PROFILE"
+        title={t('hdr.public_profile', locale)}
         subtitle={
           <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-editorial)' }}>
             {t('profile.subtitle_html', locale, {

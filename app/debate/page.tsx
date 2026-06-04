@@ -60,7 +60,7 @@ export default async function DebatePage() {
 
       <PixelPageHeader
         eyebrow={`▶ ${t('debate.eyebrow', locale).toUpperCase()}`}
-        title="SIMULATED DEBATE"
+        title={t('nav.debate', locale).toUpperCase()}
         subtitle={
           <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-editorial)' }}>
             {t('debate.subtitle', locale)}

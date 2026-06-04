@@ -15,6 +15,7 @@
 // vignette — dignified, period-appropriate, intentional.
 
 import type { SceneArtKey } from "@/lib/quiz-journey";
+import { type Locale } from "@/lib/translations";
 
 // Shared palette — warm, restrained, "estate library" vibe.
 const PAL = {
@@ -32,6 +33,8 @@ type Props = {
   scene: SceneArtKey;
   /** Display width in CSS pixels. Height set by aspect ratio. */
   width?: number;
+  /** Display locale — selects the alt-text language. Defaults 'en'. */
+  locale?: Locale;
 };
 
 // Per-scene tighter viewBox for mobile (≤640px). The desktop SVG uses
@@ -48,10 +51,11 @@ const MOBILE_VIEWBOX: Record<SceneArtKey, string> = {
   "candle-deathbed": "0 30 200 70",
 };
 
-export function SceneIllustration({ scene, width = 360 }: Props) {
+export function SceneIllustration({ scene, width = 360, locale = "en" }: Props) {
   const aspectRatio = 5 / 2.5; // 200×100 viewBox
   const height = Math.round(width / aspectRatio);
   const mobileVB = MOBILE_VIEWBOX[scene];
+  const alt = (locale === "zh" ? SCENE_ALT_ZH : SCENE_ALT)[scene];
   // Parse mobile viewBox to compute mobile aspect ratio + display
   // height. We render the mobile SVG at the same CSS max-width as
   // desktop so the layout doesn't shift; CSS hides the wrong one.
@@ -71,7 +75,7 @@ export function SceneIllustration({ scene, width = 360 }: Props) {
         style={{ display: "block", margin: "0 auto", maxWidth: "100%" }}
         preserveAspectRatio="xMidYMid meet"
         role="img"
-        aria-label={SCENE_ALT[scene]}
+        aria-label={alt}
       >
         <SceneInner scene={scene} withCorners />
       </svg>
@@ -89,7 +93,7 @@ export function SceneIllustration({ scene, width = 360 }: Props) {
         }}
         preserveAspectRatio="xMidYMid meet"
         role="img"
-        aria-label={SCENE_ALT[scene]}
+        aria-label={alt}
       >
         <SceneInner scene={scene} withCorners={false} />
       </svg>
@@ -402,4 +406,21 @@ const SCENE_ALT: Record<SceneArtKey, string> = {
     "A wooden box opened on a table, holding an unused steamship ticket and a small sepia photograph of a coastal house.",
   "candle-deathbed":
     "A single candle illuminating the foot of a bed in deep shadow.",
+};
+
+// zh alt text — kept inline (parallel to SCENE_ALT) rather than in
+// translations.ts since it's a small fixed map local to this component.
+const SCENE_ALT_ZH: Record<SceneArtKey, string> = {
+  "envelope-seal":
+    "一封以暗红色火漆封缄的信，手写的地址清晰可见。",
+  "framed-photograph":
+    "一幅带框的照片挂在镶板墙上，下方点着一支蜡烛。",
+  "stacked-letters":
+    "书桌上打开的木盒里，叠放着几种不同笔迹的信件；盒边放着一封折好的孩子写的小信，桌上还有一只墨水瓶。",
+  "two-chairs":
+    "两把椅子隔着一张矮桌相对而坐，桌上放着两叠捆好的信。",
+  "ticket-and-photo":
+    "桌上打开的木盒里，放着一张未使用的轮船船票，和一张海边小屋的褐色旧照片。",
+  "candle-deathbed":
+    "一支蜡烛照亮了深深阴影中的床尾。",
 };

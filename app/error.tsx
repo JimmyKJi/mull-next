@@ -12,7 +12,8 @@
 
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { t, type Locale, isLocale } from '@/lib/translations';
 
 const serif = "var(--font-prose)";
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
@@ -24,6 +25,14 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const [locale, setLocale] = useState<Locale>('en');
+
+  useEffect(() => {
+    const m = document.cookie.match(/(?:^|; )mull_locale=([^;]+)/);
+    const v = m?.[1];
+    if (v && isLocale(v)) setLocale(v);
+  }, []);
+
   useEffect(() => {
     // Best-effort report. Don't block the UI on this.
     try {
@@ -64,7 +73,7 @@ export default function GlobalError({
           letterSpacing: '0.18em',
           marginBottom: 16,
         }}>
-          ▸ SOMETHING WENT WRONG
+          ▸ {t('errp.eyebrow', locale)}
         </div>
         <h1 style={{
           fontFamily: serif,
@@ -74,7 +83,7 @@ export default function GlobalError({
           letterSpacing: '-0.5px',
           lineHeight: 1.15,
         }}>
-          We tripped on something.
+          {t('errp.title', locale)}
         </h1>
         <p style={{
           fontFamily: serif,
@@ -84,7 +93,7 @@ export default function GlobalError({
           margin: '0 0 28px',
           lineHeight: 1.55,
         }}>
-          The error has been logged. You can try again, or head back home.
+          {t('errp.body', locale)}
         </p>
         <div style={{
           display: 'flex',
@@ -111,7 +120,7 @@ export default function GlobalError({
               transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
             }}
           >
-            ▸ TRY AGAIN
+            ▸ {t('errp.try_again', locale)}
           </button>
           <a
             href="/"
@@ -131,7 +140,7 @@ export default function GlobalError({
               transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
             }}
           >
-            ◂ GO HOME
+            ◂ {t('errp.go_home', locale)}
           </a>
         </div>
         {error.digest && (

@@ -127,7 +127,7 @@ export default async function HomeV2() {
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
                 <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F] pixel-blink" />
-                <span>AN ATLAS OF HOW YOU THINK</span>
+                <span>{t("home.eyebrow_atlas", locale)}</span>
               </div>
 
               <h1
@@ -139,10 +139,10 @@ export default async function HomeV2() {
                 </span>
               </h1>
 
-              <p className="mt-7 max-w-[680px] text-[22px] font-light leading-[1.35] text-[#221E18] sm:text-[26px]">
-                Find your place on the{" "}
-                <span className="text-[#8C6520]">map of how you think.</span>
-              </p>
+              <p
+                className="mt-7 max-w-[680px] text-[22px] font-light leading-[1.35] text-[#221E18] sm:text-[26px]"
+                dangerouslySetInnerHTML={{ __html: t("home.hero_tagline", locale) }}
+              />
 
               <div className="mt-10 max-w-[640px]">
                 <div className="pixel-panel pixel-panel--amber">
@@ -150,7 +150,7 @@ export default async function HomeV2() {
                     className="border-b-4 border-[#8C6520] bg-[#8C6520] px-4 py-1.5 text-[10px] tracking-[0.2em] text-[#F8EDC8]"
                     style={{ fontFamily: "var(--font-pixel-display)" }}
                   >
-                    ▶ QUEST BRIEF
+                    ▶ {t("home.quest_brief", locale)}
                   </div>
                   <p className="px-5 py-4 text-[16px] font-normal leading-[1.55] text-[#221E18] sm:text-[17px]">
                     {t("home.hero_lede", locale)}
@@ -174,25 +174,22 @@ export default async function HomeV2() {
                     className="text-[10px] tracking-[0.22em] text-[#8C6520]"
                     style={{ fontFamily: "var(--font-pixel-display)" }}
                   >
-                    ▶ MURDER MYSTERY · 15 MIN
+                    ▶ {t("home.inheritor_eyebrow", locale)}
                   </div>
                   <div
                     className="mt-2 text-[18px] font-medium leading-[1.2] text-[#221E18]"
                     style={{ fontFamily: "var(--font-prose)" }}
                   >
-                    The Inheritor
+                    {t("home.inheritor_title", locale)}
                   </div>
                   <p className="mt-2 text-[13.5px] leading-[1.5] text-[#4A4338]">
-                    A reclusive philosopher is dead. You&rsquo;re named
-                    in the will, alongside six strangers. Four chambers,
-                    four anomalies, two twists, ten endings — same
-                    16-D map placement, delivered as a mystery.
+                    {t("home.inheritor_body", locale)}
                   </p>
                   <div
                     className="mt-3 inline-block bg-[#F8C75E] px-3 py-1 text-[10px] tracking-[0.18em] text-[#1A1820]"
                     style={{ fontFamily: "var(--font-pixel-display)" }}
                   >
-                    ▶ BEGIN
+                    ▶ {t("home.inheritor_cta", locale)}
                   </div>
                 </Link>
 
@@ -206,34 +203,32 @@ export default async function HomeV2() {
                     className="text-[10px] tracking-[0.22em] text-[#2F5D5C]"
                     style={{ fontFamily: "var(--font-pixel-display)" }}
                   >
-                    ▶ ARGUE A PHILOSOPHER
+                    ▶ {t("home.arena_eyebrow", locale)}
                   </div>
                   <div
                     className="mt-2 text-[18px] font-medium leading-[1.2] text-[#221E18]"
                     style={{ fontFamily: "var(--font-prose)" }}
                   >
-                    The Arena
+                    {t("home.arena_title", locale)}
                   </div>
                   <p className="mt-2 text-[13.5px] leading-[1.5] text-[#4A4338]">
-                    Debate Socrates, Nietzsche, Arendt — or another
-                    person. An impartial judge scores rigor, principle,
-                    and engagement. Elo, leaderboard, PvP.
+                    {t("home.arena_body", locale)}
                   </p>
                   <div
                     className="mt-3 inline-block bg-[#F8C75E] px-3 py-1 text-[10px] tracking-[0.18em] text-[#1A1820]"
                     style={{ fontFamily: "var(--font-pixel-display)" }}
                   >
-                    ▶ ENTER
+                    ▶ {t("home.arena_cta", locale)}
                   </div>
                 </Link>
               </div>
 
               <p className="mt-5 max-w-[640px] text-[13.5px] leading-[1.55] text-[#8C6520]">
-                No signup needed for either. Skip anything.{" "}
+                {t("home.no_signup", locale)}{" "}
                 <Link href="/quiz?mode=quick" className="text-[#4A4338] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]">
-                  Or take the 5-min classic quiz instead
+                  {t("home.classic_instead", locale)}
                 </Link>{" "}
-                — same map placement, faster.
+                {t("home.same_placement", locale)}
               </p>
 
               {/* Mobile-only inline philosopher sprite. The right-rail
@@ -253,7 +248,7 @@ export default async function HomeV2() {
                   className="text-[10px] tracking-[0.18em] text-[#8C6520]"
                   style={{ fontFamily: "var(--font-pixel-display)" }}
                 >
-                  ▸ ONE OF 560 THINKERS<br/>WAITING ON THE MAP
+                  ▸ {t("home.one_of_560_l1", locale)}<br/>{t("home.one_of_560_l2", locale)}
                 </span>
               </div>
             </div>
@@ -282,29 +277,26 @@ export default async function HomeV2() {
               className="text-[10px] tracking-[0.24em] text-[#8C6520]"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
-              ▸ ONCE YOU&rsquo;RE ON THE MAP · FIND YOUR RHYTHM
+              ▸ {t("home.rhythm_eyebrow", locale)}
             </div>
             <h2
               className="mt-4 text-[26px] leading-[1.05] tracking-[0.04em] text-[#221E18] sm:text-[34px]"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
-              <span style={{ textShadow: "3px 3px 0 #B8862F" }}>WHAT TO DO TOMORROW</span>
+              <span style={{ textShadow: "3px 3px 0 #B8862F" }}>{t("home.rhythm_title", locale)}</span>
             </h2>
             <p
               className="mt-3 max-w-[680px] text-[15px] leading-[1.55] text-[#4A4338] sm:text-[16px]"
               style={{ fontFamily: "var(--font-editorial)" }}
             >
-              Mull has six recurring rhythms — daily, weekly, and
-              long-arc. Pick the cadence that fits the day
-              you&rsquo;re actually going to have. Each one builds
-              one of your six skills, tracked in your{" "}
+              {t("home.rhythm_intro_pre", locale)}
               <Link
                 href="/atlas"
                 className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
               >
-                Atlas
+                {t("home.rhythm_intro_atlas", locale)}
               </Link>
-              .
+              {t("home.rhythm_intro_post", locale)}
             </p>
             {/* Three tiers of cadence stacked into one grid so the
                 user can pick what kind of return-rhythm matches
@@ -314,10 +306,10 @@ export default async function HomeV2() {
               <li>
                 <RhythmCard
                   href="/spar"
-                  cadence="DAILY · 5 MIN"
-                  title="Daily Spar"
-                  pitch="One philosopher, one topic, one turn each. Judge calls it in 30 seconds."
-                  cta="TODAY'S SPAR"
+                  cadence={t("home.rc_spar_cadence", locale)}
+                  title={t("nav.spar", locale)}
+                  pitch={t("home.rc_spar_pitch", locale)}
+                  cta={t("home.rc_spar_cta", locale)}
                   dark
                   shadow="#8C3717"
                 />
@@ -325,50 +317,50 @@ export default async function HomeV2() {
               <li>
                 <RhythmCard
                   href="/crucible"
-                  cadence="DAILY · REAL ACTION"
-                  title="The Crucible"
-                  pitch="A small actual thing to do today. Tomorrow Mull asks how it went."
-                  cta="TODAY'S CRUCIBLE"
+                  cadence={t("home.rc_crucible_cadence", locale)}
+                  title={t("nav.crucible", locale)}
+                  pitch={t("home.rc_crucible_pitch", locale)}
+                  cta={t("home.rc_crucible_cta", locale)}
                   shadow="#2F5D5C"
                 />
               </li>
               <li>
                 <RhythmCard
                   href="/dilemma"
-                  cadence="DAILY · 5 MIN"
-                  title="Today's Dilemma"
-                  pitch="One philosophical scenario. Write what you think. Build a streak."
-                  cta="TODAY'S DILEMMA"
+                  cadence={t("home.rc_dilemma_cadence", locale)}
+                  title={t("nav.dilemma", locale)}
+                  pitch={t("home.rc_dilemma_pitch", locale)}
+                  cta={t("home.rc_dilemma_cta", locale)}
                   shadow="#B8862F"
                 />
               </li>
               <li>
                 <RhythmCard
                   href="/wandering"
-                  cadence="WEEKLY · MON → SUN"
-                  title="The Wandering Question"
-                  pitch="One question carried across four beats of the week. Synthesis on Sunday."
-                  cta="THIS WEEK'S QUESTION"
+                  cadence={t("home.rc_wandering_cadence", locale)}
+                  title={t("nav.wandering", locale)}
+                  pitch={t("home.rc_wandering_pitch", locale)}
+                  cta={t("home.rc_wandering_cta", locale)}
                   shadow="#5D5777"
                 />
               </li>
               <li>
                 <RhythmCard
                   href="/pilgrimage"
-                  cadence="30 DAYS · YOUR ARCHETYPE"
-                  title="The Pilgrimage"
-                  pitch="A 30-day arc shaped for the kind of mind you turned out to be."
-                  cta="ENROLL"
+                  cadence={t("home.rc_pilgrimage_cadence", locale)}
+                  title={t("nav.pilgrimage", locale)}
+                  pitch={t("home.rc_pilgrimage_pitch", locale)}
+                  cta={t("home.rc_pilgrimage_cta", locale)}
                   shadow="#1E3A5F"
                 />
               </li>
               <li>
                 <RhythmCard
                   href="/atlas"
-                  cadence="ALWAYS · YOUR SIX SKILLS"
-                  title="The Atlas"
-                  pitch="Watch your Rigor, Depth, Consistency, Range, Self-Awareness, and Synthesis grow."
-                  cta="SEE YOUR ATLAS"
+                  cadence={t("home.rc_atlas_cadence", locale)}
+                  title={t("nav.atlas", locale)}
+                  pitch={t("home.rc_atlas_pitch", locale)}
+                  cta={t("home.rc_atlas_cta", locale)}
                   shadow="#7A8B43"
                 />
               </li>
@@ -385,7 +377,7 @@ export default async function HomeV2() {
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
                 <span>{todayLabel.toUpperCase()}</span>
-                <span className="text-[#B8862F]">▶ DAILY DROP</span>
+                <span className="text-[#B8862F]">▶ {t("home.daily_drop", locale)}</span>
               </div>
               <div className="relative grid grid-cols-1 md:grid-cols-[1fr_auto] md:items-center">
                 <div className="px-6 py-7 sm:px-10 sm:py-9">
@@ -449,21 +441,18 @@ export default async function HomeV2() {
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
                 <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
-                THE PHILOSOPHICAL REALM
+                {t("home.realm_eyebrow", locale)}
               </div>
               <h2
                 className="mt-5 pr-2 text-[28px] leading-[1.05] tracking-[0.04em] text-[#221E18] sm:text-[40px] md:text-[48px]"
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
                 <span style={{ textShadow: "3px 3px 0 #B8862F" }}>
-                  {PHILOSOPHERS.length} THINKERS
+                  {t("home.n_thinkers", locale, { count: PHILOSOPHERS.length })}
                 </span>
               </h2>
               <p className="mt-5 max-w-[640px] text-[16px] leading-[1.6] text-[#4A4338] sm:text-[17px]">
-                Every philosopher in Mull sits at a real point in
-                16-D space — drawn from their actual writings.
-                Below is that space, flattened to a readable map.
-                Hover anyone to read who they were.
+                {t("home.realm_body", locale)}
               </p>
             </div>
 
@@ -477,18 +466,16 @@ export default async function HomeV2() {
                   ▶ MAP_OF_MINDS.EXE
                 </span>
                 <span className="text-[10px] tracking-[0.14em] text-[#B8862F]">
-                  DRAG · ZOOM · HOVER
+                  {t("home.map_controls", locale)}
                 </span>
               </div>
               <ConstellationMount height={640} variant="interactive" />
             </div>
 
-            <p className="mt-5 max-w-[720px] text-[14px] leading-[1.55] text-[#8C6520]">
-              Take the quiz to see where{" "}
-              <span className="text-[#221E18]">you</span> appear in the
-              cloud. The closer the point, the closer their pattern is
-              to yours.
-            </p>
+            <p
+              className="mt-5 max-w-[720px] text-[14px] leading-[1.55] text-[#8C6520]"
+              dangerouslySetInnerHTML={{ __html: t("home.realm_footer", locale) }}
+            />
           </div>
         </ScrollReveal>
 
@@ -508,13 +495,13 @@ export default async function HomeV2() {
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
             <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
-            WHAT THIS IS
+            {t("home.what_eyebrow", locale)}
           </div>
           <h2
             className="mt-5 text-[28px] leading-none tracking-[0.04em] text-[#221E18] sm:text-[40px]"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
-            <span style={{ textShadow: "4px 4px 0 #B8862F" }}>HOW IT WORKS</span>
+            <span style={{ textShadow: "4px 4px 0 #B8862F" }}>{t("home.what_title", locale)}</span>
           </h2>
 
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -522,20 +509,20 @@ export default async function HomeV2() {
               {
                 glyph: "▦",
                 num: "16",
-                title: "DIMENSIONS",
-                body: "Mull places you in a 16-dimensional space of philosophical tendencies — Trust in Reason, Tragic Vision, Mystical Receptivity, Communal Embeddedness, Self as Illusion, and twelve more. Each quiz answer is a small vector that nudges your position.",
+                title: t("home.card_dimensions_title", locale),
+                body: t("home.card_dimensions_body", locale),
               },
               {
                 glyph: "✦",
                 num: "560",
-                title: "THINKERS",
-                body: "Over 500 philosophers are positioned alongside you, drawn from their actual writings. Buddha and Hume both score high on Self as Illusion — but for opposite reasons. The dimensions catch real distinctions.",
+                title: t("home.card_thinkers_title", locale),
+                body: t("home.card_thinkers_body", locale),
               },
               {
                 glyph: "◇",
                 num: "1",
-                title: "OF YOU",
-                body: "You're a continuous point, not a fixed type. A political compass collapses to 4 quadrants. MBTI sorts you into 16 boxes. Mull never collapses you — two people with the same archetype still have different fingerprints.",
+                title: t("home.card_ofyou_title", locale),
+                body: t("home.card_ofyou_body", locale),
               },
             ].map((card) => (
               <div key={card.title} className="pixel-panel">
@@ -577,21 +564,19 @@ export default async function HomeV2() {
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
             <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
-            WHAT YOU CAN DO HERE
+            {t("home.can_eyebrow", locale)}
           </div>
           <h2
             className="mt-5 text-[28px] leading-none tracking-[0.04em] text-[#221E18] sm:text-[40px]"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
-            <span style={{ textShadow: "4px 4px 0 #B8862F" }}>THE FULL MAP</span>
+            <span style={{ textShadow: "4px 4px 0 #B8862F" }}>{t("home.can_title", locale)}</span>
           </h2>
           <p
             className="mt-5 max-w-[640px] text-[16px] leading-[1.55] text-[#4A4338]"
             style={{ fontFamily: "var(--font-prose)" }}
           >
-            Mull has several surfaces. Some are signature features that
-            define the product. Some are quieter daily-return things.
-            Some are reference. All free.
+            {t("home.can_intro", locale)}
           </p>
 
           {/* Tier 2 — substantial features (constellation, daily
@@ -601,26 +586,26 @@ export default async function HomeV2() {
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
             <span aria-hidden className="inline-block h-2 w-2 bg-[#2F5D5C]" />
-            EXPLORE
+            {t("home.explore_label", locale)}
           </div>
           <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
             <SurfaceCard
               href="/philosopher"
-              eyebrow="▶ CONSTELLATION"
-              title="Browse the 560 philosophers"
-              body="The 2D map of the philosophical world. Wander, hover, find kindred minds. Search by name or by idea."
+              eyebrow={`▶ ${t("home.sc_constellation_eb", locale)}`}
+              title={t("home.sc_constellation_title", locale)}
+              body={t("home.sc_constellation_body", locale)}
             />
             <SurfaceCard
               href="/dilemma"
-              eyebrow="▶ DAILY"
-              title="Today's dilemma"
-              body="One philosophical scenario a day. Respond in writing; the response nudges your map placement over time."
+              eyebrow={`▶ ${t("home.sc_daily_eb", locale)}`}
+              title={t("home.sc_daily_title", locale)}
+              body={t("home.sc_daily_body", locale)}
             />
             <SurfaceCard
               href="/topic"
-              eyebrow="▶ READ"
-              title="Topic explainers + matchups"
-              body="Short editorial primers on twelve questions philosophers keep returning to. Plus head-to-head comparisons of thirty thinker pairs."
+              eyebrow={`▶ ${t("home.sc_read_eb", locale)}`}
+              title={t("home.sc_read_title", locale)}
+              body={t("home.sc_read_body", locale)}
             />
           </div>
 
@@ -632,28 +617,28 @@ export default async function HomeV2() {
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
             <span aria-hidden className="inline-block h-2 w-2 bg-[#8C6520]" />
-            DEEPEN
+            {t("home.deepen_label", locale)}
           </div>
           <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
             <SmallSurface
               href="/diary"
-              label="Diary"
-              body="Personal philosophical journal."
+              label={t("home.ss_diary_label", locale)}
+              body={t("home.ss_diary_body", locale)}
             />
             <SmallSurface
               href="/compare"
-              label="Compare"
-              body="Stack two thinkers across all 16 dimensions."
+              label={t("home.ss_compare_label", locale)}
+              body={t("home.ss_compare_body", locale)}
             />
             <SmallSurface
               href="/exercises"
-              label="Exercises"
-              body="A short library of contemplative practices."
+              label={t("home.ss_exercises_label", locale)}
+              body={t("home.ss_exercises_body", locale)}
             />
             <SmallSurface
               href="/debate"
-              label="Simulated debate"
-              body="Watch any two philosophers argue."
+              label={t("home.ss_debate_label", locale)}
+              body={t("home.ss_debate_body", locale)}
             />
           </div>
 
@@ -663,17 +648,17 @@ export default async function HomeV2() {
               className="text-[10px] tracking-[0.22em]"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
-              ▸ ALSO
+              ▸ {t("home.also_label", locale)}
             </span>
-            <Link href="/wrapped" className="hover:text-[#221E18]">Mull Wrapped (year in review)</Link>
+            <Link href="/wrapped" className="hover:text-[#221E18]">{t("home.also_wrapped", locale)}</Link>
             <span>·</span>
-            <Link href="/classes" className="hover:text-[#221E18]">Classes (for educators)</Link>
+            <Link href="/classes" className="hover:text-[#221E18]">{t("home.also_classes", locale)}</Link>
             <span>·</span>
-            <Link href="/install" className="hover:text-[#221E18]">Add to home screen</Link>
+            <Link href="/install" className="hover:text-[#221E18]">{t("home.add_home", locale)}</Link>
             <span>·</span>
-            <Link href="/about" className="hover:text-[#221E18]">About + costs</Link>
+            <Link href="/about" className="hover:text-[#221E18]">{t("home.also_about", locale)}</Link>
             <span>·</span>
-            <Link href="/methodology" className="hover:text-[#221E18]">Methodology</Link>
+            <Link href="/methodology" className="hover:text-[#221E18]">{t("nav.methodology", locale)}</Link>
           </div>
         </ScrollReveal>
 
@@ -690,14 +675,14 @@ export default async function HomeV2() {
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
                 <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
-                CHOOSE YOUR ARCHETYPE
+                {t("home.arch_eyebrow", locale)}
               </div>
               <h2
                 className="mt-5 pr-2 text-[22px] leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[32px] md:text-[40px]"
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
                 <span style={{ textShadow: "3px 3px 0 #B8862F" }}>
-                  TEN WAYS TO HOLD THE WORLD
+                  {t("home.arch_title", locale)}
                 </span>
               </h2>
             </div>
@@ -705,14 +690,12 @@ export default async function HomeV2() {
               href="/archetype"
               className="hidden text-[14px] text-[#8C6520] hover:text-[#221E18] hover:underline sm:inline"
             >
-              View all essays →
+              {t("home.view_all_essays", locale)}
             </Link>
           </div>
 
           <p className="mt-6 max-w-[720px] text-[16px] leading-[1.6] text-[#4A4338] sm:text-[17px]">
-            Each is one stable pattern across the 16 dimensions. The
-            quiz places you near the one you&rsquo;re closest to — but
-            no one sits exactly on top of one.
+            {t("home.arch_intro", locale)}
           </p>
 
           {/* Equal-height archetype tiles. `auto-rows-fr` makes every
@@ -758,7 +741,7 @@ export default async function HomeV2() {
                           NO. {String(ARCHETYPES.indexOf(a) + 1).padStart(2, "0")}
                         </span>
                         <span className="mt-0.5 text-[11px]">
-                          {capitalize(a.key).toUpperCase()}
+                          {t(`arch.${a.key}.name`, locale).toUpperCase()}
                         </span>
                       </div>
 
@@ -788,7 +771,7 @@ export default async function HomeV2() {
                         style={{ borderColor: color.deep }}
                       >
                         <p className="text-[14px] leading-[1.5] text-[#221E18]">
-                          {a.spirit}
+                          {t(`arch.${a.key}.spirit`, locale)}
                         </p>
                       </div>
 
@@ -806,7 +789,7 @@ export default async function HomeV2() {
                           style={{ fontFamily: "var(--font-pixel-display)" }}
                         >
                           <span className="opacity-60 transition-opacity group-hover:opacity-100">
-                            ▶ READ ESSAY
+                            ▶ {t("home.read_essay", locale)}
                           </span>
                         </div>
                       </div>
@@ -821,7 +804,7 @@ export default async function HomeV2() {
             href="/archetype"
             className="mt-8 inline-block text-[14px] text-[#8C6520] hover:text-[#221E18] hover:underline sm:hidden"
           >
-            View all essays →
+            {t("home.view_all_essays", locale)}
           </Link>
         </ScrollReveal>
 
@@ -833,19 +816,18 @@ export default async function HomeV2() {
                 className="text-[14px] tracking-[0.24em] text-[#B8862F]"
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
-                <span className="pixel-blink">▶</span> READY?
+                <span className="pixel-blink">▶</span> {t("home.ready", locale)}
               </div>
               <h2
                 className="mt-5 px-2 text-[28px] leading-[1.05] tracking-[0.04em] text-[#F8EDC8] sm:text-[44px] md:text-[52px]"
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
                 <span style={{ textShadow: "3px 3px 0 #B8862F" }}>
-                  WHERE DO YOU SIT?
+                  {t("home.where_sit", locale)}
                 </span>
               </h2>
               <p className="mx-auto mt-6 max-w-[520px] text-[16px] leading-[1.6] text-[#F8EDC8]/90">
-                A 15-minute narrative version, or a 5-minute classic.
-                Same model underneath. No signup needed.
+                {t("home.tail_body", locale)}
               </p>
               <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
                 <Link
@@ -857,14 +839,14 @@ export default async function HomeV2() {
                     boxShadow: '6px 6px 0 0 #221E18',
                   }}
                 >
-                  <span>▶ ENTER THE INHERITOR</span>
+                  <span>▶ {t("home.enter_inheritor", locale)}</span>
                 </Link>
                 <Link
                   href="/quiz?mode=quick"
                   className="pixel-button pixel-button--ghost"
                   style={{ fontSize: 14, padding: '16px 22px' }}
                 >
-                  <span>or the 5-min classic</span>
+                  <span>{t("home.or_classic", locale)}</span>
                 </Link>
               </div>
             </div>
@@ -881,7 +863,7 @@ export default async function HomeV2() {
               >
                 MULL
               </span>
-              <span className="text-[#B8862F]">a passion project · </span>
+              <span className="text-[#B8862F]">{t("home.footer_passion", locale)} · </span>
               {/* Email obfuscated to dodge naive scrapers — the real
                   address is reassembled at click via the <ObfuscatedEmail>
                   component (writes the mailto on the fly). Bots that
@@ -894,13 +876,13 @@ export default async function HomeV2() {
               />
             </div>
             <nav className="flex flex-wrap gap-5 text-[#F8EDC8]">
-              <Link href="/about" className="hover:text-[#B8862F]">About</Link>
-              <Link href="/topic" className="hover:text-[#B8862F]">Topics</Link>
-              <Link href="/vs" className="hover:text-[#B8862F]">Matchups</Link>
-              <Link href="/install" className="hover:text-[#B8862F]">Add to home screen</Link>
-              <Link href="/methodology" className="hover:text-[#B8862F]">Methodology</Link>
-              <Link href="/privacy" className="hover:text-[#B8862F]">Privacy</Link>
-              <Link href="/terms" className="hover:text-[#B8862F]">Terms</Link>
+              <Link href="/about" className="hover:text-[#B8862F]">{t("nav.about", locale)}</Link>
+              <Link href="/topic" className="hover:text-[#B8862F]">{t("nav.topics", locale)}</Link>
+              <Link href="/vs" className="hover:text-[#B8862F]">{t("nav.matchups", locale)}</Link>
+              <Link href="/install" className="hover:text-[#B8862F]">{t("home.add_home", locale)}</Link>
+              <Link href="/methodology" className="hover:text-[#B8862F]">{t("nav.methodology", locale)}</Link>
+              <Link href="/privacy" className="hover:text-[#B8862F]">{t("home.footer_privacy", locale)}</Link>
+              <Link href="/terms" className="hover:text-[#B8862F]">{t("home.footer_terms", locale)}</Link>
               {/* Tip jar — Mull is free to use; this lets users who want
                   to chip in cover the AI bill. Hidden for now via
                   TIPPING_ENABLED (legal hold on accepting tips); flip the
@@ -912,7 +894,7 @@ export default async function HomeV2() {
                   rel="noreferrer"
                   className="text-[#B8862F] hover:text-[#F8EDC8] underline decoration-[#B8862F]/40 underline-offset-2 hover:decoration-[#F8EDC8]"
                 >
-                  Support Mull
+                  {t("home.support", locale)}
                 </a>
               )}
             </nav>
@@ -921,10 +903,6 @@ export default async function HomeV2() {
       </main>
     </>
   );
-}
-
-function capitalize(s: string): string {
-  return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
 // ─── Surface cards (used by the "What you can do" section) ──────

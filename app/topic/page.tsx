@@ -12,6 +12,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { TOPICS, topicsByCategory } from '@/lib/topics';
 import { localizeTopic } from '@/lib/topics-i18n';
+import { t } from '@/lib/translations';
 import { PixelPageHeader } from '@/components/pixel-window';
 import LanguageSwitcher from '@/components/language-switcher';
 import { getServerLocale } from '@/lib/locale-server';
@@ -55,11 +56,11 @@ export default async function TopicIndexPage() {
       </div>
 
       <PixelPageHeader
-        eyebrow="▶ TOPICS"
-        title="TOPICS IN PHILOSOPHY"
+        eyebrow={`▶ ${t('topic.idx_eyebrow', locale)}`}
+        title={t('topic.title', locale)}
         subtitle={
           <p style={{ fontFamily: serif, fontStyle: 'italic', fontSize: 16, color: '#4A4338', lineHeight: 1.55 }}>
-            {`${TOPICS.length} short primers on the questions philosophers keep returning to. Each ends with a way to find where you sit.`}
+            {t('topic.subtitle', locale, { count: TOPICS.length })}
           </p>
         }
       />
@@ -74,7 +75,7 @@ export default async function TopicIndexPage() {
           textTransform: 'uppercase',
           marginBottom: 8,
         }}>
-          ◇ Featured today
+          ◇ {t('topic.featured_today', locale)}
         </div>
         <Link
           href={`/topic/${featured.slug}`}
@@ -119,7 +120,7 @@ export default async function TopicIndexPage() {
             letterSpacing: 0.6,
             textTransform: 'uppercase',
           }}>
-            READ ▶
+            {t('topic.read', locale)} ▶
           </span>
         </Link>
       </section>
@@ -150,7 +151,7 @@ export default async function TopicIndexPage() {
               transition: 'background 80ms steps(2,end)',
             }}
           >
-            {g.icon} {g.label}
+            {g.icon} {t(`topic.cat.${g.key}.label`, locale) || g.label}
           </a>
         ))}
       </nav>
@@ -180,7 +181,7 @@ export default async function TopicIndexPage() {
               letterSpacing: '-0.3px',
               color: '#221E18',
             }}>
-              {g.label}
+              {t(`topic.cat.${g.key}.label`, locale) || g.label}
             </h2>
             <span style={{
               fontFamily: sans,
@@ -200,7 +201,7 @@ export default async function TopicIndexPage() {
             margin: '0 0 16px',
             lineHeight: 1.55,
           }}>
-            {g.blurb}
+            {t(`topic.cat.${g.key}.blurb`, locale) || g.blurb}
           </p>
           <ul style={{
             listStyle: 'none',
@@ -271,7 +272,7 @@ export default async function TopicIndexPage() {
           margin: '0 0 12px',
           lineHeight: 1.5,
         }}>
-          Not sure where you sit on any of this yet? Take the 5-minute Inheritor quiz — it places you on the map and tells you which philosophers think most like you.
+          {t('topic.cta_body', locale)}
         </p>
         <Link
           href="/inheritor"
@@ -288,7 +289,7 @@ export default async function TopicIndexPage() {
             textTransform: 'uppercase',
           }}
         >
-          ▶ Take the quiz
+          ▶ {t('topic.cta_button', locale)}
         </Link>
       </div>
     </main>

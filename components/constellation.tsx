@@ -19,6 +19,7 @@ import {
   projectTo2D,
 } from "@/lib/projection";
 import { ARCHETYPE_COLORS, DEFAULT_ARCHETYPE_COLOR } from "@/lib/archetype-colors";
+import { t, type Locale } from "@/lib/translations";
 
 type Props = {
   /** If provided, renders the "you are here" overlay at the user's
@@ -32,6 +33,9 @@ type Props = {
   clickable?: boolean;
   /** Width/height override — defaults to the SVG viewBox aspect (16:9). */
   className?: string;
+  /** Display locale for the few text labels (axis labels, the "you
+   *  sit here" tooltip, and the SVG aria-label). Defaults to 'en'. */
+  locale?: Locale;
 };
 
 // SVG canvas dimensions. The viewBox is the "design" coordinate
@@ -54,6 +58,7 @@ export function Constellation({
   variant = "decorative",
   clickable = true,
   className,
+  locale = "en",
 }: Props) {
   const isInteractive = variant === "interactive";
 
@@ -71,12 +76,12 @@ export function Constellation({
         viewBox={`0 0 ${W} ${H}`}
         xmlns="http://www.w3.org/2000/svg"
         role="img"
-        aria-label="A constellation of 560 philosophers, positioned by their philosophical orientation."
+        aria-label={t("cnst.aria_2d", locale)}
         className="block w-full"
         style={{ overflow: "visible" }}
       >
         {/* Quadrant axis labels — quiet, only on interactive variant */}
-        {isInteractive ? <AxisLabels /> : null}
+        {isInteractive ? <AxisLabels locale={locale} /> : null}
 
         {/* Drift group: subtle slow translate via CSS animation.
             CSS keyframes are defined locally below. */}
@@ -165,7 +170,7 @@ export function Constellation({
               r={6}
               fill="#221E18"
             >
-              <title>You sit here.</title>
+              <title>{t("cnst.you_sit_here", locale)}</title>
             </circle>
           </g>
         ) : null}
@@ -206,7 +211,7 @@ export function Constellation({
 
 // Quiet axis labels for the interactive variant. Edges only, deeply
 // tinted so they don't compete with the points.
-function AxisLabels() {
+function AxisLabels({ locale }: { locale: Locale }) {
   const c = "#8C6520";
   const o = 0.45;
   const fz = 11;
@@ -221,12 +226,12 @@ function AxisLabels() {
       opacity={o}
     >
       {/* X axis ends — sit ~24 from the edge so they don't crowd */}
-      <text x={50} y={H / 2 - 8} textAnchor="start">EMBODIED</text>
-      <text x={W - 50} y={H / 2 - 8} textAnchor="end">ABSTRACT</text>
+      <text x={50} y={H / 2 - 8} textAnchor="start">{t("cnst.embodied", locale)}</text>
+      <text x={W - 50} y={H / 2 - 8} textAnchor="end">{t("cnst.abstract", locale)}</text>
 
       {/* Y axis ends */}
-      <text x={W / 2} y={28} textAnchor="middle">SOVEREIGN SELF</text>
-      <text x={W / 2} y={H - 16} textAnchor="middle">COMMUNAL</text>
+      <text x={W / 2} y={28} textAnchor="middle">{t("cnst.sovereign_self", locale)}</text>
+      <text x={W / 2} y={H - 16} textAnchor="middle">{t("cnst.communal", locale)}</text>
 
       {/* Subtle center cross — pure decoration */}
       <line

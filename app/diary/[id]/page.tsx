@@ -180,7 +180,7 @@ export default async function DiaryEntryPage({ params }: { params: Promise<{ id:
           full account page (most common return path) and the diary
           index (for browsing siblings). */}
       <nav
-        aria-label="Continue elsewhere"
+        aria-label={t('a11y.continue_elsewhere', locale)}
         style={{
           marginTop: 56,
           display: 'flex',

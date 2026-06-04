@@ -103,7 +103,7 @@ export default async function DilemmaArchivePage({
 
       <PixelPageHeader
         eyebrow={`▶ ${t('archive.eyebrow', locale).toUpperCase()}`}
-        title="DILEMMA ARCHIVE"
+        title={t('palette.dilemma_archive', locale).toUpperCase()}
         subtitle={
           <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-editorial)' }}>
             {t('archive.subtitle', locale)}

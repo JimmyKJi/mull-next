@@ -39,7 +39,7 @@ export default async function DuelPage() {
 
       <PixelPageHeader
         eyebrow={`▶ ${t('duel.eyebrow', locale).toUpperCase()}`}
-        title="DEBATE YOURSELF"
+        title={t('hdr.debate_yourself', locale)}
         subtitle={
           <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-editorial)' }}>
             {t('duel.subtitle', locale)}

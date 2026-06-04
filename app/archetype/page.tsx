@@ -36,8 +36,8 @@ export default async function ArchetypeIndexPage() {
       </div>
 
       <PixelPageHeader
-        eyebrow="▶ THE TEN ARCHETYPES"
-        title="CHOOSE YOUR ARCHETYPE"
+        eyebrow={`▶ ${t('hdr.ten_archetypes', locale)}`}
+        title={t('home.arch_eyebrow', locale)}
         subtitle={
           <p
             className="text-[16px] italic"

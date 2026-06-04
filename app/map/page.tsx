@@ -18,6 +18,7 @@ import { ARCHETYPES } from "@/lib/archetypes";
 import { PathwayNext } from "@/components/pathway-next";
 import { pathwayForMap } from "@/lib/pathway";
 import { getServerLocale } from "@/lib/locale-server";
+import { t } from "@/lib/translations";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-prose)";
@@ -46,22 +47,19 @@ export default async function MapPage() {
           style={{ fontFamily: pixel }}
         >
           <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F] pixel-blink" />
-          ▶ THE MAP
+          ▶ {t("map.eyebrow", locale)}
         </div>
         <h1
           className="mt-4 text-[36px] leading-none tracking-[0.04em] text-[#221E18] sm:text-[52px]"
           style={{ fontFamily: pixel }}
         >
-          <span style={{ textShadow: "4px 4px 0 #B8862F" }}>THE CONSTELLATION</span>
+          <span style={{ textShadow: "4px 4px 0 #B8862F" }}>{t("map.title", locale)}</span>
         </h1>
         <p
           className="mt-5 max-w-[640px] text-[17px] leading-[1.55] text-[#4A4338]"
           style={{ fontFamily: serif, fontStyle: "italic" }}
         >
-          {PHILOSOPHERS.length} philosophers across {ARCHETYPES.length} archetypes,
-          plotted in a 16-dimensional space of philosophical tendencies.
-          Pan, zoom, hover any thinker to see their position. After
-          you take the quiz, your own point appears among them.
+          {t("map.intro", locale, { count: PHILOSOPHERS.length, archetypes: ARCHETYPES.length })}
         </p>
 
         <div className="mt-5 flex flex-wrap items-center gap-3 text-[13px]">
@@ -70,20 +68,20 @@ export default async function MapPage() {
             className="border-2 border-[#221E18] bg-[#FFFCF4] px-3 py-1.5 text-[12px] tracking-[0.18em] text-[#221E18] hover:bg-[#F8EDC8]"
             style={{ fontFamily: pixel, textTransform: "uppercase" }}
           >
-            ▶ BROWSE ALPHABETICALLY
+            ▶ {t("map.browse_alpha", locale)}
           </Link>
           <Link
             href="/quiz/journey"
             className="border-2 border-[#221E18] bg-[#F8C75E] px-3 py-1.5 text-[12px] tracking-[0.18em] text-[#1A1820] hover:bg-[#B8862F]"
             style={{ fontFamily: pixel, textTransform: "uppercase" }}
           >
-            ▶ FIND YOUR PLACE
+            ▶ {t("map.find_place", locale)}
           </Link>
           <Link
             href="/archetype"
             className="text-[13px] text-[#8C6520] underline decoration-[#D6CDB6] underline-offset-3 hover:text-[#221E18] hover:decoration-[#8C6520]"
           >
-            Or the 10 archetypes ↗
+            {t("map.or_archetypes", locale, { count: ARCHETYPES.length })} ↗
           </Link>
         </div>
       </header>
@@ -108,30 +106,23 @@ export default async function MapPage() {
             className="text-[10px] tracking-[0.22em] text-[#8C6520]"
             style={{ fontFamily: pixel }}
           >
-            ▶ HOW TO READ IT
+            ▶ {t("map.how_to_read", locale)}
           </div>
           <ul
             className="mt-3 space-y-2 text-[14.5px] leading-[1.6] text-[#221E18]"
             style={{ fontFamily: serif }}
           >
             <li>
-              <strong>Each point</strong> is a philosopher, colored by
-              their dominant archetype.
+              <strong>{t("map.read1_lead", locale)}</strong>{t("map.read1_rest", locale)}
             </li>
             <li>
-              <strong>Nearness</strong> on the plane means similar
-              positions on the 16 underlying dimensions — Buddha and
-              Hume both score high on "Self as Illusion" but for
-              opposite reasons, so they sit near each other for a
-              specific axis, and far apart on others.
+              <strong>{t("map.read2_lead", locale)}</strong>{t("map.read2_rest", locale)}
             </li>
             <li>
-              <strong>Hover</strong> any point for the name, dates, and
-              key idea. <strong>Click</strong> to open their full page.
+              <strong>{t("map.read3a_lead", locale)}</strong>{t("map.read3a_rest", locale)}<strong>{t("map.read3b_lead", locale)}</strong>{t("map.read3b_rest", locale)}
             </li>
             <li>
-              After you take the quiz, your own point appears with a
-              pulsing halo so you can see your nearest kin.
+              {t("map.read4", locale)}
             </li>
           </ul>
         </div>
@@ -144,7 +135,7 @@ export default async function MapPage() {
             className="text-[10px] tracking-[0.22em] text-[#8C6520]"
             style={{ fontFamily: pixel }}
           >
-            ▶ THE TEN ARCHETYPES
+            ▶ {t("map.ten_archetypes", locale)}
           </div>
           <ul
             className="mt-3 grid grid-cols-2 gap-2 text-[14px] leading-[1.5] text-[#221E18]"
@@ -156,7 +147,7 @@ export default async function MapPage() {
                   href={`/archetype/${a.key}`}
                   className="text-[#221E18] underline decoration-[#D6CDB6] underline-offset-3 hover:decoration-[#8C6520]"
                 >
-                  The {a.key.charAt(0).toUpperCase() + a.key.slice(1)}
+                  {t(`arch.${a.key}.name`, locale)}
                 </Link>
               </li>
             ))}

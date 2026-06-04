@@ -214,6 +214,7 @@ export default function DebateForm({
           setSelected={setAName}
           options={filteredA}
           excludeName={bName}
+          locale={locale}
         />
         <PhilosopherPicker
           letter="B"
@@ -224,6 +225,7 @@ export default function DebateForm({
           setSelected={setBName}
           options={filteredB}
           excludeName={aName}
+          locale={locale}
         />
       </div>
 
@@ -554,7 +556,7 @@ function SpeechBubble({
 }
 
 function PhilosopherPicker({
-  letter, accent, search, setSearch, selected, setSelected, options, excludeName
+  letter, accent, search, setSearch, selected, setSelected, options, excludeName, locale
 }: {
   letter: string;
   accent: string;
@@ -564,6 +566,7 @@ function PhilosopherPicker({
   setSelected: (s: string) => void;
   options: PhilosopherEntry[];
   excludeName: string;
+  locale: Locale;
 }) {
   const filtered = options.filter(p => p.name !== excludeName);
   return (
@@ -578,13 +581,13 @@ function PhilosopherPicker({
         display: 'block',
         marginBottom: 10,
       }}>
-        Speaker {letter}
+        {letter === 'A' ? t('debate.speaker_a', locale) : t('debate.speaker_b', locale)}
       </label>
       <input
         type="text"
         value={search}
         onChange={e => setSearch(e.target.value)}
-        placeholder="Search by name, first name, or idea…"
+        placeholder={t('debate.search_placeholder', locale)}
         style={{
           fontFamily: sans,
           fontSize: 14,

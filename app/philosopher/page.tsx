@@ -68,7 +68,7 @@ export default async function PhilosopherIndexPage() {
     <main className="mx-auto max-w-[1200px] px-6 pb-32 pt-12 sm:px-10 sm:pt-16">
       <PixelPageHeader
         eyebrow={`▶ ${t('philindex.eyebrow', locale).toUpperCase()}`}
-        title="THE CONSTELLATION"
+        title={t('hdr.constellation', locale)}
         subtitle={
           <div className="space-y-3">
             <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-editorial)' }}>

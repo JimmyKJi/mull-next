@@ -82,7 +82,7 @@ export default async function SharePage({
           Pixel dialog-window chrome: chunky 4px ink border + 6px hard
           amber shadow + flat (no border-radius). */}
       <article
-        aria-label="Mull result card"
+        aria-label={t('a11y.result_card', locale)}
         className="pixel-crisp"
         style={{
           width: '100%',

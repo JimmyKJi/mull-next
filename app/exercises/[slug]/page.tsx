@@ -216,7 +216,7 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
           one (we don't know that here without auth) so we always
           show both and let the user choose. */}
       <nav
-        aria-label="Continue elsewhere"
+        aria-label={t('a11y.continue_elsewhere', locale)}
         style={{
           marginTop: 56,
           display: 'flex',

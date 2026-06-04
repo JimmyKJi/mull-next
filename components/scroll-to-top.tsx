@@ -9,9 +9,17 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { t, type Locale, isLocale } from '@/lib/translations';
 
 export default function ScrollToTop() {
   const [visible, setVisible] = useState(false);
+  const [locale, setLocale] = useState<Locale>('en');
+
+  useEffect(() => {
+    const m = document.cookie.match(/(?:^|; )mull_locale=([^;]+)/);
+    const v = m?.[1];
+    if (v && isLocale(v)) setLocale(v);
+  }, []);
 
   useEffect(() => {
     function onScroll() {
@@ -31,7 +39,7 @@ export default function ScrollToTop() {
         const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
       }}
-      aria-label="Scroll back to top"
+      aria-label={t('a11y.scroll_top', locale)}
       className="pixel-press"
       style={{
         position: 'fixed',

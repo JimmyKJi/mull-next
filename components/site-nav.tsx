@@ -318,7 +318,7 @@ export function SiteNav({ locale = "en" }: { locale?: Locale }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        aria-label="Open command palette"
+        aria-label={t("palette.open", locale)}
         className="pixel-press fixed right-[18px] z-[60] flex h-12 w-12 items-center justify-center border-4 border-[#221E18] bg-[#221E18] text-[#FAF6EC] shadow-[3px_3px_0_0_#B8862F] sm:hidden"
         style={{
           bottom: 'calc(18px + env(safe-area-inset-bottom, 0px))',
@@ -331,7 +331,7 @@ export function SiteNav({ locale = "en" }: { locale?: Locale }) {
         ⌘K
       </button>
 
-      {open ? <CommandPalette onClose={() => setOpen(false)} /> : null}
+      {open ? <CommandPalette locale={locale} onClose={() => setOpen(false)} /> : null}
     </>
   );
 }
@@ -438,56 +438,70 @@ type PaletteItem = {
   href: string;
 };
 
-const PAGE_ITEMS: PaletteItem[] = [
-  // ── Tier 1 — signature surfaces ──
-  { group: "Pages", label: "Home", href: "/" },
-  { group: "Pages", label: "The Inheritor (narrative quiz)", href: "/quiz/journey", hint: "~15 min" },
-  { group: "Pages", label: "Take the classic quiz", href: "/quiz?mode=quick", hint: "20 questions, ~5 min" },
-  { group: "Pages", label: "Detailed quiz", href: "/quiz?mode=detailed", hint: "50 questions, ~15 min" },
-  { group: "Pages", label: "Arena", href: "/arena", hint: "argue a philosopher" },
-  { group: "Pages", label: "Arena · PvE", href: "/arena/pve", hint: "face a philosopher" },
-  { group: "Pages", label: "Arena · PvP", href: "/arena/pvp", hint: "vs another human" },
-  { group: "Pages", label: "Arena · Leaderboard", href: "/arena/leaderboard" },
-  { group: "Pages", label: "Arena · Your match history", href: "/arena/history" },
-  { group: "Pages", label: "Daily Spar", href: "/spar", hint: "one turn, one judge, 5 min" },
-  { group: "Pages", label: "The Pilgrimage", href: "/pilgrimage", hint: "30-day archetype-personalized course" },
-  { group: "Pages", label: "The Crucible", href: "/crucible", hint: "daily real-life action commitment" },
-  { group: "Pages", label: "The Wandering Question", href: "/wandering", hint: "a question across the week" },
-  { group: "Pages", label: "Personal Anthology", href: "/anthology", hint: "your commonplace book" },
-  { group: "Pages", label: "Argument Diary", href: "/argument-diary", hint: "log real arguments, get fallacy spotting" },
-  { group: "Pages", label: "Year-in-View", href: "/year", hint: "your year, always updating" },
-  { group: "Pages", label: "Capability Atlas", href: "/atlas", hint: "your six skills + level" },
-  // ── Tier 2 — explore ──
-  { group: "Pages", label: "Archetypes", href: "/archetype" },
-  { group: "Pages", label: "The constellation map", href: "/map", hint: "interactive philosophical space" },
-  { group: "Pages", label: "Browse philosophers alphabetically", href: "/philosopher", hint: "560 thinkers, grouped by archetype" },
-  { group: "Pages", label: "Today's dilemma", href: "/dilemma" },
-  { group: "Pages", label: "Dilemma archive", href: "/dilemma/archive" },
-  { group: "Pages", label: "Topic explainers", href: "/topic", hint: "12 evergreen primers" },
-  { group: "Pages", label: "Philosopher matchups", href: "/vs", hint: "head-to-head comparisons" },
-  // ── Tier 3 — deepen ──
-  { group: "Pages", label: "Diary", href: "/diary" },
-  { group: "Pages", label: "Compare", href: "/compare", hint: "stack two thinkers" },
-  { group: "Pages", label: "Exercises", href: "/exercises" },
-  { group: "Pages", label: "Simulated debate", href: "/debate", hint: "watch two philosophers argue" },
-  { group: "Pages", label: "Search minds", href: "/search" },
-  // ── Tier 4 — also ──
-  { group: "Pages", label: "Mull Wrapped", href: "/wrapped", hint: "year in review" },
-  { group: "Pages", label: "Classes", href: "/classes", hint: "for educators" },
-  { group: "Pages", label: "Add to home screen", href: "/install", hint: "iOS + Android install guide" },
-  { group: "Pages", label: "About", href: "/about" },
-  { group: "Pages", label: "Methodology", href: "/methodology" },
-  { group: "Pages", label: "Account", href: "/account" },
-  { group: "Pages", label: "Sign in", href: "/login" },
-  { group: "Pages", label: "Sign up", href: "/signup" },
-];
+// Page items are built per-locale (labels + hints run through t()).
+// `group` stays an English discriminator used for filtering + as the
+// translation-key lookup in ItemList; it is never rendered raw.
+function buildPageItems(locale: Locale): PaletteItem[] {
+  return [
+    // ── Tier 1 — signature surfaces ──
+    { group: "Pages", label: t("palette.home", locale), href: "/" },
+    { group: "Pages", label: t("nav.quiz_journey", locale), href: "/quiz/journey", hint: t("palette.h_inheritor", locale) },
+    { group: "Pages", label: t("nav.quiz_classic", locale), href: "/quiz?mode=quick", hint: t("palette.h_classic", locale) },
+    { group: "Pages", label: t("nav.quiz_detailed", locale), href: "/quiz?mode=detailed", hint: t("palette.h_detailed", locale) },
+    { group: "Pages", label: t("nav.arena", locale), href: "/arena", hint: t("palette.h_arena", locale) },
+    { group: "Pages", label: t("palette.arena_pve", locale), href: "/arena/pve", hint: t("palette.h_arena_pve", locale) },
+    { group: "Pages", label: t("palette.arena_pvp", locale), href: "/arena/pvp", hint: t("palette.h_arena_pvp", locale) },
+    { group: "Pages", label: t("palette.arena_leaderboard", locale), href: "/arena/leaderboard" },
+    { group: "Pages", label: t("palette.arena_history", locale), href: "/arena/history" },
+    { group: "Pages", label: t("nav.spar", locale), href: "/spar", hint: t("palette.h_spar", locale) },
+    { group: "Pages", label: t("nav.pilgrimage", locale), href: "/pilgrimage", hint: t("palette.h_pilgrimage", locale) },
+    { group: "Pages", label: t("nav.crucible", locale), href: "/crucible", hint: t("palette.h_crucible", locale) },
+    { group: "Pages", label: t("nav.wandering", locale), href: "/wandering", hint: t("palette.h_wandering", locale) },
+    { group: "Pages", label: t("nav.anthology", locale), href: "/anthology", hint: t("palette.h_anthology", locale) },
+    { group: "Pages", label: t("nav.argument_diary", locale), href: "/argument-diary", hint: t("palette.h_argument_diary", locale) },
+    { group: "Pages", label: t("nav.year", locale), href: "/year", hint: t("palette.h_year", locale) },
+    { group: "Pages", label: t("nav.atlas", locale), href: "/atlas", hint: t("palette.h_atlas", locale) },
+    // ── Tier 2 — explore ──
+    { group: "Pages", label: t("nav.archetypes", locale), href: "/archetype" },
+    { group: "Pages", label: t("nav.map", locale), href: "/map", hint: t("palette.h_map", locale) },
+    { group: "Pages", label: t("palette.browse_phil", locale), href: "/philosopher", hint: t("palette.h_browse_phil", locale) },
+    { group: "Pages", label: t("nav.dilemma", locale), href: "/dilemma" },
+    { group: "Pages", label: t("palette.dilemma_archive", locale), href: "/dilemma/archive" },
+    { group: "Pages", label: t("nav.topics", locale), href: "/topic", hint: t("palette.h_topics", locale) },
+    { group: "Pages", label: t("nav.matchups", locale), href: "/vs", hint: t("palette.h_matchups", locale) },
+    // ── Tier 3 — deepen ──
+    { group: "Pages", label: t("nav.diary", locale), href: "/diary" },
+    { group: "Pages", label: t("nav.compare", locale), href: "/compare", hint: t("palette.h_compare", locale) },
+    { group: "Pages", label: t("nav.exercises", locale), href: "/exercises" },
+    { group: "Pages", label: t("nav.debate", locale), href: "/debate", hint: t("palette.h_debate", locale) },
+    { group: "Pages", label: t("nav.search", locale), href: "/search" },
+    // ── Tier 4 — also ──
+    { group: "Pages", label: t("palette.wrapped", locale), href: "/wrapped", hint: t("palette.h_wrapped", locale) },
+    { group: "Pages", label: t("nav.classes", locale), href: "/classes", hint: t("palette.h_classes", locale) },
+    { group: "Pages", label: t("home.add_home", locale), href: "/install", hint: t("palette.h_install", locale) },
+    { group: "Pages", label: t("nav.about", locale), href: "/about" },
+    { group: "Pages", label: t("nav.methodology", locale), href: "/methodology" },
+    { group: "Pages", label: t("nav.account_btn", locale), href: "/account" },
+    { group: "Pages", label: t("nav.signin", locale), href: "/login" },
+    { group: "Pages", label: t("nav.signup", locale), href: "/signup" },
+  ];
+}
 
-const ARCHETYPE_ITEMS: PaletteItem[] = ARCHETYPES.map((a) => ({
-  group: "Archetypes" as const,
-  label: `The ${capitalize(a.key)}`,
-  hint: a.spirit,
-  href: `/archetype/${a.key}`,
-}));
+function buildArchetypeItems(locale: Locale): PaletteItem[] {
+  return ARCHETYPES.map((a) => ({
+    group: "Archetypes" as const,
+    label: t(`arch.${a.key}.name`, locale),
+    hint: t(`arch.${a.key}.spirit`, locale),
+    href: `/archetype/${a.key}`,
+  }));
+}
+
+// Group discriminator → translation key (rendered header in ItemList).
+const PALETTE_GROUP_KEY: Record<PaletteItem["group"], string> = {
+  Pages: "palette.group_pages",
+  Archetypes: "palette.group_archetypes",
+  Philosophers: "palette.group_philosophers",
+};
 
 // Build philosopher items lazily — module load cost is negligible
 // but searching all 560 substring is fine.
@@ -498,14 +512,14 @@ const PHILOSOPHER_ITEMS: PaletteItem[] = PHILOSOPHERS.map((p) => ({
   href: `/philosopher/${p.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`,
 }));
 
-function CommandPalette({ onClose }: { onClose: () => void }) {
+function CommandPalette({ locale, onClose }: { locale: Locale; onClose: () => void }) {
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [activeIdx, setActiveIdx] = useState(0);
 
   const items = useMemo<PaletteItem[]>(() => {
     const q = query.trim().toLowerCase();
-    const fixedTop = [...PAGE_ITEMS, ...ARCHETYPE_ITEMS];
+    const fixedTop = [...buildPageItems(locale), ...buildArchetypeItems(locale)];
     if (!q) return fixedTop.slice(0, 30);
     const matchesQuery = (s: string) => s.toLowerCase().includes(q);
     const filteredFixed = fixedTop.filter(
@@ -515,7 +529,7 @@ function CommandPalette({ onClose }: { onClose: () => void }) {
       matchesQuery(i.label),
     ).slice(0, 30);
     return [...filteredFixed, ...filteredPhils];
-  }, [query]);
+  }, [query, locale]);
 
   // Reset selection when items change
   useEffect(() => {
@@ -547,7 +561,7 @@ function CommandPalette({ onClose }: { onClose: () => void }) {
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label="Quick travel command palette"
+      aria-label={t("palette.aria", locale)}
     >
       <FocusTrap onEscape={onClose}>
       {/* Pixel dialog box: 4-px ink border, hard amber shadow */}
@@ -561,14 +575,14 @@ function CommandPalette({ onClose }: { onClose: () => void }) {
             className="text-[12px] tracking-[0.16em] text-[#F8EDC8]"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
-            QUICK TRAVEL
+            {t("palette.title", locale)}
           </span>
           <button
             type="button"
             onClick={onClose}
             className="text-[14px] text-[#F8EDC8] hover:text-[#B8862F]"
             style={{ fontFamily: "var(--font-pixel-display)" }}
-            aria-label="Close"
+            aria-label={t("nav.close", locale)}
           >
             X
           </button>
@@ -576,7 +590,7 @@ function CommandPalette({ onClose }: { onClose: () => void }) {
         <input
           autoFocus
           type="text"
-          placeholder="Search pages, archetypes, philosophers…"
+          placeholder={t("palette.placeholder", locale)}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={onKey}
@@ -585,7 +599,7 @@ function CommandPalette({ onClose }: { onClose: () => void }) {
         <div className="max-h-[60vh] overflow-y-auto bg-[#FFFCF4] p-2">
           {items.length === 0 ? (
             <div className="px-3 py-8 text-center text-[14px] text-[#8C6520]">
-              No matches. Try a different search.
+              {t("palette.empty", locale)}
             </div>
           ) : (
             <ItemList
@@ -593,12 +607,17 @@ function CommandPalette({ onClose }: { onClose: () => void }) {
               activeIdx={activeIdx}
               onHover={setActiveIdx}
               onSelect={navigate}
+              locale={locale}
             />
           )}
         </div>
         <div className="flex items-center justify-between border-t-2 border-[#221E18] bg-[#221E18] px-4 py-1.5 text-[12px] leading-none text-[#F8EDC8]">
-          <span>↑↓ navigate · ↵ open · esc close</span>
-          <span>{items.length} match{items.length === 1 ? "" : "es"}</span>
+          <span>{t("palette.footer_hint", locale)}</span>
+          <span>
+            {locale === "en"
+              ? `${items.length} match${items.length === 1 ? "" : "es"}`
+              : t("palette.matches", locale, { count: items.length })}
+          </span>
         </div>
       </div>
       </FocusTrap>
@@ -611,11 +630,13 @@ function ItemList({
   activeIdx,
   onHover,
   onSelect,
+  locale,
 }: {
   items: PaletteItem[];
   activeIdx: number;
   onHover: (i: number) => void;
   onSelect: (item: PaletteItem) => void;
+  locale: Locale;
 }) {
   // Render with group headers, but track the absolute index so
   // keyboard nav stays in sync with the rendered list.
@@ -629,7 +650,7 @@ function ItemList({
           className="mt-2 px-3 pb-1 text-[11px] uppercase tracking-[0.22em] text-[#8C6520]"
           style={{ fontFamily: "var(--font-pixel-display)" }}
         >
-          {item.group}
+          {t(PALETTE_GROUP_KEY[item.group as PaletteItem["group"]], locale)}
         </div>,
       );
       lastGroup = item.group;
@@ -658,8 +679,4 @@ function ItemList({
     );
   });
   return <div>{out}</div>;
-}
-
-function capitalize(s: string): string {
-  return s.charAt(0).toUpperCase() + s.slice(1);
 }

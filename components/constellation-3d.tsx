@@ -36,6 +36,7 @@ import {
   projectTo3D,
 } from "@/lib/projection";
 import { PhilosopherSprite } from "./philosopher-sprite";
+import { t, type Locale } from "@/lib/translations";
 
 type Hovered = (typeof PHILOSOPHER_POSITIONS_3D)[number] | null;
 
@@ -49,6 +50,10 @@ type Props = {
    *  labels) vs "ambient" (no chrome, just the cloud, used as a
    *  decorative hero element). */
   variant?: "interactive" | "ambient";
+  /** Display locale for the DOM chrome (search, legend, hover card,
+   *  caption). The in-canvas 3D axis labels stay English — the WebGL
+   *  text renderer uses an SDF font without CJK glyphs. Defaults 'en'. */
+  locale?: Locale;
 };
 
 // Scale the [-1,1] projection into a roomier 3D space so points
@@ -60,6 +65,7 @@ export function Constellation3D({
   userVector,
   height = 640,
   variant = "interactive",
+  locale = "en",
 }: Props) {
   const isInteractive = variant === "interactive";
   const [hovered, setHovered] = useState<Hovered>(null);
@@ -188,6 +194,7 @@ export function Constellation3D({
           value={search}
           onChange={setSearch}
           matchCount={matched ? matched.size : null}
+          locale={locale}
         />
       ) : null}
 
@@ -198,6 +205,7 @@ export function Constellation3D({
           pinned={pinned.has(hovered.slug)}
           isCanonical={CANONICAL_PHILOSOPHER_NAMES.has(hovered.name)}
           onTogglePin={() => togglePin(hovered.slug)}
+          locale={locale}
         />
       ) : null}
 
@@ -212,14 +220,15 @@ export function Constellation3D({
           setShowAll={setShowAll}
           pinnedCount={pinned.size}
           onClearPins={() => setPinned(new Set())}
+          locale={locale}
         />
       ) : null}
 
       {/* Caption with axis legend at the bottom. */}
-      {isInteractive ? <AxesCaption /> : null}
+      {isInteractive ? <AxesCaption locale={locale} /> : null}
 
       {/* Empty state — cloud is empty if user toggled everything off. */}
-      {isInteractive && enabled.size === 0 ? <EmptyState onAll={setAll} /> : null}
+      {isInteractive && enabled.size === 0 ? <EmptyState onAll={setAll} locale={locale} /> : null}
     </div>
   );
 }
@@ -469,16 +478,24 @@ function HoverCard({
   pinned,
   isCanonical,
   onTogglePin,
+  locale,
 }: {
   p: NonNullable<Hovered>;
   pinned: boolean;
   isCanonical: boolean;
   onTogglePin: () => void;
+  locale: Locale;
 }) {
   const color =
     ARCHETYPE_COLORS[p.archetypeKey] ?? DEFAULT_ARCHETYPE_COLOR;
   const archName =
     ARCHETYPES.find((a) => a.key === p.archetypeKey)?.key ?? p.archetypeKey;
+  // zh shows the localized archetype name (e.g. "制图者"); en keeps the
+  // "THE CARTOGRAPHER" pixel-tag style.
+  const archLabel =
+    locale === "zh"
+      ? t(`arch.${p.archetypeKey}.name`, "zh")
+      : `THE ${archName.toUpperCase()}`;
   return (
     <div
       key={p.slug}
@@ -501,8 +518,8 @@ function HoverCard({
             fontFamily: "var(--font-pixel-display)",
           }}
         >
-          <span>THE {archName.toUpperCase()}</span>
-          <span className="text-[#FFD580]">▶ HOVER</span>
+          <span>{archLabel}</span>
+          <span className="text-[#FFD580]">▶ {t("cnst.hover", locale)}</span>
         </div>
 
         {/* Sprite + name row */}
@@ -556,7 +573,7 @@ function HoverCard({
               fontFamily: "var(--font-pixel-display)",
             }}
           >
-            {pinned ? "★ PINNED — CLICK TO UNPIN" : "☆ PIN TO MAP"}
+            {pinned ? t("cnst.pinned_unpin", locale) : t("cnst.pin_to_map", locale)}
           </button>
         ) : null}
 
@@ -569,7 +586,7 @@ function HoverCard({
             fontFamily: "var(--font-pixel-display)",
           }}
         >
-          ▶ CLICK POINT FOR PROFILE
+          ▶ {t("cnst.click_profile", locale)}
         </div>
       </div>
     </div>
@@ -586,10 +603,12 @@ function SearchBar({
   value,
   onChange,
   matchCount,
+  locale,
 }: {
   value: string;
   onChange: (v: string) => void;
   matchCount: number | null;
+  locale: Locale;
 }) {
   return (
     <div className="absolute left-1/2 top-4 z-20 w-[88%] max-w-[360px] -translate-x-1/2 sm:w-auto">
@@ -602,13 +621,13 @@ function SearchBar({
             className="flex items-center border-r-2 border-[#221E18] bg-[#221E18] px-3 text-[12px] tracking-[0.16em] text-[#F8EDC8]"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
-            FIND ▶
+            {t("cnst.find", locale)} ▶
           </span>
           <input
             type="text"
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            placeholder="search 560 thinkers…"
+            placeholder={t("cnst.search_placeholder", locale)}
             className="min-w-0 flex-1 bg-transparent px-3 py-1.5 text-[18px] leading-none text-[#221E18] placeholder:text-[#8C6520]/60 focus:outline-none"
             style={{ fontFamily: "var(--font-pixel-body)" }}
           />
@@ -618,7 +637,7 @@ function SearchBar({
               onClick={() => onChange("")}
               className="border-l-2 border-[#221E18] bg-[#FFFCF4] px-2 text-[16px] text-[#8C6520] hover:bg-[#F8EDC8]"
               style={{ fontFamily: "var(--font-pixel-display)" }}
-              aria-label="Clear search"
+              aria-label={t("cnst.clear_search", locale)}
             >
               ×
             </button>
@@ -630,11 +649,11 @@ function SearchBar({
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
             {matchCount === 0 ? (
-              <span className="text-[#7A2E2E]">▶ NO MATCH</span>
+              <span className="text-[#7A2E2E]">▶ {t("cnst.no_match", locale)}</span>
             ) : matchCount === 1 ? (
-              <span>▶ 1 MATCH · CHECK PANEL</span>
+              <span>▶ {t("cnst.one_match", locale)}</span>
             ) : (
-              <span>▶ {matchCount} MATCHES</span>
+              <span>▶ {t("cnst.n_matches", locale, { count: matchCount })}</span>
             )}
           </div>
         ) : null}
@@ -657,6 +676,7 @@ function Legend({
   setShowAll,
   pinnedCount,
   onClearPins,
+  locale,
 }: {
   enabled: Set<string>;
   onToggle: (key: string) => void;
@@ -666,6 +686,7 @@ function Legend({
   setShowAll: (v: boolean) => void;
   pinnedCount: number;
   onClearPins: () => void;
+  locale: Locale;
 }) {
   return (
     <div
@@ -678,7 +699,7 @@ function Legend({
           className="text-[9px] uppercase tracking-[0.22em] text-[#9A8B6A]"
           style={{ fontFamily: "var(--font-pixel-display)" }}
         >
-          The cloud
+          {t("cnst.the_cloud", locale)}
         </span>
       </div>
       <button
@@ -692,10 +713,10 @@ function Legend({
         }
       >
         <span className="font-medium">
-          {showAll ? "SHOWING ALL 560" : "ESSENTIAL 60"}
+          {showAll ? t("cnst.showing_all", locale) : t("cnst.essential_60", locale)}
         </span>
         <span className="text-[10px] opacity-70">
-          {showAll ? "▶ HIDE" : "▶ SHOW ALL"}
+          ▶ {showAll ? t("cnst.hide", locale) : t("cnst.show_all", locale)}
         </span>
       </button>
       {pinnedCount > 0 ? (
@@ -704,8 +725,8 @@ function Legend({
           onClick={onClearPins}
           className="mt-1 flex w-full items-center justify-between px-2 py-1 text-[11px] text-[#B8862F] hover:bg-[#1A2129]"
         >
-          <span>★ {pinnedCount} pinned</span>
-          <span className="text-[10px] opacity-70">clear</span>
+          <span>★ {t("cnst.n_pinned", locale, { count: pinnedCount })}</span>
+          <span className="text-[10px] opacity-70">{t("cnst.clear", locale)}</span>
         </button>
       ) : null}
 
@@ -715,15 +736,15 @@ function Legend({
           className="text-[9px] uppercase tracking-[0.22em] text-[#9A8B6A]"
           style={{ fontFamily: "var(--font-pixel-display)" }}
         >
-          Archetypes
+          {t("cnst.archetypes", locale)}
         </span>
         <button
           type="button"
           onClick={onAll}
           className="text-[10px] uppercase tracking-[0.16em] text-[#B8862F] hover:text-[#F1EAD8]"
-          title="Show all"
+          title={t("cnst.show_all_title", locale)}
         >
-          All
+          {t("cnst.all", locale)}
         </button>
       </div>
       <ul className="mt-1.5 space-y-0.5">
@@ -737,7 +758,7 @@ function Legend({
                 type="button"
                 onClick={() => onToggle(a.key)}
                 onDoubleClick={() => onOnly(a.key)}
-                title="Click to toggle, double-click to solo"
+                title={t("cnst.toggle_solo_title", locale)}
                 className="group flex w-full items-center gap-2 px-1.5 py-1 hover:bg-[#1A2129]"
               >
                 <span
@@ -755,7 +776,7 @@ function Legend({
                     color: isOn ? "#F1EAD8" : "#5A5448",
                   }}
                 >
-                  {a.key}
+                  {locale === "zh" ? t(`arch.${a.key}.name`, "zh") : a.key}
                 </span>
               </button>
             </li>
@@ -763,7 +784,7 @@ function Legend({
         })}
       </ul>
       <div className="mt-2 border-t border-[#3A3528]/40 pt-1.5 text-[10px] text-[#5A5448]">
-        click toggle · dbl-click solo
+        {t("cnst.toggle_hint", locale)}
       </div>
     </div>
   );
@@ -773,25 +794,25 @@ function Legend({
 // AxesCaption — sits at the bottom-right with a short legend of
 // what each axis means. Compact, never blocks the cloud.
 // ────────────────────────────────────────────────────────────────
-function AxesCaption() {
+function AxesCaption({ locale }: { locale: Locale }) {
   return (
     <div className="pointer-events-none absolute bottom-4 right-4 z-10 max-w-[260px] rounded-xl border border-[#3A3528]/60 bg-[#0E1419]/85 p-3 text-[11px] leading-relaxed text-[#9A8B6A] backdrop-blur-md">
       <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#B8862F]">
-        Axes
+        {t("cnst.axes", locale)}
       </div>
       <ul className="mt-2 space-y-1">
         <li>
-          <span className="text-[#D6CDB6]/80">X</span> · abstract ↔ embodied
+          <span className="text-[#D6CDB6]/80">X</span> · {t("cnst.axis_x", locale)}
         </li>
         <li>
-          <span className="text-[#D6CDB6]/80">Y</span> · sovereign ↔ communal
+          <span className="text-[#D6CDB6]/80">Y</span> · {t("cnst.axis_y", locale)}
         </li>
         <li>
-          <span className="text-[#D6CDB6]/80">Z</span> · skeptical ↔ mystical
+          <span className="text-[#D6CDB6]/80">Z</span> · {t("cnst.axis_z", locale)}
         </li>
       </ul>
       <div className="mt-2 border-t border-[#3A3528]/40 pt-2 text-[10px] text-[#5A5448]">
-        Drag to rotate · scroll to zoom
+        {t("cnst.drag_zoom", locale)}
       </div>
     </div>
   );
@@ -800,7 +821,7 @@ function AxesCaption() {
 // ────────────────────────────────────────────────────────────────
 // EmptyState — when the user has toggled every archetype off.
 // ────────────────────────────────────────────────────────────────
-function EmptyState({ onAll }: { onAll: () => void }) {
+function EmptyState({ onAll, locale }: { onAll: () => void; locale: Locale }) {
   return (
     <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center">
       <div className="pointer-events-auto rounded-xl border border-[#3A3528] bg-[#0E1419]/95 p-6 text-center">
@@ -808,14 +829,14 @@ function EmptyState({ onAll }: { onAll: () => void }) {
           className="font-display text-[20px] italic text-[#F1EAD8]"
           style={{ fontFamily: "var(--font-display)" }}
         >
-          The map is empty.
+          {t("cnst.map_empty", locale)}
         </div>
         <button
           type="button"
           onClick={onAll}
           className="mt-3 rounded-full bg-[#8C6520] px-4 py-1.5 text-[13px] text-[#FAF6EC] hover:bg-[#B8862F]"
         >
-          Show all archetypes
+          {t("cnst.show_all_arch", locale)}
         </button>
       </div>
     </div>

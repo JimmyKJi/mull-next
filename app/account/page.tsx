@@ -527,7 +527,7 @@ export default async function AccountPage() {
         const wrappedYear = month === 0 ? now.getFullYear() - 1 : now.getFullYear();
         return (
           <nav
-            aria-label="Jump to section"
+            aria-label={t('a11y.jump_to_section', locale)}
             className="mb-9 flex flex-wrap gap-2"
           >
             <a href="#latest-result" className="pixel-press" style={accountJumpChip}>▸ RESULT</a>
@@ -904,7 +904,7 @@ export default async function AccountPage() {
                 border: 'none',
                 display: 'block',
               }}
-              title="Your position and trajectory on the philosophical map"
+              title={t('a11y.map_position', locale)}
               loading="lazy"
             />
           </div>
@@ -952,10 +952,11 @@ export default async function AccountPage() {
             margin: '0 0 12px',
           }}
         >
-          ▶ A YEAR OF MULL · YOUR ACTIVITY
+          ▶ {t('account.year_activity', locale)}
         </h2>
         <ActivityHeatmap
           timestamps={events.map((e) => e.timestamp)}
+          locale={locale}
         />
       </section>
 

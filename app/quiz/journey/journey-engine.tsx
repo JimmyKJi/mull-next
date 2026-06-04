@@ -186,7 +186,7 @@ export function JourneyEngine({ scenes, reveals, locale }: Props) {
 
         {/* Scene body */}
         {scene.kind === "frame" && (
-          <FrameScene scene={scene} onAdvance={advance} />
+          <FrameScene scene={scene} onAdvance={advance} locale={locale} />
         )}
         {scene.kind === "chamber" && (
           <ChamberScene
@@ -204,6 +204,7 @@ export function JourneyEngine({ scenes, reveals, locale }: Props) {
             vector={vector}
             reveals={reveals}
             onAdvance={advance}
+            locale={locale}
           />
         )}
       </div>
@@ -225,11 +226,13 @@ function RevealScene({
   vector,
   reveals,
   onAdvance,
+  locale,
 }: {
   scene: Extract<JourneyScene, { kind: "reveal" }>;
   vector: number[];
   reveals: Record<string, RevealEnding>;
   onAdvance: () => void;
+  locale: Locale;
 }) {
   const { archetypeKey, flavor } = useMemo(() => pickEnding(vector), [vector]);
   const ending: RevealEnding =
@@ -260,7 +263,7 @@ function RevealScene({
       }}
     >
       <div style={illustrationContainer}>
-        <SceneIllustration scene={scene.art} width={360} />
+        <SceneIllustration scene={scene.art} width={360} locale={locale} />
       </div>
 
       <div style={{ padding: "26px 32px 30px" }}>
@@ -299,9 +302,11 @@ function RevealScene({
 function FrameScene({
   scene,
   onAdvance,
+  locale,
 }: {
   scene: Extract<JourneyScene, { kind: "frame" }>;
   onAdvance: () => void;
+  locale: Locale;
 }) {
   const paragraphs = scene.body.split(/\n\n+/);
   return (
@@ -314,7 +319,7 @@ function FrameScene({
     >
       {/* Illustration sits at the top of the cream card */}
       <div style={illustrationContainer}>
-        <SceneIllustration scene={scene.art} width={360} />
+        <SceneIllustration scene={scene.art} width={360} locale={locale} />
       </div>
 
       <div style={{ padding: "26px 32px 30px" }}>
@@ -372,7 +377,7 @@ function ChamberScene({
       >
         {/* Illustration sits at the top of the cream card */}
         <div style={illustrationContainer}>
-          <SceneIllustration scene={scene.art} width={360} />
+          <SceneIllustration scene={scene.art} width={360} locale={locale} />
         </div>
 
         <div style={{ padding: "24px 30px 28px" }}>

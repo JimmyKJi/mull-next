@@ -32,7 +32,7 @@ export default async function RetrospectivePage() {
 
       <PixelPageHeader
         eyebrow={`▶ ${t('retro.eyebrow', locale).toUpperCase()}`}
-        title="YEARLY RETROSPECTIVE"
+        title={t('hdr.yearly_retro', locale)}
         subtitle={
           <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-editorial)' }}>
             {t('retro.subtitle', locale)}

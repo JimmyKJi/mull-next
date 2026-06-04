@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { LOCALES, LOCALE_LABELS, type Locale, isLocale } from '@/lib/translations';
+import { LOCALES, LOCALE_LABELS, type Locale, isLocale, t } from '@/lib/translations';
 
 const sans = "'Inter', system-ui, sans-serif";
 
@@ -30,8 +30,8 @@ export default function LanguageSwitcher({ initial = 'en' }: { initial?: Locale 
     <select
       value={locale}
       onChange={onChange}
-      title="Language"
-      aria-label="Choose language"
+      title={t('a11y.language', locale)}
+      aria-label={t('a11y.choose_language', locale)}
       style={{
         fontFamily: sans,
         fontSize: 12,

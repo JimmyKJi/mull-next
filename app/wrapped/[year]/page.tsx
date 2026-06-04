@@ -20,6 +20,8 @@ import { createClient } from '@/utils/supabase/server';
 import { DIM_KEYS, DIM_NAMES, topShifts } from '@/lib/dimensions';
 import { ArchetypeSprite } from '@/components/archetype-sprite';
 import MullWordmark from '@/components/mull-wordmark';
+import { getServerLocale } from '@/lib/locale-server';
+import { t, type Locale } from '@/lib/translations';
 
 export const metadata: Metadata = {
   title: 'Your year in philosophy · Mull',
@@ -53,6 +55,15 @@ function archetypeSlug(name: string): string {
     .replace(/^-+|-+$/g, '');
 }
 
+// Localized archetype display name, article-stripped (matches the
+// English `.replace(/^The /, '')` output byte-for-byte, and yields the
+// bare zh name like "制图者" when locale === 'zh').
+function archBareName(name: string, locale: Locale): string {
+  const full = t(`arch.${archetypeSlug(name)}.name`, locale);
+  const m = full.match(/^(The|A|An)\s+(.+)$/i);
+  return m ? m[2] : full;
+}
+
 export default async function WrappedPage({
   params,
 }: {
@@ -61,6 +72,8 @@ export default async function WrappedPage({
   const { year: yearStr } = await params;
   const year = parseInt(yearStr, 10);
   if (!Number.isInteger(year) || year < 2024 || year > 2100) notFound();
+
+  const locale = await getServerLocale();
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -149,7 +162,7 @@ export default async function WrappedPage({
 
   // Empty-year fallback. Show a quiet card instead of a wall of zeros.
   if (totalEntries === 0 && attempts.length === 0) {
-    return <EmptyYear year={year} />;
+    return <EmptyYear year={year} locale={locale} />;
   }
 
   const finalSlug = lastArchetype ? archetypeSlug(lastArchetype.archetype) : null;
@@ -167,7 +180,7 @@ export default async function WrappedPage({
       {/* Screenshot-target card. 9:16-ish aspect (~380×720) so phone
           screenshots crop perfectly to IG stories + TikTok shares. */}
       <article
-        aria-label={`Mull year-in-review card for ${year}`}
+        aria-label={t('wr.aria_card', locale, { year })}
         className="pixel-crisp"
         style={{
           width: '100%',
@@ -212,7 +225,7 @@ export default async function WrappedPage({
             textTransform: 'uppercase',
             letterSpacing: '0.18em',
           }}>
-            ▸ {year} WRAPPED
+            ▸ {t('wr.badge', locale, { year })}
           </div>
         </div>
 
@@ -227,7 +240,7 @@ export default async function WrappedPage({
           lineHeight: 1.15,
           textShadow: '3px 3px 0 #B8862F',
         }}>
-          YOUR YEAR<br />IN PHILOSOPHY
+          {t('wr.headline_l1', locale)}<br />{t('wr.headline_l2', locale)}
         </h1>
 
         {/* Big-number stat grid — the most screenshotable element.
@@ -239,10 +252,10 @@ export default async function WrappedPage({
           width: '100%',
           marginBottom: 24,
         }}>
-          <StatTile value={dilemmas.length} label="DILEMMAS" accent="#3D7DA8" />
-          <StatTile value={diaries.length} label="DIARY" accent="#2F5D5C" />
-          <StatTile value={reflections.length} label="REFLECTIONS" accent="#7A4A2E" />
-          <StatTile value={attempts.length} label="QUIZ ATTEMPTS" accent="#B8862F" />
+          <StatTile value={dilemmas.length} label={t('wr.stat_dilemmas', locale)} accent="#3D7DA8" />
+          <StatTile value={diaries.length} label={t('wr.stat_diary', locale)} accent="#2F5D5C" />
+          <StatTile value={reflections.length} label={t('wr.stat_reflections', locale)} accent="#7A4A2E" />
+          <StatTile value={attempts.length} label={t('wr.stat_quiz', locale)} accent="#B8862F" />
         </div>
 
         {/* Archetype shift narrative — first → last when changed. */}
@@ -264,7 +277,7 @@ export default async function WrappedPage({
               letterSpacing: '0.18em',
               marginBottom: 8,
             }}>
-              ▸ HOW YOU MOVED
+              ▸ {t('wr.how_you_moved', locale)}
             </div>
             <div style={{
               fontFamily: serif,
@@ -273,14 +286,15 @@ export default async function WrappedPage({
               lineHeight: 1.45,
               color: '#221E18',
             }}>
-              You started the year as a{' '}
+              {t('wr.moved_a', locale)}
               <strong style={{ fontStyle: 'normal' }}>
-                {firstArchetype.archetype.replace(/^The /, '')}
-              </strong>{' '}
-              and ended as a{' '}
+                {archBareName(firstArchetype.archetype, locale)}
+              </strong>
+              {t('wr.moved_b', locale)}
               <strong style={{ fontStyle: 'normal' }}>
-                {lastArchetype.archetype.replace(/^The /, '')}
-              </strong>.
+                {archBareName(lastArchetype.archetype, locale)}
+              </strong>
+              {t('wr.moved_c', locale)}
             </div>
           </div>
         )}
@@ -315,7 +329,7 @@ export default async function WrappedPage({
               color: '#8C6520',
               marginBottom: 2,
             }}>
-              You ended the year as
+              {t('wr.ended_as', locale)}
             </div>
             <div style={{
               fontFamily: serif,
@@ -324,8 +338,7 @@ export default async function WrappedPage({
               color: '#221E18',
               lineHeight: 1.1,
             }}>
-              {lastArchetype.flavor ? `The ${lastArchetype.flavor} ` : 'The '}
-              {lastArchetype.archetype.replace(/^The /, '')}
+              {locale === 'zh' ? '' : 'The '}{lastArchetype.flavor ? `${lastArchetype.flavor} ` : ''}{archBareName(lastArchetype.archetype, locale)}
             </div>
           </div>
         )}
@@ -345,7 +358,7 @@ export default async function WrappedPage({
               marginBottom: 10,
               textAlign: 'left',
             }}>
-              ▸ TOP SHIFTS
+              ▸ {t('wr.top_shifts', locale)}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {top3Shifts.map(s => (
@@ -364,7 +377,7 @@ export default async function WrappedPage({
                   }}
                 >
                   <span style={{ color: '#221E18' }}>
-                    {DIM_NAMES[s.key as keyof typeof DIM_NAMES] || s.key}
+                    {t(`dim.${s.key}.name`, locale) || DIM_NAMES[s.key as keyof typeof DIM_NAMES] || s.key}
                   </span>
                   <span style={{
                     fontFamily: pixel,
@@ -391,7 +404,7 @@ export default async function WrappedPage({
           letterSpacing: '0.18em',
           textTransform: 'uppercase',
         }}>
-          ▸ FIND YOURS AT MULL.WORLD
+          ▸ {t('wr.find_yours', locale)}
         </div>
       </article>
 
@@ -414,8 +427,7 @@ export default async function WrappedPage({
           lineHeight: 1.5,
           marginBottom: 16,
         }}>
-          📸 Screenshot the card above and share it to your story.
-          Tag <strong>@mull</strong> if you&rsquo;d like.
+          📸 {t('wr.share_a', locale)}<strong>@mull</strong>{t('wr.share_b', locale)}
         </div>
         <p style={{
           fontFamily: serif,
@@ -425,7 +437,7 @@ export default async function WrappedPage({
           margin: '0 0 18px',
           lineHeight: 1.55,
         }}>
-          Long-press the card on iOS/Android, or use your phone&rsquo;s screenshot shortcut.
+          {t('wr.long_press', locale)}
         </p>
         <Link href="/account" style={{
           fontFamily: pixel,
@@ -437,7 +449,7 @@ export default async function WrappedPage({
           borderBottom: '2px solid #8C6520',
           paddingBottom: 1,
         }}>
-          ◂ BACK TO YOUR ACCOUNT
+          ◂ {t('wr.back_account', locale)}
         </Link>
       </div>
     </main>
@@ -476,7 +488,7 @@ function StatTile({ value, label, accent }: { value: number; label: string; acce
   );
 }
 
-function EmptyYear({ year }: { year: number }) {
+function EmptyYear({ year, locale }: { year: number; locale: Locale }) {
   return (
     <main style={{ maxWidth: 480, margin: '0 auto', padding: '80px 24px' }}>
       <div style={{
@@ -495,7 +507,7 @@ function EmptyYear({ year }: { year: number }) {
           letterSpacing: '0.18em',
           marginBottom: 14,
         }}>
-          ▸ {year} WRAPPED
+          ▸ {t('wr.badge', locale, { year })}
         </div>
         <h1 style={{
           fontFamily: serif,
@@ -505,7 +517,7 @@ function EmptyYear({ year }: { year: number }) {
           letterSpacing: '-0.5px',
           lineHeight: 1.15,
         }}>
-          No year to wrap yet.
+          {t('wr.empty_title', locale)}
         </h1>
         <p style={{
           fontFamily: serif,
@@ -515,9 +527,7 @@ function EmptyYear({ year }: { year: number }) {
           margin: '0 0 28px',
           lineHeight: 1.55,
         }}>
-          You haven&rsquo;t taken a quiz, answered a dilemma, written a diary entry,
-          or saved an exercise reflection in {year}. Come back at year&rsquo;s end —
-          or now, and start.
+          {t('wr.empty_body', locale, { year })}
         </p>
         <Link
           href="/dilemma"
@@ -538,7 +548,7 @@ function EmptyYear({ year }: { year: number }) {
             transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
           }}
         >
-          ▸ TODAY&apos;S DILEMMA
+          ▸ {t('wr.today_dilemma', locale)}
         </Link>
       </div>
     </main>

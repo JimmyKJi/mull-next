@@ -1,8 +1,17 @@
 // /privacy — v3 pixel chrome restyle. All content preserved.
+//
+// i18n: like /methodology, this page reads the locale cookie at request
+// time, so the body branches on locale. `zh` ships a full Chinese render
+// (PrivacyBodyZh); every other locale gets the English body plus the
+// honest ContentLanguageNotice. Hrefs, mailto, the public-profile URL,
+// <code> contents, and the contact email stay verbatim in both.
 
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { getServerLocale } from '@/lib/locale-server';
+import LanguageSwitcher from '@/components/language-switcher';
 import { PixelWindow, PixelPageHeader } from '@/components/pixel-window';
+import { ContentLanguageNotice } from '@/components/content-language-notice';
 
 export const metadata: Metadata = {
   title: 'Privacy',
@@ -11,10 +20,32 @@ export const metadata: Metadata = {
 };
 
 const LAST_UPDATED = 'May 10, 2026';
+// Keep in sync with LAST_UPDATED when the update date changes.
+const LAST_UPDATED_ZH = '2026年5月10日';
 
-export default function PrivacyPage() {
+export default async function PrivacyPage() {
+  const locale = await getServerLocale();
+
   return (
     <main className="mx-auto max-w-[820px] px-6 pb-32 pt-12 sm:px-10 sm:pt-16">
+      <div className="mb-6 flex justify-end">
+        <LanguageSwitcher initial={locale} />
+      </div>
+
+      <ContentLanguageNotice locale={locale} translatedLocales={['zh']} />
+
+      {locale === 'zh' ? <PrivacyBodyZh /> : <PrivacyBodyEn />}
+    </main>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────
+// English body — default for every non-zh locale. Unchanged from v3.
+// ──────────────────────────────────────────────────────────────
+
+function PrivacyBodyEn() {
+  return (
+    <>
       <PixelPageHeader
         eyebrow={`▶ PRIVACY · UPDATED ${LAST_UPDATED.toUpperCase()}`}
         title="WHAT WE HOLD"
@@ -252,7 +283,210 @@ export default function PrivacyPage() {
           ← Back to Mull
         </Link>
       </p>
-    </main>
+    </>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────
+// Chinese body — full zh render. Mirrors PrivacyBodyEn exactly; every
+// href/mailto, the public-profile URL, <code> contents, and the contact
+// email stay verbatim. Only the prose around them is translated.
+// ──────────────────────────────────────────────────────────────
+
+function PrivacyBodyZh() {
+  return (
+    <>
+      <PixelPageHeader
+        eyebrow={`▶ 隐私 · 更新于 ${LAST_UPDATED_ZH}`}
+        title="我们持有什么"
+        subtitle={
+          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-editorial)' }}>
+            用大白话说清楚。如果下面的任何内容与你实际体验到的相矛盾，那么以实际体验为准、文字才是漏洞——请发邮件给我：{' '}
+            <a
+              href="mailto:jimmy.kaian.ji@gmail.com"
+              className="not-italic text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+            >
+              jimmy.kaian.ji@gmail.com
+            </a>
+            。
+          </p>
+        }
+      />
+
+      <div className="space-y-8">
+        <PixelWindow title="MULL 收集什么" badge="▶ 数据">
+          <Prose>
+            <p>
+              如果你不注册账户，Mull 不会在我们的服务器上存储任何关于你的信息。测验完全在你的浏览器中运行，我们看不到你的答案。
+            </p>
+            <p>如果你注册了账户，我们会持有：</p>
+          </Prose>
+          <ul className="mt-3 space-y-2">
+            <ProseLi>
+              你的邮箱地址（仅用于让你登录，以及向你发送你已选择接收的邮件提醒）。
+            </ProseLi>
+            <ProseLi>
+              你保存下来的维度坐标、原型与困境回应——也就是你与 Mull 互动的实际内容。
+            </ProseLi>
+            <ProseLi>
+              你填写的可选公开资料字段（用户名、显示名称、在你公开页面上展示的内容）——这些由你直接掌控。
+            </ProseLi>
+            <ProseLi>订阅状态（免费版还是 Mull+），在订阅功能上线之后。</ProseLi>
+            <ProseLi>
+              你连接时所用的 IP 地址，会经过加盐哈希处理——仅保留 24 小时，且只用于实施速率限制。我们不存储原始 IP。
+            </ProseLi>
+          </ul>
+          <Prose className="mt-4">
+            <p>
+              我们不收集：位置数据、通讯录、浏览历史、设备指纹，或任何来自第三方追踪器的信息。Mull 没有任何记录你点击行为的分析 SDK。唯一的遥测数据，是 Vercel 那个尊重隐私、且不设置 Cookie 的页面浏览计数器。
+            </p>
+          </Prose>
+        </PixelWindow>
+
+        <PixelWindow title="我们如何使用 AI" badge="▶ 狭窄">
+          <Prose>
+            <p>
+              有三个地方用到 AI：困境分析器、哲学家辩论生成器，以及（面向 Mull+ 订阅者，待该功能上线后的）年终回顾。在每种情形下，你所写的文字都会被发送到 Anthropic 的 Claude API 进行处理，结果再存储到你的账户上。我们不会用你的数据去训练任何模型。Anthropic 的数据政策适用于进行中的 API 调用；除了让你日后能在账户里再次看到所必需的内容之外，我们不保留任何东西。
+            </p>
+            <p>
+              完整的技术细节——确切的提示词、确切的数据流向——都在{' '}
+              <Link
+                href="/methodology"
+                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+              >
+                方法论页面
+              </Link>
+              。
+            </p>
+          </Prose>
+        </PixelWindow>
+
+        <PixelWindow title="我们绝不做什么" badge="▶ 承诺">
+          <ul className="space-y-2.5">
+            <ProseLi>
+              <strong>没有广告。</strong>永远没有。没有展示广告，没有赞助内容，也不会有偷偷塞进原型页面的联盟营销链接。
+            </ProseLi>
+            <ProseLi>
+              <strong>不出售你的数据。</strong>你的反思只属于你和模型之间。我们没有任何商业关系会让出售这些数据变得诱人，即便我们想这么做也没有。
+            </ProseLi>
+            <ProseLi>
+              <strong>邮件里没有追踪像素。</strong>邮件提醒都是纯 HTML／文本。我们不知道你是否打开过它们。
+            </ProseLi>
+            <ProseLi>
+              <strong>没有第三方广告 Cookie。</strong>Mull 只设置维持你登录状态所必需的那些。
+            </ProseLi>
+          </ul>
+        </PixelWindow>
+
+        <PixelWindow title="COOKIE" badge="▶ 最少化">
+          <Prose>
+            <p>
+              我们会设置：一个 Supabase 会话 Cookie（让你保持登录）、一个小小的语言区域 Cookie（让网站记住你的语言），以及一个一次性的"已关闭引导"Cookie（这样我们就不会重复弹出欢迎浮层）。仅此而已。没有分析，没有广告，没有追踪。
+            </p>
+          </Prose>
+        </PixelWindow>
+
+        <PixelWindow title="谁能看到你的数据" badge="▶ 默认私密">
+          <Prose>
+            <p>
+              默认情况下，你的账户是私密的。你的原型、你的地图、你的困境回应——只有你自己能看到。通过{' '}
+              <Link
+                href="/account"
+                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+              >
+                公开资料设置
+              </Link>
+              ，你可以选择把这些内容的任意组合，公开在{' '}
+              <code className="rounded border border-[#D6CDB6] bg-[#F5EFDC] px-1.5 py-0.5 text-[12.5px]">
+                mull.world/u/&lt;handle&gt;
+              </code>
+              。默认是全部关闭；你可以逐项选择要分享什么。
+            </p>
+            <p>
+              维护者（也就是我，Jimmy）在技术上能够看到存储在我们 Supabase 数据库里的任何内容。我只会为了排查漏洞和滥用行为才去查看。我不会出于消遣去读用户的日记、困境或对话。基础设施托管在 Vercel 与 Supabase 上；他们的员工在各自的安全政策之下，能够访问底层系统。
+            </p>
+          </Prose>
+        </PixelWindow>
+
+        <PixelWindow title="邮件" badge="▶ 仅限自愿订阅">
+          <Prose>
+            <p>可能会发出三类邮件，全部都需自愿订阅：</p>
+          </Prose>
+          <ul className="mt-3 space-y-2">
+            <ProseLi>每日困境提醒，在你所选的本地时刻发送。</ProseLi>
+            <ProseLi>周日的每周摘要，回顾你过去 7 天的情况。</ProseLi>
+            <ProseLi>当一段 3 天以上的连续记录中断时，发送的一次性提醒邮件。</ProseLi>
+          </ul>
+          <Prose className="mt-4">
+            <p>
+              此外，在你首次注册时还会有一封欢迎邮件。要关闭其中任何一项，可前往{' '}
+              <Link
+                href="/account"
+                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+              >
+                账户设置
+              </Link>
+              。
+            </p>
+          </Prose>
+        </PixelWindow>
+
+        <PixelWindow title="你的权利" badge="▶ 完全掌控">
+          <Prose>
+            <p>你可以：</p>
+          </Prose>
+          <ul className="mt-3 space-y-2.5">
+            <ProseLi>
+              <strong>下载我们持有的关于你的全部数据</strong>，导出为单个 JSON 文件，就在{' '}
+              <Link
+                href="/account"
+                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+              >
+                账户设置
+              </Link>
+              里。
+            </ProseLi>
+            <ProseLi>
+              <strong>直接删除你的账户。</strong>同样在那个地方。我们会抹去所有数据表中每一行与用户相关的记录，并移除你的登录凭据。你提交过的匿名反馈会被保留（文字仍在，但你的标识符会消失）。
+            </ProseLi>
+            <ProseLi>
+              <strong>对任何具体事项提出异议</strong>，给我发邮件即可。我会回复。
+            </ProseLi>
+          </ul>
+        </PixelWindow>
+
+        <PixelWindow title="未成年人 · 变更 · 联系">
+          <Prose>
+            <p>
+              <strong>未成年人。</strong>Mull 并非为 13 岁以下的用户设计。如果你未满 13 岁，请不要注册账户。
+            </p>
+            <p>
+              <strong>变更。</strong>如果本政策发生实质性变更，已登录的用户会收到邮件通知。本页顶部标有日期，你随时可以查看当前的版本。
+            </p>
+            <p>
+              <strong>联系。</strong>发邮件至{' '}
+              <a
+                href="mailto:jimmy.kaian.ji@gmail.com"
+                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+              >
+                jimmy.kaian.ji@gmail.com
+              </a>
+              。每一条消息我都会读。
+            </p>
+          </Prose>
+        </PixelWindow>
+      </div>
+
+      <p className="mt-12 text-center text-[13px] text-[#8C6520]">
+        最近更新：{LAST_UPDATED_ZH}。{' '}
+        <Link
+          href="/"
+          className="ml-2 underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+        >
+          ← 返回 Mull
+        </Link>
+      </p>
+    </>
   );
 }
 

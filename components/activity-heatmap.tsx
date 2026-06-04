@@ -12,6 +12,7 @@
 // of nothing.
 
 import { ARCHETYPE_COLORS } from "@/lib/archetype-colors";
+import { type Locale } from "@/lib/translations";
 
 type Props = {
   /** All event timestamps, in any order. Only the date portion
@@ -22,9 +23,13 @@ type Props = {
   endDate?: Date;
   /** Optional accent color for filled cells. Defaults to amber. */
   accent?: { primary: string; deep: string; soft: string };
+  /** Display locale. Pluralized English copy ("entry"/"entries") maps
+   *  poorly to t() keys, so zh is rendered inline. Defaults 'en'. */
+  locale?: Locale;
 };
 
 const DAY_LABELS = ["Mon", "", "Wed", "", "Fri", "", ""];
+const DAY_LABELS_ZH = ["周一", "", "周三", "", "周五", "", ""];
 const WEEKS = 52;
 const CELL = 12; // px
 const GAP = 3;   // px
@@ -33,7 +38,10 @@ export function ActivityHeatmap({
   timestamps,
   endDate = new Date(),
   accent = ARCHETYPE_COLORS.hearth, // warm amber default
+  locale = "en",
 }: Props) {
+  const isZh = locale === "zh";
+  const dayLabels = isZh ? DAY_LABELS_ZH : DAY_LABELS;
   // Bucket timestamps by ISO date (YYYY-MM-DD, UTC). Counts duplicates.
   const counts = new Map<string, number>();
   for (const ts of timestamps) {
@@ -81,12 +89,21 @@ export function ActivityHeatmap({
           className="text-[14px] leading-[1.55] text-[#4A4338]"
           style={{ fontFamily: "var(--font-editorial)" }}
         >
-          <strong className="text-[#221E18]">{total}</strong>{" "}
-          {total === 1 ? "entry" : "entries"} across{" "}
-          <strong className="text-[#221E18]">{days}</strong>{" "}
-          {days === 1 ? "day" : "days"} in the last year.
+          {isZh ? (
+            <>
+              过去一年，<strong className="text-[#221E18]">{total}</strong> 条记录，遍布{" "}
+              <strong className="text-[#221E18]">{days}</strong> 天。
+            </>
+          ) : (
+            <>
+              <strong className="text-[#221E18]">{total}</strong>{" "}
+              {total === 1 ? "entry" : "entries"} across{" "}
+              <strong className="text-[#221E18]">{days}</strong>{" "}
+              {days === 1 ? "day" : "days"} in the last year.
+            </>
+          )}
         </p>
-        <Legend accent={accent} />
+        <Legend accent={accent} locale={locale} />
       </div>
       <div
         className="overflow-x-auto border-2 border-[#221E18] bg-[#FFFCF4] p-3"
@@ -98,7 +115,7 @@ export function ActivityHeatmap({
             className="flex flex-col gap-[3px] pr-2"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
-            {DAY_LABELS.map((d, i) => (
+            {dayLabels.map((d, i) => (
               <div
                 key={i}
                 className="text-[9px] tracking-[0.18em] text-[#8C6520]"
@@ -114,7 +131,7 @@ export function ActivityHeatmap({
             {weeks.map((week, wi) => (
               <div key={wi} className="flex flex-col gap-[3px]">
                 {week.map((day, di) => (
-                  <Cell key={di} count={day.count} date={day.date} accent={accent} />
+                  <Cell key={di} count={day.count} date={day.date} accent={accent} locale={locale} />
                 ))}
               </div>
             ))}
@@ -129,11 +146,21 @@ function Cell({
   count,
   date,
   accent,
+  locale = "en",
 }: {
   count: number;
   date: string;
   accent: { primary: string; deep: string; soft: string };
+  locale?: Locale;
 }) {
+  // Tooltip suffix: zh has no entry/entries plural, so render a single
+  // form ("条记录"); en keeps the pluralized form.
+  const suffix =
+    count > 0
+      ? locale === "zh"
+        ? ` · ${count} 条记录`
+        : ` · ${count} ${count === 1 ? "entry" : "entries"}`
+      : "";
   // -1 = future (not yet possible), 0 = empty, 1 / 2-3 / 4+ tiers.
   const bg =
     count < 0
@@ -153,7 +180,7 @@ function Cell({
         : accent.deep;
   return (
     <div
-      title={`${date}${count > 0 ? ` · ${count} ${count === 1 ? "entry" : "entries"}` : ""}`}
+      title={`${date}${suffix}`}
       style={{
         width: CELL,
         height: CELL,
@@ -166,22 +193,24 @@ function Cell({
 
 function Legend({
   accent,
+  locale = "en",
 }: {
   accent: { primary: string; deep: string; soft: string };
+  locale?: Locale;
 }) {
   return (
     <div
       className="flex items-center gap-2 text-[10px] tracking-[0.18em] text-[#8C6520]"
       style={{ fontFamily: "var(--font-pixel-display)" }}
     >
-      <span>LESS</span>
+      <span>{locale === "zh" ? "少" : "LESS"}</span>
       <div className="flex gap-[3px]">
         <div style={{ width: 10, height: 10, background: "#E2D8B6", border: `1px solid #D6CDB6` }} />
         <div style={{ width: 10, height: 10, background: accent.soft, border: `1px solid ${accent.deep}` }} />
         <div style={{ width: 10, height: 10, background: accent.primary, border: `1px solid ${accent.deep}` }} />
         <div style={{ width: 10, height: 10, background: accent.deep, border: `1px solid ${accent.deep}` }} />
       </div>
-      <span>MORE</span>
+      <span>{locale === "zh" ? "多" : "MORE"}</span>
     </div>
   );
 }

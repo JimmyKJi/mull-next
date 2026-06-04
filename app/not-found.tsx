@@ -12,6 +12,8 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import MullWordmark from '@/components/mull-wordmark';
 import EmptyStateSprite from '@/components/empty-state-sprite';
+import { getServerLocale } from '@/lib/locale-server';
+import { t } from '@/lib/translations';
 
 export const metadata: Metadata = {
   title: 'Not found',
@@ -21,7 +23,8 @@ export const metadata: Metadata = {
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-prose)";
 
-export default function NotFound() {
+export default async function NotFound() {
+  const locale = await getServerLocale();
   return (
     <main style={{
       maxWidth: 560,
@@ -60,7 +63,7 @@ export default function NotFound() {
           textShadow: '3px 3px 0 #7A2E2E',
           lineHeight: 1.1,
         }}>
-          OFF THE MAP
+          {t('nf.title', locale)}
         </h1>
         <p style={{
           fontFamily: serif,
@@ -70,9 +73,7 @@ export default function NotFound() {
           margin: '0 0 24px',
           lineHeight: 1.55,
         }}>
-          The page you tried to reach isn&rsquo;t here. Maybe the link aged out,
-          maybe the URL has a typo. Either way, here are three doors you
-          probably want.
+          {t('nf.body', locale)}
         </p>
 
         <EmptyStateSprite
@@ -89,13 +90,13 @@ export default function NotFound() {
           marginTop: 8,
         }}>
           <Link href="/" className="pixel-press" style={ctaPrimary}>
-            ▸ HOME
+            ▸ {t('nf.home', locale)}
           </Link>
           <Link href="/quiz?mode=quick" className="pixel-press" style={ctaSecondary('#B8862F')}>
-            ▸ TAKE THE QUIZ
+            ▸ {t('nf.take_quiz', locale)}
           </Link>
           <Link href="/search" className="pixel-press" style={ctaSecondary('#2F5D5C')}>
-            ▸ SEARCH MINDS
+            ▸ {t('nf.search_minds', locale)}
           </Link>
         </div>
       </div>

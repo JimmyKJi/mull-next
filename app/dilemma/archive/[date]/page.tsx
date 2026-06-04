@@ -149,7 +149,7 @@ export default async function DilemmaArchiveDatePage({
           the diary detail + exercise detail pages — paired with the
           today's-dilemma path for users who'd rather catch up live. */}
       <nav
-        aria-label="Continue elsewhere"
+        aria-label={t('a11y.continue_elsewhere', locale)}
         className="mt-10 flex flex-wrap justify-center gap-3 border-t-2 border-dashed border-[#D6CDB6] pt-6"
       >
         <Link

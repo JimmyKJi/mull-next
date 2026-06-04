@@ -435,7 +435,7 @@ export default async function PhilosopherDetailPage({
           {/* Topics this philosopher is listed under — internal SEO
               link gold. Reverse-indexed from lib/topics.ts. */}
           {relatedTopics.length > 0 ? (
-            <PixelWindow title="TOPICS" badge="▶ EXPLORE">
+            <PixelWindow title={t('nav.topics', locale).toUpperCase()} badge="▶ EXPLORE">
               <p
                 className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
                 style={{ fontFamily: 'var(--font-editorial)' }}
@@ -475,7 +475,7 @@ export default async function PhilosopherDetailPage({
 
           {/* Curated matchups featuring this philosopher. */}
           {matchups.length > 0 ? (
-            <PixelWindow title="MATCHUPS" badge="▶ COMPARE">
+            <PixelWindow title={t('nav.matchups', locale).toUpperCase()} badge="▶ COMPARE">
               <p
                 className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
                 style={{ fontFamily: 'var(--font-editorial)' }}
