@@ -49,6 +49,8 @@ import { JOURNEY_SCENES, JOURNEY_REVEALS } from '../lib/quiz-journey';
 import { JOURNEY_SCENES_I18N, JOURNEY_REVEALS_I18N } from '../lib/quiz-journey-i18n';
 import { PILGRIMAGE_ARCS, FLAVOR_LENSES } from '../lib/pilgrimage';
 import { PILGRIMAGE_I18N } from '../lib/pilgrimage-i18n';
+import { CRUCIBLES } from '../lib/crucible';
+import { CRUCIBLE_I18N } from '../lib/crucible-i18n';
 
 // Merge the ten arcs with their per-flavor enrollment lenses into one
 // record keyed by archetype, so a single domain pass covers both the
@@ -180,6 +182,16 @@ const DOMAINS = {
     constName: 'DILEMMAS_I18N',
     recordType: 'Record<string, Partial<Record<Locale, DilemmaI18nFields>>>',
     fields: ['prompt', 'hint'],
+  },
+  crucible: {
+    data: CRUCIBLES,
+    existing: CRUCIBLE_I18N,
+    keyField: 'id', // stable numeric id 1..60
+    overlayFile: 'lib/crucible-i18n.ts',
+    constName: 'CRUCIBLE_I18N',
+    recordType: 'Record<string, Partial<Record<Locale, CrucibleI18nFields>>>',
+    fields: ['prompt', 'framing'],
+    hint: 'This is "The Crucible" — a daily real-life moral ACTION the reader commits to today and reports on tomorrow (Stoic evening-review, modern shape). Register: plain, direct second person, a touch austere — a wise guide\'s terse daily instruction, never corporate or therapy-speak. Match the same Chinese literary register as the rest of Mull. Field notes: "prompt" is the action itself, in present-tense IMPERATIVE — keep it an imperative the reader could do today (e.g. "Notice three moments…", "Refuse an invitation…", "Steelman a view you usually dismiss…"); render the leading verb as a natural Chinese imperative (注意…, 拒绝…, 为…作最有力的辩护…). Many prompts END with a short clipped second instruction ("Just listen.", "Don\'t over-explain.", "Hold the silence.", "Count.") — keep those terse and imperative, do not pad. "framing" is a one-line aphoristic rationale (e.g. "The first move is awareness.", "Small repairs are weightier than they seem.", "Yeses owe nos elsewhere.") — keep it short, epigrammatic, and self-contained; do not expand into a full explanation. Keep any digits verbatim ("three moments", "100 written words", "20 minutes", "12 hours"). Do not add quotation marks the English does not have.',
   },
   topics: {
     data: TOPICS,

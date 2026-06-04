@@ -4,6 +4,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PixelPageHeader } from "@/components/pixel-window";
 import { getTodaysCrucible, getYesterdaysCrucible } from "@/lib/crucible";
+import { getServerLocale } from "@/lib/locale-server";
+import { t } from "@/lib/translations";
 import CrucibleClient from "./crucible-client";
 
 export const metadata: Metadata = {
@@ -13,7 +15,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://mull.world/crucible" },
 };
 
-export default function CruciblePage() {
+export default async function CruciblePage() {
+  const locale = await getServerLocale();
   const today = getTodaysCrucible();
   const yesterday = getYesterdaysCrucible();
   const todayKey = new Date().toISOString().slice(0, 10);
@@ -26,16 +29,14 @@ export default function CruciblePage() {
   return (
     <main className="mx-auto max-w-[760px] px-6 pb-32 pt-12 sm:px-10 sm:pt-16">
       <PixelPageHeader
-        eyebrow="▶ THE CRUCIBLE · DAILY ACTION"
-        title="COMMIT TODAY. REPORT TOMORROW."
+        eyebrow={t("crucible.eyebrow", locale)}
+        title={t("crucible.title", locale)}
         subtitle={
           <p
             className="text-[16px] italic"
             style={{ fontFamily: "var(--font-editorial)" }}
           >
-            Different from the dilemma — this isn&rsquo;t a hypothetical.
-            It&rsquo;s a real small thing to do today. Tomorrow Mull
-            will ask how it went. Stoic evening-review, modern shape.
+            {t("crucible.subtitle", locale)}
           </p>
         }
       />
@@ -44,13 +45,14 @@ export default function CruciblePage() {
         yesterday={yesterday}
         todayKey={todayKey}
         yesterdayKey={yesterdayKey}
+        locale={locale}
       />
       <p className="mt-12 text-center text-[13px] text-[#8C6520]">
         <Link
           href="/"
           className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
         >
-          ← Back to Mull
+          {t("pilgrimage.back_mull", locale)}
         </Link>
       </p>
     </main>

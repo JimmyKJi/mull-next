@@ -17,6 +17,8 @@ import {
   type CrucibleReport,
   CRUCIBLE_KEY,
 } from "@/lib/crucible";
+import { localizeCrucible } from "@/lib/crucible-i18n";
+import { t, type Locale } from "@/lib/translations";
 import { emitFeatureEvent } from "@/lib/capabilities";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
@@ -27,6 +29,7 @@ type Props = {
   yesterday: Crucible;
   todayKey: string;
   yesterdayKey: string;
+  locale?: Locale;
 };
 
 export default function CrucibleClient({
@@ -34,7 +37,10 @@ export default function CrucibleClient({
   yesterday,
   todayKey,
   yesterdayKey,
+  locale = "en",
 }: Props) {
+  const todayL = localizeCrucible(today, locale);
+  const yesterdayL = localizeCrucible(yesterday, locale);
   const [reports, setReports] = useState<CrucibleReport[] | null>(null);
   const [committed, setCommitted] = useState(false);
   const [yesterdayNote, setYesterdayNote] = useState("");
@@ -106,7 +112,7 @@ export default function CrucibleClient({
   if (reports === null) {
     return (
       <div className="text-center text-[14px] text-[#8C6520]" style={{ fontFamily: serif }}>
-        Loading…
+        {t("crucible.loading", locale)}
       </div>
     );
   }
@@ -145,7 +151,10 @@ export default function CrucibleClient({
           className="inline-flex items-center gap-2 border-2 border-[#221E18] bg-[#1A1612] px-3 py-1.5 text-[10px] tracking-[0.22em] text-[#F8C75E]"
           style={{ fontFamily: pixel, textTransform: "uppercase" }}
         >
-          ▸ CRUCIBLE STREAK · {streak} {streak === 1 ? "DAY" : "DAYS"}
+          {t("crucible.streak", locale, {
+            n: streak,
+            unit: t(streak === 1 ? "crucible.day" : "crucible.days", locale),
+          })}
         </div>
       )}
 
@@ -159,18 +168,18 @@ export default function CrucibleClient({
             className="text-[10px] tracking-[0.22em] text-[#2F5D5C]"
             style={{ fontFamily: pixel, textTransform: "uppercase" }}
           >
-            ▶ YESTERDAY&rsquo;S CRUCIBLE · CHECK-IN
+            {t("crucible.checkin_eyebrow", locale)}
           </div>
           <p
             className="mt-2 text-[16px] leading-[1.55] text-[#221E18]"
             style={{ fontFamily: serif }}
           >
-            {yesterday.prompt}
+            {yesterdayL.prompt}
           </p>
           <textarea
             value={yesterdayNote}
             onChange={(e) => setYesterdayNote(e.target.value)}
-            placeholder="A brief note for your own record. Optional."
+            placeholder={t("crucible.note_placeholder", locale)}
             rows={3}
             style={{
               marginTop: 12,
@@ -199,7 +208,7 @@ export default function CrucibleClient({
                 boxShadow: "2px 2px 0 0 #B8862F",
               }}
             >
-              ✓ KEPT
+              {t("crucible.kept", locale)}
             </button>
             <button
               type="button"
@@ -211,7 +220,7 @@ export default function CrucibleClient({
                 boxShadow: "2px 2px 0 0 #2F5D5C",
               }}
             >
-              ◇ TRIED
+              {t("crucible.tried", locale)}
             </button>
             <button
               type="button"
@@ -222,7 +231,7 @@ export default function CrucibleClient({
                 textTransform: "uppercase",
               }}
             >
-              · SKIPPED HONESTLY
+              {t("crucible.skipped", locale)}
             </button>
           </div>
         </div>
@@ -240,33 +249,37 @@ export default function CrucibleClient({
             className="text-[10px] tracking-[0.22em] text-[#8C6520]"
             style={{ fontFamily: pixel, textTransform: "uppercase" }}
           >
-            ▶ TODAY · {today.category.toUpperCase()}
+            {t("crucible.today_eyebrow", locale, {
+              category: t(`crucible.category.${today.category}`, locale),
+            })}
           </span>
           <span
             className="text-[10px] tracking-[0.18em] text-[#B8862F]"
             style={{ fontFamily: pixel, textTransform: "uppercase" }}
           >
-            #{String(today.id).padStart(2, "0")} OF 60
+            {t("crucible.count_of", locale, {
+              n: String(today.id).padStart(2, "0"),
+            })}
           </span>
         </div>
         <h2
           className="mt-4 text-[22px] leading-[1.35] text-[#221E18]"
           style={{ fontFamily: serif }}
         >
-          {today.prompt}
+          {todayL.prompt}
         </h2>
         <p
           className="mt-3 text-[14px] italic leading-[1.55] text-[#8C6520]"
           style={{ fontFamily: serif }}
         >
-          {today.framing}
+          {todayL.framing}
         </p>
         {committed ? (
           <div
             className="mt-5 border-2 border-[#2F5D5C] bg-[#E5EFEC] px-4 py-3 text-[14px] text-[#1A4140]"
             style={{ fontFamily: serif }}
           >
-            ✓ Committed for today. Mull will ask you about it tomorrow.
+            {t("crucible.committed", locale)}
           </div>
         ) : (
           <button
@@ -279,7 +292,7 @@ export default function CrucibleClient({
               boxShadow: "4px 4px 0 0 #2F5D5C",
             }}
           >
-            ▶ COMMIT — I&rsquo;LL TRY THIS TODAY
+            {t("crucible.commit_btn", locale)}
           </button>
         )}
       </div>
@@ -288,8 +301,7 @@ export default function CrucibleClient({
         className="text-[13px] italic text-[#8C6520]"
         style={{ fontFamily: serif }}
       >
-        Refreshes daily at midnight UTC. Honest skips count as
-        self-awareness; you don&rsquo;t lose anything by reporting one.
+        {t("crucible.footer", locale)}
       </p>
     </div>
   );

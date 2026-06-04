@@ -33,7 +33,7 @@ export type Crucible = {
   framing: string;
 };
 
-const CRUCIBLES: Crucible[] = [
+export const CRUCIBLES: Crucible[] = [
   { id: 1, category: "notice", prompt: "Notice three moments today when you felt mildly defensive. Don't act on them — just notice.", framing: "The first move is awareness." },
   { id: 2, category: "ask", prompt: "Ask someone whose work you've quietly resented to tell you what they were trying to do. Just listen.", framing: "Hearing the intention often dissolves the resentment." },
   { id: 3, category: "refuse", prompt: "Refuse to share an opinion you have ready in three conversations today. Hold the silence.", framing: "Not every readiness needs spending." },
