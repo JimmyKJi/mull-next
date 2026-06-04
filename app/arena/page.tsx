@@ -8,7 +8,14 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { createClient } from "@/utils/supabase/server";
 import { PixelPageHeader } from "@/components/pixel-window";
-import { ARENA_PHILOSOPHERS, getWeeklyChallenge } from "@/lib/arena/data";
+import {
+  ARENA_PHILOSOPHERS,
+  getWeeklyChallenge,
+  localizeArenaPhilosopherName,
+} from "@/lib/arena/data";
+import { localizeArenaTopic } from "@/lib/arena/topics-i18n";
+import { getServerLocale } from "@/lib/locale-server";
+import { t } from "@/lib/translations";
 
 export const metadata: Metadata = {
   title: "Arena · Mull",
@@ -20,6 +27,7 @@ const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-prose)";
 
 export default async function ArenaPage() {
+  const locale = await getServerLocale();
   const supabase = await createClient();
   const {
     data: { user },
@@ -42,8 +50,14 @@ export default async function ArenaPage() {
 
   const calibrated = !!rating?.calibration_done_at;
   const weekly = getWeeklyChallenge();
+  const weeklyTopic = localizeArenaTopic(weekly.topic, locale);
+  const weeklyPhilosopher = localizeArenaPhilosopherName(
+    weekly.philosopher.name,
+    locale,
+  );
   // URL deep-link so a click drops you into PvE pre-loaded with the
   // featured topic + philosopher. /arena/pve already parses these.
+  // English slug/name stay the lookup keys.
   const weeklyHref = user
     ? `/arena/pve?topic=${weekly.topic.slug}&opponent=${encodeURIComponent(weekly.philosopher.name)}`
     : "/login?next=/arena";
@@ -51,8 +65,8 @@ export default async function ArenaPage() {
   return (
     <main className="mx-auto max-w-[760px] px-6 pb-32 pt-10 sm:px-10">
       <PixelPageHeader
-        eyebrow="▶ ARENA"
-        title="ARGUE A PHILOSOPHER"
+        eyebrow={t("arena.eyebrow", locale)}
+        title={t("arena.title", locale)}
         subtitle={
           <p
             style={{
@@ -63,9 +77,7 @@ export default async function ArenaPage() {
               lineHeight: 1.55,
             }}
           >
-            Pick a philosopher. Debate them. An impartial judge scores
-            you on logical rigor, philosophical principle, and
-            engagement — not on whose side won. Climb the Elo.
+            {t("arena.subtitle", locale)}
           </p>
         }
       />
@@ -107,7 +119,7 @@ export default async function ArenaPage() {
               textTransform: "uppercase",
             }}
           >
-            ▶ CHALLENGE OF THE WEEK · WK {weekly.weekNumber}
+            {t("arena.weekly_eyebrow", locale, { week: weekly.weekNumber })}
           </span>
           <span
             style={{
@@ -118,7 +130,10 @@ export default async function ArenaPage() {
               textTransform: "uppercase",
             }}
           >
-            {weekly.philosopher.tier} TIER · ELO {weekly.philosopher.baseElo}
+            {t("spar.tier_line", locale, {
+              tier: t(`spar.tier.${weekly.philosopher.tier}`, locale),
+              elo: weekly.philosopher.baseElo,
+            })}
           </span>
         </div>
         <div
@@ -130,8 +145,9 @@ export default async function ArenaPage() {
             marginBottom: 8,
           }}
         >
-          <strong>Argue {weekly.philosopher.name}</strong> on{" "}
-          <em>&ldquo;{weekly.topic.title}&rdquo;</em>
+          <strong>{t("arena.weekly_argue", locale, { name: weeklyPhilosopher })}</strong>
+          {t("arena.weekly_on", locale)}
+          <em>&ldquo;{weeklyTopic.title}&rdquo;</em>
         </div>
         <p
           style={{
@@ -142,7 +158,7 @@ export default async function ArenaPage() {
             margin: 0,
           }}
         >
-          {weekly.topic.prompt}
+          {weeklyTopic.prompt}
         </p>
         <div
           style={{
@@ -158,7 +174,7 @@ export default async function ArenaPage() {
             textTransform: "uppercase",
           }}
         >
-          ▶ ENTER THE ARENA
+          {t("arena.enter", locale)}
         </div>
       </Link>
 
@@ -171,14 +187,14 @@ export default async function ArenaPage() {
             marginBottom: 28,
           }}
         >
-          <Stat label="PvE Elo" value={String(rating.pve_elo)} />
+          <Stat label={t("arena.stat_pve_elo", locale)} value={String(rating.pve_elo)} />
           <Stat
-            label="Debates"
+            label={t("arena.stat_debates", locale)}
             value={String(rating.pve_debates_count)}
           />
           <Stat
-            label="Status"
-            value={calibrated ? "Rated" : "Provisional"}
+            label={t("arena.stat_status", locale)}
+            value={calibrated ? t("arena.status_rated", locale) : t("arena.status_provisional", locale)}
           />
         </div>
       )}
@@ -195,36 +211,36 @@ export default async function ArenaPage() {
       >
         <DoorCard
           href={user ? "/arena/pve" : "/login?next=/arena"}
-          eyebrow={calibrated ? "▶ PVE · OPEN" : "▶ START HERE"}
+          eyebrow={calibrated ? t("arena.door_pve_open_eyebrow", locale) : t("arena.door_start_eyebrow", locale)}
           title={
             calibrated
-              ? "Face a philosopher"
-              : "Calibrate — three placement matches"
+              ? t("arena.door_pve_open_title", locale)
+              : t("arena.door_calibrate_title", locale)
           }
           body={
             calibrated
-              ? "Choose any of five thinkers, pick a topic, and argue. Three exchanges, then the judge calls it."
-              : "Three short debates against opponents of rising difficulty. Sets your starter Elo so the first real matches are fair."
+              ? t("arena.door_pve_open_body", locale)
+              : t("arena.door_calibrate_body", locale)
           }
         />
         <DoorCard
           href={user ? "/arena/pvp" : "/login?next=/arena/pvp"}
-          eyebrow="▶ PVP · NEW"
-          title="Debate another human"
-          body="Async player-vs-player matches. Post a challenge or accept one. Same judge + rubric. Separate PvP Elo, separate climb."
+          eyebrow={t("arena.door_pvp_eyebrow", locale)}
+          title={t("arena.door_pvp_title", locale)}
+          body={t("arena.door_pvp_body", locale)}
         />
         <DoorCard
           href="/arena/leaderboard"
-          eyebrow="▶ LEADERBOARD"
-          title="Who's climbing"
-          body="Top PvE debaters this season. Updated after every judged match."
+          eyebrow={t("arena.door_lb_eyebrow", locale)}
+          title={t("arena.door_lb_title", locale)}
+          body={t("arena.door_lb_body", locale)}
         />
         {user && (
           <DoorCard
             href="/arena/history"
-            eyebrow="▶ YOUR HISTORY"
-            title="Re-read your matches"
-            body="Every judged debate you've played — verdict, scores, kindred philosopher, Elo delta. Click through to re-read any one."
+            eyebrow={t("arena.door_hist_eyebrow", locale)}
+            title={t("arena.door_hist_title", locale)}
+            body={t("arena.door_hist_body", locale)}
           />
         )}
       </ul>
@@ -241,7 +257,7 @@ export default async function ArenaPage() {
           textShadow: "2px 2px 0 #B8862F",
         }}
       >
-        ▸ ROSTER · {ARENA_PHILOSOPHERS.length} OPPONENTS
+        {t("arena.roster", locale, { n: ARENA_PHILOSOPHERS.length })}
       </div>
       <ul
         style={{
@@ -272,7 +288,7 @@ export default async function ArenaPage() {
                 marginBottom: 2,
               }}
             >
-              {p.name}
+              {localizeArenaPhilosopherName(p.name, locale)}
             </div>
             <div
               style={{
@@ -283,7 +299,7 @@ export default async function ArenaPage() {
                 textTransform: "uppercase",
               }}
             >
-              Elo {p.baseElo}
+              {t("arena.elo_value", locale, { elo: p.baseElo })}
             </div>
           </li>
         ))}
@@ -299,9 +315,7 @@ export default async function ArenaPage() {
           lineHeight: 1.5,
         }}
       >
-        Three debates per day. Mull pays for the judge out of pocket
-        right now; the cap keeps it sustainable while we work on
-        funding.
+        {t("arena.cap_note", locale)}
       </p>
     </main>
   );

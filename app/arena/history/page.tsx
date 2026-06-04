@@ -8,8 +8,22 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
-import { getArenaTopic } from "@/lib/arena/data";
+import { getArenaTopic, localizeArenaPhilosopherName } from "@/lib/arena/data";
+import { localizeArenaTopic } from "@/lib/arena/topics-i18n";
 import { totalScore, type JudgeOutput } from "@/lib/arena/judge";
+import { getServerLocale } from "@/lib/locale-server";
+import { t, type Locale } from "@/lib/translations";
+
+const BCP47: Record<Locale, string> = {
+  en: "en-US",
+  es: "es-ES",
+  fr: "fr-FR",
+  pt: "pt-BR",
+  ru: "ru-RU",
+  zh: "zh-CN",
+  ja: "ja-JP",
+  ko: "ko-KR",
+};
 
 export const metadata: Metadata = {
   title: "Arena · History · Mull",
@@ -37,6 +51,7 @@ type Session = {
 };
 
 export default async function ArenaHistoryPage() {
+  const locale = await getServerLocale();
   const supabase = await createClient();
   const {
     data: { user },
@@ -70,7 +85,7 @@ export default async function ArenaHistoryPage() {
             textTransform: "uppercase",
           }}
         >
-          ◂ ARENA
+          {t("arena.back", locale)}
         </Link>
       </div>
 
@@ -85,7 +100,7 @@ export default async function ArenaHistoryPage() {
           marginBottom: 8,
         }}
       >
-        YOUR MATCH HISTORY
+        {t("arena.hist_page_title", locale)}
       </h1>
       <p
         style={{
@@ -97,8 +112,7 @@ export default async function ArenaHistoryPage() {
           lineHeight: 1.55,
         }}
       >
-        Your judged Arena matches, newest first. Click any match to
-        re-read the transcript and the verdict.
+        {t("arena.hist_subtitle", locale)}
       </p>
 
       {sessions.length === 0 ? (
@@ -114,7 +128,11 @@ export default async function ArenaHistoryPage() {
             textAlign: "center",
           }}
         >
-          No matches yet. <Link href="/arena/pve" style={{ color: "#221E18" }}>Face a philosopher</Link> or <Link href="/arena/pvp" style={{ color: "#221E18" }}>post a PvP challenge</Link> to start.
+          {t("arena.hist_empty_1", locale)}
+          <Link href="/arena/pve" style={{ color: "#221E18" }}>{t("arena.hist_empty_face", locale)}</Link>
+          {t("arena.hist_empty_or", locale)}
+          <Link href="/arena/pvp" style={{ color: "#221E18" }}>{t("arena.hist_empty_pvp", locale)}</Link>
+          {t("arena.hist_empty_2", locale)}
         </div>
       ) : (
         <ul
@@ -127,7 +145,7 @@ export default async function ArenaHistoryPage() {
           }}
         >
           {sessions.map((s) => (
-            <HistoryRow key={s.id} session={s} viewerId={user.id} />
+            <HistoryRow key={s.id} session={s} viewerId={user.id} locale={locale} />
           ))}
         </ul>
       )}
@@ -138,20 +156,25 @@ export default async function ArenaHistoryPage() {
 function HistoryRow({
   session,
   viewerId,
+  locale,
 }: {
   session: Session;
   viewerId: string;
+  locale: Locale;
 }) {
   const topic = getArenaTopic(session.topic_slug);
+  const localizedTopicTitle = topic
+    ? localizeArenaTopic(topic, locale).title
+    : session.topic_slug;
   const viewerIsChallenger = session.user_id === viewerId;
 
   // Figure out who the viewer was up against.
   const opponentDisplay =
     session.kind === "pve"
-      ? session.opponent
+      ? localizeArenaPhilosopherName(session.opponent, locale)
       : viewerIsChallenger
-        ? "Opponent"
-        : "Challenger";
+        ? t("arena.opp_generic", locale)
+        : t("arena.challenger", locale);
 
   // Map verdict → "did the viewer win".
   const viewerWon =
@@ -159,7 +182,11 @@ function HistoryRow({
     (session.verdict === "opponent" && !viewerIsChallenger);
   const wasDraw = session.verdict === "draw";
 
-  const verdictLabel = wasDraw ? "DRAW" : viewerWon ? "WIN" : "LOSS";
+  const verdictLabel = wasDraw
+    ? t("arena.result.draw", locale)
+    : viewerWon
+      ? t("arena.result.win", locale)
+      : t("arena.result.loss", locale);
   const verdictColor = wasDraw ? "#8C6520" : viewerWon ? "#2F5D5C" : "#7A2E2E";
 
   // Score breakdown (mine vs opp).
@@ -206,7 +233,7 @@ function HistoryRow({
               textTransform: "uppercase",
             }}
           >
-            ▸ {session.kind.toUpperCase()} · {verdictLabel}
+            ▸ {t(`arena.kind.${session.kind}`, locale)} · {verdictLabel}
           </div>
           <div
             style={{
@@ -217,7 +244,7 @@ function HistoryRow({
               textTransform: "uppercase",
             }}
           >
-            {new Date(session.judged_at).toLocaleDateString("en-US", {
+            {new Date(session.judged_at).toLocaleDateString(BCP47[locale], {
               month: "short",
               day: "numeric",
               year: "numeric",
@@ -233,7 +260,7 @@ function HistoryRow({
             marginBottom: 4,
           }}
         >
-          {topic?.title ?? session.topic_slug} <span style={{ color: "#8C6520" }}>vs</span> {opponentDisplay}
+          {localizedTopicTitle} <span style={{ color: "#8C6520" }}>{t("arena.hist_vs", locale)}</span> {opponentDisplay}
         </div>
         <div
           style={{
@@ -250,7 +277,11 @@ function HistoryRow({
           }}
         >
           <span>
-            YOU {myScore} · {opponentDisplay} {theirScore} (/ 25)
+            {t("arena.hist_scoreline", locale, {
+              my: myScore,
+              opp: opponentDisplay,
+              their: theirScore,
+            })}
           </span>
           <span
             style={{
@@ -271,7 +302,9 @@ function HistoryRow({
               color: "#8C6520",
             }}
           >
-            ↪ argued like {session.judge_json.user_kindred_philosopher}
+            {t("arena.argued_like", locale, {
+              name: session.judge_json.user_kindred_philosopher,
+            })}
           </div>
         )}
       </Link>

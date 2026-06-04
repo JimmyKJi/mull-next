@@ -7,6 +7,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { createClient } from "@/utils/supabase/server";
 import { PixelPageHeader } from "@/components/pixel-window";
+import { getServerLocale } from "@/lib/locale-server";
+import { t } from "@/lib/translations";
 
 export const metadata: Metadata = {
   title: "Arena · Leaderboard · Mull",
@@ -25,6 +27,7 @@ type Row = {
 };
 
 export default async function ArenaLeaderboardPage() {
+  const locale = await getServerLocale();
   const supabase = await createClient();
   const { data } = await supabase
     .from("arena_leaderboard")
@@ -56,13 +59,13 @@ export default async function ArenaLeaderboardPage() {
             textTransform: "uppercase",
           }}
         >
-          ◂ ARENA
+          {t("arena.back", locale)}
         </Link>
       </div>
 
       <PixelPageHeader
-        eyebrow="▶ LEADERBOARD"
-        title="PVE · TOP DEBATERS"
+        eyebrow={t("arena.door_lb_eyebrow", locale)}
+        title={t("arena.lb_page_title", locale)}
         subtitle={
           <p
             style={{
@@ -73,8 +76,7 @@ export default async function ArenaLeaderboardPage() {
               lineHeight: 1.55,
             }}
           >
-            Top 50 by Elo. Updated after every judged debate. Only
-            users who&rsquo;ve completed at least one match appear here.
+            {t("arena.lb_subtitle", locale)}
           </p>
         }
       />
@@ -103,7 +105,7 @@ export default async function ArenaLeaderboardPage() {
               textTransform: "uppercase",
             }}
           >
-            ▸ YOU · #{myRank}
+            {t("arena.lb_you", locale, { rank: myRank })}
           </div>
           <div
             style={{
@@ -113,7 +115,10 @@ export default async function ArenaLeaderboardPage() {
               letterSpacing: 0.5,
             }}
           >
-            ELO {myRow.pve_elo} · {myRow.pve_debates_count} debates
+            {t("arena.lb_you_stats", locale, {
+              elo: myRow.pve_elo,
+              n: myRow.pve_debates_count,
+            })}
           </div>
         </div>
       )}
@@ -131,7 +136,7 @@ export default async function ArenaLeaderboardPage() {
             color: "#8C6520",
           }}
         >
-          No debates judged yet. Be the first to climb.
+          {t("arena.lb_empty", locale)}
         </div>
       ) : (
         <ol
@@ -183,7 +188,7 @@ export default async function ArenaLeaderboardPage() {
                     color: "#221E18",
                   }}
                 >
-                  {r.display_name || (r.handle ? `@${r.handle}` : "Anonymous")}
+                  {r.display_name || (r.handle ? `@${r.handle}` : t("arena.anonymous", locale))}
                 </div>
                 <div
                   style={{
@@ -195,7 +200,7 @@ export default async function ArenaLeaderboardPage() {
                     marginTop: 2,
                   }}
                 >
-                  {r.pve_debates_count} debates
+                  {t("arena.debates_n", locale, { n: r.pve_debates_count })}
                 </div>
               </div>
               <div

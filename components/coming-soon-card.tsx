@@ -8,6 +8,7 @@
 // honest "later this year" cadence.
 
 import Link from "next/link";
+import { t, type Locale } from "@/lib/translations";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-editorial), Georgia, serif";
@@ -21,6 +22,10 @@ type Props = {
   accent: { primary: string; deep: string; soft: string };
   /** Optional related surface to nudge users toward in the meantime. */
   meantime?: { href: string; label: string };
+  /** Locale for the card's own chrome ("what it'll do", "when", etc.).
+   *  Content props (pitch/doing/when) must already be localized by the
+   *  caller. Defaults to English. */
+  locale?: Locale;
 };
 
 export default function ComingSoonCard({
@@ -31,6 +36,7 @@ export default function ComingSoonCard({
   when,
   accent,
   meantime,
+  locale = "en",
 }: Props) {
   return (
     <div className="space-y-5">
@@ -82,7 +88,7 @@ export default function ComingSoonCard({
             marginBottom: 12,
           }}
         >
-          ▶ WHAT IT&rsquo;LL DO
+          ▶ {t("csc.doing", locale)}
         </div>
         <ul className="space-y-2">
           {doing.map((d, i) => (
@@ -115,7 +121,7 @@ export default function ComingSoonCard({
             marginBottom: 6,
           }}
         >
-          ▶ WHEN
+          ▶ {t("csc.when", locale)}
         </div>
         {when}
       </div>
@@ -125,7 +131,7 @@ export default function ComingSoonCard({
           className="border-2 border-[#8C6520] bg-[#F5EFDC] px-4 py-3"
           style={{ fontFamily: serif, fontSize: 14, color: "#221E18" }}
         >
-          <strong>In the meantime:</strong>{" "}
+          <strong>{t("csc.meantime", locale)}</strong>{" "}
           <Link
             href={meantime.href}
             className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
