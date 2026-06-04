@@ -24,11 +24,14 @@ import { generatePhilosopherTurn } from "@/lib/arena/philosopher-voice";
 import {
   judgeSystemPrompt,
   judgeUserPrompt,
-  parseJudgeJson,
+  parseJudgeResponse,
+  JUDGE_TOOL,
+  JUDGE_TOOL_NAME,
   type JudgeOutput,
 } from "@/lib/arena/judge";
 import { aiGate } from "@/lib/rate-limit";
 import { createClient } from "@/utils/supabase/server";
+import { type Locale } from "@/lib/translations";
 
 const SONNET_MODEL = "claude-sonnet-4-6";
 
@@ -37,6 +40,11 @@ export async function POST(req: Request) {
   const philosopherName = body?.philosopherName as string | undefined;
   const topicSlug = body?.topicSlug as string | undefined;
   const userTurn = (body?.userTurn as string | undefined)?.trim() ?? "";
+  // Optional UI locale. When set (and non-English) the philosopher turn +
+  // verdict come back in that language; the topic prompt sent to the model
+  // stays English (the canonical source). Invalid values fall back to English
+  // inside the prompt builders.
+  const locale = body?.locale as Locale | undefined;
 
   if (!philosopherName || !topicSlug || !userTurn) {
     return NextResponse.json(
@@ -86,6 +94,7 @@ export async function POST(req: Request) {
     transcript: [{ speaker: "user", content: userTurn }],
     // Spar turns are tighter than Arena turns — keep cost low.
     maxChars: 900,
+    locale,
   });
   if (!philosopherTurn) {
     return NextResponse.json(
@@ -105,7 +114,9 @@ export async function POST(req: Request) {
     body: JSON.stringify({
       model: SONNET_MODEL,
       max_tokens: 2200,
-      system: judgeSystemPrompt(),
+      tools: [JUDGE_TOOL],
+      tool_choice: { type: "tool", name: JUDGE_TOOL_NAME },
+      system: judgeSystemPrompt(locale),
       messages: [
         {
           role: "user",
@@ -134,13 +145,12 @@ export async function POST(req: Request) {
     });
   }
   const data = (await judgeRes.json()) as {
-    content?: { type: string; text?: string }[];
+    content?: { type: string; text?: string; name?: string; input?: unknown }[];
     error?: { message?: string };
   };
-  const rawText = data.content?.find((c) => c.type === "text")?.text ?? "";
-  const judge: JudgeOutput | null = parseJudgeJson(rawText);
+  const judge: JudgeOutput | null = parseJudgeResponse(data);
   if (!judge) {
-    console.error("[spar/judge] could not parse:", rawText.slice(0, 500));
+    console.error("[spar/judge] could not parse:", JSON.stringify(data.content)?.slice(0, 500));
     return NextResponse.json({
       philosopherTurn,
       judge: null,

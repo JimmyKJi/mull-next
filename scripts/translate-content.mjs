@@ -51,6 +51,8 @@ import { PILGRIMAGE_ARCS, FLAVOR_LENSES } from '../lib/pilgrimage';
 import { PILGRIMAGE_I18N } from '../lib/pilgrimage-i18n';
 import { CRUCIBLES } from '../lib/crucible';
 import { CRUCIBLE_I18N } from '../lib/crucible-i18n';
+import { ARENA_TOPICS } from '../lib/arena/data';
+import { ARENA_TOPICS_I18N } from '../lib/arena/topics-i18n';
 
 // Merge the ten arcs with their per-flavor enrollment lenses into one
 // record keyed by archetype, so a single domain pass covers both the
@@ -201,6 +203,16 @@ const DOMAINS = {
     constName: 'TOPICS_I18N',
     recordType: 'Record<string, Partial<Record<Locale, TopicI18nFields>>>',
     fields: ['title', 'summary', 'essay', 'microPrompt'],
+  },
+  arenaTopics: {
+    data: ARENA_TOPICS,
+    existing: ARENA_TOPICS_I18N,
+    keyField: 'slug',
+    overlayFile: 'lib/arena/topics-i18n.ts',
+    constName: 'ARENA_TOPICS_I18N',
+    recordType: 'Record<string, Partial<Record<Locale, ArenaTopicI18nFields>>>',
+    fields: ['title', 'prompt', 'primer'],
+    hint: 'These are debate topics for Mull\'s philosophical sparring Arena. Register: intellectually serious, clear, and provocative without being sensational — the voice of a good seminar prompt. Field notes: "title" is a SHORT topic name (a noun phrase or a terse question, e.g. "Free Will", "Is lying ever obligatory?") — keep it short and punchy, mirror a question with a question. "prompt" is a SINGLE declarative debate proposition the two sides argue over (e.g. "We are wholly responsible for our choices, even when shaped by forces we did not choose.") — render it as one clean, debatable claim in natural Chinese, not softened into a question. "primer" is a neutral 1-3 sentence context paragraph shown to the user before they argue — even-handed, presenting the tension without taking a side; keep it neutral and readable. Match the same Chinese literary register as the rest of Mull. Keep any digits and proper names (philosophers, schools) in their standard Chinese forms.',
   },
   philosophers: {
     data: PHILOSOPHERS,

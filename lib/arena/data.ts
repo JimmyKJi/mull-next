@@ -16,6 +16,8 @@
 //   cached system prompt (90% discount on cached input tokens via
 //   Anthropic prompt caching).
 
+import { type Locale } from "../translations";
+
 export type ArenaTopic = {
   slug: string;
   title: string;
@@ -342,6 +344,29 @@ export const ARENA_PHILOSOPHERS: ArenaPhilosopher[] = [
 
 export function getArenaPhilosopher(name: string): ArenaPhilosopher | undefined {
   return ARENA_PHILOSOPHERS.find((p) => p.name === name);
+}
+
+// Canonical localized display names for the Arena opponents. These ten
+// are famous enough to have stable, standard renderings; English (the
+// ArenaPhilosopher.name) is the fallback for any locale not covered.
+const ARENA_PHILOSOPHER_NAMES: Record<string, Partial<Record<Locale, string>>> = {
+  "William James": { zh: "威廉·詹姆斯" },
+  "Marcus Aurelius": { zh: "马可·奥勒留" },
+  "Mencius": { zh: "孟子" },
+  "Confucius": { zh: "孔子" },
+  "Hannah Arendt": { zh: "汉娜·阿伦特" },
+  "John Stuart Mill": { zh: "约翰·斯图尔特·密尔" },
+  "Simone de Beauvoir": { zh: "西蒙娜·德·波伏娃" },
+  "Socrates": { zh: "苏格拉底" },
+  "Nietzsche": { zh: "尼采" },
+  "G.W.F. Hegel": { zh: "黑格尔" },
+};
+
+/** Localized display name for an Arena opponent. Falls back to the
+ *  English name when no translation exists for the locale. */
+export function localizeArenaPhilosopherName(name: string, locale: Locale): string {
+  if (locale === "en") return name;
+  return ARENA_PHILOSOPHER_NAMES[name]?.[locale] ?? name;
 }
 
 /** Group philosophers by tier for the UI. */

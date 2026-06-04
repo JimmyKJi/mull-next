@@ -11,6 +11,7 @@
 // debate hit the cache. ~90% off cached input tokens.
 
 import { getArenaPhilosopher, getArenaTopic, type ArenaPhilosopher } from "./data";
+import { LOCALE_FOR_PROMPT, type Locale } from "../translations";
 
 type AnthropicMessage = {
   role: "user" | "assistant";
@@ -43,6 +44,10 @@ export async function generatePhilosopherTurn(args: {
   /** Optional: cap on response length (in characters). Defaults to
    *  ~1500 chars — keeps debates tight + bounds cost. */
   maxChars?: number;
+  /** Optional: language for the response. Defaults to English (Arena
+   *  default). When non-English, the philosopher stays in voice but
+   *  writes in this language. */
+  locale?: Locale;
 }): Promise<string | null> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
@@ -55,7 +60,7 @@ export async function generatePhilosopherTurn(args: {
   const systemBlocks: AnthropicSystemBlock[] = [
     {
       type: "text",
-      text: buildSystem(args.philosopher, args.topicPrompt, maxChars),
+      text: buildSystem(args.philosopher, args.topicPrompt, maxChars, args.locale ?? "en"),
       cache_control: { type: "ephemeral" }, // cache the voice + topic
     },
   ];
@@ -116,7 +121,12 @@ function buildSystem(
   p: ArenaPhilosopher,
   topicPrompt: string,
   maxChars: number,
+  locale: Locale,
 ): string {
+  const languageDirective =
+    locale !== "en" && LOCALE_FOR_PROMPT[locale]
+      ? `\n- Write your entire response in ${LOCALE_FOR_PROMPT[locale]}. Stay fully in ${p.name}'s voice while writing in that language — do not include any English.`
+      : "";
   return `${p.voice}
 
 You are in a structured debate. The topic is:
@@ -129,7 +139,7 @@ Rules of the format:
 - Keep each turn under ${maxChars} characters. Brevity sharpens.
 - Address the opponent's specific moves directly. Don't restate your position; advance the dialogue.
 - Stay in voice. ${p.name} doesn't break character.
-- This is one of several turns — don't wrap up the whole question in one response. Make one or two clean moves, then let them respond.
+- This is one of several turns — don't wrap up the whole question in one response. Make one or two clean moves, then let them respond.${languageDirective}
 
 Do not preface your response with your name or "Response:". Just respond.`;
 }

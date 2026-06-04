@@ -17,15 +17,20 @@ import { SPAR_DAILY_LIMIT, SPAR_LIMIT_KEY, SPAR_MAX_USER_CHARS } from "@/lib/spa
 import type { JudgeOutput } from "@/lib/arena/judge";
 import { emitFeatureEvent } from "@/lib/capabilities";
 import SaveToAnthology from "@/components/save-to-anthology";
+import { t, type Locale } from "@/lib/translations";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-editorial), Georgia, serif";
 
 type Props = {
+  /** English name — the API lookup key + internal event label. */
   philosopherName: string;
+  /** Localized name — for display. */
+  philosopherDisplay: string;
   topicSlug: string;
   topicPrimer: string;
   dateKey: string;
+  locale: Locale;
 };
 
 type ResultState = {
@@ -37,9 +42,11 @@ type ResultState = {
 
 export default function SparClient({
   philosopherName,
+  philosopherDisplay,
   topicSlug,
   topicPrimer,
   dateKey,
+  locale,
 }: Props) {
   const [text, setText] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -78,13 +85,16 @@ export default function SparClient({
           philosopherName,
           topicSlug,
           userTurn: text.trim(),
+          locale,
         }),
       });
       if (!res.ok) {
         const errBody = (await res.json().catch(() => ({}))) as {
           error?: string;
         };
-        throw new Error(errBody.error || `Request failed (${res.status}).`);
+        throw new Error(
+          errBody.error || t("argdiary.err_request", locale, { status: res.status }),
+        );
       }
       const data = (await res.json()) as {
         philosopherTurn: string;
@@ -116,7 +126,7 @@ export default function SparClient({
         // ignore
       }
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong.");
+      setError(e instanceof Error ? e.message : t("argdiary.err_generic", locale));
     } finally {
       setSubmitting(false);
     }
@@ -144,7 +154,7 @@ export default function SparClient({
             marginBottom: 8,
           }}
         >
-          ▶ DAILY CAP REACHED
+          {t("spar.cap_reached", locale)}
         </div>
         <p
           style={{
@@ -155,8 +165,7 @@ export default function SparClient({
             margin: "0 0 10px",
           }}
         >
-          You&rsquo;ve played {SPAR_DAILY_LIMIT} spars today. Come
-          back tomorrow for a new challenge — or head to{" "}
+          {t("spar.cap_body_prefix", locale, { n: SPAR_DAILY_LIMIT })}
           <Link
             href="/arena"
             style={{
@@ -165,9 +174,9 @@ export default function SparClient({
               textDecorationColor: "#B8862F",
             }}
           >
-            the Arena
-          </Link>{" "}
-          for unlimited multi-turn debates.
+            {t("spar.the_arena", locale)}
+          </Link>
+          {t("spar.cap_body_suffix", locale)}
         </p>
       </div>
     );
@@ -179,9 +188,10 @@ export default function SparClient({
       <SparResult
         userTurn={result.userTurn}
         philosopherTurn={result.philosopherTurn}
-        philosopherName={philosopherName}
+        philosopherDisplay={philosopherDisplay}
         judge={result.judge}
         judgeError={result.judgeError}
+        locale={locale}
         onAgain={() => {
           setResult(null);
           setText("");
@@ -206,7 +216,7 @@ export default function SparClient({
           lineHeight: 1.6,
         }}
       >
-        <strong style={{ color: "#221E18" }}>Context:</strong>{" "}
+        <strong style={{ color: "#221E18" }}>{t("spar.context_label", locale)}</strong>{" "}
         {topicPrimer}
       </div>
 
@@ -222,7 +232,7 @@ export default function SparClient({
           marginBottom: 8,
         }}
       >
-        ▶ YOUR TURN · {SPAR_MAX_USER_CHARS} CHARS MAX
+        {t("spar.your_turn", locale, { n: SPAR_MAX_USER_CHARS })}
       </label>
       <textarea
         id="spar-turn"
@@ -230,7 +240,7 @@ export default function SparClient({
         onChange={(e) => setText(e.target.value)}
         rows={8}
         disabled={submitting}
-        placeholder="Make your strongest case. The philosopher will get one turn back. The judge will call it on argumentative quality, not stance."
+        placeholder={t("spar.placeholder", locale)}
         style={{
           width: "100%",
           padding: "12px 14px",
@@ -263,7 +273,10 @@ export default function SparClient({
           {chars} / {SPAR_MAX_USER_CHARS}
         </span>
         <span>
-          {SPAR_DAILY_LIMIT - playsToday} of {SPAR_DAILY_LIMIT} spars left today
+          {t("spar.spars_left", locale, {
+            n: SPAR_DAILY_LIMIT - playsToday,
+            total: SPAR_DAILY_LIMIT,
+          })}
         </span>
       </div>
 
@@ -303,7 +316,7 @@ export default function SparClient({
           transition: "transform 80ms steps(2, end), box-shadow 80ms steps(2, end)",
         }}
       >
-        {submitting ? "◷ JUDGING — 30 SECONDS" : "▶ SPAR"}
+        {submitting ? t("spar.judging", locale) : t("spar.spar_btn", locale)}
       </button>
     </div>
   );
@@ -314,30 +327,32 @@ export default function SparClient({
 function SparResult({
   userTurn,
   philosopherTurn,
-  philosopherName,
+  philosopherDisplay,
   judge,
   judgeError,
+  locale,
   onAgain,
   reachedLimit,
 }: {
   userTurn: string;
   philosopherTurn: string;
-  philosopherName: string;
+  philosopherDisplay: string;
   judge: JudgeOutput | null;
   judgeError?: string;
+  locale: Locale;
   onAgain: () => void;
   reachedLimit: boolean;
 }) {
   return (
     <div className="space-y-4">
-      <TurnCard speaker="YOU" content={userTurn} accent="#2F5D5C" />
+      <TurnCard speaker={t("spar.you", locale)} content={userTurn} accent="#2F5D5C" />
       <TurnCard
-        speaker={philosopherName.toUpperCase()}
+        speaker={philosopherDisplay}
         content={philosopherTurn}
         accent="#8C3717"
       />
       {judge ? (
-        <JudgeVerdict judge={judge} philosopherName={philosopherName} />
+        <JudgeVerdict judge={judge} philosopherDisplay={philosopherDisplay} locale={locale} />
       ) : judgeError ? (
         <div
           style={{
@@ -349,7 +364,7 @@ function SparResult({
             color: "#8C3717",
           }}
         >
-          {judgeError}
+          {t("spar.judge_unavailable", locale)}
         </div>
       ) : null}
       {!reachedLimit && (
@@ -369,7 +384,7 @@ function SparResult({
             cursor: "pointer",
           }}
         >
-          ▶ SPAR AGAIN (SAME OPPONENT, TODAY)
+          {t("spar.spar_again", locale)}
         </button>
       )}
       <p
@@ -382,7 +397,7 @@ function SparResult({
           fontStyle: "italic",
         }}
       >
-        Tomorrow&rsquo;s spar refreshes at midnight UTC.
+        {t("spar.refreshes", locale)}
       </p>
     </div>
   );
@@ -436,19 +451,24 @@ function TurnCard({
 
 function JudgeVerdict({
   judge,
-  philosopherName,
+  philosopherDisplay,
+  locale,
 }: {
   judge: JudgeOutput;
-  philosopherName: string;
+  philosopherDisplay: string;
+  locale: Locale;
 }) {
   const userTotal = sumScores(judge.user_scores);
   const oppTotal = sumScores(judge.opponent_scores);
   const verdictLabel =
     judge.verdict === "user"
-      ? "YOU WIN"
+      ? t("spar.you_win", locale)
       : judge.verdict === "opponent"
-        ? `${philosopherName.toUpperCase()} WINS`
-        : "DRAW";
+        ? t("spar.opp_wins", locale, { name: philosopherDisplay.toUpperCase() })
+        : t("spar.draw", locale);
+  // The kindred line bolds just the philosopher's name; split the
+  // localized template on {name} so word order stays correct per locale.
+  const [kindredBefore, kindredAfter] = t("spar.kindred_body", locale).split("{name}");
   const verdictColor =
     judge.verdict === "user" ? "#2F5D5C" : judge.verdict === "opponent" ? "#8C3717" : "#8C6520";
 
@@ -472,7 +492,7 @@ function JudgeVerdict({
           textTransform: "uppercase",
         }}
       >
-        ▶ VERDICT
+        {t("spar.verdict", locale)}
       </div>
       <div
         style={{
@@ -526,7 +546,8 @@ function JudgeVerdict({
           <SaveToAnthology
             text={judge.verdict_reasoning}
             source="spar"
-            attribution={`Verdict on ${philosopherName} spar`}
+            attribution={t("spar.verdict_attribution", locale, { name: philosopherDisplay })}
+            locale={locale}
           />
         </div>
         <div
@@ -547,7 +568,7 @@ function JudgeVerdict({
               marginBottom: 6,
             }}
           >
-            ▶ KINDRED THIS DEBATE
+            {t("spar.kindred_header", locale)}
           </div>
           <div
             style={{
@@ -556,8 +577,9 @@ function JudgeVerdict({
               color: "#F8EDC8",
             }}
           >
-            Your argumentative style most resembled{" "}
-            <strong>{judge.user_kindred_philosopher}</strong> in this spar.
+            {kindredBefore}
+            <strong>{judge.user_kindred_philosopher}</strong>
+            {kindredAfter}
           </div>
         </div>
       </div>

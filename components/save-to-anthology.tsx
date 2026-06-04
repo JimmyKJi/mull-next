@@ -10,6 +10,7 @@ import {
   type AnthologySource,
 } from "@/lib/anthology";
 import { emitFeatureEvent } from "@/lib/capabilities";
+import { t, type Locale } from "@/lib/translations";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
@@ -18,6 +19,7 @@ type Props = {
   source: AnthologySource;
   attribution?: string;
   link?: string;
+  locale?: Locale;
 };
 
 export default function SaveToAnthology({
@@ -25,6 +27,7 @@ export default function SaveToAnthology({
   source,
   attribution,
   link,
+  locale = "en",
 }: Props) {
   const [saved, setSaved] = useState(false);
 
@@ -57,7 +60,7 @@ export default function SaveToAnthology({
         transition: "background 120ms",
       }}
     >
-      {saved ? "✓ SAVED" : "★ SAVE"}
+      {saved ? t("anthology.saved_pill", locale) : t("anthology.save_pill", locale)}
     </button>
   );
 }

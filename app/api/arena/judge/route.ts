@@ -13,7 +13,9 @@ import { getArenaPhilosopher, getArenaTopic } from "@/lib/arena/data";
 import {
   judgeSystemPrompt,
   judgeUserPrompt,
-  parseJudgeJson,
+  parseJudgeResponse,
+  JUDGE_TOOL,
+  JUDGE_TOOL_NAME,
   judgmentToElo,
   totalScore,
   type JudgeOutput,
@@ -126,6 +128,8 @@ export async function POST(req: Request) {
     body: JSON.stringify({
       model: SONNET_MODEL,
       max_tokens: 2500,
+      tools: [JUDGE_TOOL],
+      tool_choice: { type: "tool", name: JUDGE_TOOL_NAME },
       system: judgeSystemPrompt(),
       messages: [
         {
@@ -153,7 +157,7 @@ export async function POST(req: Request) {
   }
 
   const data = (await res.json()) as {
-    content?: { type: string; text?: string }[];
+    content?: { type: string; text?: string; name?: string; input?: unknown }[];
     error?: { message?: string };
   };
   if (data.error) {
@@ -161,10 +165,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Judge errored." }, { status: 502 });
   }
 
-  const rawText = data.content?.find((c) => c.type === "text")?.text ?? "";
-  const parsed = parseJudgeJson(rawText);
+  const parsed = parseJudgeResponse(data);
   if (!parsed) {
-    console.error("[arena/judge] could not parse:", rawText.slice(0, 500));
+    console.error("[arena/judge] could not parse:", JSON.stringify(data.content)?.slice(0, 500));
     return NextResponse.json(
       { error: "Judge returned malformed output. Try again." },
       { status: 502 },

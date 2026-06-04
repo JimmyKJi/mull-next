@@ -28,6 +28,8 @@
 //   and identifying the flaws is the job. Without this, the verdicts
 //   are mush.
 
+import { LOCALE_FOR_PROMPT, type Locale } from "../translations";
+
 export type JudgeCriterion =
   | "validity"
   | "premises"
@@ -59,7 +61,98 @@ const CRITERIA: JudgeCriterion[] = [
   "engagement",
 ];
 
-export function judgeSystemPrompt(): string {
+export const JUDGE_TOOL_NAME = "submit_verdict";
+
+const JUDGE_SIDES = ["user", "opponent"] as const;
+const scoreField = (side: string, c: JudgeCriterion) => `${side}_${c}_score`;
+const justField = (side: string, c: JudgeCriterion) =>
+  `${side}_${c}_justification`;
+
+// Forcing the verdict through an Anthropic tool call (rather than asking
+// for raw JSON text) makes the API serialize the values for us — free-form
+// CJK justification text with embedded quotes can no longer break parsing.
+// The schema is deliberately FLAT (no nested objects): when justifications
+// were nested, the model intermittently emitted the nested object as a
+// stringified JSON blob, which failed validation. Flat primitive fields
+// (one integer + one string per criterion per side) are filled reliably.
+function buildJudgeToolSchema() {
+  const properties: Record<string, unknown> = {};
+  const required: string[] = [];
+  for (const side of JUDGE_SIDES) {
+    for (const c of CRITERIA) {
+      properties[scoreField(side, c)] = {
+        type: "integer",
+        minimum: 1,
+        maximum: 5,
+      };
+      properties[justField(side, c)] = {
+        type: "string",
+        description: `One or two sentences justifying the ${side}'s ${c} score, naming a specific move from the transcript.`,
+      };
+      required.push(scoreField(side, c), justField(side, c));
+    }
+  }
+  properties.user_kindred_philosopher = { type: "string" };
+  properties.verdict = { type: "string", enum: ["user", "opponent", "draw"] };
+  properties.verdict_reasoning = { type: "string" };
+  required.push("user_kindred_philosopher", "verdict", "verdict_reasoning");
+  return { type: "object", properties, required };
+}
+
+export const JUDGE_TOOL = {
+  name: JUDGE_TOOL_NAME,
+  description:
+    "Submit the structured verdict for the philosophical debate. Call exactly once with every field filled.",
+  input_schema: buildJudgeToolSchema(),
+};
+
+/** Reassemble the flat JUDGE_TOOL input into the nested JudgeOutput shape
+ *  the rest of the app consumes. Returns null if any field is missing or
+ *  mistyped. */
+function flatToolInputToJudgeOutput(
+  input: Record<string, unknown>,
+): JudgeOutput | null {
+  const buildSide = (side: string) => {
+    const scores = {} as JudgeSideScores;
+    const justifications = {} as Record<JudgeCriterion, string>;
+    for (const c of CRITERIA) {
+      const s = input[scoreField(side, c)];
+      const j = input[justField(side, c)];
+      if (typeof s !== "number" || typeof j !== "string") return null;
+      scores[c] = s;
+      justifications[c] = j;
+    }
+    return { scores, justifications };
+  };
+  const user = buildSide("user");
+  const opponent = buildSide("opponent");
+  if (!user || !opponent) return null;
+  const verdict = input.verdict;
+  if (verdict !== "user" && verdict !== "opponent" && verdict !== "draw") {
+    return null;
+  }
+  if (
+    typeof input.user_kindred_philosopher !== "string" ||
+    typeof input.verdict_reasoning !== "string"
+  ) {
+    return null;
+  }
+  return {
+    user_scores: user.scores,
+    user_justifications: user.justifications,
+    user_kindred_philosopher: input.user_kindred_philosopher,
+    opponent_scores: opponent.scores,
+    opponent_justifications: opponent.justifications,
+    verdict,
+    verdict_reasoning: input.verdict_reasoning,
+  };
+}
+
+export function judgeSystemPrompt(locale: Locale = "en"): string {
+  const languageDirective =
+    locale !== "en" && LOCALE_FOR_PROMPT[locale]
+      ? `\n\nLANGUAGE: Write every human-readable value you pass to the tool — all justifications, the verdict_reasoning, and the user_kindred_philosopher name — in ${LOCALE_FOR_PROMPT[locale]}. Render the chosen philosopher's name in its standard form in that language. The "verdict" value must remain exactly "user", "opponent", or "draw" in English.`
+      : "";
   return `You are the Arena judge — an impartial, rigorous evaluator of philosophical argument.
 
 CRITICAL PRINCIPLE: You are NOT judging which side is "right" in their conclusion. Both sides may hold defensible positions. Your job is to evaluate ARGUMENTATIVE QUALITY only — how well each side reasoned, not which position you find more sympathetic.
@@ -131,16 +224,7 @@ Heidegger, Sartre, Beauvoir, Camus, Arendt, Rawls, Nozick, Foucault,
 Williams, Singer, Parfit, Confucius, Mencius, Zhuangzi, Nagarjuna,
 Buddha, Laozi, Marcus Aurelius, Epictetus, Spinoza, Leibniz.
 
-Output ONLY valid JSON matching this exact schema, no preamble:
-{
-  "user_scores": { "validity": N, "premises": N, "rigor": N, "elegance": N, "engagement": N },
-  "user_justifications": { "validity": "...", "premises": "...", "rigor": "...", "elegance": "...", "engagement": "..." },
-  "user_kindred_philosopher": "Name",
-  "opponent_scores": { "validity": N, "premises": N, "rigor": N, "elegance": N, "engagement": N },
-  "opponent_justifications": { "validity": "...", "premises": "...", "rigor": "...", "elegance": "...", "engagement": "..." },
-  "verdict": "user" | "opponent" | "draw",
-  "verdict_reasoning": "..."
-}`;
+Submit your evaluation by calling the ${JUDGE_TOOL_NAME} tool. Fill every field: all five scores for each side, a justification for each score, the user_kindred_philosopher, the verdict, and the verdict_reasoning. Do not write any prose outside the tool call.${languageDirective}`;
 }
 
 export function judgeUserPrompt(args: {
@@ -216,6 +300,26 @@ export function parseJudgeJson(raw: string): JudgeOutput | null {
   } catch {
     return null;
   }
+}
+
+/** Extract + validate the verdict from a Messages API response. Prefers
+ *  the JUDGE_TOOL tool_use block (the reliable path); falls back to
+ *  parsing any text JSON the model emitted. Returns null if neither
+ *  yields a schema-valid verdict. */
+export function parseJudgeResponse(data: {
+  content?: { type: string; text?: string; name?: string; input?: unknown }[];
+}): JudgeOutput | null {
+  const toolUse = data.content?.find(
+    (c) => c.type === "tool_use" && c.name === JUDGE_TOOL_NAME,
+  );
+  if (toolUse?.input && typeof toolUse.input === "object") {
+    const fromTool = flatToolInputToJudgeOutput(
+      toolUse.input as Record<string, unknown>,
+    );
+    if (fromTool) return fromTool;
+  }
+  const text = data.content?.find((c) => c.type === "text")?.text ?? "";
+  return text ? parseJudgeJson(text) : null;
 }
 
 /** Compute the verdict-driven Elo delta. */

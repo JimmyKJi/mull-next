@@ -13,6 +13,10 @@ import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import { PixelPageHeader } from "@/components/pixel-window";
 import { getDailySpar } from "@/lib/spar";
+import { localizeArenaPhilosopherName } from "@/lib/arena/data";
+import { localizeArenaTopic } from "@/lib/arena/topics-i18n";
+import { getServerLocale } from "@/lib/locale-server";
+import { t } from "@/lib/translations";
 import SparClient from "./spar-client";
 
 export const metadata: Metadata = {
@@ -29,22 +33,27 @@ export const viewport: Viewport = {
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
-export default function SparPage() {
+export default async function SparPage() {
+  const locale = await getServerLocale();
   const today = getDailySpar();
+  // English name/slug stay the API lookup keys; localized values are
+  // for display only.
+  const topic = localizeArenaTopic(today.topic, locale);
+  const philosopherName = today.philosopher.name;
+  const philosopherDisplay = localizeArenaPhilosopherName(philosopherName, locale);
+  const tierLabel = t(`spar.tier.${today.philosopher.tier}`, locale);
 
   return (
     <main className="mx-auto max-w-[760px] px-6 pb-32 pt-10 sm:px-10">
       <PixelPageHeader
-        eyebrow="▶ DAILY SPAR · 5 MIN"
-        title="ONE TURN. ONE JUDGE."
+        eyebrow={t("spar.eyebrow", locale)}
+        title={t("spar.title", locale)}
         subtitle={
           <p
             className="text-[16px] italic"
             style={{ fontFamily: "var(--font-editorial)" }}
           >
-            A philosopher. A topic. You get one turn. They get one
-            turn. Sonnet calls it on rigor, principle, and engagement
-            — not on whose side won. Refreshes daily at midnight UTC.
+            {t("spar.subtitle", locale)}
           </p>
         }
       />
@@ -79,7 +88,7 @@ export default function SparPage() {
               textTransform: "uppercase",
             }}
           >
-            ▶ TODAY · {today.dateKey}
+            {t("spar.today", locale, { date: today.dateKey })}
           </span>
           <span
             style={{
@@ -90,7 +99,10 @@ export default function SparPage() {
               textTransform: "uppercase",
             }}
           >
-            {today.philosopher.tier} TIER · ELO {today.philosopher.baseElo}
+            {t("spar.tier_line", locale, {
+              tier: tierLabel,
+              elo: today.philosopher.baseElo,
+            })}
           </span>
         </div>
         <div
@@ -102,9 +114,9 @@ export default function SparPage() {
             margin: "0 0 10px",
           }}
         >
-          <strong>You vs {today.philosopher.name}</strong>
+          <strong>{t("spar.vs", locale, { name: philosopherDisplay })}</strong>
           <span style={{ color: "#B8862F" }}> · </span>
-          <em>&ldquo;{today.topic.title}&rdquo;</em>
+          <em>&ldquo;{topic.title}&rdquo;</em>
         </div>
         <p
           style={{
@@ -115,15 +127,17 @@ export default function SparPage() {
             margin: 0,
           }}
         >
-          {today.topic.prompt}
+          {topic.prompt}
         </p>
       </div>
 
       <SparClient
-        philosopherName={today.philosopher.name}
-        topicSlug={today.topic.slug}
-        topicPrimer={today.topic.primer}
+        philosopherName={philosopherName}
+        philosopherDisplay={philosopherDisplay}
+        topicSlug={topic.slug}
+        topicPrimer={topic.primer}
         dateKey={today.dateKey}
+        locale={locale}
       />
 
       <p
@@ -136,16 +150,14 @@ export default function SparPage() {
           lineHeight: 1.55,
         }}
       >
-        Spar costs about 15¢ in AI fees per match. Daily cap of 3
-        keeps it sustainable while Mull is free. If you want full
-        multi-turn debates with Elo + leaderboard, head to{" "}
+        {t("spar.cost_prefix", locale)}
         <Link
           href="/arena"
           className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
         >
-          the Arena
+          {t("spar.the_arena", locale)}
         </Link>
-        .
+        {locale === "zh" ? "。" : "."}
       </p>
 
       <p className="mt-10 text-center text-[13px] text-[#8C6520]">
@@ -153,7 +165,7 @@ export default function SparPage() {
           href="/"
           className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
         >
-          ← Back to Mull
+          {t("pilgrimage.back_mull", locale)}
         </Link>
       </p>
     </main>
