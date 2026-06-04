@@ -17,6 +17,7 @@ import { PHILOSOPHERS } from "@/lib/philosophers";
 import { ARCHETYPES } from "@/lib/archetypes";
 import { PathwayNext } from "@/components/pathway-next";
 import { pathwayForMap } from "@/lib/pathway";
+import { getServerLocale } from "@/lib/locale-server";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-prose)";
@@ -34,7 +35,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://mull.world/map" },
 };
 
-export default function MapPage() {
+export default async function MapPage() {
+  const locale = await getServerLocale();
   return (
     <main className="mx-auto max-w-[1400px] px-4 pb-32 pt-10 sm:px-8 sm:pt-14">
       {/* Header — kept small so the constellation gets the room */}
@@ -164,7 +166,7 @@ export default function MapPage() {
 
       {/* Pathway — quiz → dilemma → spar for cold visitors;
           spar → dilemma → anthology for warm visitors. */}
-      <PathwayNext pathway={pathwayForMap()} />
+      <PathwayNext pathway={pathwayForMap(locale)} locale={locale} />
     </main>
   );
 }

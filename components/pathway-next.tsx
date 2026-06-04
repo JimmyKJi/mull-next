@@ -21,6 +21,7 @@ import { ArchetypeSprite } from "@/components/archetype-sprite";
 import { PhilosopherSprite } from "@/components/philosopher-sprite";
 import type { Pathway, PathwayStation } from "@/lib/pathway";
 import { personalizeWarmTrail } from "@/lib/pathway";
+import { t, type Locale } from "@/lib/translations";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-prose)";
@@ -28,12 +29,13 @@ const sans = "'Inter', system-ui, sans-serif";
 
 type Props = {
   pathway: Pathway;
+  locale?: Locale;
   /** Eyebrow + heading override. Defaults to a generic trail title. */
   eyebrow?: string;
   heading?: string;
 };
 
-export function PathwayNext({ pathway, eyebrow, heading }: Props) {
+export function PathwayNext({ pathway, locale = 'en', eyebrow, heading }: Props) {
   const id = useId();
   // Start with cold trail (server-render-safe). Swap to warm after
   // hydration if archetype is set.
@@ -44,14 +46,14 @@ export function PathwayNext({ pathway, eyebrow, heading }: Props) {
     try {
       const archetypeKey = window.localStorage.getItem("mull.archetype");
       if (archetypeKey) {
-        setTrail(personalizeWarmTrail(pathway, archetypeKey));
+        setTrail(personalizeWarmTrail(pathway, archetypeKey, locale));
         setWarmedUp(true);
       } else if (pathway.warm) {
         // No archetype, but the surface defines a warm fallback.
         // Keep cold for first visit — the quiz CTA matters most then.
       }
     } catch { /* storage disabled */ }
-  }, [pathway]);
+  }, [pathway, locale]);
 
   return (
     <section
@@ -71,7 +73,7 @@ export function PathwayNext({ pathway, eyebrow, heading }: Props) {
           marginBottom: 4,
         }}
       >
-        ▶ {eyebrow ?? (warmedUp ? 'Your trail from here' : 'What to do next')}
+        ▶ {eyebrow ?? (warmedUp ? t('pathway.eyebrow_warm', locale) : t('pathway.eyebrow_cold', locale))}
       </div>
       <h2
         id={`${id}-heading`}
@@ -85,8 +87,8 @@ export function PathwayNext({ pathway, eyebrow, heading }: Props) {
         }}
       >
         {heading ?? (warmedUp
-          ? 'Pick the next step of your practice.'
-          : 'Three doors lead onward.')}
+          ? t('pathway.heading_warm', locale)
+          : t('pathway.heading_cold', locale))}
       </h2>
 
       <ol
@@ -107,6 +109,7 @@ export function PathwayNext({ pathway, eyebrow, heading }: Props) {
             station={station}
             stepNumber={i + 1}
             isLast={i === trail.length - 1}
+            locale={locale}
           />
         ))}
       </ol>
@@ -142,10 +145,12 @@ function PathwayCard({
   station,
   stepNumber,
   isLast,
+  locale,
 }: {
   station: PathwayStation;
   stepNumber: number;
   isLast: boolean;
+  locale: Locale;
 }) {
   return (
     <li style={{ display: 'flex', position: 'relative' }}>
@@ -248,7 +253,7 @@ function PathwayCard({
               textTransform: 'uppercase',
             }}
           >
-            CONTINUE ▶
+            {t('pathway.continue', locale)}
           </div>
         </div>
       </Link>

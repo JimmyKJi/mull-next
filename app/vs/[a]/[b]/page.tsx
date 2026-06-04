@@ -334,8 +334,9 @@ export default async function VsPage({
             Cold visitor: quiz → bridging philosopher → argue one in Arena.
             Warm visitor: argue both in Arena + daily Spar. */}
         <PathwayNext
-          pathway={pathwayForVs(a, b)}
-          heading={`Where do you sit between ${pa.name} and ${pb.name}?`}
+          pathway={pathwayForVs(a, b, locale)}
+          locale={locale}
+          heading={t('vs.pathway_heading', locale, { a: paName, b: pbName })}
         />
       </main>
     </>

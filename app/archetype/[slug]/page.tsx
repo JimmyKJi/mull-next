@@ -661,7 +661,7 @@ export default async function ArchetypeDetailPage({
           Cold visitor: quiz → flagship philosopher → archetype's exercise.
           Warm visitor (already has this archetype or another): Pilgrimage
           for *their* archetype + Spar + Diary. */}
-      <PathwayNext pathway={pathwayForArchetype(slug)} />
+      <PathwayNext pathway={pathwayForArchetype(slug, locale)} locale={locale} />
 
       {/* Share — small secondary action below the trail. */}
       <div className="mt-8 flex justify-center">

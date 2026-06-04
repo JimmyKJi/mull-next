@@ -550,7 +550,7 @@ export default async function PhilosopherDetailPage({
             appears as Station 01 for cold visitors, but warm visitors
             see Pilgrimage → Spar → exercise instead. Share button kept
             below as a secondary action. */}
-        <PathwayNext pathway={pathwayForPhilosopher(slug)} />
+        <PathwayNext pathway={pathwayForPhilosopher(slug, locale)} locale={locale} />
 
         {/* Share — small secondary action, kept from the old CTA panel. */}
         <div className="mt-8 flex justify-center">

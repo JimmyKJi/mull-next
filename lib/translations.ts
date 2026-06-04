@@ -953,7 +953,69 @@ export const TRANSLATIONS: TranslationMap = {
   "vs.agree.strong":   { en: "Both lean strongly into {dim}.", zh: "两者都强烈倾向于{dim}。" },
   "vs.agree.moderate": { en: "Both register moderate {dim}.", zh: "两者都表现出适度的{dim}。" },
   "vs.agree.muted":    { en: "Both keep {dim} muted.", zh: "两者都让{dim}保持低调。" },
-  "vs.agree.little":   { en: "Both have very little {dim}.", zh: "两者的{dim}都极少。" }
+  "vs.agree.little":   { en: "Both have very little {dim}.", zh: "两者的{dim}都极少。" },
+  "vs.pathway_heading": { en: "Where do you sit between {a} and {b}?", zh: "你处在{a}与{b}之间的何处？" },
+
+  // ─── Pathway — the "trail from here" footer (shared across pages) ──
+  // PathwayNext chrome
+  "pathway.eyebrow_warm": { en: "Your trail from here", zh: "你从此处的轨迹" },
+  "pathway.eyebrow_cold": { en: "What to do next", zh: "接下来做什么" },
+  "pathway.heading_warm": { en: "Pick the next step of your practice.", zh: "选择你修习的下一步。" },
+  "pathway.heading_cold": { en: "Three doors lead onward.", zh: "三扇门通向前方。" },
+  "pathway.continue":     { en: "CONTINUE ▶", zh: "继续 ▶" },
+
+  // Station tags (tiny uppercase pills)
+  "pathway.tag.quiz":          { en: "QUIZ", zh: "测验" },
+  "pathway.tag.daily":         { en: "DAILY", zh: "每日" },
+  "pathway.tag.practice":      { en: "PRACTICE", zh: "练习" },
+  "pathway.tag.return":        { en: "RETURN", zh: "回访" },
+  "pathway.tag.essay":         { en: "ESSAY", zh: "文章" },
+  "pathway.tag.journey":       { en: "JOURNEY", zh: "旅程" },
+  "pathway.tag.profile":       { en: "PROFILE", zh: "档案" },
+  "pathway.tag.compare":       { en: "COMPARE", zh: "对比" },
+  "pathway.tag.arena":         { en: "ARENA", zh: "竞技场" },
+  "pathway.tag.next_exercise": { en: "NEXT EXERCISE", zh: "下一个练习" },
+
+  // Reusable stations (product names + default blurbs)
+  "pathway.station.quiz.title":       { en: "The Inheritor", zh: "《继承者》" },
+  "pathway.station.quiz.blurb":       { en: "15-minute murder mystery. By the end you have a placement on the map.", zh: "15 分钟的谋杀谜案。结束时，你会在地图上获得一个定位。" },
+  "pathway.station.spar.title":       { en: "Today's Spar", zh: "今日交锋" },
+  "pathway.station.spar.blurb":       { en: "One philosopher, one topic, five minutes. A new one drops every day.", zh: "一位哲学家，一个主题，五分钟。每天更新。" },
+  "pathway.station.dilemma.title":    { en: "Today's dilemma", zh: "今日困境" },
+  "pathway.station.dilemma.blurb":    { en: "One unfair scenario per day. Write a response, see how others answered.", zh: "每天一个不公的情境。写下回应，看看别人如何作答。" },
+  "pathway.station.crucible.title":   { en: "The Crucible", zh: "熔炉" },
+  "pathway.station.crucible.blurb":   { en: "A philosophical action to actually do today. Tomorrow you report back.", zh: "今天真正去做的一个哲学行动。明天回来汇报。" },
+  "pathway.station.diary.title":      { en: "The Argument Diary", zh: "争论日记" },
+  "pathway.station.diary.blurb":      { en: "Paste a real disagreement, have it rebuilt with rigor.", zh: "粘贴一场真实的分歧，让它被严谨地重建。" },
+  "pathway.station.anthology.title":  { en: "Your anthology", zh: "你的文选" },
+  "pathway.station.anthology.blurb":  { en: "A commonplace book — keep the lines that struck you.", zh: "一本札记簿——留住那些打动你的句子。" },
+
+  // Dynamic station helpers
+  "pathway.read_essay":       { en: "Read the full essay.", zh: "阅读完整文章。" },
+  "pathway.pilgrimage_title": { en: "{arch} pilgrimage", zh: "{arch}朝圣之旅" },
+  "pathway.pilgrimage_blurb": { en: "30 days, one micro-practice each, sized to this archetype. The slow build.", zh: "30 天，每天一个微练习，为这一原型量身定制。缓慢的累积。" },
+  "pathway.vs_title":         { en: "{a} vs {b}", zh: "{a} 对 {b}" },
+  "pathway.arena_title":      { en: "The Arena", zh: "竞技场" },
+  "pathway.arena_argue":      { en: "Argue {name}", zh: "与{name}辩论" },
+  "pathway.arena_blurb":      { en: "Pick a philosopher, write your argument, get judged on rigor + engagement.", zh: "选一位哲学家，写下你的论证，依据严谨度与投入度受评。" },
+  "pathway.arena_blurb_opp":  { en: "Face {name} in a 5-minute single-turn debate, judged on rigor.", zh: "在 5 分钟的单回合辩论中直面{name}，依据严谨度受评。" },
+
+  // Per-surface quiz/station blurb overrides
+  "pathway.topic.quiz":            { en: "Find where you sit on {topic} and 15 other dimensions.", zh: "找出你在{topic}及其他 15 个维度上的位置。" },
+  "pathway.topic.philosopher":     { en: "One of the thinkers who lived this question. Read their position in their own register.", zh: "一位曾亲历这一问题的思想家。以其本人的语调阅读其立场。" },
+  "pathway.topic.warm_archetype":  { en: "Your archetype's 30-day pilgrimage starts here.", zh: "你的原型的 30 天朝圣之旅从这里开始。" },
+  "pathway.topic.warm_philosopher": { en: "The thinker most associated with this question.", zh: "与这一问题关联最深的思想家。" },
+  "pathway.philosopher.quiz":      { en: "Find your archetype — discover whether you'd argue with {name} or alongside them.", zh: "找出你的原型——看看你会与{name}争论，还是与其并肩。" },
+  "pathway.philosopher.vs":        { en: "On Mull's map {name} sits closest. See where they agree and where they part.", zh: "在 Mull 的地图上，{name}与其距离最近。看看他们在何处一致、在何处分道。" },
+  "pathway.philosopher.warm_vs":   { en: "See how {a} and {b} disagreed.", zh: "看看{a}与{b}如何分歧。" },
+  "pathway.archetype.quiz":        { en: "Take the quiz — find out if you're a {arch}, or somewhere nearby.", zh: "做这个测验——看看你是不是{arch}，或在其附近。" },
+  "pathway.archetype.philosopher": { en: "A thinker who lived close to this archetype. Read them as a window into the type.", zh: "一位与这一原型相近的思想家。把他们当作通向该类型的一扇窗。" },
+  "pathway.archetype.exercise":    { en: "A practice this archetype tends to find natural.", zh: "这一原型往往觉得自然的一种练习。" },
+  "pathway.vs.quiz":               { en: "Take the quiz — see which of them you sit closer to on the map.", zh: "做这个测验——看看在地图上你离他们中谁更近。" },
+  "pathway.vs.philosopher":        { en: "A third thinker who sits between them — useful for triangulating.", zh: "一位居于两者之间的第三位思想家——有助于三角定位。" },
+  "pathway.exercise.quiz":         { en: "Find your archetype — exercises hit differently when tuned to who you are.", zh: "找出你的原型——当练习贴合你的本性时，感受会不同。" },
+  "pathway.dilemma.quiz":          { en: "Find your archetype — see why you reach for the answer you do.", zh: "找出你的原型——看看你为何会给出这样的答案。" },
+  "pathway.map.quiz":              { en: "Add your point to the map — see who you cluster with.", zh: "把你的坐标加到地图上——看看你与谁聚在一起。" }
 };
 
 export function t(key: string, locale: Locale = 'en', vars?: Record<string, string | number>): string {

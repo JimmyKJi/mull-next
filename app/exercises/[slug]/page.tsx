@@ -207,7 +207,7 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
       {/* Pathway — three illustrated stations.
           Cold visitor: quiz → sibling exercise (same category) → Crucible.
           Warm visitor: Crucible → Anthology → Spar (retention loop). */}
-      <PathwayNext pathway={pathwayForExercise(slug)} />
+      <PathwayNext pathway={pathwayForExercise(slug, locale)} locale={locale} />
 
       {/* Back-navigation footer — paired pixel chips so users coming
           from the trajectory list, the exercise index, or the

@@ -21,12 +21,22 @@
 //
 // PathwayNext picks the variant client-side after hydration. If a
 // surface only defines `cold`, warm visitors see the same trail.
+//
+// Every user-visible string flows through `t(key, locale)`. The builders
+// take a `locale` and produce a fully-localized pathway; dynamic names
+// (philosophers, archetypes, topics, exercises) route through the
+// per-entity localizers.
 
-import { ARCHETYPES, getArchetypeByKey } from './archetypes';
-import { TOPICS, findTopic } from './topics';
+import { getArchetypeByKey } from './archetypes';
+import { findTopic } from './topics';
 import { EXERCISES } from './exercises';
 import { PHILOSOPHERS, philosopherSlug, getPhilosopherBySlug, nearestPhilosophers } from './philosophers';
 import { getArchetypeColor } from './archetype-colors';
+import { t, type Locale } from './translations';
+import { localizePhilosopher } from './philosophers-i18n';
+import { localizeArchetype } from './archetypes-i18n';
+import { localizeTopic } from './topics-i18n';
+import { localizeExercise } from './exercises-i18n';
 
 export type PathwayVisual =
   | { kind: 'archetype'; archetypeKey: string }
@@ -56,132 +66,142 @@ export type Pathway = {
 
 // ─── Reusable stations ──────────────────────────────────────────────
 
-const STATION_QUIZ: PathwayStation = {
-  visual: { kind: 'glyph', glyph: '◆' },
-  title: 'The Inheritor',
-  blurb: '15-minute murder mystery. By the end you have a placement on the map.',
-  href: '/quiz/journey',
-  accent: '#B8862F',
-  tag: 'QUIZ',
-};
-
-const STATION_QUICK_QUIZ: PathwayStation = {
-  visual: { kind: 'glyph', glyph: '◇' },
-  title: 'The 5-min quiz',
-  blurb: 'Faster, lighter, less story — same map at the end.',
-  href: '/quiz?mode=quick',
-  accent: '#8C6520',
-  tag: 'QUIZ',
-};
-
-const STATION_SPAR: PathwayStation = {
-  visual: { kind: 'glyph', glyph: '⚔' },
-  title: "Today's Spar",
-  blurb: 'One philosopher, one topic, five minutes. A new one drops every day.',
-  href: '/spar',
-  accent: '#7A2E2E',
-  tag: 'DAILY',
-};
-
-const STATION_DILEMMA: PathwayStation = {
-  visual: { kind: 'glyph', glyph: '◐' },
-  title: "Today's dilemma",
-  blurb: "One unfair scenario per day. Write a response, see how others answered.",
-  href: '/dilemma',
-  accent: '#3D5A7E',
-  tag: 'DAILY',
-};
-
-const STATION_CRUCIBLE: PathwayStation = {
-  visual: { kind: 'glyph', glyph: '✦' },
-  title: 'The Crucible',
-  blurb: 'A philosophical action to actually do today. Tomorrow you report back.',
-  href: '/crucible',
-  accent: '#A65846',
-  tag: 'DAILY',
-};
-
-const STATION_DIARY: PathwayStation = {
-  visual: { kind: 'glyph', glyph: '◈' },
-  title: 'The Argument Diary',
-  blurb: 'Paste a real disagreement, have it rebuilt with rigor.',
-  href: '/argument-diary',
-  accent: '#6B7F4F',
-  tag: 'PRACTICE',
-};
-
-const STATION_ANTHOLOGY: PathwayStation = {
-  visual: { kind: 'glyph', glyph: '✧' },
-  title: 'Your anthology',
-  blurb: 'A commonplace book — keep the lines that struck you.',
-  href: '/anthology',
-  accent: '#7C5A8C',
-  tag: 'RETURN',
-};
-
-/** Display name for an archetype. The canonical translated name lives
- *  in translations under `arch.<key>.name`, but this lib is pure data
- *  (no i18n access) — and every archetype name is "The <Key>", so a
- *  simple capitalize works. */
-function archetypeDisplayName(key: string): string {
-  return 'The ' + key.charAt(0).toUpperCase() + key.slice(1);
+function stationQuiz(locale: Locale): PathwayStation {
+  return {
+    visual: { kind: 'glyph', glyph: '◆' },
+    title: t('pathway.station.quiz.title', locale),
+    blurb: t('pathway.station.quiz.blurb', locale),
+    href: '/quiz/journey',
+    accent: '#B8862F',
+    tag: t('pathway.tag.quiz', locale),
+  };
 }
 
-function stationArchetype(archetypeKey: string, suffix?: string): PathwayStation {
+function stationSpar(locale: Locale): PathwayStation {
+  return {
+    visual: { kind: 'glyph', glyph: '⚔' },
+    title: t('pathway.station.spar.title', locale),
+    blurb: t('pathway.station.spar.blurb', locale),
+    href: '/spar',
+    accent: '#7A2E2E',
+    tag: t('pathway.tag.daily', locale),
+  };
+}
+
+function stationDilemma(locale: Locale): PathwayStation {
+  return {
+    visual: { kind: 'glyph', glyph: '◐' },
+    title: t('pathway.station.dilemma.title', locale),
+    blurb: t('pathway.station.dilemma.blurb', locale),
+    href: '/dilemma',
+    accent: '#3D5A7E',
+    tag: t('pathway.tag.daily', locale),
+  };
+}
+
+function stationCrucible(locale: Locale): PathwayStation {
+  return {
+    visual: { kind: 'glyph', glyph: '✦' },
+    title: t('pathway.station.crucible.title', locale),
+    blurb: t('pathway.station.crucible.blurb', locale),
+    href: '/crucible',
+    accent: '#A65846',
+    tag: t('pathway.tag.daily', locale),
+  };
+}
+
+function stationDiary(locale: Locale): PathwayStation {
+  return {
+    visual: { kind: 'glyph', glyph: '◈' },
+    title: t('pathway.station.diary.title', locale),
+    blurb: t('pathway.station.diary.blurb', locale),
+    href: '/argument-diary',
+    accent: '#6B7F4F',
+    tag: t('pathway.tag.practice', locale),
+  };
+}
+
+function stationAnthology(locale: Locale): PathwayStation {
+  return {
+    visual: { kind: 'glyph', glyph: '✧' },
+    title: t('pathway.station.anthology.title', locale),
+    blurb: t('pathway.station.anthology.blurb', locale),
+    href: '/anthology',
+    accent: '#7C5A8C',
+    tag: t('pathway.tag.return', locale),
+  };
+}
+
+/** Localized display name for an archetype. The canonical translated
+ *  name lives in translations under `arch.<key>.name` for all 10 keys. */
+function archetypeDisplayName(key: string, locale: Locale): string {
+  return t(`arch.${key}.name`, locale);
+}
+
+function stationArchetype(archetypeKey: string, locale: Locale, suffix?: string): PathwayStation {
   const a = getArchetypeByKey(archetypeKey);
   const color = getArchetypeColor(archetypeKey);
   return {
     visual: { kind: 'archetype', archetypeKey },
-    title: archetypeDisplayName(archetypeKey),
-    blurb: suffix ?? a?.spirit ?? 'Read the full essay.',
+    title: archetypeDisplayName(archetypeKey, locale),
+    blurb: suffix ?? (a ? localizeArchetype(a, locale).spirit : t('pathway.read_essay', locale)),
     href: `/archetype/${archetypeKey}`,
     accent: color.deep,
-    tag: 'ESSAY',
+    tag: t('pathway.tag.essay', locale),
   };
 }
 
-function stationPilgrimage(archetypeKey: string): PathwayStation {
+function stationPilgrimage(archetypeKey: string, locale: Locale): PathwayStation {
   const color = getArchetypeColor(archetypeKey);
   return {
     visual: { kind: 'archetype', archetypeKey },
-    title: `${archetypeDisplayName(archetypeKey)} pilgrimage`,
-    blurb: '30 days, one micro-practice each, sized to this archetype. The slow build.',
+    title: t('pathway.pilgrimage_title', locale, { arch: archetypeDisplayName(archetypeKey, locale) }),
+    blurb: t('pathway.pilgrimage_blurb', locale),
     href: '/pilgrimage',
     accent: color.deep,
-    tag: 'JOURNEY',
+    tag: t('pathway.tag.journey', locale),
   };
 }
 
-function stationPhilosopher(name: string, blurb: string): PathwayStation {
-  const p = getPhilosopherBySlug(philosopherSlug(name));
+function stationPhilosopher(name: string, blurb: string, locale: Locale): PathwayStation {
+  const slug = philosopherSlug(name);
+  const p = getPhilosopherBySlug(slug);
   const accent = p ? getArchetypeColor(p.archetypeKey).deep : '#8C6520';
+  // visual.name stays English — it keys the sprite lookup. Only the
+  // displayed title is localized.
+  const displayName = p ? localizePhilosopher(p, slug, locale).name : name;
   return {
     visual: { kind: 'philosopher', name: p?.name ?? name, archetypeKey: p?.archetypeKey },
-    title: p?.name ?? name,
+    title: displayName,
     blurb,
-    href: `/philosopher/${philosopherSlug(name)}`,
+    href: `/philosopher/${slug}`,
     accent,
-    tag: 'PROFILE',
+    tag: t('pathway.tag.profile', locale),
   };
 }
 
-function stationVs(nameA: string, nameB: string, blurb: string): PathwayStation {
+function stationVs(nameA: string, nameB: string, blurb: string, locale: Locale): PathwayStation {
   const slugA = philosopherSlug(nameA);
   const slugB = philosopherSlug(nameB);
   const [a, b] = slugA < slugB ? [slugA, slugB] : [slugB, slugA];
+  const pA = getPhilosopherBySlug(slugA);
+  const pB = getPhilosopherBySlug(slugB);
+  const dispA = pA ? localizePhilosopher(pA, slugA, locale).name : nameA;
+  const dispB = pB ? localizePhilosopher(pB, slugB, locale).name : nameB;
   return {
     visual: { kind: 'glyph', glyph: '⚖' },
-    title: `${nameA} vs ${nameB}`,
+    title: t('pathway.vs_title', locale, { a: dispA, b: dispB }),
     blurb,
     href: `/vs/${a}/${b}`,
     accent: '#3D5A7E',
-    tag: 'COMPARE',
+    tag: t('pathway.tag.compare', locale),
   };
 }
 
-function stationExercise(slug: string, blurb?: string): PathwayStation | null {
+function stationExercise(slug: string, locale: Locale, blurb?: string): PathwayStation | null {
   const ex = EXERCISES.find(e => e.slug === slug);
   if (!ex) return null;
+  const lex = localizeExercise(ex, locale);
   const glyph =
     ex.category === 'contemplative' ? '☷' :
     ex.category === 'logic' ? '⊕' :
@@ -192,122 +212,115 @@ function stationExercise(slug: string, blurb?: string): PathwayStation | null {
     '#7A2E2E';
   return {
     visual: { kind: 'glyph', glyph },
-    title: ex.name,
-    blurb: blurb ?? ex.summary,
+    title: lex.name,
+    blurb: blurb ?? lex.summary,
     href: `/exercises/${slug}`,
     accent,
-    tag: 'PRACTICE',
+    tag: t('pathway.tag.practice', locale),
   };
 }
 
-function stationTopic(slug: string, blurb?: string): PathwayStation | null {
-  const t = findTopic(slug);
-  if (!t) return null;
-  return {
-    visual: { kind: 'glyph', glyph: '◓' },
-    title: t.title,
-    blurb: blurb ?? t.summary,
-    href: `/topic/${slug}`,
-    accent: '#6B7F4F',
-    tag: 'TOPIC',
-  };
-}
-
-function stationArena(opponentName?: string): PathwayStation {
+function stationArena(locale: Locale, opponentName?: string): PathwayStation {
+  let disp = opponentName;
+  if (opponentName) {
+    const slug = philosopherSlug(opponentName);
+    const p = getPhilosopherBySlug(slug);
+    if (p) disp = localizePhilosopher(p, slug, locale).name;
+  }
   return {
     visual: { kind: 'glyph', glyph: '⚔' },
-    title: opponentName ? `Argue ${opponentName}` : 'The Arena',
-    blurb: opponentName
-      ? `Face ${opponentName} in a 5-minute single-turn debate, judged on rigor.`
-      : 'Pick a philosopher, write your argument, get judged on rigor + engagement.',
+    title: disp ? t('pathway.arena_argue', locale, { name: disp }) : t('pathway.arena_title', locale),
+    blurb: disp
+      ? t('pathway.arena_blurb_opp', locale, { name: disp })
+      : t('pathway.arena_blurb', locale),
     href: '/arena',
     accent: '#7A2E2E',
-    tag: 'ARENA',
+    tag: t('pathway.tag.arena', locale),
   };
 }
 
 // ─── Per-surface pathway builders ───────────────────────────────────
 
-export function pathwayForTopic(topicSlug: string): Pathway {
-  const t = findTopic(topicSlug);
+export function pathwayForTopic(topicSlug: string, locale: Locale = 'en'): Pathway {
+  const top = findTopic(topicSlug);
   const cold: PathwayStation[] = [];
 
   // Cold lead: the quiz — the unlocking move.
   cold.push({
-    ...STATION_QUIZ,
-    blurb: t
-      ? `Find where you sit on ${t.title.toLowerCase()} and 15 other dimensions.`
-      : STATION_QUIZ.blurb,
+    ...stationQuiz(locale),
+    blurb: top
+      ? t('pathway.topic.quiz', locale, { topic: localizeTopic(top, locale).title.toLowerCase() })
+      : stationQuiz(locale).blurb,
   });
 
   // Middle: a flagship philosopher from this topic.
-  if (t && t.philosopherNames.length > 0) {
-    const flagshipName = t.philosopherNames[0];
-    cold.push(stationPhilosopher(
-      flagshipName,
-      `One of the thinkers who lived this question. Read their position in their own register.`
-    ));
+  if (top && top.philosopherNames.length > 0) {
+    cold.push(stationPhilosopher(top.philosopherNames[0], t('pathway.topic.philosopher', locale), locale));
   }
 
   // Tail: daily ritual.
-  cold.push(STATION_SPAR);
+  cold.push(stationSpar(locale));
 
   // Warm trail: skip the quiz; lead with archetype pilgrimage,
   // keep the philosopher recommendation, end with daily ritual.
   // Note: warm trail is generated client-side using actual archetype.
   // Stations below are a generic warm fallback if archetype unknown.
   const warm: PathwayStation[] = [];
-  if (t && t.relatedArchetypes.length > 0) {
-    warm.push(stationArchetype(t.relatedArchetypes[0], `Your archetype's 30-day pilgrimage starts here.`));
+  if (top && top.relatedArchetypes.length > 0) {
+    warm.push(stationArchetype(top.relatedArchetypes[0], locale, t('pathway.topic.warm_archetype', locale)));
   }
-  if (t && t.philosopherNames.length > 0) {
-    warm.push(stationPhilosopher(t.philosopherNames[0], 'The thinker most associated with this question.'));
+  if (top && top.philosopherNames.length > 0) {
+    warm.push(stationPhilosopher(top.philosopherNames[0], t('pathway.topic.warm_philosopher', locale), locale));
   }
-  warm.push(STATION_SPAR);
+  warm.push(stationSpar(locale));
 
   return { cold, warm };
 }
 
-export function pathwayForPhilosopher(slug: string): Pathway {
+export function pathwayForPhilosopher(slug: string, locale: Locale = 'en'): Pathway {
   const p = getPhilosopherBySlug(slug);
-  if (!p) return { cold: [STATION_QUIZ, STATION_SPAR, STATION_DILEMMA] };
+  if (!p) return { cold: [stationQuiz(locale), stationSpar(locale), stationDilemma(locale)] };
 
+  const pName = localizePhilosopher(p, slug, locale).name;
   const cold: PathwayStation[] = [];
 
   // Cold lead: the quiz — frame it as "see if you think like this one".
   cold.push({
-    ...STATION_QUIZ,
-    blurb: `Find your archetype — discover whether you'd argue with ${p.name} or alongside them.`,
+    ...stationQuiz(locale),
+    blurb: t('pathway.philosopher.quiz', locale, { name: pName }),
   });
 
   // Middle: head-to-head with the nearest dimensional neighbor.
   const nearest = nearestPhilosophers(p, 3);
   if (nearest.length > 0) {
     const partner = nearest[0];
+    const partnerName = localizePhilosopher(partner, philosopherSlug(partner.name), locale).name;
     cold.push(stationVs(
       p.name,
       partner.name,
-      `On Mull's map ${partner.name} sits closest. See where they agree and where they part.`
+      t('pathway.philosopher.vs', locale, { name: partnerName }),
+      locale,
     ));
   }
 
   // Tail: daily ritual.
-  cold.push(STATION_SPAR);
+  cold.push(stationSpar(locale));
 
   // Warm: Arena duel + matchup + daily.
   const warm: PathwayStation[] = [];
-  warm.push(stationArena(p.name));
+  warm.push(stationArena(locale, p.name));
   if (nearest.length > 0) {
-    warm.push(stationVs(p.name, nearest[0].name, `See how ${p.name} and ${nearest[0].name} disagreed.`));
+    const partnerName = localizePhilosopher(nearest[0], philosopherSlug(nearest[0].name), locale).name;
+    warm.push(stationVs(p.name, nearest[0].name, t('pathway.philosopher.warm_vs', locale, { a: pName, b: partnerName }), locale));
   }
-  warm.push(STATION_SPAR);
+  warm.push(stationSpar(locale));
 
   return { cold, warm };
 }
 
-export function pathwayForArchetype(archetypeKey: string): Pathway {
+export function pathwayForArchetype(archetypeKey: string, locale: Locale = 'en'): Pathway {
   const a = getArchetypeByKey(archetypeKey);
-  if (!a) return { cold: [STATION_QUIZ, STATION_SPAR, STATION_DILEMMA] };
+  if (!a) return { cold: [stationQuiz(locale), stationSpar(locale), stationDilemma(locale)] };
 
   // Find a flagship philosopher of this archetype.
   const flagship = PHILOSOPHERS.find(p => p.archetypeKey === archetypeKey);
@@ -315,117 +328,116 @@ export function pathwayForArchetype(archetypeKey: string): Pathway {
   const cold: PathwayStation[] = [];
 
   cold.push({
-    ...STATION_QUIZ,
-    blurb: `Take the quiz — find out if you're a ${archetypeDisplayName(archetypeKey)}, or somewhere nearby.`,
+    ...stationQuiz(locale),
+    blurb: t('pathway.archetype.quiz', locale, { arch: archetypeDisplayName(archetypeKey, locale) }),
   });
   if (flagship) {
-    cold.push(stationPhilosopher(
-      flagship.name,
-      `A thinker who lived close to this archetype. Read them as a window into the type.`
-    ));
+    cold.push(stationPhilosopher(flagship.name, t('pathway.archetype.philosopher', locale), locale));
   }
   // Tail: an exercise tied to this archetype.
   const exSlug = a.suggestedExercises?.[0];
   if (exSlug) {
-    const ex = stationExercise(exSlug, `A practice this archetype tends to find natural.`);
+    const ex = stationExercise(exSlug, locale, t('pathway.archetype.exercise', locale));
     if (ex) cold.push(ex);
   } else {
-    cold.push(STATION_SPAR);
+    cold.push(stationSpar(locale));
   }
 
   // Warm: pilgrimage primary + a daily ritual + archetype's flagship exercise.
   const warm: PathwayStation[] = [];
-  warm.push(stationPilgrimage(archetypeKey));
-  warm.push(STATION_SPAR);
+  warm.push(stationPilgrimage(archetypeKey, locale));
+  warm.push(stationSpar(locale));
   if (exSlug) {
-    const ex = stationExercise(exSlug);
+    const ex = stationExercise(exSlug, locale);
     if (ex) warm.push(ex);
   } else {
-    warm.push(STATION_DIARY);
+    warm.push(stationDiary(locale));
   }
 
   return { cold, warm };
 }
 
-export function pathwayForVs(slugA: string, slugB: string): Pathway {
+export function pathwayForVs(slugA: string, slugB: string, locale: Locale = 'en'): Pathway {
   const pa = getPhilosopherBySlug(slugA);
   const pb = getPhilosopherBySlug(slugB);
-  if (!pa || !pb) return { cold: [STATION_QUIZ, STATION_SPAR, STATION_DILEMMA] };
+  if (!pa || !pb) return { cold: [stationQuiz(locale), stationSpar(locale), stationDilemma(locale)] };
 
   const cold: PathwayStation[] = [];
   cold.push({
-    ...STATION_QUIZ,
-    blurb: `Take the quiz — see which of them you sit closer to on the map.`,
+    ...stationQuiz(locale),
+    blurb: t('pathway.vs.quiz', locale),
   });
   // Pick a bridging philosopher (nearest to pa that isn't pb).
   const bridges = nearestPhilosophers(pa, 5).filter(p => p.name !== pb.name);
   if (bridges.length > 0) {
     cold.push(stationPhilosopher(
       bridges[0].name,
-      `A third thinker who sits between them — useful for triangulating.`
+      t('pathway.vs.philosopher', locale),
+      locale,
     ));
   }
-  cold.push(stationArena(pa.name));
+  cold.push(stationArena(locale, pa.name));
 
   const warm: PathwayStation[] = [];
-  warm.push(stationArena(pa.name));
-  warm.push(stationArena(pb.name));
-  warm.push(STATION_SPAR);
+  warm.push(stationArena(locale, pa.name));
+  warm.push(stationArena(locale, pb.name));
+  warm.push(stationSpar(locale));
 
   return { cold, warm };
 }
 
-export function pathwayForExercise(exerciseSlug: string): Pathway {
+export function pathwayForExercise(exerciseSlug: string, locale: Locale = 'en'): Pathway {
   const ex = EXERCISES.find(e => e.slug === exerciseSlug);
 
   const cold: PathwayStation[] = [];
   cold.push({
-    ...STATION_QUIZ,
-    blurb: 'Find your archetype — exercises hit differently when tuned to who you are.',
+    ...stationQuiz(locale),
+    blurb: t('pathway.exercise.quiz', locale),
   });
   // Surface another exercise in the same category.
   if (ex) {
     const sibling = EXERCISES.find(e => e.category === ex.category && e.slug !== ex.slug);
     if (sibling) {
+      const lsib = localizeExercise(sibling, locale);
       cold.push({
         visual: { kind: 'glyph', glyph: ex.category === 'contemplative' ? '☷' : ex.category === 'logic' ? '⊕' : '◍' },
-        title: sibling.name,
-        blurb: sibling.summary,
+        title: lsib.name,
+        blurb: lsib.summary,
         href: `/exercises/${sibling.slug}`,
         accent: ex.category === 'contemplative' ? '#2F5D5C' : ex.category === 'logic' ? '#1E3A5F' : '#7A2E2E',
-        tag: 'NEXT EXERCISE',
+        tag: t('pathway.tag.next_exercise', locale),
       });
     }
   }
-  cold.push(STATION_CRUCIBLE);
+  cold.push(stationCrucible(locale));
 
   const warm: PathwayStation[] = [];
-  warm.push(STATION_CRUCIBLE);
-  warm.push(STATION_ANTHOLOGY);
-  warm.push(STATION_SPAR);
+  warm.push(stationCrucible(locale));
+  warm.push(stationAnthology(locale));
+  warm.push(stationSpar(locale));
 
   return { cold, warm };
 }
 
-export function pathwayForDilemma(): Pathway {
+export function pathwayForDilemma(locale: Locale = 'en'): Pathway {
   return {
     cold: [
-      { ...STATION_QUIZ, blurb: 'Find your archetype — see why you reach for the answer you do.' },
-      STATION_SPAR,
-      STATION_CRUCIBLE,
+      { ...stationQuiz(locale), blurb: t('pathway.dilemma.quiz', locale) },
+      stationSpar(locale),
+      stationCrucible(locale),
     ],
-    warm: [STATION_SPAR, STATION_CRUCIBLE, STATION_DIARY],
+    warm: [stationSpar(locale), stationCrucible(locale), stationDiary(locale)],
   };
 }
 
-export function pathwayForMap(): Pathway {
+export function pathwayForMap(locale: Locale = 'en'): Pathway {
   return {
     cold: [
-      { ...STATION_QUIZ, blurb: 'Add your point to the map — see who you cluster with.' },
-      STATION_DILEMMA,
-      STATION_SPAR,
+      { ...stationQuiz(locale), blurb: t('pathway.map.quiz', locale) },
+      stationDilemma(locale),
+      stationSpar(locale),
     ],
-    warm: [STATION_SPAR, STATION_DILEMMA, STATION_ANTHOLOGY],
+    warm: [stationSpar(locale), stationDilemma(locale), stationAnthology(locale)],
   };
 }
 
@@ -435,14 +447,15 @@ export function pathwayForMap(): Pathway {
 export function personalizeWarmTrail(
   pathway: Pathway,
   archetypeKey: string,
+  locale: Locale = 'en',
 ): PathwayStation[] {
   const a = getArchetypeByKey(archetypeKey);
   if (!a) return pathway.warm ?? pathway.cold;
   const exSlug = a.suggestedExercises?.[0];
-  const ex = exSlug ? stationExercise(exSlug) : null;
+  const ex = exSlug ? stationExercise(exSlug, locale) : null;
   return [
-    stationPilgrimage(archetypeKey),
-    STATION_SPAR,
-    ex ?? STATION_DIARY,
+    stationPilgrimage(archetypeKey, locale),
+    stationSpar(locale),
+    ex ?? stationDiary(locale),
   ];
 }

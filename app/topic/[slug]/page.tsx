@@ -370,7 +370,7 @@ export default async function TopicDetailPage({
             Replaces the old single-CTA quiz panel; the quiz still
             appears as Station 01 for cold visitors, but warm visitors
             now see a pilgrimage + spar trail instead. */}
-        <PathwayNext pathway={pathwayForTopic(topic.slug)} />
+        <PathwayNext pathway={pathwayForTopic(topic.slug, locale)} locale={locale} />
       </main>
     </>
   );

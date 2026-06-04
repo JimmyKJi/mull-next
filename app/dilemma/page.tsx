@@ -481,7 +481,7 @@ export default async function DilemmaPage() {
 
       {/* Pathway — cold visitors get the quiz; warm visitors get
           Spar → Crucible → Argument Diary. */}
-      <PathwayNext pathway={pathwayForDilemma()} />
+      <PathwayNext pathway={pathwayForDilemma(locale)} locale={locale} />
 
       <p style={{
         fontFamily: sans,
