@@ -21,11 +21,12 @@ import {
   currentStreak,
   activeDates,
 } from "@/lib/capabilities";
+import { t, type Locale } from "@/lib/translations";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-editorial), Georgia, serif";
 
-export default function AtlasView() {
+export default function AtlasView({ locale }: { locale: Locale }) {
   const [events, setEvents] = useState<CapabilityEvent[] | null>(null);
 
   // Initial load + listen for cross-component updates.
@@ -43,13 +44,13 @@ export default function AtlasView() {
   if (events === null) {
     return (
       <div className="text-center text-[14px] text-[#8C6520]" style={{ fontFamily: serif }}>
-        Loading your atlas…
+        {t("atl.loading", locale)}
       </div>
     );
   }
 
   if (events.length === 0) {
-    return <EmptyState />;
+    return <EmptyState locale={locale} />;
   }
 
   const xpBySkill = aggregateXp(events);
@@ -65,17 +66,17 @@ export default function AtlasView() {
       <div className="grid grid-cols-3 gap-3">
         <BigStat
           value={String(streak)}
-          label={streak === 1 ? "DAY STREAK" : "DAY STREAK"}
+          label={t("atl.day_streak", locale)}
           color="#B8862F"
         />
         <BigStat
           value={String(activeDays)}
-          label={activeDays === 1 ? "ACTIVE DAY" : "ACTIVE DAYS"}
+          label={activeDays === 1 ? t("atl.active_day", locale) : t("atl.active_days", locale)}
           color="#2F5D5C"
         />
         <BigStat
           value={String(eventsThisWeek)}
-          label="MOVES THIS WEEK"
+          label={t("atl.moves_this_week", locale)}
           color="#8C3717"
         />
       </div>
@@ -89,25 +90,25 @@ export default function AtlasView() {
           className="flex items-center justify-between border-b-2 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
           style={{ fontFamily: pixel }}
         >
-          <span>▶ YOUR SIX SKILLS</span>
+          <span>▶ {t("atl.your_six_skills", locale)}</span>
           <span className="text-[#B8862F]">ATLAS.SYS</span>
         </div>
         <div className="px-4 py-4 sm:px-6 sm:py-5">
           <ul className="space-y-3">
             {SKILLS.map((s) => (
-              <SkillBar key={s} skill={s} xp={xpBySkill[s] ?? 0} />
+              <SkillBar key={s} skill={s} xp={xpBySkill[s] ?? 0} locale={locale} />
             ))}
           </ul>
         </div>
       </div>
 
       {/* Recent event log */}
-      <RecentEvents events={events} />
+      <RecentEvents events={events} locale={locale} />
     </div>
   );
 }
 
-function EmptyState() {
+function EmptyState({ locale }: { locale: Locale }) {
   return (
     <div
       className="border-[3px] border-[#221E18] bg-[#FFFCF4] p-6"
@@ -117,15 +118,13 @@ function EmptyState() {
         className="text-[10px] tracking-[0.22em] text-[#8C6520]"
         style={{ fontFamily: pixel }}
       >
-        ▶ ATLAS · EMPTY
+        ▶ {t("atl.empty_badge", locale)}
       </div>
       <p
         className="mt-3 text-[15px] leading-[1.6] text-[#221E18]"
         style={{ fontFamily: serif }}
       >
-        You haven&rsquo;t fired any capability events yet. The Atlas
-        fills in as you use Mull&rsquo;s practice surfaces. Try one
-        of these to start:
+        {t("atl.empty_body", locale)}
       </p>
       <ul className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-3">
         <li>
@@ -138,7 +137,7 @@ function EmptyState() {
               boxShadow: "2px 2px 0 0 #2F5D5C",
             }}
           >
-            ▶ DAILY SPAR
+            ▶ {t("atl.cta_daily_spar", locale)}
           </Link>
         </li>
         <li>
@@ -151,7 +150,7 @@ function EmptyState() {
               boxShadow: "2px 2px 0 0 #B8862F",
             }}
           >
-            ▶ TODAY&rsquo;S DILEMMA
+            ▶ {t("atl.cta_todays_dilemma", locale)}
           </Link>
         </li>
         <li>
@@ -164,7 +163,7 @@ function EmptyState() {
               boxShadow: "2px 2px 0 0 #2F5D5C",
             }}
           >
-            ▶ THE PILGRIMAGE
+            ▶ {t("atl.cta_the_pilgrimage", locale)}
           </Link>
         </li>
       </ul>
@@ -207,7 +206,7 @@ function BigStat({
   );
 }
 
-function SkillBar({ skill, xp }: { skill: Skill; xp: number }) {
+function SkillBar({ skill, xp, locale }: { skill: Skill; xp: number; locale: Locale }) {
   const meta = SKILL_META[skill];
   const { level, intoLevel, toNext } = levelFromXp(xp);
   const pct = Math.min(100, Math.round((intoLevel / toNext) * 100));
@@ -224,13 +223,13 @@ function SkillBar({ skill, xp }: { skill: Skill; xp: number }) {
           }}
         >
           {meta.name}
-          <span className="ml-2 text-[#221E18]">LV {level}</span>
+          <span className="ml-2 text-[#221E18]">{t("atl.level", locale, { level })}</span>
         </div>
         <div
           className="text-[10px] tracking-[0.14em] text-[#8C6520]"
           style={{ fontFamily: pixel, textTransform: "uppercase" }}
         >
-          {xp} / {cumNext} XP
+          {t("atl.xp_progress", locale, { xp, next: cumNext })}
         </div>
       </div>
       <div
@@ -255,7 +254,7 @@ function SkillBar({ skill, xp }: { skill: Skill; xp: number }) {
   );
 }
 
-function RecentEvents({ events }: { events: CapabilityEvent[] }) {
+function RecentEvents({ events, locale }: { events: CapabilityEvent[]; locale: Locale }) {
   const recent = events.slice(-10).reverse();
   return (
     <div
@@ -266,7 +265,7 @@ function RecentEvents({ events }: { events: CapabilityEvent[] }) {
         className="text-[10px] tracking-[0.22em] text-[#8C6520]"
         style={{ fontFamily: pixel, textTransform: "uppercase" }}
       >
-        ▶ RECENT MOVES
+        ▶ {t("atl.recent_moves", locale)}
       </div>
       <ul className="mt-2 space-y-1.5">
         {recent.map((e, i) => {
@@ -282,7 +281,7 @@ function RecentEvents({ events }: { events: CapabilityEvent[] }) {
               }}
             >
               <span className="text-[#221E18]">
-                {e.label ?? labelFromSource(e.source)}
+                {e.label ?? labelFromSource(e.source, locale)}
               </span>
               <span
                 className="text-[10px] tracking-[0.18em] whitespace-nowrap"
@@ -302,20 +301,21 @@ function RecentEvents({ events }: { events: CapabilityEvent[] }) {
   );
 }
 
-function labelFromSource(source: string): string {
-  const map: Record<string, string> = {
-    dilemma: "Daily Dilemma answered",
-    diary: "Diary entry written",
-    exercise: "Exercise reflection",
-    spar: "Daily Spar played",
-    arena: "Arena debate",
-    pilgrimage: "Pilgrimage day completed",
-    crucible: "Crucible kept",
-    anthology: "Saved to anthology",
-    wandering: "Wandering question answered",
-    argument_diary: "Argument logged",
-    reading_hour: "Reading Hour completed",
-    long_letter: "Long Letter written",
+function labelFromSource(source: string, locale: Locale): string {
+  const keyMap: Record<string, string> = {
+    dilemma: "atl.src_dilemma",
+    diary: "atl.src_diary",
+    exercise: "atl.src_exercise",
+    spar: "atl.src_spar",
+    arena: "atl.src_arena",
+    pilgrimage: "atl.src_pilgrimage",
+    crucible: "atl.src_crucible",
+    anthology: "atl.src_anthology",
+    wandering: "atl.src_wandering",
+    argument_diary: "atl.src_argument_diary",
+    reading_hour: "atl.src_reading_hour",
+    long_letter: "atl.src_long_letter",
   };
-  return map[source] ?? "Practice";
+  const key = keyMap[source];
+  return key ? t(key, locale) : t("atl.src_default", locale);
 }

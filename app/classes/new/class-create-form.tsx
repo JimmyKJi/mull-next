@@ -5,8 +5,9 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { t, type Locale } from '@/lib/translations';
 
-export default function ClassCreateForm() {
+export default function ClassCreateForm({ locale }: { locale: Locale }) {
   const router = useRouter();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -33,14 +34,14 @@ export default function ClassCreateForm() {
       });
       const json = await res.json();
       if (!res.ok) {
-        setError(json?.error || 'Could not create class.');
+        setError(json?.error || t('cls.create_error', locale));
         setSubmitting(false);
         return;
       }
       router.push(`/classes/${json.id}`);
       router.refresh();
     } catch {
-      setError('Network error.');
+      setError(t('cls.network_error', locale));
       setSubmitting(false);
     }
   }
@@ -48,12 +49,12 @@ export default function ClassCreateForm() {
   return (
     <form className="pixel-form" onSubmit={onSubmit} style={{ display: 'grid', gap: 16 }}>
       <label style={{ display: 'grid', gap: 6 }}>
-        <span>CLASS NAME</span>
+        <span>{t('cls.field_class_name', locale)}</span>
         <input
           type="text"
           value={name}
           onChange={e => setName(e.target.value)}
-          placeholder="Intro to Ethics — Fall 2026"
+          placeholder={t('cls.field_class_name_ph', locale)}
           maxLength={120}
           required
         />
@@ -61,34 +62,34 @@ export default function ClassCreateForm() {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 14 }}>
         <label style={{ display: 'grid', gap: 6 }}>
-          <span>TERM (OPTIONAL)</span>
+          <span>{t('cls.field_term', locale)}</span>
           <input
             type="text"
             value={term}
             onChange={e => setTerm(e.target.value)}
-            placeholder="Fall 2026"
+            placeholder={t('cls.field_term_ph', locale)}
             maxLength={48}
           />
         </label>
         <label style={{ display: 'grid', gap: 6 }}>
-          <span>SCHOOL (OPTIONAL)</span>
+          <span>{t('cls.field_school', locale)}</span>
           <input
             type="text"
             value={schoolName}
             onChange={e => setSchoolName(e.target.value)}
-            placeholder="Lincoln High School"
+            placeholder={t('cls.field_school_ph', locale)}
             maxLength={120}
           />
         </label>
       </div>
 
       <label style={{ display: 'grid', gap: 6 }}>
-        <span>DESCRIPTION (OPTIONAL)</span>
+        <span>{t('cls.field_description', locale)}</span>
         <textarea
           rows={3}
           value={description}
           onChange={e => setDescription(e.target.value)}
-          placeholder="What students will read, debate, and write this term."
+          placeholder={t('cls.field_description_ph', locale)}
           maxLength={600}
           style={{ resize: 'vertical' }}
         />
@@ -99,7 +100,7 @@ export default function ClassCreateForm() {
       )}
 
       <button type="submit" disabled={submitting || !name.trim()}>
-        {submitting ? 'Creating…' : 'Create class'}
+        {submitting ? t('cls.create_submitting', locale) : t('cls.create_submit', locale)}
       </button>
     </form>
   );

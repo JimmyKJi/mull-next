@@ -18,6 +18,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { t, type Locale, isLocale } from '@/lib/translations';
 
 const KEY = 'mull.pending_quiz_attempt';
 
@@ -41,6 +42,13 @@ export default function PendingAttemptClaimer() {
   const router = useRouter();
   const fired = useRef(false);
   const [toast, setToast] = useState<{ archetype: string; flavor: string | null } | null>(null);
+  const [locale, setLocale] = useState<Locale>('en');
+
+  useEffect(() => {
+    const m = document.cookie.match(/(?:^|; )mull_locale=([^;]+)/);
+    const v = m?.[1];
+    if (v && isLocale(v)) setLocale(v);
+  }, []);
 
   useEffect(() => {
     if (fired.current) return;
@@ -139,14 +147,20 @@ export default function PendingAttemptClaimer() {
         marginBottom: 6,
         textTransform: 'uppercase',
       }}>
-        ▸ QUIZ RESULT IMPORTED
+        ▸ {t('uic.claim_imported_eyebrow', locale)}
       </div>
       <div style={{
         fontFamily: "var(--font-prose)",
         fontSize: 16,
         lineHeight: 1.35,
       }}>
-        Your <strong>{label}</strong> result is now part of your trajectory.
+        {t('uic.claim_imported_body', locale, { label: `**${label}**` })
+          .split(/(\*\*[^*]+\*\*)/g)
+          .map((seg, i) =>
+            seg.startsWith('**') && seg.endsWith('**')
+              ? <strong key={i}>{seg.slice(2, -2)}</strong>
+              : seg,
+          )}
       </div>
     </div>
   );

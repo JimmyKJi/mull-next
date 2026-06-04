@@ -10,40 +10,42 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PixelPageHeader } from "@/components/pixel-window";
+import { getServerLocale } from "@/lib/locale-server";
+import { t } from "@/lib/translations";
 import AtlasView from "./atlas-view";
 
-export const metadata: Metadata = {
-  title: "Capability Atlas · Mull",
-  description:
-    "Your six skills, growing across everything you do on Mull — Rigor, Depth, Consistency, Range, Self-Awareness, Synthesis.",
-  alternates: { canonical: "https://mull.world/atlas" },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getServerLocale();
+  return {
+    title: t("atl.meta_title", locale),
+    description: t("atl.meta_description", locale),
+    alternates: { canonical: "https://mull.world/atlas" },
+  };
+}
 
-export default function AtlasPage() {
+export default async function AtlasPage() {
+  const locale = await getServerLocale();
   return (
     <main className="mx-auto max-w-[860px] px-6 pb-32 pt-12 sm:px-10 sm:pt-16">
       <PixelPageHeader
-        eyebrow="▶ THE CAPABILITY ATLAS"
-        title="WHAT YOU'RE GETTING BETTER AT"
+        eyebrow={t("atl.eyebrow", locale)}
+        title={t("atl.title", locale)}
         subtitle={
           <p
             className="text-[16px] italic"
             style={{ fontFamily: "var(--font-editorial)" }}
           >
-            Six skills, six bars. Every Spar, every Pilgrimage day,
-            every Crucible kept, every Dilemma answered — moves at
-            least one of these. Don&rsquo;t grind for the bars; the
-            bars are honest about your actual practice.
+            {t("atl.subtitle", locale)}
           </p>
         }
       />
-      <AtlasView />
+      <AtlasView locale={locale} />
       <p className="mt-12 text-center text-[13px] text-[#8C6520]">
         <Link
           href="/"
           className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
         >
-          ← Back to Mull
+          ← {t("atl.back_to_mull", locale)}
         </Link>
       </p>
     </main>

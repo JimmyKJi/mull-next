@@ -13,6 +13,8 @@
 
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
+import { getServerLocale } from '@/lib/locale-server';
+import { t } from '@/lib/translations';
 import MullWordmark from '@/components/mull-wordmark';
 import type { Metadata } from 'next';
 
@@ -26,6 +28,7 @@ const serif = "var(--font-prose)";
 
 export default async function BillingSuccessPage() {
   const supabase = await createClient();
+  const locale = await getServerLocale();
   const { data: { user } } = await supabase.auth.getUser();
 
   // Read the subscription if it exists yet. Webhook race is OK — we
@@ -66,7 +69,7 @@ export default async function BillingSuccessPage() {
           letterSpacing: '0.18em',
           marginBottom: 14,
         }}>
-          ▸ {activated ? 'WELCOME TO MULL+' : 'ACTIVATING…'}
+          ▸ {activated ? t('bsucc.eyebrow_welcome', locale, { plus: 'MULL+' }) : t('bsucc.eyebrow_activating', locale)}
         </div>
         <h1 style={{
           fontFamily: pixel,
@@ -78,7 +81,7 @@ export default async function BillingSuccessPage() {
           textShadow: '3px 3px 0 #B8862F',
           lineHeight: 1.1,
         }}>
-          {activated ? 'YOU\'RE IN.' : 'JUST A MOMENT.'}
+          {activated ? t('bsucc.heading_in', locale) : t('bsucc.heading_moment', locale)}
         </h1>
         <p style={{
           fontFamily: serif,
@@ -89,8 +92,8 @@ export default async function BillingSuccessPage() {
           lineHeight: 1.55,
         }}>
           {activated
-            ? 'Your subscription is active. Yearly retrospectives, unlimited dilemma analysis, and the rest of Mull+ are unlocked on your account.'
-            : "Your payment went through. Stripe is letting us know any second now — your account will reflect Mull+ on the next page load."}
+            ? t('bsucc.body_active', locale, { plus: 'Mull+' })
+            : t('bsucc.body_activating', locale, { plus: 'Mull+', stripe: 'Stripe' })}
         </p>
 
         {foundingSeat && (
@@ -108,7 +111,7 @@ export default async function BillingSuccessPage() {
             textTransform: 'uppercase',
             marginBottom: 22,
           }}>
-            ▸ FOUNDING MIND · SEAT #{foundingSeat} / 1000
+            ▸ {t('bsucc.founding_seat', locale, { seat: foundingSeat })}
           </div>
         )}
 
@@ -138,7 +141,7 @@ export default async function BillingSuccessPage() {
               transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
             }}
           >
-            ▸ OPEN MY ACCOUNT
+            ▸ {t('bsucc.open_account', locale)}
           </Link>
           <Link
             href="/dilemma"
@@ -159,7 +162,7 @@ export default async function BillingSuccessPage() {
               transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
             }}
           >
-            ▸ TODAY'S DILEMMA
+            ▸ {t('bsucc.todays_dilemma', locale)}
           </Link>
         </div>
       </div>

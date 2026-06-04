@@ -8,6 +8,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import CurationPanel from './curation-panel';
 import { PixelPageHeader } from '@/components/pixel-window';
+import { getServerLocale } from '@/lib/locale-server';
+import { t } from '@/lib/translations';
 
 export const metadata: Metadata = {
   title: "Editor's picks — curate",
@@ -22,32 +24,33 @@ export default async function CuratePage() {
   if (!user) redirect('/login?return_to=/account/curate');
   if (!isAdminUserId(user.id)) redirect('/account');
 
+  const locale = await getServerLocale();
+  const linkLabel = t('crt.subtitle_picks_link', locale);
+  const subtitleParts = t('crt.subtitle', locale, { picks: linkLabel }).split(linkLabel);
+
   return (
     <main className="mx-auto max-w-[920px] px-6 pb-32 pt-10 sm:px-10">
       <PixelPageHeader
-        eyebrow="▶ ADMIN · EDITOR PICKS"
-        title="CURATE THIS WEEK"
+        eyebrow={t('crt.header_eyebrow', locale)}
+        title={t('crt.header_title', locale)}
         subtitle={
           <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-editorial)' }}>
-            Pick three public entries from the last two weeks. They show up
-            on the leaderboard&rsquo;s{' '}
+            {subtitleParts[0]}
             <Link
               href="/search"
               className="not-italic text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
             >
-              Editor&rsquo;s picks
-            </Link>{' '}
-            tab until you replace them next week.
+              {linkLabel}
+            </Link>
+            {subtitleParts.slice(1).join(linkLabel)}
           </p>
         }
       />
 
-      <CurationPanel />
+      <CurationPanel locale={locale} />
 
       <p className="mt-9 text-[13px] leading-[1.6] text-[#8C6520] opacity-90">
-        Picks are world-readable. Authors are linked via their public
-        profile, so make sure the entries are ones the writers would be
-        glad to be highlighted for.
+        {t('crt.footer_note', locale)}
       </p>
     </main>
   );

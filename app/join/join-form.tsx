@@ -6,8 +6,9 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { t, type Locale } from '@/lib/translations';
 
-export default function JoinForm({ initialCode }: { initialCode: string }) {
+export default function JoinForm({ initialCode, locale }: { initialCode: string; locale: Locale }) {
   const router = useRouter();
   const [code, setCode] = useState(initialCode);
   const [submitting, setSubmitting] = useState(false);
@@ -27,14 +28,14 @@ export default function JoinForm({ initialCode }: { initialCode: string }) {
       });
       const json = await res.json();
       if (!res.ok) {
-        setError(json?.error || 'Could not join class.');
+        setError(json?.error || t('join.err_could_not_join', locale));
         setSubmitting(false);
         return;
       }
       router.push(`/classes/${json.class_id}`);
       router.refresh();
     } catch {
-      setError('Network error.');
+      setError(t('join.err_network', locale));
       setSubmitting(false);
     }
   }
@@ -42,7 +43,7 @@ export default function JoinForm({ initialCode }: { initialCode: string }) {
   return (
     <form className="pixel-form" onSubmit={onSubmit} style={{ display: 'grid', gap: 16 }}>
       <label style={{ display: 'grid', gap: 6 }}>
-        <span>INVITE CODE</span>
+        <span>{t('join.invite_code_label', locale)}</span>
         <input
           type="text"
           value={code}
@@ -66,7 +67,7 @@ export default function JoinForm({ initialCode }: { initialCode: string }) {
       )}
 
       <button type="submit" disabled={submitting || !code.trim()}>
-        {submitting ? 'Joining…' : 'Join class'}
+        {submitting ? t('join.joining', locale) : t('join.join_class', locale)}
       </button>
     </form>
   );

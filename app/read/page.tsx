@@ -4,6 +4,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PixelPageHeader } from "@/components/pixel-window";
 import ComingSoonCard from "@/components/coming-soon-card";
+import { getServerLocale } from "@/lib/locale-server";
+import { t } from "@/lib/translations";
 
 export const metadata: Metadata = {
   title: "The Reading Hour · Mull",
@@ -12,34 +14,36 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://mull.world/read" },
 };
 
-export default function ReadingHourPage() {
+export default async function ReadingHourPage() {
+  const locale = await getServerLocale();
   return (
     <main className="mx-auto max-w-[820px] px-6 pb-32 pt-12 sm:px-10 sm:pt-16">
       <PixelPageHeader
-        eyebrow="▶ THE READING HOUR · BUILDING"
-        title="ONE HOUR. ONE TEXT. FIVE PROMPTS."
+        eyebrow={t("rd.header_eyebrow", locale)}
+        title={t("rd.header_title", locale)}
         subtitle={null}
       />
       <ComingSoonCard
-        eyebrow="THE READING HOUR · BUILDING"
-        title="An hour with a primary text"
-        pitch="A 60-minute reading session with a primary text Mull picks for you — chosen from your nearest philosophers. Five prompts fire at intervals during the hour (Pomodoro-style, but for thinking). Brief synthesis at the end you can save to your anthology."
+        locale={locale}
+        eyebrow={t("rd.card_eyebrow", locale)}
+        title={t("rd.card_title", locale)}
+        pitch={t("rd.pitch", locale)}
         doing={[
-          "Mull picks a passage of the right length from a thinker close to you.",
-          "Five prompts space out across the hour: notice the question, define a term, find the move, steelman one objection, write the line you'd remember.",
-          "End-of-hour: a short synthesis form, with three sentences of yours and a kindred quote.",
-          "Drops into your /atlas as Range + Depth XP.",
+          t("rd.doing_1", locale),
+          t("rd.doing_2", locale),
+          t("rd.doing_3", locale),
+          t("rd.doing_4", locale),
         ]}
-        when="Building now. Earliest ship: Q3 2026. Needs ~80 hand-picked text excerpts before it can launch with substance."
+        when={t("rd.when", locale)}
         accent={{ primary: "#3D6FA5", deep: "#0F2236", soft: "#E0E8F0" }}
-        meantime={{ href: "/pilgrimage", label: "The Pilgrimage gives you a 30-day reading-shaped arc tuned to your archetype." }}
+        meantime={{ href: "/pilgrimage", label: t("rd.meantime", locale) }}
       />
       <p className="mt-12 text-center text-[13px] text-[#8C6520]">
         <Link
           href="/"
           className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
         >
-          ← Back to Mull
+          {t("rd.back", locale)}
         </Link>
       </p>
     </main>

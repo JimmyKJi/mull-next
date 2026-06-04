@@ -14,13 +14,30 @@ import {
   readEvents,
 } from "@/lib/capabilities";
 import { readAnthology, type AnthologyEntry } from "@/lib/anthology";
+import { t, type Locale } from "@/lib/translations";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-editorial), Georgia, serif";
 
-const MONTH_LABELS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+const MONTH_KEYS = [
+  "yr.month_jan", "yr.month_feb", "yr.month_mar", "yr.month_apr",
+  "yr.month_may", "yr.month_jun", "yr.month_jul", "yr.month_aug",
+  "yr.month_sep", "yr.month_oct", "yr.month_nov", "yr.month_dec",
+];
 
-export default function YearView() {
+// Render **bold** spans inside a translated string.
+function emph(text: string): React.ReactNode[] {
+  return text.split(/(\*\*[^*]+\*\*)/g).map((seg, i) =>
+    seg.startsWith("**") && seg.endsWith("**") ? (
+      <strong key={i}>{seg.slice(2, -2)}</strong>
+    ) : (
+      seg
+    ),
+  );
+}
+
+export default function YearView({ locale }: { locale: Locale }) {
+  const MONTH_LABELS = MONTH_KEYS.map((k) => t(k, locale));
   const [events, setEvents] = useState<CapabilityEvent[] | null>(null);
   const [anthology, setAnthology] = useState<AnthologyEntry[] | null>(null);
 
@@ -42,7 +59,7 @@ export default function YearView() {
   if (events === null || anthology === null) {
     return (
       <div className="text-center text-[14px] text-[#8C6520]" style={{ fontFamily: serif }}>
-        Loading your year…
+        {t("yr.loading", locale)}
       </div>
     );
   }
@@ -86,11 +103,11 @@ export default function YearView() {
     <div className="space-y-5">
       {/* Headlines */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <Stat label="MOVES" value={String(thisYearsEvents.length)} color="#B8862F" />
-        <Stat label="ACTIVE DAYS" value={String(activeDays)} color="#2F5D5C" />
-        <Stat label="SAVED" value={String(thisYearsAnthology.length)} color="#8C3717" />
+        <Stat label={t("yr.stat_moves", locale)} value={String(thisYearsEvents.length)} color="#B8862F" />
+        <Stat label={t("yr.stat_active_days", locale)} value={String(activeDays)} color="#2F5D5C" />
+        <Stat label={t("yr.stat_saved", locale)} value={String(thisYearsAnthology.length)} color="#8C3717" />
         <Stat
-          label="TOP SKILL"
+          label={t("yr.stat_top_skill", locale)}
           value={SKILL_META[topSkill].name.toUpperCase()}
           color={SKILL_META[topSkill].color}
         />
@@ -105,7 +122,7 @@ export default function YearView() {
           className="flex items-center justify-between border-b-2 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
           style={{ fontFamily: pixel }}
         >
-          <span>▶ MOVES BY MONTH AND SKILL · {year}</span>
+          <span>▶ {t("yr.heatmap_header", locale, { year })}</span>
           <span className="text-[#B8862F]">YEAR.SYS</span>
         </div>
         <div className="overflow-x-auto p-4">
@@ -152,7 +169,7 @@ export default function YearView() {
                       return (
                         <td
                           key={mi}
-                          title={`${meta.name} · ${MONTH_LABELS[mi]} · ${v} XP`}
+                          title={t("yr.cell_tooltip", locale, { skill: meta.name, month: MONTH_LABELS[mi], xp: v })}
                           style={{
                             width: 28,
                             height: 22,
@@ -188,11 +205,15 @@ export default function YearView() {
         >
           {topMonth && topMonth.total > 0 ? (
             <>
-              Your most active month so far: <strong>{MONTH_LABELS[topMonth.m]}</strong>{" "}
-              ({topMonth.total} XP).
+              {emph(
+                t("yr.most_active_month", locale, {
+                  month: MONTH_LABELS[topMonth.m],
+                  xp: topMonth.total,
+                }),
+              )}
             </>
           ) : (
-            "No events recorded this year yet. Start one of the surfaces below."
+            t("yr.no_events", locale)
           )}
         </div>
       </div>
@@ -200,10 +221,10 @@ export default function YearView() {
       {/* CTAs to the active surfaces */}
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         {[
-          { href: "/spar", label: "Daily Spar" },
-          { href: "/crucible", label: "Crucible" },
-          { href: "/wandering", label: "Wandering" },
-          { href: "/pilgrimage", label: "Pilgrimage" },
+          { href: "/spar", label: t("yr.cta_daily_spar", locale) },
+          { href: "/crucible", label: t("yr.cta_crucible", locale) },
+          { href: "/wandering", label: t("yr.cta_wandering", locale) },
+          { href: "/pilgrimage", label: t("yr.cta_pilgrimage", locale) },
         ].map((c) => (
           <Link
             key={c.href}

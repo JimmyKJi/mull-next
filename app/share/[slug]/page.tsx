@@ -26,6 +26,8 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getArchetypeByKey } from '@/lib/archetypes';
 import { FIGURES } from '@/lib/figures';
+import { getServerLocale } from '@/lib/locale-server';
+import { t } from '@/lib/translations';
 import MullWordmark from '@/components/mull-wordmark';
 
 const serif = "var(--font-prose)";
@@ -47,6 +49,7 @@ export default async function SharePage({
 }) {
   const { slug } = await params;
   const sp = await searchParams;
+  const locale = await getServerLocale();
   const archetype = getArchetypeByKey(slug);
   if (!archetype) notFound();
 
@@ -124,7 +127,7 @@ export default async function SharePage({
             textTransform: 'uppercase',
             letterSpacing: '0.18em',
           }}>
-            ▸ ARCHETYPE
+            ▸ {t('shp.archetype_label', locale)}
           </div>
         </div>
 
@@ -185,7 +188,7 @@ export default async function SharePage({
             border: '2px solid #8C6520',
             background: '#F8EDC8',
           }}>
-            ▸ {pct}% ALIGNMENT
+            ▸ {t('shp.alignment_pct', locale, { pct })}
           </div>
         )}
 
@@ -248,7 +251,7 @@ export default async function SharePage({
           letterSpacing: '0.18em',
           textTransform: 'uppercase',
         }}>
-          ▸ FIND YOURS AT MULL.WORLD
+          ▸ {t('shp.find_yours', locale, { url: 'MULL.WORLD' })}
         </div>
       </article>
 
@@ -271,7 +274,7 @@ export default async function SharePage({
           lineHeight: 1.5,
           marginBottom: 16,
         }}>
-          📸 Screenshot the card above and share it to your story or post. Tag <strong>@mull</strong> if you&rsquo;d like.
+          📸 {t('shp.screenshot_before', locale)}<strong>@mull</strong>{t('shp.screenshot_after', locale)}
         </div>
         <p style={{
           fontFamily: serif,
@@ -282,7 +285,7 @@ export default async function SharePage({
           lineHeight: 1.55,
           opacity: 0.9,
         }}>
-          Saving as an image: long-press the card on iOS/Android, or use your phone&rsquo;s screenshot shortcut.
+          {t('shp.saving_hint', locale)}
         </p>
         <Link href="/account" style={{
           fontFamily: pixel,
@@ -294,7 +297,7 @@ export default async function SharePage({
           borderBottom: '2px solid #8C6520',
           paddingBottom: 1,
         }}>
-          ◂ BACK TO YOUR ACCOUNT
+          ◂ {t('shp.back_to_account', locale)}
         </Link>
       </div>
     </main>

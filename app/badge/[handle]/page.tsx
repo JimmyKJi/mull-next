@@ -24,6 +24,8 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata, Viewport } from 'next';
 import { createClient } from '@/utils/supabase/server';
+import { getServerLocale } from '@/lib/locale-server';
+import { t } from '@/lib/translations';
 import { ArchetypeSprite } from '@/components/archetype-sprite';
 
 export const metadata: Metadata = {
@@ -68,6 +70,7 @@ export default async function BadgePage({
 }) {
   const { handle } = await params;
   const supabase = await createClient();
+  const locale = await getServerLocale();
 
   const { data: profile } = await supabase
     .from('public_profiles')
@@ -165,7 +168,7 @@ export default async function BadgePage({
             textTransform: 'uppercase',
             marginBottom: 4,
           }}>
-            ON MULL
+            {t('bdg.on_mull', locale)}
           </div>
           <div style={{
             fontFamily: serif,
@@ -205,7 +208,7 @@ export default async function BadgePage({
               color: '#8C6520',
               lineHeight: 1.2,
             }}>
-              an anonymous mind
+              {t('bdg.anonymous_mind', locale)}
             </div>
           )}
         </div>

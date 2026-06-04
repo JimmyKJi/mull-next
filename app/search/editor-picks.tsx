@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
 import { weekKey, weekRangeLabel } from '@/lib/week';
 import EmptyStateSprite from '@/components/empty-state-sprite';
+import { t, type Locale } from '@/lib/translations';
 
 const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
@@ -31,13 +32,13 @@ type Pick = {
   author_show_archetype: boolean | null;
 };
 
-const SOURCE_LABEL: Record<Pick['source_type'], string> = {
-  dilemma: 'Daily dilemma',
-  diary: 'Diary',
-  exercise: 'Exercise reflection',
+const SOURCE_LABEL_KEY: Record<Pick['source_type'], string> = {
+  dilemma: 'srch2.source_dilemma',
+  diary: 'srch2.source_diary',
+  exercise: 'srch2.source_exercise',
 };
 
-export default async function EditorPicks({ locale = 'en' }: { locale?: string }) {
+export default async function EditorPicks({ locale = 'en' as Locale }: { locale?: Locale }) {
   const supabase = await createClient();
   const week = weekKey();
   const { data, error } = await supabase
@@ -57,7 +58,7 @@ export default async function EditorPicks({ locale = 'en' }: { locale?: string }
           margin: 0, color: '#221E18', letterSpacing: '0.04em',
           textShadow: '3px 3px 0 #B8862F', lineHeight: 1.1,
         }}>
-          EDITOR&rsquo;S PICKS
+          {t('srch2.picks_h2', locale).toUpperCase()}
         </h2>
         <span style={{
           fontFamily: sans, fontSize: 11, fontWeight: 600,
@@ -72,7 +73,7 @@ export default async function EditorPicks({ locale = 'en' }: { locale?: string }
         fontSize: 16, color: '#4A4338',
         margin: '0 0 22px', lineHeight: 1.55,
       }}>
-        Three publicly posted entries — dilemma, diary, or exercise reflection — chosen this week for the kind of attention they reward. A different three each week.
+        {t('srch2.picks_blurb', locale)}
       </p>
 
       {picks.length === 0 ? (
@@ -84,7 +85,7 @@ export default async function EditorPicks({ locale = 'en' }: { locale?: string }
         }}>
           <EmptyStateSprite
             variant="star"
-            caption="No picks this week yet. Check back in a few days, or set your own entries to public to be eligible for next week's round."
+            caption={t('srch2.picks_empty', locale)}
           />
         </div>
       ) : (
@@ -110,7 +111,7 @@ export default async function EditorPicks({ locale = 'en' }: { locale?: string }
                   color: '#8C6520', textTransform: 'uppercase',
                   letterSpacing: '0.16em',
                 }}>
-                  {SOURCE_LABEL[p.source_type]}
+                  {t(SOURCE_LABEL_KEY[p.source_type], locale)}
                   {p.author_handle && (
                     <>
                       {' · '}
@@ -153,7 +154,7 @@ export default async function EditorPicks({ locale = 'en' }: { locale?: string }
                   fontFamily: sans, fontSize: 12, color: '#8C6520',
                   marginBottom: 8,
                 }}>
-                  Exercise: <Link href={`/exercises/${p.exercise_slug}`} style={{ color: '#8C6520' }}>{p.exercise_slug}</Link>
+                  {t('srch2.picks_exercise_label', locale)} <Link href={`/exercises/${p.exercise_slug}`} style={{ color: '#8C6520' }}>{p.exercise_slug}</Link>
                 </div>
               )}
 
@@ -175,7 +176,7 @@ export default async function EditorPicks({ locale = 'en' }: { locale?: string }
                     color: '#8C6520', textTransform: 'uppercase',
                     letterSpacing: '0.18em', marginBottom: 4,
                   }}>
-                    Why this
+                    {t('srch2.picks_why_this', locale)}
                   </div>
                   <div style={{
                     fontFamily: serif, fontStyle: 'italic',

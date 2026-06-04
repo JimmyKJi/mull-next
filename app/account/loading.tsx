@@ -6,9 +6,13 @@
 // ink border, no border-radius) so the skeleton speaks the same
 // visual language as the resolved page.
 
+import { getServerLocale } from "@/lib/locale-server";
+import { t } from "@/lib/translations";
+
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
-export default function Loading() {
+export default async function Loading() {
+  const locale = await getServerLocale();
   return (
     <main style={{ maxWidth: 760, margin: '60px auto', padding: '0 24px' }}>
       <header style={{
@@ -29,7 +33,7 @@ export default function Loading() {
         color: '#8C6520', textTransform: 'uppercase',
         letterSpacing: '0.18em', marginBottom: 14,
       }}>
-        ▸ LOADING…
+        ▸ {t('ldg.loading', locale).toUpperCase()}
       </div>
       <div className="pixel-shimmer" style={{ width: '40%', height: 36, marginBottom: 16 }} />
       <div className="pixel-shimmer" style={{ width: '60%', height: 18, marginBottom: 36 }} />

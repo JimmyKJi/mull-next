@@ -17,6 +17,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { t, type Locale, isLocale } from '@/lib/translations';
 
 const serif = "var(--font-prose)";
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
@@ -32,6 +33,13 @@ export default function ReferralCard({ initialCode = null, initialCount = 0 }: P
   const [code, setCode] = useState<string | null>(initialCode);
   const [count] = useState<number>(initialCount);
   const [copied, setCopied] = useState(false);
+  const [locale, setLocale] = useState<Locale>('en');
+
+  useEffect(() => {
+    const m = document.cookie.match(/(?:^|; )mull_locale=([^;]+)/);
+    const v = m?.[1];
+    if (v && isLocale(v)) setLocale(v);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -83,16 +91,16 @@ export default function ReferralCard({ initialCode = null, initialCount = 0 }: P
         color: '#8C6520', textTransform: 'uppercase',
         letterSpacing: '0.18em', marginBottom: 10,
       }}>
-        ▸ BRING A FRIEND
+        ▸ {t('crd.referral_eyebrow', locale)}
       </div>
       <p style={{
         fontFamily: serif, fontStyle: 'italic',
         fontSize: 15.5, color: '#4A4338',
         margin: '0 0 16px', lineHeight: 1.55,
       }}>
-        Two people thinking on the same questions sharpens both maps.
+        {t('crd.referral_lead', locale)}
         {count > 0 && (
-          <> {count} {count === 1 ? 'friend has' : 'friends have'} joined via your link.</>
+          <> {t(count === 1 ? 'crd.referral_count_one' : 'crd.referral_count_many', locale, { n: count })}</>
         )}
       </p>
 
@@ -138,7 +146,7 @@ export default function ReferralCard({ initialCode = null, initialCount = 0 }: P
             transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
           }}
         >
-          {copied ? '✓ COPIED' : 'COPY LINK'}
+          {copied ? `✓ ${t('crd.copied_label', locale)}` : t('crd.copy_link', locale)}
         </button>
       </div>
       <p style={{
@@ -146,7 +154,7 @@ export default function ReferralCard({ initialCode = null, initialCount = 0 }: P
         color: '#8C6520',
         margin: '12px 0 0', opacity: 0.85, lineHeight: 1.5,
       }}>
-        Friends who join via your link show as &ldquo;introduced by you&rdquo; on their public profile (if they make one).
+        {t('crd.referral_note', locale)}
       </p>
     </section>
   );

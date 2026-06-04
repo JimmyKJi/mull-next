@@ -15,6 +15,8 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { createClient } from '@/utils/supabase/server';
 import { createAdminClient } from '@/utils/supabase/admin';
+import { getServerLocale } from '@/lib/locale-server';
+import { t, type Locale } from '@/lib/translations';
 import MullWordmark from '@/components/mull-wordmark';
 import JoinForm from '../join-form';
 
@@ -48,6 +50,8 @@ export default async function JoinByCodePage({
     redirect(`/signup?next=/join/${encodeURIComponent(code)}`);
   }
 
+  const locale = await getServerLocale();
+
   // Preview the class (name + term + school) so the student knows
   // what they're about to join. Use admin client because the student
   // isn't a member yet — RLS would otherwise block the SELECT.
@@ -67,12 +71,12 @@ export default async function JoinByCodePage({
 
   if (preview?.is_archived) {
     return (
-      <NotFoundShell code={code} reason="This class has been archived. Reach out to your instructor for a new code." />
+      <NotFoundShell code={code} reason={t('join.reason_archived', locale)} locale={locale} />
     );
   }
   if (preview === null) {
     return (
-      <NotFoundShell code={code} reason="That invite code doesn't match any class. Double-check the spelling — codes are 6 characters." />
+      <NotFoundShell code={code} reason={t('join.reason_no_match', locale)} locale={locale} />
     );
   }
 
@@ -85,7 +89,7 @@ export default async function JoinByCodePage({
           color: '#4A4338', textDecoration: 'none',
           letterSpacing: 0.4, textTransform: 'uppercase',
         }}>
-          ◂ YOUR CLASSES
+          ◂ {t('join.your_classes', locale)}
         </Link>
       </div>
 
@@ -97,7 +101,7 @@ export default async function JoinByCodePage({
         letterSpacing: '0.18em',
         marginBottom: 14,
       }}>
-        ▸ YOU&apos;VE BEEN INVITED
+        ▸ {t('join.invited_eyebrow', locale)}
       </div>
       <h1 style={{
         fontFamily: pixel,
@@ -109,7 +113,7 @@ export default async function JoinByCodePage({
         textShadow: '3px 3px 0 #2F5D5C',
         lineHeight: 1.15,
       }}>
-        JOIN: {preview?.name?.toUpperCase()}
+        {t('join.join_label', locale)} {preview?.name?.toUpperCase()}
       </h1>
       {(preview?.term || preview?.school_name) && (
         <p style={{
@@ -130,17 +134,15 @@ export default async function JoinByCodePage({
         margin: '0 0 22px',
         lineHeight: 1.55,
       }}>
-        Joining adds you to the class roster. Your teacher will see your
-        Mull display name + responses to class assignments. Your private
-        dilemma + diary entries outside the class stay private.
+        {t('join.roster_note', locale)}
       </p>
 
-      <JoinForm initialCode={code} />
+      <JoinForm initialCode={code} locale={locale} />
     </main>
   );
 }
 
-function NotFoundShell({ code, reason }: { code: string; reason: string }) {
+function NotFoundShell({ code, reason, locale }: { code: string; reason: string; locale: Locale }) {
   return (
     <main className="mx-auto max-w-[540px] px-6 pb-32 pt-12 sm:px-10">
       <div className="mb-6">
@@ -162,7 +164,7 @@ function NotFoundShell({ code, reason }: { code: string; reason: string }) {
           letterSpacing: '0.18em',
           marginBottom: 14,
         }}>
-          ▸ INVITE NOT VALID
+          ▸ {t('join.invite_invalid_eyebrow', locale)}
         </div>
         <h1 style={{
           fontFamily: serif,
@@ -171,7 +173,9 @@ function NotFoundShell({ code, reason }: { code: string; reason: string }) {
           margin: '0 0 12px',
           letterSpacing: '-0.4px',
         }}>
-          Code <code style={{ fontFamily: pixel, fontSize: 22 }}>{code}</code> didn&rsquo;t work.
+          {t('join.code_didnt_work_before', locale)}
+          <code style={{ fontFamily: pixel, fontSize: 22 }}>{code}</code>
+          {t('join.code_didnt_work_after', locale)}
         </h1>
         <p style={{
           fontFamily: serif,
@@ -202,7 +206,7 @@ function NotFoundShell({ code, reason }: { code: string; reason: string }) {
             transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
           }}
         >
-          ▸ TRY ANOTHER CODE
+          ▸ {t('join.try_another_code', locale)}
         </Link>
       </div>
     </main>

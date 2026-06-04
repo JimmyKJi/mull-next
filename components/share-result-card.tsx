@@ -13,7 +13,8 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { t, type Locale, isLocale } from '@/lib/translations';
 
 const sans = "'Inter', system-ui, sans-serif";
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
@@ -37,15 +38,21 @@ export default function ShareResultCard({
 }) {
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [locale, setLocale] = useState<Locale>('en');
+
+  useEffect(() => {
+    const m = document.cookie.match(/(?:^|; )mull_locale=([^;]+)/);
+    const v = m?.[1];
+    if (v && isLocale(v)) setLocale(v);
+  }, []);
 
   const slug = archetypeSlug(archetype);
   const cleanArch = archetype.replace(/^The\s+/i, '');
   const flavorLabel = flavor ? `${flavor} ${cleanArch}` : cleanArch;
   const url = `https://mull.world/archetype/${slug}`;
-  const tweet =
-    `I just took the Mull quiz and landed at the ${flavorLabel}` +
-    `${alignmentPct ? ` (${alignmentPct}% alignment)` : ''}. ` +
-    `Find out where you sit on the map of how you think — `;
+  const tweet = alignmentPct
+    ? t('crd.share_tweet_pct', locale, { label: flavorLabel, pct: alignmentPct })
+    : t('crd.share_tweet', locale, { label: flavorLabel });
 
   const xIntent =
     `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}` +
@@ -65,7 +72,7 @@ export default function ShareResultCard({
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
     } catch {
-      window.prompt('Copy this link:', url);
+      window.prompt(t('crd.copy_link_prompt', locale), url);
     }
   }
 
@@ -106,7 +113,7 @@ export default function ShareResultCard({
       }
       const json = await res.json();
       if (!res.ok) {
-        setError(json?.error || 'Could not create invite.');
+        setError(json?.error || t('crd.challenge_err_create', locale));
         setChallengeBusy(false);
         return;
       }
@@ -116,7 +123,7 @@ export default function ShareResultCard({
         await navigator.clipboard.writeText(full);
       } catch {/* clipboard denied — the URL is still visible below */}
     } catch {
-      setError('Network error.');
+      setError(t('crd.challenge_err_network', locale));
     } finally {
       setChallengeBusy(false);
     }
@@ -133,7 +140,7 @@ export default function ShareResultCard({
         color: '#8C6520', textTransform: 'uppercase',
         letterSpacing: '0.18em', marginBottom: 12,
       }}>
-        ▸ SHARE YOUR ARCHETYPE
+        ▸ {t('crd.share_eyebrow', locale)}
       </div>
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
         <a
@@ -144,7 +151,7 @@ export default function ShareResultCard({
           style={{ ...pixelShareButton, textDecoration: 'none' }}
         >
           <span aria-hidden style={{ marginRight: 8 }}>𝕏</span>
-          <span>POST ON X</span>
+          <span>{t('crd.share_post_x', locale)}</span>
         </a>
         <a
           href={shareCardUrl}
@@ -152,7 +159,7 @@ export default function ShareResultCard({
           rel="noopener noreferrer"
           className="pixel-press"
           style={{ ...pixelShareButton, textDecoration: 'none' }}
-          title="Opens a screenshot-friendly card you can share to Instagram"
+          title={t('crd.share_instagram_title', locale)}
         >
           <span aria-hidden style={{ marginRight: 8 }}>◎</span>
           <span>INSTAGRAM</span>
@@ -163,7 +170,7 @@ export default function ShareResultCard({
           rel="noopener noreferrer"
           className="pixel-press"
           style={{ ...pixelShareButton, textDecoration: 'none' }}
-          title="Opens a screenshot-friendly card you can share to TikTok"
+          title={t('crd.share_tiktok_title', locale)}
         >
           <span aria-hidden style={{ marginRight: 8 }}>♪</span>
           <span>TIKTOK</span>
@@ -179,12 +186,12 @@ export default function ShareResultCard({
           }}
         >
           <span aria-hidden style={{ marginRight: 8 }}>↗</span>
-          <span>{copied ? 'COPIED!' : 'COPY LINK'}</span>
+          <span>{copied ? t('crd.share_copied', locale) : t('crd.share_copy_link', locale)}</span>
         </button>
         {hasNativeShare && (
           <button type="button" onClick={nativeShare} className="pixel-press" style={{ ...pixelShareButton, cursor: 'pointer' }}>
             <span aria-hidden style={{ marginRight: 8 }}>↗</span>
-            <span>SHARE…</span>
+            <span>{t('crd.share_native', locale)}</span>
           </button>
         )}
         {/* Friend-challenge invite. Different visual weight (amber
@@ -206,7 +213,7 @@ export default function ShareResultCard({
           }}
         >
           <span aria-hidden style={{ marginRight: 8 }}>⚔</span>
-          <span>{challengeBusy ? 'MINTING…' : 'CHALLENGE A FRIEND'}</span>
+          <span>{challengeBusy ? t('crd.challenge_minting', locale) : t('crd.challenge_friend', locale)}</span>
         </button>
       </div>
       {challengeUrl && (
@@ -226,7 +233,7 @@ export default function ShareResultCard({
             textTransform: 'uppercase',
             marginBottom: 8,
           }}>
-            ▸ INVITE LINK COPIED · SHARE IT WITH A FRIEND
+            ▸ {t('crd.invite_copied_banner', locale)}
           </div>
           <code
             style={{

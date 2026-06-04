@@ -4,6 +4,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PixelPageHeader } from "@/components/pixel-window";
 import ComingSoonCard from "@/components/coming-soon-card";
+import { getServerLocale } from "@/lib/locale-server";
+import { t } from "@/lib/translations";
 
 export const metadata: Metadata = {
   title: "Letters · Mull",
@@ -12,34 +14,36 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://mull.world/letters" },
 };
 
-export default function LettersPage() {
+export default async function LettersPage() {
+  const locale = await getServerLocale();
   return (
     <main className="mx-auto max-w-[820px] px-6 pb-32 pt-12 sm:px-10 sm:pt-16">
       <PixelPageHeader
-        eyebrow="▶ LETTERS BETWEEN INHERITORS · BUILDING"
-        title="A CORRESPONDENCE WITH THE DECEASED"
+        eyebrow={t("ltr.header_eyebrow", locale)}
+        title={t("ltr.header_title", locale)}
         subtitle={null}
       />
       <ComingSoonCard
-        eyebrow="LETTERS BETWEEN INHERITORS · BUILDING"
-        title="The Inheritor mystery, continued"
-        pitch="If you finished the Inheritor, you got an archetype-keyed task from the deceased — visit the daughter, take the steamship ticket, publish the rival's letter. This surface extends the mystery: structured letters arrive in your inbox at +1 week, +1 month, +3 months, asking what you've done with the task. You write back. The deceased writes back to you."
+        locale={locale}
+        eyebrow={t("ltr.card_eyebrow", locale)}
+        title={t("ltr.card_title", locale)}
+        pitch={t("ltr.pitch", locale)}
         doing={[
-          "Opt-in after you finish the Inheritor. Mull schedules the first letter for +7 days.",
-          "Each letter is in-fiction (the deceased writing) and personal (refers to your specific task and ending).",
-          "Your replies persist as a private correspondence — readable only by you.",
-          "Drops into /atlas as Depth + Self-Awareness XP.",
+          t("ltr.doing_1", locale),
+          t("ltr.doing_2", locale),
+          t("ltr.doing_3", locale),
+          t("ltr.doing_4", locale),
         ]}
-        when="Building now. Needs Resend cron + persistent conversation state. Earliest ship: Q3 2026."
+        when={t("ltr.when", locale)}
         accent={{ primary: "#9067B0", deep: "#3F2454", soft: "#E8DCF0" }}
-        meantime={{ href: "/quiz/journey", label: "Take or re-take the Inheritor murder mystery." }}
+        meantime={{ href: "/quiz/journey", label: t("ltr.meantime", locale) }}
       />
       <p className="mt-12 text-center text-[13px] text-[#8C6520]">
         <Link
           href="/"
           className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
         >
-          ← Back to Mull
+          {t("ltr.back", locale)}
         </Link>
       </p>
     </main>

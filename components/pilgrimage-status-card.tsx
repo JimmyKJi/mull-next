@@ -11,12 +11,20 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { PILGRIMAGE_KEY, getPilgrimageArc, type PilgrimageState } from "@/lib/pilgrimage";
 import { ARCHETYPE_COLORS } from "@/lib/archetype-colors";
+import { t, isLocale, type Locale } from "@/lib/translations";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-editorial), Georgia, serif";
 
 export default function PilgrimageStatusCard() {
   const [state, setState] = useState<PilgrimageState | null | "loading">("loading");
+  const [locale, setLocale] = useState<Locale>("en");
+
+  useEffect(() => {
+    const m = document.cookie.match(/(?:^|; )mull_locale=([^;]+)/);
+    const v = m?.[1];
+    if (v && isLocale(v)) setLocale(v);
+  }, []);
 
   useEffect(() => {
     try {
@@ -56,7 +64,7 @@ export default function PilgrimageStatusCard() {
             marginBottom: 6,
           }}
         >
-          ▶ THE PILGRIMAGE · 30 DAYS · ARCHETYPE-PERSONALIZED
+          ▶ {t("plsc.cta_eyebrow", locale)}
         </div>
         <p
           style={{
@@ -67,9 +75,7 @@ export default function PilgrimageStatusCard() {
             margin: "0 0 10px",
           }}
         >
-          A 30-day arc tuned to your archetype. One prompt per day,
-          slow drift across the month, real momentum. Different from
-          the daily dilemma — this one has a curve.
+          {t("plsc.cta_blurb", locale)}
         </p>
         <Link
           href="/pilgrimage"
@@ -86,7 +92,7 @@ export default function PilgrimageStatusCard() {
             textDecoration: "none",
           }}
         >
-          ▶ BEGIN
+          ▶ {t("plsc.cta_begin", locale)}
         </Link>
       </div>
     );
@@ -133,7 +139,7 @@ export default function PilgrimageStatusCard() {
             textTransform: "uppercase",
           }}
         >
-          ▶ THE {state.archetype.toUpperCase()} ARC · DAY {state.currentDay}/30
+          ▶ {t("plsc.arc_eyebrow", locale, { archetype: state.archetype.toUpperCase(), day: state.currentDay })}
         </div>
         <div
           style={{
@@ -144,7 +150,7 @@ export default function PilgrimageStatusCard() {
             textTransform: "uppercase",
           }}
         >
-          {arc.phases[phase]} · {done} COMPLETED
+          {arc.phases[phase]} · {t("plsc.completed", locale, { n: done })}
         </div>
       </div>
       {/* Progress bar */}
@@ -173,7 +179,7 @@ export default function PilgrimageStatusCard() {
           lineHeight: 1.4,
         }}
       >
-        <strong>Today:</strong> {today.title}
+        <strong>{t("plsc.today_label", locale)}</strong> {today.title}
       </div>
       <div
         style={{
@@ -185,7 +191,7 @@ export default function PilgrimageStatusCard() {
           textTransform: "uppercase",
         }}
       >
-        ▶ OPEN DAY {state.currentDay} →
+        ▶ {t("plsc.open_day", locale, { day: state.currentDay })} →
       </div>
     </Link>
   );

@@ -15,9 +15,16 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import EmptyStateSprite from '@/components/empty-state-sprite';
+import { t, type Locale } from '@/lib/translations';
 
 const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
+
+const SOURCE_LABEL_KEY: Record<'dilemma' | 'diary' | 'exercise', string> = {
+  dilemma: 'crt.source_dilemma',
+  diary: 'crt.source_diary',
+  exercise: 'crt.source_exercise',
+};
 
 type Candidate = {
   source_type: 'dilemma' | 'diary' | 'exercise';
@@ -46,7 +53,7 @@ type CurrentPick = {
 
 type FilterValue = 'all' | 'dilemma' | 'diary' | 'exercise';
 
-export default function CurationPanel() {
+export default function CurationPanel({ locale = 'en' as Locale }: { locale?: Locale }) {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [picks, setPicks] = useState<CurrentPick[]>([]);
   const [week, setWeek] = useState<string>('');
@@ -68,7 +75,7 @@ export default function CurationPanel() {
       if (week) params.set('week', week);
       const res = await fetch(`/api/admin/curate?${params}`);
       const json = await res.json();
-      if (!res.ok) throw new Error(json?.error || 'Failed to load.');
+      if (!res.ok) throw new Error(json?.error || t('crt.err_load', locale));
       setCandidates(json.candidates || []);
       setPicks(json.currentPicks || []);
       setWeek(json.week);
@@ -99,7 +106,7 @@ export default function CurationPanel() {
         }),
       });
       const json = await res.json();
-      if (!res.ok) throw new Error(json?.error || 'Save failed.');
+      if (!res.ok) throw new Error(json?.error || t('crt.err_save', locale));
       await load();
     } catch (e) {
       setError((e as Error).message);
@@ -109,7 +116,7 @@ export default function CurationPanel() {
   }
 
   async function clearSlot(slot: number) {
-    if (!confirm(`Clear slot ${slot}?`)) return;
+    if (!confirm(t('crt.confirm_clear', locale, { slot }))) return;
     setBusy('clear:' + slot);
     setError(null);
     try {
@@ -117,7 +124,7 @@ export default function CurationPanel() {
         method: 'DELETE',
       });
       const json = await res.json();
-      if (!res.ok) throw new Error(json?.error || 'Delete failed.');
+      if (!res.ok) throw new Error(json?.error || t('crt.err_delete', locale));
       await load();
     } catch (e) {
       setError((e as Error).message);
@@ -155,7 +162,7 @@ export default function CurationPanel() {
                 textTransform: 'uppercase', letterSpacing: '0.16em',
                 marginBottom: 8,
               }}>
-                <span>Slot {slot}</span>
+                <span>{t('crt.slot', locale, { n: slot })}</span>
                 {pick && (
                   <button
                     onClick={() => clearSlot(slot)}
@@ -164,7 +171,7 @@ export default function CurationPanel() {
                       background: 'none', border: 'none', cursor: 'pointer',
                       color: '#8C6520', fontSize: 14,
                     }}
-                    title="Clear this slot"
+                    title={t('crt.clear_slot', locale)}
                   >
                     ✕
                   </button>
@@ -176,7 +183,7 @@ export default function CurationPanel() {
                     fontFamily: sans, fontSize: 11,
                     color: '#8C6520', marginBottom: 4,
                   }}>
-                    {pick.source_type} · {pick.author_handle ? `@${pick.author_handle}` : 'no profile'}
+                    {t(SOURCE_LABEL_KEY[pick.source_type], locale)} · {pick.author_handle ? `@${pick.author_handle}` : t('crt.no_profile', locale)}
                   </div>
                   <div style={{
                     fontFamily: serif, fontSize: 14, color: '#221E18',
@@ -202,7 +209,7 @@ export default function CurationPanel() {
                   fontFamily: serif, fontStyle: 'italic',
                   fontSize: 14, color: '#8C6520',
                 }}>
-                  Empty
+                  {t('crt.slot_empty', locale)}
                 </div>
               )}
             </div>
@@ -218,7 +225,7 @@ export default function CurationPanel() {
         <span style={{
           fontFamily: sans, fontSize: 12, color: '#8C6520',
           textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 600,
-        }}>Filter:</span>
+        }}>{t('crt.filter_label', locale)}</span>
         {(['all', 'dilemma', 'diary', 'exercise'] as FilterValue[]).map(v => (
           <button
             key={v}
@@ -233,11 +240,11 @@ export default function CurationPanel() {
               fontFamily: sans, fontSize: 12.5, cursor: 'pointer',
             }}
           >
-            {v}
+            {v === 'all' ? t('crt.filter_all', locale) : t(SOURCE_LABEL_KEY[v], locale)}
           </button>
         ))}
         <span style={{ marginLeft: 'auto', fontFamily: sans, fontSize: 12, color: '#4A4338' }}>
-          From last
+          {t('crt.from_last', locale)}
           <select
             value={days}
             onChange={e => setDays(Number(e.target.value))}
@@ -247,10 +254,10 @@ export default function CurationPanel() {
               border: '1px solid #D6CDB6', borderRadius: 4, background: '#FFFCF4',
             }}
           >
-            <option value={7}>7 days</option>
-            <option value={14}>14 days</option>
-            <option value={30}>30 days</option>
-            <option value={60}>60 days</option>
+            <option value={7}>{t('crt.days', locale, { n: 7 })}</option>
+            <option value={14}>{t('crt.days', locale, { n: 14 })}</option>
+            <option value={30}>{t('crt.days', locale, { n: 30 })}</option>
+            <option value={60}>{t('crt.days', locale, { n: 60 })}</option>
           </select>
         </span>
       </div>
@@ -258,7 +265,7 @@ export default function CurationPanel() {
       {/* Status / errors */}
       {loading && (
         <p style={{ fontFamily: sans, fontSize: 13, color: '#8C6520' }}>
-          Loading candidates…
+          {t('crt.loading_candidates', locale)}
         </p>
       )}
       {error && (
@@ -279,7 +286,7 @@ export default function CurationPanel() {
         }}>
           <EmptyStateSprite
             variant="explorer"
-            caption="No public entries match these filters yet."
+            caption={t('crt.feed_empty', locale)}
           />
         </div>
       )}
@@ -303,11 +310,11 @@ export default function CurationPanel() {
                   color: '#8C6520', textTransform: 'uppercase',
                   letterSpacing: '0.14em',
                 }}>
-                  {c.source_type}
+                  {t(SOURCE_LABEL_KEY[c.source_type], locale)}
                   {c.author_handle && (
                     <> · <Link href={`/u/${c.author_handle}`} style={{ color: '#8C6520' }}>@{c.author_handle}</Link></>
                   )}
-                  {c.word_count != null && <> · {c.word_count}w</>}
+                  {c.word_count != null && <> · {t('crt.word_count', locale, { n: c.word_count })}</>}
                 </span>
                 <span style={{ fontFamily: sans, fontSize: 11, color: '#8C6520' }}>
                   {new Date(c.entry_created_at).toLocaleDateString('en-US', {
@@ -336,7 +343,7 @@ export default function CurationPanel() {
               }}>
                 <input
                   type="text"
-                  placeholder="Optional curator note (shown publicly)"
+                  placeholder={t('crt.note_placeholder', locale)}
                   value={noteDrafts[draftKey] || ''}
                   onChange={e => setNoteDrafts({ ...noteDrafts, [draftKey]: e.target.value })}
                   style={{
@@ -359,7 +366,7 @@ export default function CurationPanel() {
                       opacity: busy === draftKey + ':' + slot ? 0.6 : 1,
                     }}
                   >
-                    Slot {slot}
+                    {t('crt.slot', locale, { n: slot })}
                   </button>
                 ))}
               </div>

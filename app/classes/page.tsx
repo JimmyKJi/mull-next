@@ -13,6 +13,8 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { createClient } from '@/utils/supabase/server';
 import MullWordmark from '@/components/mull-wordmark';
+import { getServerLocale } from '@/lib/locale-server';
+import { t, type Locale } from '@/lib/translations';
 
 export const metadata: Metadata = {
   title: 'Your classes · Mull',
@@ -47,6 +49,7 @@ type StudentClass = {
 };
 
 export default async function ClassesIndexPage() {
+  const locale = await getServerLocale();
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login?next=/classes');
@@ -87,7 +90,7 @@ export default async function ClassesIndexPage() {
             textTransform: 'uppercase',
           }}
         >
-          ◂ ACCOUNT
+          ◂ {t('cls.nav_account', locale)}
         </Link>
       </div>
 
@@ -96,7 +99,7 @@ export default async function ClassesIndexPage() {
         color: '#8C6520', textTransform: 'uppercase',
         letterSpacing: '0.18em', marginBottom: 14,
       }}>
-        ▸ CLASSROOM
+        ▸ {t('cls.index_eyebrow', locale)}
       </div>
 
       <h1 style={{
@@ -109,7 +112,7 @@ export default async function ClassesIndexPage() {
         textShadow: '3px 3px 0 #B8862F',
         lineHeight: 1.1,
       }}>
-        YOUR CLASSES
+        {t('cls.index_title', locale)}
       </h1>
 
       <p style={{
@@ -120,8 +123,7 @@ export default async function ClassesIndexPage() {
         margin: '0 0 28px',
         lineHeight: 1.55,
       }}>
-        Classes you teach, plus classes you&rsquo;re a student in. Create one to
-        invite a roster — students join with the 6-character code.
+        {t('cls.index_intro', locale)}
       </p>
 
       <div className="flex flex-wrap gap-3 mb-10">
@@ -144,7 +146,7 @@ export default async function ClassesIndexPage() {
             transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
           }}
         >
-          ▸ CREATE A CLASS
+          ▸ {t('cls.create_cta', locale)}
         </Link>
         <Link
           href="/join"
@@ -165,7 +167,7 @@ export default async function ClassesIndexPage() {
             transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
           }}
         >
-          ▸ JOIN WITH A CODE
+          ▸ {t('cls.join_cta', locale)}
         </Link>
       </div>
 
@@ -180,10 +182,10 @@ export default async function ClassesIndexPage() {
             marginBottom: 16,
             textShadow: '2px 2px 0 #B8862F',
           }}>
-            ▸ TEACHING ({taught.length})
+            ▸ {t('cls.section_teaching', locale, { count: taught.length })}
           </h2>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 14 }}>
-            {taught.map(c => <TeacherClassCard key={c.id} c={c} />)}
+            {taught.map(c => <TeacherClassCard key={c.id} c={c} locale={locale} />)}
           </ul>
         </section>
       )}
@@ -199,11 +201,11 @@ export default async function ClassesIndexPage() {
             marginBottom: 16,
             textShadow: '2px 2px 0 #2F5D5C',
           }}>
-            ▸ ENROLLED ({studentMemberships.length})
+            ▸ {t('cls.section_enrolled', locale, { count: studentMemberships.length })}
           </h2>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 14 }}>
             {studentMemberships.map(m => m.classes && (
-              <StudentClassCard key={m.class_id} c={m.classes} joinedAt={m.joined_at} />
+              <StudentClassCard key={m.class_id} c={m.classes} joinedAt={m.joined_at} locale={locale} />
             ))}
           </ul>
         </section>
@@ -225,8 +227,7 @@ export default async function ClassesIndexPage() {
             margin: 0,
             lineHeight: 1.55,
           }}>
-            No classes yet. Create one to teach with Mull, or join an
-            existing class with a 6-character code from your instructor.
+            {t('cls.index_empty', locale)}
           </p>
         </div>
       )}
@@ -234,7 +235,7 @@ export default async function ClassesIndexPage() {
   );
 }
 
-function TeacherClassCard({ c }: { c: TaughtClass }) {
+function TeacherClassCard({ c, locale }: { c: TaughtClass; locale: Locale }) {
   return (
     <li>
       <Link
@@ -268,7 +269,7 @@ function TeacherClassCard({ c }: { c: TaughtClass }) {
             letterSpacing: 0.4,
             textTransform: 'uppercase',
           }}>
-            CODE · {c.invite_code}
+            {t('cls.card_code', locale, { code: c.invite_code })}
           </span>
         </div>
         {(c.term || c.school_name) && (
@@ -292,7 +293,7 @@ function TeacherClassCard({ c }: { c: TaughtClass }) {
   );
 }
 
-function StudentClassCard({ c, joinedAt }: { c: NonNullable<StudentClass['classes']>; joinedAt: string }) {
+function StudentClassCard({ c, joinedAt, locale }: { c: NonNullable<StudentClass['classes']>; joinedAt: string; locale: Locale }) {
   return (
     <li>
       <Link
@@ -326,7 +327,9 @@ function StudentClassCard({ c, joinedAt }: { c: NonNullable<StudentClass['classe
             letterSpacing: 0.4,
             textTransform: 'uppercase',
           }}>
-            JOINED {new Date(joinedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+            {t('cls.card_joined', locale, {
+              date: new Date(joinedAt).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', { month: 'short', day: 'numeric' }),
+            })}
           </span>
         </div>
         {(c.term || c.school_name) && (

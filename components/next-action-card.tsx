@@ -15,6 +15,7 @@
 // pixel button with stepped hover.
 
 import Link from 'next/link';
+import { t, type Locale } from '@/lib/translations';
 
 const serif = "var(--font-prose)";
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
@@ -25,10 +26,11 @@ type Props = {
   streak: number;
   hasShareable: boolean;       // user has at least one quiz attempt to share
   topArchetypeKey?: string;
+  locale?: Locale;
 };
 
 export default function NextActionCard({
-  quizCount, respondedToday, streak, hasShareable, topArchetypeKey,
+  quizCount, respondedToday, streak, hasShareable, topArchetypeKey, locale = 'en',
 }: Props) {
   // No quiz yet → caller already shows the FirstStepCard grid; render
   // nothing here so the two don't fight for attention.
@@ -42,40 +44,40 @@ export default function NextActionCard({
   let accent: string;
 
   if (!respondedToday) {
-    eyebrow = "TODAY'S PROMPT";
-    title = "Today's dilemma is waiting.";
-    body = "One short philosophical question. Your answer adds a small shift to your map.";
-    cta = "ANSWER TODAY'S →";
+    eyebrow = t('uic.next_today_eyebrow', locale);
+    title = t('uic.next_today_title', locale);
+    body = t('uic.next_today_body', locale);
+    cta = t('uic.next_today_cta', locale);
     href = '/dilemma';
     accent = '#B8862F';
   } else if (streak >= 7 && hasShareable && topArchetypeKey) {
-    eyebrow = `${streak}-DAY STREAK`;
-    title = "You've kept the practice for a week.";
-    body = "Worth marking. Drop a screenshot to your story so a friend might find their map too.";
-    cta = 'GET YOUR SHARE CARD →';
+    eyebrow = t('uic.next_streak_eyebrow', locale, { n: streak });
+    title = t('uic.next_week_title', locale);
+    body = t('uic.next_week_body', locale);
+    cta = t('uic.next_week_cta', locale);
     href = `/share/${topArchetypeKey}`;
     accent = '#2F5D5C';
   } else if (streak >= 3) {
-    eyebrow = `${streak}-DAY STREAK`;
-    title = 'Today is in. Try a different angle.';
-    body = 'A diary entry or a philosophical exercise lets you write longer-form — they shift the map differently.';
-    cta = 'OPEN THE DIARY →';
+    eyebrow = t('uic.next_streak_eyebrow', locale, { n: streak });
+    title = t('uic.next_angle_title', locale);
+    body = t('uic.next_angle_body', locale);
+    cta = t('uic.next_angle_cta', locale);
     href = '/diary';
     accent = '#7A4A2E';
   } else if (streak >= 1) {
-    eyebrow = `DAY ${streak}`;
-    title = 'Today is in. Come back tomorrow.';
-    body = 'Two days in a row turns this into a habit. The map shifts when you keep showing up.';
-    cta = 'SEE HOW IT SHIFTED →';
+    eyebrow = t('uic.next_day_eyebrow', locale, { n: streak });
+    title = t('uic.next_tomorrow_title', locale);
+    body = t('uic.next_tomorrow_body', locale);
+    cta = t('uic.next_tomorrow_cta', locale);
     href = '/account#progression';
     accent = '#2F5D5C';
   } else {
     // respondedToday && streak === 0 — shouldn't normally happen, but
     // be defensive.
-    eyebrow = "TODAY'S PROMPT";
-    title = 'Nicely done.';
-    body = 'Your response is logged. The shift is small but real — see it on your map below.';
-    cta = 'SCROLL TO MAP →';
+    eyebrow = t('uic.next_today_eyebrow', locale);
+    title = t('uic.next_done_title', locale);
+    body = t('uic.next_done_body', locale);
+    cta = t('uic.next_done_cta', locale);
     href = '/account#map';
     accent = '#2F5D5C';
   }

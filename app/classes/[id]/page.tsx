@@ -15,6 +15,8 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { createClient } from '@/utils/supabase/server';
 import MullWordmark from '@/components/mull-wordmark';
+import { getServerLocale } from '@/lib/locale-server';
+import { t, type Locale } from '@/lib/translations';
 import ClassInviteShare from './class-invite-share';
 import ClassLeaveButton from './class-leave-button';
 
@@ -66,6 +68,7 @@ export default async function ClassDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const locale = await getServerLocale();
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect(`/login?next=/classes/${id}`);
@@ -143,7 +146,7 @@ export default async function ClassDetailPage({
           color: '#4A4338', textDecoration: 'none',
           letterSpacing: 0.4, textTransform: 'uppercase',
         }}>
-          ◂ ALL CLASSES
+          ◂ {t('cls.nav_all_classes', locale)}
         </Link>
       </div>
 
@@ -152,8 +155,8 @@ export default async function ClassDetailPage({
         color: '#8C6520', textTransform: 'uppercase',
         letterSpacing: '0.18em', marginBottom: 14,
       }}>
-        ▸ {isTeacher ? 'TEACHING' : 'ENROLLED IN'}
-        {cls.is_archived && ' · ARCHIVED'}
+        ▸ {isTeacher ? t('cls.role_teaching', locale) : t('cls.role_enrolled', locale)}
+        {cls.is_archived && ` · ${t('cls.archived', locale)}`}
       </div>
 
       <h1 style={{
@@ -198,6 +201,7 @@ export default async function ClassDetailPage({
         <ClassInviteShare
           inviteCode={cls.invite_code}
           studentCount={studentCount}
+          locale={locale}
         />
       )}
 
@@ -225,7 +229,7 @@ export default async function ClassDetailPage({
               transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
             }}
           >
-            ▸ CLASS INSIGHTS · MAP + SHIFTS
+            ▸ {t('cls.insights_link', locale)}
           </Link>
         </div>
       )}
@@ -242,7 +246,7 @@ export default async function ClassDetailPage({
           marginBottom: 16,
           textShadow: '2px 2px 0 #B8862F',
         }}>
-          ▸ ROSTER ({studentCount} {studentCount === 1 ? 'STUDENT' : 'STUDENTS'})
+          ▸ {t(studentCount === 1 ? 'cls.roster_heading_one' : 'cls.roster_heading_many', locale, { count: studentCount })}
         </h2>
         {studentCount === 0 ? (
           <p style={{
@@ -257,7 +261,7 @@ export default async function ClassDetailPage({
             margin: 0,
             textAlign: 'center',
           }}>
-            No students yet. Share the invite link above and they&rsquo;ll appear here.
+            {t('cls.roster_empty', locale)}
           </p>
         ) : (
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 8 }}>
@@ -279,8 +283,8 @@ export default async function ClassDetailPage({
                   {r.pseudonym
                     ? <em style={{ color: '#8C6520' }}>{r.pseudonym}</em>
                     : isTeacher
-                      ? <RosterUserCell userId={r.user_id} />
-                      : (r.user_id === user.id ? 'You' : 'A classmate')}
+                      ? <RosterUserCell userId={r.user_id} locale={locale} />
+                      : (r.user_id === user.id ? t('cls.roster_you', locale) : t('cls.roster_classmate', locale))}
                 </span>
                 <span style={{
                   fontFamily: pixel,
@@ -289,7 +293,9 @@ export default async function ClassDetailPage({
                   letterSpacing: 0.4,
                   textTransform: 'uppercase',
                 }}>
-                  JOINED {new Date(r.joined_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                  {t('cls.card_joined', locale, {
+                    date: new Date(r.joined_at).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', { month: 'short', day: 'numeric' }),
+                  })}
                 </span>
               </li>
             ))}
@@ -318,7 +324,7 @@ export default async function ClassDetailPage({
             margin: 0,
             textShadow: '2px 2px 0 #2F5D5C',
           }}>
-            ▸ ASSIGNMENTS ({(assignments ?? []).length})
+            ▸ {t('cls.assignments_heading', locale, { count: (assignments ?? []).length })}
           </h2>
           {isTeacher && (
             <Link
@@ -340,7 +346,7 @@ export default async function ClassDetailPage({
                 transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
               }}
             >
-              ▸ NEW ASSIGNMENT
+              ▸ {t('cls.new_assignment_cta', locale)}
             </Link>
           )}
         </div>
@@ -359,8 +365,8 @@ export default async function ClassDetailPage({
             textAlign: 'center',
           }}>
             {isTeacher
-              ? 'No assignments yet. Click "New Assignment" to post a prompt to the class.'
-              : 'Your instructor hasn\'t posted any assignments yet.'}
+              ? t('cls.assignments_empty_teacher', locale)
+              : t('cls.assignments_empty_student', locale)}
           </p>
         ) : (
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 12 }}>
@@ -411,10 +417,10 @@ export default async function ClassDetailPage({
                         textTransform: 'uppercase',
                       }}>
                         {isTeacher
-                          ? `${submissionCount} / ${studentCount} SUBMITTED`
+                          ? t('cls.badge_submitted_count', locale, { count: submissionCount, total: studentCount })
                           : submittedByMe
-                            ? '✓ SUBMITTED'
-                            : (overdue ? 'OVERDUE' : 'PENDING')}
+                            ? t('cls.badge_submitted', locale)
+                            : (overdue ? t('cls.badge_overdue', locale) : t('cls.badge_pending', locale))}
                       </span>
                     </div>
                     <div style={{
@@ -425,9 +431,11 @@ export default async function ClassDetailPage({
                       textTransform: 'uppercase',
                       marginBottom: 6,
                     }}>
-                      {a.kind.replace('_', ' ')}
+                      {kindLabel(a.kind, locale)}
                       {a.due_at && (
-                        <> · DUE {new Date(a.due_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</>
+                        <> · {t('cls.due_label', locale, {
+                          date: new Date(a.due_at).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', { month: 'short', day: 'numeric' }),
+                        })}</>
                       )}
                     </div>
                     <p style={{
@@ -454,7 +462,7 @@ export default async function ClassDetailPage({
 
       {/* Footer actions */}
       <nav
-        aria-label="Class actions"
+        aria-label={t('cls.actions_aria', locale)}
         style={{
           marginTop: 48,
           paddingTop: 24,
@@ -466,7 +474,7 @@ export default async function ClassDetailPage({
         }}
       >
         {!isTeacher && (
-          <ClassLeaveButton classId={cls.id} className={cls.name} />
+          <ClassLeaveButton classId={cls.id} className={cls.name} locale={locale} />
         )}
       </nav>
     </main>
@@ -477,7 +485,7 @@ export default async function ClassDetailPage({
 // their name if they have one, otherwise show "Student #N" with a
 // short truncated user id for the teacher's visibility. Defined in
 // the page so it can reach back into Supabase without a round-trip.
-async function RosterUserCell({ userId }: { userId: string }) {
+async function RosterUserCell({ userId, locale }: { userId: string; locale: Locale }) {
   const supabase = await createClient();
   const { data: profile } = await supabase
     .from('public_profiles')
@@ -494,5 +502,14 @@ async function RosterUserCell({ userId }: { userId: string }) {
   }
   // No public profile — show short ID. Teacher gets visibility
   // without leaking PII.
-  return <em style={{ color: '#8C6520' }}>Student · {userId.slice(0, 6)}</em>;
+  return <em style={{ color: '#8C6520' }}>{t('cls.student_short', locale, { id: userId.slice(0, 6) })}</em>;
+}
+
+// Localize the assignment-kind enum (dilemma / exercise / diary_prompt)
+// for the per-card label. Falls back to the raw value with the
+// underscore swapped for a space.
+function kindLabel(kind: string, locale: Locale): string {
+  const key = `cls.kind_${kind}`;
+  const label = t(key, locale);
+  return label === key ? kind.replace('_', ' ') : label;
 }

@@ -9,13 +9,21 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { t, type Locale, isLocale } from '@/lib/translations';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-prose)";
 
 export default function EmbedBadgeSnippet({ handle }: { handle: string }) {
   const [copied, setCopied] = useState(false);
+  const [locale, setLocale] = useState<Locale>('en');
+
+  useEffect(() => {
+    const m = document.cookie.match(/(?:^|; )mull_locale=([^;]+)/);
+    const v = m?.[1];
+    if (v && isLocale(v)) setLocale(v);
+  }, []);
 
   const url = `https://mull.world/badge/${handle}`;
   const snippet = `<iframe src="${url}" width="320" height="100" frameborder="0" scrolling="no" title="Mull · @${handle}"></iframe>`;
@@ -26,7 +34,7 @@ export default function EmbedBadgeSnippet({ handle }: { handle: string }) {
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
     } catch {
-      window.prompt('Copy this snippet:', snippet);
+      window.prompt(t('crd.copy_snippet_prompt', locale), snippet);
     }
   }
 
@@ -47,7 +55,7 @@ export default function EmbedBadgeSnippet({ handle }: { handle: string }) {
         letterSpacing: '0.18em',
         marginBottom: 10,
       }}>
-        ▸ EMBED YOUR BADGE
+        ▸ {t('crd.embed_eyebrow', locale)}
       </div>
       <p style={{
         fontFamily: serif,
@@ -57,9 +65,7 @@ export default function EmbedBadgeSnippet({ handle }: { handle: string }) {
         margin: '0 0 14px',
         lineHeight: 1.55,
       }}>
-        Drop this snippet into your Notion page, Substack, personal
-        site, or any other surface that accepts an iframe. It updates
-        automatically as your archetype shifts.
+        {t('crd.embed_intro', locale)}
       </p>
 
       {/* Live preview */}
@@ -78,7 +84,7 @@ export default function EmbedBadgeSnippet({ handle }: { handle: string }) {
           height={100}
           frameBorder={0}
           scrolling="no"
-          title={`Mull badge preview for @${handle}`}
+          title={t('crd.embed_preview_title', locale, { handle })}
           style={{ background: 'transparent' }}
         />
       </div>
@@ -118,7 +124,7 @@ export default function EmbedBadgeSnippet({ handle }: { handle: string }) {
           transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
         }}
       >
-        {copied ? '✓ COPIED' : '▸ COPY SNIPPET'}
+        {copied ? `✓ ${t('crd.copied_label', locale)}` : `▸ ${t('crd.copy_snippet', locale)}`}
       </button>
     </section>
   );

@@ -20,6 +20,7 @@ import { ArchetypeSprite } from "@/components/archetype-sprite";
 import { ConstellationMount } from "@/components/constellation-mount";
 import { PhilosopherSprite } from "@/components/philosopher-sprite";
 import { ResultSave } from "./result-save";
+import { t, type Locale } from "@/lib/translations";
 
 type DimRadarPoint = {
   key: string;
@@ -38,6 +39,7 @@ type ClosestPhilosopher = {
 
 type Props = {
   vector: number[];
+  locale: Locale;
   mode: "quick" | "detailed";
   topKey: string;
   topName: string;
@@ -67,6 +69,7 @@ type Props = {
 
 export function ResultClient({
   vector,
+  locale,
   mode,
   topKey,
   spirit,
@@ -85,6 +88,22 @@ export function ResultClient({
   challengerCode,
 }: Props) {
   const color = getArchetypeColor(topKey);
+
+  // Localized archetype name helpers. arch.<key>.name is e.g.
+  // "The Cartographer" (en) / "制图师" (zh). archBare strips the
+  // English article; archParts splits it for the two-line hero so
+  // the article and the name can be sized/animated separately (and
+  // the article line simply doesn't render for languages with none).
+  const archFull = (key: string) => t(`arch.${key}.name`, locale);
+  const archBare = (key: string) => {
+    const m = archFull(key).match(/^(The|A|An)\s+(.+)$/i);
+    return m ? m[2] : archFull(key);
+  };
+  const archParts = (key: string): { article: string | null; main: string } => {
+    const full = archFull(key);
+    const m = full.match(/^(The|A|An)\s+(.+)$/i);
+    return m ? { article: m[1], main: m[2] } : { article: null, main: full };
+  };
 
   return (
     <main
@@ -110,6 +129,7 @@ export function ResultClient({
         challengerHandle={challengerHandle}
         challengerName={challengerName}
         challengerCode={challengerCode}
+        locale={locale}
       />
 
       {/* ─── Hero — "QUEST COMPLETE" pixel banner ───────────────
@@ -135,7 +155,7 @@ export function ResultClient({
               fontFamily: "var(--font-pixel-display)",
             }}
           >
-            <span><span className="pixel-blink">▶</span> QUEST COMPLETE</span>
+            <span><span className="pixel-blink">▶</span> {t("res.quest_complete", locale)}</span>
             <span className="text-[#B8862F]">RESULT_ARCHETYPE.LOG</span>
           </div>
 
@@ -163,7 +183,7 @@ export function ResultClient({
                 className="text-[11px] tracking-[0.26em]"
                 style={{ color: color.deep, fontFamily: "var(--font-pixel-display)" }}
               >
-                YOU ARE
+                {t("res.you_are", locale)}
               </div>
               {flavor ? (
                 <div
@@ -187,18 +207,27 @@ export function ResultClient({
                   fontFamily: "var(--font-pixel-display)",
                 }}
               >
-                <div
-                  className="text-[28px] sm:text-[40px] md:text-[44px]"
-                  style={{ textShadow: `3px 3px 0 ${color.primary}` }}
-                >
-                  THE
-                </div>
-                <div
-                  className="mt-2 text-[34px] sm:text-[52px] md:text-[64px]"
-                  style={{ textShadow: `3px 3px 0 ${color.primary}` }}
-                >
-                  {capitalize(topKey).toUpperCase()}
-                </div>
+                {(() => {
+                  const parts = archParts(topKey);
+                  return (
+                    <>
+                      {parts.article ? (
+                        <div
+                          className="text-[28px] sm:text-[40px] md:text-[44px]"
+                          style={{ textShadow: `3px 3px 0 ${color.primary}` }}
+                        >
+                          {parts.article.toUpperCase()}
+                        </div>
+                      ) : null}
+                      <div
+                        className={`${parts.article ? "mt-2 " : ""}text-[34px] sm:text-[52px] md:text-[64px]`}
+                        style={{ textShadow: `3px 3px 0 ${color.primary}` }}
+                      >
+                        {parts.main.toUpperCase()}
+                      </div>
+                    </>
+                  );
+                })()}
               </h1>
 
               <p
@@ -210,16 +239,16 @@ export function ResultClient({
 
               {/* Alignment count-up + runner-up */}
               <div className="mt-8 flex flex-wrap items-end gap-6">
-                <AlignmentCounter target={alignmentPct} color={color.deep} />
+                <AlignmentCounter target={alignmentPct} color={color.deep} locale={locale} />
                 <div className="text-[13px] text-[#4A4338]">
                   <div
                     className="text-[10px] tracking-[0.22em]"
                     style={{ color: color.deep, fontFamily: "var(--font-pixel-display)" }}
                   >
-                    RUNNER-UP
+                    {t("res.runner_up", locale)}
                   </div>
                   <div className="mt-1">
-                    The {capitalize(runnerUpKey)} ·{" "}
+                    {archFull(runnerUpKey)} ·{" "}
                     <span style={{ color: color.deep }}>{runnerUpPct}%</span>
                   </div>
                 </div>
@@ -252,23 +281,20 @@ export function ResultClient({
               textTransform: "uppercase",
             }}
           >
-            ▶ YOUR 30-DAY ARC IS READY
+            {t("res.arc_ready", locale)}
           </div>
           <div
             className="mt-3 text-[22px] leading-tight sm:text-[26px]"
             style={{ fontFamily: "var(--font-editorial)" }}
           >
-            The Pilgrimage — shaped for {flavor ? <em>{flavor.toLowerCase()}</em> : null}{" "}
-            <strong>{capitalize(topKey)}s</strong>.
+            {t("res.pilg_a", locale)}{flavor ? <em>{flavor.toLowerCase()}</em> : null}{" "}
+            <strong>{archBare(topKey)}{t("res.pilg_plural", locale)}</strong>{t("res.pilg_b", locale)}
           </div>
           <p
             className="mt-3 max-w-[680px] text-[15.5px] leading-[1.55]"
             style={{ fontFamily: "var(--font-editorial)", color: "#E5DCC0" }}
           >
-            Thirty days of daily prompts tuned to the kind of mind
-            you turned out to be. Different from the daily dilemma:
-            this one has a curve. By Day 30 you&rsquo;ll see how your
-            map moved across the arc.
+            {t("res.pilg_body", locale)}
           </p>
           <div
             className="mt-4 inline-block px-3 py-1 text-[10px] tracking-[0.18em]"
@@ -280,7 +306,7 @@ export function ResultClient({
               border: "2px solid #221E18",
             }}
           >
-            ▶ BEGIN DAY 1
+            {t("res.begin_day1", locale)}
           </div>
         </Link>
       </section>
@@ -294,7 +320,7 @@ export function ResultClient({
               className="flex items-center justify-between border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
-              <span>▶ YOUR 16-D FINGERPRINT</span>
+              <span>{t("res.fingerprint", locale)}</span>
               <span className="text-[#B8862F]">RADAR.SYS</span>
             </div>
             <div className="grid grid-cols-1 gap-6 px-5 py-6 sm:px-8 sm:py-8 md:grid-cols-[1fr_300px]">
@@ -307,7 +333,7 @@ export function ResultClient({
                     fontFamily: "var(--font-pixel-display)",
                   }}
                 >
-                  YOUR STRONGEST TENDENCIES
+                  {t("res.strongest_tendencies", locale)}
                 </div>
                 <ul className="mt-4 space-y-2">
                   {userTop3.map((d) => (
@@ -334,9 +360,7 @@ export function ResultClient({
                   ))}
                 </ul>
                 <p className="mt-6 text-[13px] leading-[1.55] text-[#4A4338]">
-                  The radar shows where each of your 16 dimensions
-                  sits on a 0–10 scale. The further from center,
-                  the stronger that tendency in your answers.
+                  {t("res.radar_note", locale)}
                 </p>
               </div>
             </div>
@@ -356,14 +380,14 @@ export function ResultClient({
               fontFamily: "var(--font-pixel-display)",
             }}
           >
-            ▶ STOOD NEAR YOU
+            {t("res.stood_near", locale)}
           </div>
           <h2
             className="mt-4 pr-2 text-[24px] leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[32px] md:text-[40px]"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
             <span style={{ textShadow: "3px 3px 0 #B8862F" }}>
-              THE NEAREST THREE
+              {t("res.nearest_three", locale)}
             </span>
           </h2>
 
@@ -396,7 +420,7 @@ export function ResultClient({
                           fontFamily: "var(--font-pixel-display)",
                         }}
                       >
-                        <span>THE {p.archetypeKey.toUpperCase()}</span>
+                        <span>{archFull(p.archetypeKey).toUpperCase()}</span>
                         <span>{Math.round(p.sim * 100)}%</span>
                       </div>
                       <div className="flex flex-col items-center px-5 py-5 text-center">
@@ -439,20 +463,18 @@ export function ResultClient({
                 fontFamily: "var(--font-pixel-display)",
               }}
             >
-              ▶ WHERE YOU SIT
+              {t("res.where_you_sit", locale)}
             </div>
             <h2
               className="mt-4 pr-2 text-[24px] leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[32px] md:text-[40px]"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
               <span style={{ textShadow: "3px 3px 0 #B8862F" }}>
-                YOU ON THE MAP
+                {t("res.you_on_map", locale)}
               </span>
             </h2>
             <p className="mt-5 max-w-[640px] text-[16px] leading-[1.6] text-[#4A4338]">
-              The dark amber pulse is you. Hover the colored points
-              nearby to read who they were. Use the legend to hide
-              other archetypes — see who specifically sits near you.
+              {t("res.map_note", locale)}
             </p>
           </div>
 
@@ -461,8 +483,8 @@ export function ResultClient({
               className="flex items-center justify-between border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.18em] text-[#F8EDC8]"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
-              <span>▶ MAP_OF_MINDS.EXE — YOUR POSITION</span>
-              <span className="text-[#B8862F]">DRAG · ZOOM · HOVER</span>
+              <span>{t("res.map_position", locale)}</span>
+              <span className="text-[#B8862F]">{t("res.drag_zoom_hover", locale)}</span>
             </div>
             <ConstellationMount
               userVector={vector}
@@ -480,7 +502,7 @@ export function ResultClient({
             className="flex items-center justify-between border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
-            <span>▶ WHAT THIS ORIENTATION SEES</span>
+            <span>{t("res.orientation_sees", locale)}</span>
             <span className="text-[#B8862F]">LIBRARY_ENTRY</span>
           </div>
           <div className="px-6 py-8 sm:px-10 sm:py-10">
@@ -497,7 +519,7 @@ export function ResultClient({
                 fontFamily: "var(--font-pixel-display)",
               }}
             >
-              ▶ WHERE IT FALTERS
+              {t("res.where_falters", locale)}
             </div>
             <p
               className="mt-4 text-[16px] leading-[1.55] text-[#4A4338] sm:text-[18px]"
@@ -533,17 +555,15 @@ export function ResultClient({
               className="border-b-4 border-[#221E18] bg-[#221E18] px-5 py-2.5 text-[11px] tracking-[0.22em] text-[#B8862F]"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
-              <span className="pixel-blink">▶</span> SAVE YOUR RESULT
+              <span className="pixel-blink">▶</span> {t("res.save_result", locale)}
             </div>
             <div className="grid gap-4 px-6 py-7 md:grid-cols-[1fr_auto] md:items-center sm:px-8">
               <div>
                 <div className="text-[22px] font-medium text-[#221E18] sm:text-[24px]">
-                  This page disappears when you close the tab.
+                  {t("res.disappears", locale)}
                 </div>
                 <p className="mt-3 text-[14px] leading-[1.55] text-[#4A4338] sm:text-[15px]">
-                  Free. Tracks how your map shifts over time as you write
-                  dilemmas, diary entries, and reflections — no other site
-                  on the internet does this for you.
+                  {t("res.save_body", locale)}
                 </p>
               </div>
               <span
@@ -556,7 +576,7 @@ export function ResultClient({
                   textTransform: 'uppercase',
                 }}
               >
-                ▶ CREATE ACCOUNT · FREE
+                {t("res.create_account", locale)}
               </span>
             </div>
           </Link>
@@ -585,17 +605,15 @@ export function ResultClient({
               fontFamily: "var(--font-pixel-display)",
             }}
           >
-            ▶ READ ON
+            {t("res.read_on", locale)}
           </div>
           <div className="grid gap-4 px-6 py-7 md:grid-cols-[1fr_auto] md:items-center sm:px-8">
             <div>
               <div className="text-[22px] font-medium sm:text-[24px]" style={{ color: color.deep }}>
-                Read the full essay on the {capitalize(topKey)}
+                {t("res.read_essay", locale, { archetype: archBare(topKey) })}
               </div>
               <p className="mt-3 text-[14px] leading-[1.55] sm:text-[15px]" style={{ color: '#4A4338' }}>
-                What this archetype gets right that others miss, where
-                it tends to falter, a day in the life, kindred thinkers
-                across history, a starter reading list.
+                {t("res.essay_body", locale)}
               </p>
             </div>
             <span
@@ -609,7 +627,7 @@ export function ResultClient({
                 textTransform: 'uppercase',
               }}
             >
-              ▶ OPEN ESSAY
+              {t("res.open_essay", locale)}
             </span>
           </div>
         </Link>
@@ -632,16 +650,14 @@ export function ResultClient({
               className="border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
-              ▶ THE ARENA · NOW TEST YOURSELF
+              {t("res.arena_eyebrow", locale)}
             </div>
             <div className="px-5 py-5">
               <div className="text-[18px] font-medium text-[#221E18]">
-                Argue a philosopher
+                {t("res.arena_title", locale)}
               </div>
               <p className="mt-3 text-[13px] leading-[1.5] text-[#4A4338]">
-                Debate any of ten thinkers — including the ones nearest
-                you on the map. An impartial judge scores logical rigor,
-                principle, and engagement. Climb the Elo.
+                {t("res.arena_body", locale)}
               </p>
             </div>
           </Link>
@@ -654,16 +670,14 @@ export function ResultClient({
               className="border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
-              ▶ THE INHERITOR · GO DEEPER
+              {t("res.inheritor_eyebrow", locale)}
             </div>
             <div className="px-5 py-5">
               <div className="text-[18px] font-medium text-[#221E18]">
-                Take the narrative version
+                {t("res.inheritor_title", locale)}
               </div>
               <p className="mt-3 text-[13px] leading-[1.5] text-[#4A4338]">
-                Same model, fully narrative — a midnight at a strange
-                estate. Four chambers. ~15 minutes. For when the
-                survey-style quiz wasn&rsquo;t enough.
+                {t("res.inheritor_body", locale)}
               </p>
             </div>
           </Link>
@@ -676,16 +690,16 @@ export function ResultClient({
             className="text-[10px] tracking-[0.22em]"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
-            ▸ ALSO
+            {t("res.also", locale)}
           </span>
           <Link href="/quiz?mode=quick" className="hover:text-[#221E18] underline decoration-[#D6CDB6] underline-offset-3 hover:decoration-[#8C6520]">
-            Retake the 5-min classic
+            {t("res.retake_classic", locale)}
           </Link>
           {isSignedIn && (
             <>
               <span>·</span>
               <Link href="/account" className="hover:text-[#221E18] underline decoration-[#D6CDB6] underline-offset-3 hover:decoration-[#8C6520]">
-                See your trajectory
+                {t("res.see_trajectory", locale)}
               </Link>
             </>
           )}
@@ -709,9 +723,11 @@ const SEEN_RESULT_KEY = 'mull.result.seen.v1';
 function AlignmentCounter({
   target,
   color,
+  locale,
 }: {
   target: number;
   color: string;
+  locale: Locale;
 }) {
   // Detect first-view synchronously so we don't flash a 0 → target
   // animation on returning visits. We treat the sessionStorage flag
@@ -765,7 +781,7 @@ function AlignmentCounter({
         className="text-[10px] tracking-[0.22em]"
         style={{ color, fontFamily: "var(--font-pixel-display)" }}
       >
-        ALIGNMENT
+        {t("res.alignment", locale)}
       </div>
       {/* Cap the digit size to 36px so the `%` glyph + 2-px hard
           shadow stay within the parent column. Display digits
@@ -945,10 +961,12 @@ function ChallengerBanner({
   challengerHandle,
   challengerName,
   challengerCode,
+  locale,
 }: {
   challengerHandle: string | null;
   challengerName: string | null;
   challengerCode: string | null;
+  locale: Locale;
 }) {
   useEffect(() => {
     if (!challengerCode) return;
@@ -1002,7 +1020,7 @@ function ChallengerBanner({
                 marginBottom: 6,
               }}
             >
-              ▸ {challengerName.toUpperCase()} CHALLENGED YOU
+              {t("res.challenged_you", locale, { name: challengerName.toUpperCase() })}
             </span>
             <span
               style={{
@@ -1010,7 +1028,7 @@ function ChallengerBanner({
                 fontSize: 18,
               }}
             >
-              See how your map sits next to theirs, side by side.
+              {t("res.challenge_body", locale)}
             </span>
           </span>
           <span
@@ -1027,7 +1045,7 @@ function ChallengerBanner({
               flexShrink: 0,
             }}
           >
-            ▸ COMPARE NOW
+            {t("res.compare_now", locale)}
           </span>
         </div>
       </Link>

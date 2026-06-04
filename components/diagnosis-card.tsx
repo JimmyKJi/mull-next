@@ -14,6 +14,7 @@
 
 import Link from 'next/link';
 import type { Kinship } from '@/lib/kinship';
+import { t, type Locale } from '@/lib/translations';
 
 const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
@@ -23,9 +24,10 @@ export type DiagnosisCardProps = {
   diagnosis: string | null;
   kinship: Kinship | null;
   is_novel: boolean | null;
+  locale?: Locale;
 };
 
-export default function DiagnosisCard({ diagnosis, kinship, is_novel }: DiagnosisCardProps) {
+export default function DiagnosisCard({ diagnosis, kinship, is_novel, locale = 'en' }: DiagnosisCardProps) {
   const hasPhilosophers = !!kinship && kinship.philosophers.length > 0;
   const hasEchoes = !!kinship && Array.isArray(kinship.echoes) && kinship.echoes.length > 0;
   const hasTraditions = !!kinship && kinship.traditions.length > 0;
@@ -57,7 +59,7 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel }: Diagnosi
         alignItems: 'center',
         flexWrap: 'wrap',
       }}>
-        <span>▸ DIAGNOSIS</span>
+        <span>▸ {t('crd.diag_eyebrow', locale)}</span>
         {is_novel && (
           <span style={{
             padding: '3px 8px',
@@ -68,7 +70,7 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel }: Diagnosi
             fontSize: 10,
             letterSpacing: '0.18em',
           }}>
-            ✦ ORIGINAL THINKING
+            ✦ {t('crd.diag_original_thinking', locale)}
           </span>
         )}
       </div>
@@ -92,7 +94,7 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel }: Diagnosi
             color: '#8C6520', textTransform: 'uppercase',
             letterSpacing: '0.18em', marginBottom: 10, marginTop: 16,
           }}>
-            KINDRED THINKERS
+            {t('crd.diag_kindred_thinkers', locale)}
           </div>
           <ul style={{
             listStyle: 'none', padding: 0, margin: 0,
@@ -131,7 +133,7 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel }: Diagnosi
                         fontFamily: pixel, fontSize: 11, color: '#8C6520',
                         fontVariantNumeric: 'tabular-nums', letterSpacing: 0.4,
                       }}>
-                        {Math.round(kp.similarity * 100)}% KIN
+                        {t('crd.diag_pct_kin', locale, { pct: Math.round(kp.similarity * 100) })}
                       </span>
                     )}
                   </div>
@@ -158,7 +160,7 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel }: Diagnosi
             color: '#8C6520', textTransform: 'uppercase',
             letterSpacing: '0.18em', marginBottom: 10, marginTop: 16,
           }}>
-            ALSO ECHOES
+            {t('crd.diag_also_echoes', locale)}
           </div>
           <ul style={{
             listStyle: 'none', padding: 0, margin: 0,
@@ -222,7 +224,7 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel }: Diagnosi
             color: '#8C6520', textTransform: 'uppercase',
             letterSpacing: '0.18em', marginBottom: 10, marginTop: 16,
           }}>
-            TRADITIONS
+            {t('crd.diag_traditions', locale)}
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
             {kinship.traditions.map(tr => (
@@ -247,9 +249,7 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel }: Diagnosi
           fontSize: 15, color: '#6B3E8C',
           margin: '14px 0 0', lineHeight: 1.55,
         }}>
-          No philosopher in our database voices this move strongly.
-          That doesn&rsquo;t mean it&rsquo;s untouched ground, but it&rsquo;s outside
-          the canon as Mull currently maps it. Worth following.
+          {t('crd.diag_novel_note', locale)}
         </p>
       )}
     </div>

@@ -19,6 +19,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { t, type Locale, isLocale } from '@/lib/translations';
 
 const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
@@ -33,16 +34,16 @@ type Candidate = {
   created_at: string;
 };
 
-function relativeWeeks(iso: string): string {
+function relativeWeeks(iso: string, locale: Locale): string {
   const then = new Date(iso).getTime();
   const now = Date.now();
   const days = Math.floor((now - then) / 86400000);
-  if (days < 14) return `${days} days ago`;
+  if (days < 14) return t('time.days_ago', locale, { n: days });
   const weeks = Math.floor(days / 7);
-  if (weeks < 8) return `${weeks} weeks ago`;
+  if (weeks < 8) return t('time.weeks_ago', locale, { n: weeks });
   const months = Math.floor(days / 30);
-  if (months < 12) return `${months} months ago`;
-  return `over a year ago`;
+  if (months < 12) return t('time.months_ago', locale, { n: months });
+  return t('crd.over_a_year_ago', locale);
 }
 
 export default function ReflectionCard() {
@@ -52,6 +53,13 @@ export default function ReflectionCard() {
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [locale, setLocale] = useState<Locale>('en');
+
+  useEffect(() => {
+    const m = document.cookie.match(/(?:^|; )mull_locale=([^;]+)/);
+    const v = m?.[1];
+    if (v && isLocale(v)) setLocale(v);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -84,7 +92,7 @@ export default function ReflectionCard() {
         }),
       });
       const json = await res.json();
-      if (!res.ok) throw new Error(json?.error || 'Could not save.');
+      if (!res.ok) throw new Error(json?.error || t('crd.reflection_err_save', locale));
       setDone(true);
     } catch (e) {
       setError((e as Error).message);
@@ -97,12 +105,12 @@ export default function ReflectionCard() {
   if (done) {
     return (
       <section style={cardStyle}>
-        <div style={eyebrow}>▸ REFLECTION SAVED</div>
+        <div style={eyebrow}>▸ {t('crd.reflection_saved_eyebrow', locale)}</div>
         <p style={{
           fontFamily: serif, fontStyle: 'italic',
           fontSize: 17, color: '#221E18', margin: 0, lineHeight: 1.55,
         }}>
-          Saved. The note will sit alongside the original — you can read both, side by side, on the dilemma archive whenever you want.
+          {t('crd.reflection_saved_body', locale)}
         </p>
       </section>
     );
@@ -110,12 +118,12 @@ export default function ReflectionCard() {
 
   return (
     <section className="pixel-form" style={cardStyle}>
-      <div style={eyebrow}>▸ HAS ANYTHING SHIFTED?</div>
+      <div style={eyebrow}>▸ {t('crd.reflection_eyebrow', locale)}</div>
       <p style={{
         fontFamily: serif, fontStyle: 'italic', fontSize: 16,
         color: '#4A4338', margin: '0 0 18px', lineHeight: 1.55,
       }}>
-        You wrote this {relativeWeeks(candidate.created_at)}. Read it again before answering — what feels different now?
+        {t('crd.reflection_intro', locale, { when: relativeWeeks(candidate.created_at, locale) })}
       </p>
 
       {/* Original prompt */}
@@ -128,7 +136,7 @@ export default function ReflectionCard() {
         marginBottom: 14,
       }}>
         <div style={subEyebrow}>
-          THE DILEMMA
+          {t('crd.reflection_the_dilemma', locale)}
         </div>
         <p style={{
           fontFamily: serif, fontStyle: 'italic',
@@ -148,7 +156,7 @@ export default function ReflectionCard() {
         marginBottom: 20,
       }}>
         <div style={subEyebrow}>
-          WHAT YOU WROTE
+          {t('crd.reflection_what_you_wrote', locale)}
         </div>
         <p style={{
           fontFamily: serif, fontSize: 15.5, color: '#221E18',
@@ -164,13 +172,13 @@ export default function ReflectionCard() {
         color: '#2F5D5C', textTransform: 'uppercase',
         letterSpacing: '0.18em', marginBottom: 8,
       }}>
-        ▸ WHAT YOU THINK NOW
+        ▸ {t('crd.reflection_what_now', locale)}
       </div>
       <textarea
         value={text}
         onChange={e => setText(e.target.value)}
         rows={6}
-        placeholder="What's still true. What's no longer true. What you'd write differently if asked today."
+        placeholder={t('crd.reflection_placeholder', locale)}
         maxLength={4000}
         style={{
           width: '100%',
@@ -192,15 +200,15 @@ export default function ReflectionCard() {
           color: text.trim().length < 10 ? '#7A2E2E' : '#8C6520',
           letterSpacing: 0.4,
         }}>
-          {text.length} / 4000
-          {text.trim().length < 10 && text.length > 0 && ' · A LITTLE MORE'}
+          {t('crd.reflection_counter', locale, { n: text.length })}
+          {text.trim().length < 10 && text.length > 0 && t('crd.reflection_a_little_more', locale)}
         </span>
         <button
           type="submit"
           onClick={submit}
           disabled={text.trim().length < 10 || busy}
         >
-          {busy ? 'Saving…' : 'Save reflection'}
+          {busy ? t('crd.reflection_saving', locale) : t('crd.reflection_save', locale)}
         </button>
       </div>
       {error && (

@@ -40,7 +40,7 @@ export default function DilemmaReminderCard({ locale = 'en' as Locale }: { local
         const res = await fetch('/api/notifications/dilemma-reminder');
         const json = await res.json();
         if (cancelled) return;
-        if (!res.ok) throw new Error(json?.error || 'Failed to load.');
+        if (!res.ok) throw new Error(json?.error || t('drc.err_load', locale));
         const detected = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
         setPrefs({
           enabled: !!json.enabled,
@@ -71,7 +71,7 @@ export default function DilemmaReminderCard({ locale = 'en' as Locale }: { local
         body: JSON.stringify(next),
       });
       const json = await res.json();
-      if (!res.ok) throw new Error(json?.error || 'Save failed.');
+      if (!res.ok) throw new Error(json?.error || t('drc.err_save', locale));
       setSavedAt(Date.now());
     } catch (e) {
       setError((e as Error).message);
@@ -130,9 +130,9 @@ export default function DilemmaReminderCard({ locale = 'en' as Locale }: { local
                 const time = d.toLocaleTimeString(locale === 'en' ? 'en-US' : locale, {
                   hour: 'numeric', minute: '2-digit',
                 });
-                return `Yes — send today's dilemma at ${time}.`;
+                return t('drc.toggle_label_on', locale, { time });
               })()
-            : "I'd like today's dilemma in my inbox each morning."}
+            : t('drc.toggle_label_off', locale)}
         </span>
       </label>
 
@@ -156,7 +156,7 @@ export default function DilemmaReminderCard({ locale = 'en' as Locale }: { local
               value={prefs.tz}
               onChange={e => setPrefs({ ...prefs, tz: e.target.value })}
               onBlur={() => save(prefs)}
-              placeholder="e.g. America/New_York"
+              placeholder={t('drc.tz_placeholder', locale)}
               style={{ flex: 1, minWidth: 200 }}
             />
           </label>

@@ -7,15 +7,18 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
+import { t, type Locale } from '@/lib/translations';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
 export default function ClassLeaveButton({
   classId,
   className,
+  locale,
 }: {
   classId: string;
   className: string;
+  locale: Locale;
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
@@ -23,7 +26,7 @@ export default function ClassLeaveButton({
 
   async function leave() {
     if (busy) return;
-    if (!confirm(`Leave "${className}"? You can re-join later with the invite code.`)) {
+    if (!confirm(t('cls.leave_confirm', locale, { name: className }))) {
       return;
     }
     setBusy(true);
@@ -32,7 +35,7 @@ export default function ClassLeaveButton({
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        setError('Not signed in.');
+        setError(t('cls.not_signed_in', locale));
         setBusy(false);
         return;
       }
@@ -77,7 +80,7 @@ export default function ClassLeaveButton({
           transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
         }}
       >
-        {busy ? 'LEAVING…' : 'LEAVE CLASS'}
+        {busy ? t('cls.leaving', locale) : t('cls.leave_class', locale)}
       </button>
       {error && (
         <p className="pixel-alert pixel-alert--error" style={{ marginTop: 10, display: 'inline-block' }}>

@@ -638,6 +638,7 @@ export default async function AccountPage() {
               .replace(/[^a-z0-9]+/g, '-')
               .replace(/^-+|-+$/g, '')
           : undefined}
+        locale={locale}
       />
 
       {(quizCount > 0 || dilemmaCount > 0) && (

@@ -17,6 +17,8 @@ import type { Metadata } from 'next';
 import { createClient } from '@/utils/supabase/server';
 import MullWordmark from '@/components/mull-wordmark';
 import { DIM_KEYS, DIM_NAMES } from '@/lib/dimensions';
+import { getServerLocale } from '@/lib/locale-server';
+import { t, type Locale } from '@/lib/translations';
 
 export const metadata: Metadata = {
   title: 'Class insights · Mull',
@@ -46,6 +48,7 @@ export default async function ClassInsightsPage({
   params: Promise<{ id: string }>;
 }) {
   const { id: classId } = await params;
+  const locale = await getServerLocale();
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect(`/login?next=/classes/${classId}/insights`);
@@ -194,7 +197,7 @@ export default async function ClassInsightsPage({
         color: '#8C6520', textTransform: 'uppercase',
         letterSpacing: '0.18em', marginBottom: 14,
       }}>
-        ▸ CLASS INSIGHTS · {cls.name.toUpperCase()}
+        ▸ {t('cls.insights_eyebrow', locale)} · {cls.name.toUpperCase()}
       </div>
 
       <h1 style={{
@@ -207,7 +210,7 @@ export default async function ClassInsightsPage({
         textShadow: '3px 3px 0 #B8862F',
         lineHeight: 1.1,
       }}>
-        WHERE YOUR CLASS SITS
+        {t('cls.insights_title', locale)}
       </h1>
 
       <p style={{
@@ -218,14 +221,12 @@ export default async function ClassInsightsPage({
         margin: '0 0 26px',
         lineHeight: 1.55,
       }}>
-        Aggregated from each student&rsquo;s latest quiz attempt. Individual
-        responses stay private; you see only the class-wide pattern.
+        {t('cls.insights_intro', locale)}
         {studentsWithoutQuiz > 0 && (
           <>
             {' '}
             <span style={{ color: '#7A2E2E' }}>
-              {studentsWithoutQuiz} of {totalStudents} students haven&rsquo;t
-              taken the quiz yet — encourage them to.
+              {t('cls.insights_no_quiz_warn', locale, { count: studentsWithoutQuiz, total: totalStudents })}
             </span>
           </>
         )}
@@ -238,20 +239,20 @@ export default async function ClassInsightsPage({
         gap: 12,
         marginBottom: 36,
       }}>
-        <StatTile label="Students" value={totalStudents} accent="#221E18" />
-        <StatTile label="Took the quiz" value={studentsWithQuiz} accent="#2F5D5C" />
-        <StatTile label="Quiz attempts total" value={allAttempts.length} accent="#B8862F" />
-        <StatTile label="With pre/post" value={shiftStudentCount} accent="#7A4A2E" />
+        <StatTile label={t('cls.stat_students', locale)} value={totalStudents} accent="#221E18" />
+        <StatTile label={t('cls.stat_took_quiz', locale)} value={studentsWithQuiz} accent="#2F5D5C" />
+        <StatTile label={t('cls.stat_attempts_total', locale)} value={allAttempts.length} accent="#B8862F" />
+        <StatTile label={t('cls.stat_with_prepost', locale)} value={shiftStudentCount} accent="#7A4A2E" />
       </div>
 
       {studentsWithQuiz === 0 ? (
-        <EmptyClass classId={cls.id} />
+        <EmptyClass classId={cls.id} locale={locale} />
       ) : (
         <>
           {/* Section 1: archetype distribution */}
-          <Section title="▸ ARCHETYPE DISTRIBUTION">
+          <Section title={`▸ ${t('cls.insights_arch_title', locale)}`}>
             <p style={subtitleStyle}>
-              How your class clusters across the ten archetypes.
+              {t('cls.insights_arch_subtitle', locale)}
             </p>
             <ul style={listStyle}>
               {archDistribution.map(([archetype, count]) => {
@@ -284,11 +285,9 @@ export default async function ClassInsightsPage({
           </Section>
 
           {/* Section 2: dimensional average */}
-          <Section title="▸ CLASS DIMENSIONAL MAP">
+          <Section title={`▸ ${t('cls.insights_map_title', locale)}`}>
             <p style={subtitleStyle}>
-              Average position of your class across all 16 dimensions.
-              Bar = the mean; the lighter span behind it shows the full
-              range from the lowest to the highest student.
+              {t('cls.insights_map_subtitle', locale)}
             </p>
             <ul style={listStyle}>
               {dimStatsSorted.map(d => {
@@ -336,13 +335,9 @@ export default async function ClassInsightsPage({
 
           {/* Section 3: pre/post shift */}
           {shiftStudentCount > 0 && avgShifts ? (
-            <Section title="▸ HOW THE CLASS HAS SHIFTED">
+            <Section title={`▸ ${t('cls.insights_shift_title', locale)}`}>
               <p style={subtitleStyle}>
-                Average per-dimension shift between first and latest quiz
-                attempts, across the {shiftStudentCount} student{shiftStudentCount === 1 ? '' : 's'} with multiple
-                attempts. The top five biggest absolute moves are listed below —
-                the dimensions where your class&rsquo;s collective thinking changed
-                most over the term.
+                {t(shiftStudentCount === 1 ? 'cls.insights_shift_subtitle_one' : 'cls.insights_shift_subtitle_many', locale, { count: shiftStudentCount })}
               </p>
               <ul style={listStyle}>
                 {topShifts.map(s => (
@@ -372,12 +367,9 @@ export default async function ClassInsightsPage({
               </ul>
             </Section>
           ) : (
-            <Section title="▸ PRE/POST SHIFT · NOT YET AVAILABLE">
+            <Section title={`▸ ${t('cls.insights_shift_na_title', locale)}`}>
               <p style={subtitleStyle}>
-                None of your students have taken the quiz more than once yet.
-                When at least one student takes a second quiz attempt (most
-                useful at the end of the term), this section will show
-                how the class&rsquo;s thinking has shifted.
+                {t('cls.insights_shift_na_subtitle', locale)}
               </p>
             </Section>
           )}
@@ -439,7 +431,7 @@ function StatTile({ label, value, accent }: { label: string; value: number; acce
   );
 }
 
-function EmptyClass({ classId }: { classId: string }) {
+function EmptyClass({ classId, locale }: { classId: string; locale: Locale }) {
   return (
     <div style={{
       padding: '24px 22px',
@@ -456,9 +448,7 @@ function EmptyClass({ classId }: { classId: string }) {
         margin: '0 0 14px',
         lineHeight: 1.55,
       }}>
-        No quiz attempts yet from your roster. Once students take the
-        quiz, this page surfaces archetype distribution + class-wide
-        dimensional position + pre/post shift over the term.
+        {t('cls.insights_empty', locale)}
       </p>
       <Link
         href={`/classes/${classId}`}
@@ -479,7 +469,7 @@ function EmptyClass({ classId }: { classId: string }) {
           transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
         }}
       >
-        ◂ BACK TO CLASS
+        ◂ {t('cls.back_to_class', locale)}
       </Link>
     </div>
   );

@@ -23,6 +23,7 @@ import {
   aggregateXp,
   levelFromXp,
 } from "@/lib/capabilities";
+import { t as tr, type Locale, isLocale } from "@/lib/translations";
 
 type Toast = {
   id: number;
@@ -37,6 +38,13 @@ const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
 export default function CapabilityToast() {
   const [toasts, setToasts] = useState<Toast[]>([]);
+  const [locale, setLocale] = useState<Locale>("en");
+
+  useEffect(() => {
+    const m = document.cookie.match(/(?:^|; )mull_locale=([^;]+)/);
+    const v = m?.[1];
+    if (v && isLocale(v)) setLocale(v);
+  }, []);
 
   useEffect(() => {
     let lastEventsLength = readEvents().length;
@@ -124,8 +132,8 @@ export default function CapabilityToast() {
               }}
             >
               {t.leveledUp
-                ? `▶ LEVEL UP · ${meta.name} LV ${t.newLevel}`
-                : `▶ +${t.event.xp} ${meta.name}`}
+                ? `▶ ${tr("uic.toast_level_up", locale, { skill: meta.name, lv: t.newLevel })}`
+                : `▶ ${tr("uic.toast_xp_gain", locale, { xp: t.event.xp, skill: meta.name })}`}
             </div>
             <div
               style={{
@@ -135,7 +143,7 @@ export default function CapabilityToast() {
                 lineHeight: 1.4,
               }}
             >
-              {t.event.label ?? `Practice in ${meta.name.toLowerCase()}.`}
+              {t.event.label ?? tr("uic.toast_practice_in", locale, { skill: meta.name.toLowerCase() })}
             </div>
           </div>
         );

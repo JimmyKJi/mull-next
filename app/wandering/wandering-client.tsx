@@ -12,6 +12,7 @@ import {
   WANDERING_BEATS,
 } from "@/lib/wandering";
 import { emitFeatureEvent } from "@/lib/capabilities";
+import { t, type Locale } from "@/lib/translations";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-editorial), Georgia, serif";
@@ -20,8 +21,10 @@ type Beat = "Mon" | "Wed" | "Fri" | "Sun";
 
 export default function WanderingClient({
   question,
+  locale,
 }: {
   question: WanderingQuestion;
+  locale: Locale;
 }) {
   const [responses, setResponses] = useState<WanderingResponse[] | null>(null);
 
@@ -60,7 +63,7 @@ export default function WanderingClient({
   if (responses === null) {
     return (
       <div className="text-center text-[14px] text-[#8C6520]" style={{ fontFamily: serif }}>
-        Loading…
+        {t("wndr.loading", locale)}
       </div>
     );
   }
@@ -91,7 +94,7 @@ export default function WanderingClient({
             textTransform: "uppercase",
           }}
         >
-          ▶ THIS WEEK&rsquo;S QUESTION
+          ▶ {t("wndr.this_weeks_question", locale)}
         </div>
         <h2
           className="mt-3 text-[26px] leading-tight"
@@ -113,7 +116,7 @@ export default function WanderingClient({
             textTransform: "uppercase",
           }}
         >
-          {beatsDone} of 4 beats answered
+          {t("wndr.beats_answered", locale, { done: beatsDone })}
         </div>
       </div>
 
@@ -127,6 +130,7 @@ export default function WanderingClient({
               description={b.description}
               existing={responsesByBeat.get(b.day as Beat)}
               onSave={(text) => saveResponse(b.day as Beat, text)}
+              locale={locale}
             />
           </li>
         ))}
@@ -136,9 +140,7 @@ export default function WanderingClient({
         className="text-[13px] italic text-[#8C6520]"
         style={{ fontFamily: serif }}
       >
-        Mull will start prompting the kindred + far philosophers'
-        responses in a future build. For now the four beats are
-        scaffolding for your own week-long thinking.
+        {t("wndr.scaffolding_note", locale)}
       </p>
     </div>
   );
@@ -150,12 +152,14 @@ function BeatPanel({
   description,
   existing,
   onSave,
+  locale,
 }: {
   beat: Beat;
   label: string;
   description: string;
   existing?: WanderingResponse;
   onSave: (text: string) => void;
+  locale: Locale;
 }) {
   const [text, setText] = useState(existing?.text ?? "");
   const [open, setOpen] = useState(!existing);
@@ -179,7 +183,7 @@ function BeatPanel({
             className="text-[10px] tracking-[0.18em] text-[#8C6520] hover:text-[#221E18]"
             style={{ fontFamily: pixel, textTransform: "uppercase" }}
           >
-            EDIT
+            {t("wndr.edit", locale)}
           </button>
         </div>
         <p
@@ -214,7 +218,7 @@ function BeatPanel({
             className="text-[10px] tracking-[0.18em] text-[#8C6520]"
             style={{ fontFamily: pixel, textTransform: "uppercase" }}
           >
-            CANCEL
+            {t("wndr.cancel", locale)}
           </button>
         )}
       </div>
@@ -228,7 +232,7 @@ function BeatPanel({
         value={text}
         onChange={(e) => setText(e.target.value)}
         rows={5}
-        placeholder="What comes? Brief is fine."
+        placeholder={t("wndr.placeholder", locale)}
         style={{
           marginTop: 10,
           width: "100%",
@@ -260,7 +264,7 @@ function BeatPanel({
           opacity: text.trim() ? 1 : 0.5,
         }}
       >
-        ▶ SAVE {beat}
+        ▶ {t("wndr.save_beat", locale, { beat })}
       </button>
     </div>
   );

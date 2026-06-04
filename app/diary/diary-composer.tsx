@@ -208,6 +208,7 @@ export default function DiaryComposer({ locale = 'en' }: { locale?: Locale }) {
           diagnosis={result.diagnosis}
           kinship={result.kinship}
           is_novel={result.is_novel}
+          locale={locale}
         />
 
         {shifts.length > 0 && (

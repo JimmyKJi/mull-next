@@ -168,6 +168,7 @@ export default function DilemmaForm({ questionPrompt, locale = 'en' }: { questio
           diagnosis={result.diagnosis}
           kinship={result.kinship}
           is_novel={result.is_novel}
+          locale={locale}
         />
 
         {shifts.length > 0 && (

@@ -13,7 +13,7 @@ import {
 import { getArchetypeColor } from "@/lib/archetype-colors";
 import { DIM_KEYS, DIM_NAMES, type DimKey } from "@/lib/dimensions";
 import { getServerLocale } from "@/lib/locale-server";
-import { t } from "@/lib/translations";
+import { t, type Locale } from "@/lib/translations";
 import { PHILOSOPHERS } from "@/lib/philosophers";
 import {
   cos,
@@ -62,9 +62,14 @@ export default async function ResultPage({
   const vector = decodeVector(params.v);
   const mode = params.m === "detailed" ? "detailed" : "quick";
 
+  // Per-request locale — needed both for the sparse fallback below and
+  // for the dimension names that flow into the client reveal (radar
+  // axis labels + tendency chips).
+  const locale = await getServerLocale();
+
   const sparse = magnitude(vector) < 2;
   if (sparse) {
-    return <SparseFallback />;
+    return <SparseFallback locale={locale} />;
   }
 
   // Check signed-in state — drives whether the result page promotes
@@ -123,10 +128,6 @@ export default async function ResultPage({
     .sort((a, b) => b.sim - a.sim)
     .slice(0, 3);
 
-  // Per-request locale — localizes the dimension names that flow into
-  // the client reveal (radar axis labels + tendency chips).
-  const locale = await getServerLocale();
-
   // Dimensions data for the radar — normalize each value to 0..1
   // (vectors come in roughly 0..10 range).
   const dimRadar = DIM_KEYS.map((k, i) => ({
@@ -145,6 +146,7 @@ export default async function ResultPage({
   return (
     <ResultClient
       vector={vector}
+      locale={locale}
       mode={mode}
       topKey={top.archetype.key}
       topName={top.archetype.key}
@@ -168,7 +170,7 @@ export default async function ResultPage({
 
 import Link from "next/link";
 
-function SparseFallback() {
+function SparseFallback({ locale }: { locale: Locale }) {
   return (
     <main className="min-h-[100svh] bg-[#FAF6EC] px-6 py-24 text-[#221E18] sm:px-10 sm:py-32">
       <div className="mx-auto max-w-[640px] text-center">
@@ -176,31 +178,28 @@ function SparseFallback() {
           className="text-[11px] uppercase tracking-[0.24em] text-[#8C6520]"
           style={{ fontFamily: "var(--font-pixel-display)" }}
         >
-          ▶ YOUR RESULT
+          {t("res.sparse_eyebrow", locale)}
         </div>
         <h1
           className="mt-6 text-[36px] leading-none tracking-[0.04em] text-[#221E18] sm:text-[56px]"
           style={{ fontFamily: "var(--font-pixel-display)" }}
         >
           <span style={{ textShadow: "4px 4px 0 #B8862F" }}>
-            NOT YET PLACED
+            {t("res.sparse_title", locale)}
           </span>
         </h1>
         <p className="mx-auto mt-8 max-w-[480px] text-[16px] leading-[1.65] text-[#4A4338] sm:text-[17px]">
-          You skipped most of the questions, which is honest. Mull
-          would rather show you nothing than show you something fake.
-          Take it again with answers that fit you, or browse the ten
-          archetypes to see what you might be near.
+          {t("res.sparse_body", locale)}
         </p>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-5">
           <Link href="/quiz?mode=quick" className="pixel-button pixel-button--amber">
-            <span>▶ RETAKE THE QUIZ</span>
+            <span>{t("res.sparse_retake", locale)}</span>
           </Link>
           <Link
             href="/archetype"
             className="text-[14px] text-[#4A4338] underline decoration-[#D6CDB6] decoration-2 underline-offset-4 hover:text-[#221E18] hover:decoration-[#8C6520]"
           >
-            Browse the ten archetypes →
+            {t("res.sparse_browse", locale)}
           </Link>
         </div>
       </div>

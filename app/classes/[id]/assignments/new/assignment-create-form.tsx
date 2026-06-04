@@ -6,17 +6,19 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { t, type Locale } from '@/lib/translations';
 
 type Kind = 'dilemma' | 'exercise' | 'diary_prompt';
 
-const KIND_OPTIONS: { value: Kind; label: string; hint: string }[] = [
-  { value: 'dilemma', label: 'Dilemma', hint: 'A philosophical question students respond to in prose.' },
-  { value: 'exercise', label: 'Exercise reflection', hint: 'A guided practice + a reflection prompt.' },
-  { value: 'diary_prompt', label: 'Diary prompt', hint: 'Open-ended writing prompt.' },
-];
+const KIND_VALUES: Kind[] = ['dilemma', 'exercise', 'diary_prompt'];
 
-export default function AssignmentCreateForm({ classId }: { classId: string }) {
+export default function AssignmentCreateForm({ classId, locale }: { classId: string; locale: Locale }) {
   const router = useRouter();
+  const kindOptions: { value: Kind; label: string; hint: string }[] = KIND_VALUES.map(value => ({
+    value,
+    label: t(`cls.kind_${value}`, locale),
+    hint: t(`cls.kind_${value}_hint`, locale),
+  }));
   const [kind, setKind] = useState<Kind>('dilemma');
   const [title, setTitle] = useState('');
   const [prompt, setPrompt] = useState('');
@@ -44,14 +46,14 @@ export default function AssignmentCreateForm({ classId }: { classId: string }) {
       });
       const json = await res.json();
       if (!res.ok) {
-        setError(json?.error || 'Could not create assignment.');
+        setError(json?.error || t('cls.assignment_create_error', locale));
         setSubmitting(false);
         return;
       }
       router.push(`/classes/${classId}/assignments/${json.id}`);
       router.refresh();
     } catch {
-      setError('Network error.');
+      setError(t('cls.network_error', locale));
       setSubmitting(false);
     }
   }
@@ -68,10 +70,10 @@ export default function AssignmentCreateForm({ classId }: { classId: string }) {
           padding: 0,
           marginBottom: 4,
         }}>
-          KIND
+          {t('cls.field_kind', locale)}
         </legend>
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-          {KIND_OPTIONS.map(opt => (
+          {kindOptions.map(opt => (
             <label
               key={opt.value}
               style={{
@@ -103,24 +105,24 @@ export default function AssignmentCreateForm({ classId }: { classId: string }) {
       </fieldset>
 
       <label style={{ display: 'grid', gap: 6 }}>
-        <span>TITLE</span>
+        <span>{t('cls.field_title', locale)}</span>
         <input
           type="text"
           value={title}
           onChange={e => setTitle(e.target.value)}
-          placeholder="Week 3 — Is the self an illusion?"
+          placeholder={t('cls.field_title_ph', locale)}
           maxLength={200}
           required
         />
       </label>
 
       <label style={{ display: 'grid', gap: 6 }}>
-        <span>PROMPT</span>
+        <span>{t('cls.field_prompt', locale)}</span>
         <textarea
           rows={5}
           value={prompt}
           onChange={e => setPrompt(e.target.value)}
-          placeholder="The question students will respond to."
+          placeholder={t('cls.field_prompt_ph', locale)}
           maxLength={4000}
           required
           style={{ resize: 'vertical', minHeight: 120 }}
@@ -128,19 +130,19 @@ export default function AssignmentCreateForm({ classId }: { classId: string }) {
       </label>
 
       <label style={{ display: 'grid', gap: 6 }}>
-        <span>INSTRUCTIONS (OPTIONAL)</span>
+        <span>{t('cls.field_instructions', locale)}</span>
         <textarea
           rows={3}
           value={instructions}
           onChange={e => setInstructions(e.target.value)}
-          placeholder="Aim for 200–400 words. Cite one philosopher from the syllabus."
+          placeholder={t('cls.field_instructions_ph', locale)}
           maxLength={1000}
           style={{ resize: 'vertical' }}
         />
       </label>
 
       <label style={{ display: 'grid', gap: 6 }}>
-        <span>DUE DATE (OPTIONAL)</span>
+        <span>{t('cls.field_due_date', locale)}</span>
         <input
           type="datetime-local"
           value={dueAt}
@@ -151,7 +153,7 @@ export default function AssignmentCreateForm({ classId }: { classId: string }) {
       {error && <p className="pixel-alert pixel-alert--error" role="alert">{error}</p>}
 
       <button type="submit" disabled={submitting || !title.trim() || !prompt.trim()}>
-        {submitting ? 'Posting…' : 'Post assignment'}
+        {submitting ? t('cls.assignment_submitting', locale) : t('cls.assignment_submit', locale)}
       </button>
     </form>
   );

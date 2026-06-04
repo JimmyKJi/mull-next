@@ -14,9 +14,10 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import FocusTrap from './focus-trap';
+import { t, type Locale, isLocale } from '@/lib/translations';
 
 const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
@@ -37,6 +38,13 @@ export default function FeedbackButton() {
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [locale, setLocale] = useState<Locale>('en');
+
+  useEffect(() => {
+    const m = document.cookie.match(/(?:^|; )mull_locale=([^;]+)/);
+    const v = m?.[1];
+    if (v && isLocale(v)) setLocale(v);
+  }, []);
 
   if (hide) return null;
 
@@ -54,7 +62,7 @@ export default function FeedbackButton() {
         }),
       });
       const json = await res.json();
-      if (!res.ok) throw new Error(json?.error || 'Could not send.');
+      if (!res.ok) throw new Error(json?.error || t('crd.feedback_err_send', locale));
       setSent(true);
       setText('');
       setTimeout(() => { setOpen(false); setSent(false); }, 1800);
@@ -71,8 +79,8 @@ export default function FeedbackButton() {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          aria-label="Send feedback"
-          title="Send feedback"
+          aria-label={t('crd.feedback_send_aria', locale)}
+          title={t('crd.feedback_send_aria', locale)}
           className="pixel-press mull-feedback-fab"
           style={{
             position: 'fixed',
@@ -88,7 +96,7 @@ export default function FeedbackButton() {
             transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
           }}
         >
-          <span className="mull-feedback-fab-full">▸ FEEDBACK</span>
+          <span className="mull-feedback-fab-full">▸ {t('crd.feedback_fab', locale)}</span>
           <span className="mull-feedback-fab-mini" aria-hidden>?</span>
           <style>{`
             /* Desktop: full pill in the bottom-right.
@@ -135,7 +143,7 @@ export default function FeedbackButton() {
         <div
           role="dialog"
           aria-modal="true"
-          aria-label="Feedback form"
+          aria-label={t('crd.feedback_form_aria', locale)}
           className="pixel-form"
           style={{
             position: 'fixed',
@@ -167,12 +175,12 @@ export default function FeedbackButton() {
               textTransform: 'uppercase',
               letterSpacing: '0.18em',
             }}>
-              ▸ SEND FEEDBACK
+              ▸ {t('crd.feedback_dialog_title', locale)}
             </strong>
             <button
               type="button"
               onClick={() => { setOpen(false); setSent(false); setError(null); }}
-              aria-label="Close"
+              aria-label={t('crd.feedback_close_aria', locale)}
               style={{
                 background: 'none', border: 'none', cursor: 'pointer',
                 fontFamily: pixel,
@@ -193,7 +201,7 @@ export default function FeedbackButton() {
               lineHeight: 1.5,
               padding: '8px 0',
             }}>
-              Thank you. Read every word.
+              {t('crd.feedback_sent', locale)}
             </p>
           ) : (
             <>
@@ -201,7 +209,7 @@ export default function FeedbackButton() {
                   input chrome via globals.css — no inline border / fonts
                   needed here beyond width + min-height. */}
               <textarea
-                placeholder="What's broken, what's confusing, what worked, what didn't?"
+                placeholder={t('crd.feedback_placeholder', locale)}
                 value={text}
                 onChange={e => setText(e.target.value)}
                 rows={4}
@@ -224,13 +232,13 @@ export default function FeedbackButton() {
                 letterSpacing: 0.4,
                 textTransform: 'uppercase',
               }}>
-                <span>{text.length} / 4000</span>
+                <span>{t('crd.feedback_counter', locale, { n: text.length })}</span>
                 <button
                   type="submit"
                   onClick={submit}
                   disabled={!text.trim() || busy}
                 >
-                  {busy ? 'Sending…' : 'Send'}
+                  {busy ? t('crd.feedback_sending', locale) : t('crd.feedback_send_btn', locale)}
                 </button>
               </div>
               {error && (

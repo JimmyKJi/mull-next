@@ -11,27 +11,36 @@
 'use client';
 
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { t, isLocale, type Locale } from '@/lib/translations';
 
 const sans = "'Inter', system-ui, sans-serif";
 
 export type TabKey = 'activity' | 'picks' | 'original';
 
-const TABS: Array<{ key: TabKey; label: string }> = [
-  { key: 'activity', label: 'Activity' },
-  { key: 'picks',    label: "Editor's picks" },
-  { key: 'original', label: 'Original thinking' },
+const TABS: Array<{ key: TabKey; labelKey: string }> = [
+  { key: 'activity', labelKey: 'srch2.tab_activity' },
+  { key: 'picks',    labelKey: 'srch2.tab_picks' },
+  { key: 'original', labelKey: 'srch2.tab_original' },
 ];
 
 export function useActiveTab(): TabKey {
   const params = useSearchParams();
-  const t = params.get('tab');
-  if (t === 'picks') return 'picks';
-  if (t === 'original') return 'original';
+  const tab = params.get('tab');
+  if (tab === 'picks') return 'picks';
+  if (tab === 'original') return 'original';
   return 'activity';
 }
 
 export default function LeaderboardTabs({ active }: { active: TabKey }) {
+  const [locale, setLocale] = useState<Locale>('en');
+  useEffect(() => {
+    const m = document.cookie.match(/(?:^|; )mull_locale=([^;]+)/);
+    const v = m?.[1];
+    if (v && isLocale(v)) setLocale(v);
+  }, []);
+
   return (
     // Pixel-tabs: chunky 4-px ink bottom border with each tab as a
     // pixel-bordered "button". Active tab gets the amber fill +
@@ -57,7 +66,7 @@ export default function LeaderboardTabs({ active }: { active: TabKey }) {
             }
             style={{ fontFamily: 'var(--font-pixel-display)' }}
           >
-            ▶ {tab.label.toUpperCase()}
+            ▶ {t(tab.labelKey, locale).toUpperCase()}
           </Link>
         );
       })}

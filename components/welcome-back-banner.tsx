@@ -16,26 +16,34 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { t, type Locale, isLocale } from '@/lib/translations';
 
 const KEY = 'mull.last_account_visit';
 const THRESHOLD_DAYS = 3;
 
-function relativeGap(daysAgo: number): string {
-  if (daysAgo < 7) return `${daysAgo} days`;
+function relativeGap(daysAgo: number, locale: Locale): string {
+  if (daysAgo < 7) return t('uic.gap_days', locale, { n: daysAgo });
   if (daysAgo < 30) {
     const w = Math.round(daysAgo / 7);
-    return w === 1 ? 'a week' : `${w} weeks`;
+    return w === 1 ? t('uic.gap_week', locale) : t('uic.gap_weeks', locale, { n: w });
   }
   if (daysAgo < 365) {
     const m = Math.round(daysAgo / 30);
-    return m === 1 ? 'a month' : `${m} months`;
+    return m === 1 ? t('uic.gap_month', locale) : t('uic.gap_months', locale, { n: m });
   }
   const y = Math.round(daysAgo / 365);
-  return y === 1 ? 'a year' : `${y} years`;
+  return y === 1 ? t('uic.gap_year', locale) : t('uic.gap_years', locale, { n: y });
 }
 
 export default function WelcomeBackBanner() {
   const [daysAgo, setDaysAgo] = useState<number | null>(null);
+  const [locale, setLocale] = useState<Locale>('en');
+
+  useEffect(() => {
+    const m = document.cookie.match(/(?:^|; )mull_locale=([^;]+)/);
+    const v = m?.[1];
+    if (v && isLocale(v)) setLocale(v);
+  }, []);
 
   useEffect(() => {
     try {
@@ -68,7 +76,7 @@ export default function WelcomeBackBanner() {
     <button
       type="button"
       onClick={() => setDaysAgo(null)}
-      aria-label="Dismiss welcome-back banner"
+      aria-label={t('uic.welcome_back_dismiss', locale)}
       className="pixel-press"
       style={{
         display: 'flex',
@@ -101,7 +109,7 @@ export default function WelcomeBackBanner() {
         }
       `}</style>
       <span>
-        ▸ WELCOME BACK · {relativeGap(daysAgo)} SINCE YOUR LAST VISIT
+        ▸ {t('uic.welcome_back_text', locale, { gap: relativeGap(daysAgo, locale) })}
       </span>
       <span aria-hidden style={{ opacity: 0.6 }}>✕</span>
     </button>

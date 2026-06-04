@@ -19,39 +19,53 @@
 
 import type { Metadata } from 'next';
 import { PixelPageHeader } from '@/components/pixel-window';
+import { getServerLocale } from '@/lib/locale-server';
+import { t } from '@/lib/translations';
 import { InstallClient } from './install-client';
 
-export const metadata: Metadata = {
-  title: 'Add Mull to your home screen',
-  description: 'Step-by-step guide to installing Mull as an app on iPhone, iPad, or Android — no app store required.',
-  alternates: { canonical: 'https://mull.world/install' },
-  openGraph: {
-    title: 'Add Mull to your home screen — Mull',
-    description: 'Install Mull as an app on iOS or Android in three taps.',
-    type: 'article',
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getServerLocale();
+  return {
+    title: t('inst.meta_title', locale),
+    description: t('inst.meta_description', locale),
+    alternates: { canonical: 'https://mull.world/install' },
+    openGraph: {
+      title: t('inst.meta_og_title', locale),
+      description: t('inst.meta_og_description', locale),
+      type: 'article',
+    },
+  };
+}
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-prose)";
 
-export default function InstallPage() {
+// Render **bold** spans inside a translated string.
+function emph(text: string): React.ReactNode[] {
+  return text.split(/(\*\*[^*]+\*\*)/g).map((seg, i) =>
+    seg.startsWith('**') && seg.endsWith('**') ? (
+      <strong key={i}>{seg.slice(2, -2)}</strong>
+    ) : (
+      seg
+    ),
+  );
+}
+
+export default async function InstallPage() {
+  const locale = await getServerLocale();
   return (
     <main className="mx-auto max-w-[760px] px-5 pb-32 pt-10 sm:px-10">
       <PixelPageHeader
-        eyebrow="▶ INSTALL"
-        title="ADD MULL TO YOUR HOME SCREEN"
+        eyebrow={t('inst.eyebrow', locale)}
+        title={t('inst.title', locale)}
         subtitle={
           <p style={{ fontFamily: serif, fontStyle: 'italic', fontSize: 16, color: '#4A4338', lineHeight: 1.55 }}>
-            Three taps and Mull lives on your phone like a native app — full-screen,
-            no URL bar, with a tile that pulls up <strong>Daily Spar</strong>,{' '}
-            <strong>Pilgrimage</strong>, or <strong>The Inheritor</strong> straight from your home screen.
-            No App Store. No download.
+            {emph(t('inst.subtitle', locale))}
           </p>
         }
       />
 
-      <InstallClient />
+      <InstallClient locale={locale} />
     </main>
   );
 }

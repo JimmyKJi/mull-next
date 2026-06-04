@@ -9,6 +9,8 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { createClient } from '@/utils/supabase/server';
 import MullWordmark from '@/components/mull-wordmark';
+import { getServerLocale } from '@/lib/locale-server';
+import { t } from '@/lib/translations';
 import AssignmentCreateForm from './assignment-create-form';
 
 export const metadata: Metadata = {
@@ -25,6 +27,7 @@ export default async function NewAssignmentPage({
   params: Promise<{ id: string }>;
 }) {
   const { id: classId } = await params;
+  const locale = await getServerLocale();
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect(`/login?next=/classes/${classId}/assignments/new`);
@@ -54,7 +57,7 @@ export default async function NewAssignmentPage({
           letterSpacing: 0.4,
           textTransform: 'uppercase',
         }}>
-          ◂ BACK TO CLASS
+          ◂ {t('cls.back_to_class', locale)}
         </Link>
       </div>
 
@@ -66,7 +69,7 @@ export default async function NewAssignmentPage({
         letterSpacing: '0.18em',
         marginBottom: 14,
       }}>
-        ▸ NEW ASSIGNMENT · {cls.name.toUpperCase()}
+        ▸ {t('cls.new_assignment_eyebrow', locale)} · {cls.name.toUpperCase()}
       </div>
       <h1 style={{
         fontFamily: pixel,
@@ -78,7 +81,7 @@ export default async function NewAssignmentPage({
         textShadow: '3px 3px 0 #B8862F',
         lineHeight: 1.1,
       }}>
-        POST A PROMPT
+        {t('cls.new_assignment_title', locale)}
       </h1>
       <p style={{
         fontFamily: serif,
@@ -88,12 +91,10 @@ export default async function NewAssignmentPage({
         margin: '0 0 28px',
         lineHeight: 1.55,
       }}>
-        Pick what kind of response you want, write the prompt, and
-        optionally set a due date. Students see it on their next visit
-        to the class page.
+        {t('cls.new_assignment_intro', locale)}
       </p>
 
-      <AssignmentCreateForm classId={classId} />
+      <AssignmentCreateForm classId={classId} locale={locale} />
     </main>
   );
 }

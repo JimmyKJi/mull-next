@@ -7,8 +7,11 @@
 // link is a real one — update to your actual Ko-fi when you set up
 // the account.
 
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import { TIPPING_ENABLED } from "@/lib/feature-flags";
+import { t, type Locale, isLocale } from "@/lib/translations";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-prose)";
@@ -24,10 +27,20 @@ type Props = {
 };
 
 export function SupportMullPrompt({
-  lead = "If this gave you something, consider keeping it running.",
-  detail = "Mull is free to use. Each Arena verdict costs about 15 cents in AI fees; The Inheritor and the daily dilemma have their own small costs. A tip — any size — helps keep them open to everyone.",
+  lead,
+  detail,
   accent = "#B8862F",
 }: Props) {
+  const [locale, setLocale] = useState<Locale>("en");
+
+  useEffect(() => {
+    const m = document.cookie.match(/(?:^|; )mull_locale=([^;]+)/);
+    const v = m?.[1];
+    if (v && isLocale(v)) setLocale(v);
+  }, []);
+
+  const leadText = lead ?? t("uic.support_lead_default", locale);
+  const detailText = detail ?? t("uic.support_detail_default", locale);
   // Tip jar temporarily hidden pending a legal constraint on accepting
   // tips/donations — see TIPPING_ENABLED in lib/feature-flags.ts. While
   // off, this renders nothing on all three surfaces (quiz-journey reveal
@@ -54,7 +67,7 @@ export function SupportMullPrompt({
           marginBottom: 8,
         }}
       >
-        ▸ KEEP MULL OPEN
+        ▸ {t("uic.support_eyebrow", locale)}
       </div>
       <p
         style={{
@@ -65,7 +78,7 @@ export function SupportMullPrompt({
           lineHeight: 1.55,
         }}
       >
-        {lead}
+        {leadText}
       </p>
       <p
         style={{
@@ -77,7 +90,7 @@ export function SupportMullPrompt({
           lineHeight: 1.55,
         }}
       >
-        {detail}
+        {detailText}
       </p>
       <a
         href="https://ko-fi.com/mull"
@@ -97,7 +110,7 @@ export function SupportMullPrompt({
           textDecoration: "none",
         }}
       >
-        ▶ TIP MULL ON KO-FI
+        ▶ {t("uic.support_tip_cta", locale)}
       </a>
       <p
         style={{
@@ -110,7 +123,7 @@ export function SupportMullPrompt({
           margin: "10px 0 0",
         }}
       >
-        no obligation · no signup · close this if you'd rather not
+        {t("uic.support_footer", locale)}
       </p>
     </aside>
   );

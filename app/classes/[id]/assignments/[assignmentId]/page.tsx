@@ -14,6 +14,8 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { createClient } from '@/utils/supabase/server';
 import MullWordmark from '@/components/mull-wordmark';
+import { getServerLocale } from '@/lib/locale-server';
+import { t, type Locale } from '@/lib/translations';
 import AssignmentSubmitForm from './assignment-submit-form';
 import { scoreAuthenticity, authSummary, type AuthResult } from '@/lib/ai-authenticity';
 
@@ -62,6 +64,7 @@ export default async function AssignmentDetailPage({
   params: Promise<{ id: string; assignmentId: string }>;
 }) {
   const { id: classId, assignmentId } = await params;
+  const locale = await getServerLocale();
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect(`/login?next=/classes/${classId}/assignments/${assignmentId}`);
@@ -131,10 +134,12 @@ export default async function AssignmentDetailPage({
         color: '#8C6520', textTransform: 'uppercase',
         letterSpacing: '0.18em', marginBottom: 14,
       }}>
-        ▸ {assignment.kind.replace('_', ' ').toUpperCase()}
+        ▸ {kindLabel(assignment.kind, locale).toUpperCase()}
         {assignment.due_at && (
           <span style={{ color: overdue ? '#7A2E2E' : '#8C6520', marginLeft: 8 }}>
-            · DUE {new Date(assignment.due_at).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}
+            · {t('cls.due_label', locale, {
+              date: new Date(assignment.due_at).toLocaleString(locale === 'zh' ? 'zh-CN' : 'en-US', { dateStyle: 'medium', timeStyle: 'short' }),
+            })}
           </span>
         )}
       </div>
@@ -184,7 +189,7 @@ export default async function AssignmentDetailPage({
               color: '#8C6520', letterSpacing: 0.4,
               textTransform: 'uppercase', marginBottom: 6,
             }}>
-              INSTRUCTIONS
+              {t('cls.instructions_label', locale)}
             </div>
             {assignment.instructions}
           </div>
@@ -198,6 +203,7 @@ export default async function AssignmentDetailPage({
           assignmentId={assignment.id}
           existingText={mySubmission?.response_text ?? ''}
           existingSubmittedAt={mySubmission?.submitted_at ?? null}
+          locale={locale}
         />
       )}
 
@@ -206,6 +212,7 @@ export default async function AssignmentDetailPage({
         <TeacherSubmissionsView
           submissions={submissions ?? []}
           roster={roster}
+          locale={locale}
         />
       )}
     </main>
@@ -215,9 +222,11 @@ export default async function AssignmentDetailPage({
 async function TeacherSubmissionsView({
   submissions,
   roster,
+  locale,
 }: {
   submissions: Submission[];
   roster: RosterEntry[];
+  locale: Locale;
 }) {
   const supabase = await createClient();
   // Resolve each submitter's display name.
@@ -249,7 +258,7 @@ async function TeacherSubmissionsView({
           marginBottom: 16,
           textShadow: '2px 2px 0 #2F5D5C',
         }}>
-          ▸ SUBMISSIONS ({submissions.length} / {roster.length})
+          ▸ {t('cls.submissions_heading', locale, { count: submissions.length, total: roster.length })}
         </h2>
 
         {submissions.length === 0 ? (
@@ -265,7 +274,7 @@ async function TeacherSubmissionsView({
             margin: 0,
             textAlign: 'center',
           }}>
-            No submissions yet.
+            {t('cls.submissions_empty', locale)}
           </p>
         ) : (
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 12 }}>
@@ -274,7 +283,7 @@ async function TeacherSubmissionsView({
               const rosterRow = roster.find(r => r.user_id === s.student_user_id);
               const studentLabel = rosterRow?.pseudonym
                 ? rosterRow.pseudonym
-                : (profile?.display_name || (profile ? `@${profile.handle}` : `Student · ${s.student_user_id.slice(0, 6)}`));
+                : (profile?.display_name || (profile ? `@${profile.handle}` : t('cls.student_short', locale, { id: s.student_user_id.slice(0, 6) })));
               // Heuristic AI-pattern score — computed on-the-fly,
               // no DB column, no API call. Surfaced as a signal,
               // not a verdict. See lib/ai-authenticity.ts header.
@@ -310,11 +319,13 @@ async function TeacherSubmissionsView({
                       letterSpacing: 0.4,
                       textTransform: 'uppercase',
                     }}>
-                      SUBMITTED {new Date(s.submitted_at).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}
-                      {s.reviewed_at && <> · ✓ REVIEWED</>}
+                      {t('cls.submitted_at', locale, {
+                        date: new Date(s.submitted_at).toLocaleString(locale === 'zh' ? 'zh-CN' : 'en-US', { dateStyle: 'medium', timeStyle: 'short' }),
+                      })}
+                      {s.reviewed_at && <> · {t('cls.reviewed', locale)}</>}
                     </span>
                   </div>
-                  <AuthBadge auth={auth} />
+                  <AuthBadge auth={auth} locale={locale} />
                   <p style={{
                     fontFamily: serif,
                     fontSize: 15.5,
@@ -341,7 +352,7 @@ async function TeacherSubmissionsView({
               letterSpacing: 0.4,
               textTransform: 'uppercase',
             }}>
-              ▸ {unsubmitted.length} STUDENT{unsubmitted.length === 1 ? '' : 'S'} HAVEN&apos;T SUBMITTED
+              ▸ {t(unsubmitted.length === 1 ? 'cls.unsubmitted_summary_one' : 'cls.unsubmitted_summary_many', locale, { count: unsubmitted.length })}
             </summary>
             <ul style={{
               listStyle: 'none',
@@ -359,7 +370,7 @@ async function TeacherSubmissionsView({
                   fontSize: 14,
                   color: '#4D1818',
                 }}>
-                  {r.pseudonym || <em>Student · {r.user_id.slice(0, 6)}</em>}
+                  {r.pseudonym || <em>{t('cls.student_short', locale, { id: r.user_id.slice(0, 6) })}</em>}
                 </li>
               ))}
             </ul>
@@ -377,7 +388,7 @@ async function TeacherSubmissionsView({
 // <details> drilling into the specific flags, so teachers don't have
 // to take the score on faith.
 
-function AuthBadge({ auth }: { auth: AuthResult }) {
+function AuthBadge({ auth, locale }: { auth: AuthResult; locale: Locale }) {
   const palette = {
     high:   { fg: '#7A2E2E', bg: '#F5E0E0', border: '#7A2E2E', icon: '!' },
     medium: { fg: '#8C6520', bg: '#F8EDC8', border: '#B8862F', icon: '·' },
@@ -400,7 +411,7 @@ function AuthBadge({ auth }: { auth: AuthResult }) {
         textTransform: 'uppercase',
       }}>
         <span aria-hidden style={{ fontWeight: 700 }}>{palette.icon}</span>
-        <span>AI-PATTERN SCAN · {authSummary(auth)}</span>
+        <span>{t('cls.ai_scan_label', locale)} · {authSummary(auth)}</span>
       </summary>
       <div style={{
         marginTop: 8,
@@ -413,12 +424,10 @@ function AuthBadge({ auth }: { auth: AuthResult }) {
         lineHeight: 1.5,
       }}>
         <p style={{ margin: '0 0 8px', fontStyle: 'italic' }}>
-          This is a heuristic signal, not a verdict. False positives
-          happen, especially for students with a formal register or
-          non-native English speakers writing carefully.
+          {t('cls.ai_scan_disclaimer', locale)}
         </p>
         {auth.flags.length === 0 ? (
-          <p style={{ margin: 0 }}>No patterns flagged.</p>
+          <p style={{ margin: 0 }}>{t('cls.ai_scan_no_flags', locale)}</p>
         ) : (
           <ul style={{
             margin: 0,
@@ -448,4 +457,13 @@ function AuthBadge({ auth }: { auth: AuthResult }) {
       </div>
     </details>
   );
+}
+
+// Localize the assignment-kind enum (dilemma / exercise / diary_prompt)
+// for the eyebrow. Falls back to the raw value with the underscore
+// swapped for a space.
+function kindLabel(kind: string, locale: Locale): string {
+  const key = `cls.kind_${kind}`;
+  const label = t(key, locale);
+  return label === key ? kind.replace('_', ' ') : label;
 }

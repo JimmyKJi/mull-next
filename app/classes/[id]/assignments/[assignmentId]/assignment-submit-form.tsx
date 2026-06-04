@@ -5,6 +5,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { t, type Locale } from '@/lib/translations';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-prose)";
@@ -14,11 +15,13 @@ export default function AssignmentSubmitForm({
   assignmentId,
   existingText,
   existingSubmittedAt,
+  locale,
 }: {
   classId: string;
   assignmentId: string;
   existingText: string;
   existingSubmittedAt: string | null;
+  locale: Locale;
 }) {
   const router = useRouter();
   const [text, setText] = useState(existingText);
@@ -39,7 +42,7 @@ export default function AssignmentSubmitForm({
       });
       const json = await res.json();
       if (!res.ok) {
-        setError(json?.error || 'Could not save response.');
+        setError(json?.error || t('cls.submit_error', locale));
         setSubmitting(false);
         return;
       }
@@ -47,7 +50,7 @@ export default function AssignmentSubmitForm({
       setSubmitting(false);
       router.refresh();
     } catch {
-      setError('Network error.');
+      setError(t('cls.network_error', locale));
       setSubmitting(false);
     }
   }
@@ -63,15 +66,17 @@ export default function AssignmentSubmitForm({
         marginBottom: 0,
       }}>
         {savedAt
-          ? `✓ SUBMITTED ${new Date(savedAt).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}`
-          : '▸ YOUR RESPONSE'}
+          ? t('cls.submitted_at', locale, {
+              date: new Date(savedAt).toLocaleString(locale === 'zh' ? 'zh-CN' : 'en-US', { dateStyle: 'medium', timeStyle: 'short' }),
+            })
+          : `▸ ${t('cls.your_response', locale)}`}
       </div>
 
       <textarea
         rows={10}
         value={text}
         onChange={e => setText(e.target.value)}
-        placeholder="Write your response here. You can edit and re-submit until your teacher marks it reviewed."
+        placeholder={t('cls.response_ph', locale)}
         maxLength={8000}
         required
         style={{ resize: 'vertical', minHeight: 220 }}
@@ -95,8 +100,8 @@ export default function AssignmentSubmitForm({
         </span>
         <button type="submit" disabled={submitting || !text.trim()}>
           {submitting
-            ? 'Saving…'
-            : (savedAt ? 'Update response' : 'Submit response')}
+            ? t('cls.saving', locale)
+            : (savedAt ? t('cls.update_response', locale) : t('cls.submit_response', locale))}
         </button>
       </div>
 
@@ -113,8 +118,7 @@ export default function AssignmentSubmitForm({
           background: '#E5F0EE',
           border: '2px solid #2F5D5C',
         }}>
-          Your response is saved. You can come back and edit it any time until
-          your instructor reviews the submission.
+          {t('cls.saved_note', locale)}
         </p>
       )}
 
@@ -129,10 +133,7 @@ export default function AssignmentSubmitForm({
         margin: 0,
         lineHeight: 1.5,
       }}>
-        Heads up: your teacher sees a heuristic AI-pattern signal alongside
-        your submission. It looks for common AI phrasing and structure — it
-        is not a verdict and false positives happen, but writing in your own
-        voice is the safest path.
+        {t('cls.ai_disclosure', locale)}
       </p>
     </form>
   );

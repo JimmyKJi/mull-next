@@ -9,6 +9,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { t, type Locale } from "@/lib/translations";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-prose)";
@@ -42,7 +43,7 @@ function isStandalone(): boolean {
   return false;
 }
 
-export function InstallClient() {
+export function InstallClient({ locale }: { locale: Locale }) {
   const [platform, setPlatform] = useState<Platform>("desktop");
   const [installed, setInstalled] = useState(false);
   const [prompt, setPrompt] = useState<BeforeInstallPromptEvent | null>(null);
@@ -91,7 +92,7 @@ export function InstallClient() {
             marginBottom: 6,
           }}
         >
-          ✓ Installed
+          ✓ {t("inst.installed_badge", locale)}
         </div>
         <h2
           style={{
@@ -102,7 +103,7 @@ export function InstallClient() {
             color: "#221E18",
           }}
         >
-          You&rsquo;re running Mull standalone.
+          {t("inst.installed_heading", locale)}
         </h2>
         <p
           style={{
@@ -114,8 +115,7 @@ export function InstallClient() {
             lineHeight: 1.55,
           }}
         >
-          Mull is already on your home screen. Pin the Daily Spar or your
-          Pilgrimage as a shortcut — long-press the icon.
+          {t("inst.installed_body", locale)}
         </p>
         <Link
           href="/"
@@ -132,7 +132,7 @@ export function InstallClient() {
             textDecoration: "none",
           }}
         >
-          ▶ Back to Mull
+          ▶ {t("inst.back_to_mull", locale)}
         </Link>
       </section>
     );
@@ -171,7 +171,7 @@ export function InstallClient() {
               marginBottom: 6,
             }}
           >
-            ◆ One-tap install
+            ◆ {t("inst.onetap_badge", locale)}
           </div>
           <h2
             style={{
@@ -182,7 +182,7 @@ export function InstallClient() {
               color: "#221E18",
             }}
           >
-            Your browser can install Mull directly.
+            {t("inst.onetap_heading", locale)}
           </h2>
           <p
             style={{
@@ -194,7 +194,7 @@ export function InstallClient() {
               lineHeight: 1.55,
             }}
           >
-            Skip the manual steps below — tap install and Chromium does the rest.
+            {t("inst.onetap_body", locale)}
           </p>
           <button
             type="button"
@@ -218,11 +218,11 @@ export function InstallClient() {
               cursor: "pointer",
             }}
           >
-            ▶ Install Mull
+            ▶ {t("inst.install_button", locale)}
           </button>
           {androidPromptResult === "dismissed" ? (
             <p style={{ marginTop: 12, fontSize: 13, color: "#7A2E2E", fontFamily: serif, fontStyle: "italic" }}>
-              No problem — follow the Android steps below whenever you&rsquo;re ready.
+              {t("inst.dismissed_note", locale)}
             </p>
           ) : null}
         </section>
@@ -233,6 +233,7 @@ export function InstallClient() {
           key={p}
           platform={p}
           isCurrent={p === platform}
+          locale={locale}
         />
       ))}
 
@@ -255,7 +256,7 @@ export function InstallClient() {
             marginBottom: 8,
           }}
         >
-          ◇ Why install?
+          ◇ {t("inst.why_install", locale)}
         </div>
         <ul
           style={{
@@ -267,10 +268,10 @@ export function InstallClient() {
             lineHeight: 1.6,
           }}
         >
-          <li>The URL bar disappears — full screen, like a native app.</li>
-          <li>One tap on the home tile opens the Daily Spar or your Pilgrimage.</li>
-          <li>It&rsquo;s the same site — no data sync, no separate account.</li>
-          <li>No App Store gatekeeper, no ratings, no auto-updates that change the layout overnight.</li>
+          <li>{t("inst.why_fullscreen", locale)}</li>
+          <li>{t("inst.why_onetap", locale)}</li>
+          <li>{t("inst.why_samesite", locale)}</li>
+          <li>{t("inst.why_no_appstore", locale)}</li>
         </ul>
       </section>
     </div>
@@ -280,11 +281,13 @@ export function InstallClient() {
 function PlatformGuide({
   platform,
   isCurrent,
+  locale,
 }: {
   platform: Platform;
   isCurrent: boolean;
+  locale: Locale;
 }) {
-  const meta = PLATFORM_META[platform];
+  const meta = platformMeta(locale)[platform];
   return (
     <section
       style={{
@@ -310,7 +313,7 @@ function PlatformGuide({
             textTransform: "uppercase",
           }}
         >
-          ★ YOU&rsquo;RE ON THIS
+          ★ {t("inst.youre_on_this", locale)}
         </div>
       ) : null}
 
@@ -450,7 +453,7 @@ function PlatformGuide({
   );
 }
 
-const PLATFORM_META: Record<
+function platformMeta(locale: Locale): Record<
   Platform,
   {
     title: string;
@@ -460,67 +463,69 @@ const PLATFORM_META: Record<
     steps: { title: string; detail?: string }[];
     notes?: string;
   }
-> = {
-  ios: {
-    title: "iPhone or iPad (Safari)",
-    glyph: "◍",
-    accent: "#3D5A7E",
-    preface: "iOS only lets Safari install web apps — Chrome and Firefox on iPhone can't do this. If you opened this in another browser, copy the URL and open it in Safari first.",
-    steps: [
-      {
-        title: "Tap the Share button at the bottom of Safari",
-        detail: "It's the square with an arrow pointing up. If you're in landscape on an iPad, it's at the top.",
-      },
-      {
-        title: 'Scroll down and tap "Add to Home Screen"',
-        detail: "It's about halfway down the share sheet, in the second row of grey actions.",
-      },
-      {
-        title: 'Confirm the name "Mull" and tap "Add"',
-        detail: "iOS may suggest a longer name — feel free to shorten it. The tile is now on your home screen.",
-      },
-    ],
-    notes: "If you don't see \"Add to Home Screen\", you're either in private browsing or in a browser that isn't Safari. Both block the install.",
-  },
-  android: {
-    title: "Android (Chrome, Edge, Brave)",
-    glyph: "◑",
-    accent: "#6B7F4F",
-    preface: "Most Android browsers built on Chromium can install Mull. Firefox on Android also supports it, with slightly different menu wording.",
-    steps: [
-      {
-        title: "Tap the three-dot menu in the top-right",
-        detail: "It's labeled \"More\" or shown as ⋮. In Firefox the menu lives in the bottom-right.",
-      },
-      {
-        title: 'Tap "Install app" or "Add to Home screen"',
-        detail: "Chrome and Edge show \"Install app\" once they detect Mull as a PWA. Firefox calls it \"Install\" or \"Add to Home screen\" depending on version.",
-      },
-      {
-        title: "Confirm and the tile drops onto your home screen",
-        detail: "Some launchers (Samsung, Pixel) ask whether you want a shortcut or a full install — choose Install for the full-screen experience.",
-      },
-    ],
-    notes: "Long-press the Mull tile after install for shortcuts straight to Daily Spar, Pilgrimage, or The Inheritor.",
-  },
-  desktop: {
-    title: "Desktop (Chrome, Edge, Brave)",
-    glyph: "◇",
-    accent: "#B8862F",
-    preface: "Chromium browsers on macOS, Windows, and Linux can install Mull as a standalone window. Safari on macOS doesn't support web app install — for that, just bookmark and pin the tab.",
-    steps: [
-      {
-        title: "Look for the install icon in the address bar",
-        detail: "A small monitor-with-a-down-arrow icon appears at the right edge of the URL bar when a site is installable.",
-      },
-      {
-        title: 'Click it, then click "Install"',
-        detail: "Mull opens in its own window, separate from your other tabs. The Dock / Taskbar gets a Mull entry.",
-      },
-      {
-        title: "Pin it for quick access",
-        detail: "Right-click the Dock icon (macOS) or Taskbar icon (Windows) and choose to keep it there.",
-      },
-    ],
-  },
-};
+> {
+  return {
+    ios: {
+      title: t("inst.ios_title", locale),
+      glyph: "◍",
+      accent: "#3D5A7E",
+      preface: t("inst.ios_preface", locale),
+      steps: [
+        {
+          title: t("inst.ios_step1_title", locale),
+          detail: t("inst.ios_step1_detail", locale),
+        },
+        {
+          title: t("inst.ios_step2_title", locale),
+          detail: t("inst.ios_step2_detail", locale),
+        },
+        {
+          title: t("inst.ios_step3_title", locale),
+          detail: t("inst.ios_step3_detail", locale),
+        },
+      ],
+      notes: t("inst.ios_notes", locale),
+    },
+    android: {
+      title: t("inst.android_title", locale),
+      glyph: "◑",
+      accent: "#6B7F4F",
+      preface: t("inst.android_preface", locale),
+      steps: [
+        {
+          title: t("inst.android_step1_title", locale),
+          detail: t("inst.android_step1_detail", locale),
+        },
+        {
+          title: t("inst.android_step2_title", locale),
+          detail: t("inst.android_step2_detail", locale),
+        },
+        {
+          title: t("inst.android_step3_title", locale),
+          detail: t("inst.android_step3_detail", locale),
+        },
+      ],
+      notes: t("inst.android_notes", locale),
+    },
+    desktop: {
+      title: t("inst.desktop_title", locale),
+      glyph: "◇",
+      accent: "#B8862F",
+      preface: t("inst.desktop_preface", locale),
+      steps: [
+        {
+          title: t("inst.desktop_step1_title", locale),
+          detail: t("inst.desktop_step1_detail", locale),
+        },
+        {
+          title: t("inst.desktop_step2_title", locale),
+          detail: t("inst.desktop_step2_detail", locale),
+        },
+        {
+          title: t("inst.desktop_step3_title", locale),
+          detail: t("inst.desktop_step3_detail", locale),
+        },
+      ],
+    },
+  };
+}

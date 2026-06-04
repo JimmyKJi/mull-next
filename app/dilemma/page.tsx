@@ -318,6 +318,7 @@ export default async function DilemmaPage() {
             diagnosis={existing.diagnosis}
             kinship={existing.kinship}
             is_novel={existing.is_novel}
+            locale={locale}
           />
           {shifts.length > 0 && (
             <div>

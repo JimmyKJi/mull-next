@@ -5,6 +5,7 @@
 // distribute the invite link to students without leaving the page.
 
 import { useState } from 'react';
+import { t, type Locale } from '@/lib/translations';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-prose)";
@@ -12,9 +13,11 @@ const serif = "var(--font-prose)";
 export default function ClassInviteShare({
   inviteCode,
   studentCount,
+  locale,
 }: {
   inviteCode: string;
   studentCount: number;
+  locale: Locale;
 }) {
   const [copiedKind, setCopiedKind] = useState<'url' | 'code' | null>(null);
 
@@ -28,7 +31,7 @@ export default function ClassInviteShare({
       setCopiedKind(kind);
       setTimeout(() => setCopiedKind(null), 1800);
     } catch {
-      window.prompt('Copy this:', text);
+      window.prompt(t('cls.copy_prompt', locale), text);
     }
   }
 
@@ -49,7 +52,7 @@ export default function ClassInviteShare({
         letterSpacing: '0.18em',
         marginBottom: 12,
       }}>
-        ▸ INVITE STUDENTS
+        ▸ {t('cls.invite_eyebrow', locale)}
       </div>
       <p style={{
         fontFamily: serif,
@@ -59,12 +62,10 @@ export default function ClassInviteShare({
         margin: '0 0 16px',
         lineHeight: 1.55,
       }}>
-        Share the link with your class. Students who already have a Mull
-        account join in one click; new students sign up first and then
-        the code joins them automatically.
+        {t('cls.invite_body', locale)}
         {' '}
         <strong style={{ fontStyle: 'normal' }}>
-          {studentCount} {studentCount === 1 ? 'student has' : 'students have'} joined so far.
+          {t(studentCount === 1 ? 'cls.invite_joined_one' : 'cls.invite_joined_many', locale, { count: studentCount })}
         </strong>
       </p>
 
@@ -108,7 +109,7 @@ export default function ClassInviteShare({
               transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
             }}
           >
-            {copiedKind === 'url' ? '✓ COPIED' : 'COPY URL'}
+            {copiedKind === 'url' ? t('cls.copied', locale) : t('cls.copy_url', locale)}
           </button>
         </div>
 
@@ -127,7 +128,7 @@ export default function ClassInviteShare({
             fontSize: 13,
             color: '#4A4338',
           }}>
-            Or share the 6-character code directly:
+            {t('cls.share_code_directly', locale)}
           </span>
           <button
             type="button"
@@ -145,7 +146,7 @@ export default function ClassInviteShare({
               transition: 'transform 80ms steps(2, end)',
             }}
           >
-            {copiedKind === 'code' ? '✓ COPIED' : inviteCode}
+            {copiedKind === 'code' ? t('cls.copied', locale) : inviteCode}
           </button>
         </div>
       </div>

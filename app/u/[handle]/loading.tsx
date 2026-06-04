@@ -8,10 +8,13 @@
 // public profile.
 
 import MullWordmark from '@/components/mull-wordmark';
+import { getServerLocale } from '@/lib/locale-server';
+import { t } from '@/lib/translations';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
-export default function Loading() {
+export default async function Loading() {
+  const locale = await getServerLocale();
   return (
     <main style={{ maxWidth: 760, margin: '60px auto', padding: '0 24px' }}>
       <header style={{
@@ -49,7 +52,7 @@ export default function Loading() {
         letterSpacing: 0.4,
         textTransform: 'uppercase',
       }}>
-        ▸ LOADING…
+        ▸ {t('ldg.loading', locale).toUpperCase()}
       </p>
     </main>
   );

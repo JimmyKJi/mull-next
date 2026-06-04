@@ -18,6 +18,8 @@ import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
 import { findExercise } from '@/lib/exercises';
 import EmptyStateSprite from '@/components/empty-state-sprite';
+import { getServerLocale } from '@/lib/locale-server';
+import { t } from '@/lib/translations';
 
 const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
@@ -95,6 +97,7 @@ function preview(text: string, max = 320): string {
 
 export default async function OriginalThinking() {
   const supabase = await createClient();
+  const locale = await getServerLocale();
 
   // Fan out three queries in parallel — one per source table. Each pulls
   // up to PER_SOURCE_LIMIT recent novel+public entries with the author's
@@ -143,7 +146,7 @@ export default async function OriginalThinking() {
     const pp = pickProfile(r.public_profiles);
     return {
       sourceType: 'diary',
-      sourceLabel: 'Diary',
+      sourceLabel: t('srch2.source_diary', locale),
       id: r.id,
       title: r.title,
       context: null,
@@ -160,7 +163,7 @@ export default async function OriginalThinking() {
     const pp = pickProfile(r.public_profiles);
     return {
       sourceType: 'dilemma',
-      sourceLabel: 'Daily dilemma',
+      sourceLabel: t('srch2.source_dilemma', locale),
       id: r.id,
       title: null,
       context: r.question_text,
@@ -180,7 +183,7 @@ export default async function OriginalThinking() {
     const ex = findExercise(r.exercise_slug);
     return {
       sourceType: 'exercise',
-      sourceLabel: ex ? `Exercise · ${ex.name}` : 'Exercise reflection',
+      sourceLabel: ex ? t('srch2.source_exercise_named', locale, { name: ex.name }) : t('srch2.source_exercise', locale),
       id: r.id,
       title: null,
       context: ex?.reflection ?? null,
@@ -210,14 +213,14 @@ export default async function OriginalThinking() {
           margin: 0, color: '#221E18', letterSpacing: '0.04em',
           textShadow: '3px 3px 0 #6B3E8C', lineHeight: 1.1,
         }}>
-          ORIGINAL THINKING
+          {t('srch2.original_h2', locale).toUpperCase()}
         </h2>
         <span style={{
           fontFamily: sans, fontSize: 11, fontWeight: 600,
           color: '#6B3E8C', textTransform: 'uppercase',
           letterSpacing: '0.16em',
         }}>
-          ✦ outside the canon
+          ✦ {t('srch2.original_badge', locale)}
         </span>
       </div>
       <p style={{
@@ -225,10 +228,7 @@ export default async function OriginalThinking() {
         fontSize: 16, color: '#4A4338',
         margin: '0 0 22px', lineHeight: 1.55,
       }}>
-        Public writing — diary entries, dilemma responses, and exercise
-        reflections — voicing moves the philosophical canon doesn&rsquo;t
-        strongly capture. The judgement is conservative; most entries
-        are echoes, and only the ones that aren&rsquo;t land here.
+        {t('srch2.original_blurb', locale)}
       </p>
 
       {rows.length === 0 ? (
@@ -240,7 +240,7 @@ export default async function OriginalThinking() {
         }}>
           <EmptyStateSprite
             variant="explorer"
-            caption="No entries here yet. Once someone writes something genuinely uncovered by the canon and marks it public, it surfaces here."
+            caption={t('srch2.original_empty', locale)}
           />
         </div>
       ) : (
@@ -324,7 +324,7 @@ export default async function OriginalThinking() {
                     color: '#6B3E8C', textTransform: 'uppercase',
                     letterSpacing: '0.18em', marginBottom: 4,
                   }}>
-                    Why this is original
+                    {t('srch2.original_why', locale)}
                   </div>
                   <div style={{
                     fontFamily: serif, fontStyle: 'italic',
@@ -349,7 +349,7 @@ export default async function OriginalThinking() {
                       borderRadius: 999,
                       letterSpacing: 0.2,
                     }}>
-                      adjacent to {tr}
+                      {t('srch2.original_adjacent', locale, { tradition: tr })}
                     </span>
                   ))}
                 </div>

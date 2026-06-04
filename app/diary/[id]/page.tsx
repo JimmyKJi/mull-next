@@ -139,6 +139,7 @@ export default async function DiaryEntryPage({ params }: { params: Promise<{ id:
         diagnosis={entry.diagnosis}
         kinship={entry.kinship}
         is_novel={entry.is_novel}
+        locale={locale}
       />
 
       {shifts.length > 0 && (
