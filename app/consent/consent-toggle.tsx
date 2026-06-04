@@ -11,10 +11,11 @@ import {
   setStoredConsent,
   type ResearchConsent,
 } from "@/components/research-consent-gate";
+import { t, type Locale } from "@/lib/translations";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
-export default function ConsentToggle() {
+export default function ConsentToggle({ locale }: { locale: Locale }) {
   const [current, setCurrent] = useState<ResearchConsent | null | "loading">(
     "loading",
   );
@@ -49,17 +50,17 @@ export default function ConsentToggle() {
         className="text-[14px] text-[#8C6520]"
         style={{ fontFamily: "var(--font-editorial)" }}
       >
-        Loading…
+        {t("consent.toggle_loading", locale)}
       </p>
     );
   }
 
   const statusLine =
     current === "yes"
-      ? "You're opted IN. Your anonymized data may be used in academic research."
+      ? t("consent.toggle_status_yes", locale)
       : current === "no"
-        ? "You're opted OUT. Your data is not used for research."
-        : "You haven't decided yet. You'll be asked the next time you start the quiz.";
+        ? t("consent.toggle_status_no", locale)
+        : t("consent.toggle_status_undecided", locale);
 
   return (
     <div>
@@ -89,7 +90,9 @@ export default function ConsentToggle() {
             textAlign: "center",
           }}
         >
-          {current === "yes" ? "✓ OPTED IN" : "▶ OPT IN TO RESEARCH"}
+          {current === "yes"
+            ? t("consent.toggle_opted_in", locale)
+            : t("consent.toggle_opt_in", locale)}
         </button>
         <button
           type="button"
@@ -110,7 +113,9 @@ export default function ConsentToggle() {
             textAlign: "center",
           }}
         >
-          {current === "no" ? "✓ OPTED OUT" : "◂ OPT OUT"}
+          {current === "no"
+            ? t("consent.toggle_opted_out", locale)
+            : t("consent.toggle_opt_out", locale)}
         </button>
       </div>
       {current !== null && (
@@ -119,7 +124,7 @@ export default function ConsentToggle() {
           onClick={clear}
           className="mt-3 text-[12px] text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
         >
-          reset — ask me next time
+          {t("consent.toggle_reset", locale)}
         </button>
       )}
     </div>

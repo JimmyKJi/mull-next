@@ -24,6 +24,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { t, type Locale, isLocale } from "@/lib/translations";
 
 const STORAGE_KEY = "mull.research_consent";
 
@@ -42,6 +43,13 @@ export function ResearchConsentGate({ children }: Props) {
   // the consent overlay. Avoids a layout-shift flash on every page
   // load by checking and hiding in a single effect tick.
   const [decision, setDecision] = useState<ResearchConsent | "loading" | "needed">("loading");
+  const [locale, setLocale] = useState<Locale>("en");
+
+  useEffect(() => {
+    const m = document.cookie.match(/(?:^|; )mull_locale=([^;]+)/);
+    const v = m?.[1];
+    if (v && isLocale(v)) setLocale(v);
+  }, []);
 
   useEffect(() => {
     try {
@@ -82,7 +90,7 @@ export function ResearchConsentGate({ children }: Props) {
   }
 
   if (decision === "needed") {
-    return <ConsentScreen onDecide={record} />;
+    return <ConsentScreen onDecide={record} locale={locale} />;
   }
 
   return <>{children}</>;
@@ -90,8 +98,10 @@ export function ResearchConsentGate({ children }: Props) {
 
 function ConsentScreen({
   onDecide,
+  locale,
 }: {
   onDecide: (choice: ResearchConsent) => void;
+  locale: Locale;
 }) {
   return (
     <div
@@ -123,7 +133,7 @@ function ConsentScreen({
               marginBottom: 18,
             }}
           >
-            ▸ RESEARCH CONSENT · 30 SECONDS
+            {t("consent.gate_eyebrow", locale)}
           </div>
           <h1
             style={{
@@ -137,7 +147,7 @@ function ConsentScreen({
               textShadow: "3px 3px 0 #B8862F",
             }}
           >
-            ABOUT YOUR DATA
+            {t("consent.title", locale)}
           </h1>
 
           <div
@@ -150,26 +160,13 @@ function ConsentScreen({
             }}
           >
             <p style={{ margin: "0 0 12px" }}>
-              Mull is built by{" "}
-              <strong style={{ color: "#221E18" }}>Jimmy Ji</strong>, a
-              philosophy student at King&rsquo;s College London. Your
-              quiz answers — anonymized and aggregated — may be useful
-              for academic research on how people philosophically
-              situate themselves.
+              {emph(t("consent.gate_p1", locale))}
             </p>
             <p style={{ margin: "0 0 12px" }}>
-              <strong style={{ color: "#221E18" }}>What this means:</strong>{" "}
-              your answers — including which option you choose for each
-              question — might appear in academic papers, in model
-              refinements, or in aggregate plots. Never tied to your
-              email, never sold to third parties, never used for
-              advertising. Academic research only.
+              {emph(t("consent.gate_p2", locale))}
             </p>
             <p style={{ margin: "0 0 4px" }}>
-              <strong style={{ color: "#221E18" }}>This choice doesn&rsquo;t gate anything.</strong>{" "}
-              You can take the quiz, debate philosophers, save your
-              map — all of it — either way. You can change your mind
-              any time at{" "}
+              {emph(t("consent.gate_p3_a", locale))}
               <Link
                 href="/consent"
                 style={{
@@ -180,7 +177,7 @@ function ConsentScreen({
               >
                 /consent
               </Link>
-              .
+              {t("consent.gate_p3_b", locale)}
             </p>
           </div>
 
@@ -210,7 +207,7 @@ function ConsentScreen({
                   "transform 80ms steps(2, end), box-shadow 80ms steps(2, end)",
               }}
             >
-              ▶ YES — INCLUDE MY DATA IN RESEARCH
+              {t("consent.gate_yes", locale)}
             </button>
             <button
               type="button"
@@ -228,7 +225,7 @@ function ConsentScreen({
                 cursor: "pointer",
               }}
             >
-              ◂ NO — JUST LET ME TAKE THE QUIZ
+              {t("consent.gate_no", locale)}
             </button>
             <Link
               href="/consent"
@@ -242,12 +239,26 @@ function ConsentScreen({
                 textDecorationColor: "rgba(184, 134, 47, 0.4)",
               }}
             >
-              Read the full notice first →
+              {t("consent.gate_read_full", locale)}
             </Link>
           </div>
         </div>
       </div>
     </div>
+  );
+}
+
+// Render **bold** spans inside a translated string, styled to match
+// the gate's inline ink color.
+function emph(text: string): React.ReactNode[] {
+  return text.split(/(\*\*[^*]+\*\*)/g).map((seg, i) =>
+    seg.startsWith("**") && seg.endsWith("**") ? (
+      <strong key={i} style={{ color: "#221E18" }}>
+        {seg.slice(2, -2)}
+      </strong>
+    ) : (
+      seg
+    ),
   );
 }
 

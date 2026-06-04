@@ -8,6 +8,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PixelWindow, PixelPageHeader } from "@/components/pixel-window";
+import { t, type Locale } from "@/lib/translations";
+import { getServerLocale } from "@/lib/locale-server";
 import ConsentToggle from "./consent-toggle";
 
 export const metadata: Metadata = {
@@ -17,19 +19,19 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://mull.world/consent" },
 };
 
-export default function ConsentPage() {
+export default async function ConsentPage() {
+  const locale = await getServerLocale();
   return (
     <main className="mx-auto max-w-[760px] px-6 pb-32 pt-12 sm:px-10 sm:pt-16">
       <PixelPageHeader
-        eyebrow="▶ RESEARCH CONSENT"
-        title="ABOUT YOUR DATA"
+        eyebrow={t("consent.eyebrow", locale)}
+        title={t("consent.title", locale)}
         subtitle={
           <p
             className="text-[16px] italic"
             style={{ fontFamily: "var(--font-editorial)" }}
           >
-            The honest version of what happens to your quiz answers,
-            and how to change your mind.
+            {t("consent.subtitle", locale)}
           </p>
         }
       />
@@ -37,160 +39,106 @@ export default function ConsentPage() {
       <div className="space-y-8">
         {/* Live toggle — pulled out into a client component so the
             page can stay server-rendered around it. */}
-        <PixelWindow title="YOUR CURRENT CHOICE" badge="▶ CHANGE ANY TIME">
-          <ConsentToggle />
+        <PixelWindow
+          title={t("consent.win_choice_title", locale)}
+          badge={t("consent.win_choice_badge", locale)}
+        >
+          <ConsentToggle locale={locale} />
         </PixelWindow>
 
-        <PixelWindow title="THE SHORT VERSION" badge="▶ TL;DR">
+        <PixelWindow
+          title={t("consent.win_short_title", locale)}
+          badge={t("consent.win_short_badge", locale)}
+        >
           <Prose>
-            <p>
-              Mull is a one-person passion project. Anonymized,
-              aggregated quiz answers may be used in academic research
-              about how people philosophically situate themselves.
-              Nothing is sold, nothing is shared with advertisers,
-              nothing is tied to your email. Opting out doesn&apos;t
-              gate anything — the quiz, the Arena, the map, the daily
-              dilemma, all of it works the same either way.
-            </p>
+            <p>{t("consent.short_body", locale)}</p>
           </Prose>
         </PixelWindow>
 
-        <PixelWindow title="WHAT IS COLLECTED" badge="▶ THE DATA">
+        <PixelWindow
+          title={t("consent.win_data_title", locale)}
+          badge={t("consent.win_data_badge", locale)}
+        >
           <Prose>
-            <p>If you opt in, the following may be used for research:</p>
+            <p>{t("consent.data_intro", locale)}</p>
           </Prose>
           <ul className="mt-3 space-y-2.5">
-            <Bullet>
-              Your <strong>individual question answers</strong> — which
-              option you chose for each quiz question — together with the{" "}
-              <strong>16-D vector</strong> they sum to and which archetype
-              it landed in. (Per-question answers are only recorded if you
-              opt in; opting out keeps just the anonymous final result.)
-            </Bullet>
-            <Bullet>
-              Your <strong>daily dilemma responses</strong>, diary
-              entries, and exercise reflections — only the written
-              text and the vector deltas they produced.
-            </Bullet>
-            <Bullet>
-              Your <strong>Arena debate transcripts</strong> and
-              judge verdicts — your turns, the philosopher&apos;s
-              turns, the scoring.
-            </Bullet>
-            <Bullet>
-              Aggregate <strong>trajectory data</strong> — how your
-              vector has moved over time, the patterns of drift
-              across the user base.
-            </Bullet>
+            <Bullet>{emph(t("consent.data_b1", locale))}</Bullet>
+            <Bullet>{emph(t("consent.data_b2", locale))}</Bullet>
+            <Bullet>{emph(t("consent.data_b3", locale))}</Bullet>
+            <Bullet>{emph(t("consent.data_b4", locale))}</Bullet>
           </ul>
           <Prose className="mt-4">
-            <p>
-              What is <strong>never</strong> shared:
-            </p>
+            <p>{emph(t("consent.data_never_intro", locale))}</p>
           </Prose>
           <ul className="mt-3 space-y-2.5">
-            <Bullet>
-              Your <strong>email address</strong> or any identifying
-              account info.
-            </Bullet>
-            <Bullet>
-              Your <strong>IP address</strong>, geographical location,
-              or any browsing telemetry beyond what Vercel Analytics
-              collects (which is itself privacy-respecting).
-            </Bullet>
-            <Bullet>
-              Anything that could be used to <strong>re-identify</strong>{" "}
-              you from the dataset.
-            </Bullet>
+            <Bullet>{emph(t("consent.data_n1", locale))}</Bullet>
+            <Bullet>{emph(t("consent.data_n2", locale))}</Bullet>
+            <Bullet>{emph(t("consent.data_n3", locale))}</Bullet>
           </ul>
         </PixelWindow>
 
-        <PixelWindow title="WHO USES IT" badge="▶ THE RESEARCH">
+        <PixelWindow
+          title={t("consent.win_who_title", locale)}
+          badge={t("consent.win_who_badge", locale)}
+        >
           <Prose>
             <p>
-              The only person currently with access is{" "}
-              <strong>Jimmy Ji</strong> (philosophy student at
-              King&rsquo;s College London,{" "}
+              {emph(t("consent.who_p1_a", locale))}
               <a
                 href="mailto:jimmy.kaian.ji@gmail.com"
                 className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
               >
                 jimmy.kaian.ji@gmail.com
               </a>
-              ). If the data ends up contributing to a published
-              paper, the paper&apos;s authors and any peer reviewers
-              would see anonymized aggregates — never your individual
-              responses tied to any identifier.
+              {emph(t("consent.who_p1_b", locale))}
             </p>
-            <p>
-              If a research collaboration is ever proposed beyond this
-              setup (e.g. a partnership with a university research
-              group), an updated notice will appear here and previous
-              opt-ins will be asked to re-confirm. Your default state
-              cannot quietly change.
-            </p>
+            <p>{t("consent.who_p2", locale)}</p>
           </Prose>
         </PixelWindow>
 
-        <PixelWindow title="WHAT WE WILL NEVER DO" badge="▶ COMMITMENTS">
+        <PixelWindow
+          title={t("consent.win_never_title", locale)}
+          badge={t("consent.win_never_badge", locale)}
+        >
           <ul className="space-y-3">
-            <Bullet>
-              Sell your data to commercial buyers.{" "}
-              <em>Ever.</em> This is not a hedge — it is a fixed
-              property of Mull.
-            </Bullet>
-            <Bullet>
-              Use your data to train commercial AI models.
-            </Bullet>
-            <Bullet>
-              Share individual responses with anyone outside the
-              maintainer + any future named research collaborators.
-            </Bullet>
-            <Bullet>
-              Penalize you, downgrade your experience, or hide
-              features if you opt out.
-            </Bullet>
-            <Bullet>
-              Change your consent silently — any change is opt-in,
-              explicit, and explained.
-            </Bullet>
+            <Bullet>{emph(t("consent.never_b1", locale))}</Bullet>
+            <Bullet>{emph(t("consent.never_b2", locale))}</Bullet>
+            <Bullet>{emph(t("consent.never_b3", locale))}</Bullet>
+            <Bullet>{emph(t("consent.never_b4", locale))}</Bullet>
+            <Bullet>{emph(t("consent.never_b5", locale))}</Bullet>
           </ul>
         </PixelWindow>
 
-        <PixelWindow title="STILL OWNS YOUR DATA" badge="▶ ALWAYS YOURS">
+        <PixelWindow
+          title={t("consent.win_owns_title", locale)}
+          badge={t("consent.win_owns_badge", locale)}
+        >
           <Prose>
             <p>
-              You can <strong>delete your account</strong> outright at{" "}
+              {emph(t("consent.owns_p1_a", locale))}
               <Link
                 href="/account/profile"
                 className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
               >
-                Account → Profile
+                {t("consent.owns_p1_link", locale)}
               </Link>
-              . This removes your data from Mull&apos;s database in
-              full. If you previously opted in, any historic exports
-              already used in completed research cannot be retracted
-              (academic publications are typically not editable after
-              the fact), but no further data will be drawn.
+              {emph(t("consent.owns_p1_b", locale))}
             </p>
-            <p>
-              You can <strong>download all of your data as JSON</strong>{" "}
-              from the same page — emails, quiz attempts, dilemma
-              responses, diary entries, debate transcripts, the lot.
-            </p>
+            <p>{emph(t("consent.owns_p2", locale))}</p>
           </Prose>
         </PixelWindow>
       </div>
 
       <p className="mt-12 text-[13px] leading-[1.6] text-[#8C6520] opacity-80">
-        Questions, push-back, or factual corrections welcome at{" "}
+        {t("consent.footer_a", locale)}
         <a
           href="mailto:jimmy.kaian.ji@gmail.com"
           className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
         >
           jimmy.kaian.ji@gmail.com
         </a>
-        .
+        {t("consent.footer_b", locale)}
       </p>
 
       <p className="mt-10 text-center text-[13px] text-[#8C6520]">
@@ -198,11 +146,25 @@ export default function ConsentPage() {
           href="/"
           className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
         >
-          ← Back to Mull
+          {t("consent.back_to_mull", locale)}
         </Link>
       </p>
     </main>
   );
+}
+
+// Render **bold** and *italic* spans inside a translated string. Lets
+// localized prose carry inline emphasis without per-fragment keys.
+function emph(text: string): React.ReactNode[] {
+  return text.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g).map((seg, i) => {
+    if (seg.startsWith("**") && seg.endsWith("**")) {
+      return <strong key={i}>{seg.slice(2, -2)}</strong>;
+    }
+    if (seg.startsWith("*") && seg.endsWith("*")) {
+      return <em key={i}>{seg.slice(1, -1)}</em>;
+    }
+    return seg;
+  });
 }
 
 function Prose({
