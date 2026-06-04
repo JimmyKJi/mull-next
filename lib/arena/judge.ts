@@ -102,7 +102,7 @@ function buildJudgeToolSchema() {
 export const JUDGE_TOOL = {
   name: JUDGE_TOOL_NAME,
   description:
-    "Submit the structured verdict for the philosophical debate. Call exactly once with every field filled.",
+    "Submit the structured verdict for the philosophical debate. Call exactly once with every field filled. Each score and each justification is its own separate top-level field (e.g. user_validity_score, user_validity_justification) — do NOT nest scores or justifications into sub-objects, and do NOT pass a justification as a stringified JSON blob.",
   input_schema: buildJudgeToolSchema(),
 };
 
@@ -146,6 +146,82 @@ function flatToolInputToJudgeOutput(
     verdict,
     verdict_reasoning: input.verdict_reasoning,
   };
+}
+
+/** Fallback recovery for when the model ignores the flat schema and emits
+ *  the OLD nested shape into the tool input: `user_scores`/`opponent_scores`
+ *  objects plus `user_justifications`/`opponent_justifications` that arrive
+ *  either as a clean object or — the failure mode that motivated the flat
+ *  schema — as a stringified JSON blob whose CJK text contains unescaped
+ *  quotes (so it won't re-parse). We recover the load-bearing fields
+ *  (scores, verdict, reasoning, kindred), which always serialize cleanly,
+ *  and best-effort the justifications, degrading to empty strings rather
+ *  than failing the whole verdict. Returns null only if the structural
+ *  fields are absent. */
+function nestedToolInputToJudgeOutput(
+  input: Record<string, unknown>,
+): JudgeOutput | null {
+  const readScores = (v: unknown): JudgeSideScores | null => {
+    if (!v || typeof v !== "object") return null;
+    const o = v as Record<string, unknown>;
+    const scores = {} as JudgeSideScores;
+    for (const c of CRITERIA) {
+      const n = o[c];
+      if (typeof n !== "number") return null;
+      scores[c] = n;
+    }
+    return scores;
+  };
+  const userScores = readScores(input.user_scores);
+  const opponentScores = readScores(input.opponent_scores);
+  if (!userScores || !opponentScores) return null;
+  const verdict = input.verdict;
+  if (verdict !== "user" && verdict !== "opponent" && verdict !== "draw") {
+    return null;
+  }
+  if (
+    typeof input.user_kindred_philosopher !== "string" ||
+    typeof input.verdict_reasoning !== "string"
+  ) {
+    return null;
+  }
+  return {
+    user_scores: userScores,
+    user_justifications: coerceJustifications(input.user_justifications),
+    user_kindred_philosopher: input.user_kindred_philosopher,
+    opponent_scores: opponentScores,
+    opponent_justifications: coerceJustifications(input.opponent_justifications),
+    verdict,
+    verdict_reasoning: input.verdict_reasoning,
+  };
+}
+
+/** Coerce a justifications value (a per-criterion object, a parseable JSON
+ *  string, or an unparseable blob) into a full per-criterion record. Missing
+ *  or unrecoverable entries become empty strings — the verdict still renders;
+ *  a missing justification is a soft loss, not a hard failure. */
+function coerceJustifications(value: unknown): Record<JudgeCriterion, string> {
+  const out = {} as Record<JudgeCriterion, string>;
+  for (const c of CRITERIA) out[c] = "";
+  let obj: Record<string, unknown> | null = null;
+  if (value && typeof value === "object") {
+    obj = value as Record<string, unknown>;
+  } else if (typeof value === "string") {
+    try {
+      const parsed = JSON.parse(value);
+      if (parsed && typeof parsed === "object") {
+        obj = parsed as Record<string, unknown>;
+      }
+    } catch {
+      obj = null;
+    }
+  }
+  if (obj) {
+    for (const c of CRITERIA) {
+      if (typeof obj[c] === "string") out[c] = obj[c] as string;
+    }
+  }
+  return out;
 }
 
 export function judgeSystemPrompt(locale: Locale = "en"): string {
@@ -245,7 +321,7 @@ OPPONENT: ${args.opponentName}
 TRANSCRIPT:
 ${transcriptText}
 
-Score now. Output ONLY the JSON.`;
+Score now by calling the ${JUDGE_TOOL_NAME} tool, filling every field individually. Do not assemble or emit a JSON object yourself.`;
 }
 
 /** Compute side totals from scores. */
@@ -313,10 +389,15 @@ export function parseJudgeResponse(data: {
     (c) => c.type === "tool_use" && c.name === JUDGE_TOOL_NAME,
   );
   if (toolUse?.input && typeof toolUse.input === "object") {
-    const fromTool = flatToolInputToJudgeOutput(
-      toolUse.input as Record<string, unknown>,
-    );
-    if (fromTool) return fromTool;
+    const input = toolUse.input as Record<string, unknown>;
+    const fromFlat = flatToolInputToJudgeOutput(input);
+    if (fromFlat) return fromFlat;
+    // The model sometimes ignores the flat schema and nests the verdict
+    // (most often under a language directive, where CJK justifications get
+    // crammed into a stringified blob). Recover what we can rather than
+    // dropping the whole verdict.
+    const fromNested = nestedToolInputToJudgeOutput(input);
+    if (fromNested) return fromNested;
   }
   const text = data.content?.find((c) => c.type === "text")?.text ?? "";
   return text ? parseJudgeJson(text) : null;
