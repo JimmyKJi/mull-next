@@ -12,12 +12,14 @@
 import { NextResponse } from "next/server";
 import { aiGate } from "@/lib/rate-limit";
 import { createClient } from "@/utils/supabase/server";
+import { LOCALE_FOR_PROMPT, type Locale } from "@/lib/translations";
 
 const HAIKU_MODEL = "claude-haiku-4-5";
 
 type Body = {
   account: string;
   context?: string;
+  locale?: Locale;
 };
 
 export async function POST(req: Request) {
@@ -77,6 +79,15 @@ Rules:
     context ? `\n\nContext: ${context}` : ""
   }`;
 
+  // When the user is on a non-English locale, ask for the analysis in
+  // that language. Only the string VALUES are translated — the JSON
+  // keys must stay English so parsing below still works.
+  const locale = body?.locale;
+  const languageDirective =
+    locale && locale !== "en" && LOCALE_FOR_PROMPT[locale]
+      ? `\n\nIMPORTANT: Write every string value in the JSON — the steelman, each fallacy name and explanation, and each kindred take — in ${LOCALE_FOR_PROMPT[locale]}. Render philosopher names in their standard form in that language. The JSON keys themselves must stay exactly as shown, in English.`
+      : "";
+
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
@@ -87,7 +98,7 @@ Rules:
     body: JSON.stringify({
       model: HAIKU_MODEL,
       max_tokens: 1500,
-      system,
+      system: system + languageDirective,
       messages: [{ role: "user", content: userMessage }],
     }),
   });

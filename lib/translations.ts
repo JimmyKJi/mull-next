@@ -631,6 +631,26 @@ export const TRANSLATIONS: TranslationMap = {
   "anthology.source.dilemma": { en: "Dilemma", zh: "困境" },
   "anthology.source.diary": { en: "Diary", zh: "日记" },
   "anthology.source.manual": { en: "Added by hand", zh: "手动添加" },
+
+  // ── Argument Diary (/argument-diary) ──
+  "argdiary.eyebrow": { en: "▶ ARGUMENT DIARY", zh: "▶ 论辩日记" },
+  "argdiary.title": { en: "LOG IT. GET FEEDBACK.", zh: "记录下来。获得反馈。" },
+  "argdiary.subtitle": { en: "When you have a real argument with someone, write a short account here. Mull steelmans the other side, identifies two fallacies in your framing, and pulls three kindred philosophers' takes. Honest feedback, not therapy.", zh: "当你和别人发生一场真实的争论后，在这里写下简短的经过。Mull 会为对方的立场作最有力的申辩，指出你论述中的两处谬误，并援引三位志趣相近的哲学家的看法。诚实的反馈，而非情绪安慰。" },
+  "argdiary.account_label": { en: "▶ THE ARGUMENT · YOUR ACCOUNT", zh: "▶ 这场争论 · 你的陈述" },
+  "argdiary.account_placeholder": { en: "What was the disagreement? What did each of you say? Be specific. Aim for 150-400 words — enough that Mull can see what was actually being argued.", zh: "分歧在哪里？你们各自说了什么？请具体些。建议写 150–400 字——足以让 Mull 看清真正争论的是什么。" },
+  "argdiary.context_label": { en: "▶ CONTEXT (OPTIONAL)", zh: "▶ 背景（可不填）" },
+  "argdiary.context_placeholder": { en: "Your relationship to the other party, what was at stake, etc.", zh: "你与对方的关系、当时事关什么，等等。" },
+  "argdiary.analyze": { en: "▶ ANALYZE", zh: "▶ 分析" },
+  "argdiary.analyzing": { en: "◷ ANALYZING — ~10 SECONDS", zh: "◷ 分析中——约 10 秒" },
+  "argdiary.err_too_long": { en: "Account too long ({n} char max).", zh: "陈述过长（最多 {n} 字）。" },
+  "argdiary.err_request": { en: "Request failed ({status}).", zh: "请求失败（{status}）。" },
+  "argdiary.err_generic": { en: "Something went wrong.", zh: "出了点问题。" },
+  "argdiary.past_entries": { en: "▸ PAST ENTRIES ({n})", zh: "▸ 过往记录（{n}）" },
+  "argdiary.section_steelman": { en: "THE STEELMAN", zh: "对方的强论" },
+  "argdiary.section_fallacies": { en: "FALLACIES IN YOUR FRAMING", zh: "你论述中的谬误" },
+  "argdiary.section_kindred": { en: "THREE KINDRED TAKES", zh: "三种志趣相近的看法" },
+  "argdiary.save": { en: "SAVE", zh: "收藏" },
+
   "i18n.untranslated_short": { en: "(Prototype translation — a careful pass is in progress.)", es: "(Traducción prototipo — una revisión cuidadosa está en curso.)", fr: "(Traduction prototype — une révision soignée est en cours.)", pt: "(Tradução protótipo — uma revisão cuidadosa está em andamento.)", ru: "(Перевод-прототип — тщательная редактура уже идёт.)", zh: "（原型翻译 —— 我们正在进行细致的人工校对。）", ja: "（プロトタイプ翻訳 — 丁寧な見直しを進行中です。）", ko: "(프로토타입 번역 — 정밀한 교정이 진행 중입니다.)" },
   "i18n.prototype_notice": { en: "Translations on this site are currently a machine-generated prototype. A careful, native-speaker pass is in progress and will replace these as it lands.", es: "Las traducciones de este sitio son actualmente un prototipo generado por máquina. Está en curso una revisión cuidadosa por hablantes nativos que las irá reemplazando.", fr: "Les traductions de ce site sont actuellement un prototype généré par machine. Une relecture soignée par des locutrices et locuteurs natifs est en cours et viendra les remplacer.", pt: "As traduções deste site são, no momento, um protótipo gerado por máquina. Uma revisão cuidadosa por falantes nativos está em andamento e irá substituí-las.", ru: "Переводы на этом сайте сейчас — машинный прототип. Аккуратная редактура носителями языка уже идёт и будет постепенно их заменять.", zh: "本站目前的翻译是机器生成的原型版本。我们正在邀请母语者进行精细校对，并会逐步替换。", ja: "本サイトの翻訳は、現時点では機械生成のプロトタイプです。母語話者による丁寧な見直しを進めており、順次置き換わっていきます。", ko: "이 사이트의 번역은 현재 기계가 만든 프로토타입입니다. 모국어 사용자에 의한 정밀한 교정이 진행 중이며, 점차 교체됩니다." },
 

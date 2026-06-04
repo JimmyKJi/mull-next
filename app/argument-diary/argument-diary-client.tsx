@@ -12,6 +12,7 @@ import {
   saveAnthologyEntry,
 } from "@/lib/anthology";
 import { emitFeatureEvent } from "@/lib/capabilities";
+import { t, type Locale } from "@/lib/translations";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-editorial), Georgia, serif";
@@ -33,7 +34,11 @@ type DiaryEntry = {
   analysis: AnalysisShape;
 };
 
-export default function ArgumentDiaryClient() {
+export default function ArgumentDiaryClient({
+  locale = "en",
+}: {
+  locale?: Locale;
+}) {
   const [history, setHistory] = useState<DiaryEntry[]>([]);
   const [account, setAccount] = useState("");
   const [context, setContext] = useState("");
@@ -56,7 +61,7 @@ export default function ArgumentDiaryClient() {
   async function submit() {
     if (submitting || !account.trim()) return;
     if (account.length > MAX_CHARS) {
-      setError(`Account too long (${MAX_CHARS} char max).`);
+      setError(t("argdiary.err_too_long", locale, { n: MAX_CHARS }));
       return;
     }
     setSubmitting(true);
@@ -68,11 +73,14 @@ export default function ArgumentDiaryClient() {
         body: JSON.stringify({
           account: account.trim(),
           context: context.trim() || undefined,
+          locale,
         }),
       });
       if (!res.ok) {
         const e = (await res.json().catch(() => ({}))) as { error?: string };
-        throw new Error(e.error || `Request failed (${res.status}).`);
+        throw new Error(
+          e.error || t("argdiary.err_request", locale, { status: res.status }),
+        );
       }
       const data = (await res.json()) as { analysis: AnalysisShape };
       const entry: DiaryEntry = {
@@ -100,7 +108,7 @@ export default function ArgumentDiaryClient() {
         2,
       );
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong.");
+      setError(e instanceof Error ? e.message : t("argdiary.err_generic", locale));
     } finally {
       setSubmitting(false);
     }
@@ -117,13 +125,13 @@ export default function ArgumentDiaryClient() {
           className="text-[10px] tracking-[0.22em] text-[#8C6520]"
           style={{ fontFamily: pixel, textTransform: "uppercase" }}
         >
-          ▶ THE ARGUMENT · YOUR ACCOUNT
+          {t("argdiary.account_label", locale)}
         </label>
         <textarea
           value={account}
           onChange={(e) => setAccount(e.target.value)}
           rows={8}
-          placeholder="What was the disagreement? What did each of you say? Be specific. Aim for 150-400 words — enough that Mull can see what was actually being argued."
+          placeholder={t("argdiary.account_placeholder", locale)}
           disabled={submitting}
           style={{
             marginTop: 8,
@@ -157,12 +165,12 @@ export default function ArgumentDiaryClient() {
           className="mt-4 block text-[10px] tracking-[0.22em] text-[#8C6520]"
           style={{ fontFamily: pixel, textTransform: "uppercase" }}
         >
-          ▶ CONTEXT (OPTIONAL)
+          {t("argdiary.context_label", locale)}
         </label>
         <input
           value={context}
           onChange={(e) => setContext(e.target.value)}
-          placeholder="Your relationship to the other party, what was at stake, etc."
+          placeholder={t("argdiary.context_placeholder", locale)}
           disabled={submitting}
           style={{
             marginTop: 8,
@@ -209,12 +217,14 @@ export default function ArgumentDiaryClient() {
               submitting || !account.trim() ? "default" : "pointer",
           }}
         >
-          {submitting ? "◷ ANALYZING — ~10 SECONDS" : "▶ ANALYZE"}
+          {submitting
+            ? t("argdiary.analyzing", locale)
+            : t("argdiary.analyze", locale)}
         </button>
       </div>
 
       {/* Result */}
-      {latest && <AnalysisCard entry={latest} />}
+      {latest && <AnalysisCard entry={latest} locale={locale} />}
 
       {/* History */}
       {history.length > 1 && (
@@ -226,7 +236,9 @@ export default function ArgumentDiaryClient() {
             className="cursor-pointer text-[12px] text-[#8C6520]"
             style={{ fontFamily: pixel, letterSpacing: "0.18em", textTransform: "uppercase" }}
           >
-            ▸ PAST ENTRIES ({history.length - (latest ? 1 : 0)})
+            {t("argdiary.past_entries", locale, {
+              n: history.length - (latest ? 1 : 0),
+            })}
           </summary>
           <ul className="mt-3 space-y-2">
             {history
@@ -240,10 +252,12 @@ export default function ArgumentDiaryClient() {
                       className="cursor-pointer text-[13px] text-[#221E18]"
                       style={{ fontFamily: serif }}
                     >
-                      {new Date(h.ts).toLocaleDateString()} — {h.account.slice(0, 80)}…
+                      {new Date(h.ts).toLocaleDateString(
+                        locale === "zh" ? "zh-CN" : undefined,
+                      )} — {h.account.slice(0, 80)}…
                     </summary>
                     <div className="mt-2">
-                      <AnalysisCard entry={h} />
+                      <AnalysisCard entry={h} locale={locale} />
                     </div>
                   </details>
                 </li>
@@ -255,10 +269,16 @@ export default function ArgumentDiaryClient() {
   );
 }
 
-function AnalysisCard({ entry }: { entry: DiaryEntry }) {
+function AnalysisCard({
+  entry,
+  locale,
+}: {
+  entry: DiaryEntry;
+  locale: Locale;
+}) {
   return (
     <div className="space-y-3">
-      <Section title="THE STEELMAN" accent="#2F5D5C">
+      <Section title={t("argdiary.section_steelman", locale)} accent="#2F5D5C">
         <p
           className="text-[15px] leading-[1.65] text-[#221E18]"
           style={{ fontFamily: serif }}
@@ -267,7 +287,7 @@ function AnalysisCard({ entry }: { entry: DiaryEntry }) {
         </p>
       </Section>
 
-      <Section title="FALLACIES IN YOUR FRAMING" accent="#8C3717">
+      <Section title={t("argdiary.section_fallacies", locale)} accent="#8C3717">
         <ul className="space-y-3">
           {entry.analysis.fallacies?.map((f, i) => (
             <li key={i}>
@@ -288,7 +308,7 @@ function AnalysisCard({ entry }: { entry: DiaryEntry }) {
         </ul>
       </Section>
 
-      <Section title="THREE KINDRED TAKES" accent="#1E3A5F">
+      <Section title={t("argdiary.section_kindred", locale)} accent="#1E3A5F">
         <ul className="space-y-3">
           {entry.analysis.kindred?.map((k, i) => (
             <li key={i}>
@@ -301,7 +321,11 @@ function AnalysisCard({ entry }: { entry: DiaryEntry }) {
                 >
                   {k.philosopher.toUpperCase()}
                 </span>
-                <SaveTakeButton philosopher={k.philosopher} take={k.take} />
+                <SaveTakeButton
+                  philosopher={k.philosopher}
+                  take={k.take}
+                  locale={locale}
+                />
               </div>
               <p
                 className="mt-1 text-[14.5px] leading-[1.55] text-[#221E18]"
@@ -350,9 +374,11 @@ function Section({
 function SaveTakeButton({
   philosopher,
   take,
+  locale,
 }: {
   philosopher: string;
   take: string;
+  locale: Locale;
 }) {
   const [saved, setSaved] = useState(false);
   return (
@@ -384,7 +410,7 @@ function SaveTakeButton({
         cursor: saved ? "default" : "pointer",
       }}
     >
-      {saved ? "✓" : "★"} SAVE
+      {saved ? "✓" : "★"} {t("argdiary.save", locale)}
     </button>
   );
 }
