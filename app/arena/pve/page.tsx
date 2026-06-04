@@ -8,7 +8,14 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
-import { ARENA_PHILOSOPHERS, ARENA_TOPICS } from "@/lib/arena/data";
+import {
+  ARENA_PHILOSOPHERS,
+  ARENA_TOPICS,
+  localizeArenaPhilosopherName,
+} from "@/lib/arena/data";
+import { localizeArenaTopic } from "@/lib/arena/topics-i18n";
+import { getServerLocale } from "@/lib/locale-server";
+import { t } from "@/lib/translations";
 import PveStarter from "./pve-starter";
 
 // Force dynamic — user's rating is loaded per-request.
@@ -23,6 +30,7 @@ const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-prose)";
 
 export default async function ArenaPvePage() {
+  const locale = await getServerLocale();
   const supabase = await createClient();
   const {
     data: { user },
@@ -51,7 +59,7 @@ export default async function ArenaPvePage() {
             textTransform: "uppercase",
           }}
         >
-          ◂ ARENA
+          {t("arena.back", locale)}
         </Link>
       </div>
       <h1
@@ -65,21 +73,26 @@ export default async function ArenaPvePage() {
           marginBottom: 20,
         }}
       >
-        CHOOSE YOUR OPPONENT
+        {t("arena.pve_choose_title", locale)}
       </h1>
       <PveStarter
         philosophers={ARENA_PHILOSOPHERS.map((p) => ({
           name: p.name,
+          displayName: localizeArenaPhilosopherName(p.name, locale),
           baseElo: p.baseElo,
           tier: p.tier,
         }))}
-        topics={ARENA_TOPICS.map((t) => ({
-          slug: t.slug,
-          title: t.title,
-          category: t.category,
-          primer: t.primer,
-        }))}
+        topics={ARENA_TOPICS.map((topic) => {
+          const lz = localizeArenaTopic(topic, locale);
+          return {
+            slug: topic.slug,
+            title: lz.title,
+            category: topic.category,
+            primer: lz.primer,
+          };
+        })}
         userElo={userElo}
+        locale={locale}
       />
     </main>
   );

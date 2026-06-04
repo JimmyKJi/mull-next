@@ -10,12 +10,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { t, type Locale } from "@/lib/translations";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-prose)";
 
 type Phil = {
   name: string;
+  displayName: string;
   baseElo: number;
   tier: "friendly" | "sharp" | "heavy";
 };
@@ -27,25 +29,17 @@ type Topic = {
 };
 
 const MAX_ELO_GAP = 300;
-const TIER_LABEL: Record<Phil["tier"], string> = {
-  friendly: "Friendly",
-  sharp: "Sharp",
-  heavy: "Heavy",
-};
-const TIER_BLURB: Record<Phil["tier"], string> = {
-  friendly: "Accessible voices, plain-spoken — good for early debates.",
-  sharp: "Substantive thinkers who'll press you for real engagement.",
-  heavy: "Dense, historically demanding. The reward is the workout.",
-};
 
 export default function PveStarter({
   philosophers,
   topics,
   userElo,
+  locale,
 }: {
   philosophers: Phil[];
   topics: Topic[];
   userElo: number;
+  locale: Locale;
 }) {
   const router = useRouter();
   const [opponent, setOpponent] = useState<string | null>(null);
@@ -69,13 +63,13 @@ export default function PveStarter({
       });
       const json = await res.json();
       if (!res.ok) {
-        setError(json?.error ?? "Could not start. Try again.");
+        setError(json?.error ?? t("arena.err_start", locale));
         setStarting(false);
         return;
       }
       router.push(`/arena/pve/${json.session_id}`);
     } catch {
-      setError("Network error.");
+      setError(t("arena.err_network", locale));
       setStarting(false);
     }
   }
@@ -94,7 +88,7 @@ export default function PveStarter({
     <div style={{ display: "grid", gap: 28 }}>
       {/* Step 1: opponent */}
       <section>
-        <SectionHead n={1} title="Pick a philosopher" />
+        <SectionHead n={1} title={t("arena.pve_pick_phil", locale)} locale={locale} />
         <p
           style={{
             fontFamily: serif,
@@ -104,9 +98,9 @@ export default function PveStarter({
             margin: "0 0 14px",
           }}
         >
-          Your Elo: <strong>{userElo}</strong>. You can face opponents
-          up to {MAX_ELO_GAP} Elo above you — heavier voices unlock as
-          you climb.
+          {t("arena.pve_elo_note_a", locale)}
+          <strong>{userElo}</strong>
+          {t("arena.pve_elo_note_b", locale, { gap: MAX_ELO_GAP })}
         </p>
 
         {(["friendly", "sharp", "heavy"] as const).map((tier) => {
@@ -124,7 +118,7 @@ export default function PveStarter({
                   marginBottom: 4,
                 }}
               >
-                ▸ {TIER_LABEL[tier]}
+                ▸ {t(`spar.tier.${tier}`, locale)}
               </div>
               <p
                 style={{
@@ -136,7 +130,7 @@ export default function PveStarter({
                   lineHeight: 1.45,
                 }}
               >
-                {TIER_BLURB[tier]}
+                {t(`arena.pve_blurb_${tier}`, locale)}
               </p>
               <ul
                 style={{
@@ -157,7 +151,7 @@ export default function PveStarter({
                         type="button"
                         onClick={() => !locked && setOpponent(p.name)}
                         disabled={locked}
-                        title={locked ? `Reach Elo ${p.baseElo - MAX_ELO_GAP} to unlock` : ""}
+                        title={locked ? t("arena.pve_locked_title", locale, { elo: p.baseElo - MAX_ELO_GAP }) : ""}
                         style={{
                           width: "100%",
                           padding: "12px 14px",
@@ -181,7 +175,7 @@ export default function PveStarter({
                           transition: "background 120ms ease",
                         }}
                       >
-                        <div style={{ fontWeight: 500 }}>{p.name}</div>
+                        <div style={{ fontWeight: 500 }}>{p.displayName}</div>
                         <div
                           style={{
                             fontFamily: pixel,
@@ -197,8 +191,8 @@ export default function PveStarter({
                           }}
                         >
                           {locked
-                            ? `🔒 Reach ${p.baseElo - MAX_ELO_GAP}`
-                            : `Elo ${p.baseElo}`}
+                            ? t("arena.pve_locked_short", locale, { elo: p.baseElo - MAX_ELO_GAP })
+                            : t("arena.elo_value", locale, { elo: p.baseElo })}
                         </div>
                       </button>
                     </li>
@@ -212,7 +206,7 @@ export default function PveStarter({
 
       {/* Step 2: topic */}
       <section>
-        <SectionHead n={2} title="Pick a topic" />
+        <SectionHead n={2} title={t("arena.pve_pick_topic", locale)} locale={locale} />
         <div style={{
           display: "flex",
           justifyContent: "space-between",
@@ -231,7 +225,7 @@ export default function PveStarter({
               lineHeight: 1.5,
             }}
           >
-            {topics.length} topics — pick one that genuinely puzzles you, or shuffle.
+            {t("arena.pve_topic_count", locale, { n: topics.length })}
           </p>
           <button
             type="button"
@@ -258,7 +252,7 @@ export default function PveStarter({
               textTransform: "uppercase",
             }}
           >
-            ⚄ SHUFFLE
+            {t("arena.pve_shuffle", locale)}
           </button>
         </div>
         {(["philosophical", "everyday"] as const).map((cat) => {
@@ -276,7 +270,7 @@ export default function PveStarter({
                   marginBottom: 8,
                 }}
               >
-                ▸ {cat === "philosophical" ? "Philosophical" : "Everyday life"} · {list.length}
+                ▸ {t(cat === "philosophical" ? "arena.pve_cat_philosophical" : "arena.pve_cat_everyday", locale)} · {list.length}
               </div>
               <ul
                 style={{
@@ -357,10 +351,15 @@ export default function PveStarter({
           }}
         >
           {starting
-            ? "▸ STARTING…"
+            ? t("arena.pve_starting", locale)
             : opponent && topicSlug
-              ? `▶ FACE ${opponent.toUpperCase()}`
-              : "PICK A PHILOSOPHER + TOPIC"}
+              ? t("arena.pve_face", locale, {
+                  name: (
+                    philosophers.find((p) => p.name === opponent)?.displayName ??
+                    opponent
+                  ).toUpperCase(),
+                })
+              : t("arena.pve_pick_prompt", locale)}
         </button>
         {error && (
           <p
@@ -382,7 +381,7 @@ export default function PveStarter({
   );
 }
 
-function SectionHead({ n, title }: { n: number; title: string }) {
+function SectionHead({ n, title, locale }: { n: number; title: string; locale: Locale }) {
   return (
     <div
       style={{
@@ -395,7 +394,7 @@ function SectionHead({ n, title }: { n: number; title: string }) {
         textShadow: "2px 2px 0 #B8862F",
       }}
     >
-      ▸ STEP {n} · {title.toUpperCase()}
+      {t("arena.pve_step", locale, { n, title: title.toUpperCase() })}
     </div>
   );
 }

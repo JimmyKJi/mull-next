@@ -15,6 +15,7 @@ import { useState } from "react";
 import Link from "next/link";
 import type { JudgeOutput } from "@/lib/arena/judge";
 import { SupportMullPrompt } from "@/components/support-mull-prompt";
+import { t, type Locale } from "@/lib/translations";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-prose)";
@@ -34,6 +35,7 @@ type Props = {
   initialEloDelta: number | null;
   initialStatus: "active" | "judged" | "abandoned";
   initialVerdict: "user" | "opponent" | "draw" | null;
+  locale: Locale;
 };
 
 export default function MatchClient(props: Props) {
@@ -74,7 +76,7 @@ export default function MatchClient(props: Props) {
       });
       const json = await res.json();
       if (!res.ok) {
-        setError(json?.error ?? "Could not submit.");
+        setError(json?.error ?? t("arena.err_submit", props.locale));
         setSubmitting(false);
         return;
       }
@@ -86,7 +88,7 @@ export default function MatchClient(props: Props) {
       setInput("");
       setSubmitting(false);
     } catch {
-      setError("Network error.");
+      setError(t("arena.err_network", props.locale));
       setSubmitting(false);
     }
   }
@@ -103,7 +105,7 @@ export default function MatchClient(props: Props) {
       });
       const json = await res.json();
       if (!res.ok) {
-        setError(json?.error ?? "Judge failed.");
+        setError(json?.error ?? t("arena.err_judge", props.locale));
         setJudging(false);
         return;
       }
@@ -114,7 +116,7 @@ export default function MatchClient(props: Props) {
       setJudging(false);
       window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
     } catch {
-      setError("Network error.");
+      setError(t("arena.err_network", props.locale));
       setJudging(false);
     }
   }
@@ -133,7 +135,11 @@ export default function MatchClient(props: Props) {
             marginBottom: 8,
           }}
         >
-          ▶ TOPIC · YOU ({props.userElo}) VS {props.opponentName.toUpperCase()} ({props.opponentElo})
+          {t("arena.match_header", props.locale, {
+            myElo: props.userElo,
+            opp: props.opponentName.toUpperCase(),
+            oppElo: props.opponentElo,
+          })}
         </div>
         <h1
           style={{
@@ -170,7 +176,7 @@ export default function MatchClient(props: Props) {
               cursor: "pointer",
             }}
           >
-            ▸ context (optional)
+            {t("arena.match_context", props.locale)}
           </summary>
           <p
             style={{
@@ -188,12 +194,13 @@ export default function MatchClient(props: Props) {
 
       {/* Transcript */}
       <section style={{ marginBottom: 20 }}>
-        {turns.map((t) => (
+        {turns.map((turn) => (
           <TurnBubble
-            key={t.turn_order}
-            speaker={t.speaker}
+            key={turn.turn_order}
+            speaker={turn.speaker}
             opponentName={props.opponentName}
-            content={t.content}
+            content={turn.content}
+            locale={props.locale}
           />
         ))}
       </section>
@@ -211,12 +218,12 @@ export default function MatchClient(props: Props) {
               marginBottom: 8,
             }}
           >
-            ▸ YOUR TURN
+            {t("arena.match_your_turn", props.locale)}
           </div>
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Your response. Press where they're weak, concede where they're right. Min 20 characters. The judge scores logical rigor, not stance."
+            placeholder={t("arena.match_placeholder", props.locale)}
             maxLength={2000}
             rows={6}
             style={{
@@ -262,7 +269,7 @@ export default function MatchClient(props: Props) {
                   disabled={judging}
                   style={btnGhost}
                 >
-                  {judging ? "▸ JUDGING…" : "▶ CALL THE VERDICT"}
+                  {judging ? t("arena.match_judging", props.locale) : t("arena.match_call_verdict", props.locale)}
                 </button>
               )}
               <button
@@ -271,7 +278,7 @@ export default function MatchClient(props: Props) {
                 disabled={!canSubmit || submitting}
                 style={canSubmit ? btnPrimary : btnDisabled}
               >
-                {submitting ? "▸ THINKING…" : "▶ SUBMIT TURN"}
+                {submitting ? t("arena.match_thinking", props.locale) : t("arena.match_submit", props.locale)}
               </button>
             </div>
           </div>
@@ -301,6 +308,7 @@ export default function MatchClient(props: Props) {
           userEloBefore={props.userElo}
           userEloAfter={userEloAfter}
           opponentName={props.opponentName}
+          locale={props.locale}
         />
       )}
     </div>
@@ -313,10 +321,12 @@ function TurnBubble({
   speaker,
   opponentName,
   content,
+  locale,
 }: {
   speaker: "user" | "opponent";
   opponentName: string;
   content: string;
+  locale: Locale;
 }) {
   const isUser = speaker === "user";
   return (
@@ -332,7 +342,7 @@ function TurnBubble({
           textAlign: isUser ? "right" : "left",
         }}
       >
-        {isUser ? "You" : opponentName}
+        {isUser ? t("arena.you", locale) : opponentName}
       </div>
       <div
         style={{
@@ -363,12 +373,14 @@ function VerdictPanel({
   userEloBefore,
   userEloAfter,
   opponentName,
+  locale,
 }: {
   judge: JudgeOutput;
   eloDelta: number;
   userEloBefore: number;
   userEloAfter: number;
   opponentName: string;
+  locale: Locale;
 }) {
   const userTotal =
     judge.user_scores.validity +
@@ -391,10 +403,10 @@ function VerdictPanel({
         : "#8C6520";
   const verdictLabel =
     judge.verdict === "user"
-      ? "YOU WON"
+      ? t("arena.match_you_won", locale)
       : judge.verdict === "opponent"
-        ? `${opponentName.toUpperCase()} WON`
-        : "DRAW";
+        ? t("arena.match_opp_won", locale, { name: opponentName.toUpperCase() })
+        : t("arena.match_draw", locale);
 
   return (
     <div style={{ marginTop: 28 }}>
@@ -419,7 +431,7 @@ function VerdictPanel({
             marginBottom: 6,
           }}
         >
-          ▶ VERDICT
+          {t("spar.verdict", locale)}
         </div>
         <div
           style={{
@@ -441,7 +453,11 @@ function VerdictPanel({
             marginBottom: 12,
           }}
         >
-          You {userTotal} · {opponentName} {oppTotal} (of 25)
+          {t("arena.match_scoreline", locale, {
+            my: userTotal,
+            opp: opponentName,
+            their: oppTotal,
+          })}
         </div>
         <div
           style={{
@@ -475,7 +491,7 @@ function VerdictPanel({
             marginBottom: 8,
           }}
         >
-          ▸ JUDGE'S REASONING
+          {t("arena.match_reasoning", locale)}
         </div>
         <p
           style={{
@@ -500,11 +516,12 @@ function VerdictPanel({
         }}
       >
         <ScoreColumn
-          label="YOU"
+          label={t("arena.you", locale).toUpperCase()}
           color="#2F5D5C"
           scores={judge.user_scores}
           justifications={judge.user_justifications}
           total={userTotal}
+          locale={locale}
         />
         <ScoreColumn
           label={opponentName.toUpperCase()}
@@ -512,6 +529,7 @@ function VerdictPanel({
           scores={judge.opponent_scores}
           justifications={judge.opponent_justifications}
           total={oppTotal}
+          locale={locale}
         />
       </div>
 
@@ -534,7 +552,7 @@ function VerdictPanel({
             marginBottom: 6,
           }}
         >
-          ▸ YOUR ARGUMENTATIVE KIN
+          {t("arena.match_kin_header", locale)}
         </div>
         <p
           style={{
@@ -545,8 +563,9 @@ function VerdictPanel({
             lineHeight: 1.55,
           }}
         >
-          The judge noted that in this debate, you argued most like{" "}
-          <strong>{judge.user_kindred_philosopher}</strong>.
+          {t("arena.match_kin_body", locale, {
+            name: judge.user_kindred_philosopher,
+          })}
         </p>
       </div>
 
@@ -567,7 +586,7 @@ function VerdictPanel({
             textDecoration: "none",
           }}
         >
-          ▶ FACE ANOTHER
+          {t("arena.match_face_another", locale)}
         </Link>
         <Link
           href="/arena/leaderboard"
@@ -584,13 +603,13 @@ function VerdictPanel({
             textDecoration: "none",
           }}
         >
-          ◂ LEADERBOARD
+          {t("arena.match_leaderboard", locale)}
         </Link>
       </div>
 
       <SupportMullPrompt
-        lead="Loved this match? Help keep the Arena open."
-        detail="Each Arena verdict costs about 15 cents in AI fees. Mull is free to play; tips from people who can afford it keep it free for everyone else."
+        lead={t("arena.support_lead", locale)}
+        detail={t("arena.support_detail", locale)}
       />
     </div>
   );
@@ -602,19 +621,21 @@ function ScoreColumn({
   scores,
   justifications,
   total,
+  locale,
 }: {
   label: string;
   color: string;
   scores: JudgeOutput["user_scores"];
   justifications: JudgeOutput["user_justifications"];
   total: number;
+  locale: Locale;
 }) {
-  const rows: { key: keyof typeof scores; label: string }[] = [
-    { key: "validity", label: "Validity" },
-    { key: "premises", label: "Premises" },
-    { key: "rigor", label: "Rigor" },
-    { key: "elegance", label: "Elegance" },
-    { key: "engagement", label: "Engagement" },
+  const rows: { key: keyof typeof scores; labelKey: string }[] = [
+    { key: "validity", labelKey: "arena.crit.validity" },
+    { key: "premises", labelKey: "arena.crit.premises" },
+    { key: "rigor", labelKey: "arena.crit.rigor" },
+    { key: "elegance", labelKey: "arena.crit.elegance" },
+    { key: "engagement", labelKey: "arena.crit.engagement" },
   ];
   return (
     <div
@@ -661,7 +682,7 @@ function ScoreColumn({
                 marginBottom: 3,
               }}
             >
-              <span>{r.label}</span>
+              <span>{t(r.labelKey, locale)}</span>
               <span style={{ color }}>{scores[r.key]}/5</span>
             </div>
             <p

@@ -15,6 +15,8 @@ import { getArenaPhilosopher, getArenaTopic } from "@/lib/arena/data";
 import { generatePhilosopherTurn } from "@/lib/arena/philosopher-voice";
 import { notifyYourTurn } from "@/lib/arena/notifications";
 import { aiGate } from "@/lib/rate-limit";
+import { getServerLocale } from "@/lib/locale-server";
+import type { Locale } from "@/lib/translations";
 
 const MAX_USER_CHARS = 2000;
 const MAX_TURNS_BEFORE_VERDICT = 8;
@@ -103,11 +105,13 @@ export async function POST(req: Request) {
     });
   }
   // PvE
+  const locale = await getServerLocale();
   return handlePveTurn({
     supabase,
     session,
     turns,
     content,
+    locale,
   });
 }
 
@@ -120,8 +124,9 @@ async function handlePveTurn(args: {
   };
   turns: { turn_order: number; speaker: string; content: string }[];
   content: string;
+  locale: Locale;
 }) {
-  const { supabase, session, turns, content } = args;
+  const { supabase, session, turns, content, locale } = args;
   const lastTurn = turns[turns.length - 1];
   if (lastTurn?.speaker === "user") {
     return NextResponse.json(
@@ -159,6 +164,7 @@ async function handlePveTurn(args: {
     philosopher,
     topicPrompt: topic.prompt,
     transcript,
+    locale,
   });
   if (!opponentReply) {
     return NextResponse.json(

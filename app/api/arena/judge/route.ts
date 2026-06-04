@@ -23,6 +23,7 @@ import {
 import { newElo, kFactorForGames } from "@/lib/arena/elo";
 import { notifyVerdict } from "@/lib/arena/notifications";
 import { aiGate } from "@/lib/rate-limit";
+import { getServerLocale } from "@/lib/locale-server";
 
 const SONNET_MODEL = "claude-sonnet-4-6";
 const MIN_EXCHANGES_BEFORE_JUDGE = 2; // 2 user turns + 2 opponent turns
@@ -118,6 +119,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Judge unavailable." }, { status: 500 });
   }
 
+  const locale = await getServerLocale();
+
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
@@ -130,7 +133,7 @@ export async function POST(req: Request) {
       max_tokens: 2500,
       tools: [JUDGE_TOOL],
       tool_choice: { type: "tool", name: JUDGE_TOOL_NAME },
-      system: judgeSystemPrompt(),
+      system: judgeSystemPrompt(locale),
       messages: [
         {
           role: "user",
