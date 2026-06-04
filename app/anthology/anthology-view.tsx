@@ -13,22 +13,19 @@ import {
   removeAnthologyEntry,
   sourceBreadth,
 } from "@/lib/anthology";
+import { t, type Locale } from "@/lib/translations";
 import { emitFeatureEvent } from "@/lib/capabilities";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-editorial), Georgia, serif";
 
-const SOURCE_LABELS: Record<string, string> = {
-  spar: "Daily Spar",
-  arena: "Arena",
-  pilgrimage: "The Pilgrimage",
-  wandering: "Wandering Question",
-  philosopher: "Philosopher page",
-  topic: "Topic",
-  dilemma: "Dilemma",
-  diary: "Diary",
-  manual: "Added by hand",
-};
+// Localized source label, falling back to the raw source key for any
+// source without a translation entry.
+function sourceLabel(source: string, locale: Locale): string {
+  const key = `anthology.source.${source}`;
+  const v = t(key, locale);
+  return v === key ? source : v;
+}
 
 const SOURCE_COLORS: Record<string, string> = {
   spar: "#8C3717",
@@ -42,7 +39,7 @@ const SOURCE_COLORS: Record<string, string> = {
   manual: "#5C4528",
 };
 
-export default function AnthologyView() {
+export default function AnthologyView({ locale = "en" }: { locale?: Locale }) {
   const [entries, setEntries] = useState<AnthologyEntry[] | null>(null);
   const [showAdd, setShowAdd] = useState(false);
   const [newText, setNewText] = useState("");
@@ -62,7 +59,7 @@ export default function AnthologyView() {
   if (entries === null) {
     return (
       <div className="text-center text-[14px] text-[#8C6520]" style={{ fontFamily: serif }}>
-        Loading…
+        {t("anthology.loading", locale)}
       </div>
     );
   }
@@ -87,10 +84,10 @@ export default function AnthologyView() {
     <div className="space-y-5">
       {/* Headline */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-        <Stat label="ENTRIES" value={String(entries.length)} color="#8C6520" />
-        <Stat label="SOURCES" value={String(breadth)} color="#2F5D5C" />
+        <Stat label={t("anthology.stat_entries", locale)} value={String(entries.length)} color="#8C6520" />
+        <Stat label={t("anthology.stat_sources", locale)} value={String(breadth)} color="#2F5D5C" />
         <Stat
-          label="THIS MONTH"
+          label={t("anthology.stat_this_month", locale)}
           value={String(
             entries.filter((e) => Date.now() - e.ts < 30 * 86400000).length,
           )}
@@ -111,7 +108,7 @@ export default function AnthologyView() {
               boxShadow: "2px 2px 0 0 #2F5D5C",
             }}
           >
-            ▶ ADD A QUOTE BY HAND
+            {t("anthology.add_by_hand", locale)}
           </button>
         ) : (
           <div
@@ -122,13 +119,13 @@ export default function AnthologyView() {
               className="text-[10px] tracking-[0.22em] text-[#8C6520]"
               style={{ fontFamily: pixel, textTransform: "uppercase" }}
             >
-              ▶ THE PASSAGE
+              {t("anthology.the_passage", locale)}
             </label>
             <textarea
               value={newText}
               onChange={(e) => setNewText(e.target.value)}
               rows={4}
-              placeholder="Paste or type the passage."
+              placeholder={t("anthology.passage_placeholder", locale)}
               style={{
                 marginTop: 6,
                 width: "100%",
@@ -147,12 +144,12 @@ export default function AnthologyView() {
               className="mt-3 block text-[10px] tracking-[0.22em] text-[#8C6520]"
               style={{ fontFamily: pixel, textTransform: "uppercase" }}
             >
-              ▶ ATTRIBUTION (OPTIONAL)
+              {t("anthology.attribution", locale)}
             </label>
             <input
               value={newAttr}
               onChange={(e) => setNewAttr(e.target.value)}
-              placeholder="Who said or wrote it. Optional."
+              placeholder={t("anthology.attribution_placeholder", locale)}
               style={{
                 marginTop: 6,
                 width: "100%",
@@ -179,7 +176,7 @@ export default function AnthologyView() {
                   cursor: newText.trim() ? "pointer" : "default",
                 }}
               >
-                ▶ ADD
+                {t("anthology.add", locale)}
               </button>
               <button
                 type="button"
@@ -194,7 +191,7 @@ export default function AnthologyView() {
                   textTransform: "uppercase",
                 }}
               >
-                CANCEL
+                {t("anthology.cancel", locale)}
               </button>
             </div>
           </div>
@@ -211,28 +208,28 @@ export default function AnthologyView() {
             className="text-[15px] leading-[1.55] text-[#221E18]"
             style={{ fontFamily: serif }}
           >
-            Your anthology is empty. Save passages from{" "}
+            {t("anthology.empty_prefix", locale)}
             <Link
               href="/spar"
               className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
             >
-              Daily Spar verdicts
+              {t("anthology.empty_spar", locale)}
             </Link>
-            ,{" "}
+            {t("anthology.list_sep", locale)}
             <Link
               href="/pilgrimage"
               className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
             >
-              Pilgrimage days
+              {t("anthology.empty_pilgrimage", locale)}
             </Link>
-            ,{" "}
+            {t("anthology.list_sep", locale)}
             <Link
               href="/philosopher"
               className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
             >
-              philosopher pages
+              {t("anthology.empty_philosopher", locale)}
             </Link>
-            , or add one by hand above.
+            {t("anthology.empty_suffix", locale)}
           </p>
         </div>
       ) : (
@@ -257,7 +254,7 @@ export default function AnthologyView() {
                       textTransform: "uppercase",
                     }}
                   >
-                    {SOURCE_LABELS[e.source] ?? e.source}
+                    {sourceLabel(e.source, locale)}
                   </span>
                   <button
                     type="button"
@@ -267,9 +264,9 @@ export default function AnthologyView() {
                       fontFamily: pixel,
                       textTransform: "uppercase",
                     }}
-                    aria-label="Remove from anthology"
+                    aria-label={t("anthology.remove_aria", locale)}
                   >
-                    ✕ REMOVE
+                    {t("anthology.remove", locale)}
                   </button>
                 </div>
                 <p

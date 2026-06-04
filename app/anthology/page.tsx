@@ -3,6 +3,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PixelPageHeader } from "@/components/pixel-window";
+import { getServerLocale } from "@/lib/locale-server";
+import { t } from "@/lib/translations";
 import AnthologyView from "./anthology-view";
 
 export const metadata: Metadata = {
@@ -12,30 +14,29 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://mull.world/anthology" },
 };
 
-export default function AnthologyPage() {
+export default async function AnthologyPage() {
+  const locale = await getServerLocale();
   return (
     <main className="mx-auto max-w-[860px] px-6 pb-32 pt-12 sm:px-10 sm:pt-16">
       <PixelPageHeader
-        eyebrow="▶ PERSONAL ANTHOLOGY"
-        title="YOUR COMMONPLACE BOOK"
+        eyebrow={t("anthology.eyebrow", locale)}
+        title={t("anthology.title", locale)}
         subtitle={
           <p
             className="text-[16px] italic"
             style={{ fontFamily: "var(--font-editorial)" }}
           >
-            Save passages, verdicts, and exchanges from any Mull
-            surface — they accrue here. Over months it becomes a
-            picture of what you&rsquo;ve actually been thinking about.
+            {t("anthology.subtitle", locale)}
           </p>
         }
       />
-      <AnthologyView />
+      <AnthologyView locale={locale} />
       <p className="mt-12 text-center text-[13px] text-[#8C6520]">
         <Link
           href="/"
           className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
         >
-          ← Back to Mull
+          {t("pilgrimage.back_mull", locale)}
         </Link>
       </p>
     </main>
