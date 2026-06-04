@@ -11,19 +11,25 @@
 
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { PHILOSOPHERS } from '@/lib/philosophers';
-import { CURATED_VS_PAIRS, toCanonicalPair, vsPairsByCategory } from '@/lib/vs-pairs';
+import { PHILOSOPHERS, philosopherSlug } from '@/lib/philosophers';
+import { localizePhilosopher } from '@/lib/philosophers-i18n';
+import { toCanonicalPair, vsPairsByCategory } from '@/lib/vs-pairs';
 import { PixelPageHeader } from '@/components/pixel-window';
+import { getServerLocale } from '@/lib/locale-server';
+import { t } from '@/lib/translations';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
 
-export const metadata: Metadata = {
-  title: 'Philosopher matchups',
-  description: 'Plato vs Aristotle, Nietzsche vs Kant, Sartre vs Camus and dozens more — side-by-side comparisons across Mull\'s 16 philosophical dimensions.',
-  alternates: { canonical: 'https://mull.world/vs' },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getServerLocale();
+  return {
+    title: t('vs.meta_title', locale),
+    description: t('vs.meta_desc', locale),
+    alternates: { canonical: 'https://mull.world/vs' },
+  };
+}
 
 /** Featured matchup rotates by day-of-year so the page feels alive
  *  without server state. Picks from a hand-chosen subset of the most
@@ -50,11 +56,18 @@ function pickFeatured() {
   return { name1: n1, name2: n2, href: `/vs/${canonical.a}/${canonical.b}` };
 }
 
-export default function VsIndexPage() {
-  // Name resolver — defensive against renames in the philosopher corpus.
-  const resolveName = (n: string) => PHILOSOPHERS.find(p => p.name === n);
-  const groups = vsPairsByCategory(resolveName);
+export default async function VsIndexPage() {
+  const locale = await getServerLocale();
+  // Name resolver — localized display name, defensive against renames.
+  const resolveName = (n: string): { name: string } | undefined => {
+    const p = PHILOSOPHERS.find(x => x.name === n);
+    if (!p) return undefined;
+    return { name: localizePhilosopher(p, philosopherSlug(p.name), locale).name };
+  };
+  const groups = vsPairsByCategory(resolveName, locale);
   const featured = pickFeatured();
+  const featuredName1 = resolveName(featured.name1)?.name ?? featured.name1;
+  const featuredName2 = resolveName(featured.name2)?.name ?? featured.name2;
 
   // Total resolvable pairs for the header subtitle.
   const totalPairs = groups.reduce((sum, g) => sum + g.pairs.length, 0);
@@ -62,11 +75,11 @@ export default function VsIndexPage() {
   return (
     <main className="mx-auto max-w-[920px] px-5 pb-32 pt-10 sm:px-10">
       <PixelPageHeader
-        eyebrow="▶ MATCHUPS"
-        title="PHILOSOPHER VS PHILOSOPHER"
+        eyebrow={t('vs.eyebrow', locale)}
+        title={t('vs.title', locale)}
         subtitle={
           <p style={{ fontFamily: serif, fontStyle: 'italic', fontSize: 16, color: '#4A4338', lineHeight: 1.55 }}>
-            {`${totalPairs} side-by-side comparisons across Mull’s 16 dimensions. See where two thinkers agree, where they sharply disagree, and where you sit between them.`}
+            {t('vs.subtitle', locale, { n: totalPairs })}
           </p>
         }
       />
@@ -81,7 +94,7 @@ export default function VsIndexPage() {
           textTransform: 'uppercase',
           marginBottom: 8,
         }}>
-          ◇ Featured matchup today
+          {t('vs.featured_today', locale)}
         </div>
         <Link
           href={featured.href}
@@ -112,7 +125,7 @@ export default function VsIndexPage() {
               color: '#221E18',
               lineHeight: 1.15,
             }}>
-              {featured.name1}
+              {featuredName1}
             </div>
             <div style={{
               fontFamily: pixel,
@@ -121,7 +134,7 @@ export default function VsIndexPage() {
               letterSpacing: 1,
               textTransform: 'uppercase',
             }}>
-              vs
+              {t('vs.vs_badge', locale)}
             </div>
             <div style={{
               fontFamily: serif,
@@ -130,7 +143,7 @@ export default function VsIndexPage() {
               color: '#221E18',
               lineHeight: 1.15,
             }}>
-              {featured.name2}
+              {featuredName2}
             </div>
           </div>
           <div style={{
@@ -141,7 +154,7 @@ export default function VsIndexPage() {
             letterSpacing: 0.6,
             textTransform: 'uppercase',
           }}>
-            COMPARE ▶
+            {t('vs.compare_cta', locale)}
           </div>
         </Link>
       </section>
@@ -256,7 +269,7 @@ export default function VsIndexPage() {
                     color: '#221E18',
                     lineHeight: 1.25,
                   }}>
-                    {p.name1} <span style={{ color: '#8C6520', fontFamily: pixel, fontSize: 10 }}>VS</span> {p.name2}
+                    {p.name1} <span style={{ color: '#8C6520', fontFamily: pixel, fontSize: 10 }}>{t('vs.vs_badge', locale)}</span> {p.name2}
                   </div>
                 </Link>
               </li>
@@ -280,7 +293,7 @@ export default function VsIndexPage() {
           margin: '0 0 6px',
           lineHeight: 1.5,
         }}>
-          Want a matchup not listed here?
+          {t('vs.construct_q', locale)}
         </p>
         <p style={{
           fontFamily: serif,
@@ -290,7 +303,7 @@ export default function VsIndexPage() {
           margin: '0 0 12px',
           lineHeight: 1.5,
         }}>
-          Any two of our {PHILOSOPHERS.length} philosophers can be compared. Browse the full list to find them, then construct the URL: <code style={{ fontFamily: pixel, fontSize: 12, color: '#8C6520' }}>/vs/[slug-a]/[slug-b]</code>.
+          {t('vs.construct_body_pre', locale, { n: PHILOSOPHERS.length })}<code style={{ fontFamily: pixel, fontSize: 12, color: '#8C6520' }}>/vs/[slug-a]/[slug-b]</code>{t('vs.construct_body_post', locale)}
         </p>
         <Link
           href="/philosopher"
@@ -307,7 +320,7 @@ export default function VsIndexPage() {
             textTransform: 'uppercase',
           }}
         >
-          ▶ Browse philosophers
+          {t('vs.browse_philosophers', locale)}
         </Link>
       </div>
     </main>

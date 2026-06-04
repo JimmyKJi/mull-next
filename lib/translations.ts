@@ -884,7 +884,76 @@ export const TRANSLATIONS: TranslationMap = {
   "pilgrimage.back_progress":    { en: "◂ BACK TO PROGRESS", zh: "◂ 返回进度" },
   "pilgrimage.edit_note":        { en: "You can edit and resubmit by changing the text above and clicking again. Your response stays on this device until you sign in and we add server-side sync.", zh: "你可以修改上方文字后再次点击，以编辑并重新提交。在你登录、且我们加入服务器端同步之前，你的回应只会留在这台设备上。" },
   "pilgrimage.prev_day_nav":     { en: "◂ DAY {n}", zh: "◂ 第 {n} 天" },
-  "pilgrimage.next_day_nav":     { en: "DAY {n} ▸", zh: "第 {n} 天 ▸" }
+  "pilgrimage.next_day_nav":     { en: "DAY {n} ▸", zh: "第 {n} 天 ▸" },
+
+  // ─── /vs — philosopher matchups ───────────────────────────────────
+  // Index chrome
+  "vs.meta_title":      { en: "Philosopher matchups", zh: "哲学家对决" },
+  "vs.meta_desc":       { en: "Plato vs Aristotle, Nietzsche vs Kant, Sartre vs Camus and dozens more — side-by-side comparisons across Mull's 16 philosophical dimensions.", zh: "柏拉图对亚里士多德、尼采对康德、萨特对加缪，以及数十组对决——在 Mull 的 16 个哲学维度上并排比较。" },
+  "vs.eyebrow":         { en: "▶ MATCHUPS", zh: "▶ 对决" },
+  "vs.title":           { en: "PHILOSOPHER VS PHILOSOPHER", zh: "哲学家 对 哲学家" },
+  "vs.subtitle":        { en: "{n} side-by-side comparisons across Mull's 16 dimensions. See where two thinkers agree, where they sharply disagree, and where you sit between them.", zh: "在 Mull 的 16 个维度上进行 {n} 组并排比较。看看两位思想家在何处一致、在何处尖锐分歧，以及你处在他们之间的哪个位置。" },
+  "vs.featured_today":  { en: "◇ Featured matchup today", zh: "◇ 今日精选对决" },
+  "vs.vs_badge":        { en: "VS", zh: "对" },
+  "vs.compare_cta":     { en: "COMPARE ▶", zh: "对比 ▶" },
+  "vs.construct_q":     { en: "Want a matchup not listed here?", zh: "想看这里没有列出的对决？" },
+  "vs.construct_body_pre": { en: "Any two of our {n} philosophers can be compared. Browse the full list to find them, then construct the URL: ", zh: "我们的 {n} 位哲学家中，任意两位都可以比较。浏览完整名单找到他们，然后构造网址：" },
+  "vs.construct_body_post": { en: ".", zh: "。" },
+  "vs.browse_philosophers": { en: "▶ Browse philosophers", zh: "▶ 浏览哲学家" },
+
+  // Category labels + blurbs
+  "vs.cat.greatest-hits.label": { en: "Greatest hits", zh: "经典对决" },
+  "vs.cat.greatest-hits.blurb": { en: "The matchups everyone wants to read first.", zh: "人人都想先读的对决。" },
+  "vs.cat.eastern.label":       { en: "Eastern & Islamic thinkers", zh: "东方与伊斯兰思想家" },
+  "vs.cat.eastern.blurb":       { en: "The non-Western canon — China, India, Japan, the Islamic golden age.", zh: "非西方经典——中国、印度、日本与伊斯兰黄金时代。" },
+  "vs.cat.twentieth.label":     { en: "20th & 21st century", zh: "20 与 21 世纪" },
+  "vs.cat.twentieth.blurb":     { en: "The modern arguments — phenomenology, analytic, critical theory, post-structuralism.", zh: "现代之争——现象学、分析哲学、批判理论、后结构主义。" },
+  "vs.cat.ethics-politics.label": { en: "Ethics & politics", zh: "伦理与政治" },
+  "vs.cat.ethics-politics.blurb": { en: "What we owe each other, and how the state fits in.", zh: "我们彼此亏欠什么，国家又如何安放其中。" },
+  "vs.cat.ancient-medieval.label": { en: "Ancient & medieval", zh: "古代与中世纪" },
+  "vs.cat.ancient-medieval.blurb": { en: "Pre-Enlightenment — Greek, Roman, Christian scholastic.", zh: "启蒙之前——希腊、罗马与基督教经院哲学。" },
+  "vs.cat.more.label":          { en: "More matchups", zh: "更多对决" },
+  "vs.cat.more.blurb":          { en: "Recently added — not yet sorted.", zh: "新近添加——尚未归类。" },
+
+  // Comparison page chrome
+  "vs.all_matchups":    { en: "◂ ALL MATCHUPS", zh: "◂ 所有对决" },
+  "vs.head_to_head":    { en: "▸ HEAD-TO-HEAD", zh: "▸ 正面交锋" },
+  "vs.meta_pair_title": { en: "{a} vs {b}", zh: "{a} 对 {b}" },
+  "vs.meta_pair_desc":  { en: "Compare {a} and {b} across Mull's 16 philosophical dimensions. Where they agree, where they sharply diverge, and where you sit between them.", zh: "在 Mull 的 16 个哲学维度上比较{a}与{b}：他们在何处一致、在何处尖锐分歧，以及你处在他们之间的哪个位置。" },
+  "vs.disagreed_title": { en: "▸ WHERE THEY SHARPLY DISAGREED", zh: "▸ 他们尖锐分歧之处" },
+  "vs.disagreed_sub":   { en: "The three dimensions on which {a} and {b} are farthest apart on Mull's 0–10 scale.", zh: "在 Mull 的 0–10 标度上，{a}与{b}相距最远的三个维度。" },
+  "vs.overlapped_title": { en: "▸ WHERE THEY OVERLAPPED", zh: "▸ 他们重叠之处" },
+  "vs.overlapped_sub":  { en: "Where the gap is smallest — both with meaningful presence on the dimension (not \"neither cared\").", zh: "差距最小之处——且两者在该维度上都有实质存在（并非“两者都不在意”）。" },
+  "vs.all_dims_title":  { en: "▸ ALL 16 DIMENSIONS", zh: "▸ 全部 16 个维度" },
+  "vs.all_dims_sub":    { en: "The full vector comparison. Bars show their 0–10 scores side-by-side.", zh: "完整的向量比较。柱条并排显示他们的 0–10 分值。" },
+  "vs.gap_line":        { en: "gap {n} / 10", zh: "差距 {n} / 10" },
+  "vs.score_line":      { en: "{name}: {v}/10", zh: "{name}：{v}/10" },
+
+  // Auto-generated disagreement / agreement prose
+  "vs.disagree_line":   { en: "{intensifier} ({gap}/10): {body}", zh: "{intensifier}（{gap}/10）：{body}" },
+  "vs.intensity.sharply":  { en: "sharply", zh: "尖锐" },
+  "vs.intensity.clearly":  { en: "clearly", zh: "明显" },
+  "vs.intensity.somewhat": { en: "somewhat", zh: "略有" },
+  "vs.disagree.TV": { en: "{higher} sees tragedy and limit as central; {lower} doesn't make that the starting point.", zh: "{higher}视悲剧与限度为核心；{lower}并不以此为出发点。" },
+  "vs.disagree.VA": { en: "{higher} affirms life as it is more readily; {lower} qualifies that affirmation.", zh: "{higher}更坦然地肯定生活本身；{lower}则对这种肯定有所保留。" },
+  "vs.disagree.WP": { en: "{higher} emphasises shaping and self-overcoming; {lower} weighs acceptance or context more.", zh: "{higher}强调塑造与自我超越；{lower}更看重接纳或情境。" },
+  "vs.disagree.TR": { en: "{higher} trusts reasoned argument more strongly than {lower} does.", zh: "{higher}比{lower}更强烈地信赖理性论证。" },
+  "vs.disagree.TE": { en: "{higher} grounds knowing in lived experience; {lower} weights other sources of evidence more.", zh: "{higher}将认识扎根于亲身经验；{lower}更倚重其他证据来源。" },
+  "vs.disagree.RT": { en: "{higher} treats inherited tradition as a source of wisdom; {lower} is readier to question it.", zh: "{higher}视承袭的传统为智慧之源；{lower}则更愿意质疑它。" },
+  "vs.disagree.MR": { en: "{higher} is more open to mystical or apophatic depths; {lower} stays within what reason can name.", zh: "{higher}更向神秘或否定神学的深处敞开；{lower}则停留在理性可命名的范围之内。" },
+  "vs.disagree.SR": { en: "{higher} holds doubt and suspended judgment as a discipline; {lower} is more willing to commit.", zh: "{higher}将怀疑与悬置判断视为一种修养；{lower}则更愿意作出承诺。" },
+  "vs.disagree.CE": { en: "{higher} locates the self in community and relationship; {lower} starts from the individual.", zh: "{higher}将自我置于共同体与关系之中；{lower}则从个体出发。" },
+  "vs.disagree.SS": { en: "{higher} treats the individual as the seat of moral authority; {lower} embeds it elsewhere.", zh: "{higher}视个体为道德权威的所在；{lower}则将其安放在别处。" },
+  "vs.disagree.PO": { en: "{higher} is oriented toward what helps a life go well in practice; {lower} foregrounds other priorities.", zh: "{higher}着眼于在实践中让生活过得好；{lower}则突出其他优先事项。" },
+  "vs.disagree.TD": { en: "{higher} pursues understanding for its own sake; {lower} is more interested in what understanding is for.", zh: "{higher}为理解本身而追求理解；{lower}则更关心理解的用途。" },
+  "vs.disagree.AT": { en: "{higher} values restraint and ascetic discipline; {lower} is less drawn to that path.", zh: "{higher}珍视克制与苦行的修炼；{lower}则不太倾向这条路。" },
+  "vs.disagree.ES": { en: "{higher} trusts the body and the senses; {lower} is more dualist or sceptical of them.", zh: "{higher}信赖身体与感官；{lower}则更具二元论色彩或对其存疑。" },
+  "vs.disagree.UI": { en: "{higher} reaches for universal moral principles; {lower} weighs particular contexts more heavily.", zh: "{higher}诉诸普遍的道德原则；{lower}则更看重具体情境。" },
+  "vs.disagree.SI": { en: "{higher} treats the unified self as an illusion or construction; {lower} takes the self as more given.", zh: "{higher}视统一的自我为幻象或建构；{lower}则把自我看作更为既定的东西。" },
+  "vs.agree.strong":   { en: "Both lean strongly into {dim}.", zh: "两者都强烈倾向于{dim}。" },
+  "vs.agree.moderate": { en: "Both register moderate {dim}.", zh: "两者都表现出适度的{dim}。" },
+  "vs.agree.muted":    { en: "Both keep {dim} muted.", zh: "两者都让{dim}保持低调。" },
+  "vs.agree.little":   { en: "Both have very little {dim}.", zh: "两者的{dim}都极少。" }
 };
 
 export function t(key: string, locale: Locale = 'en', vars?: Record<string, string | number>): string {

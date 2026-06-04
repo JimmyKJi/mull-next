@@ -21,6 +21,7 @@
 // computation runs through philosopherSlug() at build time.
 
 import { philosopherSlug, PHILOSOPHERS, getPhilosopherBySlug } from './philosophers';
+import { t, type Locale } from './translations';
 
 /** Pairs we explicitly want indexed + prerendered. Order within each
  *  pair doesn't matter — canonicalisation happens in toCanonicalPair.
@@ -280,6 +281,7 @@ type VsBucket = {
  *  (skipped if a name doesn't match — defensive against renames). */
 export function vsPairsByCategory(
   resolveName: (n: string) => { name: string } | undefined,
+  locale: Locale = 'en',
 ): VsBucket[] {
   const seen = new Set<string>();
   const buckets: VsBucket[] = VS_CATEGORIES.map(cat => {
@@ -294,7 +296,14 @@ export function vsPairsByCategory(
       seen.add(href);
       pairs.push({ name1: p1.name, name2: p2.name, href });
     }
-    return { key: cat.key, label: cat.label, blurb: cat.blurb, icon: cat.icon, accent: cat.accent, pairs };
+    return {
+      key: cat.key,
+      label: t(`vs.cat.${cat.key}.label`, locale),
+      blurb: t(`vs.cat.${cat.key}.blurb`, locale),
+      icon: cat.icon,
+      accent: cat.accent,
+      pairs,
+    };
   });
   // Fallback bucket: any curated pair we didn't sort.
   const leftover: { name1: string; name2: string; href: string }[] = [];
@@ -311,8 +320,8 @@ export function vsPairsByCategory(
   if (leftover.length > 0) {
     buckets.push({
       key: 'more',
-      label: 'More matchups',
-      blurb: 'Recently added — not yet sorted.',
+      label: t('vs.cat.more.label', locale),
+      blurb: t('vs.cat.more.blurb', locale),
       icon: '○',
       accent: '#8C6520',
       pairs: leftover,
@@ -367,41 +376,30 @@ export function disagreementPhrase(
   c: DimComparison,
   nameA: string,
   nameB: string,
+  locale: Locale = 'en',
 ): string {
   const higher = c.delta > 0 ? nameA : nameB;
   const lower = c.delta > 0 ? nameB : nameA;
   const gap = c.absDelta;
-  const intensifier = gap >= 6 ? 'sharply' : gap >= 4 ? 'clearly' : 'somewhat';
+  const intensityKey = gap >= 6 ? 'sharply' : gap >= 4 ? 'clearly' : 'somewhat';
+  const intensifier = t(`vs.intensity.${intensityKey}`, locale);
 
-  // Dimension-specific phrasing. Fallback for any we don't have a
-  // hand-written one for.
-  const templates: Record<DimKey, string> = {
-    TV: `${higher} sees tragedy and limit as central; ${lower} doesn't make that the starting point.`,
-    VA: `${higher} affirms life as it is more readily; ${lower} qualifies that affirmation.`,
-    WP: `${higher} emphasises shaping and self-overcoming; ${lower} weighs acceptance or context more.`,
-    TR: `${higher} trusts reasoned argument more strongly than ${lower} does.`,
-    TE: `${higher} grounds knowing in lived experience; ${lower} weights other sources of evidence more.`,
-    RT: `${higher} treats inherited tradition as a source of wisdom; ${lower} is readier to question it.`,
-    MR: `${higher} is more open to mystical or apophatic depths; ${lower} stays within what reason can name.`,
-    SR: `${higher} holds doubt and suspended judgment as a discipline; ${lower} is more willing to commit.`,
-    CE: `${higher} locates the self in community and relationship; ${lower} starts from the individual.`,
-    SS: `${higher} treats the individual as the seat of moral authority; ${lower} embeds it elsewhere.`,
-    PO: `${higher} is oriented toward what helps a life go well in practice; ${lower} foregrounds other priorities.`,
-    TD: `${higher} pursues understanding for its own sake; ${lower} is more interested in what understanding is for.`,
-    AT: `${higher} values restraint and ascetic discipline; ${lower} is less drawn to that path.`,
-    ES: `${higher} trusts the body and the senses; ${lower} is more dualist or sceptical of them.`,
-    UI: `${higher} reaches for universal moral principles; ${lower} weighs particular contexts more heavily.`,
-    SI: `${higher} treats the unified self as an illusion or construction; ${lower} takes the self as more given.`,
-  };
+  // Dimension-specific phrasing lives in translations under
+  // `vs.disagree.<DimKey>` (en + zh), interpolating {higher}/{lower}.
+  const body = t(`vs.disagree.${c.key}`, locale, { higher, lower });
 
-  return `${intensifier} (${gap}/10): ${templates[c.key]}`;
+  return t('vs.disagree_line', locale, { intensifier, gap, body });
 }
 
 /** A short evocative phrase describing agreement on a dimension. */
-export function agreementPhrase(c: DimComparison): string {
+export function agreementPhrase(c: DimComparison, locale: Locale = 'en'): string {
   const avg = (c.valueA + c.valueB) / 2;
-  if (avg >= 7) return `Both lean strongly into ${c.name.toLowerCase()}.`;
-  if (avg >= 5) return `Both register moderate ${c.name.toLowerCase()}.`;
-  if (avg >= 3) return `Both keep ${c.name.toLowerCase()} muted.`;
-  return `Both have very little ${c.name.toLowerCase()}.`;
+  // Dimension name: lowercased English reads naturally mid-sentence;
+  // for other locales pull the localized dimension name verbatim.
+  const dim =
+    locale === 'en'
+      ? c.name.toLowerCase()
+      : t(`dim.${c.key}.name`, locale);
+  const tierKey = avg >= 7 ? 'strong' : avg >= 5 ? 'moderate' : avg >= 3 ? 'muted' : 'little';
+  return t(`vs.agree.${tierKey}`, locale, { dim });
 }

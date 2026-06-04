@@ -34,6 +34,9 @@ import { PathwayNext } from '@/components/pathway-next';
 import { pathwayForVs } from '@/lib/pathway';
 import { ContentLanguageNotice } from '@/components/content-language-notice';
 import { getServerLocale } from '@/lib/locale-server';
+import { localizePhilosopher } from '@/lib/philosophers-i18n';
+import { localizeArchetype } from '@/lib/archetypes-i18n';
+import { t, type Locale } from '@/lib/translations';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-editorial)";
@@ -48,6 +51,7 @@ export async function generateMetadata({
   params: Promise<{ a: string; b: string }>;
 }): Promise<Metadata> {
   const { a, b } = await params;
+  const locale = await getServerLocale();
   const pa = getPhilosopherBySlug(a);
   const pb = getPhilosopherBySlug(b);
   if (!pa || !pb) return { title: 'Comparison not found' };
@@ -59,8 +63,10 @@ export async function generateMetadata({
   const canonicalB = a < b ? b : a;
   const canonicalUrl = `https://mull.world/vs/${canonicalA}/${canonicalB}`;
 
-  const title = `${pa.name} vs ${pb.name}`;
-  const desc = `Compare ${pa.name} and ${pb.name} across Mull's 16 philosophical dimensions. Where they agree, where they sharply diverge, and where you sit between them.`;
+  const paName = localizePhilosopher(pa, a, locale).name;
+  const pbName = localizePhilosopher(pb, b, locale).name;
+  const title = t('vs.meta_pair_title', locale, { a: paName, b: pbName });
+  const desc = t('vs.meta_pair_desc', locale, { a: paName, b: pbName });
   return {
     title,
     description: desc,
@@ -129,6 +135,15 @@ export default async function VsPage({
   const archA = getArchetypeByKey(pa.archetypeKey);
   const archB = getArchetypeByKey(pb.archetypeKey);
 
+  // Localized display strings. The raw `pa`/`pb` keep English name +
+  // slug for sprites, links, and the (English-for-SEO) JSON-LD.
+  const paL = localizePhilosopher(pa, a, locale);
+  const pbL = localizePhilosopher(pb, b, locale);
+  const paName = paL.name;
+  const pbName = pbL.name;
+  const archASpirit = archA ? localizeArchetype(archA, locale).spirit : pa.archetypeName;
+  const archBSpirit = archB ? localizeArchetype(archB, locale).spirit : pb.archetypeName;
+
   // JSON-LD: ItemList with two ListItem (each pointing at the
   // philosopher pages) inside an Article. Gives Google a clean
   // structured signal that this is a comparison between two notable
@@ -172,18 +187,18 @@ export default async function VsPage({
             color: '#4A4338', textDecoration: 'none',
             letterSpacing: 0.4, textTransform: 'uppercase',
           }}>
-            ◂ ALL MATCHUPS
+            {t('vs.all_matchups', locale)}
           </Link>
         </div>
 
-        <ContentLanguageNotice locale={locale} />
+        <ContentLanguageNotice locale={locale} translatedLocales={["zh"]} />
 
         <div style={{
           fontFamily: pixel, fontSize: 12,
           color: '#8C6520', textTransform: 'uppercase',
           letterSpacing: '0.18em', marginBottom: 14,
         }}>
-          ▸ HEAD-TO-HEAD
+          {t('vs.head_to_head', locale)}
         </div>
 
         <h1 style={{
@@ -196,7 +211,7 @@ export default async function VsPage({
           textShadow: '3px 3px 0 #B8862F',
           lineHeight: 1.1,
         }}>
-          {pa.name.toUpperCase()} <span style={{ color: '#8C6520' }}>VS</span> {pb.name.toUpperCase()}
+          {paName.toUpperCase()} <span style={{ color: '#8C6520' }}>{t('vs.vs_badge', locale)}</span> {pbName.toUpperCase()}
         </h1>
 
         {/* Hero: side-by-side sprite + name + dates + archetype */}
@@ -206,27 +221,27 @@ export default async function VsPage({
           gap: 16,
           marginBottom: 36,
         }}>
-          <PhilosopherCard p={pa} color={colorA} archetypeName={archA?.spirit ?? pa.archetypeName} />
-          <PhilosopherCard p={pb} color={colorB} archetypeName={archB?.spirit ?? pb.archetypeName} />
+          <PhilosopherCard p={pa} color={colorA} displayName={paName} displayDates={paL.dates} archetypeName={archASpirit} />
+          <PhilosopherCard p={pb} color={colorB} displayName={pbName} displayDates={pbL.dates} archetypeName={archBSpirit} />
         </section>
 
         {/* Where they sharply disagreed */}
         <section style={{ marginBottom: 36 }}>
-          <h2 style={sectionH2}>▸ WHERE THEY SHARPLY DISAGREED</h2>
+          <h2 style={sectionH2}>{t('vs.disagreed_title', locale)}</h2>
           <p style={subtitle}>
-            The three dimensions on which {pa.name} and {pb.name} are
-            farthest apart on Mull&rsquo;s 0–10 scale.
+            {t('vs.disagreed_sub', locale, { a: paName, b: pbName })}
           </p>
           <ul style={{ listStyle: 'none', padding: 0, margin: '14px 0 0', display: 'grid', gap: 12 }}>
             {disagreements.map(c => (
               <DimRow
                 key={c.key}
                 c={c}
-                nameA={pa.name}
-                nameB={pb.name}
+                nameA={paName}
+                nameB={pbName}
                 colorA={colorA}
                 colorB={colorB}
                 kind="disagree"
+                locale={locale}
               />
             ))}
           </ul>
@@ -235,21 +250,21 @@ export default async function VsPage({
         {/* Where they overlapped */}
         {agreements.length > 0 && (
           <section style={{ marginBottom: 36 }}>
-            <h2 style={sectionH2}>▸ WHERE THEY OVERLAPPED</h2>
+            <h2 style={sectionH2}>{t('vs.overlapped_title', locale)}</h2>
             <p style={subtitle}>
-              Where the gap is smallest — both with meaningful presence
-              on the dimension (not "neither cared").
+              {t('vs.overlapped_sub', locale)}
             </p>
             <ul style={{ listStyle: 'none', padding: 0, margin: '14px 0 0', display: 'grid', gap: 12 }}>
               {agreements.map(c => (
                 <DimRow
                   key={c.key}
                   c={c}
-                  nameA={pa.name}
-                  nameB={pb.name}
+                  nameA={paName}
+                  nameB={pbName}
                   colorA={colorA}
                   colorB={colorB}
                   kind="agree"
+                  locale={locale}
                 />
               ))}
             </ul>
@@ -258,10 +273,9 @@ export default async function VsPage({
 
         {/* Full 16-dimension comparison */}
         <section style={{ marginBottom: 36 }}>
-          <h2 style={sectionH2}>▸ ALL 16 DIMENSIONS</h2>
+          <h2 style={sectionH2}>{t('vs.all_dims_title', locale)}</h2>
           <p style={subtitle}>
-            The full vector comparison. Bars show their 0–10 scores
-            side-by-side.
+            {t('vs.all_dims_sub', locale)}
           </p>
           <div style={{
             marginTop: 14,
@@ -287,7 +301,7 @@ export default async function VsPage({
                       display: 'flex',
                       justifyContent: 'space-between',
                     }}>
-                      <span>{c.name}</span>
+                      <span>{t(`dim.${c.key}.name`, locale)}</span>
                       <span style={{ color: '#8C6520' }}>Δ {c.absDelta}</span>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
@@ -310,8 +324,8 @@ export default async function VsPage({
               letterSpacing: 0.4,
               textTransform: 'uppercase',
             }}>
-              <span style={{ color: colorA.deep }}>◀ {pa.name.toUpperCase()}</span>
-              <span style={{ color: colorB.deep }}>{pb.name.toUpperCase()} ▶</span>
+              <span style={{ color: colorA.deep }}>◀ {paName.toUpperCase()}</span>
+              <span style={{ color: colorB.deep }}>{pbName.toUpperCase()} ▶</span>
             </div>
           </div>
         </section>
@@ -334,10 +348,14 @@ function PhilosopherCard({
   p,
   color,
   archetypeName,
+  displayName,
+  displayDates,
 }: {
   p: PhilosopherEntry;
   color: { soft: string; deep: string };
   archetypeName: string;
+  displayName: string;
+  displayDates: string;
 }) {
   return (
     <Link
@@ -371,7 +389,7 @@ function PhilosopherCard({
         color: '#221E18',
         marginBottom: 2,
       }}>
-        {p.name}
+        {displayName}
       </div>
       <div style={{
         fontFamily: pixel,
@@ -381,7 +399,7 @@ function PhilosopherCard({
         textTransform: 'uppercase',
         marginBottom: 8,
       }}>
-        {p.dates}
+        {displayDates}
       </div>
       <div style={{
         fontFamily: serif,
@@ -403,6 +421,7 @@ function DimRow({
   colorA,
   colorB,
   kind,
+  locale,
 }: {
   c: DimComparison;
   nameA: string;
@@ -410,6 +429,7 @@ function DimRow({
   colorA: { soft: string; deep: string };
   colorB: { soft: string; deep: string };
   kind: 'agree' | 'disagree';
+  locale: Locale;
 }) {
   return (
     <li style={{
@@ -431,9 +451,9 @@ function DimRow({
         flexWrap: 'wrap',
         gap: 8,
       }}>
-        <span>{c.name}</span>
+        <span>{t(`dim.${c.key}.name`, locale)}</span>
         <span style={{ color: kind === 'disagree' ? '#7A2E2E' : '#2F5D5C' }}>
-          {kind === 'disagree' ? `Δ ${c.absDelta} / 10` : `gap ${c.absDelta} / 10`}
+          {kind === 'disagree' ? `Δ ${c.absDelta} / 10` : t('vs.gap_line', locale, { n: c.absDelta })}
         </span>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 10 }}>
@@ -445,7 +465,7 @@ function DimRow({
             fontWeight: 500,
             marginBottom: 2,
           }}>
-            {nameA}: {c.valueA}/10
+            {t('vs.score_line', locale, { name: nameA, v: c.valueA })}
           </div>
           <DimBar value={c.valueA} color={colorA.deep} align="left" />
         </div>
@@ -457,7 +477,7 @@ function DimRow({
             fontWeight: 500,
             marginBottom: 2,
           }}>
-            {nameB}: {c.valueB}/10
+            {t('vs.score_line', locale, { name: nameB, v: c.valueB })}
           </div>
           <DimBar value={c.valueB} color={colorB.deep} align="left" />
         </div>
@@ -471,8 +491,8 @@ function DimRow({
         lineHeight: 1.5,
       }}>
         {kind === 'disagree'
-          ? disagreementPhrase(c, nameA, nameB)
-          : agreementPhrase(c)}
+          ? disagreementPhrase(c, nameA, nameB, locale)
+          : agreementPhrase(c, locale)}
       </p>
     </li>
   );
