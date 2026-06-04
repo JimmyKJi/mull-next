@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { DIM_KEYS, DIM_NAMES, topShifts } from '@/lib/dimensions';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
-import LanguageSwitcher from '@/components/language-switcher';
 import MullWordmark from '@/components/mull-wordmark';
 import ScrollToTop from '@/components/scroll-to-top';
 import type { Metadata } from 'next';
@@ -237,7 +236,6 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
       }}>
         <MullWordmark />
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-          <LanguageSwitcher initial={locale} />
           {/* Compare CTA — chunky amber pixel chip. The single most
               interesting CTA on someone else's profile shouldn't read
               like a tiny underline in the corner. */}

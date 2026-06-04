@@ -26,6 +26,7 @@ import { PHILOSOPHERS } from "@/lib/philosophers";
 import { t, type Locale } from "@/lib/translations";
 import FocusTrap from "./focus-trap";
 import { MullMark } from "./mull-mark";
+import LanguageSwitcher from "./language-switcher";
 
 // Umbrella groups. `key` is a translation key (nav.group.*); each item's
 // `key` is a nav.* translation key. Order follows the funnel: assess →
@@ -261,8 +262,15 @@ export function SiteNav({ locale = "en" }: { locale?: Locale }) {
             })}
           </ul>
 
-          {/* Right cluster — search, account, and (mobile) the menu toggle */}
+          {/* Right cluster — language, search, account, and (mobile) the menu toggle */}
           <div className="flex shrink-0 items-center gap-2.5">
+            {/* Language picker — global, so it's reachable on every page
+                (incl. home & the quiz). Hidden on the smallest screens
+                where the bar is tight; the mobile drawer carries it
+                there instead. */}
+            <div className="hidden sm:block">
+              <LanguageSwitcher initial={locale} />
+            </div>
             <button
               type="button"
               onClick={() => setOpen(true)}
@@ -397,6 +405,18 @@ function MobileMenu({
               </ul>
             </div>
           ))}
+
+          {/* Language — global picker, surfaced here for the small
+              screens that hide it from the bar. */}
+          <div className="mb-4">
+            <div
+              className="mb-1.5 px-1 text-[11px] uppercase tracking-[0.2em] text-[#8C6520]"
+              style={{ fontFamily: "var(--font-pixel-display)" }}
+            >
+              {t("a11y.language", locale)}
+            </div>
+            <LanguageSwitcher initial={locale} />
+          </div>
 
           {/* Utilities — hidden from the mobile bar, surfaced here. */}
           <div className="flex gap-1.5 pb-[env(safe-area-inset-bottom,0px)]">

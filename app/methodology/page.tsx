@@ -29,7 +29,6 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getServerLocale } from '@/lib/locale-server';
 import { t, type Locale } from '@/lib/translations';
-import LanguageSwitcher from '@/components/language-switcher';
 import { PixelWindow, PixelPageHeader } from '@/components/pixel-window';
 import { ContentLanguageNotice } from '@/components/content-language-notice';
 import { DIM_KEYS, DIM_NAMES, DIM_DESCRIPTIONS } from '@/lib/dimensions';
@@ -92,10 +91,6 @@ export default async function MethodologyPage() {
 
   return (
     <main className="mx-auto max-w-[860px] px-6 pb-32 pt-12 sm:px-10 sm:pt-16">
-      <div className="mb-6 flex justify-end">
-        <LanguageSwitcher initial={locale} />
-      </div>
-
       <ContentLanguageNotice locale={locale} translatedLocales={['zh']} />
 
       {locale === 'zh' ? (

@@ -12,7 +12,6 @@ import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
-import LanguageSwitcher from '@/components/language-switcher';
 import MullWordmark from '@/components/mull-wordmark';
 import { PRICES, isDryRun, isEduEmail } from '@/lib/billing';
 import { getUserPlan } from '@/lib/subscription';
@@ -57,7 +56,6 @@ export default async function BillingPage() {
         gap: 16,
       }}>
         <MullWordmark />
-        <LanguageSwitcher initial={locale} />
       </header>
 
       <div style={{

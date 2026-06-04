@@ -10,7 +10,6 @@ import ProfileForm from './profile-form';
 import DataControls from './data-controls';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
-import LanguageSwitcher from '@/components/language-switcher';
 import { PixelPageHeader } from '@/components/pixel-window';
 import EmbedBadgeSnippet from '@/components/embed-badge-snippet';
 
@@ -54,7 +53,6 @@ export default async function ProfileSettingsPage() {
         >
           ← {t('nav.account', locale)}
         </Link>
-        <LanguageSwitcher initial={locale} />
       </div>
 
       <PixelPageHeader

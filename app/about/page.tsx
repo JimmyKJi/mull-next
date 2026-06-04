@@ -16,7 +16,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getServerLocale } from '@/lib/locale-server';
-import LanguageSwitcher from '@/components/language-switcher';
 import { PixelWindow, PixelPageHeader } from '@/components/pixel-window';
 import { ContentLanguageNotice } from '@/components/content-language-notice';
 import { TIPPING_ENABLED } from '@/lib/feature-flags';
@@ -39,11 +38,6 @@ export default async function AboutPage() {
 
   return (
     <main className="mx-auto max-w-[820px] px-6 pb-32 pt-12 sm:px-10 sm:pt-16">
-      {/* Language switcher floats top-right under the global SiteNav */}
-      <div className="mb-6 flex justify-end">
-        <LanguageSwitcher initial={locale} />
-      </div>
-
       <ContentLanguageNotice locale={locale} translatedLocales={['zh']} />
 
       {locale === 'zh' ? <AboutBodyZh /> : <AboutBodyEn />}

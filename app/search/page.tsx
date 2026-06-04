@@ -3,7 +3,6 @@
 
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
-import LanguageSwitcher from '@/components/language-switcher';
 import Link from 'next/link';
 import SearchPanel from './search-panel';
 import Leaderboard from './leaderboard';
@@ -32,7 +31,6 @@ export default async function SearchPage({
   return (
     <main className="mx-auto max-w-[860px] px-6 pb-32 pt-10 sm:px-10">
       <div className="mb-6 flex items-center justify-end gap-4">
-        <LanguageSwitcher initial={locale} />
         <Link
           href="/account"
           className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"

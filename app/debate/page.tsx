@@ -4,7 +4,6 @@ import { createClient } from '@/utils/supabase/server';
 import DebateForm from './debate-form';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
-import LanguageSwitcher from '@/components/language-switcher';
 import { PixelPageHeader } from '@/components/pixel-window';
 
 const serif = "var(--font-prose)";
@@ -43,7 +42,6 @@ export default async function DebatePage() {
   return (
     <main className="mx-auto max-w-[860px] px-6 pb-32 pt-10 sm:px-10">
       <div className="mb-6 flex items-center justify-end gap-4">
-        <LanguageSwitcher initial={locale} />
         <Link
           href="/dilemma"
           className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"

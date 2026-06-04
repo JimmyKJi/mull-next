@@ -5,7 +5,6 @@ import { topShifts } from '@/lib/dimensions';
 import DiaryEntryActions from './diary-entry-actions';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
-import LanguageSwitcher from '@/components/language-switcher';
 import DiagnosisCard from '@/components/diagnosis-card';
 import type { Kinship } from '@/lib/kinship';
 
@@ -56,7 +55,6 @@ export default async function DiaryEntryPage({ params }: { params: Promise<{ id:
         >
           ← {t('nav.all_entries', locale)}
         </Link>
-        <LanguageSwitcher initial={locale} />
       </div>
 
       <div

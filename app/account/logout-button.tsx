@@ -6,8 +6,7 @@ import { t, type Locale } from "@/lib/translations";
 
 // LogoutButton — sits in the top-right of /account. Pixel ghost chip
 // (transparent fill, 2px ink border, no shadow) so it reads as a
-// secondary action — the LanguageSwitcher next to it has similar
-// visual weight.
+// secondary action.
 
 export default function LogoutButton({ locale = 'en' }: { locale?: Locale }) {
   const router = useRouter();

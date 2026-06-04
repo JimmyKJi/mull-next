@@ -27,27 +27,47 @@ export default function LanguageSwitcher({ initial = 'en' }: { initial?: Locale 
   }
 
   return (
-    <select
-      value={locale}
-      onChange={onChange}
-      title={t('a11y.language', locale)}
-      aria-label={t('a11y.choose_language', locale)}
-      style={{
-        fontFamily: sans,
-        fontSize: 12,
-        padding: '4px 8px',
-        background: 'transparent',
-        border: '1px solid #D6CDB6',
-        borderRadius: 6,
-        color: '#4A4338',
-        cursor: 'pointer',
-      }}
-    >
-      {LOCALES.map(loc => (
-        <option key={loc} value={loc}>
-          {LOCALE_LABELS[loc].native}
-        </option>
-      ))}
-    </select>
+    <span style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
+      {/* Globe sits over the select's left padding so the control reads
+          instantly as a language picker, regardless of which language
+          name is currently selected. */}
+      <span
+        aria-hidden
+        style={{
+          position: 'absolute',
+          left: 9,
+          fontSize: 14,
+          lineHeight: 1,
+          pointerEvents: 'none',
+        }}
+      >
+        🌐
+      </span>
+      <select
+        value={locale}
+        onChange={onChange}
+        title={t('a11y.language', locale)}
+        aria-label={t('a11y.choose_language', locale)}
+        style={{
+          fontFamily: sans,
+          fontSize: 13,
+          fontWeight: 500,
+          // Extra left padding clears the globe; the native dropdown
+          // arrow sits at the right.
+          padding: '7px 8px 7px 31px',
+          background: '#FFFCF4',
+          border: '2px solid #221E18',
+          borderRadius: 0,
+          color: '#221E18',
+          cursor: 'pointer',
+        }}
+      >
+        {LOCALES.map(loc => (
+          <option key={loc} value={loc}>
+            {LOCALE_LABELS[loc].native}
+          </option>
+        ))}
+      </select>
+    </span>
   );
 }

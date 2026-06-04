@@ -11,7 +11,6 @@ import { EXERCISES, CATEGORY_META, type ExerciseCategory } from '@/lib/exercises
 import { localizeExercise } from '@/lib/exercises-i18n';
 import { t } from '@/lib/translations';
 import { getServerLocale } from '@/lib/locale-server';
-import LanguageSwitcher from '@/components/language-switcher';
 import { PixelPageHeader } from '@/components/pixel-window';
 import type { Metadata } from 'next';
 
@@ -59,10 +58,6 @@ export default async function ExercisesPage() {
 
   return (
     <main className="mx-auto max-w-[920px] px-5 pb-32 pt-10 sm:px-10">
-      <div className="mb-6 flex justify-end">
-        <LanguageSwitcher initial={locale} />
-      </div>
-
       <PixelPageHeader
         eyebrow={`▶ ${t('exercises.eyebrow', locale).toUpperCase()}`}
         title={t('exercises.title', locale).toUpperCase()}

@@ -6,7 +6,6 @@ import LogoutButton from './logout-button';
 import { getDailyDilemma } from '@/lib/dilemmas';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
-import LanguageSwitcher from '@/components/language-switcher';
 import ProgressionPanel from '@/components/progression-panel';
 import { computeUserStats } from '@/lib/profile-progression';
 import DilemmaReminderCard from '@/components/dilemma-reminder-card';
@@ -431,10 +430,9 @@ export default async function AccountPage() {
 
   return (
     <main className="mx-auto max-w-[820px] px-6 pb-32 pt-10 sm:px-10">
-      {/* Top rail — language switcher + sign-out (the wordmark lives
+      {/* Top rail — sign-out (the wordmark lives
           in the global SiteNav now). */}
       <div className="mb-6 flex items-center justify-end gap-3">
-        <LanguageSwitcher initial={locale} />
         <LogoutButton locale={locale} />
       </div>
 

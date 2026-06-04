@@ -14,7 +14,6 @@ import { TOPICS, topicsByCategory } from '@/lib/topics';
 import { localizeTopic } from '@/lib/topics-i18n';
 import { t } from '@/lib/translations';
 import { PixelPageHeader } from '@/components/pixel-window';
-import LanguageSwitcher from '@/components/language-switcher';
 import { getServerLocale } from '@/lib/locale-server';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
@@ -51,10 +50,6 @@ export default async function TopicIndexPage() {
 
   return (
     <main className="mx-auto max-w-[920px] px-5 pb-32 pt-10 sm:px-10">
-      <div className="mb-6 flex justify-end">
-        <LanguageSwitcher initial={locale} />
-      </div>
-
       <PixelPageHeader
         eyebrow={`▶ ${t('topic.idx_eyebrow', locale)}`}
         title={t('topic.title', locale)}

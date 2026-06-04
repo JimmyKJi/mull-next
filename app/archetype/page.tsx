@@ -9,7 +9,6 @@ import { getArchetypeColor } from '@/lib/archetype-colors';
 import { ArchetypeSprite } from '@/components/archetype-sprite';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
-import LanguageSwitcher from '@/components/language-switcher';
 import { PixelPageHeader } from '@/components/pixel-window';
 
 export const metadata: Metadata = {
@@ -31,10 +30,6 @@ export default async function ArchetypeIndexPage() {
 
   return (
     <main className="mx-auto max-w-[1200px] px-6 pb-32 pt-12 sm:px-10 sm:pt-16">
-      <div className="mb-6 flex justify-end">
-        <LanguageSwitcher initial={locale} />
-      </div>
-
       <PixelPageHeader
         eyebrow={`▶ ${t('hdr.ten_archetypes', locale)}`}
         title={t('home.arch_eyebrow', locale)}

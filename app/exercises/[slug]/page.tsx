@@ -10,7 +10,6 @@ import { localizeExercise } from '@/lib/exercises-i18n';
 import { localizeExtras } from '@/lib/exercises-extras-i18n';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
-import LanguageSwitcher from '@/components/language-switcher';
 import { ContentLanguageNotice } from '@/components/content-language-notice';
 import { createClient } from '@/utils/supabase/server';
 import { PathwayNext } from '@/components/pathway-next';
@@ -70,7 +69,6 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
         >
           ← {t('exercises.all', locale)}
         </Link>
-        <LanguageSwitcher initial={locale} />
       </div>
 
       <ContentLanguageNotice locale={locale} translatedLocales={CORE_TRANSLATED} />

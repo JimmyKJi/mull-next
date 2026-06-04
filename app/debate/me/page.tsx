@@ -5,7 +5,6 @@ import { PHILOSOPHERS } from '@/lib/philosophers';
 import DuelForm from './duel-form';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
-import LanguageSwitcher from '@/components/language-switcher';
 import { PixelPageHeader } from '@/components/pixel-window';
 
 const serif = "var(--font-prose)";
@@ -34,7 +33,6 @@ export default async function DuelPage() {
         >
           ← {t('nav.two_thinker_debate', locale)}
         </Link>
-        <LanguageSwitcher initial={locale} />
       </div>
 
       <PixelPageHeader

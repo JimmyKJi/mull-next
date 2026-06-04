@@ -9,7 +9,6 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 import { t, type Locale, isLocale } from '@/lib/translations';
-import LanguageSwitcher from '@/components/language-switcher';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -42,10 +41,6 @@ export default function LoginPage() {
 
   return (
     <main className="mx-auto flex min-h-[calc(100vh-64px)] max-w-[480px] flex-col px-6 pb-32 pt-12 sm:pt-16">
-      <div className="mb-6 flex justify-end">
-        <LanguageSwitcher initial={locale} />
-      </div>
-
       <div
         className="border-4 border-[#221E18] bg-[#FFFCF4]"
         style={{ boxShadow: '6px 6px 0 0 #8C6520' }}

@@ -7,7 +7,6 @@ import type { Metadata } from 'next';
 import DilemmaForm from './dilemma-form';
 import { getServerLocale } from '@/lib/locale-server';
 import { t, type Locale } from '@/lib/translations';
-import LanguageSwitcher from '@/components/language-switcher';
 import DiagnosisCard from '@/components/diagnosis-card';
 import type { Kinship } from '@/lib/kinship';
 import { PathwayNext } from '@/components/pathway-next';
@@ -118,7 +117,6 @@ export default async function DilemmaPage() {
   return (
     <main className="mx-auto max-w-[820px] px-6 pb-32 pt-10 sm:px-10">
       <div className="mb-6 flex items-center justify-end gap-3">
-        <LanguageSwitcher initial={locale} />
         <Link
           href="/account"
           className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"

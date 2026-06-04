@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
-import LanguageSwitcher from '@/components/language-switcher';
 import RetrospectivePanel from './retrospective-panel';
 import { PixelPageHeader } from '@/components/pixel-window';
 
@@ -27,7 +26,6 @@ export default async function RetrospectivePage() {
         >
           ← Account
         </Link>
-        <LanguageSwitcher initial={locale} />
       </div>
 
       <PixelPageHeader

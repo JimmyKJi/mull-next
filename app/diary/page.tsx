@@ -5,7 +5,6 @@ import DiaryComposer from './diary-composer';
 import { topShifts } from '@/lib/dimensions';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
-import LanguageSwitcher from '@/components/language-switcher';
 import { PixelPageHeader } from '@/components/pixel-window';
 import EmptyStateSprite from '@/components/empty-state-sprite';
 
@@ -60,7 +59,6 @@ export default async function DiaryPage() {
   return (
     <main className="mx-auto max-w-[860px] px-6 pb-32 pt-10 sm:px-10">
       <div className="mb-6 flex items-center justify-end gap-4">
-        <LanguageSwitcher initial={locale} />
         <Link
           href="/dilemma"
           className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"

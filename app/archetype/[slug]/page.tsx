@@ -16,7 +16,6 @@ import { EXERCISES } from '@/lib/exercises';
 import { PHILOSOPHERS, philosopherSlug } from '@/lib/philosophers';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
-import LanguageSwitcher from '@/components/language-switcher';
 import { PixelWindow } from '@/components/pixel-window';
 import { PathwayNext } from '@/components/pathway-next';
 import { pathwayForArchetype } from '@/lib/pathway';
@@ -139,7 +138,6 @@ export default async function ArchetypeDetailPage({
         >
           ← {t('arch_detail.back_to_index', locale)}
         </Link>
-        <LanguageSwitcher initial={locale} />
       </div>
 
       {/* ─── Hero — pixel sprite + name + spirit ─── */}
