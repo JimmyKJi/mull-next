@@ -9,6 +9,9 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import { ARENA_TOPICS } from "@/lib/arena/data";
+import { localizeArenaTopic } from "@/lib/arena/topics-i18n";
+import { getServerLocale } from "@/lib/locale-server";
+import { t } from "@/lib/translations";
 import NewChallengeClient from "./new-challenge-client";
 
 export const metadata: Metadata = {
@@ -24,6 +27,7 @@ export default async function NewPvpChallengePage() {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/arena/pvp/new");
+  const locale = await getServerLocale();
 
   return (
     <main className="mx-auto max-w-[760px] px-6 pb-32 pt-10 sm:px-10">
@@ -39,7 +43,7 @@ export default async function NewPvpChallengePage() {
             textTransform: "uppercase",
           }}
         >
-          ◂ PVP
+          {t("arena.pvp_back", locale)}
         </Link>
       </div>
       <h1
@@ -53,16 +57,20 @@ export default async function NewPvpChallengePage() {
           marginBottom: 18,
         }}
       >
-        POST A CHALLENGE
+        {t("arena.pvp_post_title", locale)}
       </h1>
       <NewChallengeClient
-        topics={ARENA_TOPICS.map((t) => ({
-          slug: t.slug,
-          title: t.title,
-          category: t.category,
-          prompt: t.prompt,
-          primer: t.primer,
-        }))}
+        locale={locale}
+        topics={ARENA_TOPICS.map((topic) => {
+          const lz = localizeArenaTopic(topic, locale);
+          return {
+            slug: topic.slug,
+            title: lz.title,
+            category: topic.category,
+            prompt: lz.prompt,
+            primer: lz.primer,
+          };
+        })}
       />
     </main>
   );

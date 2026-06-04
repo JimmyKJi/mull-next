@@ -16,6 +16,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { JudgeOutput } from "@/lib/arena/judge";
 import { SupportMullPrompt } from "@/components/support-mull-prompt";
+import { t, type Locale } from "@/lib/translations";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-prose)";
@@ -24,6 +25,7 @@ type Turn = { turn_order: number; speaker: "user" | "opponent"; content: string 
 
 type Props = {
   sessionId: string;
+  locale: Locale;
   status: "pending_opponent" | "active" | "judged" | "abandoned";
   topicTitle: string;
   topicPrompt: string;
@@ -52,8 +54,8 @@ export default function PvpMatchClient(props: Props) {
   const [judging, setJudging] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const locale = props.locale;
   const mySpeaker: "user" | "opponent" = props.iAmChallenger ? "user" : "opponent";
-  const myLabel = props.iAmChallenger ? "You" : "You";
   const otherLabel = props.iAmChallenger
     ? props.opponentLabel
     : props.challengerLabel;
@@ -80,7 +82,7 @@ export default function PvpMatchClient(props: Props) {
       });
       const json = await res.json();
       if (!res.ok) {
-        setError(json?.error ?? "Could not accept.");
+        setError(json?.error ?? t("arena.err_accept", locale));
         setAccepting(false);
         return;
       }
@@ -88,7 +90,7 @@ export default function PvpMatchClient(props: Props) {
       setAccepting(false);
       router.refresh(); // re-load server-side fields like opponent_user_id
     } catch {
-      setError("Network error.");
+      setError(t("arena.err_network", locale));
       setAccepting(false);
     }
   }
@@ -108,7 +110,7 @@ export default function PvpMatchClient(props: Props) {
       });
       const json = await res.json();
       if (!res.ok) {
-        setError(json?.error ?? "Could not submit.");
+        setError(json?.error ?? t("arena.err_submit", locale));
         setSubmitting(false);
         return;
       }
@@ -123,7 +125,7 @@ export default function PvpMatchClient(props: Props) {
       setInput("");
       setSubmitting(false);
     } catch {
-      setError("Network error.");
+      setError(t("arena.err_network", locale));
       setSubmitting(false);
     }
   }
@@ -140,7 +142,7 @@ export default function PvpMatchClient(props: Props) {
       });
       const json = await res.json();
       if (!res.ok) {
-        setError(json?.error ?? "Judge failed.");
+        setError(json?.error ?? t("arena.err_judge", locale));
         setJudging(false);
         return;
       }
@@ -151,7 +153,7 @@ export default function PvpMatchClient(props: Props) {
       setJudging(false);
       window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
     } catch {
-      setError("Network error.");
+      setError(t("arena.err_network", locale));
       setJudging(false);
     }
   }
@@ -170,12 +172,18 @@ export default function PvpMatchClient(props: Props) {
             marginBottom: 8,
           }}
         >
-          ▶ PVP · {props.challengerLabel.toUpperCase()} ({props.challengerElo}) VS{" "}
-          {(status === "pending_opponent"
-            ? "OPEN"
-            : props.opponentLabel.toUpperCase()
-          )}{" "}
-          {status !== "pending_opponent" && `(${props.opponentElo})`}
+          {status === "pending_opponent"
+            ? t("arena.pvp_match_header_open", locale, {
+                a: props.challengerLabel.toUpperCase(),
+                ae: props.challengerElo,
+                b: t("arena.pvp_open_slot", locale),
+              })
+            : t("arena.pvp_match_header", locale, {
+                a: props.challengerLabel.toUpperCase(),
+                ae: props.challengerElo,
+                b: props.opponentLabel.toUpperCase(),
+                be: props.opponentElo,
+              })}
         </div>
         <h1
           style={{
@@ -205,13 +213,13 @@ export default function PvpMatchClient(props: Props) {
 
       {/* Transcript */}
       <section style={{ marginBottom: 20 }}>
-        {turns.map((t) => (
+        {turns.map((turn) => (
           <TurnBubble
-            key={t.turn_order}
-            speaker={t.speaker}
-            mine={t.speaker === mySpeaker}
+            key={turn.turn_order}
+            mine={turn.speaker === mySpeaker}
             otherLabel={otherLabel}
-            content={t.content}
+            content={turn.content}
+            locale={locale}
           />
         ))}
       </section>
@@ -236,8 +244,7 @@ export default function PvpMatchClient(props: Props) {
               lineHeight: 1.55,
             }}
           >
-            This is an open challenge. Accept and write your response
-            to {props.challengerLabel}'s opening turn above.
+            {t("arena.pvp_accept_prompt", locale, { name: props.challengerLabel })}
           </p>
           <button
             type="button"
@@ -245,7 +252,7 @@ export default function PvpMatchClient(props: Props) {
             disabled={accepting}
             style={btnPrimary}
           >
-            {accepting ? "▸ ACCEPTING…" : "▶ ACCEPT CHALLENGE"}
+            {accepting ? t("arena.pvp_accepting", locale) : t("arena.pvp_accept_cta", locale)}
           </button>
         </div>
       )}
@@ -270,9 +277,7 @@ export default function PvpMatchClient(props: Props) {
               lineHeight: 1.55,
             }}
           >
-            Waiting for an opponent to accept. Your challenge is
-            visible on the PvP board. When someone accepts and writes
-            their first turn, it'll be your turn next.
+            {t("arena.pvp_waiting_accept", locale)}
           </p>
         </div>
       )}
@@ -290,12 +295,12 @@ export default function PvpMatchClient(props: Props) {
               marginBottom: 8,
             }}
           >
-            ▸ YOUR TURN
+            {t("arena.match_your_turn", locale)}
           </div>
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={`Address ${otherLabel}'s last point directly. Min 20 chars.`}
+            placeholder={t("arena.pvp_turn_placeholder", locale, { name: otherLabel })}
             maxLength={2000}
             rows={6}
             style={{
@@ -341,7 +346,7 @@ export default function PvpMatchClient(props: Props) {
                   disabled={judging}
                   style={btnGhost}
                 >
-                  {judging ? "▸ JUDGING…" : "▶ CALL THE VERDICT"}
+                  {judging ? t("arena.match_judging", locale) : t("arena.match_call_verdict", locale)}
                 </button>
               )}
               <button
@@ -350,7 +355,7 @@ export default function PvpMatchClient(props: Props) {
                 disabled={input.trim().length < 20 || submitting}
                 style={input.trim().length >= 20 ? btnPrimary : btnDisabled}
               >
-                {submitting ? "▸ SUBMITTING…" : "▶ SUBMIT TURN"}
+                {submitting ? t("arena.pvp_submitting", locale) : t("arena.match_submit", locale)}
               </button>
             </div>
           </div>
@@ -377,8 +382,7 @@ export default function PvpMatchClient(props: Props) {
               lineHeight: 1.55,
             }}
           >
-            Waiting on {otherLabel} to play their turn. Come back
-            later — or call the verdict if you've both played enough.
+            {t("arena.pvp_waiting_turn", locale, { name: otherLabel })}
           </p>
           {canCallVerdict && (
             <button
@@ -387,7 +391,7 @@ export default function PvpMatchClient(props: Props) {
               disabled={judging}
               style={btnPrimary}
             >
-              {judging ? "▸ JUDGING…" : "▶ CALL THE VERDICT NOW"}
+              {judging ? t("arena.match_judging", locale) : t("arena.pvp_call_verdict_now", locale)}
             </button>
           )}
         </div>
@@ -417,6 +421,7 @@ export default function PvpMatchClient(props: Props) {
           userEloAfter={userEloAfter}
           iAmChallenger={props.iAmChallenger}
           opponentLabel={otherLabel}
+          locale={locale}
         />
       )}
     </div>
@@ -426,15 +431,15 @@ export default function PvpMatchClient(props: Props) {
 // ─── Turn bubble ─────────────────────────────────────────────────
 
 function TurnBubble({
-  speaker,
   mine,
   otherLabel,
   content,
+  locale,
 }: {
-  speaker: "user" | "opponent";
   mine: boolean;
   otherLabel: string;
   content: string;
+  locale: Locale;
 }) {
   return (
     <div style={{ marginBottom: 12 }}>
@@ -449,7 +454,7 @@ function TurnBubble({
           textAlign: mine ? "right" : "left",
         }}
       >
-        {mine ? "You" : otherLabel}
+        {mine ? t("arena.you", locale) : otherLabel}
       </div>
       <div
         style={{
@@ -480,12 +485,14 @@ function VerdictPanel({
   userEloAfter,
   iAmChallenger,
   opponentLabel,
+  locale,
 }: {
   judge: JudgeOutput;
   eloDelta: number;
   userEloAfter: number | null;
   iAmChallenger: boolean;
   opponentLabel: string;
+  locale: Locale;
 }) {
   // The judge verdict is from the challenger's perspective ("user wins"
   // means challenger wins). Map that to whether the calling viewer won.
@@ -512,7 +519,11 @@ function VerdictPanel({
     : isDraw
       ? "#8C6520"
       : "#7A2E2E";
-  const verdictLabel = iWon ? "YOU WON" : isDraw ? "DRAW" : `${opponentLabel.toUpperCase()} WON`;
+  const verdictLabel = iWon
+    ? t("arena.match_you_won", locale)
+    : isDraw
+      ? t("arena.match_draw", locale)
+      : t("arena.match_opp_won", locale, { name: opponentLabel.toUpperCase() });
 
   // Display "my score" vs "their score" — for the OPPONENT viewer,
   // the judge's "user_scores" is the CHALLENGER's, so we flip labels.
@@ -541,7 +552,7 @@ function VerdictPanel({
             marginBottom: 6,
           }}
         >
-          ▶ VERDICT
+          {t("spar.verdict", locale)}
         </div>
         <div
           style={{
@@ -563,7 +574,7 @@ function VerdictPanel({
             marginBottom: 12,
           }}
         >
-          You {myScore} · {opponentLabel} {theirScore} (of 25)
+          {t("arena.match_scoreline", locale, { my: myScore, opp: opponentLabel, their: theirScore })}
         </div>
         {userEloAfter !== null && (
           <div
@@ -574,8 +585,11 @@ function VerdictPanel({
               letterSpacing: 0.5,
             }}
           >
-            PVP ELO {userEloAfter - eloDelta} → {userEloAfter} ({eloDelta >= 0 ? "+" : ""}
-            {eloDelta})
+            {t("arena.pvp_elo_line", locale, {
+              before: userEloAfter - eloDelta,
+              after: userEloAfter,
+              delta: `${eloDelta >= 0 ? "+" : ""}${eloDelta}`,
+            })}
           </div>
         )}
       </div>
@@ -598,7 +612,7 @@ function VerdictPanel({
             marginBottom: 8,
           }}
         >
-          ▸ JUDGE'S REASONING
+          {t("arena.match_reasoning", locale)}
         </div>
         <p
           style={{
@@ -630,13 +644,13 @@ function VerdictPanel({
             textDecoration: "none",
           }}
         >
-          ▶ NEXT MATCH
+          {t("arena.pvp_next_match", locale)}
         </Link>
       </div>
 
       <SupportMullPrompt
-        lead="Loved the match? Help keep the Arena open."
-        detail="Each Arena verdict costs about 15 cents in AI fees. Mull is free to play; tips from people who can afford it keep it free for everyone else."
+        lead={t("arena.support_lead", locale)}
+        detail={t("arena.support_detail", locale)}
       />
     </div>
   );

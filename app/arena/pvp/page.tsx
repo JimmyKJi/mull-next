@@ -10,6 +10,9 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import { getArenaTopic } from "@/lib/arena/data";
+import { localizeArenaTopic } from "@/lib/arena/topics-i18n";
+import { getServerLocale } from "@/lib/locale-server";
+import { t, type Locale } from "@/lib/translations";
 
 export const metadata: Metadata = {
   title: "Arena · PvP · Mull",
@@ -45,6 +48,7 @@ export default async function ArenaPvpPage() {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/arena/pvp");
+  const locale = await getServerLocale();
 
   const [openRes, activeRes, ratingRes] = await Promise.all([
     supabase
@@ -99,7 +103,7 @@ export default async function ArenaPvpPage() {
             textTransform: "uppercase",
           }}
         >
-          ◂ ARENA
+          {t("arena.back", locale)}
         </Link>
       </div>
 
@@ -115,7 +119,7 @@ export default async function ArenaPvpPage() {
             marginBottom: 10,
           }}
         >
-          PVP · ASYNC
+          {t("arena.pvp_title", locale)}
         </h1>
         <p
           style={{
@@ -127,17 +131,16 @@ export default async function ArenaPvpPage() {
             lineHeight: 1.55,
           }}
         >
-          Debate other humans, turn by turn. Same judge, same rubric.
-          Your PvP Elo:{" "}
-          <strong style={{ color: "#221E18" }}>{myPvpElo}</strong> ·{" "}
-          {ratingRes.data?.pvp_debates_count ?? 0} debates.
+          {t("arena.pvp_sub_a", locale)}
+          <strong style={{ color: "#221E18" }}>{myPvpElo}</strong>
+          {t("arena.pvp_sub_b", locale, { n: ratingRes.data?.pvp_debates_count ?? 0 })}
         </p>
       </header>
 
       {/* Section: your turn */}
       {myTurnMatches.length > 0 && (
         <section style={{ marginBottom: 28 }}>
-          <SectionHead label={`▸ YOUR TURN · ${myTurnMatches.length}`} accent="#7A2E2E" />
+          <SectionHead label={t("arena.pvp_sec_your_turn", locale, { n: myTurnMatches.length })} accent="#7A2E2E" />
           <ul
             style={{
               listStyle: "none",
@@ -148,7 +151,7 @@ export default async function ArenaPvpPage() {
             }}
           >
             {myTurnMatches.map((m) => (
-              <MatchRow key={m.id} match={m} flavour="your-turn" />
+              <MatchRow key={m.id} match={m} flavour="your-turn" locale={locale} />
             ))}
           </ul>
         </section>
@@ -157,7 +160,7 @@ export default async function ArenaPvpPage() {
       {/* Section: waiting on opponent */}
       {theirTurnMatches.length > 0 && (
         <section style={{ marginBottom: 28 }}>
-          <SectionHead label={`▸ WAITING · ${theirTurnMatches.length}`} accent="#8C6520" />
+          <SectionHead label={t("arena.pvp_sec_waiting", locale, { n: theirTurnMatches.length })} accent="#8C6520" />
           <ul
             style={{
               listStyle: "none",
@@ -168,7 +171,7 @@ export default async function ArenaPvpPage() {
             }}
           >
             {theirTurnMatches.map((m) => (
-              <MatchRow key={m.id} match={m} flavour="waiting" />
+              <MatchRow key={m.id} match={m} flavour="waiting" locale={locale} />
             ))}
           </ul>
         </section>
@@ -177,7 +180,7 @@ export default async function ArenaPvpPage() {
       {/* Section: your open challenges */}
       {myOpenChallenges.length > 0 && (
         <section style={{ marginBottom: 28 }}>
-          <SectionHead label="▸ YOUR OPEN CHALLENGES" accent="#8C6520" />
+          <SectionHead label={t("arena.pvp_sec_your_open", locale)} accent="#8C6520" />
           <ul
             style={{
               listStyle: "none",
@@ -191,6 +194,7 @@ export default async function ArenaPvpPage() {
               <OpenChallengeRow
                 key={c.id}
                 challenge={c}
+                locale={locale}
                 mine
               />
             ))}
@@ -208,7 +212,7 @@ export default async function ArenaPvpPage() {
             marginBottom: 10,
           }}
         >
-          <SectionHead label={`▸ OPEN CHALLENGES · ${browsableChallenges.length}`} accent="#2F5D5C" />
+          <SectionHead label={t("arena.pvp_sec_open", locale, { n: browsableChallenges.length })} accent="#2F5D5C" />
           <Link
             href="/arena/pvp/new"
             style={{
@@ -224,7 +228,7 @@ export default async function ArenaPvpPage() {
               textDecoration: "none",
             }}
           >
-            ▶ POST A CHALLENGE
+            {t("arena.pvp_post_cta", locale)}
           </Link>
         </div>
         {browsableChallenges.length === 0 ? (
@@ -241,7 +245,7 @@ export default async function ArenaPvpPage() {
               textAlign: "center",
             }}
           >
-            No open challenges right now. Post one to fill the board.
+            {t("arena.pvp_empty", locale)}
           </p>
         ) : (
           <ul
@@ -254,7 +258,7 @@ export default async function ArenaPvpPage() {
             }}
           >
             {browsableChallenges.map((c) => (
-              <OpenChallengeRow key={c.id} challenge={c} />
+              <OpenChallengeRow key={c.id} challenge={c} locale={locale} />
             ))}
           </ul>
         )}
@@ -284,11 +288,14 @@ function SectionHead({ label, accent }: { label: string; accent: string }) {
 function MatchRow({
   match,
   flavour,
+  locale,
 }: {
   match: MyActiveMatch;
   flavour: "your-turn" | "waiting";
+  locale: Locale;
 }) {
-  const topic = getArenaTopic(match.topic_slug);
+  const baseTopic = getArenaTopic(match.topic_slug);
+  const topic = baseTopic ? localizeArenaTopic(baseTopic, locale) : null;
   const accent = flavour === "your-turn" ? "#7A2E2E" : "#8C6520";
   return (
     <li>
@@ -315,7 +322,7 @@ function MatchRow({
             marginBottom: 4,
           }}
         >
-          {flavour === "your-turn" ? "▸ YOUR TURN" : "▸ WAITING ON OPPONENT"}
+          {flavour === "your-turn" ? t("arena.match_your_turn", locale) : t("arena.pvp_waiting_opp", locale)}
         </div>
         <div style={{ fontSize: 16, fontWeight: 500, color: "#221E18" }}>
           {topic?.title ?? match.topic_slug}
@@ -327,15 +334,18 @@ function MatchRow({
 
 function OpenChallengeRow({
   challenge,
+  locale,
   mine,
 }: {
   challenge: OpenChallenge;
+  locale: Locale;
   mine?: boolean;
 }) {
-  const topic = getArenaTopic(challenge.topic_slug);
+  const baseTopic = getArenaTopic(challenge.topic_slug);
+  const topic = baseTopic ? localizeArenaTopic(baseTopic, locale) : null;
   const challengerLabel =
     challenge.challenger_display_name ||
-    (challenge.challenger_handle ? `@${challenge.challenger_handle}` : "Anonymous");
+    (challenge.challenger_handle ? `@${challenge.challenger_handle}` : t("arena.anonymous", locale));
   return (
     <li>
       <Link
@@ -379,7 +389,9 @@ function OpenChallengeRow({
               textTransform: "uppercase",
             }}
           >
-            {mine ? "YOURS · WAITING" : `vs ${challengerLabel} (Elo ${challenge.challenger_elo ?? 1000})`}
+            {mine
+              ? t("arena.pvp_yours_waiting", locale)
+              : t("arena.pvp_vs_challenger", locale, { name: challengerLabel, elo: challenge.challenger_elo ?? 1000 })}
           </div>
         </div>
         <div

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { t, type Locale } from "@/lib/translations";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-prose)";
@@ -14,7 +15,13 @@ type Topic = {
   primer: string;
 };
 
-export default function NewChallengeClient({ topics }: { topics: Topic[] }) {
+export default function NewChallengeClient({
+  topics,
+  locale,
+}: {
+  topics: Topic[];
+  locale: Locale;
+}) {
   const router = useRouter();
   const [topicSlug, setTopicSlug] = useState<string | null>(null);
   const [opening, setOpening] = useState("");
@@ -38,13 +45,13 @@ export default function NewChallengeClient({ topics }: { topics: Topic[] }) {
       });
       const json = await res.json();
       if (!res.ok) {
-        setError(json?.error ?? "Could not post.");
+        setError(json?.error ?? t("arena.err_post", locale));
         setSubmitting(false);
         return;
       }
       router.push(`/arena/pvp/${json.session_id}`);
     } catch {
-      setError("Network error.");
+      setError(t("arena.err_network", locale));
       setSubmitting(false);
     }
   }
@@ -57,7 +64,7 @@ export default function NewChallengeClient({ topics }: { topics: Topic[] }) {
   return (
     <div style={{ display: "grid", gap: 24 }}>
       <section>
-        <Head n={1} title="Pick a topic" />
+        <Head n={1} title={t("arena.pve_pick_topic", locale)} locale={locale} />
         {(["philosophical", "everyday"] as const).map((cat) => {
           const list = grouped[cat];
           if (list.length === 0) return null;
@@ -73,7 +80,7 @@ export default function NewChallengeClient({ topics }: { topics: Topic[] }) {
                   marginBottom: 6,
                 }}
               >
-                ▸ {cat === "philosophical" ? "Philosophical" : "Everyday life"}
+                ▸ {t(cat === "philosophical" ? "arena.pve_cat_philosophical" : "arena.pve_cat_everyday", locale)}
               </div>
               <ul
                 style={{
@@ -84,13 +91,13 @@ export default function NewChallengeClient({ topics }: { topics: Topic[] }) {
                   gap: 6,
                 }}
               >
-                {list.map((t) => {
-                  const picked = topicSlug === t.slug;
+                {list.map((topic) => {
+                  const picked = topicSlug === topic.slug;
                   return (
-                    <li key={t.slug}>
+                    <li key={topic.slug}>
                       <button
                         type="button"
-                        onClick={() => setTopicSlug(t.slug)}
+                        onClick={() => setTopicSlug(topic.slug)}
                         style={{
                           display: "block",
                           width: "100%",
@@ -112,7 +119,7 @@ export default function NewChallengeClient({ topics }: { topics: Topic[] }) {
                             color: "#221E18",
                           }}
                         >
-                          {t.title}
+                          {topic.title}
                         </div>
                       </button>
                     </li>
@@ -126,7 +133,7 @@ export default function NewChallengeClient({ topics }: { topics: Topic[] }) {
 
       {selectedTopic && (
         <section>
-          <Head n={2} title="Your opening turn" />
+          <Head n={2} title={t("arena.pvp_opening_title", locale)} locale={locale} />
           <div
             style={{
               padding: "12px 14px",
@@ -145,7 +152,7 @@ export default function NewChallengeClient({ topics }: { topics: Topic[] }) {
                 marginBottom: 4,
               }}
             >
-              ▸ TOPIC
+              {t("arena.pvp_topic_label", locale)}
             </div>
             <p
               style={{
@@ -169,13 +176,12 @@ export default function NewChallengeClient({ topics }: { topics: Topic[] }) {
               margin: "0 0 8px",
             }}
           >
-            State your position. Make a real argument — your opponent
-            sees this before they accept. Min 50 chars.
+            {t("arena.pvp_opening_help", locale)}
           </p>
           <textarea
             value={opening}
             onChange={(e) => setOpening(e.target.value)}
-            placeholder="Your opening position. The opponent will respond to this when they accept the challenge."
+            placeholder={t("arena.pvp_opening_placeholder", locale)}
             maxLength={2000}
             rows={8}
             style={{
@@ -235,7 +241,7 @@ export default function NewChallengeClient({ topics }: { topics: Topic[] }) {
                 textTransform: "uppercase",
               }}
             >
-              {submitting ? "▸ POSTING…" : "▶ POST CHALLENGE"}
+              {submitting ? t("arena.pvp_posting", locale) : t("arena.pvp_post_challenge", locale)}
             </button>
           </div>
         </section>
@@ -259,7 +265,7 @@ export default function NewChallengeClient({ topics }: { topics: Topic[] }) {
   );
 }
 
-function Head({ n, title }: { n: number; title: string }) {
+function Head({ n, title, locale }: { n: number; title: string; locale: Locale }) {
   return (
     <div
       style={{
@@ -272,7 +278,7 @@ function Head({ n, title }: { n: number; title: string }) {
         textShadow: "2px 2px 0 #B8862F",
       }}
     >
-      ▸ STEP {n} · {title.toUpperCase()}
+      {t("arena.pve_step", locale, { n, title: title.toUpperCase() })}
     </div>
   );
 }

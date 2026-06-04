@@ -14,6 +14,9 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { createClient } from "@/utils/supabase/server";
 import { getArenaTopic } from "@/lib/arena/data";
+import { localizeArenaTopic } from "@/lib/arena/topics-i18n";
+import { getServerLocale } from "@/lib/locale-server";
+import { t } from "@/lib/translations";
 import PvpMatchClient from "./pvp-match-client";
 
 export const metadata: Metadata = {
@@ -36,6 +39,7 @@ export default async function PvpMatchPage({
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect(`/login?next=/arena/pvp/${id}`);
+  const locale = await getServerLocale();
 
   const { data: session } = await supabase
     .from("arena_sessions")
@@ -53,6 +57,7 @@ export default async function PvpMatchPage({
 
   const topic = getArenaTopic(session.topic_slug);
   if (!topic) notFound();
+  const lzTopic = localizeArenaTopic(topic, locale);
 
   // Look up display names for both players.
   const ids = [session.user_id];
@@ -80,9 +85,9 @@ export default async function PvpMatchPage({
     return (
       <main className="mx-auto max-w-[600px] px-6 pt-20 text-center">
         <p style={{ fontFamily: "Cormorant Garamond, Georgia, serif" }}>
-          That match isn't open and you're not a participant.
+          {t("arena.pvp_not_participant", locale)}
         </p>
-        <Link href="/arena/pvp">◂ Back to PvP</Link>
+        <Link href="/arena/pvp">{t("arena.pvp_back_to_pvp", locale)}</Link>
       </main>
     );
   }
@@ -101,24 +106,25 @@ export default async function PvpMatchPage({
             textTransform: "uppercase",
           }}
         >
-          ◂ PVP
+          {t("arena.pvp_back", locale)}
         </Link>
       </div>
       <PvpMatchClient
         sessionId={id}
+        locale={locale}
         status={session.status as "pending_opponent" | "active" | "judged" | "abandoned"}
-        topicTitle={topic.title}
-        topicPrompt={topic.prompt}
-        topicPrimer={topic.primer}
+        topicTitle={lzTopic.title}
+        topicPrompt={lzTopic.prompt}
+        topicPrimer={lzTopic.primer}
         iAmChallenger={iAmChallenger}
         iAmOpponent={iAmOpponent}
         challengerLabel={
           challengerProfile?.display_name ||
-          (challengerProfile?.handle ? `@${challengerProfile.handle}` : "Challenger")
+          (challengerProfile?.handle ? `@${challengerProfile.handle}` : t("arena.pvp_challenger", locale))
         }
         opponentLabel={
           opponentProfile?.display_name ||
-          (opponentProfile?.handle ? `@${opponentProfile.handle}` : "Opponent")
+          (opponentProfile?.handle ? `@${opponentProfile.handle}` : t("arena.pvp_opponent", locale))
         }
         challengerElo={session.user_elo_at_start}
         opponentElo={session.opponent_elo_at_start}
