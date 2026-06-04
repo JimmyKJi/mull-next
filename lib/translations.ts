@@ -425,7 +425,7 @@ export const TRANSLATIONS: TranslationMap = {
   "profile.map_em": { en: "map", es: "mapa", fr: "carte", pt: "mapa", ru: "картой", zh: "星图", ja: "地図", ko: "지도" },
   "profile.subtitle_html": { en: "Pick a handle, choose what's visible, and your profile becomes shareable at {code}. You can delete it any time.", es: "Elige un nombre de usuario, decide qué se ve y tu perfil será compartible en {code}. Puedes eliminarlo cuando quieras.", fr: "Choisis un identifiant, décide ce qui est visible, et ton profil devient partageable à {code}. Tu peux le supprimer à tout moment.", pt: "Escolha um apelido, decida o que fica visível e seu perfil poderá ser compartilhado em {code}. Você pode excluí-lo a qualquer momento.", ru: "Выберите псевдоним, укажите, что будет видно, — и ваш профиль станет доступен по адресу {code}. Удалить его можно в любой момент.", zh: "设置一个用户名，选择可见内容，你的主页便可通过 {code} 分享给他人。随时可以删除。", ja: "ハンドルを決め、公開する内容を選ぶと、{code} でプロフィールを共有できるようになります。いつでも削除できます。", ko: "핸들을 정하고 공개할 항목을 선택하면, {code}에서 공유 가능한 프로필이 만들어집니다. 언제든지 삭제할 수 있습니다." },
   "profile.handle": { en: "Handle", es: "Nombre de usuario", fr: "Identifiant", pt: "Apelido", ru: "Псевдоним", zh: "用户名", ja: "ハンドル", ko: "핸들" },
-  "profile.handle_placeholder": { en: "your-handle", es: "tu-nombre", fr: "ton-identifiant", pt: "seu-apelido", ru: "ваш-псевдоним", zh: "your-handle", ja: "your-handle", ko: "your-handle" },
+  "profile.handle_placeholder": { en: "your-handle", es: "tu-nombre", fr: "ton-identifiant", pt: "seu-apelido", ru: "ваш-псевдоним", zh: "你的用户名", ja: "your-handle", ko: "your-handle" },
   "profile.handle_invalid": { en: "3-32 chars: lowercase letters, numbers, underscore, dash.", es: "3-32 caracteres: letras minúsculas, números, guión bajo, guión.", fr: "3-32 caractères : lettres minuscules, chiffres, underscore, tiret.", pt: "3-32 caracteres: letras minúsculas, números, sublinhado, hífen.", ru: "3–32 символа: строчные буквы, цифры, нижнее подчёркивание, дефис.", zh: "3–32 个字符：小写字母、数字、下划线或连字符。", ja: "3〜32文字：小文字の英字、数字、アンダースコア、ハイフンのみ。", ko: "3~32자, 소문자·숫자·밑줄·하이픈만 사용 가능합니다." },
   "profile.display_name": { en: "Display name (optional)", es: "Nombre visible (opcional)", fr: "Nom affiché (facultatif)", pt: "Nome de exibição (opcional)", ru: "Отображаемое имя (необязательно)", zh: "显示名称（可选）", ja: "表示名（任意）", ko: "표시 이름 (선택)" },
   "profile.display_placeholder": { en: "What you'd like to be called", es: "Cómo quieres que te llamen", fr: "Comment tu veux être appelé·e", pt: "Como você gostaria de ser chamado", ru: "Как вас называть", zh: "你希望被如何称呼", ja: "呼ばれたい名前", ko: "불리고 싶은 이름" },
@@ -1218,6 +1218,7 @@ export const TRANSLATIONS: TranslationMap = {
   "compare.their_handle":       { en: "THEIR HANDLE", zh: "对方的用户名" },
   "compare.submit":             { en: "COMPARE", zh: "对照" },
   "compare.picker_footer":      { en: "Both users need a public profile (Account → Public profile settings → toggle on) for the comparison to work. Per-field visibility (archetype, dimensions, etc.) is respected.", zh: "双方都需要公开资料（账户 → 公开资料设置 → 开启）才能进行对照。按字段的可见性（原型、维度等）将被尊重。" },
+  "compare.eg":                 { en: "e.g. {name}", zh: "例如 {name}" },
 
   // ─── /quiz/journey — "The Inheritor" narrative-quiz chrome ───
   // (The scenes + the ten reveal endings themselves live in

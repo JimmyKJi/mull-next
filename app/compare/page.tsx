@@ -536,7 +536,7 @@ function ComparePicker({ initialYou, initialThem, locale }: { initialYou: string
               type="text"
               name="you"
               defaultValue={initialYou}
-              placeholder="e.g. jimmy"
+              placeholder={t('compare.eg', locale, { name: 'jimmy' })}
               required
               className="border-2 border-[#221E18] bg-[#FFFCF4] px-3 py-2.5 text-[16px] text-[#221E18] focus:bg-[#F8EDC8] focus:outline-none"
               style={{ fontFamily: 'var(--font-prose)' }}
@@ -551,7 +551,7 @@ function ComparePicker({ initialYou, initialThem, locale }: { initialYou: string
               type="text"
               name="them"
               defaultValue={initialThem}
-              placeholder="e.g. alice"
+              placeholder={t('compare.eg', locale, { name: 'alice' })}
               required
               className="border-2 border-[#221E18] bg-[#FFFCF4] px-3 py-2.5 text-[16px] text-[#221E18] focus:bg-[#F8EDC8] focus:outline-none"
               style={{ fontFamily: 'var(--font-prose)' }}

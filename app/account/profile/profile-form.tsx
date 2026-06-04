@@ -129,7 +129,7 @@ export default function ProfileForm({ initial, userEmail, locale = 'en' }: { ini
             type="text"
             value={handle}
             onChange={e => setHandle(e.target.value.toLowerCase())}
-            placeholder="your-handle"
+            placeholder={t('profile.handle_placeholder', locale)}
             maxLength={32}
             style={{ ...inputStyle, fontFamily: serif, fontStyle: 'italic', fontSize: 18 }}
           />
