@@ -15,6 +15,9 @@ import { localizeTopic } from '@/lib/topics-i18n';
 import { t } from '@/lib/translations';
 import { PixelPageHeader } from '@/components/pixel-window';
 import { getServerLocale } from '@/lib/locale-server';
+import { createClient } from '@/utils/supabase/server';
+import { getUserOrientation } from '@/lib/user-orientation';
+import { rankByDimensionFocus } from '@/lib/recommendations';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-prose)";
@@ -46,7 +49,28 @@ function pickFeaturedTopic() {
 export default async function TopicIndexPage() {
   const locale = await getServerLocale();
   const groups = topicsByCategory();
-  const featured = localizeTopic(pickFeaturedTopic(), locale);
+
+  // Featured topic: for a placed user, "the question that lives where you
+  // do" — the topic whose probed dimensions are the ones they load most
+  // distinctively on (mean-centered against their own baseline). Logged-out
+  // / unplaced visitors and crawlers have no vector, so this is [] and we
+  // fall back to the day-of-year pick: the public/SEO output is unchanged.
+  // This page already reads cookies via getServerLocale, so the auth read
+  // adds no caching penalty.
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const orientation = await getUserOrientation(supabase, user?.id ?? null);
+  const focusRanked = rankByDimensionFocus(
+    orientation.vector,
+    TOPICS,
+    (tp) => tp.relevantDimensions,
+    1,
+  );
+  const featuredPersonalized = focusRanked.length > 0;
+  const featured = localizeTopic(
+    featuredPersonalized ? focusRanked[0].item : pickFeaturedTopic(),
+    locale,
+  );
 
   return (
     <main className="mx-auto max-w-[920px] px-5 pb-32 pt-10 sm:px-10">
@@ -70,7 +94,9 @@ export default async function TopicIndexPage() {
           textTransform: 'uppercase',
           marginBottom: 8,
         }}>
-          ◇ {t('topic.featured_today', locale)}
+          ◇ {featuredPersonalized
+            ? t('topic.featured_for_you', locale)
+            : t('topic.featured_today', locale)}
         </div>
         <Link
           href={`/topic/${featured.slug}`}
@@ -108,6 +134,18 @@ export default async function TopicIndexPage() {
           }}>
             {featured.summary}
           </p>
+          {featuredPersonalized && (
+            <p style={{
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: 14.5,
+              color: '#6B7F4F',
+              margin: '0 0 12px',
+              lineHeight: 1.5,
+            }}>
+              {t('topic.featured_for_you_note', locale)}
+            </p>
+          )}
           <span style={{
             fontFamily: pixel,
             fontSize: 10,

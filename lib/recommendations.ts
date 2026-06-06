@@ -69,6 +69,50 @@ export function nearestPhilosophersToVector(
   return rankByVector(userVec, PHILOSOPHERS, (p) => p.vector, n);
 }
 
+/** Rank "subject-matter" items — ones defined by the DIMENSIONS they
+ *  probe rather than by a position in the space (e.g. topics, whose
+ *  `relevantDimensions` declare what the concept is ABOUT) — by how
+ *  strongly the user loads on those dimensions relative to their OWN
+ *  average.
+ *
+ *  Mean-centering is the whole point. A topic has subject matter, not a
+ *  stance, so cosine-to-a-topic-vector is the wrong question; the right
+ *  one is "is this about the axes that stand out in YOU?" Raw loadings
+ *  would just resurface whatever axes everyone scores high on; centering
+ *  by the user's own mean surfaces the item about the dimensions that
+ *  most DISTINGUISH this user — "the question that lives where you do."
+ *  A positive score means the item's dimensions sit above your personal
+ *  baseline; negative means below it.
+ *
+ *  Items with no (resolvable) dimensions are skipped. Returns [] when the
+ *  user vector is absent/invalid — caller should fall back to a
+ *  non-personalized pick. */
+export function rankByDimensionFocus<T>(
+  userVec: number[] | null | undefined,
+  items: readonly T[],
+  getDims: (item: T) => readonly DimKey[],
+  n?: number,
+): Ranked<T>[] {
+  if (!isVec16(userVec)) return [];
+  const mean = userVec.reduce((s, x) => s + x, 0) / userVec.length;
+  const out: Ranked<T>[] = [];
+  for (const item of items) {
+    const dims = getDims(item);
+    let acc = 0;
+    let count = 0;
+    for (const k of dims) {
+      const i = DIM_KEYS.indexOf(k);
+      if (i < 0) continue;
+      acc += userVec[i] - mean;
+      count++;
+    }
+    if (count === 0) continue;
+    out.push({ item, sim: acc / count });
+  }
+  out.sort((a, b) => b.sim - a.sim);
+  return typeof n === 'number' ? out.slice(0, n) : out;
+}
+
 // ─────────────────────────────────────────────────────────────────────
 // Question-aware ranking — proximity that counts the dimensions a given
 // question probes more heavily than the rest. Powers the Wandering

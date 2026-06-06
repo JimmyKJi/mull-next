@@ -2068,6 +2068,8 @@ export const TRANSLATIONS: TranslationMap = {
   "topic.title": { en: "TOPICS IN PHILOSOPHY", zh: "哲学主题" },
   "topic.subtitle": { en: "{count} short primers on the questions philosophers keep returning to. Each ends with a way to find where you sit.", zh: "{count} 篇简明导读，带你走进哲学家反复追问的那些问题。每一篇的结尾，都有一种方式帮你找到自己的位置。" },
   "topic.featured_today": { en: "Featured today", zh: "今日精选" },
+  "topic.featured_for_you": { en: "The question that lives where you do", zh: "栖居于你坐标之处的那个问题" },
+  "topic.featured_for_you_note": { en: "Of all the questions here, this one sits on the dimensions that most define you.", zh: "在这里的所有问题中，唯有这一个，正落在最能定义你的那些维度上。" },
   "topic.read": { en: "READ", zh: "阅读" },
   "topic.cta_body": { en: "Not sure where you sit on any of this yet? Take the 5-minute Inheritor quiz — it places you on the map and tells you which philosophers think most like you.", zh: "还不确定自己在这一切之中身处何方？花五分钟做一做“传承者”测验——它会把你标定在地图上，并告诉你哪些哲学家与你的思考方式最为相近。" },
   "topic.cta_button": { en: "Take the quiz", zh: "开始测验" },
