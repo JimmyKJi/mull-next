@@ -9,7 +9,7 @@
 // product leans on wherever a user vector is available.
 
 import { cos } from './vectors';
-import { DIM_KEYS } from './dimensions';
+import { DIM_KEYS, type DimKey } from './dimensions';
 import { PHILOSOPHERS, type PhilosopherEntry } from './philosophers';
 
 export type Ranked<T> = { item: T; sim: number };
@@ -67,4 +67,127 @@ export function nearestPhilosophersToVector(
   n = 6,
 ): Ranked<PhilosopherEntry>[] {
   return rankByVector(userVec, PHILOSOPHERS, (p) => p.vector, n);
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// Question-aware ranking — proximity that counts the dimensions a given
+// question probes more heavily than the rest. Powers the Wandering
+// feature's "kindred / far" beats, where the contrast we want is "near
+// you ON WHAT THIS QUESTION IS ABOUT," not generic global proximity.
+// ─────────────────────────────────────────────────────────────────────
+
+/** Per-dimension weights: the `touched` dimensions get weight `boost`,
+ *  the rest 1. Folds a question's focus into an otherwise-uniform metric. */
+function dimWeights(touched: readonly DimKey[], boost: number): number[] {
+  const set = new Set(touched);
+  return DIM_KEYS.map((k) => (set.has(k) ? boost : 1));
+}
+
+/** Weighted cosine similarity: ordinary cosine after scaling each
+ *  dimension by sqrt(weight). Scaling by sqrt(w) is the standard way to
+ *  fold per-axis weights into a cosine while keeping it a proper
+ *  normalized similarity (the weight then appears linearly inside the
+ *  dot product and the norms). */
+function weightedCos(a: number[], b: number[], weights: number[]): number {
+  const sa = a.map((x, i) => x * Math.sqrt(weights[i]));
+  const sb = b.map((x, i) => x * Math.sqrt(weights[i]));
+  return cos(sa, sb);
+}
+
+/** Of a question's touched dimensions, the single one that best explains
+ *  a pick in human terms:
+ *    - 'shared'    → where the two vectors lean the same way most strongly
+ *                    (largest product) — "you both go hard on this."
+ *    - 'divergent' → where they split hardest (largest absolute gap) —
+ *                    "this is where you part ways."
+ *  Returns null when there are no touched dimensions. Robust to the
+ *  model's non-negative magnitude convention either way. */
+export function touchAxis(
+  userVec: number[],
+  otherVec: number[],
+  touched: readonly DimKey[],
+  mode: 'shared' | 'divergent',
+): DimKey | null {
+  let best: DimKey | null = null;
+  let bestScore = -Infinity;
+  for (const k of touched) {
+    const i = DIM_KEYS.indexOf(k);
+    if (i < 0) continue;
+    const score =
+      mode === 'shared'
+        ? userVec[i] * otherVec[i]
+        : Math.abs(userVec[i] - otherVec[i]);
+    if (score > bestScore) {
+      bestScore = score;
+      best = k;
+    }
+  }
+  return best;
+}
+
+/** One philosopher surfaced for a wandering beat, paired with the
+ *  question-weighted similarity and the touched dimension that best
+ *  explains the pick (for a "near you on X" / "you split on X" label). */
+export type WanderingPick = {
+  philosopher: PhilosopherEntry;
+  sim: number;
+  axis: DimKey | null;
+};
+
+export type WanderingPicks = {
+  /** Nearest the user, question-weighted — the Wednesday "kindred" beat. */
+  kindred: WanderingPick[];
+  /** The single most-distant philosopher by the same question-weighted
+   *  metric — the Friday "far" beat. null when no user vector. */
+  far: WanderingPick | null;
+};
+
+/** Pick the philosophers a wandering question surfaces across the week:
+ *  `kindred` (near you, question-weighted) for Wednesday and a single
+ *  `far` (the question-weighted opposite) for Friday.
+ *
+ *  Question-aware by design: `touches` (the dimensions the question most
+ *  tests) are weighted up, so the kindred are near you *on what this
+ *  question is about* and the far voice disagrees with you *there* too —
+ *  a sharper, more relevant contrast than a generic global opposite.
+ *
+ *  Returns empties when the user vector is absent/invalid; the caller
+ *  then falls back to a non-personalized invitation (e.g. "take the
+ *  quiz to meet the minds nearest you"). */
+export function pickWanderingPhilosophers(
+  userVec: number[] | null | undefined,
+  touches: readonly DimKey[],
+  opts?: { kindredN?: number; boost?: number },
+): WanderingPicks {
+  if (!isVec16(userVec)) return { kindred: [], far: null };
+  const u = userVec;
+  const kindredN = opts?.kindredN ?? 2;
+  // Mild boost: a touched dim counts ~sqrt(2)× its usual voice — enough to
+  // make the pick question-aware without letting 3 axes drown the other 13.
+  const boost = opts?.boost ?? 2;
+  const weights = dimWeights(touches, boost);
+
+  const ranked: { p: PhilosopherEntry; sim: number }[] = [];
+  for (const p of PHILOSOPHERS) {
+    if (!isVec16(p.vector)) continue;
+    ranked.push({ p, sim: weightedCos(u, p.vector, weights) });
+  }
+  ranked.sort((a, b) => b.sim - a.sim);
+
+  const kindred: WanderingPick[] = ranked.slice(0, kindredN).map(({ p, sim }) => ({
+    philosopher: p,
+    sim,
+    axis: touchAxis(u, p.vector, touches, 'shared'),
+  }));
+
+  const last = ranked.length ? ranked[ranked.length - 1] : null;
+  const far: WanderingPick | null = last
+    ? {
+        philosopher: last.p,
+        sim: last.sim,
+        axis: touchAxis(u, last.p.vector, touches, 'divergent'),
+      }
+    : null;
+
+  return { kindred, far };
 }
