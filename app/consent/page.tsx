@@ -10,7 +10,10 @@ import Link from "next/link";
 import { PixelWindow, PixelPageHeader } from "@/components/pixel-window";
 import { t, type Locale } from "@/lib/translations";
 import { getServerLocale } from "@/lib/locale-server";
+import { createClient } from "@/utils/supabase/server";
+import { DEMOGRAPHIC_FIELDS, type DemographicValues } from "@/lib/demographics";
 import ConsentToggle from "./consent-toggle";
+import DemographicsForm from "@/components/demographics-form";
 
 export const metadata: Metadata = {
   title: "Research consent · Mull",
@@ -21,6 +24,32 @@ export const metadata: Metadata = {
 
 export default async function ConsentPage() {
   const locale = await getServerLocale();
+
+  // Optional demographics editor — only surfaced for signed-in, opted-in
+  // users. research_demographics holds consented data only, and anonymous
+  // users have no row to attach it to. `demographics` stays null otherwise,
+  // which hides the window entirely.
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let demographics: DemographicValues | null = null;
+  if (user) {
+    const { data: consentRow } = await supabase
+      .from("research_consent")
+      .select("consent")
+      .eq("user_id", user.id)
+      .maybeSingle();
+    if (consentRow?.consent === "yes") {
+      const { data: demoRow } = await supabase
+        .from("research_demographics")
+        .select(DEMOGRAPHIC_FIELDS.join(","))
+        .eq("user_id", user.id)
+        .maybeSingle();
+      demographics = (demoRow ?? {}) as DemographicValues;
+    }
+  }
+
   return (
     <main className="mx-auto max-w-[760px] px-6 pb-32 pt-12 sm:px-10 sm:pt-16">
       <PixelPageHeader
@@ -45,6 +74,24 @@ export default async function ConsentPage() {
         >
           <ConsentToggle locale={locale} />
         </PixelWindow>
+
+        {demographics && (
+          <PixelWindow
+            title={t("demo.win_title", locale)}
+            badge={t("demo.win_badge", locale)}
+          >
+            <Prose>
+              <p>{t("demo.section_intro", locale)}</p>
+            </Prose>
+            <div className="mt-4">
+              <DemographicsForm
+                locale={locale}
+                initial={demographics}
+                variant="page"
+              />
+            </div>
+          </PixelWindow>
+        )}
 
         <PixelWindow
           title={t("consent.win_short_title", locale)}

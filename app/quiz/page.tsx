@@ -5,6 +5,7 @@
 
 import type { Metadata, Viewport } from "next";
 import { getServerLocale } from "@/lib/locale-server";
+import { createClient } from "@/utils/supabase/server";
 import { QUICK_QUESTIONS } from "@/lib/quiz-questions";
 import { DETAILED_QUESTIONS } from "@/lib/quiz-questions-detailed";
 import { QuizEngine } from "./quiz-engine";
@@ -33,12 +34,19 @@ export default async function QuizPage({
   const questions = mode === "detailed" ? DETAILED_QUESTIONS : QUICK_QUESTIONS;
   const locale = await getServerLocale();
 
+  // Auth state drives the gate's optional post-opt-in demographics step:
+  // only signed-in users see it, since anonymous answers can't be saved.
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
     <main className="min-h-[100svh] bg-[#FAF6EC] text-[#221E18]">
       {/* First-time visitors see the research-consent screen; once
           they've decided (yes or no), the gate becomes a no-op and
           renders the quiz directly. */}
-      <ResearchConsentGate>
+      <ResearchConsentGate isLoggedIn={!!user} locale={locale}>
         <QuizEngine questions={questions} mode={mode} locale={locale} />
       </ResearchConsentGate>
     </main>

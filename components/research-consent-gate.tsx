@@ -25,25 +25,40 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { t, type Locale, isLocale } from "@/lib/translations";
+import DemographicsForm from "@/components/demographics-form";
 
 const STORAGE_KEY = "mull.research_consent";
+// Remembers that we've shown the one-time optional demographics step after
+// opt-in, so we don't re-prompt on every subsequent quiz start.
+const DEMO_PROMPTED_KEY = "mull.research_demographics_prompted";
 
 export type ResearchConsent = "yes" | "no";
 
 type Props = {
   children: React.ReactNode;
+  /** Whether a Supabase session exists. Only logged-in users see the
+   *  optional demographics step (anonymous answers can't be persisted). */
+  isLoggedIn?: boolean;
+  /** Server-resolved locale, so the gate renders in-language on first
+   *  paint. Falls back to the mull_locale cookie, then English. */
+  locale?: Locale;
 };
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-editorial), Georgia, serif";
 
-export function ResearchConsentGate({ children }: Props) {
-  // Hydration-safe state. Start as "decided" so the SSR'd children
-  // render briefly before we check localStorage and possibly show
-  // the consent overlay. Avoids a layout-shift flash on every page
-  // load by checking and hiding in a single effect tick.
-  const [decision, setDecision] = useState<ResearchConsent | "loading" | "needed">("loading");
-  const [locale, setLocale] = useState<Locale>("en");
+type Phase = "loading" | "consent" | "demographics" | "done";
+
+export function ResearchConsentGate({
+  children,
+  isLoggedIn = false,
+  locale: localeProp,
+}: Props) {
+  // Hydration-safe. Start "loading" and render nothing until we've read
+  // localStorage in an effect, so there's no flash of the consent overlay
+  // on a page the user already decided on.
+  const [phase, setPhase] = useState<Phase>("loading");
+  const [locale, setLocale] = useState<Locale>(localeProp ?? "en");
 
   useEffect(() => {
     const m = document.cookie.match(/(?:^|; )mull_locale=([^;]+)/);
@@ -54,15 +69,11 @@ export function ResearchConsentGate({ children }: Props) {
   useEffect(() => {
     try {
       const stored = window.localStorage.getItem(STORAGE_KEY);
-      if (stored === "yes" || stored === "no") {
-        setDecision(stored);
-      } else {
-        setDecision("needed");
-      }
+      setPhase(stored === "yes" || stored === "no" ? "done" : "consent");
     } catch {
-      // localStorage blocked (private browsing edge case) — just let
-      // the user through without consent capture.
-      setDecision("needed");
+      // localStorage blocked (private browsing edge case) — just let the
+      // user through without consent capture.
+      setPhase("done");
     }
   }, []);
 
@@ -79,21 +90,43 @@ export function ResearchConsentGate({ children }: Props) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ research_consent: choice }),
     }).catch(() => {});
-    setDecision(choice);
+
+    // After a logged-in user opts IN, offer the optional demographics step
+    // once. Everyone else (opted out, anonymous, or already prompted) goes
+    // straight to the quiz.
+    if (choice === "yes" && isLoggedIn && !demographicsPrompted()) {
+      setPhase("demographics");
+    } else {
+      setPhase("done");
+    }
   }
 
-  if (decision === "loading") {
-    // Render nothing during the brief hydration window. Prevents a
-    // flash of the underlying gate before we know whether to show
-    // the consent screen.
-    return null;
+  function finishDemographics() {
+    try {
+      window.localStorage.setItem(DEMO_PROMPTED_KEY, "1");
+    } catch {
+      // ignore
+    }
+    setPhase("done");
   }
 
-  if (decision === "needed") {
+  if (phase === "loading") return null;
+  if (phase === "consent") {
     return <ConsentScreen onDecide={record} locale={locale} />;
   }
-
+  if (phase === "demographics") {
+    return <DemographicsStep onDone={finishDemographics} locale={locale} />;
+  }
   return <>{children}</>;
+}
+
+/** Have we already shown the one-time post-opt-in demographics step? */
+function demographicsPrompted(): boolean {
+  try {
+    return window.localStorage.getItem(DEMO_PROMPTED_KEY) === "1";
+  } catch {
+    return false;
+  }
 }
 
 function ConsentScreen({
@@ -242,6 +275,80 @@ function ConsentScreen({
               {t("consent.gate_read_full", locale)}
             </Link>
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Optional demographics step — shown once, right after a logged-in user
+// opts in. Reuses the same dark-overlay + cream-card chrome as the consent
+// screen. Never a hard block: "Skip for now" proceeds straight to the quiz.
+function DemographicsStep({
+  onDone,
+  locale,
+}: {
+  onDone: () => void;
+  locale: Locale;
+}) {
+  return (
+    <div
+      style={{
+        background: "#26201A",
+        minHeight: "100svh",
+        padding: "60px 18px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <div style={{ maxWidth: 580, width: "100%" }}>
+        <div
+          style={{
+            background: "#FFFCF4",
+            border: "4px solid #221E18",
+            boxShadow: "6px 6px 0 0 #B8862F",
+            padding: "32px 30px",
+          }}
+        >
+          <div
+            style={{
+              fontFamily: pixel,
+              fontSize: 10,
+              color: "#8C6520",
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              marginBottom: 14,
+            }}
+          >
+            {t("demo.win_badge", locale)}
+          </div>
+          <h1
+            style={{
+              fontFamily: pixel,
+              fontSize: 18,
+              color: "#221E18",
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+              lineHeight: 1.2,
+              margin: "0 0 12px",
+              textShadow: "3px 3px 0 #B8862F",
+            }}
+          >
+            {t("demo.gate_title", locale)}
+          </h1>
+          <p
+            style={{
+              fontFamily: serif,
+              fontSize: 15.5,
+              color: "#4A4338",
+              lineHeight: 1.6,
+              margin: "0 0 22px",
+            }}
+          >
+            {t("demo.gate_intro", locale)}
+          </p>
+          <DemographicsForm locale={locale} variant="gate" onDone={onDone} />
         </div>
       </div>
     </div>

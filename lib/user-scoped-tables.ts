@@ -286,6 +286,13 @@ export const USER_SCOPED_TABLES: readonly UserScopedTable[] = [
     inExport: true,
     note: 'Per-question quiz answer trail, captured only for opted-in users. Backs the /admin/research distributions. Wiped on delete; included in export so users can audit what was recorded.',
   },
+  {
+    name: 'research_demographics',
+    deleteStrategy: 'wipe',
+    inExport: true,
+    singleton: true,
+    note: 'Optional self-reported demographics (age range / gender / cultural background / education / religion) shared by research-consented users. One row per user, every field nullable. Wiped on delete; included in export so a user can see and erase exactly what they shared. See supabase/migrations/20260606_research_demographics.sql + lib/demographics.ts.',
+  },
 ] as const;
 
 // ─── Derived accessors ──────────────────────────────────────────────
