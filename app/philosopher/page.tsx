@@ -14,6 +14,9 @@ import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import { PixelPageHeader, PixelWindow } from '@/components/pixel-window';
 import { philosophersWithBios } from '@/lib/philosopher-bios';
+import { createClient } from '@/utils/supabase/server';
+import { getUserOrientation } from '@/lib/user-orientation';
+import { nearestPhilosophersToVector } from '@/lib/recommendations';
 
 export const metadata: Metadata = {
   title: 'All philosophers — 560 thinkers, 10 archetypes',
@@ -47,6 +50,21 @@ export default async function PhilosopherIndexPage() {
   // Localize display fields (name/dates/keyIdea); the English name still
   // drives the URL slug, the sprite seed, and the alphabetical sort.
   const loc = (e: PhilosopherEntry) => localizePhilosopher(e, philosopherSlug(e.name), locale);
+
+  // Personalized "nearest you" row: for a placed user, rank all
+  // philosophers by cosine similarity to their own 16-D coordinates and
+  // surface the six closest. Logged-out / unplaced visitors — and crawlers
+  // — get no vector, so the list is empty and the section simply doesn't
+  // render: the public/SEO output is byte-for-byte unchanged. This page
+  // already reads cookies via getServerLocale, so the auth read here adds
+  // no caching penalty.
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const orientation = await getUserOrientation(supabase, user?.id ?? null);
+  const nearestToYou = orientation.vector
+    ? nearestPhilosophersToVector(orientation.vector, 6).map((r) => r.item)
+    : [];
+
   const featured = pickFeaturedProfile();
   const bioSlugs = philosophersWithBios();
   const featuredList = bioSlugs
@@ -78,6 +96,74 @@ export default async function PhilosopherIndexPage() {
           </div>
         }
       />
+
+      {/* Personalized: the six philosophers nearest the user's OWN 16-D
+          coordinates, ranked by cosine similarity. Only rendered for a
+          placed (quiz-taken) user; absent for everyone else. */}
+      {nearestToYou.length > 0 ? (
+        <section className="mb-8">
+          <div
+            className="mb-2 text-[10px] tracking-[0.18em] text-[#8C6520]"
+            style={{ fontFamily: "var(--font-pixel-display)", textTransform: 'uppercase' }}
+          >
+            ◆ {t('philindex.nearest_you', locale)}
+          </div>
+          <p className="mb-3 text-[13px] italic text-[#4A4338]" style={{ fontFamily: 'var(--font-editorial)' }}>
+            {t('philindex.nearest_you_helper', locale, { n: PHILOSOPHERS.length })}
+          </p>
+          <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3">
+            {nearestToYou.map((p) => {
+              const color = getArchetypeColor(p.archetypeKey);
+              return (
+                <li key={p.name}>
+                  <Link
+                    href={`/philosopher/${philosopherSlug(p.name)}`}
+                    className="pixel-press flex items-start gap-3 border-2 px-3 py-2.5 transition-all hover:translate-x-[-1px] hover:translate-y-[-1px]"
+                    style={{
+                      borderColor: '#221E18',
+                      background: '#FFFCF4',
+                      boxShadow: `3px 3px 0 0 ${color.deep}`,
+                      textDecoration: 'none',
+                      color: 'inherit',
+                    }}
+                  >
+                    <div
+                      className="shrink-0 border-2 p-1"
+                      style={{ borderColor: color.deep, background: '#FBFAF2' }}
+                      aria-hidden
+                    >
+                      <PhilosopherSprite name={p.name} archetypeKey={p.archetypeKey} size={40} />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div
+                        className="text-[14.5px] font-medium leading-tight text-[#221E18]"
+                        style={{ fontFamily: 'var(--font-prose)' }}
+                      >
+                        {loc(p).name}
+                      </div>
+                      <div className="mt-0.5 text-[10.5px] tracking-wide text-[#8C6520]">
+                        {loc(p).dates}
+                      </div>
+                      <p
+                        className="mt-1 text-[12px] italic leading-snug text-[#4A4338]"
+                        style={{
+                          fontFamily: 'var(--font-editorial)',
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        {loc(p).keyIdea}
+                      </p>
+                    </div>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      ) : null}
 
       {/* Featured profile rotates daily — links into a long-form bio
           page (~300 words of editorial content per philosopher). */}
