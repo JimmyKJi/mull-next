@@ -32,6 +32,14 @@ import {
   REGION_LOCALES,
   type LocaleRegion,
 } from '@/lib/locale-region';
+import {
+  DEMOGRAPHIC_FIELDS,
+  DEMOGRAPHIC_OPTIONS,
+  fieldLabelKey,
+  optionLabelKey,
+  type DemographicField,
+} from '@/lib/demographics';
+import { t } from '@/lib/translations';
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
@@ -72,6 +80,48 @@ type RegionAgg = {
   dimN: number;
   arch: [string, number][];
 };
+
+// ── Optional self-reported demographics (research_demographics) ─────
+// One row per opted-in user who shared anything; every field nullable.
+type DemoRow = Partial<Record<DemographicField, string | null>>;
+type DemoDist = { code: string; label: string; count: number };
+type DemoFieldAgg = {
+  field: DemographicField;
+  label: string;
+  answered: number; // rows with a non-null value (incl. prefer_not_to_say)
+  notShared: number; // rows left blank for this field
+  dist: DemoDist[]; // canonical-order distribution across the field's options
+};
+type DemographicsAgg = { total: number; coverage: number; fields: DemoFieldAgg[] };
+
+// Tally the consented demographics rows into a per-field distribution. English
+// labels via the demo.* i18n keys; aggregate counts only, never a user_id.
+// `notShared` (NULL) is kept distinct from a 'prefer_not_to_say' answer.
+function aggregateDemographics(rows: DemoRow[], optIn: number): DemographicsAgg {
+  const fields: DemoFieldAgg[] = DEMOGRAPHIC_FIELDS.map((field) => {
+    const counts: Record<string, number> = {};
+    let answered = 0;
+    let notShared = 0;
+    for (const row of rows) {
+      const v = row[field];
+      if (v == null || v === '') {
+        notShared++;
+        continue;
+      }
+      answered++;
+      counts[v] = (counts[v] || 0) + 1;
+    }
+    const dist: DemoDist[] = DEMOGRAPHIC_OPTIONS[field].map((code) => ({
+      code,
+      label: t(optionLabelKey(code), 'en'),
+      count: counts[code] || 0,
+    }));
+    return { field, label: t(fieldLabelKey(field), 'en'), answered, notShared, dist };
+  });
+  const total = rows.length;
+  const coverage = optIn > 0 ? Math.round((total / optIn) * 100) : 0;
+  return { total, coverage, fields };
+}
 
 // Roll a slice of research rows up into the aggregate figures the region
 // comparison renders. Mirrors the overall-corpus math, scoped to a bucket.
@@ -132,6 +182,7 @@ async function loadResearch() {
     attemptsTotal,
     researchRows,
     researchTotal,
+    demoRowsRes,
   ] = await Promise.all([
     admin.auth.admin.listUsers({ page: 1, perPage: 1000 }),
     admin.from('research_consent').select('consent').limit(5000),
@@ -144,6 +195,10 @@ async function loadResearch() {
     admin
       .from('research_quiz_responses')
       .select('*', { count: 'exact', head: true }),
+    admin
+      .from('research_demographics')
+      .select(DEMOGRAPHIC_FIELDS.join(', '))
+      .limit(20000),
   ]);
 
   // ── Consent overview ──────────────────────────────────────────────
@@ -199,9 +254,14 @@ async function loadResearch() {
     ...aggregateRows(buckets[region]),
   }));
 
+  // ── Optional demographics (opted-in users who shared general info) ─
+  const demoRows = (demoRowsRes.data as DemoRow[] | null) || [];
+  const demographics = aggregateDemographics(demoRows, optIn);
+
   return {
     consent: { optIn, optOut, undecided, decided, totalUsers, optInRate },
     regions,
+    demographics,
     corpus: {
       total: researchTotal.count ?? rows.length,
       quick: quickTrails.length,
@@ -336,6 +396,9 @@ export default async function ResearchAdminPage() {
           </p>
         )}
       </section>
+
+      {/* ── Optional demographics (opt-in self-reports) ──────────── */}
+      <DemographicsBreakdown data={d.demographics} />
 
       {/* ── By language region (Western / Eastern / Unknown) ─────── */}
       <section style={cardStyle('#3A5A6A')}>
@@ -993,6 +1056,104 @@ function RegionDimCompare({ regions }: { regions: RegionAgg[] }) {
         </div>
       )}
     </section>
+  );
+}
+
+// Per-field accent so each demographic band reads as its own group.
+const DEMO_FIELD_ACCENT: Record<DemographicField, string> = {
+  age_range: '#2F5D5C',
+  gender: '#7A2E5A',
+  cultural_group: '#7A4A2E',
+  education: '#5A3A6A',
+  religion: '#B8862F',
+};
+
+// Optional self-reported demographics, aggregate only. One band per field
+// (age / gender / cultural background / education / religion), each a
+// canonical-order distribution. "Not shared" (blank) is kept distinct from
+// "Prefer not to say" (an explicit decline counted as an answer).
+function DemographicsBreakdown({ data }: { data: DemographicsAgg }) {
+  return (
+    <section style={cardStyle('#5A3A6A')}>
+      <h2 style={sectionTitle}>▸ DEMOGRAPHICS</h2>
+      <p style={sectionSub}>
+        Optional self-reports from opted-in users.{' '}
+        {data.total.toLocaleString()} shared at least one field
+        {data.coverage > 0 ? ` (${data.coverage}% of opted-in users)` : ''}. Bars
+        show shares among those who answered each field.{' '}
+        <strong>Not shared</strong> = left blank; <strong>Prefer not to say</strong>{' '}
+        is an explicit decline, counted as an answer.
+      </p>
+      {data.total === 0 ? (
+        <p
+          style={{
+            fontFamily: serif,
+            fontStyle: 'italic',
+            color: '#8C6520',
+            margin: '16px 0 0',
+            fontSize: 14,
+          }}
+        >
+          No demographics shared yet. Once opted-in users fill in the optional
+          “general info” step, the breakdown appears here.
+        </p>
+      ) : (
+        <div style={{ marginTop: 14 }}>
+          {data.fields.map((f) => (
+            <DemoFieldBlock key={f.field} field={f} />
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
+
+function DemoFieldBlock({ field }: { field: DemoFieldAgg }) {
+  const accent = DEMO_FIELD_ACCENT[field.field];
+  return (
+    <div style={{ padding: '12px 0 14px', borderBottom: '2px dashed #D6CDB6' }}>
+      <div
+        style={{
+          fontFamily: pixel,
+          fontSize: 10,
+          color: '#8C6520',
+          letterSpacing: 0.4,
+          textTransform: 'uppercase',
+          marginBottom: 10,
+        }}
+      >
+        {field.label} · {field.answered} answered
+        {field.notShared > 0 ? ` · ${field.notShared} not shared` : ''}
+      </div>
+      {field.answered === 0 ? (
+        <div
+          style={{
+            fontFamily: serif,
+            fontStyle: 'italic',
+            fontSize: 13.5,
+            color: '#8C6520',
+          }}
+        >
+          No answers yet.
+        </div>
+      ) : (
+        field.dist.map((entry) => {
+          const pct =
+            field.answered > 0
+              ? Math.round((entry.count / field.answered) * 100)
+              : 0;
+          return (
+            <DistRow
+              key={entry.code}
+              label={entry.label}
+              barPct={pct}
+              right={`${entry.count} · ${pct}%`}
+              color={accent}
+            />
+          );
+        })
+      )}
+    </div>
   );
 }
 
