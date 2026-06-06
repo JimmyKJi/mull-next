@@ -12,6 +12,9 @@ import { localizeExercise } from '@/lib/exercises-i18n';
 import { t } from '@/lib/translations';
 import { getServerLocale } from '@/lib/locale-server';
 import { PixelPageHeader } from '@/components/pixel-window';
+import { createClient } from '@/utils/supabase/server';
+import { getUserOrientation } from '@/lib/user-orientation';
+import { rankByDimensionFocus } from '@/lib/recommendations';
 import type { Metadata } from 'next';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
@@ -52,7 +55,25 @@ function durationBucket(duration: string): { label: string; color: string } {
 
 export default async function ExercisesPage() {
   const locale = await getServerLocale();
-  const featured = pickFeaturedExercise();
+
+  // Featured practice: for a placed user, "the practice for where you stand"
+  // — the exercise whose worked dimensions are the ones they load most
+  // distinctively on (mean-centered against their own baseline). Logged-out
+  // / unplaced visitors and crawlers have no vector, so focusRanked is [] and
+  // we fall back to the day-of-year pick: the public/SEO output is unchanged.
+  // This page already reads cookies via getServerLocale, so the auth read
+  // adds no caching penalty.
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const orientation = await getUserOrientation(supabase, user?.id ?? null);
+  const focusRanked = rankByDimensionFocus(
+    orientation.vector,
+    EXERCISES,
+    (e) => e.relevantDimensions,
+    1,
+  );
+  const featuredPersonalized = focusRanked.length > 0;
+  const featured = featuredPersonalized ? focusRanked[0].item : pickFeaturedExercise();
   const featuredLocal = localizeExercise(featured, locale);
   const featuredBucket = durationBucket(featured.duration);
 
@@ -78,7 +99,9 @@ export default async function ExercisesPage() {
           textTransform: 'uppercase',
           marginBottom: 8,
         }}>
-          ◇ Try this today
+          ◇ {featuredPersonalized
+            ? t('exercises.featured_for_you', locale)
+            : t('exercises.try_today', locale)}
         </div>
         <Link
           href={`/exercises/${featured.slug}`}
@@ -135,6 +158,18 @@ export default async function ExercisesPage() {
           }}>
             {featuredLocal.summary}
           </p>
+          {featuredPersonalized && (
+            <p style={{
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: 14.5,
+              color: '#6B7F4F',
+              margin: '0 0 12px',
+              lineHeight: 1.5,
+            }}>
+              {t('exercises.featured_for_you_note', locale)}
+            </p>
+          )}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
             <span style={{
               fontFamily: sans,

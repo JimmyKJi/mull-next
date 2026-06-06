@@ -7,6 +7,8 @@
 // completion / let users save reflections, that storage layer goes in a
 // separate migration.
 
+import type { DimKey } from './dimensions';
+
 export type ExerciseCategory = 'contemplative' | 'logic' | 'argument';
 
 export const CATEGORY_META: Record<ExerciseCategory, { label: string; blurb: string; accent: string }> = {
@@ -37,11 +39,19 @@ export type Exercise = {
   about: string;          // 2–3 paragraphs
   steps: string[];        // numbered steps
   reflection: string;     // a closing prompt to consider after
+  /** The 16-D dimensions this practice most works/embodies — grounded in
+   *  its tradition + mechanism (a Stoic memento mori sits on TV/AT/MR; a
+   *  fallacy hunt on SR/TR/TD). Mirrors Topic.relevantDimensions, and lets
+   *  rankByDimensionFocus surface "the practice for where you stand" on the
+   *  /exercises featured slot. Keep to 2–3 — the dims that genuinely
+   *  characterize the practice, not every axis it brushes. */
+  relevantDimensions: DimKey[];
 };
 
 export const EXERCISES: Exercise[] = [
   {
     slug: 'premortem',
+    relevantDimensions: ['TV', 'PO', 'TR'],
     category: 'contemplative',
     name: 'Premortem',
     summary: 'Imagine the failure of your plan in vivid detail before you start.',
@@ -61,6 +71,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'negative-visualization',
+    relevantDimensions: ['TV', 'AT', 'VA'],
     category: 'contemplative',
     name: 'Negative visualization',
     summary: "Imagine losing what you have, briefly and concretely, to remember it's a gift.",
@@ -80,6 +91,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'socratic-self-questioning',
+    relevantDimensions: ['SR', 'TR', 'SS'],
     category: 'contemplative',
     name: 'Socratic self-questioning',
     summary: "Take one strongly-held belief and walk it through five 'why' questions.",
@@ -99,6 +111,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'view-from-above',
+    relevantDimensions: ['MR', 'SI', 'TV'],
     category: 'contemplative',
     name: 'View from above',
     summary: "Mentally zoom out — your city, your country, the planet — and look back at your day.",
@@ -118,6 +131,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'examen',
+    relevantDimensions: ['AT', 'RT', 'SS'],
     category: 'contemplative',
     name: 'The Examen',
     summary: 'Five-step Ignatian end-of-day review — what was given, what was missed, what to take into tomorrow.',
@@ -137,6 +151,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'memento-mori',
+    relevantDimensions: ['TV', 'AT', 'MR'],
     category: 'contemplative',
     name: 'Memento mori',
     summary: 'A short, deliberate confrontation with mortality. Clarifying.',
@@ -158,6 +173,7 @@ export const EXERCISES: Exercise[] = [
   // ─────────────────── LOGIC ─────────────────────────────────────────
   {
     slug: 'fallacy-hunt',
+    relevantDimensions: ['SR', 'TR', 'TD'],
     category: 'logic',
     name: 'Fallacy hunt',
     summary: 'Pick a real argument from the wild and find three reasoning errors in it.',
@@ -177,6 +193,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'steelmanning',
+    relevantDimensions: ['TR', 'UI', 'SR'],
     category: 'logic',
     name: 'Steelmanning the opposite',
     summary: 'Write the strongest possible version of the view you most reject.',
@@ -196,6 +213,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'counterexample-drill',
+    relevantDimensions: ['TR', 'SR', 'UI'],
     category: 'logic',
     name: 'Counterexample drill',
     summary: 'Try to break a moral rule with a single concrete case.',
@@ -215,6 +233,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'argument-map',
+    relevantDimensions: ['TR', 'TD', 'SR'],
     category: 'logic',
     name: 'Argument mapping',
     summary: 'Draw the structure of an argument as boxes and arrows. See its load-bearing walls.',
@@ -234,6 +253,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'reductio',
+    relevantDimensions: ['TR', 'TD', 'SR'],
     category: 'logic',
     name: 'Reductio ad absurdum',
     summary: 'Take a claim seriously, run it to its logical limit, see if you still believe it.',
@@ -255,6 +275,7 @@ export const EXERCISES: Exercise[] = [
   // ─────────────────── ARGUMENT ──────────────────────────────────────
   {
     slug: 'sixty-second-case',
+    relevantDimensions: ['TR', 'SS', 'PO'],
     category: 'argument',
     name: 'The 60-second case',
     summary: 'Compress your argument until 60 seconds is enough.',
@@ -274,6 +295,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'anticipating-objections',
+    relevantDimensions: ['TR', 'SR', 'RT'],
     category: 'argument',
     name: 'Anticipating objections',
     summary: 'For every position, list the three strongest objections — then answer them.',
@@ -293,6 +315,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'translation-under-constraint',
+    relevantDimensions: ['TR', 'CE', 'PO'],
     category: 'argument',
     name: 'Translation under constraint',
     summary: 'Rephrase a complex argument for a 12-year-old, then for a skeptic, then for an adversary.',
@@ -312,6 +335,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'dialectical-loop',
+    relevantDimensions: ['TD', 'TR', 'SR'],
     category: 'argument',
     name: 'Dialectical loop',
     summary: "Thesis → strongest antithesis → synthesis. Hegel's move, made walkable.",
@@ -331,6 +355,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'switch-sides',
+    relevantDimensions: ['SR', 'TR', 'UI'],
     category: 'argument',
     name: 'Switch sides',
     summary: 'Argue both sides of a debate, alternating, until you no longer know which side you started on.',
@@ -354,6 +379,7 @@ export const EXERCISES: Exercise[] = [
   // ── Contemplative (7) ─────────────────────────────────────────
   {
     slug: 'morning-intention',
+    relevantDimensions: ['AT', 'SS', 'PO'],
     category: 'contemplative',
     name: 'Morning intention',
     summary: 'Begin the day by naming what you\'re bringing to it, not what you want from it.',
@@ -371,6 +397,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'three-line-evening',
+    relevantDimensions: ['AT', 'SS', 'PO'],
     category: 'contemplative',
     name: 'Three-line evening',
     summary: 'A nightly review compressed to its three honest sentences.',
@@ -388,6 +415,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'loving-kindness',
+    relevantDimensions: ['CE', 'MR', 'UI'],
     category: 'contemplative',
     name: 'Metta (loving-kindness)',
     summary: 'Buddhist practice for extending warmth — first to yourself, then outward in widening circles.',
@@ -407,6 +435,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'breath-count',
+    relevantDimensions: ['MR', 'AT', 'SI'],
     category: 'contemplative',
     name: 'Breath count to ten',
     summary: 'The simplest concentration practice in the Zen toolkit. Most people fail before five.',
@@ -425,6 +454,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'mindful-eating',
+    relevantDimensions: ['ES', 'MR', 'AT'],
     category: 'contemplative',
     name: 'Mindful eating',
     summary: 'One meal eaten with full attention. Reveals how rarely you taste what you eat.',
@@ -443,6 +473,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'letter-future-self',
+    relevantDimensions: ['SS', 'TV', 'VA'],
     category: 'contemplative',
     name: 'Letter to your future self',
     summary: 'Write to who you\'ll be in one year, five years, ten. Discover what you most want to tell them.',
@@ -461,6 +492,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'body-scan',
+    relevantDimensions: ['ES', 'MR', 'SI'],
     category: 'contemplative',
     name: 'Body scan',
     summary: 'Slow attention to each region of the body. Returns you to the only place you actually live.',
@@ -484,6 +516,7 @@ export const EXERCISES: Exercise[] = [
   // ── Logic (7) ─────────────────────────────────────────────────
   {
     slug: 'burden-of-proof',
+    relevantDimensions: ['SR', 'TR', 'TD'],
     category: 'logic',
     name: 'Burden-of-proof check',
     summary: 'Most arguments lose because the wrong side is being asked to prove the wrong thing.',
@@ -502,6 +535,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'necessary-sufficient',
+    relevantDimensions: ['TR', 'TD', 'SR'],
     category: 'logic',
     name: 'Necessary vs sufficient',
     summary: 'A confusion that\'s killed more arguments than any fallacy.',
@@ -519,6 +553,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'modus-tollens',
+    relevantDimensions: ['TR', 'SR', 'TD'],
     category: 'logic',
     name: 'Modus tollens practice',
     summary: 'The classical denying-the-consequent move. The fastest way to spot a broken conditional.',
@@ -536,6 +571,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'bayesian-update',
+    relevantDimensions: ['SR', 'TE', 'TR'],
     category: 'logic',
     name: 'Bayesian update',
     summary: 'New evidence in. How much should the belief move? Probability done responsibly.',
@@ -554,6 +590,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'hidden-premises',
+    relevantDimensions: ['SR', 'TR', 'TD'],
     category: 'logic',
     name: 'Naming hidden premises',
     summary: 'Most arguments don\'t state their assumptions. The fastest way to refute one is to make them visible.',
@@ -572,6 +609,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'ockhams-razor',
+    relevantDimensions: ['TR', 'SR', 'TD'],
     category: 'logic',
     name: 'Ockham\'s razor',
     summary: 'When two theories explain the same evidence, prefer the one with fewer entities. A scalpel, not a club.',
@@ -590,6 +628,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'disjunction-elimination',
+    relevantDimensions: ['TR', 'SR', 'TD'],
     category: 'logic',
     name: 'Disjunction elimination',
     summary: 'When you know it\'s A or B, and you can rule out one, the other is forced.',
@@ -610,6 +649,7 @@ export const EXERCISES: Exercise[] = [
   // ── Argument (6) ──────────────────────────────────────────────
   {
     slug: 'charitable-interpretation',
+    relevantDimensions: ['TR', 'UI', 'CE'],
     category: 'argument',
     name: 'Charitable interpretation',
     summary: 'Before arguing against a position, prove you understand it well enough that its holder would say "yes, that\'s it."',
@@ -627,6 +667,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'concession-and-counter',
+    relevantDimensions: ['CE', 'TR', 'UI'],
     category: 'argument',
     name: 'Concession-and-counter',
     summary: 'A rhetorical structure that builds trust before it pushes back.',
@@ -644,6 +685,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'ideological-turing-test',
+    relevantDimensions: ['UI', 'SR', 'CE'],
     category: 'argument',
     name: 'Ideological Turing test',
     summary: 'Argue an opponent\'s view well enough that strangers can\'t tell you\'re not a believer.',
@@ -662,6 +704,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'reframe-disagreement',
+    relevantDimensions: ['CE', 'SS', 'SR'],
     category: 'argument',
     name: 'Reframing the disagreement',
     summary: 'When two people argue past each other, the disagreement is usually deeper than either is naming.',
@@ -680,6 +723,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'stoic-preview',
+    relevantDimensions: ['TV', 'AT', 'CE'],
     category: 'argument',
     name: 'Stoic preview',
     summary: 'Before a hard conversation, rehearse the worst version of how it could go. Then walk in.',
@@ -697,6 +741,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     slug: 'ten-word-version',
+    relevantDimensions: ['TR', 'PO', 'SS'],
     category: 'argument',
     name: 'The ten-word version',
     summary: 'Compress your argument to ten words. The compression forces honesty.',
