@@ -191,3 +191,50 @@ export function pickWanderingPhilosophers(
 
   return { kindred, far };
 }
+
+export type RankedPair<T> = {
+  pair: T;
+  /** Cosine of the user to each member. */
+  simA: number;
+  simB: number;
+  /** 1 - cos(A, B): how opposed the two members are. */
+  tension: number;
+  /** The "splits you" score (see rankSplittingPairs). */
+  score: number;
+};
+
+/** Rank candidate pairs by how much they "split" the user: a pair scores
+ *  high when the user is close to BOTH members yet the two members
+ *  genuinely oppose each other — the debate you're personally torn by,
+ *  rather than a random marquee matchup.
+ *
+ *  score = min(simToA, simToB) · (1 + tension), where tension = 1 - cos(A,B).
+ *  The min() term demands you actually lean toward *both* sides (a lopsided
+ *  pair scores low); the (1 + tension) factor rewards a real opposition
+ *  over two thinkers who merely resemble each other.
+ *
+ *  Pairs with a missing/invalid member vector are skipped. Returns [] when
+ *  the user vector is absent/invalid — caller should fall back to a
+ *  non-personalized pick. */
+export function rankSplittingPairs<T>(
+  userVec: number[] | null | undefined,
+  pairs: readonly T[],
+  getVecA: (p: T) => number[] | null | undefined,
+  getVecB: (p: T) => number[] | null | undefined,
+  n?: number,
+): RankedPair<T>[] {
+  if (!isVec16(userVec)) return [];
+  const out: RankedPair<T>[] = [];
+  for (const pair of pairs) {
+    const va = getVecA(pair);
+    const vb = getVecB(pair);
+    if (!isVec16(va) || !isVec16(vb)) continue;
+    const simA = cos(userVec, va);
+    const simB = cos(userVec, vb);
+    const tension = 1 - cos(va, vb);
+    const score = Math.min(simA, simB) * (1 + tension);
+    out.push({ pair, simA, simB, tension, score });
+  }
+  out.sort((a, b) => b.score - a.score);
+  return typeof n === 'number' ? out.slice(0, n) : out;
+}

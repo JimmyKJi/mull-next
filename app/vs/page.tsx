@@ -11,12 +11,15 @@
 
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { PHILOSOPHERS, philosopherSlug } from '@/lib/philosophers';
+import { PHILOSOPHERS, philosopherSlug, getPhilosopherBySlug } from '@/lib/philosophers';
 import { localizePhilosopher } from '@/lib/philosophers-i18n';
-import { toCanonicalPair, vsPairsByCategory } from '@/lib/vs-pairs';
+import { toCanonicalPair, vsPairsByCategory, CURATED_VS_PAIRS } from '@/lib/vs-pairs';
 import { PixelPageHeader } from '@/components/pixel-window';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
+import { createClient } from '@/utils/supabase/server';
+import { getUserOrientation } from '@/lib/user-orientation';
+import { rankSplittingPairs } from '@/lib/recommendations';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const serif = "var(--font-prose)";
@@ -56,6 +59,29 @@ function pickFeatured() {
   return { name1: n1, name2: n2, href: `/vs/${canonical.a}/${canonical.b}` };
 }
 
+/** Personalized featured matchup: of the curated pairs, the one the user
+ *  is drawn to BOTH sides of yet which genuinely opposes itself — "the
+ *  debate that splits you." Returns null when the user has no vector
+ *  (logged-out / unplaced / crawler), so the page falls back to the
+ *  day-of-year pick and the public/SEO output stays byte-for-byte the same. */
+function pickSplittingFeatured(
+  userVec: number[] | null,
+): { name1: string; name2: string; href: string } | null {
+  if (!userVec) return null;
+  const candidates: { n1: string; n2: string; vA: number[]; vB: number[] }[] = [];
+  for (const [n1, n2] of CURATED_VS_PAIRS) {
+    const p1 = getPhilosopherBySlug(philosopherSlug(n1));
+    const p2 = getPhilosopherBySlug(philosopherSlug(n2));
+    if (!p1 || !p2) continue;
+    candidates.push({ n1, n2, vA: p1.vector, vB: p2.vector });
+  }
+  const ranked = rankSplittingPairs(userVec, candidates, (c) => c.vA, (c) => c.vB, 1);
+  if (!ranked.length) return null;
+  const { n1, n2 } = ranked[0].pair;
+  const canonical = toCanonicalPair(n1, n2);
+  return { name1: n1, name2: n2, href: `/vs/${canonical.a}/${canonical.b}` };
+}
+
 export default async function VsIndexPage() {
   const locale = await getServerLocale();
   // Name resolver — localized display name, defensive against renames.
@@ -65,7 +91,19 @@ export default async function VsIndexPage() {
     return { name: localizePhilosopher(p, philosopherSlug(p.name), locale).name };
   };
   const groups = vsPairsByCategory(resolveName, locale);
-  const featured = pickFeatured();
+
+  // Featured matchup: for a placed user, "the debate that splits you" —
+  // a curated pair they're drawn to both sides of, ranked by their own
+  // 16-D coordinates. Logged-out / unplaced visitors + crawlers get no
+  // vector, so this is null and we fall back to the day-of-year pick: the
+  // public/SEO output is unchanged. This page already reads cookies via
+  // getServerLocale, so the auth read here adds no caching penalty.
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const orientation = await getUserOrientation(supabase, user?.id ?? null);
+  const splitting = pickSplittingFeatured(orientation.vector);
+  const featured = splitting ?? pickFeatured();
+  const featuredPersonalized = splitting !== null;
   const featuredName1 = resolveName(featured.name1)?.name ?? featured.name1;
   const featuredName2 = resolveName(featured.name2)?.name ?? featured.name2;
 
@@ -94,7 +132,9 @@ export default async function VsIndexPage() {
           textTransform: 'uppercase',
           marginBottom: 8,
         }}>
-          {t('vs.featured_today', locale)}
+          {featuredPersonalized
+            ? t('vs.featured_splits_you', locale)
+            : t('vs.featured_today', locale)}
         </div>
         <Link
           href={featured.href}
@@ -146,6 +186,18 @@ export default async function VsIndexPage() {
               {featuredName2}
             </div>
           </div>
+          {featuredPersonalized && (
+            <div style={{
+              marginTop: 12,
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: 14.5,
+              color: '#4A4338',
+              lineHeight: 1.5,
+            }}>
+              {t('vs.splits_you_note', locale)}
+            </div>
+          )}
           <div style={{
             marginTop: 12,
             fontFamily: pixel,

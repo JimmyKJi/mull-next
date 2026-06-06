@@ -1360,6 +1360,8 @@ export const TRANSLATIONS: TranslationMap = {
   "vs.title":           { en: "PHILOSOPHER VS PHILOSOPHER", zh: "哲学家 对 哲学家" },
   "vs.subtitle":        { en: "{n} side-by-side comparisons across Mull's 16 dimensions. See where two thinkers agree, where they sharply disagree, and where you sit between them.", zh: "在 Mull 的 16 个维度上进行 {n} 组并排比较。看看两位思想家在何处一致、在何处尖锐分歧，以及你处在他们之间的哪个位置。" },
   "vs.featured_today":  { en: "◇ Featured matchup today", zh: "◇ 今日精选对决" },
+  "vs.featured_splits_you": { en: "◆ The debate that splits you", zh: "◆ 令你两难的那场争论" },
+  "vs.splits_you_note": { en: "Two thinkers you're drawn toward — who pull in opposite directions.", zh: "你同时被这两位思想者吸引——而他们彼此背道而驰。" },
   "vs.vs_badge":        { en: "VS", zh: "对" },
   "vs.compare_cta":     { en: "COMPARE ▶", zh: "对比 ▶" },
   "vs.construct_q":     { en: "Want a matchup not listed here?", zh: "想看这里没有列出的对决？" },
