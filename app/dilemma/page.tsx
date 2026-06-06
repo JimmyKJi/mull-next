@@ -1,6 +1,6 @@
 import { createClient } from '@/utils/supabase/server';
-import { getDailyDilemma } from '@/lib/dilemmas';
-import { localizeDilemma } from '@/lib/dilemmas-i18n';
+import { getUserOrientation } from '@/lib/user-orientation';
+import { getPersonalizedDilemma, localizeDeepDilemma } from '@/lib/archetype-dilemmas';
 import { topShifts } from '@/lib/dimensions';
 import Link from 'next/link';
 import type { Metadata } from 'next';
@@ -48,13 +48,20 @@ export default async function DilemmaPage() {
   const supabase = await createClient();
   const locale = await getServerLocale();
   const { data: { user } } = await supabase.auth.getUser();
-  const today = getDailyDilemma();
-  // Localize today's dilemma question + hint. localizeDilemma prefers the
-  // full zh overlay (all 379 dilemmas), falls back to the dil.N.* keys
-  // (8 locales, first ~30), then to the English source.
-  const localizedDilemma = localizeDilemma(today.dilemma, today.index, locale);
-  const localizedPrompt = localizedDilemma.prompt;
-  const localizedHint = localizedDilemma.hint || '';
+
+  // Personalized daily dilemma: the question is chosen for the user's current
+  // archetype (from their latest quiz attempt) and aimed at that archetype's
+  // growth edge. Unplaced users (no attempt) get the universal-deep pool.
+  // Deterministic per UTC day, so a refresh shows the same question.
+  const orientation = await getUserOrientation(supabase, user?.id ?? null);
+  const today = getPersonalizedDilemma(orientation.archetypeKey);
+  const localized = localizeDeepDilemma(today.dilemma, locale);
+  const localizedPrompt = localized.prompt;
+  const localizedHint = localized.hint || '';
+  // Localized archetype display name for the "FOR THE CARTOGRAPHER" pill.
+  const archetypeName = orientation.archetypeKey
+    ? t(`arch.${orientation.archetypeKey}.name`, locale)
+    : null;
 
   let existing: ExistingResponse | null = null;
   let streak = 0;
@@ -166,7 +173,10 @@ export default async function DilemmaPage() {
           className="border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
           style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
-          ▶ TODAY&apos;S QUESTION
+          ▶ {(archetypeName
+            ? t('dilemma.for_archetype', locale, { name: archetypeName })
+            : t('dilemma.todays_question', locale)
+          ).toUpperCase()}
         </div>
         <div className="px-6 py-7 sm:px-8 sm:py-9">
           <h1
@@ -175,6 +185,11 @@ export default async function DilemmaPage() {
           >
             {localizedPrompt}
           </h1>
+          {archetypeName ? (
+            <p className="mt-3 text-[12px] leading-[1.5] text-[#8C6520]">
+              {t('dilemma.personalized_note', locale)}
+            </p>
+          ) : null}
           {localizedHint ? (
             <p
               className="mt-5 border-l-4 px-4 py-2 text-[15.5px] italic leading-[1.55] text-[#4A4338]"
@@ -388,7 +403,11 @@ export default async function DilemmaPage() {
           </div>
         </div>
       ) : (
-        <DilemmaForm questionPrompt={localizedPrompt} locale={locale} />
+        <DilemmaForm
+          questionPrompt={localizedPrompt}
+          locale={locale}
+          dilemmaRef={{ poolKey: today.poolKey, index: today.index }}
+        />
       )}
 
       {user && existing && recent.length > 0 && (

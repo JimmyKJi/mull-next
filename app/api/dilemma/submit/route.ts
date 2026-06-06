@@ -1,7 +1,12 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { DIM_KEYS, DIM_NAMES, DIM_DESCRIPTIONS } from '@/lib/dimensions';
-import { DILEMMAS, getDailyDilemma } from '@/lib/dilemmas';
+import {
+  getDeepDilemmaByRef,
+  getPersonalizedDilemma,
+  dilemmaDateKey,
+} from '@/lib/archetype-dilemmas';
+import { getUserOrientation } from '@/lib/user-orientation';
 import { rateLimit } from '@/lib/rate-limit';
 import { logError } from '@/lib/error-log';
 import {
@@ -155,8 +160,34 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: limit.message }, { status: 429 });
     }
 
-    const today = getDailyDilemma();
-    const dateKey = today.dateKey;
+    // Resolve which dilemma this is. The client sends a dilemmaRef
+    // {poolKey, index} identifying the personalized prompt it rendered; we
+    // reconstruct the exact prompt server-side and never trust client free
+    // text for what the question was. If the ref is missing or invalid (an
+    // older client, or tampering), fall back to recomputing today's
+    // personalized dilemma from the user's current archetype. Either way the
+    // stored question_text is the English canonical prompt — matching the
+    // prior behavior and the language the Claude analyzer reasons in.
+    const dateKey = dilemmaDateKey();
+    const ref = body?.dilemmaRef;
+    const refDilemma =
+      ref &&
+      typeof ref.poolKey === 'string' &&
+      Number.isInteger(ref.index)
+        ? getDeepDilemmaByRef(ref.poolKey, ref.index)
+        : null;
+
+    let questionText: string;
+    let dilemmaIndex: number;
+    if (refDilemma) {
+      questionText = refDilemma.prompt;
+      dilemmaIndex = ref.index;
+    } else {
+      const orientation = await getUserOrientation(supabase, user.id);
+      const fallback = getPersonalizedDilemma(orientation.archetypeKey);
+      questionText = fallback.dilemma.prompt;
+      dilemmaIndex = fallback.index;
+    }
 
     // Check if already submitted today
     const { data: existing } = await supabase
@@ -182,7 +213,7 @@ export async function POST(req: Request) {
     let is_novel = false;
 
     if (apiKey) {
-      const result = await callClaude(today.dilemma.prompt, responseText, apiKey);
+      const result = await callClaude(questionText, responseText, apiKey);
       if (result) {
         vector_delta = result.vector_delta;
         analysis = result.analysis;
@@ -199,8 +230,8 @@ export async function POST(req: Request) {
       .insert({
         user_id: user.id,
         dilemma_date: dateKey,
-        dilemma_index: today.index,
-        question_text: today.dilemma.prompt,
+        dilemma_index: dilemmaIndex,
+        question_text: questionText,
         response_text: responseText,
         vector_delta,
         analysis,

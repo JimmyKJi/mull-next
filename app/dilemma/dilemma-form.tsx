@@ -41,7 +41,19 @@ function deltaToShifts(delta: number[] | null): ShiftItem[] {
     .slice(0, 4);
 }
 
-export default function DilemmaForm({ questionPrompt, locale = 'en' }: { questionPrompt: string; locale?: Locale }) {
+export default function DilemmaForm({
+  questionPrompt,
+  locale = 'en',
+  dilemmaRef,
+}: {
+  questionPrompt: string;
+  locale?: Locale;
+  // Identifies which personalized dilemma the user is answering ({poolKey,
+  // index} into lib/archetype-dilemmas). The server reconstructs the exact
+  // prompt from this — it never trusts the rendered text — so the stored
+  // question and the Claude analysis match what the user actually saw.
+  dilemmaRef?: { poolKey: string; index: number };
+}) {
   const [text, setText] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -63,7 +75,7 @@ export default function DilemmaForm({ questionPrompt, locale = 'en' }: { questio
       const res = await fetch('/api/dilemma/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ response_text: text, is_public: makePublic })
+        body: JSON.stringify({ response_text: text, is_public: makePublic, dilemmaRef })
       });
       const json = await res.json();
       if (!res.ok) {
