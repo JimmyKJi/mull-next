@@ -31,6 +31,7 @@ import { getArchetypeByKey } from './archetypes';
 import { findTopic } from './topics';
 import { EXERCISES } from './exercises';
 import { PHILOSOPHERS, philosopherSlug, getPhilosopherBySlug, nearestPhilosophers } from './philosophers';
+import { nearestPhilosophersToVector } from './recommendations';
 import { getArchetypeColor } from './archetype-colors';
 import { t, type Locale } from './translations';
 import { localizePhilosopher } from './philosophers-i18n';
@@ -177,6 +178,16 @@ function stationPhilosopher(name: string, blurb: string, locale: Locale): Pathwa
     href: `/philosopher/${slug}`,
     accent,
     tag: t('pathway.tag.profile', locale),
+  };
+}
+
+/** Like stationPhilosopher, but framed as the user's nearest kin in the
+ *  16-D space — the vector-personalized lead for a warm trail. Reuses the
+ *  philosopher station's sprite/accent/href; only the blurb + tag change. */
+function stationNearestMind(name: string, locale: Locale): PathwayStation {
+  return {
+    ...stationPhilosopher(name, t('pathway.nearest_you', locale), locale),
+    tag: t('pathway.tag.kindred', locale),
   };
 }
 
@@ -441,16 +452,38 @@ export function pathwayForMap(locale: Locale = 'en'): Pathway {
   };
 }
 
-/** Returns the pathway with the warm trail rebuilt to use a specific
- *  archetype. Used by the client component once it reads the
- *  archetype from localStorage. */
+/** Returns the pathway with the warm trail rebuilt for a returning user.
+ *  Called by the client component once it reads the user's orientation
+ *  from localStorage.
+ *
+ *  Two tiers of personalization:
+ *    - With a 16-D `vector` (the user's own coordinates): lead the trail
+ *      with the single philosopher NEAREST them in vector space — a
+ *      genuinely personal "go meet your closest kin" hook that coarse
+ *      archetype buckets can't express — then the archetype pilgrimage
+ *      and a daily ritual.
+ *    - Without a vector (older clients / pre-vector users): fall back to
+ *      the archetype-only trail (pilgrimage → spar → flagship exercise). */
 export function personalizeWarmTrail(
   pathway: Pathway,
   archetypeKey: string,
   locale: Locale = 'en',
+  vector?: number[] | null,
 ): PathwayStation[] {
   const a = getArchetypeByKey(archetypeKey);
   if (!a) return pathway.warm ?? pathway.cold;
+
+  // Vector-space lead, when we know the user's own coordinates.
+  const nearest = nearestPhilosophersToVector(vector, 1)[0]?.item;
+  if (nearest) {
+    return [
+      stationNearestMind(nearest.name, locale),
+      stationPilgrimage(archetypeKey, locale),
+      stationSpar(locale),
+    ];
+  }
+
+  // Archetype-only fallback.
   const exSlug = a.suggestedExercises?.[0];
   const ex = exSlug ? stationExercise(exSlug, locale) : null;
   return [

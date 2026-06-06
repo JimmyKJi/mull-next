@@ -1427,6 +1427,8 @@ export const TRANSLATIONS: TranslationMap = {
   "pathway.heading_warm": { en: "Pick the next step of your practice.", zh: "选择你修习的下一步。" },
   "pathway.heading_cold": { en: "Three doors lead onward.", zh: "三扇门通向前方。" },
   "pathway.continue":     { en: "CONTINUE ▶", zh: "继续 ▶" },
+  // Blurb for the vector-personalized "mind nearest your coordinates" station.
+  "pathway.nearest_you":  { en: "Your closest kin in the constellation — by your own coordinates.", zh: "在整片思想星图中，与你坐标最相近的那个人。" },
 
   // Station tags (tiny uppercase pills)
   "pathway.tag.quiz":          { en: "QUIZ", zh: "测验" },
@@ -1439,6 +1441,7 @@ export const TRANSLATIONS: TranslationMap = {
   "pathway.tag.compare":       { en: "COMPARE", zh: "对比" },
   "pathway.tag.arena":         { en: "ARENA", zh: "竞技场" },
   "pathway.tag.next_exercise": { en: "NEXT EXERCISE", zh: "下一个练习" },
+  "pathway.tag.kindred":       { en: "KINDRED", zh: "知音" },
 
   // Reusable stations (product names + default blurbs)
   "pathway.station.quiz.title":       { en: "The Inheritor", zh: "《继承者》" },

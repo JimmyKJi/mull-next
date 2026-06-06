@@ -27,6 +27,12 @@ const STASH_KEY = "mull.pending_quiz_attempt";
 // Set alongside the heavier STASH_KEY so any page can do a single
 // localStorage.getItem('mull.archetype') without parsing JSON.
 const ARCHETYPE_KEY = "mull.archetype";
+// The user's own 16-D coordinates, stashed for client-side vector-space
+// personalization (the PathwayNext "mind nearest you" station, and any
+// future "near you" surfaces). It's the user's own result — already shown
+// on this very page — not sensitive. Lets client widgets rank content by
+// cosine similarity without a server round-trip or an API call.
+const VECTOR_KEY = "mull.vector";
 // The per-question trail written by the quiz engine's finish(). Must
 // match RESEARCH_ANSWERS_KEY in app/quiz/quiz-engine.tsx.
 const RESEARCH_ANSWERS_KEY = "mull.quiz.research_answers";
@@ -95,6 +101,9 @@ export function ResultSave({
     // the rest of the site gets the personalization signal.
     try {
       if (archetype) window.localStorage.setItem(ARCHETYPE_KEY, archetype);
+      if (Array.isArray(vector) && vector.length === 16) {
+        window.localStorage.setItem(VECTOR_KEY, JSON.stringify(vector));
+      }
     } catch { /* storage disabled */ }
 
     const consent = getStoredConsent(); // "yes" | "no" | null

@@ -21,6 +21,7 @@ import { ArchetypeSprite } from "@/components/archetype-sprite";
 import { PhilosopherSprite } from "@/components/philosopher-sprite";
 import type { Pathway, PathwayStation } from "@/lib/pathway";
 import { personalizeWarmTrail } from "@/lib/pathway";
+import { coerceVector16 } from "@/lib/recommendations";
 import { t, type Locale } from "@/lib/translations";
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
@@ -46,7 +47,16 @@ export function PathwayNext({ pathway, locale = 'en', eyebrow, heading }: Props)
     try {
       const archetypeKey = window.localStorage.getItem("mull.archetype");
       if (archetypeKey) {
-        setTrail(personalizeWarmTrail(pathway, archetypeKey, locale));
+        // Read the user's own 16-D coordinates too (if present) so the
+        // warm trail can lead with the philosopher nearest them in vector
+        // space. Users who took the quiz before vectors were stashed fall
+        // back to archetype-only personalization inside personalizeWarmTrail.
+        let vector: number[] | null = null;
+        try {
+          const rawVec = window.localStorage.getItem("mull.vector");
+          if (rawVec) vector = coerceVector16(JSON.parse(rawVec));
+        } catch { /* malformed vector — fall back to archetype-only */ }
+        setTrail(personalizeWarmTrail(pathway, archetypeKey, locale, vector));
         setWarmedUp(true);
       } else if (pathway.warm) {
         // No archetype, but the surface defines a warm fallback.
