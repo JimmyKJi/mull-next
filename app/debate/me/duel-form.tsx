@@ -1,23 +1,15 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { matchesPhilosopherSearch, type PhilosopherEntry } from '@/lib/philosophers';
 import { FIGURES } from '@/lib/figures';
+import { SUGGESTED_DEBATE_TOPICS } from '@/lib/debate-topics';
+import { coerceVector16, rankByDimensionFocus } from '@/lib/recommendations';
 import { t, type Locale } from '@/lib/translations';
 
 const serif = "var(--font-prose)";
 const sans = "'Inter', system-ui, sans-serif";
-
-const SUGGESTED_TOPICS = [
-  'whether free will is real',
-  'what makes a life worth living',
-  'whether the self is an illusion',
-  'the source of moral authority',
-  'whether tradition is wisdom or weight',
-  'how to face death well',
-  'what beauty is for',
-  'whether we owe anything to strangers',
-];
+const VECTOR_KEY = 'mull.vector';
 
 type Exchange = { speaker: 'A' | 'B'; text: string };
 type DuelResult = {
@@ -36,6 +28,23 @@ export default function DuelForm({ philosophers, locale = 'en' }: { philosophers
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<DuelResult | null>(null);
+  // The user's own 16-D coordinates, read client-side after hydration so
+  // the suggested-topic chips can lead with the debates that probe where
+  // they most stand out. null until read (or if never placed) → chips
+  // render in their canonical order.
+  const [userVec, setUserVec] = useState<number[] | null>(null);
+
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(VECTOR_KEY);
+      if (raw) setUserVec(coerceVector16(JSON.parse(raw)));
+    } catch { /* storage disabled or malformed — keep canonical order */ }
+  }, []);
+
+  const suggestedTopics = useMemo(() => {
+    const ranked = rankByDimensionFocus(userVec, SUGGESTED_DEBATE_TOPICS, s => s.relevantDimensions);
+    return ranked.length ? ranked.map(r => r.item) : SUGGESTED_DEBATE_TOPICS;
+  }, [userVec]);
 
   const filtered = useMemo(
     () => philosophers.filter(p => matchesPhilosopherSearch(p, search)),
@@ -188,23 +197,23 @@ export default function DuelForm({ philosophers, locale = 'en' }: { philosophers
           }}
         />
         <div style={{ marginTop: 10, display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-          {SUGGESTED_TOPICS.map(suggestion => (
+          {suggestedTopics.map(suggestion => (
             <button
-              key={suggestion}
+              key={suggestion.text}
               type="button"
-              onClick={() => setTopic(suggestion)}
+              onClick={() => setTopic(suggestion.text)}
               style={{
                 fontFamily: sans,
                 fontSize: 12,
                 padding: '6px 12px',
-                background: topic === suggestion ? '#221E18' : '#F5EFDC',
-                color: topic === suggestion ? '#FAF6EC' : '#4A4338',
+                background: topic === suggestion.text ? '#221E18' : '#F5EFDC',
+                color: topic === suggestion.text ? '#FAF6EC' : '#4A4338',
                 border: '1px solid #D6CDB6',
                 borderRadius: 999,
                 cursor: 'pointer',
               }}
             >
-              {suggestion}
+              {suggestion.text}
             </button>
           ))}
         </div>
