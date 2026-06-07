@@ -102,7 +102,7 @@ export const WANDERING_BEATS = [
   { day: "Mon", label: "Start", description: "First response — what comes to mind unedited." },
   { day: "Wed", label: "Kindred", description: "Two philosophers near you. React to one." },
   { day: "Fri", label: "Far", description: "One philosopher further on the map. React." },
-  { day: "Sun", label: "Synthesis", description: "Pull the threads together. Mull will help." },
+  { day: "Sun", label: "Synthesis", description: "Pull the threads together — the synthesis is yours to write." },
 ] as const;
 
 export type WanderingResponse = {

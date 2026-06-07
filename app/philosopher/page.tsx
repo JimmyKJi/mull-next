@@ -1,4 +1,4 @@
-// /philosopher — index of all 560 philosophers, grouped by archetype.
+// /philosopher — index of all philosophers, grouped by archetype.
 // v3 pixel chrome restyle. Each archetype cluster gets its own
 // PixelWindow with the archetype sprite + per-archetype color.
 
@@ -19,7 +19,7 @@ import { getUserOrientation } from '@/lib/user-orientation';
 import { nearestPhilosophersToVector } from '@/lib/recommendations';
 
 export const metadata: Metadata = {
-  title: 'All philosophers — 560 thinkers, 10 archetypes',
+  title: `All philosophers — ${PHILOSOPHERS.length} thinkers, 10 archetypes`,
   description:
     `Browse all ${PHILOSOPHERS.length} philosophers in Mull's constellation — from Heraclitus to bell hooks, grouped by archetype. Each profile shows their key idea, their position on Mull's 16 dimensions, and their nearest kin.`,
   openGraph: {

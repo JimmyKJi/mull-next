@@ -308,7 +308,7 @@ export default async function TopicIndexPage() {
           {t('topic.cta_body', locale)}
         </p>
         <Link
-          href="/inheritor"
+          href="/quiz/journey"
           style={{
             display: 'inline-block',
             fontFamily: pixel,

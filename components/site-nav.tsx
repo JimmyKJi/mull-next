@@ -484,7 +484,7 @@ function buildPageItems(locale: Locale): PaletteItem[] {
     // ── Tier 2 — explore ──
     { group: "Pages", label: t("nav.archetypes", locale), href: "/archetype" },
     { group: "Pages", label: t("nav.map", locale), href: "/map", hint: t("palette.h_map", locale) },
-    { group: "Pages", label: t("palette.browse_phil", locale), href: "/philosopher", hint: t("palette.h_browse_phil", locale) },
+    { group: "Pages", label: t("palette.browse_phil", locale), href: "/philosopher", hint: t("palette.h_browse_phil", locale, { count: PHILOSOPHERS.length }) },
     { group: "Pages", label: t("nav.dilemma", locale), href: "/dilemma" },
     { group: "Pages", label: t("palette.dilemma_archive", locale), href: "/dilemma/archive" },
     { group: "Pages", label: t("nav.topics", locale), href: "/topic", hint: t("palette.h_topics", locale) },

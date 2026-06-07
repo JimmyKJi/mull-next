@@ -34,7 +34,7 @@ import { TIPPING_ENABLED } from "@/lib/feature-flags";
 export const metadata: Metadata = {
   title: "Mull · Find your place on the map of how you think",
   description:
-    "A philosophical-mapping tool. 16 dimensions, ten archetypes, 560 thinkers. Take the quiz, see where your worldview sits — and which thinkers across history have stood near you.",
+    `A philosophical-mapping tool. 16 dimensions, ten archetypes, ${PHILOSOPHERS.length} thinkers. Take the quiz, see where your worldview sits — and which thinkers across history have stood near you.`,
 };
 
 export const viewport: Viewport = {
@@ -72,7 +72,7 @@ export default async function HomeV2() {
         name: 'Mull',
         url: 'https://mull.world',
         description:
-          'A philosophical-mapping tool. 16 dimensions, ten archetypes, 560 thinkers.',
+          `A philosophical-mapping tool. 16 dimensions, ten archetypes, ${PHILOSOPHERS.length} thinkers.`,
       },
       {
         '@type': 'WebSite',
@@ -248,7 +248,7 @@ export default async function HomeV2() {
                   className="text-[10px] tracking-[0.18em] text-[#8C6520]"
                   style={{ fontFamily: "var(--font-pixel-display)" }}
                 >
-                  ▸ {t("home.one_of_560_l1", locale)}<br/>{t("home.one_of_560_l2", locale)}
+                  ▸ {t("home.one_of_560_l1", locale, { count: PHILOSOPHERS.length })}<br/>{t("home.one_of_560_l2", locale)}
                 </span>
               </div>
             </div>
@@ -514,7 +514,7 @@ export default async function HomeV2() {
               },
               {
                 glyph: "✦",
-                num: "560",
+                num: String(PHILOSOPHERS.length),
                 title: t("home.card_thinkers_title", locale),
                 body: t("home.card_thinkers_body", locale),
               },
@@ -592,7 +592,7 @@ export default async function HomeV2() {
             <SurfaceCard
               href="/philosopher"
               eyebrow={`▶ ${t("home.sc_constellation_eb", locale)}`}
-              title={t("home.sc_constellation_title", locale)}
+              title={t("home.sc_constellation_title", locale, { count: PHILOSOPHERS.length })}
               body={t("home.sc_constellation_body", locale)}
             />
             <SurfaceCard

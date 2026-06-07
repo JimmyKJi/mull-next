@@ -16,6 +16,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getServerLocale } from '@/lib/locale-server';
+import { PHILOSOPHERS } from '@/lib/philosophers';
 import { PixelWindow, PixelPageHeader } from '@/components/pixel-window';
 import { ContentLanguageNotice } from '@/components/content-language-notice';
 import { TIPPING_ENABLED } from '@/lib/feature-flags';
@@ -84,7 +85,7 @@ function AboutBodyEn() {
               thought, it asks what <strong>you</strong> think — concretely, on
               real questions — and shows you where that places you in the long
               conversation. The map isn&apos;t a verdict, it&apos;s a mirror.
-              The 560 thinkers in the constellation are there as company, not
+              The {PHILOSOPHERS.length} thinkers in the constellation are there as company, not
               as curriculum.
             </p>
           </Prose>
@@ -118,7 +119,7 @@ function AboutBodyEn() {
               leaderboard, PvP against other humans. The Arena is Mull&apos;s
               answer to "what do I do once I know where I sit?"
             </Promise>
-            <Promise title="560 philosophers, 10 archetypes, 12 topics, 30 matchups.">
+            <Promise title={`${PHILOSOPHERS.length} philosophers, 10 archetypes, 12 topics, 30 matchups.`}>
               The constellation is the heart of the site — a 2D map you can
               wander. Every philosopher page is a small editorial essay; the
               archetype pages go longer. Topic explainers cover the questions
@@ -453,7 +454,7 @@ function AboutBodyZh() {
               哲学是人类最初用来审视自身思维的工具——一门拒绝把自己的前提视为理所当然的学问。大多数人上完一门导论课便将它抛诸脑后，因为它的讲授方式让人觉得像是在背诵一座博物馆：年代、人名、学说、考试。
             </p>
             <p>
-              Mull 把这一切颠倒过来。它不告诉你那些已故哲学家想过什么，而是问<strong>你</strong>怎么想——针对真实的问题，给出具体的回答——再告诉你，这些回答将你放在这场漫长对话中的哪个位置。这张地图不是判决，而是一面镜子。星图中的 560 位思想家，是作为同伴、而非课程出现在那里的。
+              Mull 把这一切颠倒过来。它不告诉你那些已故哲学家想过什么，而是问<strong>你</strong>怎么想——针对真实的问题，给出具体的回答——再告诉你，这些回答将你放在这场漫长对话中的哪个位置。这张地图不是判决，而是一面镜子。星图中的 {PHILOSOPHERS.length} 位思想家，是作为同伴、而非课程出现在那里的。
             </p>
           </Prose>
         </PixelWindow>
@@ -471,7 +472,7 @@ function AboutBodyZh() {
             <Promise title="竞技场——与哲学家争辩，并获得评分。">
               就日常或哲学话题，与十位思想家中的任意一位（苏格拉底、尼采、阿伦特、孔子、密尔等——分三个难度档）展开辩论。一位中立的裁判会就逻辑的严谨、哲学的原则与投入的程度为双方评分——而<em>不</em>评判谁胜谁负。Elo 积分、排行榜、与真人对战的 PvP。当你已经知道自己身处何方，"接下来该做什么？"——竞技场便是 Mull 给出的答案。
             </Promise>
-            <Promise title="560 位哲学家、10 种原型、12 个主题、30 场对决。">
+            <Promise title={`${PHILOSOPHERS.length} 位哲学家、10 种原型、12 个主题、30 场对决。`}>
               星图是整个网站的核心——一张你可以漫游的二维地图。每一个哲学家页面都是一篇小小的编辑随笔，原型页面则更为详尽。主题解说涵盖了哲学家们反复回到的那些问题（自由意志、电车难题、人生的意义、我们彼此亏欠什么）。对决页面则是跨越十六个维度的正面比较。
             </Promise>
             <Promise title="困境、日记、练习。">

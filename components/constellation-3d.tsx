@@ -627,7 +627,7 @@ function SearchBar({
             type="text"
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            placeholder={t("cnst.search_placeholder", locale)}
+            placeholder={t("cnst.search_placeholder", locale, { count: PHILOSOPHER_POSITIONS_3D.length })}
             className="min-w-0 flex-1 bg-transparent px-3 py-1.5 text-[18px] leading-none text-[#221E18] placeholder:text-[#8C6520]/60 focus:outline-none"
             style={{ fontFamily: "var(--font-pixel-body)" }}
           />
@@ -713,7 +713,7 @@ function Legend({
         }
       >
         <span className="font-medium">
-          {showAll ? t("cnst.showing_all", locale) : t("cnst.essential_60", locale)}
+          {showAll ? t("cnst.showing_all", locale, { count: PHILOSOPHER_POSITIONS_3D.length }) : t("cnst.essential_60", locale)}
         </span>
         <span className="text-[10px] opacity-70">
           ▶ {showAll ? t("cnst.hide", locale) : t("cnst.show_all", locale)}

@@ -76,7 +76,7 @@ export function Constellation({
         viewBox={`0 0 ${W} ${H}`}
         xmlns="http://www.w3.org/2000/svg"
         role="img"
-        aria-label={t("cnst.aria_2d", locale)}
+        aria-label={t("cnst.aria_2d", locale, { count: PHILOSOPHER_POSITIONS.length })}
         className="block w-full"
         style={{ overflow: "visible" }}
       >
