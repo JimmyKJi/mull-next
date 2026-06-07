@@ -1,12 +1,115 @@
 # Mull · Session handoff
 
-The previous session was long and accomplished a lot. This doc
-hands off enough state for the next session to pick up cold.
+This doc hands off enough state for the next session to pick up cold.
+Newest updates first.
 
-**Last session ended:** 2026-05-27.
-**Branch:** `claude/zen-wu-4cd09b` (also live on `mull.world` via
-direct Vercel CLI deploys — production deploys do NOT come from
-git auto-deploy; see "How to ship" below).
+**Last session ended:** 2026-06-07 (vector-space UX sweep + deeper
+daily dilemma). Prior: 2026-05-27.
+**Branch:** `claude/zen-wu-4cd09b`. Ship with
+`git push origin HEAD:redesign-2026` — that auto-deploys to
+`mull.world` via Vercel (see "How to ship" below).
+
+---
+
+## Updates from the 2026-06-07 session
+
+**Theme: personalize the daily dilemma, then make the *entire* UX
+vector-space-driven.** Jimmy's brief:
+> "improving the daily dilemma, make it personalised to each archetype
+> and also make the questions better … After this, make the entire ux
+> archetype or even vector space based … This includes all types of
+> recommendations, for features like daily dilemma but also other
+> features"
+
+Shipped across many small commits on `claude/zen-wu-4cd09b`, each
+deployed via `git push origin HEAD:redesign-2026` (auto-deploys — see
+the corrected "How to ship" below).
+
+### Task A — deeper, per-archetype daily dilemma (DONE)
+
+- `lib/archetype-dilemmas.ts` — hand-authored deep dilemmas keyed per
+  archetype, replacing the shallow shared pool.
+- `app/dilemma/page.tsx` personalizes the prompt for a placed user
+  (archetype pill) with a graceful fallback for everyone else.
+- `dilemma-form.tsx` POSTs a `dilemmaRef`; the submit route
+  reconstructs the dilemma from that ref server-side (doesn't trust
+  client text).
+
+### Task B — vector-space recommendation engine (DONE for the featured-pick / nearest-content surfaces)
+
+The spine is **`lib/recommendations.ts`** — the one engine that ranks
+*content* against the *user's own 16-D vector*. Built on `lib/vectors.ts`
+(cos, normalize, magnitude). Key exports:
+
+- `rankByVector` / `nearestPhilosophersToVector` — cosine-nearest.
+- `rankByDimensionFocus(userVec, items, getDims, n)` — **mean-centered**
+  ranking: surfaces content sitting on the dimensions the user loads
+  *most distinctively on* (above their OWN baseline), not globally-high
+  axes. Powers the /topic + /exercises featured picks.
+- `rankSplittingPairs` — score = `min(simA,simB)·(1+tension)`, for the
+  /vs "debate that splits you."
+- `pickWanderingPhilosophers` — kindred/far split for the Wandering week.
+
+**Server-side personalization pattern** (used everywhere SEO matters):
+
+```ts
+const supabase = await createClient();              // @/utils/supabase/server
+const { data: { user } } = await supabase.auth.getUser();
+const orientation = await getUserOrientation(supabase, user?.id ?? null);
+// orientation.vector is number[16] | null  (null = logged-out / unplaced / crawler)
+```
+
+`getUserOrientation` lives in `lib/user-orientation.ts`. Pages that
+already call `getServerLocale()` are dynamically rendered, so the auth
+read adds NO caching penalty, and the null/logged-out branch stays
+byte-identical to before — public SEO output is unchanged. The
+client-side mirror is the `mull.vector` localStorage key (written by
+result-save), for client components.
+
+**Surfaces converted to vector-space (all live):**
+
+| Surface | What's personalized |
+|---|---|
+| Daily dilemma | per-archetype prompt (Task A) |
+| Philosopher index | "philosophers nearest you" row |
+| Wandering week | kindred / far philosophers |
+| Pathway "trail from here" | vector-aware warm trail |
+| `/vs` featured | "the debate that splits you" |
+| `/topic` featured | "the question that lives where you do" |
+| `/exercises` featured | "the practice for where you stand" |
+
+**Content tagging added this session:** every Topic and Exercise now
+carries `relevantDimensions: DimKey[]` (2–3 dims grounded in tradition
++ mechanism). For exercises the field is REQUIRED, so `tsc` fails if a
+new exercise is added untagged — a built-in safety net.
+
+**i18n coverage varies by key-group** — match the group you edit:
+`topic.*`, `vs.*`, `wndr.*`, `pathway.*` are **en+zh only**;
+`exercises.*` is **all 8 locales** (en/es/fr/pt/ru/zh/ja/ko). zh strings
+MUST use full-width punctuation (，。？「」——), never ASCII quotes.
+
+### What's next on the vector-space thread (NOT started)
+
+- **`SUGGESTED_TOPICS` debate chips** (`app/debate/debate-form.tsx` +
+  `app/debate/me/duel-form.tsx`) — 10 freeform debate prompts that map
+  cleanly onto dimensions ("whether reason or experience reveals truth"
+  → TR/TE; "whether the self is an illusion" → SI). Could be reordered
+  so the user's distinctive axes come first. Modest payoff; needs a
+  client-side `mull.vector` read in both forms (they're client
+  components) + a prompt→dims map. The array is DUPLICATED across both
+  files — dedupe while there.
+- **Deliberately NOT converted** (don't "fix" these): the anthology
+  (re-ranking fights the user's mental model of their own collection),
+  `/atlas` (already a self-personalized XP tracker), the home page (SEO
+  marketing, stays static), the archetype / philosopher / exercise
+  DETAIL pages (their "related / nearest / kindred" lists are anchored
+  on the *viewed subject*, not the visitor — correct as-is), and the
+  philosopher index's daily "featured profile" (the page already has a
+  personalized "nearest you" row above it; personalizing both would
+  stack two philosopher recs).
+- **Low-value cleanup deferred:** 3 duplicate cosine impls + a duplicate
+  `archetypeNameToSlug` (`app/search/leaderboard.tsx:41`) could fold
+  into the shared libs.
 
 ---
 
@@ -412,29 +515,23 @@ PROJECT-FOR-COWORK.md:
 
 ### How to ship to production
 
-Production deploys do NOT auto-deploy from git anymore — Jimmy's
-Vercel production branch is `redesign-2026`, and the previous
-session shipped via direct Vercel CLI deploys from
-`claude/zen-wu-4cd09b` to override that. The pattern is:
+**As of 2026-06-07 the deploy path is a single git push.** The Vercel
+production branch is `redesign-2026`; pushing the working branch's HEAD
+onto it auto-deploys to mull.world:
 
 ```bash
-# from anywhere, push your work to claude/zen-wu-4cd09b first:
-git push origin claude/zen-wu-4cd09b
-
-# then in main repo, set up a fresh worktree at the latest commit:
-cd /Users/jimmy/Documents/mull-next
-git fetch origin claude/zen-wu-4cd09b
-git worktree add /tmp/mull-deploy origin/claude/zen-wu-4cd09b
-cp -r /Users/jimmy/Documents/mull-next/.vercel /tmp/mull-deploy/.vercel
-cd /tmp/mull-deploy
-npx vercel deploy --prod --yes --archive=tgz
-
-# clean up:
-git worktree remove /tmp/mull-deploy --force
+# from the worktree (local HEAD = claude/zen-wu-4cd09b):
+git push origin HEAD:redesign-2026
 ```
 
-For PREVIEW deploys (e.g. to share with Jimmy without affecting
-mull.world), drop the `--prod` flag.
+Verify first (tsc + invariants green — see below). Jimmy has given
+standing permission to push + prod-deploy after a verified batch, so no
+approval round-trip is needed.
+
+(Historical: earlier sessions claimed git auto-deploy was off and used a
+direct `npx vercel deploy --prod` from a /tmp worktree with a copied
+`.vercel`. That dance is no longer needed for this branch — the simple
+push above is the live mechanism.)
 
 ### Common reset commands
 
