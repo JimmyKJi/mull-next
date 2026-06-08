@@ -114,11 +114,11 @@ export default async function BadgePage({
           gap: 12,
           padding: '12px 14px',
           background: '#FFFCF4',
-          border: '4px solid #221E18',
-          boxShadow: '4px 4px 0 0 #B8862F',
+          border: '4px solid var(--color-ink)',
+          boxShadow: '4px 4px 0 0 var(--color-acc)',
           borderRadius: 0,
           textDecoration: 'none',
-          color: '#221E18',
+          color: 'var(--color-ink)',
           fontFamily: serif,
           width: 'fit-content',
           minWidth: 260,
@@ -133,9 +133,9 @@ export default async function BadgePage({
           style={{
             width: 56,
             height: 56,
-            background: '#F8EDC8',
-            border: '3px solid #221E18',
-            boxShadow: '2px 2px 0 0 #8C6520',
+            background: 'var(--color-acc-soft)',
+            border: '3px solid var(--color-ink)',
+            boxShadow: '2px 2px 0 0 var(--color-acc-deep)',
             padding: 4,
             flexShrink: 0,
           }}
@@ -151,7 +151,7 @@ export default async function BadgePage({
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontFamily: pixel,
               fontSize: 22,
-              color: '#8C6520',
+              color: 'var(--color-acc-deep)',
             }}>
               M
             </div>
@@ -163,7 +163,7 @@ export default async function BadgePage({
           <div style={{
             fontFamily: pixel,
             fontSize: 9,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             letterSpacing: '0.18em',
             textTransform: 'uppercase',
             marginBottom: 4,
@@ -174,7 +174,7 @@ export default async function BadgePage({
             fontFamily: serif,
             fontSize: 17,
             fontWeight: 500,
-            color: '#221E18',
+            color: 'var(--color-ink)',
             lineHeight: 1.1,
             marginBottom: 4,
             overflow: 'hidden',
@@ -188,7 +188,7 @@ export default async function BadgePage({
               fontFamily: serif,
               fontStyle: 'italic',
               fontSize: 13,
-              color: '#8C6520',
+              color: 'var(--color-acc-deep)',
               lineHeight: 1.2,
               overflow: 'hidden',
               textOverflow: 'ellipsis',
@@ -205,7 +205,7 @@ export default async function BadgePage({
               fontFamily: serif,
               fontStyle: 'italic',
               fontSize: 13,
-              color: '#8C6520',
+              color: 'var(--color-acc-deep)',
               lineHeight: 1.2,
             }}>
               {t('bdg.anonymous_mind', locale)}
@@ -218,11 +218,11 @@ export default async function BadgePage({
           fontFamily: serif,
           fontSize: 13,
           fontWeight: 600,
-          color: '#221E18',
+          color: 'var(--color-ink)',
           letterSpacing: '-0.3px',
           flexShrink: 0,
         }}>
-          mull<span style={{ color: '#B8862F' }}>.</span>
+          mull<span style={{ color: 'var(--color-acc)' }}>.</span>
         </div>
       </a>
     </>

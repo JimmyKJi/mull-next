@@ -184,7 +184,7 @@ export default async function VsPage({
         <div className="mb-6 flex items-center justify-between gap-4">
           <Link href="/vs" style={{
             fontFamily: pixel, fontSize: 11,
-            color: '#4A4338', textDecoration: 'none',
+            color: 'var(--color-ink-soft)', textDecoration: 'none',
             letterSpacing: 0.4, textTransform: 'uppercase',
           }}>
             {t('vs.all_matchups', locale)}
@@ -195,7 +195,7 @@ export default async function VsPage({
 
         <div style={{
           fontFamily: pixel, fontSize: 12,
-          color: '#8C6520', textTransform: 'uppercase',
+          color: 'var(--color-acc-deep)', textTransform: 'uppercase',
           letterSpacing: '0.18em', marginBottom: 14,
         }}>
           {t('vs.head_to_head', locale)}
@@ -205,13 +205,13 @@ export default async function VsPage({
           fontFamily: pixel,
           fontSize: 28,
           margin: '0 0 22px',
-          color: '#221E18',
+          color: 'var(--color-ink)',
           letterSpacing: '0.04em',
           textTransform: 'uppercase',
-          textShadow: '3px 3px 0 #B8862F',
+          textShadow: '3px 3px 0 var(--color-acc)',
           lineHeight: 1.1,
         }}>
-          {paName.toUpperCase()} <span style={{ color: '#8C6520' }}>{t('vs.vs_badge', locale)}</span> {pbName.toUpperCase()}
+          {paName.toUpperCase()} <span style={{ color: 'var(--color-acc-deep)' }}>{t('vs.vs_badge', locale)}</span> {pbName.toUpperCase()}
         </h1>
 
         {/* Hero: side-by-side sprite + name + dates + archetype */}
@@ -281,8 +281,8 @@ export default async function VsPage({
             marginTop: 14,
             padding: '20px 22px',
             background: '#FFFCF4',
-            border: '3px solid #221E18',
-            boxShadow: '4px 4px 0 0 #B8862F',
+            border: '3px solid var(--color-ink)',
+            boxShadow: '4px 4px 0 0 var(--color-acc)',
             borderRadius: 0,
           }}>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 12 }}>
@@ -294,7 +294,7 @@ export default async function VsPage({
                     <div style={{
                       fontFamily: pixel,
                       fontSize: 10,
-                      color: '#221E18',
+                      color: 'var(--color-ink)',
                       letterSpacing: 0.4,
                       textTransform: 'uppercase',
                       marginBottom: 4,
@@ -302,7 +302,7 @@ export default async function VsPage({
                       justifyContent: 'space-between',
                     }}>
                       <span>{t(`dim.${c.key}.name`, locale)}</span>
-                      <span style={{ color: '#8C6520' }}>Δ {c.absDelta}</span>
+                      <span style={{ color: 'var(--color-acc-deep)' }}>Δ {c.absDelta}</span>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                       <DimBar value={c.valueA} color={colorA.deep} align="right" />
@@ -314,13 +314,13 @@ export default async function VsPage({
             <div style={{
               marginTop: 14,
               paddingTop: 12,
-              borderTop: '2px dashed #D6CDB6',
+              borderTop: '2px dashed var(--color-line)',
               display: 'flex',
               justifyContent: 'space-between',
               gap: 12,
               fontFamily: pixel,
               fontSize: 10,
-              color: '#4A4338',
+              color: 'var(--color-ink-soft)',
               letterSpacing: 0.4,
               textTransform: 'uppercase',
             }}>
@@ -366,7 +366,7 @@ function PhilosopherCard({
         display: 'block',
         padding: '16px 16px',
         background: color.soft,
-        border: '3px solid #221E18',
+        border: '3px solid var(--color-ink)',
         boxShadow: `4px 4px 0 0 ${color.deep}`,
         borderRadius: 0,
         textDecoration: 'none',
@@ -377,7 +377,7 @@ function PhilosopherCard({
       <div className="pixel-crisp" style={{
         width: 64, height: 64,
         background: '#FFFCF4',
-        border: '2px solid #221E18',
+        border: '2px solid var(--color-ink)',
         padding: 4,
         marginBottom: 10,
       }}>
@@ -387,7 +387,7 @@ function PhilosopherCard({
         fontFamily: serif,
         fontSize: 19,
         fontWeight: 500,
-        color: '#221E18',
+        color: 'var(--color-ink)',
         marginBottom: 2,
       }}>
         {displayName}
@@ -406,7 +406,7 @@ function PhilosopherCard({
         fontFamily: serif,
         fontStyle: 'italic',
         fontSize: 13,
-        color: '#4A4338',
+        color: 'var(--color-ink-soft)',
         lineHeight: 1.45,
       }}>
         {archetypeName}
@@ -436,14 +436,14 @@ function DimRow({
     <li style={{
       padding: '14px 16px',
       background: '#FFFCF4',
-      border: '3px solid #221E18',
+      border: '3px solid var(--color-ink)',
       boxShadow: kind === 'disagree' ? '4px 4px 0 0 #7A2E2E' : '4px 4px 0 0 #2F5D5C',
       borderRadius: 0,
     }}>
       <div style={{
         fontFamily: pixel,
         fontSize: 11,
-        color: '#221E18',
+        color: 'var(--color-ink)',
         letterSpacing: 0.4,
         textTransform: 'uppercase',
         marginBottom: 8,
@@ -487,7 +487,7 @@ function DimRow({
         fontFamily: serif,
         fontStyle: 'italic',
         fontSize: 14,
-        color: '#221E18',
+        color: 'var(--color-ink)',
         margin: 0,
         lineHeight: 1.5,
       }}>
@@ -513,7 +513,7 @@ function DimBar({
     <div style={{
       height: 14,
       background: '#EFE6CC',
-      border: '2px solid #221E18',
+      border: '2px solid var(--color-ink)',
       position: 'relative',
       overflow: 'hidden',
     }}>
@@ -534,18 +534,18 @@ function DimBar({
 const sectionH2: React.CSSProperties = {
   fontFamily: pixel,
   fontSize: 14,
-  color: '#221E18',
+  color: 'var(--color-ink)',
   textTransform: 'uppercase',
   letterSpacing: '0.18em',
   marginBottom: 10,
-  textShadow: '2px 2px 0 #B8862F',
+  textShadow: '2px 2px 0 var(--color-acc)',
 };
 
 const subtitle: React.CSSProperties = {
   fontFamily: serif,
   fontStyle: 'italic',
   fontSize: 15,
-  color: '#4A4338',
+  color: 'var(--color-ink-soft)',
   margin: 0,
   lineHeight: 1.55,
 };

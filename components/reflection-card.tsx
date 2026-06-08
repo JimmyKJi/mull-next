@@ -108,7 +108,7 @@ export default function ReflectionCard() {
         <div style={eyebrow}>▸ {t('crd.reflection_saved_eyebrow', locale)}</div>
         <p style={{
           fontFamily: serif, fontStyle: 'italic',
-          fontSize: 17, color: '#221E18', margin: 0, lineHeight: 1.55,
+          fontSize: 17, color: 'var(--color-ink)', margin: 0, lineHeight: 1.55,
         }}>
           {t('crd.reflection_saved_body', locale)}
         </p>
@@ -121,7 +121,7 @@ export default function ReflectionCard() {
       <div style={eyebrow}>▸ {t('crd.reflection_eyebrow', locale)}</div>
       <p style={{
         fontFamily: serif, fontStyle: 'italic', fontSize: 16,
-        color: '#4A4338', margin: '0 0 18px', lineHeight: 1.55,
+        color: 'var(--color-ink-soft)', margin: '0 0 18px', lineHeight: 1.55,
       }}>
         {t('crd.reflection_intro', locale, { when: relativeWeeks(candidate.created_at, locale) })}
       </p>
@@ -129,9 +129,9 @@ export default function ReflectionCard() {
       {/* Original prompt */}
       <div style={{
         padding: '14px 16px',
-        background: '#F8EDC8',
-        border: '3px solid #221E18',
-        boxShadow: '3px 3px 0 0 #B8862F',
+        background: 'var(--color-acc-soft)',
+        border: '3px solid var(--color-ink)',
+        boxShadow: '3px 3px 0 0 var(--color-acc)',
         borderRadius: 0,
         marginBottom: 14,
       }}>
@@ -140,7 +140,7 @@ export default function ReflectionCard() {
         </div>
         <p style={{
           fontFamily: serif, fontStyle: 'italic',
-          fontSize: 16, color: '#221E18', margin: 0, lineHeight: 1.5,
+          fontSize: 16, color: 'var(--color-ink)', margin: 0, lineHeight: 1.5,
         }}>
           {candidate.question_text}
         </p>
@@ -150,7 +150,7 @@ export default function ReflectionCard() {
       <div style={{
         padding: '14px 16px',
         background: '#FFFCF4',
-        border: '3px solid #221E18',
+        border: '3px solid var(--color-ink)',
         boxShadow: '3px 3px 0 0 #2F5D5C',
         borderRadius: 0,
         marginBottom: 20,
@@ -159,7 +159,7 @@ export default function ReflectionCard() {
           {t('crd.reflection_what_you_wrote', locale)}
         </div>
         <p style={{
-          fontFamily: serif, fontSize: 15.5, color: '#221E18',
+          fontFamily: serif, fontSize: 15.5, color: 'var(--color-ink)',
           margin: 0, lineHeight: 1.6, whiteSpace: 'pre-wrap',
         }}>
           {candidate.response_text}
@@ -197,7 +197,7 @@ export default function ReflectionCard() {
       }}>
         <span style={{
           fontFamily: pixel, fontSize: 11,
-          color: text.trim().length < 10 ? '#7A2E2E' : '#8C6520',
+          color: text.trim().length < 10 ? '#7A2E2E' : 'var(--color-acc-deep)',
           letterSpacing: 0.4,
         }}>
           {t('crd.reflection_counter', locale, { n: text.length })}
@@ -228,7 +228,7 @@ const cardStyle: React.CSSProperties = {
   marginTop: 32,
   padding: '24px 26px',
   background: '#FFFCF4',
-  border: '4px solid #221E18',
+  border: '4px solid var(--color-ink)',
   boxShadow: '5px 5px 0 0 #2F5D5C',
   borderRadius: 0,
 };
@@ -241,6 +241,6 @@ const eyebrow: React.CSSProperties = {
 
 const subEyebrow: React.CSSProperties = {
   fontFamily: pixel, fontSize: 10,
-  color: '#8C6520', textTransform: 'uppercase',
+  color: 'var(--color-acc-deep)', textTransform: 'uppercase',
   letterSpacing: '0.18em', marginBottom: 6,
 };

@@ -78,14 +78,14 @@ export default async function AdminUsagePage() {
   return (
     <main className="mx-auto max-w-[860px] px-6 pb-32 pt-12 sm:px-10 sm:pt-16">
       <div
-        className="mb-6 text-[10px] tracking-[0.24em] text-[#8C6520]"
+        className="mb-6 text-[10px] tracking-[0.24em] text-acc-deep"
         style={{ fontFamily: pixel }}
       >
         ▶ ADMIN · USAGE DASHBOARD
       </div>
       <h1
-        className="text-[36px] leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[44px]"
-        style={{ fontFamily: pixel, textShadow: "3px 3px 0 #B8862F" }}
+        className="text-[36px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[44px]"
+        style={{ fontFamily: pixel, textShadow: "3px 3px 0 var(--color-acc)" }}
       >
         AI SPEND + KILL SWITCH
       </h1>
@@ -102,11 +102,11 @@ export default async function AdminUsagePage() {
           capCents={spend.monthlyCapCents}
         />
         <div
-          className="border-[3px] border-[#221E18] p-3 text-center"
+          className="border-[3px] border-ink p-3 text-center"
           style={{
             background: spend.paused ? "#8C3717" : "#2F5D5C",
-            color: "#F8EDC8",
-            boxShadow: "3px 3px 0 0 #B8862F",
+            color: "var(--color-acc-soft)",
+            boxShadow: "3px 3px 0 0 var(--color-acc)",
           }}
         >
           <div
@@ -126,7 +126,7 @@ export default async function AdminUsagePage() {
 
       {spend.paused && spend.reason && (
         <div
-          className="mt-4 border-[3px] border-[#221E18] bg-[#FEE9E0] p-4"
+          className="mt-4 border-[3px] border-ink bg-[#FEE9E0] p-4"
           style={{ boxShadow: "3px 3px 0 0 #8C3717" }}
         >
           <div
@@ -145,20 +145,20 @@ export default async function AdminUsagePage() {
       )}
 
       <h2
-        className="mt-12 text-[10px] tracking-[0.24em] text-[#8C6520]"
+        className="mt-12 text-[10px] tracking-[0.24em] text-acc-deep"
         style={{ fontFamily: pixel }}
       >
         ▶ PER-BUCKET BREAKDOWN
       </h2>
       <div
-        className="mt-3 overflow-x-auto border-[3px] border-[#221E18] bg-[#FFFCF4]"
-        style={{ boxShadow: "3px 3px 0 0 #B8862F" }}
+        className="mt-3 overflow-x-auto border-[3px] border-ink bg-[#FFFCF4]"
+        style={{ boxShadow: "3px 3px 0 0 var(--color-acc)" }}
       >
         <table className="w-full border-collapse text-[14px]">
           <thead>
             <tr
-              className="border-b-2 border-[#221E18] bg-[#FBF6E8] text-[10px] tracking-[0.18em]"
-              style={{ fontFamily: pixel, color: "#8C6520" }}
+              className="border-b-2 border-ink bg-[#FBF6E8] text-[10px] tracking-[0.18em]"
+              style={{ fontFamily: pixel, color: "var(--color-acc-deep)" }}
             >
               <th className="px-3 py-2 text-left">BUCKET</th>
               <th className="px-3 py-2 text-right">TODAY</th>
@@ -169,19 +169,19 @@ export default async function AdminUsagePage() {
             {AI_BUCKETS.map((b) => (
               <tr key={b} className="border-b border-[#EBE3CA]">
                 <td
-                  className="px-3 py-2 text-[#221E18]"
+                  className="px-3 py-2 text-ink"
                   style={{ fontFamily: "var(--font-editorial)" }}
                 >
                   {BUCKET_LABELS[b] ?? b}
                 </td>
                 <td
-                  className="px-3 py-2 text-right text-[#221E18]"
+                  className="px-3 py-2 text-right text-ink"
                   style={{ fontFamily: pixel }}
                 >
                   {perBucketDay[b] ?? 0}
                 </td>
                 <td
-                  className="px-3 py-2 text-right text-[#221E18]"
+                  className="px-3 py-2 text-right text-ink"
                   style={{ fontFamily: pixel }}
                 >
                   {perBucketMonth[b] ?? 0}
@@ -193,13 +193,13 @@ export default async function AdminUsagePage() {
       </div>
 
       <h2
-        className="mt-10 text-[10px] tracking-[0.24em] text-[#8C6520]"
+        className="mt-10 text-[10px] tracking-[0.24em] text-acc-deep"
         style={{ fontFamily: pixel }}
       >
         ▶ CONTROLS (ENV VARS)
       </h2>
       <div
-        className="mt-3 border-2 border-[#221E18] bg-[#1A1612] p-4 text-[13px] text-[#F8EDC8]"
+        className="mt-3 border-2 border-ink bg-[#1A1612] p-4 text-[13px] text-acc-soft"
         style={{ fontFamily: "Menlo, monospace" }}
       >
         <div>
@@ -225,10 +225,10 @@ export default async function AdminUsagePage() {
         </div>
       </div>
 
-      <p className="mt-10 text-center text-[13px] text-[#8C6520]">
+      <p className="mt-10 text-center text-[13px] text-acc-deep">
         <Link
           href="/account"
-          className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           ← Account
         </Link>
@@ -248,22 +248,22 @@ function SpendStat({
 }) {
   const pct = Math.min(100, Math.round((cents / capCents) * 100));
   const color =
-    pct >= 100 ? "#8C3717" : pct >= 80 ? "#C7522A" : pct >= 50 ? "#B8862F" : "#2F5D5C";
+    pct >= 100 ? "#8C3717" : pct >= 80 ? "#C7522A" : pct >= 50 ? "var(--color-acc)" : "#2F5D5C";
   return (
     <div
-      className="border-[3px] border-[#221E18] bg-[#FFFCF4] p-3 text-center"
+      className="border-[3px] border-ink bg-[#FFFCF4] p-3 text-center"
       style={{ boxShadow: `3px 3px 0 0 ${color}` }}
     >
-      <div className="text-[24px] leading-none text-[#221E18]" style={{ fontFamily: pixel }}>
+      <div className="text-[24px] leading-none text-ink" style={{ fontFamily: pixel }}>
         ${(cents / 100).toFixed(2)}
       </div>
       <div
-        className="mt-1 text-[10px] tracking-[0.18em] text-[#8C6520]"
+        className="mt-1 text-[10px] tracking-[0.18em] text-acc-deep"
         style={{ fontFamily: pixel }}
       >
         OF ${(capCents / 100).toFixed(0)} CAP · {pct}%
       </div>
-      <div className="mt-2 h-2 border border-[#221E18] bg-[#FBF6E8]">
+      <div className="mt-2 h-2 border border-ink bg-[#FBF6E8]">
         <div style={{ width: `${pct}%`, height: "100%", background: color }} />
       </div>
       <div

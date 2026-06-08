@@ -55,33 +55,33 @@ export function PixelWindow({
         bg: accent.soft,
         titleBg: accent.deep,
         titleText: accent.soft,
-        bodyText: "#221E18",
+        bodyText: "var(--color-ink)",
       }
     : variant === "ink"
       ? {
-          border: "#221E18",
-          shadow: "#8C6520",
+          border: "var(--color-ink)",
+          shadow: "var(--color-acc-deep)",
           bg: "#1A1612",
-          titleBg: "#221E18",
-          titleText: "#F8EDC8",
-          bodyText: "#F8EDC8",
+          titleBg: "var(--color-ink)",
+          titleText: "var(--color-acc-soft)",
+          bodyText: "var(--color-acc-soft)",
         }
       : variant === "amber"
         ? {
-            border: "#8C6520",
-            shadow: "#8C6520",
-            bg: "#F8EDC8",
-            titleBg: "#8C6520",
-            titleText: "#F8EDC8",
-            bodyText: "#221E18",
+            border: "var(--color-acc-deep)",
+            shadow: "var(--color-acc-deep)",
+            bg: "var(--color-acc-soft)",
+            titleBg: "var(--color-acc-deep)",
+            titleText: "var(--color-acc-soft)",
+            bodyText: "var(--color-ink)",
           }
         : {
-            border: "#221E18",
-            shadow: "#221E18",
+            border: "var(--color-ink)",
+            shadow: "var(--color-ink)",
             bg: "#FFFCF4",
-            titleBg: "#221E18",
-            titleText: "#F8EDC8",
-            bodyText: "#221E18",
+            titleBg: "var(--color-ink)",
+            titleText: "var(--color-acc-soft)",
+            bodyText: "var(--color-ink)",
           };
 
   return (
@@ -105,7 +105,7 @@ export function PixelWindow({
           }}
         >
           <span>{title}</span>
-          {badge ? <span className="text-[#B8862F]">{badge}</span> : null}
+          {badge ? <span className="text-acc">{badge}</span> : null}
         </div>
       ) : null}
       <div className={(flush ? "" : "px-5 py-5 sm:px-7 sm:py-6 ") + (bodyClassName ?? "")}>
@@ -135,8 +135,8 @@ type HeaderProps = {
 };
 
 export function PixelPageHeader({ eyebrow, title, subtitle, accent }: HeaderProps) {
-  const accentColor = accent?.deep ?? "#8C6520";
-  const shadowColor = accent?.primary ?? "#B8862F";
+  const accentColor = accent?.deep ?? "var(--color-acc-deep)";
+  const shadowColor = accent?.primary ?? "var(--color-acc)";
   return (
     <header className="mb-10 sm:mb-14">
       {eyebrow ? (
@@ -155,7 +155,7 @@ export function PixelPageHeader({ eyebrow, title, subtitle, accent }: HeaderProp
           set the upper breakpoints (sm/md) so wider screens keep the
           chunkier 32px / 44px the design intends. */}
       <h1
-        className="mull-pixel-title mt-5 pr-2 leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[32px] md:text-[44px]"
+        className="mull-pixel-title mt-5 pr-2 leading-[1.1] tracking-[0.04em] text-ink sm:text-[32px] md:text-[44px]"
         style={{ fontFamily: "var(--font-pixel-display)" }}
       >
         <span className="mull-pixel-title-shadow" style={{ ['--mull-shadow-color' as string]: shadowColor } as React.CSSProperties}>
@@ -171,7 +171,7 @@ export function PixelPageHeader({ eyebrow, title, subtitle, accent }: HeaderProp
         }
       `}</style>
       {subtitle ? (
-        <div className="mt-5 max-w-[680px] text-[15px] leading-[1.6] text-[#4A4338] sm:text-[16px]">
+        <div className="mt-5 max-w-[680px] text-[15px] leading-[1.6] text-ink-soft sm:text-[16px]">
           {subtitle}
         </div>
       ) : null}

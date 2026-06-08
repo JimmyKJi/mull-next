@@ -113,8 +113,8 @@ export default function CapabilityToast() {
             style={{
               padding: "10px 14px",
               background: t.leveledUp ? meta.color : "#1A1612",
-              color: "#F8EDC8",
-              border: "3px solid #221E18",
+              color: "var(--color-acc-soft)",
+              border: "3px solid var(--color-ink)",
               boxShadow: `4px 4px 0 0 ${t.leveledUp ? "#F8C75E" : meta.color}`,
               minWidth: 220,
               fontFamily: pixel,

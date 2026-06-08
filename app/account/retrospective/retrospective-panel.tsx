@@ -54,7 +54,7 @@ export default function RetrospectivePanel({ locale = 'en' }: { locale?: Locale 
   return (
     <div className="pixel-form">
       <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', marginBottom: 24 }}>
-        <label style={{ fontFamily: sans, fontSize: 13, color: '#4A4338' }}>
+        <label style={{ fontFamily: sans, fontSize: 13, color: 'var(--color-ink-soft)' }}>
           {t('retro.year_label', locale)}{' '}
           <select
             value={year}
@@ -63,10 +63,10 @@ export default function RetrospectivePanel({ locale = 'en' }: { locale?: Locale 
               fontFamily: sans,
               fontSize: 14,
               padding: '6px 10px',
-              border: '1px solid #D6CDB6',
+              border: '1px solid var(--color-line)',
               borderRadius: 6,
               background: '#FFFCF4',
-              color: '#221E18',
+              color: 'var(--color-ink)',
             }}
             aria-label={t('a11y.select_year', locale)}
           >
@@ -82,8 +82,8 @@ export default function RetrospectivePanel({ locale = 'en' }: { locale?: Locale 
             fontSize: 14.5,
             fontWeight: 500,
             padding: '11px 22px',
-            background: '#221E18',
-            color: '#FAF6EC',
+            background: 'var(--color-ink)',
+            color: 'var(--color-cream)',
             border: 'none',
             borderRadius: 8,
             cursor: loading ? 'wait' : 'pointer',
@@ -124,7 +124,7 @@ export default function RetrospectivePanel({ locale = 'en' }: { locale?: Locale 
             <div style={{
               padding: '20px 18px',
               background: '#FFFCF4',
-              border: '3px dashed #8C6520',
+              border: '3px dashed var(--color-acc-deep)',
               borderRadius: 0,
             }}>
               <EmptyStateSprite
@@ -156,7 +156,7 @@ export default function RetrospectivePanel({ locale = 'en' }: { locale?: Locale 
                 fontFamily: sans,
                 fontSize: 11,
                 fontWeight: 600,
-                color: '#8C6520',
+                color: 'var(--color-acc-deep)',
                 textTransform: 'uppercase',
                 letterSpacing: '0.16em',
                 marginBottom: 10,
@@ -173,7 +173,7 @@ export default function RetrospectivePanel({ locale = 'en' }: { locale?: Locale 
                     <strong style={{ fontVariantNumeric: 'tabular-nums' }}>
                       {s.delta > 0 ? '+' : ''}{s.delta.toFixed(1)}
                     </strong>{' '}
-                    <span style={{ color: '#4A4338' }}>{s.name}</span>
+                    <span style={{ color: 'var(--color-ink-soft)' }}>{s.name}</span>
                   </span>
                 ))}
               </div>
@@ -185,12 +185,12 @@ export default function RetrospectivePanel({ locale = 'en' }: { locale?: Locale 
             <article style={{
               padding: '32px 36px',
               background: '#FFFCF4',
-              border: '4px solid #221E18',
-              boxShadow: '5px 5px 0 0 #B8862F',
+              border: '4px solid var(--color-ink)',
+              boxShadow: '5px 5px 0 0 var(--color-acc)',
               borderRadius: 0,
               fontFamily: serif,
               fontSize: 17.5,
-              color: '#221E18',
+              color: 'var(--color-ink)',
               lineHeight: 1.7,
             }}>
               {result.essay.split(/\n\n+/).map((para, i) => (
@@ -202,7 +202,7 @@ export default function RetrospectivePanel({ locale = 'en' }: { locale?: Locale 
               fontFamily: serif,
               fontStyle: 'italic',
               fontSize: 16,
-              color: '#8C6520',
+              color: 'var(--color-acc-deep)',
               opacity: 0.85,
             }}>
               {t('retro.essay_failed', locale)}
@@ -265,8 +265,8 @@ function RetrospectiveTypewriter({ year }: { year: number }) {
     <div style={{
       padding: '24px 28px',
       background: '#FFFCF4',
-      border: '4px solid #221E18',
-      boxShadow: '5px 5px 0 0 #B8862F',
+      border: '4px solid var(--color-ink)',
+      boxShadow: '5px 5px 0 0 var(--color-acc)',
       borderRadius: 0,
       marginBottom: 24,
       minHeight: 110,
@@ -274,7 +274,7 @@ function RetrospectiveTypewriter({ year }: { year: number }) {
       <div style={{
         fontFamily: 'var(--font-pixel-display)',
         fontSize: 11,
-        color: '#8C6520',
+        color: 'var(--color-acc-deep)',
         textTransform: 'uppercase',
         letterSpacing: '0.18em',
         marginBottom: 12,
@@ -285,7 +285,7 @@ function RetrospectiveTypewriter({ year }: { year: number }) {
         fontFamily: serif,
         fontStyle: 'italic',
         fontSize: 17,
-        color: '#221E18',
+        color: 'var(--color-ink)',
         margin: 0,
         lineHeight: 1.55,
       }}>
@@ -301,7 +301,7 @@ function RetrospectiveTypewriter({ year }: { year: number }) {
                   width: 9,
                   height: 16,
                   marginLeft: 2,
-                  background: '#B8862F',
+                  background: 'var(--color-acc)',
                   verticalAlign: '-2px',
                 }}
                 className="pixel-blink"
@@ -318,15 +318,15 @@ function Stat({ label, value }: { label: string; value: number }) {
     <div style={{
       padding: '14px 16px',
       background: '#FFFCF4',
-      border: '3px solid #221E18',
-      boxShadow: '3px 3px 0 0 #8C6520',
+      border: '3px solid var(--color-ink)',
+      boxShadow: '3px 3px 0 0 var(--color-acc-deep)',
       borderRadius: 0,
     }}>
       <div style={{
         fontFamily: serif,
         fontSize: 28,
         fontWeight: 500,
-        color: '#221E18',
+        color: 'var(--color-ink)',
         lineHeight: 1,
       }}>
         {value}
@@ -334,7 +334,7 @@ function Stat({ label, value }: { label: string; value: number }) {
       <div style={{
         fontFamily: sans,
         fontSize: 11,
-        color: '#8C6520',
+        color: 'var(--color-acc-deep)',
         textTransform: 'uppercase',
         letterSpacing: '0.16em',
         marginTop: 6,

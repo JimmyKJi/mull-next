@@ -38,10 +38,10 @@ export default async function ReadingHourPage() {
         accent={{ primary: "#3D6FA5", deep: "#0F2236", soft: "#E0E8F0" }}
         meantime={{ href: "/pilgrimage", label: t("rd.meantime", locale) }}
       />
-      <p className="mt-12 text-center text-[13px] text-[#8C6520]">
+      <p className="mt-12 text-center text-[13px] text-acc-deep">
         <Link
           href="/"
-          className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           {t("rd.back", locale)}
         </Link>

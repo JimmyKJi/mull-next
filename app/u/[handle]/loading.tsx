@@ -47,7 +47,7 @@ export default async function Loading() {
         marginTop: 60,
         fontFamily: pixel,
         fontSize: 11,
-        color: '#8C6520',
+        color: 'var(--color-acc-deep)',
         opacity: 0.85,
         letterSpacing: 0.4,
         textTransform: 'uppercase',

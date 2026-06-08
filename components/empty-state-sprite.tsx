@@ -118,7 +118,7 @@ export default function EmptyStateSprite({
             fontFamily: "var(--font-prose)",
             fontStyle: 'italic',
             fontSize: 15,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             margin: 0,
             textAlign: 'center',
             maxWidth: 320,

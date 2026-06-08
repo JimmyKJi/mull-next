@@ -151,8 +151,8 @@ function ConsentScreen({
         <div
           style={{
             background: "#FFFCF4",
-            border: "4px solid #221E18",
-            boxShadow: "6px 6px 0 0 #B8862F",
+            border: "4px solid var(--color-ink)",
+            boxShadow: "6px 6px 0 0 var(--color-acc)",
             padding: "32px 30px",
           }}
         >
@@ -160,7 +160,7 @@ function ConsentScreen({
             style={{
               fontFamily: pixel,
               fontSize: 10,
-              color: "#8C6520",
+              color: "var(--color-acc-deep)",
               letterSpacing: "0.22em",
               textTransform: "uppercase",
               marginBottom: 18,
@@ -172,12 +172,12 @@ function ConsentScreen({
             style={{
               fontFamily: pixel,
               fontSize: 18,
-              color: "#221E18",
+              color: "var(--color-ink)",
               letterSpacing: "0.04em",
               textTransform: "uppercase",
               lineHeight: 1.2,
               margin: "0 0 16px",
-              textShadow: "3px 3px 0 #B8862F",
+              textShadow: "3px 3px 0 var(--color-acc)",
             }}
           >
             {t("consent.title", locale)}
@@ -187,7 +187,7 @@ function ConsentScreen({
             style={{
               fontFamily: serif,
               fontSize: 16,
-              color: "#221E18",
+              color: "var(--color-ink)",
               lineHeight: 1.65,
               margin: "0 0 14px",
             }}
@@ -203,9 +203,9 @@ function ConsentScreen({
               <Link
                 href="/consent"
                 style={{
-                  color: "#8C6520",
+                  color: "var(--color-acc-deep)",
                   textDecoration: "underline",
-                  textDecorationColor: "#B8862F",
+                  textDecorationColor: "var(--color-acc)",
                 }}
               >
                 /consent
@@ -229,7 +229,7 @@ function ConsentScreen({
                 padding: "14px 18px",
                 background: "#F8C75E",
                 color: "#1A1820",
-                border: "3px solid #221E18",
+                border: "3px solid var(--color-ink)",
                 boxShadow: "4px 4px 0 0 #2F5D5C",
                 fontFamily: pixel,
                 fontSize: 12,
@@ -249,8 +249,8 @@ function ConsentScreen({
                 width: "100%",
                 padding: "12px 18px",
                 background: "transparent",
-                color: "#4A4338",
-                border: "2px solid #8C6520",
+                color: "var(--color-ink-soft)",
+                border: "2px solid var(--color-acc-deep)",
                 fontFamily: pixel,
                 fontSize: 11,
                 letterSpacing: "0.16em",
@@ -267,7 +267,7 @@ function ConsentScreen({
                 paddingTop: 6,
                 fontFamily: serif,
                 fontSize: 14,
-                color: "#8C6520",
+                color: "var(--color-acc-deep)",
                 textDecoration: "underline",
                 textDecorationColor: "rgba(184, 134, 47, 0.4)",
               }}
@@ -306,8 +306,8 @@ function DemographicsStep({
         <div
           style={{
             background: "#FFFCF4",
-            border: "4px solid #221E18",
-            boxShadow: "6px 6px 0 0 #B8862F",
+            border: "4px solid var(--color-ink)",
+            boxShadow: "6px 6px 0 0 var(--color-acc)",
             padding: "32px 30px",
           }}
         >
@@ -315,7 +315,7 @@ function DemographicsStep({
             style={{
               fontFamily: pixel,
               fontSize: 10,
-              color: "#8C6520",
+              color: "var(--color-acc-deep)",
               letterSpacing: "0.22em",
               textTransform: "uppercase",
               marginBottom: 14,
@@ -327,12 +327,12 @@ function DemographicsStep({
             style={{
               fontFamily: pixel,
               fontSize: 18,
-              color: "#221E18",
+              color: "var(--color-ink)",
               letterSpacing: "0.04em",
               textTransform: "uppercase",
               lineHeight: 1.2,
               margin: "0 0 12px",
-              textShadow: "3px 3px 0 #B8862F",
+              textShadow: "3px 3px 0 var(--color-acc)",
             }}
           >
             {t("demo.gate_title", locale)}
@@ -341,7 +341,7 @@ function DemographicsStep({
             style={{
               fontFamily: serif,
               fontSize: 15.5,
-              color: "#4A4338",
+              color: "var(--color-ink-soft)",
               lineHeight: 1.6,
               margin: "0 0 22px",
             }}
@@ -360,7 +360,7 @@ function DemographicsStep({
 function emph(text: string): React.ReactNode[] {
   return text.split(/(\*\*[^*]+\*\*)/g).map((seg, i) =>
     seg.startsWith("**") && seg.endsWith("**") ? (
-      <strong key={i} style={{ color: "#221E18" }}>
+      <strong key={i} style={{ color: "var(--color-ink)" }}>
         {seg.slice(2, -2)}
       </strong>
     ) : (

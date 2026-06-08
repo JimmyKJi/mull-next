@@ -111,7 +111,7 @@ export default async function HomeV2() {
         }}
       />
 
-      <main className="relative z-10 min-h-[100svh] bg-[#FAF6EC] text-[#221E18]">
+      <main className="relative z-10 min-h-[100svh] bg-cream text-ink">
         {/* SiteNav (in app/layout.tsx) is the global top bar now. */}
 
         {/* ─── Hero — pixel opening screen, 2 columns ───────────
@@ -123,36 +123,36 @@ export default async function HomeV2() {
             {/* ── Left column: title + CTA ── */}
             <div className="relative">
               <div
-                className="flex items-center gap-3 text-[10px] tracking-[0.24em] text-[#8C6520]"
+                className="flex items-center gap-3 text-[10px] tracking-[0.24em] text-acc-deep"
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
-                <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F] pixel-blink" />
+                <span aria-hidden className="inline-block h-2 w-2 bg-acc pixel-blink" />
                 <span>{t("home.eyebrow_atlas", locale)}</span>
               </div>
 
               <h1
-                className="mt-6 text-[64px] leading-none tracking-[0.04em] text-[#221E18] sm:text-[96px] md:text-[128px]"
+                className="mt-6 text-[64px] leading-none tracking-[0.04em] text-ink sm:text-[96px] md:text-[128px]"
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
-                <span className="inline-block" style={{ textShadow: "6px 6px 0 #B8862F" }}>
+                <span className="inline-block" style={{ textShadow: "6px 6px 0 var(--color-acc)" }}>
                   MULL
                 </span>
               </h1>
 
               <p
-                className="mt-7 max-w-[680px] text-[22px] font-light leading-[1.35] text-[#221E18] sm:text-[26px]"
+                className="mt-7 max-w-[680px] text-[22px] font-light leading-[1.35] text-ink sm:text-[26px]"
                 dangerouslySetInnerHTML={{ __html: t("home.hero_tagline", locale) }}
               />
 
               <div className="mt-10 max-w-[640px]">
                 <div className="pixel-panel pixel-panel--amber">
                   <div
-                    className="border-b-4 border-[#8C6520] bg-[#8C6520] px-4 py-1.5 text-[10px] tracking-[0.2em] text-[#F8EDC8]"
+                    className="border-b-4 border-acc-deep bg-acc-deep px-4 py-1.5 text-[10px] tracking-[0.2em] text-acc-soft"
                     style={{ fontFamily: "var(--font-pixel-display)" }}
                   >
                     ▶ {t("home.quest_brief", locale)}
                   </div>
-                  <p className="px-5 py-4 text-[16px] font-normal leading-[1.55] text-[#221E18] sm:text-[17px]">
+                  <p className="px-5 py-4 text-[16px] font-normal leading-[1.55] text-ink sm:text-[17px]">
                     {t("home.hero_lede", locale)}
                   </p>
                 </div>
@@ -167,22 +167,22 @@ export default async function HomeV2() {
                 {/* — Tier 1: The Quiz — */}
                 <Link
                   href="/quiz/journey"
-                  className="block border-[4px] border-[#221E18] bg-[#FFFCF4] p-5 transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
-                  style={{ boxShadow: "5px 5px 0 0 #B8862F" }}
+                  className="block border-[4px] border-ink bg-[#FFFCF4] p-5 transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
+                  style={{ boxShadow: "5px 5px 0 0 var(--color-acc)" }}
                 >
                   <div
-                    className="text-[10px] tracking-[0.22em] text-[#8C6520]"
+                    className="text-[10px] tracking-[0.22em] text-acc-deep"
                     style={{ fontFamily: "var(--font-pixel-display)" }}
                   >
                     ▶ {t("home.inheritor_eyebrow", locale)}
                   </div>
                   <div
-                    className="mt-2 text-[18px] font-medium leading-[1.2] text-[#221E18]"
+                    className="mt-2 text-[18px] font-medium leading-[1.2] text-ink"
                     style={{ fontFamily: "var(--font-prose)" }}
                   >
                     {t("home.inheritor_title", locale)}
                   </div>
-                  <p className="mt-2 text-[13.5px] leading-[1.5] text-[#4A4338]">
+                  <p className="mt-2 text-[13.5px] leading-[1.5] text-ink-soft">
                     {t("home.inheritor_body", locale)}
                   </p>
                   <div
@@ -196,7 +196,7 @@ export default async function HomeV2() {
                 {/* — Tier 1: The Arena — */}
                 <Link
                   href="/arena"
-                  className="block border-[4px] border-[#221E18] bg-[#FFFCF4] p-5 transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
+                  className="block border-[4px] border-ink bg-[#FFFCF4] p-5 transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
                   style={{ boxShadow: "5px 5px 0 0 #2F5D5C" }}
                 >
                   <div
@@ -206,12 +206,12 @@ export default async function HomeV2() {
                     ▶ {t("home.arena_eyebrow", locale)}
                   </div>
                   <div
-                    className="mt-2 text-[18px] font-medium leading-[1.2] text-[#221E18]"
+                    className="mt-2 text-[18px] font-medium leading-[1.2] text-ink"
                     style={{ fontFamily: "var(--font-prose)" }}
                   >
                     {t("home.arena_title", locale)}
                   </div>
-                  <p className="mt-2 text-[13.5px] leading-[1.5] text-[#4A4338]">
+                  <p className="mt-2 text-[13.5px] leading-[1.5] text-ink-soft">
                     {t("home.arena_body", locale)}
                   </p>
                   <div
@@ -223,9 +223,9 @@ export default async function HomeV2() {
                 </Link>
               </div>
 
-              <p className="mt-5 max-w-[640px] text-[13.5px] leading-[1.55] text-[#8C6520]">
+              <p className="mt-5 max-w-[640px] text-[13.5px] leading-[1.55] text-acc-deep">
                 {t("home.no_signup", locale)}{" "}
-                <Link href="/quiz?mode=quick" className="text-[#4A4338] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]">
+                <Link href="/quiz?mode=quick" className="text-ink-soft underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep">
                   {t("home.classic_instead", locale)}
                 </Link>{" "}
                 {t("home.same_placement", locale)}
@@ -245,7 +245,7 @@ export default async function HomeV2() {
                   floating
                 />
                 <span
-                  className="text-[10px] tracking-[0.18em] text-[#8C6520]"
+                  className="text-[10px] tracking-[0.18em] text-acc-deep"
                   style={{ fontFamily: "var(--font-pixel-display)" }}
                 >
                   ▸ {t("home.one_of_560_l1", locale, { count: PHILOSOPHERS.length })}<br/>{t("home.one_of_560_l2", locale)}
@@ -274,25 +274,25 @@ export default async function HomeV2() {
         <ScrollReveal as="section" className="px-6 pb-16 sm:px-10 sm:pb-20">
           <div className="mx-auto max-w-[1200px]">
             <div
-              className="text-[10px] tracking-[0.24em] text-[#8C6520]"
+              className="text-[10px] tracking-[0.24em] text-acc-deep"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
               ▸ {t("home.rhythm_eyebrow", locale)}
             </div>
             <h2
-              className="mt-4 text-[26px] leading-[1.05] tracking-[0.04em] text-[#221E18] sm:text-[34px]"
+              className="mt-4 text-[26px] leading-[1.05] tracking-[0.04em] text-ink sm:text-[34px]"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
-              <span style={{ textShadow: "3px 3px 0 #B8862F" }}>{t("home.rhythm_title", locale)}</span>
+              <span style={{ textShadow: "3px 3px 0 var(--color-acc)" }}>{t("home.rhythm_title", locale)}</span>
             </h2>
             <p
-              className="mt-3 max-w-[680px] text-[15px] leading-[1.55] text-[#4A4338] sm:text-[16px]"
+              className="mt-3 max-w-[680px] text-[15px] leading-[1.55] text-ink-soft sm:text-[16px]"
               style={{ fontFamily: "var(--font-editorial)" }}
             >
               {t("home.rhythm_intro_pre", locale)}
               <Link
                 href="/atlas"
-                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
               >
                 {t("home.rhythm_intro_atlas", locale)}
               </Link>
@@ -373,26 +373,26 @@ export default async function HomeV2() {
           <div className="mx-auto max-w-[1200px]">
             <div className="pixel-panel">
               <div
-                className="flex items-center justify-between border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
+                className="flex items-center justify-between border-b-4 border-ink bg-ink px-4 py-2 text-[10px] tracking-[0.22em] text-acc-soft"
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
                 <span>{todayLabel.toUpperCase()}</span>
-                <span className="text-[#B8862F]">▶ {t("home.daily_drop", locale)}</span>
+                <span className="text-acc">▶ {t("home.daily_drop", locale)}</span>
               </div>
               <div className="relative grid grid-cols-1 md:grid-cols-[1fr_auto] md:items-center">
                 <div className="px-6 py-7 sm:px-10 sm:py-9">
                   <p
-                    className="text-[24px] leading-[1.35] text-[#221E18] sm:text-[30px]"
+                    className="text-[24px] leading-[1.35] text-ink sm:text-[30px]"
                     style={{ fontFamily: "var(--font-editorial)", paddingRight: 56 }}
                   >
                     <em>&ldquo;{philosopher.keyIdea}&rdquo;</em>
                   </p>
-                  <div className="mt-5 flex items-center gap-3 text-[14px] text-[#4A4338]">
-                    <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
+                  <div className="mt-5 flex items-center gap-3 text-[14px] text-ink-soft">
+                    <span aria-hidden className="inline-block h-2 w-2 bg-acc" />
                     <span>
                       {philosopher.name}
                       {philosopher.dates ? (
-                        <span className="text-[#8C6520]"> · {philosopher.dates}</span>
+                        <span className="text-acc-deep"> · {philosopher.dates}</span>
                       ) : null}
                     </span>
                   </div>
@@ -402,7 +402,7 @@ export default async function HomeV2() {
                     Mobile: 48px sprite floated top-right inside the
                     quote, with quote padding-right reserving the space.
                     Same delight beat for both viewports. */}
-                <div className="hidden border-l-4 border-[#221E18] bg-[#F8EDC8] px-8 py-7 md:block">
+                <div className="hidden border-l-4 border-ink bg-acc-soft px-8 py-7 md:block">
                   <PhilosopherSprite
                     name={philosopher.name}
                     archetypeKey={philosopher.archetypeKey}
@@ -433,39 +433,39 @@ export default async function HomeV2() {
 
         {/* ─── The constellation — pixel-framed for this slice
             (next slice replaces R3F with a 2D pixel overworld) ─── */}
-        <ScrollReveal as="section" className="border-y-4 border-[#221E18] bg-[#FFFCF4] px-6 py-14 sm:px-10 sm:py-20">
+        <ScrollReveal as="section" className="border-y-4 border-ink bg-[#FFFCF4] px-6 py-14 sm:px-10 sm:py-20">
           <div className="mx-auto max-w-[1200px]">
             <div className="max-w-[800px]">
               <div
-                className="flex items-center gap-3 text-[10px] tracking-[0.24em] text-[#8C6520]"
+                className="flex items-center gap-3 text-[10px] tracking-[0.24em] text-acc-deep"
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
-                <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
+                <span aria-hidden className="inline-block h-2 w-2 bg-acc" />
                 {t("home.realm_eyebrow", locale)}
               </div>
               <h2
-                className="mt-5 pr-2 text-[28px] leading-[1.05] tracking-[0.04em] text-[#221E18] sm:text-[40px] md:text-[48px]"
+                className="mt-5 pr-2 text-[28px] leading-[1.05] tracking-[0.04em] text-ink sm:text-[40px] md:text-[48px]"
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
-                <span style={{ textShadow: "3px 3px 0 #B8862F" }}>
+                <span style={{ textShadow: "3px 3px 0 var(--color-acc)" }}>
                   {t("home.n_thinkers", locale, { count: PHILOSOPHERS.length })}
                 </span>
               </h2>
-              <p className="mt-5 max-w-[640px] text-[16px] leading-[1.6] text-[#4A4338] sm:text-[17px]">
+              <p className="mt-5 max-w-[640px] text-[16px] leading-[1.6] text-ink-soft sm:text-[17px]">
                 {t("home.realm_body", locale)}
               </p>
             </div>
 
             {/* Pixel-framed map container */}
-            <div className="mt-10 border-4 border-[#221E18] bg-[#0E1419] shadow-[8px_8px_0_0_#8C6520]">
+            <div className="mt-10 border-4 border-ink bg-[#0E1419] shadow-[8px_8px_0_0_var(--color-acc-deep)]">
               <div
-                className="flex items-center justify-between border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2"
+                className="flex items-center justify-between border-b-4 border-ink bg-ink px-4 py-2"
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
-                <span className="text-[10px] tracking-[0.18em] text-[#F8EDC8]">
+                <span className="text-[10px] tracking-[0.18em] text-acc-soft">
                   ▶ MAP_OF_MINDS.EXE
                 </span>
-                <span className="text-[10px] tracking-[0.14em] text-[#B8862F]">
+                <span className="text-[10px] tracking-[0.14em] text-acc">
                   {t("home.map_controls", locale)}
                 </span>
               </div>
@@ -473,7 +473,7 @@ export default async function HomeV2() {
             </div>
 
             <p
-              className="mt-5 max-w-[720px] text-[14px] leading-[1.55] text-[#8C6520]"
+              className="mt-5 max-w-[720px] text-[14px] leading-[1.55] text-acc-deep"
               dangerouslySetInnerHTML={{ __html: t("home.realm_footer", locale) }}
             />
           </div>
@@ -491,17 +491,17 @@ export default async function HomeV2() {
             pixel-glyph icon, a chunky pixel heading, and short body. */}
         <ScrollReveal as="section" className="mx-auto max-w-[1200px] px-6 py-20 sm:px-10 sm:py-28">
           <div
-            className="flex items-center gap-3 text-[10px] tracking-[0.24em] text-[#8C6520]"
+            className="flex items-center gap-3 text-[10px] tracking-[0.24em] text-acc-deep"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
-            <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
+            <span aria-hidden className="inline-block h-2 w-2 bg-acc" />
             {t("home.what_eyebrow", locale)}
           </div>
           <h2
-            className="mt-5 text-[28px] leading-none tracking-[0.04em] text-[#221E18] sm:text-[40px]"
+            className="mt-5 text-[28px] leading-none tracking-[0.04em] text-ink sm:text-[40px]"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
-            <span style={{ textShadow: "4px 4px 0 #B8862F" }}>{t("home.what_title", locale)}</span>
+            <span style={{ textShadow: "4px 4px 0 var(--color-acc)" }}>{t("home.what_title", locale)}</span>
           </h2>
 
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -527,7 +527,7 @@ export default async function HomeV2() {
             ].map((card) => (
               <div key={card.title} className="pixel-panel">
                 <div
-                  className="flex items-center justify-between border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
+                  className="flex items-center justify-between border-b-4 border-ink bg-ink px-4 py-2 text-[10px] tracking-[0.22em] text-acc-soft"
                   style={{ fontFamily: "var(--font-pixel-display)" }}
                 >
                   <span>{card.glyph}</span>
@@ -535,15 +535,15 @@ export default async function HomeV2() {
                 </div>
                 <div className="px-5 py-5">
                   <div
-                    className="text-[64px] leading-none text-[#B8862F]"
+                    className="text-[64px] leading-none text-acc"
                     style={{
                       fontFamily: "var(--font-pixel-display)",
-                      textShadow: "4px 4px 0 #221E18",
+                      textShadow: "4px 4px 0 var(--color-ink)",
                     }}
                   >
                     {card.num}
                   </div>
-                  <p className="mt-5 text-[15px] leading-[1.6] text-[#4A4338] sm:text-[16px]">
+                  <p className="mt-5 text-[15px] leading-[1.6] text-ink-soft sm:text-[16px]">
                     {card.body}
                   </p>
                 </div>
@@ -558,22 +558,22 @@ export default async function HomeV2() {
             Tier 1 (Quiz + Arena) already lived in the hero; this
             section makes the rest of the product navigable so users
             who skip the hero CTAs still see what's here. */}
-        <ScrollReveal as="section" className="mx-auto max-w-[1200px] border-t-4 border-[#221E18] px-6 py-20 sm:px-10 sm:py-24">
+        <ScrollReveal as="section" className="mx-auto max-w-[1200px] border-t-4 border-ink px-6 py-20 sm:px-10 sm:py-24">
           <div
-            className="flex items-center gap-3 text-[10px] tracking-[0.24em] text-[#8C6520]"
+            className="flex items-center gap-3 text-[10px] tracking-[0.24em] text-acc-deep"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
-            <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
+            <span aria-hidden className="inline-block h-2 w-2 bg-acc" />
             {t("home.can_eyebrow", locale)}
           </div>
           <h2
-            className="mt-5 text-[28px] leading-none tracking-[0.04em] text-[#221E18] sm:text-[40px]"
+            className="mt-5 text-[28px] leading-none tracking-[0.04em] text-ink sm:text-[40px]"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
-            <span style={{ textShadow: "4px 4px 0 #B8862F" }}>{t("home.can_title", locale)}</span>
+            <span style={{ textShadow: "4px 4px 0 var(--color-acc)" }}>{t("home.can_title", locale)}</span>
           </h2>
           <p
-            className="mt-5 max-w-[640px] text-[16px] leading-[1.55] text-[#4A4338]"
+            className="mt-5 max-w-[640px] text-[16px] leading-[1.55] text-ink-soft"
             style={{ fontFamily: "var(--font-prose)" }}
           >
             {t("home.can_intro", locale)}
@@ -613,10 +613,10 @@ export default async function HomeV2() {
               grid. These are real and useful but not where new users
               should start. */}
           <div
-            className="mt-12 flex items-center gap-3 text-[10px] tracking-[0.22em] text-[#8C6520]"
+            className="mt-12 flex items-center gap-3 text-[10px] tracking-[0.22em] text-acc-deep"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
-            <span aria-hidden className="inline-block h-2 w-2 bg-[#8C6520]" />
+            <span aria-hidden className="inline-block h-2 w-2 bg-acc-deep" />
             {t("home.deepen_label", locale)}
           </div>
           <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -643,22 +643,22 @@ export default async function HomeV2() {
           </div>
 
           {/* Tier 4 — utility + social. Quietest row. */}
-          <div className="mt-10 flex flex-wrap items-center gap-4 text-[12px] text-[#8C6520]">
+          <div className="mt-10 flex flex-wrap items-center gap-4 text-[12px] text-acc-deep">
             <span
               className="text-[10px] tracking-[0.22em]"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
               ▸ {t("home.also_label", locale)}
             </span>
-            <Link href="/wrapped" className="hover:text-[#221E18]">{t("home.also_wrapped", locale)}</Link>
+            <Link href="/wrapped" className="hover:text-ink">{t("home.also_wrapped", locale)}</Link>
             <span>·</span>
-            <Link href="/classes" className="hover:text-[#221E18]">{t("home.also_classes", locale)}</Link>
+            <Link href="/classes" className="hover:text-ink">{t("home.also_classes", locale)}</Link>
             <span>·</span>
-            <Link href="/install" className="hover:text-[#221E18]">{t("home.add_home", locale)}</Link>
+            <Link href="/install" className="hover:text-ink">{t("home.add_home", locale)}</Link>
             <span>·</span>
-            <Link href="/about" className="hover:text-[#221E18]">{t("home.also_about", locale)}</Link>
+            <Link href="/about" className="hover:text-ink">{t("home.also_about", locale)}</Link>
             <span>·</span>
-            <Link href="/methodology" className="hover:text-[#221E18]">{t("nav.methodology", locale)}</Link>
+            <Link href="/methodology" className="hover:text-ink">{t("nav.methodology", locale)}</Link>
           </div>
         </ScrollReveal>
 
@@ -667,34 +667,34 @@ export default async function HomeV2() {
             figure rendered with image-rendering:pixelated so it
             reads as a sprite, framed in a pixel panel in the
             archetype's color. */}
-        <ScrollReveal as="section" className="mx-auto max-w-[1200px] border-t-4 border-[#221E18] px-6 py-20 sm:px-10 sm:py-28">
+        <ScrollReveal as="section" className="mx-auto max-w-[1200px] border-t-4 border-ink px-6 py-20 sm:px-10 sm:py-28">
           <div className="flex items-baseline justify-between">
             <div>
               <div
-                className="flex items-center gap-3 text-[10px] tracking-[0.24em] text-[#8C6520]"
+                className="flex items-center gap-3 text-[10px] tracking-[0.24em] text-acc-deep"
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
-                <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
+                <span aria-hidden className="inline-block h-2 w-2 bg-acc" />
                 {t("home.arch_eyebrow", locale)}
               </div>
               <h2
-                className="mt-5 pr-2 text-[22px] leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[32px] md:text-[40px]"
+                className="mt-5 pr-2 text-[22px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[32px] md:text-[40px]"
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
-                <span style={{ textShadow: "3px 3px 0 #B8862F" }}>
+                <span style={{ textShadow: "3px 3px 0 var(--color-acc)" }}>
                   {t("home.arch_title", locale)}
                 </span>
               </h2>
             </div>
             <Link
               href="/archetype"
-              className="hidden text-[14px] text-[#8C6520] hover:text-[#221E18] hover:underline sm:inline"
+              className="hidden text-[14px] text-acc-deep hover:text-ink hover:underline sm:inline"
             >
               {t("home.view_all_essays", locale)}
             </Link>
           </div>
 
-          <p className="mt-6 max-w-[720px] text-[16px] leading-[1.6] text-[#4A4338] sm:text-[17px]">
+          <p className="mt-6 max-w-[720px] text-[16px] leading-[1.6] text-ink-soft sm:text-[17px]">
             {t("home.arch_intro", locale)}
           </p>
 
@@ -770,7 +770,7 @@ export default async function HomeV2() {
                         className="flex-1 border-t-2 px-3 py-3 text-center"
                         style={{ borderColor: color.deep }}
                       >
-                        <p className="text-[14px] leading-[1.5] text-[#221E18]">
+                        <p className="text-[14px] leading-[1.5] text-ink">
                           {t(`arch.${a.key}.spirit`, locale)}
                         </p>
                       </div>
@@ -802,7 +802,7 @@ export default async function HomeV2() {
 
           <Link
             href="/archetype"
-            className="mt-8 inline-block text-[14px] text-[#8C6520] hover:text-[#221E18] hover:underline sm:hidden"
+            className="mt-8 inline-block text-[14px] text-acc-deep hover:text-ink hover:underline sm:hidden"
           >
             {t("home.view_all_essays", locale)}
           </Link>
@@ -813,20 +813,20 @@ export default async function HomeV2() {
           <div className="pixel-panel pixel-panel--ink mx-auto">
             <div className="px-6 py-10 sm:px-12 sm:py-14">
               <div
-                className="text-[14px] tracking-[0.24em] text-[#B8862F]"
+                className="text-[14px] tracking-[0.24em] text-acc"
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
                 <span className="pixel-blink">▶</span> {t("home.ready", locale)}
               </div>
               <h2
-                className="mt-5 px-2 text-[28px] leading-[1.05] tracking-[0.04em] text-[#F8EDC8] sm:text-[44px] md:text-[52px]"
+                className="mt-5 px-2 text-[28px] leading-[1.05] tracking-[0.04em] text-acc-soft sm:text-[44px] md:text-[52px]"
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
-                <span style={{ textShadow: "3px 3px 0 #B8862F" }}>
+                <span style={{ textShadow: "3px 3px 0 var(--color-acc)" }}>
                   {t("home.where_sit", locale)}
                 </span>
               </h2>
-              <p className="mx-auto mt-6 max-w-[520px] text-[16px] leading-[1.6] text-[#F8EDC8]/90">
+              <p className="mx-auto mt-6 max-w-[520px] text-[16px] leading-[1.6] text-acc-soft/90">
                 {t("home.tail_body", locale)}
               </p>
               <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
@@ -836,7 +836,7 @@ export default async function HomeV2() {
                   style={{
                     fontSize: 16,
                     padding: '18px 28px',
-                    boxShadow: '6px 6px 0 0 #221E18',
+                    boxShadow: '6px 6px 0 0 var(--color-ink)',
                   }}
                 >
                   <span>▶ {t("home.enter_inheritor", locale)}</span>
@@ -854,16 +854,16 @@ export default async function HomeV2() {
         </ScrollReveal>
 
         {/* ─── Footer — pixel status bar ─────────────────────── */}
-        <footer className="border-t-4 border-[#221E18] bg-[#221E18] px-6 py-5 sm:px-10">
-          <div className="mx-auto flex max-w-[1200px] flex-wrap items-baseline justify-between gap-4 text-[14px] leading-relaxed text-[#B8862F]">
+        <footer className="border-t-4 border-ink bg-ink px-6 py-5 sm:px-10">
+          <div className="mx-auto flex max-w-[1200px] flex-wrap items-baseline justify-between gap-4 text-[14px] leading-relaxed text-acc">
             <div>
               <span
-                className="mr-2 text-[12px] tracking-[0.2em] text-[#F8EDC8]"
+                className="mr-2 text-[12px] tracking-[0.2em] text-acc-soft"
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
                 MULL
               </span>
-              <span className="text-[#B8862F]">{t("home.footer_passion", locale)} · </span>
+              <span className="text-acc">{t("home.footer_passion", locale)} · </span>
               {/* Email obfuscated to dodge naive scrapers — the real
                   address is reassembled at click via the <ObfuscatedEmail>
                   component (writes the mailto on the fly). Bots that
@@ -872,17 +872,17 @@ export default async function HomeV2() {
               <ObfuscatedEmail
                 user="jimmy.kaian.ji"
                 domain="gmail.com"
-                className="text-[#F8EDC8] underline decoration-[#B8862F]/40 underline-offset-2 hover:decoration-[#F8EDC8]"
+                className="text-acc-soft underline decoration-acc/40 underline-offset-2 hover:decoration-acc-soft"
               />
             </div>
-            <nav className="flex flex-wrap gap-5 text-[#F8EDC8]">
-              <Link href="/about" className="hover:text-[#B8862F]">{t("nav.about", locale)}</Link>
-              <Link href="/topic" className="hover:text-[#B8862F]">{t("nav.topics", locale)}</Link>
-              <Link href="/vs" className="hover:text-[#B8862F]">{t("nav.matchups", locale)}</Link>
-              <Link href="/install" className="hover:text-[#B8862F]">{t("home.add_home", locale)}</Link>
-              <Link href="/methodology" className="hover:text-[#B8862F]">{t("nav.methodology", locale)}</Link>
-              <Link href="/privacy" className="hover:text-[#B8862F]">{t("home.footer_privacy", locale)}</Link>
-              <Link href="/terms" className="hover:text-[#B8862F]">{t("home.footer_terms", locale)}</Link>
+            <nav className="flex flex-wrap gap-5 text-acc-soft">
+              <Link href="/about" className="hover:text-acc">{t("nav.about", locale)}</Link>
+              <Link href="/topic" className="hover:text-acc">{t("nav.topics", locale)}</Link>
+              <Link href="/vs" className="hover:text-acc">{t("nav.matchups", locale)}</Link>
+              <Link href="/install" className="hover:text-acc">{t("home.add_home", locale)}</Link>
+              <Link href="/methodology" className="hover:text-acc">{t("nav.methodology", locale)}</Link>
+              <Link href="/privacy" className="hover:text-acc">{t("home.footer_privacy", locale)}</Link>
+              <Link href="/terms" className="hover:text-acc">{t("home.footer_terms", locale)}</Link>
               {/* Tip jar — Mull is free to use; this lets users who want
                   to chip in cover the AI bill. Hidden for now via
                   TIPPING_ENABLED (legal hold on accepting tips); flip the
@@ -892,7 +892,7 @@ export default async function HomeV2() {
                   href="https://ko-fi.com/mull"
                   target="_blank"
                   rel="noreferrer"
-                  className="text-[#B8862F] hover:text-[#F8EDC8] underline decoration-[#B8862F]/40 underline-offset-2 hover:decoration-[#F8EDC8]"
+                  className="text-acc hover:text-acc-soft underline decoration-acc/40 underline-offset-2 hover:decoration-acc-soft"
                 >
                   {t("home.support", locale)}
                 </a>
@@ -921,22 +921,22 @@ function SurfaceCard({
   return (
     <Link
       href={href}
-      className="block border-[3px] border-[#221E18] bg-[#FFFCF4] p-5 transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
-      style={{ boxShadow: "4px 4px 0 0 #B8862F" }}
+      className="block border-[3px] border-ink bg-[#FFFCF4] p-5 transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
+      style={{ boxShadow: "4px 4px 0 0 var(--color-acc)" }}
     >
       <div
-        className="text-[10px] tracking-[0.22em] text-[#8C6520]"
+        className="text-[10px] tracking-[0.22em] text-acc-deep"
         style={{ fontFamily: "var(--font-pixel-display)" }}
       >
         {eyebrow}
       </div>
       <div
-        className="mt-2 text-[17px] font-medium leading-[1.25] text-[#221E18]"
+        className="mt-2 text-[17px] font-medium leading-[1.25] text-ink"
         style={{ fontFamily: "var(--font-prose)" }}
       >
         {title}
       </div>
-      <p className="mt-2 text-[13.5px] leading-[1.5] text-[#4A4338]">{body}</p>
+      <p className="mt-2 text-[13.5px] leading-[1.5] text-ink-soft">{body}</p>
     </Link>
   );
 }
@@ -953,16 +953,16 @@ function SmallSurface({
   return (
     <Link
       href={href}
-      className="block border-[2px] border-[#221E18] bg-[#FFFCF4] p-3 transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
-      style={{ boxShadow: "3px 3px 0 0 #B8862F" }}
+      className="block border-[2px] border-ink bg-[#FFFCF4] p-3 transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
+      style={{ boxShadow: "3px 3px 0 0 var(--color-acc)" }}
     >
       <div
-        className="text-[14px] font-medium text-[#221E18]"
+        className="text-[14px] font-medium text-ink"
         style={{ fontFamily: "var(--font-prose)" }}
       >
         {label}
       </div>
-      <p className="mt-1 text-[12.5px] leading-[1.45] text-[#8C6520]">{body}</p>
+      <p className="mt-1 text-[12.5px] leading-[1.45] text-acc-deep">{body}</p>
     </Link>
   );
 }
@@ -990,10 +990,10 @@ function RhythmCard({
   return (
     <Link
       href={href}
-      className="block h-full border-[3px] border-[#221E18] p-4 transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
+      className="block h-full border-[3px] border-ink p-4 transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
       style={{
         background: dark ? "#1A1612" : "#FFFCF4",
-        color: dark ? "#F8EDC8" : "#221E18",
+        color: dark ? "var(--color-acc-soft)" : "var(--color-ink)",
         boxShadow: `4px 4px 0 0 ${shadow}`,
       }}
     >
@@ -1016,7 +1016,7 @@ function RhythmCard({
         className="mt-1.5 text-[13.5px] leading-[1.5]"
         style={{
           fontFamily: "var(--font-editorial)",
-          color: dark ? "#E5DCC0" : "#4A4338",
+          color: dark ? "#E5DCC0" : "var(--color-ink-soft)",
         }}
       >
         {pitch}
@@ -1026,7 +1026,7 @@ function RhythmCard({
         style={{
           fontFamily: "var(--font-pixel-display)",
           background: dark ? "#F8C75E" : shadow,
-          color: dark ? "#1A1820" : "#F8EDC8",
+          color: dark ? "#1A1820" : "var(--color-acc-soft)",
           textTransform: "uppercase",
         }}
       >

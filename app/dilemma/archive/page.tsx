@@ -93,7 +93,7 @@ export default async function DilemmaArchivePage({
       <div className="mb-6 flex items-center justify-end gap-3">
         <Link
           href="/dilemma"
-          className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"
+          className="text-[13px] text-ink-soft hover:text-ink hover:underline"
         >
           {t('archive.todays_dilemma', locale)} →
         </Link>
@@ -112,12 +112,12 @@ export default async function DilemmaArchivePage({
 
       {!user && (
         <div style={{
-          padding: '20px 24px', background: '#FFFCF4', border: '1px dashed #D6CDB6',
+          padding: '20px 24px', background: '#FFFCF4', border: '1px dashed var(--color-line)',
           borderRadius: 10, marginBottom: 32,
         }}>
           <p style={{
             fontFamily: serif, fontStyle: 'italic', fontSize: 16,
-            color: '#4A4338', margin: '0 0 12px',
+            color: 'var(--color-ink-soft)', margin: '0 0 12px',
           }}>
             {t('archive.signin_required', locale)}
           </p>
@@ -135,16 +135,16 @@ export default async function DilemmaArchivePage({
       {user && !isMullPlus && (
         <div style={{
           padding: '18px 22px', background: '#F5EFDC', border: '1px solid #E2D8B6',
-          borderLeft: '3px solid #B8862F', borderRadius: 8, marginBottom: 28,
+          borderLeft: '3px solid var(--color-acc)', borderRadius: 8, marginBottom: 28,
         }}>
           <div style={{
-            fontFamily: sans, fontSize: 11, fontWeight: 600, color: '#8C6520',
+            fontFamily: sans, fontSize: 11, fontWeight: 600, color: 'var(--color-acc-deep)',
             textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 8,
           }}>
             {t('archive.plus_lock_eyebrow', locale)}
           </div>
           <p style={{
-            fontFamily: serif, fontSize: 16, color: '#221E18',
+            fontFamily: serif, fontSize: 16, color: 'var(--color-ink)',
             margin: '0 0 12px', lineHeight: 1.5,
           }}>
             {t('archive.plus_lock_body', locale)}
@@ -167,16 +167,16 @@ export default async function DilemmaArchivePage({
             <li
               key={item.dateKey}
               style={{
-                background: answered ? '#F8EDC8' : '#FFFCF4',
-                border: '3px solid #221E18',
-                boxShadow: answered ? '3px 3px 0 0 #2F5D5C' : '3px 3px 0 0 #D6CDB6',
+                background: answered ? 'var(--color-acc-soft)' : '#FFFCF4',
+                border: '3px solid var(--color-ink)',
+                boxShadow: answered ? '3px 3px 0 0 #2F5D5C' : '3px 3px 0 0 var(--color-line)',
                 borderRadius: 0,
                 padding: '16px 20px',
               }}
             >
               <div style={{
                 fontFamily: 'var(--font-pixel-display)', fontSize: 10,
-                color: answered ? '#2F5D5C' : '#8C6520',
+                color: answered ? '#2F5D5C' : 'var(--color-acc-deep)',
                 textTransform: 'uppercase', letterSpacing: '0.18em',
                 marginBottom: 10,
               }}>
@@ -186,7 +186,7 @@ export default async function DilemmaArchivePage({
 
               <h2 style={{
                 fontFamily: serif, fontSize: 19, fontWeight: 500,
-                color: '#221E18', margin: '0 0 6px', lineHeight: 1.35,
+                color: 'var(--color-ink)', margin: '0 0 6px', lineHeight: 1.35,
               }}>
                 {item.dilemma.prompt}
               </h2>
@@ -194,7 +194,7 @@ export default async function DilemmaArchivePage({
               {item.dilemma.hint && (
                 <p style={{
                   fontFamily: serif, fontStyle: 'italic',
-                  fontSize: 14.5, color: '#4A4338',
+                  fontSize: 14.5, color: 'var(--color-ink-soft)',
                   margin: '0 0 12px', lineHeight: 1.5,
                 }}>
                   {item.dilemma.hint}
@@ -211,7 +211,7 @@ export default async function DilemmaArchivePage({
                     {t('archive.signin_to_answer', locale)}
                   </Link>
                 ) : !isMullPlus ? (
-                  <span style={{ ...statusChip, color: '#8C6520' }}>
+                  <span style={{ ...statusChip, color: 'var(--color-acc-deep)' }}>
                     🔒 {t('archive.plus_required', locale)}
                   </span>
                 ) : (
@@ -231,7 +231,7 @@ export default async function DilemmaArchivePage({
       {totalPages > 1 && (
         <nav style={{
           marginTop: 32, display: 'flex', justifyContent: 'space-between',
-          alignItems: 'center', fontFamily: sans, fontSize: 14, color: '#4A4338',
+          alignItems: 'center', fontFamily: sans, fontSize: 14, color: 'var(--color-ink-soft)',
           flexWrap: 'wrap', gap: 12,
         }}>
           {page > 1 ? (
@@ -239,7 +239,7 @@ export default async function DilemmaArchivePage({
               ← {t('archive.newer', locale)}
             </Link>
           ) : <span />}
-          <span style={{ color: '#8C6520', fontSize: 12, letterSpacing: 0.3 }}>
+          <span style={{ color: 'var(--color-acc-deep)', fontSize: 12, letterSpacing: 0.3 }}>
             {t('archive.page_of', locale, { n: page, total: totalPages })}
           </span>
           {page < totalPages ? (
@@ -251,7 +251,7 @@ export default async function DilemmaArchivePage({
       )}
 
       <p style={{
-        fontFamily: sans, fontSize: 12, color: '#8C6520',
+        fontFamily: sans, fontSize: 12, color: 'var(--color-acc-deep)',
         marginTop: 48, opacity: 0.75, textAlign: 'center', letterSpacing: 0.3,
       }}>
         {t('archive.footer_note', locale, { date: new Date(`${LAUNCH_DATE}T00:00:00Z`).toLocaleDateString(dateFmt, { day: 'numeric', month: 'long', year: 'numeric' }) })}
@@ -264,17 +264,17 @@ export default async function DilemmaArchivePage({
 }
 
 const primaryButton: React.CSSProperties = {
-  padding: '10px 20px', background: '#221E18', color: '#FAF6EC',
+  padding: '10px 20px', background: 'var(--color-ink)', color: 'var(--color-cream)',
   borderRadius: 6, textDecoration: 'none',
   fontFamily: sans, fontSize: 14, fontWeight: 500, display: 'inline-block',
 };
 const primaryButtonSmall: React.CSSProperties = {
-  padding: '7px 14px', background: '#221E18', color: '#FAF6EC',
+  padding: '7px 14px', background: 'var(--color-ink)', color: 'var(--color-cream)',
   borderRadius: 6, textDecoration: 'none',
   fontFamily: sans, fontSize: 13, fontWeight: 500, display: 'inline-block',
 };
 const secondaryButton: React.CSSProperties = {
-  padding: '10px 20px', border: '1px solid #221E18', color: '#221E18',
+  padding: '10px 20px', border: '1px solid var(--color-ink)', color: 'var(--color-ink)',
   borderRadius: 6, textDecoration: 'none',
   fontFamily: sans, fontSize: 14, display: 'inline-block',
 };
@@ -286,7 +286,7 @@ const statusLink: React.CSSProperties = {
   textDecoration: 'underline', textUnderlineOffset: 3,
 };
 const pageLink: React.CSSProperties = {
-  fontFamily: sans, fontSize: 14, color: '#221E18',
+  fontFamily: sans, fontSize: 14, color: 'var(--color-ink)',
   textDecoration: 'none', padding: '8px 14px',
-  border: '1px solid #D6CDB6', borderRadius: 6,
+  border: '1px solid var(--color-line)', borderRadius: 6,
 };

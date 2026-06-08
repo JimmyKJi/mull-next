@@ -75,7 +75,7 @@ export function InstallClient({ locale }: { locale: Locale }) {
       <section
         style={{
           padding: "26px 24px",
-          border: "4px solid #221E18",
+          border: "4px solid var(--color-ink)",
           background: "#F8EBC9",
           boxShadow: "6px 6px 0 0 #6B7F4F",
           textAlign: "center",
@@ -100,7 +100,7 @@ export function InstallClient({ locale }: { locale: Locale }) {
             fontSize: 24,
             fontWeight: 500,
             margin: "0 0 8px",
-            color: "#221E18",
+            color: "var(--color-ink)",
           }}
         >
           {t("inst.installed_heading", locale)}
@@ -110,7 +110,7 @@ export function InstallClient({ locale }: { locale: Locale }) {
             fontFamily: serif,
             fontStyle: "italic",
             fontSize: 15,
-            color: "#4A4338",
+            color: "var(--color-ink-soft)",
             margin: "0 0 18px",
             lineHeight: 1.55,
           }}
@@ -122,9 +122,9 @@ export function InstallClient({ locale }: { locale: Locale }) {
           style={{
             display: "inline-block",
             padding: "10px 18px",
-            background: "#221E18",
+            background: "var(--color-ink)",
             color: "#F8EBC9",
-            border: "3px solid #221E18",
+            border: "3px solid var(--color-ink)",
             fontFamily: pixel,
             fontSize: 11,
             letterSpacing: 0.6,
@@ -156,9 +156,9 @@ export function InstallClient({ locale }: { locale: Locale }) {
         <section
           style={{
             padding: "20px 22px",
-            border: "4px solid #221E18",
+            border: "4px solid var(--color-ink)",
             background: "#F8EBC9",
-            boxShadow: "6px 6px 0 0 #B8862F",
+            boxShadow: "6px 6px 0 0 var(--color-acc)",
           }}
         >
           <div
@@ -166,7 +166,7 @@ export function InstallClient({ locale }: { locale: Locale }) {
               fontFamily: pixel,
               fontSize: 10,
               letterSpacing: "0.18em",
-              color: "#8C6520",
+              color: "var(--color-acc-deep)",
               textTransform: "uppercase",
               marginBottom: 6,
             }}
@@ -179,7 +179,7 @@ export function InstallClient({ locale }: { locale: Locale }) {
               fontSize: 22,
               fontWeight: 500,
               margin: "0 0 6px",
-              color: "#221E18",
+              color: "var(--color-ink)",
             }}
           >
             {t("inst.onetap_heading", locale)}
@@ -189,7 +189,7 @@ export function InstallClient({ locale }: { locale: Locale }) {
               fontFamily: serif,
               fontStyle: "italic",
               fontSize: 15,
-              color: "#4A4338",
+              color: "var(--color-ink-soft)",
               margin: "0 0 14px",
               lineHeight: 1.55,
             }}
@@ -207,10 +207,10 @@ export function InstallClient({ locale }: { locale: Locale }) {
             }}
             style={{
               padding: "10px 18px",
-              background: "#221E18",
+              background: "var(--color-ink)",
               color: "#F8EBC9",
-              border: "3px solid #221E18",
-              boxShadow: "3px 3px 0 0 #B8862F",
+              border: "3px solid var(--color-ink)",
+              boxShadow: "3px 3px 0 0 var(--color-acc)",
               fontFamily: pixel,
               fontSize: 11,
               letterSpacing: 0.6,
@@ -251,7 +251,7 @@ export function InstallClient({ locale }: { locale: Locale }) {
             fontFamily: pixel,
             fontSize: 10,
             letterSpacing: "0.18em",
-            color: "#8C6520",
+            color: "var(--color-acc-deep)",
             textTransform: "uppercase",
             marginBottom: 8,
           }}
@@ -264,7 +264,7 @@ export function InstallClient({ locale }: { locale: Locale }) {
             paddingLeft: 18,
             fontFamily: serif,
             fontSize: 15,
-            color: "#221E18",
+            color: "var(--color-ink)",
             lineHeight: 1.6,
           }}
         >
@@ -293,7 +293,7 @@ function PlatformGuide({
       style={{
         padding: "22px 24px",
         background: isCurrent ? "#FFFCF4" : "#FBFAF2",
-        border: `4px solid ${isCurrent ? "#221E18" : "#C2A062"}`,
+        border: `4px solid ${isCurrent ? "var(--color-ink)" : "#C2A062"}`,
         boxShadow: isCurrent ? `5px 5px 0 0 ${meta.accent}` : "none",
         position: "relative",
       }}
@@ -342,7 +342,7 @@ function PlatformGuide({
             fontSize: 22,
             fontWeight: 500,
             margin: 0,
-            color: "#221E18",
+            color: "var(--color-ink)",
             letterSpacing: "-0.2px",
           }}
         >
@@ -354,7 +354,7 @@ function PlatformGuide({
           fontFamily: serif,
           fontStyle: "italic",
           fontSize: 14.5,
-          color: "#4A4338",
+          color: "var(--color-ink-soft)",
           margin: "0 0 18px",
           lineHeight: 1.55,
         }}
@@ -381,7 +381,7 @@ function PlatformGuide({
               alignItems: "start",
               padding: "12px 14px",
               background: "#FFFCF4",
-              border: "2px solid #221E18",
+              border: "2px solid var(--color-ink)",
               boxShadow: `2px 2px 0 0 ${meta.accent}`,
             }}
           >
@@ -407,7 +407,7 @@ function PlatformGuide({
                   fontFamily: serif,
                   fontSize: 15.5,
                   fontWeight: 500,
-                  color: "#221E18",
+                  color: "var(--color-ink)",
                   marginBottom: 2,
                   lineHeight: 1.4,
                 }}
@@ -420,7 +420,7 @@ function PlatformGuide({
                     fontFamily: serif,
                     fontStyle: "italic",
                     fontSize: 13.5,
-                    color: "#4A4338",
+                    color: "var(--color-ink-soft)",
                     lineHeight: 1.5,
                   }}
                 >
@@ -441,7 +441,7 @@ function PlatformGuide({
             fontSize: 13,
             color: "#7A4A2E",
             background: "#F5EDC8",
-            border: "2px dashed #B8862F",
+            border: "2px dashed var(--color-acc)",
             padding: "10px 14px",
             lineHeight: 1.5,
           }}
@@ -510,7 +510,7 @@ function platformMeta(locale: Locale): Record<
     desktop: {
       title: t("inst.desktop_title", locale),
       glyph: "◇",
-      accent: "#B8862F",
+      accent: "var(--color-acc)",
       preface: t("inst.desktop_preface", locale),
       steps: [
         {

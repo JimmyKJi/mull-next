@@ -74,7 +74,7 @@ export default function NewChallengeClient({
                 style={{
                   fontFamily: pixel,
                   fontSize: 10,
-                  color: "#8C6520",
+                  color: "var(--color-acc-deep)",
                   letterSpacing: "0.22em",
                   textTransform: "uppercase",
                   marginBottom: 6,
@@ -104,10 +104,10 @@ export default function NewChallengeClient({
                           textAlign: "left",
                           padding: "10px 12px",
                           background: picked ? "#F8C75E" : "#FFFCF4",
-                          border: "3px solid #221E18",
+                          border: "3px solid var(--color-ink)",
                           boxShadow: picked
                             ? "4px 4px 0 0 #2F5D5C"
-                            : "3px 3px 0 0 #B8862F",
+                            : "3px 3px 0 0 var(--color-acc)",
                           cursor: "pointer",
                           fontFamily: serif,
                         }}
@@ -116,7 +116,7 @@ export default function NewChallengeClient({
                           style={{
                             fontSize: 15,
                             fontWeight: 500,
-                            color: "#221E18",
+                            color: "var(--color-ink)",
                           }}
                         >
                           {topic.title}
@@ -138,7 +138,7 @@ export default function NewChallengeClient({
             style={{
               padding: "12px 14px",
               background: "#1F1814",
-              border: "3px solid #B8862F",
+              border: "3px solid var(--color-acc)",
               marginBottom: 12,
             }}
           >
@@ -146,7 +146,7 @@ export default function NewChallengeClient({
               style={{
                 fontFamily: pixel,
                 fontSize: 10,
-                color: "#B8862F",
+                color: "var(--color-acc)",
                 letterSpacing: 0.4,
                 textTransform: "uppercase",
                 marginBottom: 4,
@@ -159,7 +159,7 @@ export default function NewChallengeClient({
                 fontFamily: serif,
                 fontStyle: "italic",
                 fontSize: 15,
-                color: "#F8EDC8",
+                color: "var(--color-acc-soft)",
                 margin: 0,
                 lineHeight: 1.5,
               }}
@@ -172,7 +172,7 @@ export default function NewChallengeClient({
               fontFamily: serif,
               fontStyle: "italic",
               fontSize: 14,
-              color: "#8C6520",
+              color: "var(--color-acc-deep)",
               margin: "0 0 8px",
             }}
           >
@@ -190,9 +190,9 @@ export default function NewChallengeClient({
               fontFamily: serif,
               fontSize: 16,
               lineHeight: 1.55,
-              border: "3px solid #221E18",
+              border: "3px solid var(--color-ink)",
               background: "#FFFCF4",
-              color: "#221E18",
+              color: "var(--color-ink)",
               resize: "vertical",
               minHeight: 160,
             }}
@@ -211,7 +211,7 @@ export default function NewChallengeClient({
               style={{
                 fontFamily: pixel,
                 fontSize: 10,
-                color: "#8C6520",
+                color: "var(--color-acc-deep)",
                 letterSpacing: 0.4,
                 textTransform: "uppercase",
               }}
@@ -227,9 +227,9 @@ export default function NewChallengeClient({
                 background:
                   topicSlug && opening.trim().length >= 50
                     ? "#F8C75E"
-                    : "#D6CDB6",
+                    : "var(--color-line)",
                 color: "#1A1820",
-                border: "3px solid #221E18",
+                border: "3px solid var(--color-ink)",
                 boxShadow: "3px 3px 0 0 #2F5D5C",
                 cursor:
                   topicSlug && opening.trim().length >= 50
@@ -271,11 +271,11 @@ function Head({ n, title, locale }: { n: number; title: string; locale: Locale }
       style={{
         fontFamily: pixel,
         fontSize: 11,
-        color: "#221E18",
+        color: "var(--color-ink)",
         letterSpacing: "0.2em",
         textTransform: "uppercase",
         marginBottom: 10,
-        textShadow: "2px 2px 0 #B8862F",
+        textShadow: "2px 2px 0 var(--color-acc)",
       }}
     >
       {t("arena.pve_step", locale, { n, title: title.toUpperCase() })}

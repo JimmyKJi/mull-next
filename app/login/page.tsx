@@ -42,36 +42,36 @@ export default function LoginPage() {
   return (
     <main className="mx-auto flex min-h-[calc(100vh-64px)] max-w-[480px] flex-col px-6 pb-32 pt-12 sm:pt-16">
       <div
-        className="border-4 border-[#221E18] bg-[#FFFCF4]"
-        style={{ boxShadow: '6px 6px 0 0 #8C6520' }}
+        className="border-4 border-ink bg-[#FFFCF4]"
+        style={{ boxShadow: '6px 6px 0 0 var(--color-acc-deep)' }}
       >
         {/* Title bar */}
         <div
-          className="flex items-center justify-between border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
+          className="flex items-center justify-between border-b-4 border-ink bg-ink px-4 py-2 text-[10px] tracking-[0.22em] text-acc-soft"
           style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
           <span>▶ {t('auth.signin', locale).toUpperCase()}</span>
-          <span className="text-[#B8862F]">AUTH.SYS</span>
+          <span className="text-acc">AUTH.SYS</span>
         </div>
 
         <div className="px-6 py-7 sm:px-8">
           <h1
-            className="text-[26px] leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[36px]"
+            className="text-[26px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[36px]"
             style={{ fontFamily: 'var(--font-pixel-display)' }}
           >
-            <span style={{ textShadow: '3px 3px 0 #B8862F' }}>
+            <span style={{ textShadow: '3px 3px 0 var(--color-acc)' }}>
               {t('auth.welcome_back', locale).toUpperCase()}
             </span>
           </h1>
           <p
-            className="mt-4 text-[15px] italic leading-[1.5] text-[#4A4338]"
+            className="mt-4 text-[15px] italic leading-[1.5] text-ink-soft"
             style={{ fontFamily: 'var(--font-prose)' }}
           >
             {t('auth.signin_subtitle', locale)}
           </p>
 
           <form onSubmit={handleSubmit} className="mt-7 flex flex-col gap-5">
-            <label className="flex flex-col gap-1.5 text-[12px] tracking-[0.18em] text-[#8C6520]" style={{ fontFamily: 'var(--font-pixel-display)' }}>
+            <label className="flex flex-col gap-1.5 text-[12px] tracking-[0.18em] text-acc-deep" style={{ fontFamily: 'var(--font-pixel-display)' }}>
               {t('auth.email', locale).toUpperCase()}
               <input
                 type="email"
@@ -79,12 +79,12 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 autoComplete="email"
-                className="border-2 border-[#221E18] bg-[#FFFCF4] px-3 py-2.5 text-[16px] text-[#221E18] focus:bg-[#F8EDC8] focus:outline-none"
+                className="border-2 border-ink bg-[#FFFCF4] px-3 py-2.5 text-[16px] text-ink focus:bg-acc-soft focus:outline-none"
                 style={{ fontFamily: 'var(--font-prose)' }}
               />
             </label>
 
-            <label className="flex flex-col gap-1.5 text-[12px] tracking-[0.18em] text-[#8C6520]" style={{ fontFamily: 'var(--font-pixel-display)' }}>
+            <label className="flex flex-col gap-1.5 text-[12px] tracking-[0.18em] text-acc-deep" style={{ fontFamily: 'var(--font-pixel-display)' }}>
               {t('auth.password', locale).toUpperCase()}
               <input
                 type="password"
@@ -92,7 +92,7 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 autoComplete="current-password"
-                className="border-2 border-[#221E18] bg-[#FFFCF4] px-3 py-2.5 text-[16px] text-[#221E18] focus:bg-[#F8EDC8] focus:outline-none"
+                className="border-2 border-ink bg-[#FFFCF4] px-3 py-2.5 text-[16px] text-ink focus:bg-acc-soft focus:outline-none"
                 style={{ fontFamily: 'var(--font-prose)' }}
               />
             </label>
@@ -118,12 +118,12 @@ export default function LoginPage() {
         </div>
 
         <div
-          className="border-t-2 border-[#221E18] bg-[#F8EDC8] px-6 py-3 text-center text-[13px] text-[#4A4338] sm:px-8"
+          className="border-t-2 border-ink bg-acc-soft px-6 py-3 text-center text-[13px] text-ink-soft sm:px-8"
         >
           {t('auth.no_account', locale)}{' '}
           <Link
             href="/signup"
-            className="font-medium text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+            className="font-medium text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
           >
             {t('auth.create_one', locale)} →
           </Link>

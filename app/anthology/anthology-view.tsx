@@ -34,7 +34,7 @@ const SOURCE_COLORS: Record<string, string> = {
   wandering: "#5D5777",
   philosopher: "#0F2236",
   topic: "#7A8B43",
-  dilemma: "#B8862F",
+  dilemma: "var(--color-acc)",
   diary: "#3F2454",
   manual: "#5C4528",
 };
@@ -58,7 +58,7 @@ export default function AnthologyView({ locale = "en" }: { locale?: Locale }) {
 
   if (entries === null) {
     return (
-      <div className="text-center text-[14px] text-[#8C6520]" style={{ fontFamily: serif }}>
+      <div className="text-center text-[14px] text-acc-deep" style={{ fontFamily: serif }}>
         {t("anthology.loading", locale)}
       </div>
     );
@@ -101,7 +101,7 @@ export default function AnthologyView({ locale = "en" }: { locale?: Locale }) {
           <button
             type="button"
             onClick={() => setShowAdd(true)}
-            className="border-2 border-[#221E18] bg-[#F8C75E] px-3 py-1.5 text-[11px] tracking-[0.18em] text-[#1A1820] hover:bg-[#B8862F]"
+            className="border-2 border-ink bg-[#F8C75E] px-3 py-1.5 text-[11px] tracking-[0.18em] text-[#1A1820] hover:bg-acc"
             style={{
               fontFamily: pixel,
               textTransform: "uppercase",
@@ -112,11 +112,11 @@ export default function AnthologyView({ locale = "en" }: { locale?: Locale }) {
           </button>
         ) : (
           <div
-            className="border-[3px] border-[#221E18] bg-[#FFFCF4] p-4"
-            style={{ boxShadow: "3px 3px 0 0 #B8862F" }}
+            className="border-[3px] border-ink bg-[#FFFCF4] p-4"
+            style={{ boxShadow: "3px 3px 0 0 var(--color-acc)" }}
           >
             <label
-              className="text-[10px] tracking-[0.22em] text-[#8C6520]"
+              className="text-[10px] tracking-[0.22em] text-acc-deep"
               style={{ fontFamily: pixel, textTransform: "uppercase" }}
             >
               {t("anthology.the_passage", locale)}
@@ -131,17 +131,17 @@ export default function AnthologyView({ locale = "en" }: { locale?: Locale }) {
                 width: "100%",
                 padding: "10px 12px",
                 background: "#FBF6E8",
-                border: "2px solid #221E18",
+                border: "2px solid var(--color-ink)",
                 fontFamily: serif,
                 fontSize: 15,
-                color: "#221E18",
+                color: "var(--color-ink)",
                 resize: "vertical",
                 minHeight: 100,
                 borderRadius: 0,
               }}
             />
             <label
-              className="mt-3 block text-[10px] tracking-[0.22em] text-[#8C6520]"
+              className="mt-3 block text-[10px] tracking-[0.22em] text-acc-deep"
               style={{ fontFamily: pixel, textTransform: "uppercase" }}
             >
               {t("anthology.attribution", locale)}
@@ -155,10 +155,10 @@ export default function AnthologyView({ locale = "en" }: { locale?: Locale }) {
                 width: "100%",
                 padding: "8px 12px",
                 background: "#FBF6E8",
-                border: "2px solid #221E18",
+                border: "2px solid var(--color-ink)",
                 fontFamily: serif,
                 fontSize: 14,
-                color: "#221E18",
+                color: "var(--color-ink)",
                 borderRadius: 0,
               }}
             />
@@ -167,7 +167,7 @@ export default function AnthologyView({ locale = "en" }: { locale?: Locale }) {
                 type="button"
                 onClick={addManual}
                 disabled={!newText.trim()}
-                className="border-[3px] border-[#221E18] bg-[#F8C75E] px-3 py-2 text-[11px] tracking-[0.18em] text-[#1A1820]"
+                className="border-[3px] border-ink bg-[#F8C75E] px-3 py-2 text-[11px] tracking-[0.18em] text-[#1A1820]"
                 style={{
                   fontFamily: pixel,
                   textTransform: "uppercase",
@@ -185,7 +185,7 @@ export default function AnthologyView({ locale = "en" }: { locale?: Locale }) {
                   setNewText("");
                   setNewAttr("");
                 }}
-                className="border-2 border-[#8C6520] px-3 py-2 text-[11px] tracking-[0.18em] text-[#8C6520]"
+                className="border-2 border-acc-deep px-3 py-2 text-[11px] tracking-[0.18em] text-acc-deep"
                 style={{
                   fontFamily: pixel,
                   textTransform: "uppercase",
@@ -201,31 +201,31 @@ export default function AnthologyView({ locale = "en" }: { locale?: Locale }) {
       {/* Entries */}
       {sorted.length === 0 ? (
         <div
-          className="border-[3px] border-[#221E18] bg-[#FFFCF4] p-6"
-          style={{ boxShadow: "4px 4px 0 0 #B8862F" }}
+          className="border-[3px] border-ink bg-[#FFFCF4] p-6"
+          style={{ boxShadow: "4px 4px 0 0 var(--color-acc)" }}
         >
           <p
-            className="text-[15px] leading-[1.55] text-[#221E18]"
+            className="text-[15px] leading-[1.55] text-ink"
             style={{ fontFamily: serif }}
           >
             {t("anthology.empty_prefix", locale)}
             <Link
               href="/spar"
-              className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+              className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
             >
               {t("anthology.empty_spar", locale)}
             </Link>
             {t("anthology.list_sep", locale)}
             <Link
               href="/pilgrimage"
-              className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+              className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
             >
               {t("anthology.empty_pilgrimage", locale)}
             </Link>
             {t("anthology.list_sep", locale)}
             <Link
               href="/philosopher"
-              className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+              className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
             >
               {t("anthology.empty_philosopher", locale)}
             </Link>
@@ -237,10 +237,10 @@ export default function AnthologyView({ locale = "en" }: { locale?: Locale }) {
           {sorted.map((e) => (
             <li key={e.id}>
               <div
-                className="border-l-[5px] border-[#221E18] bg-[#FFFCF4] p-4"
+                className="border-l-[5px] border-ink bg-[#FFFCF4] p-4"
                 style={{
-                  borderLeftColor: SOURCE_COLORS[e.source] ?? "#221E18",
-                  boxShadow: "3px 3px 0 0 #B8862F",
+                  borderLeftColor: SOURCE_COLORS[e.source] ?? "var(--color-ink)",
+                  boxShadow: "3px 3px 0 0 var(--color-acc)",
                 }}
               >
                 <div
@@ -250,7 +250,7 @@ export default function AnthologyView({ locale = "en" }: { locale?: Locale }) {
                     className="text-[10px] tracking-[0.22em]"
                     style={{
                       fontFamily: pixel,
-                      color: SOURCE_COLORS[e.source] ?? "#221E18",
+                      color: SOURCE_COLORS[e.source] ?? "var(--color-ink)",
                       textTransform: "uppercase",
                     }}
                   >
@@ -259,7 +259,7 @@ export default function AnthologyView({ locale = "en" }: { locale?: Locale }) {
                   <button
                     type="button"
                     onClick={() => removeAnthologyEntry(e.id)}
-                    className="text-[10px] tracking-[0.18em] text-[#8C6520] hover:text-[#8C3717]"
+                    className="text-[10px] tracking-[0.18em] text-acc-deep hover:text-[#8C3717]"
                     style={{
                       fontFamily: pixel,
                       textTransform: "uppercase",
@@ -270,14 +270,14 @@ export default function AnthologyView({ locale = "en" }: { locale?: Locale }) {
                   </button>
                 </div>
                 <p
-                  className="mt-3 text-[15.5px] leading-[1.6] text-[#221E18]"
+                  className="mt-3 text-[15.5px] leading-[1.6] text-ink"
                   style={{ fontFamily: serif }}
                 >
                   &ldquo;{e.text}&rdquo;
                 </p>
                 {(e.attribution || e.link) && (
                   <p
-                    className="mt-2 text-[13px] text-[#8C6520]"
+                    className="mt-2 text-[13px] text-acc-deep"
                     style={{ fontFamily: serif }}
                   >
                     {e.attribution && (
@@ -285,7 +285,7 @@ export default function AnthologyView({ locale = "en" }: { locale?: Locale }) {
                         — {e.link ? (
                           <Link
                             href={e.link}
-                            className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                            className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
                           >
                             {e.attribution}
                           </Link>
@@ -316,11 +316,11 @@ function Stat({
 }) {
   return (
     <div
-      className="border-2 border-[#221E18] bg-[#FFFCF4] p-3 text-center"
+      className="border-2 border-ink bg-[#FFFCF4] p-3 text-center"
       style={{ boxShadow: `2px 2px 0 0 ${color}` }}
     >
       <div
-        className="text-[24px] leading-none text-[#221E18]"
+        className="text-[24px] leading-none text-ink"
         style={{ fontFamily: pixel }}
       >
         {value}

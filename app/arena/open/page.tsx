@@ -38,10 +38,10 @@ export default async function MullOpenPage() {
         accent={{ primary: "#C7522A", deep: "#8C3717", soft: "#F5DCD0" }}
         meantime={{ href: "/arena", label: t("arena.open_meantime", locale) }}
       />
-      <p className="mt-12 text-center text-[13px] text-[#8C6520]">
+      <p className="mt-12 text-center text-[13px] text-acc-deep">
         <Link
           href="/arena"
-          className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           {t("arena.back_to_arena", locale)}
         </Link>

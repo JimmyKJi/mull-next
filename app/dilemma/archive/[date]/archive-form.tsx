@@ -69,10 +69,10 @@ export default function DilemmaArchiveForm({
           fontSize: 17,
           lineHeight: 1.6,
           padding: '20px 22px',
-          border: '1px solid #D6CDB6',
+          border: '1px solid var(--color-line)',
           borderRadius: 12,
           background: '#FFFCF4',
-          color: '#221E18',
+          color: 'var(--color-ink)',
           outline: 'none',
           resize: 'vertical',
           minHeight: 200,
@@ -85,7 +85,7 @@ export default function DilemmaArchiveForm({
           <div style={{
             height: '100%',
             width: `${Math.min(100, (charCount / 4000) * 100)}%`,
-            background: charCount < 30 ? '#D6CDB6' : charCount > 3700 ? '#C7522A' : '#B8862F',
+            background: charCount < 30 ? 'var(--color-line)' : charCount > 3700 ? '#C7522A' : 'var(--color-acc)',
             transition: 'width 0.18s ease, background 0.2s ease',
           }} />
         </div>
@@ -96,7 +96,7 @@ export default function DilemmaArchiveForm({
       }}>
         <span style={{
           fontFamily: sans, fontSize: 12,
-          color: tooShort ? '#7A2E2E' : '#8C6520', letterSpacing: 0.3,
+          color: tooShort ? '#7A2E2E' : 'var(--color-acc-deep)', letterSpacing: 0.3,
         }}>
           {wordCount} {t(wordCount === 1 ? 'dilemma.words' : 'dilemma.words_plural', locale)} · {charCount}/4000
           {tooShort ? ' · ' + t('dilemma.too_short', locale) : ''}
@@ -107,8 +107,8 @@ export default function DilemmaArchiveForm({
           style={{
             fontFamily: sans, fontSize: 14.5, fontWeight: 500,
             padding: '12px 24px',
-            background: ready ? '#221E18' : '#A39880',
-            color: '#FAF6EC', border: 'none', borderRadius: 8,
+            background: ready ? 'var(--color-ink)' : '#A39880',
+            color: 'var(--color-cream)', border: 'none', borderRadius: 8,
             cursor: ready && !submitting ? 'pointer' : 'not-allowed',
             opacity: submitting ? 0.7 : 1, letterSpacing: 0.4,
           }}

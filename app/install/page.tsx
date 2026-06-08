@@ -59,7 +59,7 @@ export default async function InstallPage() {
         eyebrow={t('inst.eyebrow', locale)}
         title={t('inst.title', locale)}
         subtitle={
-          <p style={{ fontFamily: serif, fontStyle: 'italic', fontSize: 16, color: '#4A4338', lineHeight: 1.55 }}>
+          <p style={{ fontFamily: serif, fontStyle: 'italic', fontSize: 16, color: 'var(--color-ink-soft)', lineHeight: 1.55 }}>
             {emph(t('inst.subtitle', locale))}
           </p>
         }

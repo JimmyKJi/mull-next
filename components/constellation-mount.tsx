@@ -46,13 +46,13 @@ const Constellation3D = dynamic(
     loading: () => {
       const loc = clientLocale();
       return (
-        <div className="relative w-full overflow-hidden rounded-2xl border border-[#D6CDB6] bg-[#FFFCF4]">
+        <div className="relative w-full overflow-hidden rounded-2xl border border-line bg-[#FFFCF4]">
           <Constellation
             variant="interactive"
             clickable={false}
             locale={loc}
           />
-          <div className="pointer-events-none absolute inset-x-0 bottom-3 text-center text-[11px] uppercase tracking-[0.22em] text-[#8C6520] opacity-70">
+          <div className="pointer-events-none absolute inset-x-0 bottom-3 text-center text-[11px] uppercase tracking-[0.22em] text-acc-deep opacity-70">
             {t("cnst.loading_3d", loc)}
           </div>
         </div>
@@ -133,10 +133,10 @@ export function ConstellationMount({
               right: 12,
               zIndex: 5,
               padding: '8px 12px',
-              background: '#221E18',
-              color: '#FAF6EC',
-              border: '3px solid #B8862F',
-              boxShadow: '3px 3px 0 0 #B8862F',
+              background: 'var(--color-ink)',
+              color: 'var(--color-cream)',
+              border: '3px solid var(--color-acc)',
+              boxShadow: '3px 3px 0 0 var(--color-acc)',
               borderRadius: 0,
               fontFamily: "var(--font-pixel-display, 'Courier New', monospace)",
               fontSize: 10,
@@ -173,13 +173,13 @@ export function ConstellationMount({
               alignItems: 'center',
               justifyContent: 'space-between',
               padding: '10px 14px',
-              borderBottom: '4px solid #221E18',
-              background: '#221E18',
+              borderBottom: '4px solid var(--color-ink)',
+              background: 'var(--color-ink)',
             }}>
               <span style={{
                 fontFamily: "var(--font-pixel-display, 'Courier New', monospace)",
                 fontSize: 11,
-                color: '#F8EDC8',
+                color: 'var(--color-acc-soft)',
                 letterSpacing: '0.18em',
                 textTransform: 'uppercase',
               }}>
@@ -192,10 +192,10 @@ export function ConstellationMount({
                 className="pixel-press"
                 style={{
                   padding: '6px 12px',
-                  background: '#B8862F',
+                  background: 'var(--color-acc)',
                   color: '#1A1612',
-                  border: '3px solid #221E18',
-                  boxShadow: '3px 3px 0 0 #221E18',
+                  border: '3px solid var(--color-ink)',
+                  boxShadow: '3px 3px 0 0 var(--color-ink)',
                   borderRadius: 0,
                   fontFamily: "var(--font-pixel-display, 'Courier New', monospace)",
                   fontSize: 11,

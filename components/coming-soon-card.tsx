@@ -62,12 +62,12 @@ export default function ComingSoonCard({
         </div>
         <h2
           className="text-[28px] leading-tight"
-          style={{ fontFamily: pixel, color: "#221E18", textShadow: `3px 3px 0 ${accent.primary}` }}
+          style={{ fontFamily: pixel, color: "var(--color-ink)", textShadow: `3px 3px 0 ${accent.primary}` }}
         >
           {title.toUpperCase()}
         </h2>
         <p
-          className="mt-4 text-[16px] leading-[1.65] text-[#221E18]"
+          className="mt-4 text-[16px] leading-[1.65] text-ink"
           style={{ fontFamily: serif }}
         >
           {pitch}
@@ -75,14 +75,14 @@ export default function ComingSoonCard({
       </div>
 
       <div
-        className="border-[3px] border-[#221E18] bg-[#FFFCF4] p-5"
-        style={{ boxShadow: "3px 3px 0 0 #B8862F" }}
+        className="border-[3px] border-ink bg-[#FFFCF4] p-5"
+        style={{ boxShadow: "3px 3px 0 0 var(--color-acc)" }}
       >
         <div
           style={{
             fontFamily: pixel,
             fontSize: 10,
-            color: "#8C6520",
+            color: "var(--color-acc-deep)",
             letterSpacing: "0.22em",
             textTransform: "uppercase",
             marginBottom: 12,
@@ -94,7 +94,7 @@ export default function ComingSoonCard({
           {doing.map((d, i) => (
             <li
               key={i}
-              className="border-l-4 px-3 py-2 text-[14.5px] leading-[1.55] text-[#221E18]"
+              className="border-l-4 px-3 py-2 text-[14.5px] leading-[1.55] text-ink"
               style={{
                 fontFamily: serif,
                 borderColor: accent.primary,
@@ -108,7 +108,7 @@ export default function ComingSoonCard({
       </div>
 
       <div
-        className="border-2 border-[#221E18] bg-[#1A1612] px-4 py-3 text-[#F8EDC8]"
+        className="border-2 border-ink bg-[#1A1612] px-4 py-3 text-acc-soft"
         style={{ fontFamily: serif, fontSize: 14 }}
       >
         <div
@@ -128,13 +128,13 @@ export default function ComingSoonCard({
 
       {meantime && (
         <div
-          className="border-2 border-[#8C6520] bg-[#F5EFDC] px-4 py-3"
-          style={{ fontFamily: serif, fontSize: 14, color: "#221E18" }}
+          className="border-2 border-acc-deep bg-[#F5EFDC] px-4 py-3"
+          style={{ fontFamily: serif, fontSize: 14, color: "var(--color-ink)" }}
         >
           <strong>{t("csc.meantime", locale)}</strong>{" "}
           <Link
             href={meantime.href}
-            className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+            className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
           >
             {meantime.label}
           </Link>

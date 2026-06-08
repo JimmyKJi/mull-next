@@ -55,14 +55,14 @@ export default async function EditorPicks({ locale = 'en' as Locale }: { locale?
         <h2 style={{
           fontFamily: 'var(--font-pixel-display, "Courier New", monospace)',
           fontSize: 22, fontWeight: 400,
-          margin: 0, color: '#221E18', letterSpacing: '0.04em',
-          textShadow: '3px 3px 0 #B8862F', lineHeight: 1.1,
+          margin: 0, color: 'var(--color-ink)', letterSpacing: '0.04em',
+          textShadow: '3px 3px 0 var(--color-acc)', lineHeight: 1.1,
         }}>
           {t('srch2.picks_h2', locale).toUpperCase()}
         </h2>
         <span style={{
           fontFamily: sans, fontSize: 11, fontWeight: 600,
-          color: '#8C6520', textTransform: 'uppercase',
+          color: 'var(--color-acc-deep)', textTransform: 'uppercase',
           letterSpacing: '0.16em',
         }}>
           {weekRangeLabel(week, locale)}
@@ -70,7 +70,7 @@ export default async function EditorPicks({ locale = 'en' as Locale }: { locale?
       </div>
       <p style={{
         fontFamily: serif, fontStyle: 'italic',
-        fontSize: 16, color: '#4A4338',
+        fontSize: 16, color: 'var(--color-ink-soft)',
         margin: '0 0 22px', lineHeight: 1.55,
       }}>
         {t('srch2.picks_blurb', locale)}
@@ -80,7 +80,7 @@ export default async function EditorPicks({ locale = 'en' as Locale }: { locale?
         <div style={{
           padding: '20px 18px',
           background: '#FFFCF4',
-          border: '3px dashed #8C6520',
+          border: '3px dashed var(--color-acc-deep)',
           borderRadius: 0,
         }}>
           <EmptyStateSprite
@@ -97,8 +97,8 @@ export default async function EditorPicks({ locale = 'en' as Locale }: { locale?
             <li key={`${p.slot}-${p.source_id}`} style={{
               padding: '18px 22px',
               background: '#FFFCF4',
-              border: '4px solid #221E18',
-              boxShadow: '4px 4px 0 0 #B8862F',
+              border: '4px solid var(--color-ink)',
+              boxShadow: '4px 4px 0 0 var(--color-acc)',
               borderRadius: 0,
             }}>
               <div style={{
@@ -108,14 +108,14 @@ export default async function EditorPicks({ locale = 'en' as Locale }: { locale?
               }}>
                 <span style={{
                   fontFamily: sans, fontSize: 11, fontWeight: 600,
-                  color: '#8C6520', textTransform: 'uppercase',
+                  color: 'var(--color-acc-deep)', textTransform: 'uppercase',
                   letterSpacing: '0.16em',
                 }}>
                   {t(SOURCE_LABEL_KEY[p.source_type], locale)}
                   {p.author_handle && (
                     <>
                       {' · '}
-                      <Link href={`/u/${p.author_handle}`} style={{ color: '#8C6520' }}>
+                      <Link href={`/u/${p.author_handle}`} style={{ color: 'var(--color-acc-deep)' }}>
                         {p.author_display_name || `@${p.author_handle}`}
                       </Link>
                     </>
@@ -126,7 +126,7 @@ export default async function EditorPicks({ locale = 'en' as Locale }: { locale?
                 </span>
                 <span style={{
                   fontFamily: serif, fontSize: 18, fontWeight: 500,
-                  color: '#B8862F', fontVariantNumeric: 'tabular-nums',
+                  color: 'var(--color-acc)', fontVariantNumeric: 'tabular-nums',
                 }}>
                   {p.slot}
                 </span>
@@ -135,7 +135,7 @@ export default async function EditorPicks({ locale = 'en' as Locale }: { locale?
               {p.entry_question && (
                 <div style={{
                   fontFamily: serif, fontStyle: 'italic',
-                  fontSize: 15, color: '#4A4338',
+                  fontSize: 15, color: 'var(--color-ink-soft)',
                   marginBottom: 10, lineHeight: 1.4,
                 }}>
                   {p.entry_question}
@@ -144,22 +144,22 @@ export default async function EditorPicks({ locale = 'en' as Locale }: { locale?
               {p.entry_title && (
                 <div style={{
                   fontFamily: serif, fontSize: 18, fontWeight: 500,
-                  color: '#221E18', marginBottom: 6, lineHeight: 1.3,
+                  color: 'var(--color-ink)', marginBottom: 6, lineHeight: 1.3,
                 }}>
                   {p.entry_title}
                 </div>
               )}
               {p.exercise_slug && (
                 <div style={{
-                  fontFamily: sans, fontSize: 12, color: '#8C6520',
+                  fontFamily: sans, fontSize: 12, color: 'var(--color-acc-deep)',
                   marginBottom: 8,
                 }}>
-                  {t('srch2.picks_exercise_label', locale)} <Link href={`/exercises/${p.exercise_slug}`} style={{ color: '#8C6520' }}>{p.exercise_slug}</Link>
+                  {t('srch2.picks_exercise_label', locale)} <Link href={`/exercises/${p.exercise_slug}`} style={{ color: 'var(--color-acc-deep)' }}>{p.exercise_slug}</Link>
                 </div>
               )}
 
               <p style={{
-                fontFamily: serif, fontSize: 16, color: '#221E18',
+                fontFamily: serif, fontSize: 16, color: 'var(--color-ink)',
                 lineHeight: 1.6, margin: 0,
                 whiteSpace: 'pre-wrap',
               }}>
@@ -173,14 +173,14 @@ export default async function EditorPicks({ locale = 'en' as Locale }: { locale?
                 }}>
                   <div style={{
                     fontFamily: sans, fontSize: 10, fontWeight: 600,
-                    color: '#8C6520', textTransform: 'uppercase',
+                    color: 'var(--color-acc-deep)', textTransform: 'uppercase',
                     letterSpacing: '0.18em', marginBottom: 4,
                   }}>
                     {t('srch2.picks_why_this', locale)}
                   </div>
                   <div style={{
                     fontFamily: serif, fontStyle: 'italic',
-                    fontSize: 14.5, color: '#4A4338', lineHeight: 1.5,
+                    fontSize: 14.5, color: 'var(--color-ink-soft)', lineHeight: 1.5,
                   }}>
                     {p.curator_note}
                   </div>

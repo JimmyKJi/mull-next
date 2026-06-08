@@ -47,7 +47,7 @@ export default function LeaderboardTabs({ active }: { active: TabKey }) {
     // hard ink shadow, inactive tabs sit flat in cream.
     <div
       role="tablist"
-      className="flex flex-wrap gap-2 border-b-4 border-[#221E18] pb-0"
+      className="flex flex-wrap gap-2 border-b-4 border-ink pb-0"
       style={{ marginBottom: 20 }}
     >
       {TABS.map((tab) => {
@@ -61,8 +61,8 @@ export default function LeaderboardTabs({ active }: { active: TabKey }) {
             className={
               'inline-flex items-center border-l-2 border-r-2 border-t-2 px-4 py-2 text-[11px] tracking-[0.18em] transition-colors ' +
               (isActive
-                ? 'bg-[#B8862F] text-[#1A1612] border-[#221E18]'
-                : 'bg-[#FFFCF4] text-[#8C6520] border-[#D6CDB6] hover:bg-[#F8EDC8] hover:text-[#221E18] hover:border-[#221E18]')
+                ? 'bg-acc text-[#1A1612] border-ink'
+                : 'bg-[#FFFCF4] text-acc-deep border-line hover:bg-acc-soft hover:text-ink hover:border-ink')
             }
             style={{ fontFamily: 'var(--font-pixel-display)' }}
           >

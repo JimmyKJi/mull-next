@@ -107,7 +107,7 @@ export function ResultClient({
 
   return (
     <main
-      className="min-h-[100svh] bg-[#FAF6EC] text-[#221E18]"
+      className="min-h-[100svh] bg-cream text-ink"
       style={
         {
           ["--acc" as string]: color.primary,
@@ -156,7 +156,7 @@ export function ResultClient({
             }}
           >
             <span><span className="pixel-blink">▶</span> {t("res.quest_complete", locale)}</span>
-            <span className="text-[#B8862F]">RESULT_ARCHETYPE.LOG</span>
+            <span className="text-acc">RESULT_ARCHETYPE.LOG</span>
           </div>
 
           <div className="grid grid-cols-1 gap-8 px-6 py-10 sm:px-10 sm:py-14 md:grid-cols-[auto_1fr] md:items-center md:gap-12">
@@ -231,7 +231,7 @@ export function ResultClient({
               </h1>
 
               <p
-                className="mt-7 max-w-[520px] text-[18px] leading-[1.45] text-[#221E18] sm:text-[20px]"
+                className="mt-7 max-w-[520px] text-[18px] leading-[1.45] text-ink sm:text-[20px]"
                 style={{ fontFamily: "var(--font-prose)" }}
               >
                 <em>&ldquo;{spirit}&rdquo;</em>
@@ -240,7 +240,7 @@ export function ResultClient({
               {/* Alignment count-up + runner-up */}
               <div className="mt-8 flex flex-wrap items-end gap-6">
                 <AlignmentCounter target={alignmentPct} color={color.deep} locale={locale} />
-                <div className="text-[13px] text-[#4A4338]">
+                <div className="text-[13px] text-ink-soft">
                   <div
                     className="text-[10px] tracking-[0.22em]"
                     style={{ color: color.deep, fontFamily: "var(--font-pixel-display)" }}
@@ -268,7 +268,7 @@ export function ResultClient({
           className="block border-[4px] p-5 transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5 sm:p-6"
           style={{
             background: "#1A1612",
-            color: "#F8EDC8",
+            color: "var(--color-acc-soft)",
             borderColor: color.deep,
             boxShadow: `6px 6px 0 0 ${color.deep}`,
           }}
@@ -303,7 +303,7 @@ export function ResultClient({
               textTransform: "uppercase",
               background: "#F8C75E",
               color: "#1A1820",
-              border: "2px solid #221E18",
+              border: "2px solid var(--color-ink)",
             }}
           >
             {t("res.begin_day1", locale)}
@@ -317,11 +317,11 @@ export function ResultClient({
         <div className="mx-auto max-w-[1100px]">
           <div className="pixel-panel">
             <div
-              className="flex items-center justify-between border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
+              className="flex items-center justify-between border-b-4 border-ink bg-ink px-4 py-2 text-[10px] tracking-[0.22em] text-acc-soft"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
               <span>{t("res.fingerprint", locale)}</span>
-              <span className="text-[#B8862F]">RADAR.SYS</span>
+              <span className="text-acc">RADAR.SYS</span>
             </div>
             <div className="grid grid-cols-1 gap-6 px-5 py-6 sm:px-8 sm:py-8 md:grid-cols-[1fr_300px]">
               <RadarChart points={dimRadar} color={color.primary} accent={color.accent} />
@@ -355,11 +355,11 @@ export function ResultClient({
                       >
                         {d.key}
                       </span>
-                      <span className="text-[#221E18]">{d.name}</span>
+                      <span className="text-ink">{d.name}</span>
                     </li>
                   ))}
                 </ul>
-                <p className="mt-6 text-[13px] leading-[1.55] text-[#4A4338]">
+                <p className="mt-6 text-[13px] leading-[1.55] text-ink-soft">
                   {t("res.radar_note", locale)}
                 </p>
               </div>
@@ -383,10 +383,10 @@ export function ResultClient({
             {t("res.stood_near", locale)}
           </div>
           <h2
-            className="mt-4 pr-2 text-[24px] leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[32px] md:text-[40px]"
+            className="mt-4 pr-2 text-[24px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[32px] md:text-[40px]"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
-            <span style={{ textShadow: "3px 3px 0 #B8862F" }}>
+            <span style={{ textShadow: "3px 3px 0 var(--color-acc)" }}>
               {t("res.nearest_three", locale)}
             </span>
           </h2>
@@ -430,14 +430,14 @@ export function ResultClient({
                           size={96}
                           floating
                         />
-                        <div className="mt-4 text-[18px] font-medium text-[#221E18]">
+                        <div className="mt-4 text-[18px] font-medium text-ink">
                           {p.name}
                         </div>
-                        <div className="mt-1 text-[12px] text-[#8C6520]">
+                        <div className="mt-1 text-[12px] text-acc-deep">
                           {p.dates}
                         </div>
                         <p
-                          className="mt-4 text-[14px] leading-[1.5] text-[#4A4338]"
+                          className="mt-4 text-[14px] leading-[1.5] text-ink-soft"
                           style={{ fontFamily: "var(--font-editorial)" }}
                         >
                           <em>&ldquo;{p.keyIdea}&rdquo;</em>
@@ -453,7 +453,7 @@ export function ResultClient({
       </section>
 
       {/* ─── Constellation with you on it ───────────────────── */}
-      <section className="border-y-4 border-[#221E18] bg-[#FFFCF4] px-6 py-14 sm:px-10 sm:py-20">
+      <section className="border-y-4 border-ink bg-[#FFFCF4] px-6 py-14 sm:px-10 sm:py-20">
         <div className="mx-auto max-w-[1200px]">
           <div className="max-w-[760px]">
             <div
@@ -466,25 +466,25 @@ export function ResultClient({
               {t("res.where_you_sit", locale)}
             </div>
             <h2
-              className="mt-4 pr-2 text-[24px] leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[32px] md:text-[40px]"
+              className="mt-4 pr-2 text-[24px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[32px] md:text-[40px]"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
-              <span style={{ textShadow: "3px 3px 0 #B8862F" }}>
+              <span style={{ textShadow: "3px 3px 0 var(--color-acc)" }}>
                 {t("res.you_on_map", locale)}
               </span>
             </h2>
-            <p className="mt-5 max-w-[640px] text-[16px] leading-[1.6] text-[#4A4338]">
+            <p className="mt-5 max-w-[640px] text-[16px] leading-[1.6] text-ink-soft">
               {t("res.map_note", locale)}
             </p>
           </div>
 
-          <div className="mt-10 border-4 border-[#221E18] bg-[#0E1419] shadow-[8px_8px_0_0_#8C6520]">
+          <div className="mt-10 border-4 border-ink bg-[#0E1419] shadow-[8px_8px_0_0_var(--color-acc-deep)]">
             <div
-              className="flex items-center justify-between border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.18em] text-[#F8EDC8]"
+              className="flex items-center justify-between border-b-4 border-ink bg-ink px-4 py-2 text-[10px] tracking-[0.18em] text-acc-soft"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
               <span>{t("res.map_position", locale)}</span>
-              <span className="text-[#B8862F]">{t("res.drag_zoom_hover", locale)}</span>
+              <span className="text-acc">{t("res.drag_zoom_hover", locale)}</span>
             </div>
             <ConstellationMount
               userVector={vector}
@@ -499,15 +499,15 @@ export function ResultClient({
       <section className="mx-auto max-w-[860px] px-6 py-16 sm:px-10 sm:py-24">
         <div className="pixel-panel">
           <div
-            className="flex items-center justify-between border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
+            className="flex items-center justify-between border-b-4 border-ink bg-ink px-4 py-2 text-[10px] tracking-[0.22em] text-acc-soft"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
             <span>{t("res.orientation_sees", locale)}</span>
-            <span className="text-[#B8862F]">LIBRARY_ENTRY</span>
+            <span className="text-acc">LIBRARY_ENTRY</span>
           </div>
           <div className="px-6 py-8 sm:px-10 sm:py-10">
             <p
-              className="text-[18px] leading-[1.55] text-[#221E18] sm:text-[20px]"
+              className="text-[18px] leading-[1.55] text-ink sm:text-[20px]"
               style={{ fontFamily: "var(--font-prose)" }}
             >
               {whatItGetsRight}
@@ -522,7 +522,7 @@ export function ResultClient({
               {t("res.where_falters", locale)}
             </div>
             <p
-              className="mt-4 text-[16px] leading-[1.55] text-[#4A4338] sm:text-[18px]"
+              className="mt-4 text-[16px] leading-[1.55] text-ink-soft sm:text-[18px]"
               style={{ fontFamily: "var(--font-prose)" }}
             >
               {whereItFalters}
@@ -544,25 +544,25 @@ export function ResultClient({
             href="/signup"
             className="pixel-panel pixel-press pixel-press--lg block"
             style={{
-              background: '#F8EDC8',
-              borderColor: '#221E18',
-              boxShadow: '6px 6px 0 0 #B8862F',
+              background: 'var(--color-acc-soft)',
+              borderColor: 'var(--color-ink)',
+              boxShadow: '6px 6px 0 0 var(--color-acc)',
               marginBottom: 18,
               transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
             }}
           >
             <div
-              className="border-b-4 border-[#221E18] bg-[#221E18] px-5 py-2.5 text-[11px] tracking-[0.22em] text-[#B8862F]"
+              className="border-b-4 border-ink bg-ink px-5 py-2.5 text-[11px] tracking-[0.22em] text-acc"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
               <span className="pixel-blink">▶</span> {t("res.save_result", locale)}
             </div>
             <div className="grid gap-4 px-6 py-7 md:grid-cols-[1fr_auto] md:items-center sm:px-8">
               <div>
-                <div className="text-[22px] font-medium text-[#221E18] sm:text-[24px]">
+                <div className="text-[22px] font-medium text-ink sm:text-[24px]">
                   {t("res.disappears", locale)}
                 </div>
-                <p className="mt-3 text-[14px] leading-[1.55] text-[#4A4338] sm:text-[15px]">
+                <p className="mt-3 text-[14px] leading-[1.55] text-ink-soft sm:text-[15px]">
                   {t("res.save_body", locale)}
                 </p>
               </div>
@@ -570,9 +570,9 @@ export function ResultClient({
                 className="inline-block px-5 py-3 text-[12px] tracking-[0.08em] text-[#1A1612]"
                 style={{
                   fontFamily: "var(--font-pixel-display)",
-                  background: '#B8862F',
-                  border: '4px solid #221E18',
-                  boxShadow: '4px 4px 0 0 #221E18',
+                  background: 'var(--color-acc)',
+                  border: '4px solid var(--color-ink)',
+                  boxShadow: '4px 4px 0 0 var(--color-ink)',
                   textTransform: 'uppercase',
                 }}
               >
@@ -612,7 +612,7 @@ export function ResultClient({
               <div className="text-[22px] font-medium sm:text-[24px]" style={{ color: color.deep }}>
                 {t("res.read_essay", locale, { archetype: archBare(topKey) })}
               </div>
-              <p className="mt-3 text-[14px] leading-[1.55] sm:text-[15px]" style={{ color: '#4A4338' }}>
+              <p className="mt-3 text-[14px] leading-[1.55] sm:text-[15px]" style={{ color: 'var(--color-ink-soft)' }}>
                 {t("res.essay_body", locale)}
               </p>
             </div>
@@ -622,8 +622,8 @@ export function ResultClient({
                 fontFamily: "var(--font-pixel-display)",
                 color: color.soft,
                 background: color.deep,
-                border: '4px solid #221E18',
-                boxShadow: '4px 4px 0 0 #221E18',
+                border: '4px solid var(--color-ink)',
+                boxShadow: '4px 4px 0 0 var(--color-ink)',
                 textTransform: 'uppercase',
               }}
             >
@@ -642,21 +642,21 @@ export function ResultClient({
             href="/arena"
             className="pixel-panel block transition-transform hover:-translate-x-1 hover:-translate-y-1"
             style={{
-              borderColor: '#221E18',
+              borderColor: 'var(--color-ink)',
               boxShadow: '4px 4px 0 0 #2F5D5C',
             }}
           >
             <div
-              className="border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
+              className="border-b-4 border-ink bg-ink px-4 py-2 text-[10px] tracking-[0.22em] text-acc-soft"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
               {t("res.arena_eyebrow", locale)}
             </div>
             <div className="px-5 py-5">
-              <div className="text-[18px] font-medium text-[#221E18]">
+              <div className="text-[18px] font-medium text-ink">
                 {t("res.arena_title", locale)}
               </div>
-              <p className="mt-3 text-[13px] leading-[1.5] text-[#4A4338]">
+              <p className="mt-3 text-[13px] leading-[1.5] text-ink-soft">
                 {t("res.arena_body", locale)}
               </p>
             </div>
@@ -667,16 +667,16 @@ export function ResultClient({
             className="pixel-panel block transition-transform hover:-translate-x-1 hover:-translate-y-1"
           >
             <div
-              className="border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
+              className="border-b-4 border-ink bg-ink px-4 py-2 text-[10px] tracking-[0.22em] text-acc-soft"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
               {t("res.inheritor_eyebrow", locale)}
             </div>
             <div className="px-5 py-5">
-              <div className="text-[18px] font-medium text-[#221E18]">
+              <div className="text-[18px] font-medium text-ink">
                 {t("res.inheritor_title", locale)}
               </div>
-              <p className="mt-3 text-[13px] leading-[1.5] text-[#4A4338]">
+              <p className="mt-3 text-[13px] leading-[1.5] text-ink-soft">
                 {t("res.inheritor_body", locale)}
               </p>
             </div>
@@ -685,20 +685,20 @@ export function ResultClient({
 
         {/* TIER 3: quiet links for the optional actions — retake the
             classic, or (signed-in) open your trajectory page. */}
-        <div className="mt-6 flex flex-wrap items-center gap-4 text-[13px] text-[#8C6520]">
+        <div className="mt-6 flex flex-wrap items-center gap-4 text-[13px] text-acc-deep">
           <span
             className="text-[10px] tracking-[0.22em]"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
             {t("res.also", locale)}
           </span>
-          <Link href="/quiz?mode=quick" className="hover:text-[#221E18] underline decoration-[#D6CDB6] underline-offset-3 hover:decoration-[#8C6520]">
+          <Link href="/quiz?mode=quick" className="hover:text-ink underline decoration-line underline-offset-3 hover:decoration-acc-deep">
             {t("res.retake_classic", locale)}
           </Link>
           {isSignedIn && (
             <>
               <span>·</span>
-              <Link href="/account" className="hover:text-[#221E18] underline decoration-[#D6CDB6] underline-offset-3 hover:decoration-[#8C6520]">
+              <Link href="/account" className="hover:text-ink underline decoration-line underline-offset-3 hover:decoration-acc-deep">
                 {t("res.see_trajectory", locale)}
               </Link>
             </>
@@ -792,7 +792,7 @@ function AlignmentCounter({
           style={{
             color,
             fontFamily: "var(--font-pixel-display)",
-            textShadow: "2px 2px 0 #B8862F",
+            textShadow: "2px 2px 0 var(--color-acc)",
           }}
         >
           {display}
@@ -802,7 +802,7 @@ function AlignmentCounter({
           style={{
             color,
             fontFamily: "var(--font-pixel-display)",
-            textShadow: "2px 2px 0 #B8862F",
+            textShadow: "2px 2px 0 var(--color-acc)",
           }}
         >
           %
@@ -990,12 +990,12 @@ function ChallengerBanner({
         className="pixel-press pixel-press--lg block"
         style={{
           padding: '20px 24px',
-          background: '#F8EDC8',
-          border: '4px solid #221E18',
-          boxShadow: '5px 5px 0 0 #B8862F',
+          background: 'var(--color-acc-soft)',
+          border: '4px solid var(--color-ink)',
+          boxShadow: '5px 5px 0 0 var(--color-acc)',
           borderRadius: 0,
           textDecoration: 'none',
-          color: '#221E18',
+          color: 'var(--color-ink)',
           transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
         }}
       >
@@ -1013,7 +1013,7 @@ function ChallengerBanner({
               style={{
                 fontFamily: 'var(--font-pixel-display)',
                 fontSize: 11,
-                color: '#8C6520',
+                color: 'var(--color-acc-deep)',
                 letterSpacing: '0.18em',
                 textTransform: 'uppercase',
                 display: 'block',
@@ -1034,10 +1034,10 @@ function ChallengerBanner({
           <span
             style={{
               color: '#1A1612',
-              background: '#B8862F',
+              background: 'var(--color-acc)',
               padding: '10px 16px',
-              border: '3px solid #221E18',
-              boxShadow: '3px 3px 0 0 #221E18',
+              border: '3px solid var(--color-ink)',
+              boxShadow: '3px 3px 0 0 var(--color-ink)',
               fontFamily: 'var(--font-pixel-display)',
               fontSize: 12,
               letterSpacing: 0.4,

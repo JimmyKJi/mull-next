@@ -39,7 +39,7 @@ export default async function JourneyPage() {
   const reveals = localizeReveals(JOURNEY_REVEALS, locale);
 
   return (
-    <main className="min-h-[100svh] bg-[#FAF6EC] text-[#221E18]">
+    <main className="min-h-[100svh] bg-cream text-ink">
       <JourneyEngine scenes={scenes} reveals={reveals} locale={locale} />
     </main>
   );

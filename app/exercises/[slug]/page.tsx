@@ -65,7 +65,7 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
       <div className="mb-6 flex items-center justify-between gap-4">
         <Link
           href="/exercises"
-          className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"
+          className="text-[13px] text-ink-soft hover:text-ink hover:underline"
         >
           ← {t('exercises.all', locale)}
         </Link>
@@ -74,26 +74,26 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
       <ContentLanguageNotice locale={locale} translatedLocales={CORE_TRANSLATED} />
 
       <div
-        className="flex flex-wrap items-center gap-3 text-[10px] tracking-[0.22em] text-[#8C6520]"
+        className="flex flex-wrap items-center gap-3 text-[10px] tracking-[0.22em] text-acc-deep"
         style={{ fontFamily: 'var(--font-pixel-display)' }}
       >
-        <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
+        <span aria-hidden className="inline-block h-2 w-2 bg-acc" />
         <span>▶ {ex.tradition.toUpperCase()}</span>
         <span className="opacity-60">·</span>
-        <span className="text-[#221E18]">{ex.duration.toUpperCase()}</span>
+        <span className="text-ink">{ex.duration.toUpperCase()}</span>
       </div>
 
       <h1
-        className="mt-5 pr-2 text-[26px] leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[36px] md:text-[44px]"
+        className="mt-5 pr-2 text-[26px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[36px] md:text-[44px]"
         style={{ fontFamily: 'var(--font-pixel-display)' }}
       >
-        <span style={{ textShadow: '3px 3px 0 #B8862F' }}>
+        <span style={{ textShadow: '3px 3px 0 var(--color-acc)' }}>
           {ex.name.toUpperCase()}
         </span>
       </h1>
 
       <p
-        className="mt-6 text-[18px] italic leading-[1.55] text-[#4A4338]"
+        className="mt-6 text-[18px] italic leading-[1.55] text-ink-soft"
         style={{ fontFamily: 'var(--font-prose)' }}
       >
         {ex.summary}
@@ -105,7 +105,7 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
         {locale !== 'en' && ex.about === original.about && (
           <p style={{
             fontSize: 12.5,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             fontStyle: 'italic',
             opacity: 0.85,
             marginBottom: 14,
@@ -132,7 +132,7 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
               position: 'relative',
               fontFamily: sans,
               fontSize: 15,
-              color: '#221E18',
+              color: 'var(--color-ink)',
               lineHeight: 1.6,
             }}>
               <span style={{
@@ -142,7 +142,7 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
                 fontFamily: serif,
                 fontSize: 22,
                 fontWeight: 500,
-                color: '#8C6520',
+                color: 'var(--color-acc-deep)',
                 lineHeight: 1,
               }}>
                 {i + 1}.
@@ -156,15 +156,15 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
       <div style={{
         marginTop: 36,
         padding: '22px 26px',
-        background: '#F8EDC8',
-        border: '4px solid #221E18',
-        boxShadow: '5px 5px 0 0 #B8862F',
+        background: 'var(--color-acc-soft)',
+        border: '4px solid var(--color-ink)',
+        boxShadow: '5px 5px 0 0 var(--color-acc)',
         borderRadius: 0,
       }}>
         <div style={{
           fontFamily: 'var(--font-pixel-display)',
           fontSize: 11,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           textTransform: 'uppercase',
           letterSpacing: '0.18em',
           marginBottom: 12,
@@ -176,7 +176,7 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
           fontFamily: serif,
           fontStyle: 'italic',
           fontSize: 18,
-          color: '#221E18',
+          color: 'var(--color-ink)',
           lineHeight: 1.55,
         }}>
           {ex.reflection}
@@ -185,7 +185,7 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
           marginTop: 14,
           fontFamily: sans,
           fontSize: 12.5,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           opacity: 0.8,
           lineHeight: 1.55,
         }}>
@@ -222,7 +222,7 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
           gap: 12,
           justifyContent: 'center',
           paddingTop: 24,
-          borderTop: '2px dashed #D6CDB6',
+          borderTop: '2px dashed var(--color-line)',
         }}
       >
         <Link
@@ -233,7 +233,7 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
             padding: '10px 16px',
             background: '#FFFCF4',
             color: '#7A4A2E',
-            border: '3px solid #221E18',
+            border: '3px solid var(--color-ink)',
             boxShadow: '3px 3px 0 0 #7A4A2E',
             borderRadius: 0,
             fontFamily: 'var(--font-pixel-display)',
@@ -252,10 +252,10 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
           style={{
             display: 'inline-block',
             padding: '10px 16px',
-            background: '#221E18',
-            color: '#FAF6EC',
-            border: '3px solid #221E18',
-            boxShadow: '3px 3px 0 0 #B8862F',
+            background: 'var(--color-ink)',
+            color: 'var(--color-cream)',
+            border: '3px solid var(--color-ink)',
+            boxShadow: '3px 3px 0 0 var(--color-acc)',
             borderRadius: 0,
             fontFamily: 'var(--font-pixel-display)',
             fontSize: 11,
@@ -290,10 +290,10 @@ function ExerciseExtrasSection({
     <div style={{ marginTop: 48 }}>
       {locale !== 'en' && !EXTRAS_TRANSLATED.includes(locale) && (
         <p style={{
-          fontFamily: sans, fontSize: 12.5, color: '#8C6520',
+          fontFamily: sans, fontSize: 12.5, color: 'var(--color-acc-deep)',
           fontStyle: 'italic', opacity: 0.85, marginBottom: 18,
           padding: '10px 14px', background: '#F5EFDC',
-          borderLeft: '3px solid #B8862F', borderRadius: 6,
+          borderLeft: '3px solid var(--color-acc)', borderRadius: 6,
         }}>
           {t('i18n.untranslated_short', locale)}
         </p>
@@ -336,10 +336,10 @@ function ExerciseExtrasSection({
             {extras.relatedThinkers.map((thinker, i) => (
               <li key={i} style={{
                 padding: '10px 14px', background: '#FFFCF4',
-                border: '2px solid #221E18', borderRadius: 0,
+                border: '2px solid var(--color-ink)', borderRadius: 0,
               }}>
-                <strong style={{ color: '#221E18' }}>{thinker.name}</strong>
-                <span style={{ color: '#4A4338' }}> — {thinker.note}</span>
+                <strong style={{ color: 'var(--color-ink)' }}>{thinker.name}</strong>
+                <span style={{ color: 'var(--color-ink-soft)' }}> — {thinker.note}</span>
               </li>
             ))}
           </ul>
@@ -352,23 +352,23 @@ function ExerciseExtrasSection({
             {extras.furtherReading.map((book, i) => (
               <li key={i} style={{
                 padding: '12px 16px', background: '#FFFCF4',
-                border: '3px solid #221E18',
-                boxShadow: '3px 3px 0 0 #B8862F',
+                border: '3px solid var(--color-ink)',
+                boxShadow: '3px 3px 0 0 var(--color-acc)',
                 borderRadius: 0,
               }}>
                 <div style={{
-                  fontFamily: serif, fontSize: 17, color: '#221E18',
+                  fontFamily: serif, fontSize: 17, color: 'var(--color-ink)',
                   marginBottom: 2, lineHeight: 1.3,
                 }}>
                   {book.title}
                 </div>
                 <div style={{
                   fontFamily: sans, fontSize: 12,
-                  color: '#8C6520', marginBottom: 6, letterSpacing: 0.2,
+                  color: 'var(--color-acc-deep)', marginBottom: 6, letterSpacing: 0.2,
                 }}>
                   {book.author}{book.year ? ` · ${book.year}` : ''}
                 </div>
-                <p style={{ margin: 0, fontSize: 14, color: '#4A4338', lineHeight: 1.55 }}>{book.note}</p>
+                <p style={{ margin: 0, fontSize: 14, color: 'var(--color-ink-soft)', lineHeight: 1.55 }}>{book.note}</p>
               </li>
             ))}
           </ul>
@@ -386,16 +386,16 @@ function ExerciseExtrasSection({
                   style={{
                     display: 'block', padding: '12px 16px',
                     background: '#FFFCF4',
-                    border: '3px solid #221E18',
+                    border: '3px solid var(--color-ink)',
                     boxShadow: '3px 3px 0 0 #2F5D5C',
                     borderRadius: 0, textDecoration: 'none', color: 'inherit',
                     transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
                   }}
                 >
-                  <div style={{ fontFamily: serif, fontSize: 17, color: '#221E18' }}>
+                  <div style={{ fontFamily: serif, fontSize: 17, color: 'var(--color-ink)' }}>
                     {rex.name} →
                   </div>
-                  <p style={{ margin: '2px 0 0', fontSize: 13.5, color: '#4A4338' }}>{rex.summary}</p>
+                  <p style={{ margin: '2px 0 0', fontSize: 13.5, color: 'var(--color-ink-soft)' }}>{rex.summary}</p>
                 </Link>
               </li>
             ))}
@@ -408,8 +408,8 @@ function ExerciseExtrasSection({
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 8 }}>
             {extras.kindredPractices.map((kp, i) => (
               <li key={i} style={{ padding: '8px 0', borderBottom: '1px solid #EBE3CA' }}>
-                <strong style={{ color: '#221E18' }}>{kp.name}</strong>
-                <span style={{ color: '#4A4338' }}> — {kp.note}</span>
+                <strong style={{ color: 'var(--color-ink)' }}>{kp.name}</strong>
+                <span style={{ color: 'var(--color-ink-soft)' }}> — {kp.note}</span>
               </li>
             ))}
           </ul>
@@ -433,14 +433,14 @@ function Section({ title, children }: { title: string; children: React.ReactNode
         fontWeight: 500,
         margin: '0 0 14px',
         letterSpacing: '-0.2px',
-        color: '#221E18',
+        color: 'var(--color-ink)',
       }}>
         {title}
       </h2>
       <div style={{
         fontFamily: sans,
         fontSize: 15.5,
-        color: '#4A4338',
+        color: 'var(--color-ink-soft)',
         lineHeight: 1.65,
       }}>
         {children}

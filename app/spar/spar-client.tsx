@@ -139,16 +139,16 @@ export default function SparClient({
       <div
         style={{
           padding: "18px 22px",
-          background: "#F8EDC8",
-          border: "3px solid #8C6520",
-          boxShadow: "3px 3px 0 0 #B8862F",
+          background: "var(--color-acc-soft)",
+          border: "3px solid var(--color-acc-deep)",
+          boxShadow: "3px 3px 0 0 var(--color-acc)",
         }}
       >
         <div
           style={{
             fontFamily: pixel,
             fontSize: 10,
-            color: "#8C6520",
+            color: "var(--color-acc-deep)",
             letterSpacing: "0.22em",
             textTransform: "uppercase",
             marginBottom: 8,
@@ -160,7 +160,7 @@ export default function SparClient({
           style={{
             fontFamily: serif,
             fontSize: 15.5,
-            color: "#221E18",
+            color: "var(--color-ink)",
             lineHeight: 1.6,
             margin: "0 0 10px",
           }}
@@ -169,9 +169,9 @@ export default function SparClient({
           <Link
             href="/arena"
             style={{
-              color: "#8C6520",
+              color: "var(--color-acc-deep)",
               textDecoration: "underline",
-              textDecorationColor: "#B8862F",
+              textDecorationColor: "var(--color-acc)",
             }}
           >
             {t("spar.the_arena", locale)}
@@ -208,15 +208,15 @@ export default function SparClient({
         style={{
           padding: "14px 16px",
           background: "#FBF6E8",
-          borderLeft: "4px solid #B8862F",
+          borderLeft: "4px solid var(--color-acc)",
           marginBottom: 14,
           fontFamily: serif,
           fontSize: 14,
-          color: "#4A4338",
+          color: "var(--color-ink-soft)",
           lineHeight: 1.6,
         }}
       >
-        <strong style={{ color: "#221E18" }}>{t("spar.context_label", locale)}</strong>{" "}
+        <strong style={{ color: "var(--color-ink)" }}>{t("spar.context_label", locale)}</strong>{" "}
         {topicPrimer}
       </div>
 
@@ -226,7 +226,7 @@ export default function SparClient({
           display: "block",
           fontFamily: pixel,
           fontSize: 10,
-          color: "#8C6520",
+          color: "var(--color-acc-deep)",
           letterSpacing: "0.22em",
           textTransform: "uppercase",
           marginBottom: 8,
@@ -245,12 +245,12 @@ export default function SparClient({
           width: "100%",
           padding: "12px 14px",
           background: "#FFFCF4",
-          border: "3px solid #221E18",
-          boxShadow: "3px 3px 0 0 #B8862F",
+          border: "3px solid var(--color-ink)",
+          boxShadow: "3px 3px 0 0 var(--color-acc)",
           fontFamily: serif,
           fontSize: 15.5,
           lineHeight: 1.55,
-          color: "#221E18",
+          color: "var(--color-ink)",
           resize: "vertical",
           minHeight: 140,
           borderRadius: 0,
@@ -266,7 +266,7 @@ export default function SparClient({
           fontSize: 10,
           letterSpacing: "0.18em",
           textTransform: "uppercase",
-          color: overLimit ? "#8C3717" : "#8C6520",
+          color: overLimit ? "#8C3717" : "var(--color-acc-deep)",
         }}
       >
         <span>
@@ -304,9 +304,9 @@ export default function SparClient({
           marginTop: 16,
           width: "100%",
           padding: "14px 20px",
-          background: submitting || !text.trim() || overLimit ? "#D6CDB6" : "#F8C75E",
-          color: submitting || !text.trim() || overLimit ? "#8C6520" : "#1A1820",
-          border: "3px solid #221E18",
+          background: submitting || !text.trim() || overLimit ? "var(--color-line)" : "#F8C75E",
+          color: submitting || !text.trim() || overLimit ? "var(--color-acc-deep)" : "#1A1820",
+          border: "3px solid var(--color-ink)",
           boxShadow: submitting || !text.trim() || overLimit ? "none" : "4px 4px 0 0 #2F5D5C",
           fontFamily: pixel,
           fontSize: 12,
@@ -375,8 +375,8 @@ function SparResult({
             width: "100%",
             padding: "12px 18px",
             background: "transparent",
-            color: "#4A4338",
-            border: "2px solid #8C6520",
+            color: "var(--color-ink-soft)",
+            border: "2px solid var(--color-acc-deep)",
             fontFamily: pixel,
             fontSize: 11,
             letterSpacing: "0.16em",
@@ -392,7 +392,7 @@ function SparResult({
           marginTop: 12,
           fontFamily: serif,
           fontSize: 14,
-          color: "#8C6520",
+          color: "var(--color-acc-deep)",
           lineHeight: 1.55,
           fontStyle: "italic",
         }}
@@ -415,7 +415,7 @@ function TurnCard({
   return (
     <div
       style={{
-        border: "3px solid #221E18",
+        border: "3px solid var(--color-ink)",
         background: "#FFFCF4",
         boxShadow: `3px 3px 0 0 ${accent}`,
       }}
@@ -423,8 +423,8 @@ function TurnCard({
       <div
         style={{
           padding: "8px 12px",
-          background: "#221E18",
-          color: "#F8EDC8",
+          background: "var(--color-ink)",
+          color: "var(--color-acc-soft)",
           fontFamily: pixel,
           fontSize: 10,
           letterSpacing: "0.22em",
@@ -439,7 +439,7 @@ function TurnCard({
           fontFamily: serif,
           fontSize: 15.5,
           lineHeight: 1.65,
-          color: "#221E18",
+          color: "var(--color-ink)",
           whiteSpace: "pre-wrap",
         }}
       >
@@ -470,21 +470,21 @@ function JudgeVerdict({
   // localized template on {name} so word order stays correct per locale.
   const [kindredBefore, kindredAfter] = t("spar.kindred_body", locale).split("{name}");
   const verdictColor =
-    judge.verdict === "user" ? "#2F5D5C" : judge.verdict === "opponent" ? "#8C3717" : "#8C6520";
+    judge.verdict === "user" ? "#2F5D5C" : judge.verdict === "opponent" ? "#8C3717" : "var(--color-acc-deep)";
 
   return (
     <div
       style={{
-        border: "4px solid #221E18",
+        border: "4px solid var(--color-ink)",
         background: "#1A1612",
-        color: "#F8EDC8",
-        boxShadow: "5px 5px 0 0 #B8862F",
+        color: "var(--color-acc-soft)",
+        boxShadow: "5px 5px 0 0 var(--color-acc)",
       }}
     >
       <div
         style={{
           padding: "12px 16px",
-          background: "#221E18",
+          background: "var(--color-ink)",
           color: "#F8C75E",
           fontFamily: pixel,
           fontSize: 11,
@@ -513,7 +513,7 @@ function JudgeVerdict({
             style={{
               fontFamily: pixel,
               fontSize: 18,
-              color: verdictColor === "#8C6520" ? "#F8C75E" : verdictColor,
+              color: verdictColor === "var(--color-acc-deep)" ? "#F8C75E" : verdictColor,
               letterSpacing: "0.16em",
             }}
           >
@@ -523,7 +523,7 @@ function JudgeVerdict({
             style={{
               fontFamily: pixel,
               fontSize: 12,
-              color: "#B8862F",
+              color: "var(--color-acc)",
               letterSpacing: "0.18em",
             }}
           >
@@ -563,7 +563,7 @@ function JudgeVerdict({
               fontFamily: pixel,
               fontSize: 9,
               letterSpacing: "0.22em",
-              color: "#B8862F",
+              color: "var(--color-acc)",
               textTransform: "uppercase",
               marginBottom: 6,
             }}
@@ -574,7 +574,7 @@ function JudgeVerdict({
             style={{
               fontFamily: serif,
               fontSize: 15,
-              color: "#F8EDC8",
+              color: "var(--color-acc-soft)",
             }}
           >
             {kindredBefore}

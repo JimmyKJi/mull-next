@@ -79,7 +79,7 @@ export default async function ArenaHistoryPage() {
           style={{
             fontFamily: pixel,
             fontSize: 11,
-            color: "#4A4338",
+            color: "var(--color-ink-soft)",
             textDecoration: "none",
             letterSpacing: 0.4,
             textTransform: "uppercase",
@@ -93,10 +93,10 @@ export default async function ArenaHistoryPage() {
         style={{
           fontFamily: pixel,
           fontSize: 24,
-          color: "#221E18",
+          color: "var(--color-ink)",
           letterSpacing: "0.04em",
           textTransform: "uppercase",
-          textShadow: "3px 3px 0 #B8862F",
+          textShadow: "3px 3px 0 var(--color-acc)",
           marginBottom: 8,
         }}
       >
@@ -107,7 +107,7 @@ export default async function ArenaHistoryPage() {
           fontFamily: serif,
           fontStyle: "italic",
           fontSize: 15,
-          color: "#4A4338",
+          color: "var(--color-ink-soft)",
           margin: "0 0 28px",
           lineHeight: 1.55,
         }}
@@ -120,18 +120,18 @@ export default async function ArenaHistoryPage() {
           style={{
             padding: "24px 22px",
             background: "#FFFCF4",
-            border: "3px dashed #8C6520",
+            border: "3px dashed var(--color-acc-deep)",
             fontFamily: serif,
             fontStyle: "italic",
             fontSize: 15,
-            color: "#8C6520",
+            color: "var(--color-acc-deep)",
             textAlign: "center",
           }}
         >
           {t("arena.hist_empty_1", locale)}
-          <Link href="/arena/pve" style={{ color: "#221E18" }}>{t("arena.hist_empty_face", locale)}</Link>
+          <Link href="/arena/pve" style={{ color: "var(--color-ink)" }}>{t("arena.hist_empty_face", locale)}</Link>
           {t("arena.hist_empty_or", locale)}
-          <Link href="/arena/pvp" style={{ color: "#221E18" }}>{t("arena.hist_empty_pvp", locale)}</Link>
+          <Link href="/arena/pvp" style={{ color: "var(--color-ink)" }}>{t("arena.hist_empty_pvp", locale)}</Link>
           {t("arena.hist_empty_2", locale)}
         </div>
       ) : (
@@ -187,7 +187,7 @@ function HistoryRow({
     : viewerWon
       ? t("arena.result.win", locale)
       : t("arena.result.loss", locale);
-  const verdictColor = wasDraw ? "#8C6520" : viewerWon ? "#2F5D5C" : "#7A2E2E";
+  const verdictColor = wasDraw ? "var(--color-acc-deep)" : viewerWon ? "#2F5D5C" : "#7A2E2E";
 
   // Score breakdown (mine vs opp).
   const userTotal = totalScore(session.judge_json.user_scores);
@@ -208,7 +208,7 @@ function HistoryRow({
           display: "block",
           padding: "14px 16px",
           background: "#FFFCF4",
-          border: "3px solid #221E18",
+          border: "3px solid var(--color-ink)",
           boxShadow: `3px 3px 0 0 ${verdictColor}`,
           textDecoration: "none",
           color: "inherit",
@@ -239,7 +239,7 @@ function HistoryRow({
             style={{
               fontFamily: pixel,
               fontSize: 9,
-              color: "#8C6520",
+              color: "var(--color-acc-deep)",
               letterSpacing: 0.4,
               textTransform: "uppercase",
             }}
@@ -256,11 +256,11 @@ function HistoryRow({
             fontFamily: serif,
             fontSize: 17,
             fontWeight: 500,
-            color: "#221E18",
+            color: "var(--color-ink)",
             marginBottom: 4,
           }}
         >
-          {localizedTopicTitle} <span style={{ color: "#8C6520" }}>{t("arena.hist_vs", locale)}</span> {opponentDisplay}
+          {localizedTopicTitle} <span style={{ color: "var(--color-acc-deep)" }}>{t("arena.hist_vs", locale)}</span> {opponentDisplay}
         </div>
         <div
           style={{
@@ -271,7 +271,7 @@ function HistoryRow({
             flexWrap: "wrap",
             fontFamily: pixel,
             fontSize: 10,
-            color: "#4A4338",
+            color: "var(--color-ink-soft)",
             letterSpacing: 0.4,
             textTransform: "uppercase",
           }}
@@ -299,7 +299,7 @@ function HistoryRow({
               fontFamily: serif,
               fontStyle: "italic",
               fontSize: 13,
-              color: "#8C6520",
+              color: "var(--color-acc-deep)",
             }}
           >
             {t("arena.argued_like", locale, {

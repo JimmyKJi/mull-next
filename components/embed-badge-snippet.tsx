@@ -43,14 +43,14 @@ export default function EmbedBadgeSnippet({ handle }: { handle: string }) {
       marginTop: 32,
       padding: '22px 24px',
       background: '#FFFCF4',
-      border: '4px solid #221E18',
-      boxShadow: '5px 5px 0 0 #B8862F',
+      border: '4px solid var(--color-ink)',
+      boxShadow: '5px 5px 0 0 var(--color-acc)',
       borderRadius: 0,
     }}>
       <div style={{
         fontFamily: pixel,
         fontSize: 12,
-        color: '#8C6520',
+        color: 'var(--color-acc-deep)',
         textTransform: 'uppercase',
         letterSpacing: '0.18em',
         marginBottom: 10,
@@ -61,7 +61,7 @@ export default function EmbedBadgeSnippet({ handle }: { handle: string }) {
         fontFamily: serif,
         fontStyle: 'italic',
         fontSize: 15,
-        color: '#4A4338',
+        color: 'var(--color-ink-soft)',
         margin: '0 0 14px',
         lineHeight: 1.55,
       }}>
@@ -71,8 +71,8 @@ export default function EmbedBadgeSnippet({ handle }: { handle: string }) {
       {/* Live preview */}
       <div style={{
         padding: '14px',
-        background: '#F8EDC8',
-        border: '3px solid #221E18',
+        background: 'var(--color-acc-soft)',
+        border: '3px solid var(--color-ink)',
         marginBottom: 14,
         display: 'flex',
         alignItems: 'center',
@@ -92,8 +92,8 @@ export default function EmbedBadgeSnippet({ handle }: { handle: string }) {
       {/* Snippet text + copy button */}
       <div style={{
         padding: '12px 14px',
-        background: '#221E18',
-        color: '#F8EDC8',
+        background: 'var(--color-ink)',
+        color: 'var(--color-acc-soft)',
         fontFamily: 'ui-monospace, Menlo, monospace',
         fontSize: 12,
         lineHeight: 1.55,
@@ -111,10 +111,10 @@ export default function EmbedBadgeSnippet({ handle }: { handle: string }) {
         style={{
           display: 'inline-block',
           padding: '10px 16px',
-          background: copied ? '#2F5D5C' : '#221E18',
-          color: '#FAF6EC',
-          border: '3px solid #221E18',
-          boxShadow: '3px 3px 0 0 #B8862F',
+          background: copied ? '#2F5D5C' : 'var(--color-ink)',
+          color: 'var(--color-cream)',
+          border: '3px solid var(--color-ink)',
+          boxShadow: '3px 3px 0 0 var(--color-acc)',
           borderRadius: 0,
           fontFamily: pixel,
           fontSize: 11,

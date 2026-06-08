@@ -49,8 +49,8 @@ export default function PilgrimageStatusCard() {
         style={{
           padding: "14px 18px",
           background: "#FFFCF4",
-          border: "3px solid #221E18",
-          boxShadow: "3px 3px 0 0 #B8862F",
+          border: "3px solid var(--color-ink)",
+          boxShadow: "3px 3px 0 0 var(--color-acc)",
           marginBottom: 18,
         }}
       >
@@ -58,7 +58,7 @@ export default function PilgrimageStatusCard() {
           style={{
             fontFamily: pixel,
             fontSize: 10,
-            color: "#8C6520",
+            color: "var(--color-acc-deep)",
             letterSpacing: "0.22em",
             textTransform: "uppercase",
             marginBottom: 6,
@@ -70,7 +70,7 @@ export default function PilgrimageStatusCard() {
           style={{
             fontFamily: serif,
             fontSize: 14.5,
-            color: "#221E18",
+            color: "var(--color-ink)",
             lineHeight: 1.55,
             margin: "0 0 10px",
           }}
@@ -84,7 +84,7 @@ export default function PilgrimageStatusCard() {
             padding: "6px 12px",
             background: "#F8C75E",
             color: "#1A1820",
-            border: "2px solid #221E18",
+            border: "2px solid var(--color-ink)",
             fontFamily: pixel,
             fontSize: 10,
             letterSpacing: "0.18em",
@@ -175,7 +175,7 @@ export default function PilgrimageStatusCard() {
         style={{
           fontFamily: serif,
           fontSize: 15.5,
-          color: "#221E18",
+          color: "var(--color-ink)",
           lineHeight: 1.4,
         }}
       >

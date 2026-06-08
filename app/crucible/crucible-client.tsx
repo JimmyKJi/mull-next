@@ -111,7 +111,7 @@ export default function CrucibleClient({
 
   if (reports === null) {
     return (
-      <div className="text-center text-[14px] text-[#8C6520]" style={{ fontFamily: serif }}>
+      <div className="text-center text-[14px] text-acc-deep" style={{ fontFamily: serif }}>
         {t("crucible.loading", locale)}
       </div>
     );
@@ -148,7 +148,7 @@ export default function CrucibleClient({
       {/* Streak chip */}
       {streak > 0 && (
         <div
-          className="inline-flex items-center gap-2 border-2 border-[#221E18] bg-[#1A1612] px-3 py-1.5 text-[10px] tracking-[0.22em] text-[#F8C75E]"
+          className="inline-flex items-center gap-2 border-2 border-ink bg-[#1A1612] px-3 py-1.5 text-[10px] tracking-[0.22em] text-[#F8C75E]"
           style={{ fontFamily: pixel, textTransform: "uppercase" }}
         >
           {t("crucible.streak", locale, {
@@ -161,7 +161,7 @@ export default function CrucibleClient({
       {/* Yesterday's check-in */}
       {!yesterdayReported && (
         <div
-          className="border-[3px] border-[#221E18] bg-[#FBF6E8] p-5"
+          className="border-[3px] border-ink bg-[#FBF6E8] p-5"
           style={{ boxShadow: "3px 3px 0 0 #2F5D5C" }}
         >
           <div
@@ -171,7 +171,7 @@ export default function CrucibleClient({
             {t("crucible.checkin_eyebrow", locale)}
           </div>
           <p
-            className="mt-2 text-[16px] leading-[1.55] text-[#221E18]"
+            className="mt-2 text-[16px] leading-[1.55] text-ink"
             style={{ fontFamily: serif }}
           >
             {yesterdayL.prompt}
@@ -186,11 +186,11 @@ export default function CrucibleClient({
               width: "100%",
               padding: "10px 12px",
               background: "#FFFCF4",
-              border: "2px solid #221E18",
+              border: "2px solid var(--color-ink)",
               fontFamily: serif,
               fontSize: 14.5,
               lineHeight: 1.55,
-              color: "#221E18",
+              color: "var(--color-ink)",
               resize: "vertical",
               minHeight: 80,
               borderRadius: 0,
@@ -200,12 +200,12 @@ export default function CrucibleClient({
             <button
               type="button"
               onClick={() => reportYesterday("kept")}
-              className="border-2 border-[#221E18] px-3 py-2 text-[11px] tracking-[0.18em] text-[#F8EDC8] hover:opacity-90"
+              className="border-2 border-ink px-3 py-2 text-[11px] tracking-[0.18em] text-acc-soft hover:opacity-90"
               style={{
                 background: "#2F5D5C",
                 fontFamily: pixel,
                 textTransform: "uppercase",
-                boxShadow: "2px 2px 0 0 #B8862F",
+                boxShadow: "2px 2px 0 0 var(--color-acc)",
               }}
             >
               {t("crucible.kept", locale)}
@@ -213,7 +213,7 @@ export default function CrucibleClient({
             <button
               type="button"
               onClick={() => reportYesterday("tried")}
-              className="border-2 border-[#221E18] bg-[#F8C75E] px-3 py-2 text-[11px] tracking-[0.18em] text-[#1A1820] hover:bg-[#B8862F]"
+              className="border-2 border-ink bg-[#F8C75E] px-3 py-2 text-[11px] tracking-[0.18em] text-[#1A1820] hover:bg-acc"
               style={{
                 fontFamily: pixel,
                 textTransform: "uppercase",
@@ -225,7 +225,7 @@ export default function CrucibleClient({
             <button
               type="button"
               onClick={() => reportYesterday("skipped")}
-              className="border-2 border-[#8C6520] bg-transparent px-3 py-2 text-[11px] tracking-[0.18em] text-[#8C6520] hover:bg-[#F5EFDC]"
+              className="border-2 border-acc-deep bg-transparent px-3 py-2 text-[11px] tracking-[0.18em] text-acc-deep hover:bg-[#F5EFDC]"
               style={{
                 fontFamily: pixel,
                 textTransform: "uppercase",
@@ -239,14 +239,14 @@ export default function CrucibleClient({
 
       {/* Today's commit */}
       <div
-        className="border-[4px] border-[#221E18] bg-[#FFFCF4] p-6"
-        style={{ boxShadow: "5px 5px 0 0 #B8862F" }}
+        className="border-[4px] border-ink bg-[#FFFCF4] p-6"
+        style={{ boxShadow: "5px 5px 0 0 var(--color-acc)" }}
       >
         <div
           className="flex items-baseline justify-between gap-2"
         >
           <span
-            className="text-[10px] tracking-[0.22em] text-[#8C6520]"
+            className="text-[10px] tracking-[0.22em] text-acc-deep"
             style={{ fontFamily: pixel, textTransform: "uppercase" }}
           >
             {t("crucible.today_eyebrow", locale, {
@@ -254,7 +254,7 @@ export default function CrucibleClient({
             })}
           </span>
           <span
-            className="text-[10px] tracking-[0.18em] text-[#B8862F]"
+            className="text-[10px] tracking-[0.18em] text-acc"
             style={{ fontFamily: pixel, textTransform: "uppercase" }}
           >
             {t("crucible.count_of", locale, {
@@ -263,13 +263,13 @@ export default function CrucibleClient({
           </span>
         </div>
         <h2
-          className="mt-4 text-[22px] leading-[1.35] text-[#221E18]"
+          className="mt-4 text-[22px] leading-[1.35] text-ink"
           style={{ fontFamily: serif }}
         >
           {todayL.prompt}
         </h2>
         <p
-          className="mt-3 text-[14px] italic leading-[1.55] text-[#8C6520]"
+          className="mt-3 text-[14px] italic leading-[1.55] text-acc-deep"
           style={{ fontFamily: serif }}
         >
           {todayL.framing}
@@ -285,7 +285,7 @@ export default function CrucibleClient({
           <button
             type="button"
             onClick={commitToday}
-            className="mt-5 w-full border-[3px] border-[#221E18] bg-[#F8C75E] px-4 py-3 text-[12px] tracking-[0.18em] text-[#1A1820] hover:bg-[#B8862F]"
+            className="mt-5 w-full border-[3px] border-ink bg-[#F8C75E] px-4 py-3 text-[12px] tracking-[0.18em] text-[#1A1820] hover:bg-acc"
             style={{
               fontFamily: pixel,
               textTransform: "uppercase",
@@ -298,7 +298,7 @@ export default function CrucibleClient({
       </div>
 
       <p
-        className="text-[13px] italic text-[#8C6520]"
+        className="text-[13px] italic text-acc-deep"
         style={{ fontFamily: serif }}
       >
         {t("crucible.footer", locale)}

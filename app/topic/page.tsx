@@ -78,7 +78,7 @@ export default async function TopicIndexPage() {
         eyebrow={`▶ ${t('topic.idx_eyebrow', locale)}`}
         title={t('topic.title', locale)}
         subtitle={
-          <p style={{ fontFamily: serif, fontStyle: 'italic', fontSize: 16, color: '#4A4338', lineHeight: 1.55 }}>
+          <p style={{ fontFamily: serif, fontStyle: 'italic', fontSize: 16, color: 'var(--color-ink-soft)', lineHeight: 1.55 }}>
             {t('topic.subtitle', locale, { count: TOPICS.length })}
           </p>
         }
@@ -89,7 +89,7 @@ export default async function TopicIndexPage() {
         <div style={{
           fontFamily: pixel,
           fontSize: 10,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           letterSpacing: 0.6,
           textTransform: 'uppercase',
           marginBottom: 8,
@@ -105,8 +105,8 @@ export default async function TopicIndexPage() {
             display: 'block',
             padding: '24px 26px',
             background: '#F8EBC9',
-            border: '4px solid #221E18',
-            boxShadow: '6px 6px 0 0 #B8862F',
+            border: '4px solid var(--color-ink)',
+            boxShadow: '6px 6px 0 0 var(--color-acc)',
             borderRadius: 0,
             textDecoration: 'none',
             color: 'inherit',
@@ -119,7 +119,7 @@ export default async function TopicIndexPage() {
             fontWeight: 500,
             margin: '0 0 10px',
             letterSpacing: '-0.4px',
-            color: '#221E18',
+            color: 'var(--color-ink)',
             lineHeight: 1.15,
           }}>
             {featured.title}
@@ -128,7 +128,7 @@ export default async function TopicIndexPage() {
             fontFamily: serif,
             fontStyle: 'italic',
             fontSize: 17,
-            color: '#4A4338',
+            color: 'var(--color-ink-soft)',
             margin: '0 0 12px',
             lineHeight: 1.5,
           }}>
@@ -149,7 +149,7 @@ export default async function TopicIndexPage() {
           <span style={{
             fontFamily: pixel,
             fontSize: 10,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             letterSpacing: 0.6,
             textTransform: 'uppercase',
           }}>
@@ -212,14 +212,14 @@ export default async function TopicIndexPage() {
               fontWeight: 500,
               margin: 0,
               letterSpacing: '-0.3px',
-              color: '#221E18',
+              color: 'var(--color-ink)',
             }}>
               {t(`topic.cat.${g.key}.label`, locale) || g.label}
             </h2>
             <span style={{
               fontFamily: sans,
               fontSize: 11,
-              color: '#8C6520',
+              color: 'var(--color-acc-deep)',
               opacity: 0.7,
               marginLeft: 'auto',
             }}>
@@ -230,7 +230,7 @@ export default async function TopicIndexPage() {
             fontFamily: serif,
             fontStyle: 'italic',
             fontSize: 14.5,
-            color: '#4A4338',
+            color: 'var(--color-ink-soft)',
             margin: '0 0 16px',
             lineHeight: 1.55,
           }}>
@@ -253,7 +253,7 @@ export default async function TopicIndexPage() {
                     display: 'block',
                     padding: '14px 16px',
                     background: '#FFFCF4',
-                    border: '3px solid #221E18',
+                    border: '3px solid var(--color-ink)',
                     boxShadow: `3px 3px 0 0 ${g.accent}`,
                     borderRadius: 0,
                     textDecoration: 'none',
@@ -268,7 +268,7 @@ export default async function TopicIndexPage() {
                     fontWeight: 500,
                     margin: '0 0 6px',
                     letterSpacing: '-0.2px',
-                    color: '#221E18',
+                    color: 'var(--color-ink)',
                     lineHeight: 1.2,
                   }}>
                     {localizeTopic(t, locale).title}
@@ -277,7 +277,7 @@ export default async function TopicIndexPage() {
                     fontFamily: serif,
                     fontStyle: 'italic',
                     fontSize: 14,
-                    color: '#4A4338',
+                    color: 'var(--color-ink-soft)',
                     margin: 0,
                     lineHeight: 1.45,
                   }}>
@@ -295,13 +295,13 @@ export default async function TopicIndexPage() {
         marginTop: 36,
         padding: '20px 22px',
         background: '#FFFCF4',
-        border: '3px solid #221E18',
+        border: '3px solid var(--color-ink)',
         boxShadow: '4px 4px 0 0 #6B7F4F',
       }}>
         <p style={{
           fontFamily: serif,
           fontSize: 16,
-          color: '#221E18',
+          color: 'var(--color-ink)',
           margin: '0 0 12px',
           lineHeight: 1.5,
         }}>
@@ -314,9 +314,9 @@ export default async function TopicIndexPage() {
             fontFamily: pixel,
             fontSize: 11,
             padding: '8px 14px',
-            background: '#221E18',
+            background: 'var(--color-ink)',
             color: '#F8EBC9',
-            border: '2px solid #221E18',
+            border: '2px solid var(--color-ink)',
             textDecoration: 'none',
             letterSpacing: 0.6,
             textTransform: 'uppercase',

@@ -29,7 +29,7 @@ export default async function DuelPage() {
       <div className="mb-6 flex items-center justify-between gap-4">
         <Link
           href="/debate"
-          className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"
+          className="text-[13px] text-ink-soft hover:text-ink hover:underline"
         >
           ← {t('nav.two_thinker_debate', locale)}
         </Link>
@@ -46,10 +46,10 @@ export default async function DuelPage() {
       />
 
       <div
-        className="-mt-4 mb-8 border-l-4 px-4 py-2.5 text-[13px] leading-[1.6] text-[#4A4338]"
-        style={{ borderColor: '#B8862F', background: '#F5EFDC' }}
+        className="-mt-4 mb-8 border-l-4 px-4 py-2.5 text-[13px] leading-[1.6] text-ink-soft"
+        style={{ borderColor: 'var(--color-acc)', background: '#F5EFDC' }}
       >
-        <strong className="text-[#221E18]">
+        <strong className="text-ink">
           {t('duel.mull_plus_notice', locale)}
         </strong>{' '}
         {t('duel.mull_plus_body', locale)}
@@ -59,8 +59,8 @@ export default async function DuelPage() {
         <div style={{
           padding: '28px 32px',
           background: '#FFFCF4',
-          border: '4px solid #221E18',
-          boxShadow: '5px 5px 0 0 #B8862F',
+          border: '4px solid var(--color-ink)',
+          boxShadow: '5px 5px 0 0 var(--color-acc)',
           borderRadius: 0,
           textAlign: 'center',
         }}>
@@ -68,7 +68,7 @@ export default async function DuelPage() {
             fontFamily: serif,
             fontStyle: 'italic',
             fontSize: 18,
-            color: '#4A4338',
+            color: 'var(--color-ink-soft)',
             margin: '0 0 20px',
           }}>
             {t('duel.need_quiz', locale)}
@@ -79,10 +79,10 @@ export default async function DuelPage() {
             style={{
               display: 'inline-block',
               padding: '12px 22px',
-              background: '#B8862F',
+              background: 'var(--color-acc)',
               color: '#1A1612',
-              border: '4px solid #221E18',
-              boxShadow: '4px 4px 0 0 #221E18',
+              border: '4px solid var(--color-ink)',
+              boxShadow: '4px 4px 0 0 var(--color-ink)',
               borderRadius: 0,
               fontFamily: 'var(--font-pixel-display)',
               fontSize: 12,
@@ -102,7 +102,7 @@ export default async function DuelPage() {
       <p style={{
         fontFamily: sans,
         fontSize: 12,
-        color: '#8C6520',
+        color: 'var(--color-acc-deep)',
         marginTop: 56,
         opacity: 0.7,
         textAlign: 'center',

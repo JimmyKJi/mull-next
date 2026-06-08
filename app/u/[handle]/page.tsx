@@ -245,10 +245,10 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
             style={{
               display: 'inline-block',
               padding: '8px 14px',
-              background: '#B8862F',
+              background: 'var(--color-acc)',
               color: '#1A1612',
-              border: '3px solid #221E18',
-              boxShadow: '3px 3px 0 0 #221E18',
+              border: '3px solid var(--color-ink)',
+              boxShadow: '3px 3px 0 0 var(--color-ink)',
               borderRadius: 0,
               fontFamily: pixel,
               fontSize: 11,
@@ -261,7 +261,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
             ▸ COMPARE WITH ME
           </Link>
           <Link href="/" style={{
-            fontFamily: pixel, fontSize: 11, color: '#4A4338',
+            fontFamily: pixel, fontSize: 11, color: 'var(--color-ink-soft)',
             textDecoration: 'none', letterSpacing: 0.4,
             textTransform: 'uppercase',
           }}>
@@ -275,7 +275,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
       <div style={{
         fontFamily: pixel,
         fontSize: 12,
-        color: '#8C6520',
+        color: 'var(--color-acc-deep)',
         textTransform: 'uppercase',
         letterSpacing: '0.18em',
         marginBottom: 14,
@@ -299,7 +299,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           fontFamily: serif,
           fontStyle: 'italic',
           fontSize: 22,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           margin: '0 0 18px',
         }}>
           {headline}
@@ -308,7 +308,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
             fontFamily: pixel,
             fontStyle: 'normal',
             fontSize: 13,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             letterSpacing: 0.4,
           }}>
             {latest.alignment_pct}{t('account.percent_alignment', locale).toUpperCase()}
@@ -320,7 +320,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
         <p style={{
           fontFamily: serif,
           fontSize: 18,
-          color: '#221E18',
+          color: 'var(--color-ink)',
           margin: '0 0 32px',
           lineHeight: 1.55,
           maxWidth: 560,
@@ -343,15 +343,15 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           {profile.show_streak && streak > 0 && (
             <div style={{
               padding: '16px 20px',
-              background: '#221E18',
-              border: '4px solid #221E18',
-              boxShadow: '4px 4px 0 0 #B8862F',
+              background: 'var(--color-ink)',
+              border: '4px solid var(--color-ink)',
+              boxShadow: '4px 4px 0 0 var(--color-acc)',
               borderRadius: 0,
-              color: '#FAF6EC',
+              color: 'var(--color-cream)',
             }}>
               <div style={{
                 fontFamily: pixel, fontSize: 28,
-                color: '#F8EDC8', lineHeight: 1, letterSpacing: 0.4,
+                color: 'var(--color-acc-soft)', lineHeight: 1, letterSpacing: 0.4,
               }}>
                 {streak >= 30 ? '30+' : streak}
                 <span style={{ fontSize: 13, opacity: 0.7, marginLeft: 6 }}>
@@ -371,13 +371,13 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
             <div style={{
               padding: '16px 20px',
               background: '#FFFCF4',
-              border: '4px solid #221E18',
+              border: '4px solid var(--color-ink)',
               boxShadow: '4px 4px 0 0 #3D7DA8',
               borderRadius: 0,
             }}>
               <div style={{
                 fontFamily: pixel, fontSize: 28,
-                color: '#221E18', lineHeight: 1, letterSpacing: 0.4,
+                color: 'var(--color-ink)', lineHeight: 1, letterSpacing: 0.4,
               }}>{publicDilemmas.length}</div>
               <div style={{
                 fontFamily: pixel, fontSize: 10,
@@ -392,13 +392,13 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
             <div style={{
               padding: '16px 20px',
               background: '#FFFCF4',
-              border: '4px solid #221E18',
+              border: '4px solid var(--color-ink)',
               boxShadow: '4px 4px 0 0 #2F5D5C',
               borderRadius: 0,
             }}>
               <div style={{
                 fontFamily: pixel, fontSize: 28,
-                color: '#221E18', lineHeight: 1, letterSpacing: 0.4,
+                color: 'var(--color-ink)', lineHeight: 1, letterSpacing: 0.4,
               }}>{publicDiaries.length}</div>
               <div style={{
                 fontFamily: pixel, fontSize: 10,
@@ -418,7 +418,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
             ▸ {t('pub.their_place', locale).toUpperCase()}
           </h2>
           <div style={{
-            border: '4px solid #221E18',
+            border: '4px solid var(--color-ink)',
             boxShadow: '5px 5px 0 0 #2F5D5C',
             borderRadius: 0,
             overflow: 'hidden',
@@ -440,7 +440,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
             <p style={{
               fontFamily: pixel,
               fontSize: 11,
-              color: '#8C6520',
+              color: 'var(--color-acc-deep)',
               marginTop: 12,
               opacity: 0.85,
               letterSpacing: 0.4,
@@ -454,7 +454,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
 
       {profile.show_dimensions && topDims.some(d => d.v > 0) && (
         <section style={{ marginBottom: 44 }}>
-          <h2 style={pixelSectionH2('#B8862F')}>
+          <h2 style={pixelSectionH2('var(--color-acc)')}>
             ▸ {t('pub.strongest_tendencies', locale).toUpperCase()}
           </h2>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -471,13 +471,13 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                 alignItems: 'center',
                 fontFamily: serif,
                 fontSize: 15,
-                color: '#221E18',
+                color: 'var(--color-ink)',
               }}>
                 <span style={{ minWidth: 140 }}>{d.name}</span>
                 <div style={{
                   height: 10,
-                  background: '#FAF6EC',
-                  border: '2px solid #221E18',
+                  background: 'var(--color-cream)',
+                  border: '2px solid var(--color-ink)',
                   borderRadius: 0,
                   overflow: 'hidden',
                   flex: 1,
@@ -486,7 +486,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                   <div style={{
                     height: '100%',
                     width: `${Math.max(0, Math.min(100, (d.v / 12) * 100))}%`,
-                    background: '#B8862F',
+                    background: 'var(--color-acc)',
                     transition: 'width 0.4s steps(8, end)',
                   }} />
                 </div>
@@ -494,7 +494,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                   fontFamily: pixel,
                   fontSize: 13,
                   fontVariantNumeric: 'tabular-nums',
-                  color: '#8C6520',
+                  color: 'var(--color-acc-deep)',
                   textAlign: 'right',
                   minWidth: 50,
                   letterSpacing: 0.4,
@@ -524,7 +524,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                     fontFamily: serif,
                     fontStyle: 'italic',
                     fontSize: 16,
-                    color: '#4A4338',
+                    color: 'var(--color-ink-soft)',
                     margin: '0 0 8px',
                   }}>
                     &ldquo;{d.question_text}&rdquo;
@@ -532,7 +532,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                   <p style={{
                     fontFamily: serif,
                     fontSize: 16,
-                    color: '#221E18',
+                    color: 'var(--color-ink)',
                     margin: '0 0 8px',
                     lineHeight: 1.55,
                     whiteSpace: 'pre-wrap',
@@ -582,7 +582,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                       fontFamily: serif,
                       fontSize: 19,
                       fontWeight: 500,
-                      color: '#221E18',
+                      color: 'var(--color-ink)',
                       marginBottom: 6,
                     }}>
                       {d.title}
@@ -591,7 +591,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                   <p style={{
                     fontFamily: serif,
                     fontSize: 16,
-                    color: '#221E18',
+                    color: 'var(--color-ink)',
                     margin: '0 0 8px',
                     lineHeight: 1.55,
                     whiteSpace: 'pre-wrap',
@@ -633,13 +633,13 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           display: 'block',
           marginTop: 56,
           padding: '20px 24px',
-          background: '#F8EDC8',
-          border: '4px solid #221E18',
-          boxShadow: '5px 5px 0 0 #B8862F',
+          background: 'var(--color-acc-soft)',
+          border: '4px solid var(--color-ink)',
+          boxShadow: '5px 5px 0 0 var(--color-acc)',
           borderRadius: 0,
           fontFamily: serif,
           fontSize: 15,
-          color: '#221E18',
+          color: 'var(--color-ink)',
           lineHeight: 1.55,
           textDecoration: 'none',
           transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
@@ -653,15 +653,15 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           flexWrap: 'wrap',
         }}>
           <span>
-            <strong style={{ color: '#221E18' }}>{t('pub.cta_title', locale)}</strong>{' '}
+            <strong style={{ color: 'var(--color-ink)' }}>{t('pub.cta_title', locale)}</strong>{' '}
             {t('pub.cta_body', locale)}
           </span>
           <span style={{
             color: '#1A1612',
-            background: '#B8862F',
+            background: 'var(--color-acc)',
             padding: '8px 14px',
-            border: '3px solid #221E18',
-            boxShadow: '3px 3px 0 0 #221E18',
+            border: '3px solid var(--color-ink)',
+            boxShadow: '3px 3px 0 0 var(--color-ink)',
             fontFamily: pixel,
             fontSize: 11,
             letterSpacing: 0.4,
@@ -686,7 +686,7 @@ function pixelSectionH2(accent: string): React.CSSProperties {
   return {
     fontFamily: pixel,
     fontSize: 16,
-    color: '#221E18',
+    color: 'var(--color-ink)',
     textTransform: 'uppercase',
     letterSpacing: '0.18em',
     margin: '0 0 16px',
@@ -700,7 +700,7 @@ function publicEntryCard(accent: string): React.CSSProperties {
   return {
     padding: '18px 22px',
     background: '#FFFCF4',
-    border: '4px solid #221E18',
+    border: '4px solid var(--color-ink)',
     boxShadow: `4px 4px 0 0 ${accent}`,
     borderRadius: 0,
   };
@@ -721,7 +721,7 @@ const publicEventAnalysis: React.CSSProperties = {
   fontFamily: serif,
   fontStyle: 'italic',
   fontSize: 14,
-  color: '#8C6520',
+  color: 'var(--color-acc-deep)',
   margin: '0 0 8px',
   lineHeight: 1.5,
 };
@@ -732,7 +732,7 @@ const publicShiftsRow: React.CSSProperties = {
   flexWrap: 'wrap',
   marginTop: 12,
   paddingTop: 12,
-  borderTop: '2px dashed #D6CDB6',
+  borderTop: '2px dashed var(--color-line)',
 };
 
 function publicShiftChip(positive: boolean): React.CSSProperties {

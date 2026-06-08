@@ -22,7 +22,7 @@ export default async function RetrospectivePage() {
       <div className="mb-6 flex items-center justify-between gap-4">
         <Link
           href="/account"
-          className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"
+          className="text-[13px] text-ink-soft hover:text-ink hover:underline"
         >
           ← Account
         </Link>
@@ -40,7 +40,7 @@ export default async function RetrospectivePage() {
 
       <RetrospectivePanel locale={locale} />
 
-      <p className="mt-12 text-[12px] leading-[1.6] text-[#8C6520] opacity-75">
+      <p className="mt-12 text-[12px] leading-[1.6] text-acc-deep opacity-75">
         {t('retro.dogfood_note', locale)}
       </p>
     </main>

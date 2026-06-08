@@ -122,7 +122,7 @@ export default async function AssignmentDetailPage({
         <MullWordmark />
         <Link href={`/classes/${cls.id}`} style={{
           fontFamily: pixel, fontSize: 11,
-          color: '#4A4338', textDecoration: 'none',
+          color: 'var(--color-ink-soft)', textDecoration: 'none',
           letterSpacing: 0.4, textTransform: 'uppercase',
         }}>
           ◂ {cls.name.toUpperCase()}
@@ -131,12 +131,12 @@ export default async function AssignmentDetailPage({
 
       <div style={{
         fontFamily: pixel, fontSize: 12,
-        color: '#8C6520', textTransform: 'uppercase',
+        color: 'var(--color-acc-deep)', textTransform: 'uppercase',
         letterSpacing: '0.18em', marginBottom: 14,
       }}>
         ▸ {kindLabel(assignment.kind, locale).toUpperCase()}
         {assignment.due_at && (
-          <span style={{ color: overdue ? '#7A2E2E' : '#8C6520', marginLeft: 8 }}>
+          <span style={{ color: overdue ? '#7A2E2E' : 'var(--color-acc-deep)', marginLeft: 8 }}>
             · {t('cls.due_label', locale, {
               date: new Date(assignment.due_at).toLocaleString(locale === 'zh' ? 'zh-CN' : 'en-US', { dateStyle: 'medium', timeStyle: 'short' }),
             })}
@@ -158,8 +158,8 @@ export default async function AssignmentDetailPage({
       <div style={{
         padding: '20px 24px',
         background: '#FFFCF4',
-        border: '4px solid #221E18',
-        boxShadow: '5px 5px 0 0 #B8862F',
+        border: '4px solid var(--color-ink)',
+        boxShadow: '5px 5px 0 0 var(--color-acc)',
         borderRadius: 0,
         marginBottom: 24,
       }}>
@@ -167,7 +167,7 @@ export default async function AssignmentDetailPage({
           fontFamily: serif,
           fontStyle: 'italic',
           fontSize: 17,
-          color: '#221E18',
+          color: 'var(--color-ink)',
           margin: 0,
           lineHeight: 1.6,
           whiteSpace: 'pre-wrap',
@@ -178,15 +178,15 @@ export default async function AssignmentDetailPage({
           <div style={{
             marginTop: 16,
             paddingTop: 14,
-            borderTop: '2px dashed #D6CDB6',
+            borderTop: '2px dashed var(--color-line)',
             fontFamily: 'Inter, sans-serif',
             fontSize: 14,
-            color: '#4A4338',
+            color: 'var(--color-ink-soft)',
             lineHeight: 1.55,
           }}>
             <div style={{
               fontFamily: pixel, fontSize: 10,
-              color: '#8C6520', letterSpacing: 0.4,
+              color: 'var(--color-acc-deep)', letterSpacing: 0.4,
               textTransform: 'uppercase', marginBottom: 6,
             }}>
               {t('cls.instructions_label', locale)}
@@ -252,7 +252,7 @@ async function TeacherSubmissionsView({
         <h2 style={{
           fontFamily: pixel,
           fontSize: 14,
-          color: '#221E18',
+          color: 'var(--color-ink)',
           textTransform: 'uppercase',
           letterSpacing: '0.18em',
           marginBottom: 16,
@@ -265,12 +265,12 @@ async function TeacherSubmissionsView({
           <p style={{
             padding: '20px 18px',
             background: '#FFFCF4',
-            border: '3px dashed #8C6520',
+            border: '3px dashed var(--color-acc-deep)',
             borderRadius: 0,
             fontFamily: serif,
             fontStyle: 'italic',
             fontSize: 15,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             margin: 0,
             textAlign: 'center',
           }}>
@@ -292,8 +292,8 @@ async function TeacherSubmissionsView({
                 <li key={s.id} style={{
                   padding: '14px 16px',
                   background: '#FFFCF4',
-                  border: '3px solid #221E18',
-                  boxShadow: `3px 3px 0 0 ${s.reviewed_at ? '#2F5D5C' : '#B8862F'}`,
+                  border: '3px solid var(--color-ink)',
+                  boxShadow: `3px 3px 0 0 ${s.reviewed_at ? '#2F5D5C' : 'var(--color-acc)'}`,
                   borderRadius: 0,
                 }}>
                   <div style={{
@@ -308,14 +308,14 @@ async function TeacherSubmissionsView({
                       fontFamily: serif,
                       fontSize: 17,
                       fontWeight: 500,
-                      color: '#221E18',
+                      color: 'var(--color-ink)',
                     }}>
                       {studentLabel}
                     </span>
                     <span style={{
                       fontFamily: pixel,
                       fontSize: 10,
-                      color: '#8C6520',
+                      color: 'var(--color-acc-deep)',
                       letterSpacing: 0.4,
                       textTransform: 'uppercase',
                     }}>
@@ -329,7 +329,7 @@ async function TeacherSubmissionsView({
                   <p style={{
                     fontFamily: serif,
                     fontSize: 15.5,
-                    color: '#221E18',
+                    color: 'var(--color-ink)',
                     margin: 0,
                     lineHeight: 1.6,
                     whiteSpace: 'pre-wrap',
@@ -391,7 +391,7 @@ async function TeacherSubmissionsView({
 function AuthBadge({ auth, locale }: { auth: AuthResult; locale: Locale }) {
   const palette = {
     high:   { fg: '#7A2E2E', bg: '#F5E0E0', border: '#7A2E2E', icon: '!' },
-    medium: { fg: '#8C6520', bg: '#F8EDC8', border: '#B8862F', icon: '·' },
+    medium: { fg: 'var(--color-acc-deep)', bg: 'var(--color-acc-soft)', border: 'var(--color-acc)', icon: '·' },
     low:    { fg: '#2F5D5C', bg: '#E5F0EE', border: '#2F5D5C', icon: '✓' },
   }[auth.bucket];
   return (
@@ -417,10 +417,10 @@ function AuthBadge({ auth, locale }: { auth: AuthResult; locale: Locale }) {
         marginTop: 8,
         padding: '10px 12px',
         background: '#FFFCF4',
-        border: '2px solid #D6CDB6',
+        border: '2px solid var(--color-line)',
         fontFamily: serif,
         fontSize: 13,
-        color: '#4A4338',
+        color: 'var(--color-ink-soft)',
         lineHeight: 1.5,
       }}>
         <p style={{ margin: '0 0 8px', fontStyle: 'italic' }}>
@@ -442,7 +442,7 @@ function AuthBadge({ auth, locale }: { auth: AuthResult; locale: Locale }) {
                   <div style={{
                     marginTop: 4,
                     fontSize: 12,
-                    color: '#8C6520',
+                    color: 'var(--color-acc-deep)',
                     fontStyle: 'italic',
                   }}>
                     {f.evidence.slice(0, 2).map((e, i) => (

@@ -84,7 +84,7 @@ export default async function ClassesIndexPage() {
           style={{
             fontFamily: pixel,
             fontSize: 11,
-            color: '#4A4338',
+            color: 'var(--color-ink-soft)',
             textDecoration: 'none',
             letterSpacing: 0.4,
             textTransform: 'uppercase',
@@ -96,7 +96,7 @@ export default async function ClassesIndexPage() {
 
       <div style={{
         fontFamily: pixel, fontSize: 12,
-        color: '#8C6520', textTransform: 'uppercase',
+        color: 'var(--color-acc-deep)', textTransform: 'uppercase',
         letterSpacing: '0.18em', marginBottom: 14,
       }}>
         ▸ {t('cls.index_eyebrow', locale)}
@@ -106,10 +106,10 @@ export default async function ClassesIndexPage() {
         fontFamily: pixel,
         fontSize: 28,
         margin: '0 0 14px',
-        color: '#221E18',
+        color: 'var(--color-ink)',
         letterSpacing: '0.06em',
         textTransform: 'uppercase',
-        textShadow: '3px 3px 0 #B8862F',
+        textShadow: '3px 3px 0 var(--color-acc)',
         lineHeight: 1.1,
       }}>
         {t('cls.index_title', locale)}
@@ -119,7 +119,7 @@ export default async function ClassesIndexPage() {
         fontFamily: serif,
         fontStyle: 'italic',
         fontSize: 17,
-        color: '#4A4338',
+        color: 'var(--color-ink-soft)',
         margin: '0 0 28px',
         lineHeight: 1.55,
       }}>
@@ -133,10 +133,10 @@ export default async function ClassesIndexPage() {
           style={{
             display: 'inline-block',
             padding: '12px 22px',
-            background: '#B8862F',
+            background: 'var(--color-acc)',
             color: '#1A1612',
-            border: '4px solid #221E18',
-            boxShadow: '4px 4px 0 0 #221E18',
+            border: '4px solid var(--color-ink)',
+            boxShadow: '4px 4px 0 0 var(--color-ink)',
             borderRadius: 0,
             fontFamily: pixel,
             fontSize: 12,
@@ -156,7 +156,7 @@ export default async function ClassesIndexPage() {
             padding: '12px 22px',
             background: '#FFFCF4',
             color: '#2F5D5C',
-            border: '4px solid #221E18',
+            border: '4px solid var(--color-ink)',
             boxShadow: '4px 4px 0 0 #2F5D5C',
             borderRadius: 0,
             fontFamily: pixel,
@@ -176,11 +176,11 @@ export default async function ClassesIndexPage() {
           <h2 style={{
             fontFamily: pixel,
             fontSize: 14,
-            color: '#221E18',
+            color: 'var(--color-ink)',
             textTransform: 'uppercase',
             letterSpacing: '0.18em',
             marginBottom: 16,
-            textShadow: '2px 2px 0 #B8862F',
+            textShadow: '2px 2px 0 var(--color-acc)',
           }}>
             ▸ {t('cls.section_teaching', locale, { count: taught.length })}
           </h2>
@@ -195,7 +195,7 @@ export default async function ClassesIndexPage() {
           <h2 style={{
             fontFamily: pixel,
             fontSize: 14,
-            color: '#221E18',
+            color: 'var(--color-ink)',
             textTransform: 'uppercase',
             letterSpacing: '0.18em',
             marginBottom: 16,
@@ -215,7 +215,7 @@ export default async function ClassesIndexPage() {
         <div style={{
           padding: '32px 28px',
           background: '#FFFCF4',
-          border: '3px dashed #8C6520',
+          border: '3px dashed var(--color-acc-deep)',
           borderRadius: 0,
           textAlign: 'center',
         }}>
@@ -223,7 +223,7 @@ export default async function ClassesIndexPage() {
             fontFamily: serif,
             fontStyle: 'italic',
             fontSize: 17,
-            color: '#4A4338',
+            color: 'var(--color-ink-soft)',
             margin: 0,
             lineHeight: 1.55,
           }}>
@@ -245,8 +245,8 @@ function TeacherClassCard({ c, locale }: { c: TaughtClass; locale: Locale }) {
           display: 'block',
           padding: '16px 18px',
           background: '#FFFCF4',
-          border: '4px solid #221E18',
-          boxShadow: '4px 4px 0 0 #B8862F',
+          border: '4px solid var(--color-ink)',
+          boxShadow: '4px 4px 0 0 var(--color-acc)',
           borderRadius: 0,
           textDecoration: 'none',
           color: 'inherit',
@@ -258,14 +258,14 @@ function TeacherClassCard({ c, locale }: { c: TaughtClass; locale: Locale }) {
             fontFamily: serif,
             fontSize: 20,
             fontWeight: 500,
-            color: '#221E18',
+            color: 'var(--color-ink)',
           }}>
             {c.name}
           </span>
           <span style={{
             fontFamily: pixel,
             fontSize: 11,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             letterSpacing: 0.4,
             textTransform: 'uppercase',
           }}>
@@ -277,14 +277,14 @@ function TeacherClassCard({ c, locale }: { c: TaughtClass; locale: Locale }) {
             fontFamily: serif,
             fontStyle: 'italic',
             fontSize: 14,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             marginBottom: c.description ? 6 : 0,
           }}>
             {[c.term, c.school_name].filter(Boolean).join(' · ')}
           </div>
         )}
         {c.description && (
-          <p style={{ fontFamily: serif, fontSize: 14.5, color: '#4A4338', margin: 0, lineHeight: 1.5 }}>
+          <p style={{ fontFamily: serif, fontSize: 14.5, color: 'var(--color-ink-soft)', margin: 0, lineHeight: 1.5 }}>
             {c.description}
           </p>
         )}
@@ -303,7 +303,7 @@ function StudentClassCard({ c, joinedAt, locale }: { c: NonNullable<StudentClass
           display: 'block',
           padding: '16px 18px',
           background: '#FFFCF4',
-          border: '4px solid #221E18',
+          border: '4px solid var(--color-ink)',
           boxShadow: '4px 4px 0 0 #2F5D5C',
           borderRadius: 0,
           textDecoration: 'none',
@@ -316,14 +316,14 @@ function StudentClassCard({ c, joinedAt, locale }: { c: NonNullable<StudentClass
             fontFamily: serif,
             fontSize: 20,
             fontWeight: 500,
-            color: '#221E18',
+            color: 'var(--color-ink)',
           }}>
             {c.name}
           </span>
           <span style={{
             fontFamily: pixel,
             fontSize: 10,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             letterSpacing: 0.4,
             textTransform: 'uppercase',
           }}>
@@ -333,7 +333,7 @@ function StudentClassCard({ c, joinedAt, locale }: { c: NonNullable<StudentClass
           </span>
         </div>
         {(c.term || c.school_name) && (
-          <div style={{ fontFamily: serif, fontStyle: 'italic', fontSize: 14, color: '#8C6520' }}>
+          <div style={{ fontFamily: serif, fontStyle: 'italic', fontSize: 14, color: 'var(--color-acc-deep)' }}>
             {[c.term, c.school_name].filter(Boolean).join(' · ')}
           </div>
         )}

@@ -144,7 +144,7 @@ export function JourneyEngine({ scenes, reveals, locale }: Props) {
                 letterSpacing: "0.22em",
                 textTransform: "uppercase",
                 background: "#F8C75E",
-                border: "2px solid #221E18",
+                border: "2px solid var(--color-ink)",
                 padding: "3px 8px",
               }}
             >
@@ -155,7 +155,7 @@ export function JourneyEngine({ scenes, reveals, locale }: Props) {
                 style={{
                   fontFamily: pixel,
                   fontSize: 10,
-                  color: "#B8862F",
+                  color: "var(--color-acc)",
                   letterSpacing: "0.2em",
                   textTransform: "uppercase",
                 }}
@@ -258,8 +258,8 @@ function RevealScene({
     <article
       style={{
         background: "#FFFCF4",
-        border: "4px solid #221E18",
-        boxShadow: "6px 6px 0 0 #B8862F",
+        border: "4px solid var(--color-ink)",
+        boxShadow: "6px 6px 0 0 var(--color-acc)",
       }}
     >
       <div style={illustrationContainer}>
@@ -274,7 +274,7 @@ function RevealScene({
             style={{
               fontFamily: serif,
               fontSize: 18,
-              color: "#221E18",
+              color: "var(--color-ink)",
               margin: i === paragraphs.length - 1 ? "0 0 24px" : "0 0 16px",
               lineHeight: 1.7,
             }}
@@ -313,8 +313,8 @@ function FrameScene({
     <article
       style={{
         background: "#FFFCF4",
-        border: "4px solid #221E18",
-        boxShadow: "6px 6px 0 0 #B8862F",
+        border: "4px solid var(--color-ink)",
+        boxShadow: "6px 6px 0 0 var(--color-acc)",
       }}
     >
       {/* Illustration sits at the top of the cream card */}
@@ -332,7 +332,7 @@ function FrameScene({
             style={{
               fontFamily: serif,
               fontSize: 18,
-              color: "#221E18",
+              color: "var(--color-ink)",
               margin: i === paragraphs.length - 1 ? "0 0 24px" : "0 0 16px",
               lineHeight: 1.7,
             }}
@@ -370,8 +370,8 @@ function ChamberScene({
       <div
         style={{
           background: "#FFFCF4",
-          border: "4px solid #221E18",
-          boxShadow: "5px 5px 0 0 #B8862F",
+          border: "4px solid var(--color-ink)",
+          boxShadow: "5px 5px 0 0 var(--color-acc)",
           marginBottom: 18,
         }}
       >
@@ -388,7 +388,7 @@ function ChamberScene({
               style={{
                 fontFamily: serif,
                 fontSize: 17.5,
-                color: "#221E18",
+                color: "var(--color-ink)",
                 margin: i === paragraphs.length - 1 ? "0 0 18px" : "0 0 14px",
                 lineHeight: 1.7,
               }}
@@ -402,10 +402,10 @@ function ChamberScene({
               fontFamily: serif,
               fontWeight: 600,
               fontSize: 19,
-              color: "#221E18",
+              color: "var(--color-ink)",
               margin: "12px 0 0",
               lineHeight: 1.55,
-              borderLeft: "3px solid #B8862F",
+              borderLeft: "3px solid var(--color-acc)",
               paddingLeft: 14,
             }}
           >
@@ -449,18 +449,18 @@ function ChamberScene({
                   color: isDimmed
                     ? "#5D5644"
                     : isSilence
-                      ? "#D6CDB6"
-                      : "#221E18",
+                      ? "var(--color-line)"
+                      : "var(--color-ink)",
                   border: isSilence
-                    ? "2px dashed #8C6520"
-                    : "3px solid #221E18",
+                    ? "2px dashed var(--color-acc-deep)"
+                    : "3px solid var(--color-ink)",
                   boxShadow: isPicked
                     ? "4px 4px 0 0 #2F5D5C"
                     : isDimmed
                       ? "none"
                       : isSilence
                         ? "none"
-                        : "3px 3px 0 0 #B8862F",
+                        : "3px 3px 0 0 var(--color-acc)",
                   cursor: revealed ? "default" : "pointer",
                   opacity: isDimmed ? 0.5 : 1,
                   transition:
@@ -494,7 +494,7 @@ function ChamberScene({
           style={{
             padding: "18px 22px",
             background: "#1F1814",
-            border: "3px solid #B8862F",
+            border: "3px solid var(--color-acc)",
             marginBottom: scene.twistClue ? 14 : 20,
           }}
         >
@@ -505,7 +505,7 @@ function ChamberScene({
                 fontFamily: serif,
                 fontStyle: "italic",
                 fontSize: 16.5,
-                color: "#F8EDC8",
+                color: "var(--color-acc-soft)",
                 margin: i === paragraphs.length - 1 ? 0 : "0 0 12px",
                 lineHeight: 1.65,
               }}
@@ -528,7 +528,7 @@ function ChamberScene({
             style={{
               fontFamily: pixel,
               fontSize: 9,
-              color: "#B8862F",
+              color: "var(--color-acc)",
               letterSpacing: "0.22em",
               textTransform: "uppercase",
               marginBottom: 6,
@@ -590,8 +590,8 @@ function GateScreen({
         <div
           style={{
             background: "#FFFCF4",
-            border: "4px solid #221E18",
-            boxShadow: "6px 6px 0 0 #B8862F",
+            border: "4px solid var(--color-ink)",
+            boxShadow: "6px 6px 0 0 var(--color-acc)",
             padding: "32px 30px",
             textAlign: "center",
           }}
@@ -600,7 +600,7 @@ function GateScreen({
             style={{
               fontFamily: pixel,
               fontSize: 10,
-              color: "#8C6520",
+              color: "var(--color-acc-deep)",
               letterSpacing: "0.22em",
               textTransform: "uppercase",
               marginBottom: 22,
@@ -612,12 +612,12 @@ function GateScreen({
             style={{
               fontFamily: pixel,
               fontSize: 22,
-              color: "#221E18",
+              color: "var(--color-ink)",
               letterSpacing: "0.04em",
               textTransform: "uppercase",
               lineHeight: 1.2,
               margin: "0 0 18px",
-              textShadow: "3px 3px 0 #B8862F",
+              textShadow: "3px 3px 0 var(--color-acc)",
             }}
           >
             {t("journey.gate_title", locale)}
@@ -626,7 +626,7 @@ function GateScreen({
             style={{
               fontFamily: serif,
               fontSize: 17,
-              color: "#221E18",
+              color: "var(--color-ink)",
               margin: "0 0 12px",
               lineHeight: 1.65,
             }}
@@ -638,7 +638,7 @@ function GateScreen({
               fontFamily: serif,
               fontSize: 15,
               fontStyle: "italic",
-              color: "#8C6520",
+              color: "var(--color-acc-deep)",
               margin: "0 0 28px",
               lineHeight: 1.5,
             }}
@@ -659,7 +659,7 @@ function GateScreen({
                 padding: "16px 20px",
                 background: "#F8C75E",
                 color: "#1A1820",
-                border: "3px solid #221E18",
+                border: "3px solid var(--color-ink)",
                 boxShadow: "4px 4px 0 0 #2F5D5C",
                 fontFamily: pixel,
                 fontSize: 13,
@@ -677,8 +677,8 @@ function GateScreen({
                 width: "100%",
                 padding: "14px 18px",
                 background: "transparent",
-                color: "#4A4338",
-                border: "2px solid #8C6520",
+                color: "var(--color-ink-soft)",
+                border: "2px solid var(--color-acc-deep)",
                 fontFamily: pixel,
                 fontSize: 11,
                 letterSpacing: "0.18em",
@@ -709,7 +709,7 @@ function italicizeMarkers(s: string): string {
 
 const illustrationContainer: React.CSSProperties = {
   background: "#F0E5CB",
-  borderBottom: "3px solid #221E18",
+  borderBottom: "3px solid var(--color-ink)",
   padding: "16px 14px",
   display: "flex",
   justifyContent: "center",
@@ -718,7 +718,7 @@ const illustrationContainer: React.CSSProperties = {
 const eyebrowStyle: React.CSSProperties = {
   fontFamily: pixel,
   fontSize: 10,
-  color: "#8C6520",
+  color: "var(--color-acc-deep)",
   letterSpacing: "0.22em",
   textTransform: "uppercase",
   marginBottom: 16,
@@ -730,7 +730,7 @@ const advanceBtn: React.CSSProperties = {
   padding: "14px 20px",
   background: "#F8C75E",
   color: "#1A1820",
-  border: "3px solid #221E18",
+  border: "3px solid var(--color-ink)",
   boxShadow: "4px 4px 0 0 #2F5D5C",
   fontFamily: "var(--font-pixel-display, 'Courier New', monospace)",
   fontSize: 12,

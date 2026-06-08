@@ -43,20 +43,20 @@ export default async function MapPage() {
       {/* Header — kept small so the constellation gets the room */}
       <header className="mb-6 sm:mb-8">
         <div
-          className="flex items-center gap-3 text-[10px] tracking-[0.24em] text-[#8C6520]"
+          className="flex items-center gap-3 text-[10px] tracking-[0.24em] text-acc-deep"
           style={{ fontFamily: pixel }}
         >
-          <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F] pixel-blink" />
+          <span aria-hidden className="inline-block h-2 w-2 bg-acc pixel-blink" />
           ▶ {t("map.eyebrow", locale)}
         </div>
         <h1
-          className="mt-4 text-[36px] leading-none tracking-[0.04em] text-[#221E18] sm:text-[52px]"
+          className="mt-4 text-[36px] leading-none tracking-[0.04em] text-ink sm:text-[52px]"
           style={{ fontFamily: pixel }}
         >
-          <span style={{ textShadow: "4px 4px 0 #B8862F" }}>{t("map.title", locale)}</span>
+          <span style={{ textShadow: "4px 4px 0 var(--color-acc)" }}>{t("map.title", locale)}</span>
         </h1>
         <p
-          className="mt-5 max-w-[640px] text-[17px] leading-[1.55] text-[#4A4338]"
+          className="mt-5 max-w-[640px] text-[17px] leading-[1.55] text-ink-soft"
           style={{ fontFamily: serif, fontStyle: "italic" }}
         >
           {t("map.intro", locale, { count: PHILOSOPHERS.length, archetypes: ARCHETYPES.length })}
@@ -65,21 +65,21 @@ export default async function MapPage() {
         <div className="mt-5 flex flex-wrap items-center gap-3 text-[13px]">
           <Link
             href="/philosopher"
-            className="border-2 border-[#221E18] bg-[#FFFCF4] px-3 py-1.5 text-[12px] tracking-[0.18em] text-[#221E18] hover:bg-[#F8EDC8]"
+            className="border-2 border-ink bg-[#FFFCF4] px-3 py-1.5 text-[12px] tracking-[0.18em] text-ink hover:bg-acc-soft"
             style={{ fontFamily: pixel, textTransform: "uppercase" }}
           >
             ▶ {t("map.browse_alpha", locale)}
           </Link>
           <Link
             href="/quiz/journey"
-            className="border-2 border-[#221E18] bg-[#F8C75E] px-3 py-1.5 text-[12px] tracking-[0.18em] text-[#1A1820] hover:bg-[#B8862F]"
+            className="border-2 border-ink bg-[#F8C75E] px-3 py-1.5 text-[12px] tracking-[0.18em] text-[#1A1820] hover:bg-acc"
             style={{ fontFamily: pixel, textTransform: "uppercase" }}
           >
             ▶ {t("map.find_place", locale)}
           </Link>
           <Link
             href="/archetype"
-            className="text-[13px] text-[#8C6520] underline decoration-[#D6CDB6] underline-offset-3 hover:text-[#221E18] hover:decoration-[#8C6520]"
+            className="text-[13px] text-acc-deep underline decoration-line underline-offset-3 hover:text-ink hover:decoration-acc-deep"
           >
             {t("map.or_archetypes", locale, { count: ARCHETYPES.length })} ↗
           </Link>
@@ -99,17 +99,17 @@ export default async function MapPage() {
           first. */}
       <section className="mt-12 grid gap-8 md:grid-cols-2">
         <div
-          className="border-[3px] border-[#221E18] bg-[#FFFCF4] p-5"
-          style={{ boxShadow: "4px 4px 0 0 #B8862F" }}
+          className="border-[3px] border-ink bg-[#FFFCF4] p-5"
+          style={{ boxShadow: "4px 4px 0 0 var(--color-acc)" }}
         >
           <div
-            className="text-[10px] tracking-[0.22em] text-[#8C6520]"
+            className="text-[10px] tracking-[0.22em] text-acc-deep"
             style={{ fontFamily: pixel }}
           >
             ▶ {t("map.how_to_read", locale)}
           </div>
           <ul
-            className="mt-3 space-y-2 text-[14.5px] leading-[1.6] text-[#221E18]"
+            className="mt-3 space-y-2 text-[14.5px] leading-[1.6] text-ink"
             style={{ fontFamily: serif }}
           >
             <li>
@@ -128,24 +128,24 @@ export default async function MapPage() {
         </div>
 
         <div
-          className="border-[3px] border-[#221E18] bg-[#FFFCF4] p-5"
-          style={{ boxShadow: "4px 4px 0 0 #B8862F" }}
+          className="border-[3px] border-ink bg-[#FFFCF4] p-5"
+          style={{ boxShadow: "4px 4px 0 0 var(--color-acc)" }}
         >
           <div
-            className="text-[10px] tracking-[0.22em] text-[#8C6520]"
+            className="text-[10px] tracking-[0.22em] text-acc-deep"
             style={{ fontFamily: pixel }}
           >
             ▶ {t("map.ten_archetypes", locale)}
           </div>
           <ul
-            className="mt-3 grid grid-cols-2 gap-2 text-[14px] leading-[1.5] text-[#221E18]"
+            className="mt-3 grid grid-cols-2 gap-2 text-[14px] leading-[1.5] text-ink"
             style={{ fontFamily: serif }}
           >
             {ARCHETYPES.map((a) => (
               <li key={a.key}>
                 <Link
                   href={`/archetype/${a.key}`}
-                  className="text-[#221E18] underline decoration-[#D6CDB6] underline-offset-3 hover:decoration-[#8C6520]"
+                  className="text-ink underline decoration-line underline-offset-3 hover:decoration-acc-deep"
                 >
                   {t(`arch.${a.key}.name`, locale)}
                 </Link>

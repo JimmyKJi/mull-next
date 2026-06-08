@@ -86,19 +86,19 @@ export function ActivityHeatmap({
     <div>
       <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
         <p
-          className="text-[14px] leading-[1.55] text-[#4A4338]"
+          className="text-[14px] leading-[1.55] text-ink-soft"
           style={{ fontFamily: "var(--font-editorial)" }}
         >
           {isZh ? (
             <>
-              过去一年，<strong className="text-[#221E18]">{total}</strong> 条记录，遍布{" "}
-              <strong className="text-[#221E18]">{days}</strong> 天。
+              过去一年，<strong className="text-ink">{total}</strong> 条记录，遍布{" "}
+              <strong className="text-ink">{days}</strong> 天。
             </>
           ) : (
             <>
-              <strong className="text-[#221E18]">{total}</strong>{" "}
+              <strong className="text-ink">{total}</strong>{" "}
               {total === 1 ? "entry" : "entries"} across{" "}
-              <strong className="text-[#221E18]">{days}</strong>{" "}
+              <strong className="text-ink">{days}</strong>{" "}
               {days === 1 ? "day" : "days"} in the last year.
             </>
           )}
@@ -106,8 +106,8 @@ export function ActivityHeatmap({
         <Legend accent={accent} locale={locale} />
       </div>
       <div
-        className="overflow-x-auto border-2 border-[#221E18] bg-[#FFFCF4] p-3"
-        style={{ boxShadow: "3px 3px 0 0 #B8862F" }}
+        className="overflow-x-auto border-2 border-ink bg-[#FFFCF4] p-3"
+        style={{ boxShadow: "3px 3px 0 0 var(--color-acc)" }}
       >
         <div className="flex gap-[3px]">
           {/* Y-axis day labels */}
@@ -118,7 +118,7 @@ export function ActivityHeatmap({
             {dayLabels.map((d, i) => (
               <div
                 key={i}
-                className="text-[9px] tracking-[0.18em] text-[#8C6520]"
+                className="text-[9px] tracking-[0.18em] text-acc-deep"
                 style={{ height: CELL, lineHeight: `${CELL}px` }}
               >
                 {d.toUpperCase()}
@@ -176,7 +176,7 @@ function Cell({
     count < 0
       ? "transparent"
       : count === 0
-        ? "#D6CDB6"
+        ? "var(--color-line)"
         : accent.deep;
   return (
     <div
@@ -200,12 +200,12 @@ function Legend({
 }) {
   return (
     <div
-      className="flex items-center gap-2 text-[10px] tracking-[0.18em] text-[#8C6520]"
+      className="flex items-center gap-2 text-[10px] tracking-[0.18em] text-acc-deep"
       style={{ fontFamily: "var(--font-pixel-display)" }}
     >
       <span>{locale === "zh" ? "少" : "LESS"}</span>
       <div className="flex gap-[3px]">
-        <div style={{ width: 10, height: 10, background: "#E2D8B6", border: `1px solid #D6CDB6` }} />
+        <div style={{ width: 10, height: 10, background: "#E2D8B6", border: `1px solid var(--color-line)` }} />
         <div style={{ width: 10, height: 10, background: accent.soft, border: `1px solid ${accent.deep}` }} />
         <div style={{ width: 10, height: 10, background: accent.primary, border: `1px solid ${accent.deep}` }} />
         <div style={{ width: 10, height: 10, background: accent.deep, border: `1px solid ${accent.deep}` }} />

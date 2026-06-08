@@ -85,10 +85,10 @@ export default function FeedbackButton() {
           style={{
             position: 'fixed',
             zIndex: 60,
-            background: '#221E18',
-            color: '#FAF6EC',
-            border: '3px solid #221E18',
-            boxShadow: '3px 3px 0 0 #B8862F',
+            background: 'var(--color-ink)',
+            color: 'var(--color-cream)',
+            border: '3px solid var(--color-ink)',
+            boxShadow: '3px 3px 0 0 var(--color-acc)',
             borderRadius: 0,
             fontFamily: pixel,
             textTransform: 'uppercase',
@@ -155,8 +155,8 @@ export default function FeedbackButton() {
             width: 320,
             maxWidth: 'calc(100vw - 36px)',
             background: '#FFFCF4',
-            border: '4px solid #221E18',
-            boxShadow: '5px 5px 0 0 #B8862F',
+            border: '4px solid var(--color-ink)',
+            boxShadow: '5px 5px 0 0 var(--color-acc)',
             borderRadius: 0,
             padding: '16px 18px',
             fontFamily: sans,
@@ -171,7 +171,7 @@ export default function FeedbackButton() {
             <strong style={{
               fontFamily: pixel,
               fontSize: 11,
-              color: '#8C6520',
+              color: 'var(--color-acc-deep)',
               textTransform: 'uppercase',
               letterSpacing: '0.18em',
             }}>
@@ -184,7 +184,7 @@ export default function FeedbackButton() {
               style={{
                 background: 'none', border: 'none', cursor: 'pointer',
                 fontFamily: pixel,
-                fontSize: 14, color: '#8C6520',
+                fontSize: 14, color: 'var(--color-acc-deep)',
                 padding: '0 4px', lineHeight: 1,
               }}
             >
@@ -228,7 +228,7 @@ export default function FeedbackButton() {
                 marginTop: 10,
                 fontFamily: pixel,
                 fontSize: 10,
-                color: '#8C6520',
+                color: 'var(--color-acc-deep)',
                 letterSpacing: 0.4,
                 textTransform: 'uppercase',
               }}>

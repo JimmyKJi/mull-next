@@ -87,7 +87,7 @@ export default function DemographicsForm({
           ? t("demo.save_error", locale)
           : "";
   const statusColor =
-    status === "saved" ? "#2F5D5C" : status === "error" ? "#9B2C2C" : "#8C6520";
+    status === "saved" ? "#2F5D5C" : status === "error" ? "#9B2C2C" : "var(--color-acc-deep)";
 
   return (
     <div>
@@ -101,7 +101,7 @@ export default function DemographicsForm({
                 fontSize: 10,
                 letterSpacing: "0.18em",
                 textTransform: "uppercase",
-                color: "#8C6520",
+                color: "var(--color-acc-deep)",
                 marginBottom: 6,
               }}
             >
@@ -116,9 +116,9 @@ export default function DemographicsForm({
                 fontSize: 15,
                 padding: "9px 12px",
                 background: "#FFFCF4",
-                border: "2px solid #221E18",
+                border: "2px solid var(--color-ink)",
                 borderRadius: 0,
-                color: "#221E18",
+                color: "var(--color-ink)",
                 cursor: "pointer",
               }}
             >
@@ -187,7 +187,7 @@ const primaryBtn: React.CSSProperties = {
   padding: "12px 18px",
   background: "#F8C75E",
   color: "#1A1820",
-  border: "3px solid #221E18",
+  border: "3px solid var(--color-ink)",
   boxShadow: "4px 4px 0 0 #2F5D5C",
   fontFamily: pixel,
   fontSize: 11,
@@ -199,8 +199,8 @@ const primaryBtn: React.CSSProperties = {
 const ghostBtn: React.CSSProperties = {
   padding: "12px 14px",
   background: "transparent",
-  color: "#4A4338",
-  border: "2px solid #8C6520",
+  color: "var(--color-ink-soft)",
+  border: "2px solid var(--color-acc-deep)",
   fontFamily: pixel,
   fontSize: 11,
   letterSpacing: "0.16em",

@@ -86,7 +86,7 @@ export default async function JoinByCodePage({
         <MullWordmark />
         <Link href="/classes" style={{
           fontFamily: pixel, fontSize: 11,
-          color: '#4A4338', textDecoration: 'none',
+          color: 'var(--color-ink-soft)', textDecoration: 'none',
           letterSpacing: 0.4, textTransform: 'uppercase',
         }}>
           ◂ {t('join.your_classes', locale)}
@@ -96,7 +96,7 @@ export default async function JoinByCodePage({
       <div style={{
         fontFamily: pixel,
         fontSize: 12,
-        color: '#8C6520',
+        color: 'var(--color-acc-deep)',
         textTransform: 'uppercase',
         letterSpacing: '0.18em',
         marginBottom: 14,
@@ -107,7 +107,7 @@ export default async function JoinByCodePage({
         fontFamily: pixel,
         fontSize: 24,
         margin: '0 0 14px',
-        color: '#221E18',
+        color: 'var(--color-ink)',
         letterSpacing: '0.06em',
         textTransform: 'uppercase',
         textShadow: '3px 3px 0 #2F5D5C',
@@ -120,7 +120,7 @@ export default async function JoinByCodePage({
           fontFamily: serif,
           fontStyle: 'italic',
           fontSize: 16,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           margin: '0 0 20px',
         }}>
           {[preview?.term, preview?.school_name].filter(Boolean).join(' · ')}
@@ -130,7 +130,7 @@ export default async function JoinByCodePage({
         fontFamily: serif,
         fontStyle: 'italic',
         fontSize: 15.5,
-        color: '#4A4338',
+        color: 'var(--color-ink-soft)',
         margin: '0 0 22px',
         lineHeight: 1.55,
       }}>
@@ -151,7 +151,7 @@ function NotFoundShell({ code, reason, locale }: { code: string; reason: string;
       <div style={{
         padding: '28px 28px',
         background: '#FFFCF4',
-        border: '4px solid #221E18',
+        border: '4px solid var(--color-ink)',
         boxShadow: '5px 5px 0 0 #7A2E2E',
         borderRadius: 0,
         textAlign: 'center',
@@ -181,7 +181,7 @@ function NotFoundShell({ code, reason, locale }: { code: string; reason: string;
           fontFamily: serif,
           fontStyle: 'italic',
           fontSize: 16,
-          color: '#4A4338',
+          color: 'var(--color-ink-soft)',
           margin: '0 0 24px',
           lineHeight: 1.55,
         }}>
@@ -193,10 +193,10 @@ function NotFoundShell({ code, reason, locale }: { code: string; reason: string;
           style={{
             display: 'inline-block',
             padding: '12px 22px',
-            background: '#221E18',
-            color: '#FAF6EC',
-            border: '4px solid #221E18',
-            boxShadow: '4px 4px 0 0 #B8862F',
+            background: 'var(--color-ink)',
+            color: 'var(--color-cream)',
+            border: '4px solid var(--color-ink)',
+            boxShadow: '4px 4px 0 0 var(--color-acc)',
             borderRadius: 0,
             fontFamily: pixel,
             fontSize: 12,

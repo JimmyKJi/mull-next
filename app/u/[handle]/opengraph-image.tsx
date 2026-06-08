@@ -49,12 +49,12 @@ export default async function ProfileOGImage({
   const figureSvg = archetypeKey ? FIGURES[archetypeKey] : null;
   const figureDataUri = figureSvg ? svgToDataUri(figureSvg) : null;
 
-  const CREAM = '#FAF6EC';
-  const CREAM_2 = '#F1EAD8';
-  const INK = '#221E18';
-  const INK_SOFT = '#4A4338';
-  const ACC = '#B8862F';
-  const ACC_DEEP = '#8C6520';
+  const CREAM = 'var(--color-cream)';
+  const CREAM_2 = 'var(--color-cream-2)';
+  const INK = 'var(--color-ink)';
+  const INK_SOFT = 'var(--color-ink-soft)';
+  const ACC = 'var(--color-acc)';
+  const ACC_DEEP = 'var(--color-acc-deep)';
 
   return new ImageResponse(
     (
@@ -246,10 +246,10 @@ export default async function ProfileOGImage({
 }
 
 function genericCard(fonts: Awaited<ReturnType<typeof loadOGFonts>>) {
-  const CREAM = '#FAF6EC';
-  const INK = '#221E18';
-  const ACC = '#B8862F';
-  const INK_SOFT = '#4A4338';
+  const CREAM = 'var(--color-cream)';
+  const INK = 'var(--color-ink)';
+  const ACC = 'var(--color-acc)';
+  const INK_SOFT = 'var(--color-ink-soft)';
   return new ImageResponse(
     (
       <div

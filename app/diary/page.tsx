@@ -61,13 +61,13 @@ export default async function DiaryPage() {
       <div className="mb-6 flex items-center justify-end gap-4">
         <Link
           href="/dilemma"
-          className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"
+          className="text-[13px] text-ink-soft hover:text-ink hover:underline"
         >
           {t('nav.dilemma_arrow', locale)}
         </Link>
         <Link
           href="/account"
-          className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"
+          className="text-[13px] text-ink-soft hover:text-ink hover:underline"
         >
           {t('nav.account_arrow', locale)}
         </Link>
@@ -87,7 +87,7 @@ export default async function DiaryPage() {
         <div style={{
           padding: '28px 32px',
           background: '#FFFCF4',
-          border: '1px dashed #D6CDB6',
+          border: '1px dashed var(--color-line)',
           borderRadius: 12,
           textAlign: 'center',
         }}>
@@ -95,7 +95,7 @@ export default async function DiaryPage() {
             fontFamily: serif,
             fontStyle: 'italic',
             fontSize: 18,
-            color: '#4A4338',
+            color: 'var(--color-ink-soft)',
             margin: '0 0 16px',
           }}>
             {t('diary.account_required', locale)}
@@ -103,8 +103,8 @@ export default async function DiaryPage() {
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link href="/signup" style={{
               padding: '10px 20px',
-              background: '#221E18',
-              color: '#FAF6EC',
+              background: 'var(--color-ink)',
+              color: 'var(--color-cream)',
               borderRadius: 6,
               textDecoration: 'none',
               fontFamily: sans,
@@ -115,8 +115,8 @@ export default async function DiaryPage() {
             </Link>
             <Link href="/login" style={{
               padding: '10px 20px',
-              border: '1px solid #221E18',
-              color: '#221E18',
+              border: '1px solid var(--color-ink)',
+              color: 'var(--color-ink)',
               borderRadius: 6,
               textDecoration: 'none',
               fontFamily: sans,
@@ -153,7 +153,7 @@ export default async function DiaryPage() {
             fontStyle: 'italic',
             fontSize: 24,
             fontWeight: 500,
-            color: '#4A4338',
+            color: 'var(--color-ink-soft)',
             margin: '0 0 18px',
           }}>
             {t('diary.earlier_entries', locale)}
@@ -168,7 +168,7 @@ export default async function DiaryPage() {
                     display: 'block',
                     padding: '20px 22px',
                     background: '#FFFCF4',
-                    border: '4px solid #221E18',
+                    border: '4px solid var(--color-ink)',
                     boxShadow: '4px 4px 0 0 #2F5D5C',
                     borderRadius: 0,
                     textDecoration: 'none',
@@ -196,7 +196,7 @@ export default async function DiaryPage() {
                       <span style={{
                         fontFamily: sans,
                         fontSize: 12,
-                        color: '#8C6520',
+                        color: 'var(--color-acc-deep)',
                         opacity: 0.75,
                       }}>
                         {t('diary.entry_words', locale, { n: e.word_count || 0 })}
@@ -207,7 +207,7 @@ export default async function DiaryPage() {
                         fontFamily: serif,
                         fontSize: 22,
                         fontWeight: 500,
-                        color: '#221E18',
+                        color: 'var(--color-ink)',
                         marginBottom: 6,
                       }}>
                         {e.title}
@@ -216,7 +216,7 @@ export default async function DiaryPage() {
                     <p style={{
                       fontFamily: serif,
                       fontSize: 16,
-                      color: '#221E18',
+                      color: 'var(--color-ink)',
                       margin: 0,
                       lineHeight: 1.55,
                       whiteSpace: 'pre-wrap',
@@ -234,7 +234,7 @@ export default async function DiaryPage() {
                             <strong style={{ fontVariantNumeric: 'tabular-nums' }}>
                               {s.delta > 0 ? '+' : ''}{s.delta.toFixed(1)}
                             </strong>{' '}
-                            <span style={{ color: '#4A4338' }}>{s.name}</span>
+                            <span style={{ color: 'var(--color-ink-soft)' }}>{s.name}</span>
                           </span>
                         ))}
                       </div>
@@ -250,7 +250,7 @@ export default async function DiaryPage() {
       <p style={{
         fontFamily: sans,
         fontSize: 12,
-        color: '#8C6520',
+        color: 'var(--color-acc-deep)',
         marginTop: 56,
         opacity: 0.7,
         textAlign: 'center',

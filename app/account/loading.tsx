@@ -30,7 +30,7 @@ export default async function Loading() {
       {/* Eyebrow caret + title shimmer */}
       <div style={{
         fontFamily: pixel, fontSize: 11,
-        color: '#8C6520', textTransform: 'uppercase',
+        color: 'var(--color-acc-deep)', textTransform: 'uppercase',
         letterSpacing: '0.18em', marginBottom: 14,
       }}>
         ▸ {t('ldg.loading', locale).toUpperCase()}

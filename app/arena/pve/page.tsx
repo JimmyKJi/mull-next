@@ -53,7 +53,7 @@ export default async function ArenaPvePage() {
           style={{
             fontFamily: pixel,
             fontSize: 11,
-            color: "#4A4338",
+            color: "var(--color-ink-soft)",
             textDecoration: "none",
             letterSpacing: 0.4,
             textTransform: "uppercase",
@@ -66,10 +66,10 @@ export default async function ArenaPvePage() {
         style={{
           fontFamily: pixel,
           fontSize: 24,
-          color: "#221E18",
+          color: "var(--color-ink)",
           letterSpacing: "0.04em",
           textTransform: "uppercase",
-          textShadow: "3px 3px 0 #B8862F",
+          textShadow: "3px 3px 0 var(--color-acc)",
           marginBottom: 20,
         }}
       >

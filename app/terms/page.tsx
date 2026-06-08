@@ -51,7 +51,7 @@ function TermsBodyEn() {
             email{' '}
             <a
               href="mailto:jimmy.kaian.ji@gmail.com"
-              className="not-italic text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+              className="not-italic text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
             >
               jimmy.kaian.ji@gmail.com
             </a>{' '}
@@ -162,7 +162,7 @@ function TermsBodyEn() {
               live, the rules will be: clear pricing on the{' '}
               <Link
                 href="/billing"
-                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
               >
                 billing page
               </Link>
@@ -188,7 +188,7 @@ function TermsBodyEn() {
               <strong>Privacy.</strong> See the{' '}
               <Link
                 href="/privacy"
-                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
               >
                 privacy policy
               </Link>
@@ -206,7 +206,7 @@ function TermsBodyEn() {
               <strong>Contact.</strong>{' '}
               <a
                 href="mailto:jimmy.kaian.ji@gmail.com"
-                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
               >
                 jimmy.kaian.ji@gmail.com
               </a>
@@ -216,11 +216,11 @@ function TermsBodyEn() {
         </PixelWindow>
       </div>
 
-      <p className="mt-12 text-center text-[13px] text-[#8C6520]">
+      <p className="mt-12 text-center text-[13px] text-acc-deep">
         Last updated: {LAST_UPDATED}.{' '}
         <Link
           href="/"
-          className="ml-2 underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          className="ml-2 underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           ← Back to Mull
         </Link>
@@ -246,7 +246,7 @@ function TermsBodyZh() {
             使用 Mull 即表示你同意以下条款。若有任何不明之处，请发邮件至{' '}
             <a
               href="mailto:jimmy.kaian.ji@gmail.com"
-              className="not-italic text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+              className="not-italic text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
             >
               jimmy.kaian.ji@gmail.com
             </a>{' '}
@@ -321,7 +321,7 @@ function TermsBodyZh() {
               <strong>订阅（上线时）。</strong> 在本文发布之时，订阅尚未启用。当它上线时，规则将是：在{' '}
               <Link
                 href="/billing"
-                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
               >
                 计费页
               </Link>
@@ -339,7 +339,7 @@ function TermsBodyZh() {
               <strong>隐私。</strong> 参见{' '}
               <Link
                 href="/privacy"
-                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
               >
                 隐私政策
               </Link>
@@ -352,7 +352,7 @@ function TermsBodyZh() {
               <strong>联系方式。</strong>{' '}
               <a
                 href="mailto:jimmy.kaian.ji@gmail.com"
-                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
               >
                 jimmy.kaian.ji@gmail.com
               </a>
@@ -362,11 +362,11 @@ function TermsBodyZh() {
         </PixelWindow>
       </div>
 
-      <p className="mt-12 text-center text-[13px] text-[#8C6520]">
+      <p className="mt-12 text-center text-[13px] text-acc-deep">
         最近更新：{LAST_UPDATED_ZH}。{' '}
         <Link
           href="/"
-          className="ml-2 underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          className="ml-2 underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           ← 返回 Mull
         </Link>
@@ -378,7 +378,7 @@ function TermsBodyZh() {
 function Prose({ children }: { children: React.ReactNode }) {
   return (
     <div
-      className="space-y-4 text-[15.5px] leading-[1.65] text-[#221E18] [&_strong]:text-[#221E18]"
+      className="space-y-4 text-[15.5px] leading-[1.65] text-ink [&_strong]:text-ink"
       style={{ fontFamily: 'var(--font-prose)' }}
     >
       {children}
@@ -389,8 +389,8 @@ function Prose({ children }: { children: React.ReactNode }) {
 function ProseLi({ children }: { children: React.ReactNode }) {
   return (
     <li
-      className="border-l-4 px-4 py-2 text-[14.5px] leading-[1.6] text-[#221E18]"
-      style={{ borderColor: '#B8862F', background: '#FFFCF4', fontFamily: 'var(--font-prose)' }}
+      className="border-l-4 px-4 py-2 text-[14.5px] leading-[1.6] text-ink"
+      style={{ borderColor: 'var(--color-acc)', background: '#FFFCF4', fontFamily: 'var(--font-prose)' }}
     >
       {children}
     </li>

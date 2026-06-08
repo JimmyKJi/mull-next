@@ -59,7 +59,7 @@ export default function MullWordmark({
     fontFamily: "var(--font-prose)",
     fontSize,
     fontWeight: 500,
-    color: '#221E18',
+    color: 'var(--color-ink)',
     textDecoration: 'none',
     letterSpacing: '-0.5px',
     lineHeight: 1,
@@ -79,12 +79,12 @@ export default function MullWordmark({
     <span style={wrapperStyle}>
       <MullMark size={markSize} variant={markVariant} />
       <span style={textStyle}>
-        Mull<span style={{ color: '#B8862F' }}>.</span>
+        Mull<span style={{ color: 'var(--color-acc)' }}>.</span>
       </span>
     </span>
   ) : (
     <>
-      Mull<span style={{ color: '#B8862F' }}>.</span>
+      Mull<span style={{ color: 'var(--color-acc)' }}>.</span>
     </>
   );
 

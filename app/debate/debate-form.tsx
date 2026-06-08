@@ -140,7 +140,7 @@ export default function DebateForm({
         <div style={{
           fontFamily: 'var(--font-pixel-display)',
           fontSize: 12,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           textTransform: 'uppercase',
           letterSpacing: '0.18em',
           marginBottom: 14,
@@ -152,7 +152,7 @@ export default function DebateForm({
             fontFamily: serif,
             fontStyle: 'italic',
             fontSize: 17,
-            color: '#4A4338',
+            color: 'var(--color-ink-soft)',
             margin: '0 0 32px',
             lineHeight: 1.55,
           }}>
@@ -183,10 +183,10 @@ export default function DebateForm({
             className="pixel-press"
             style={{
               padding: '12px 22px',
-              background: '#221E18',
-              color: '#FAF6EC',
-              border: '4px solid #221E18',
-              boxShadow: '4px 4px 0 0 #B8862F',
+              background: 'var(--color-ink)',
+              color: 'var(--color-cream)',
+              border: '4px solid var(--color-ink)',
+              boxShadow: '4px 4px 0 0 var(--color-acc)',
               borderRadius: 0,
               cursor: 'pointer',
               fontFamily: 'var(--font-pixel-display)',
@@ -241,7 +241,7 @@ export default function DebateForm({
           fontFamily: sans,
           fontSize: 11,
           fontWeight: 600,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           textTransform: 'uppercase',
           letterSpacing: '0.18em',
           display: 'block',
@@ -259,10 +259,10 @@ export default function DebateForm({
             fontFamily: serif,
             fontSize: 18,
             padding: '14px 18px',
-            border: '1px solid #D6CDB6',
+            border: '1px solid var(--color-line)',
             borderRadius: 10,
             background: '#FFFCF4',
-            color: '#221E18',
+            color: 'var(--color-ink)',
             outline: 'none',
             width: '100%',
             boxSizing: 'border-box',
@@ -278,9 +278,9 @@ export default function DebateForm({
                 fontFamily: sans,
                 fontSize: 12,
                 padding: '6px 12px',
-                background: topic === suggestion.text ? '#221E18' : '#F5EFDC',
-                color: topic === suggestion.text ? '#FAF6EC' : '#4A4338',
-                border: '1px solid #D6CDB6',
+                background: topic === suggestion.text ? 'var(--color-ink)' : '#F5EFDC',
+                color: topic === suggestion.text ? 'var(--color-cream)' : 'var(--color-ink-soft)',
+                border: '1px solid var(--color-line)',
                 borderRadius: 999,
                 cursor: 'pointer',
               }}
@@ -300,8 +300,8 @@ export default function DebateForm({
             fontSize: 15,
             fontWeight: 500,
             padding: '14px 28px',
-            background: ready ? '#221E18' : '#A39880',
-            color: '#FAF6EC',
+            background: ready ? 'var(--color-ink)' : '#A39880',
+            color: 'var(--color-cream)',
             border: 'none',
             borderRadius: 8,
             cursor: ready && !submitting ? 'pointer' : 'not-allowed',
@@ -312,7 +312,7 @@ export default function DebateForm({
           {submitting ? t('debate.generating', locale) : t('debate.stage_debate', locale)}
         </button>
         {!ready && (aName || bName) && (
-          <span style={{ fontFamily: sans, fontSize: 12.5, color: '#8C6520' }}>
+          <span style={{ fontFamily: sans, fontSize: 12.5, color: 'var(--color-acc-deep)' }}>
             {!aName ? t('debate.pick_a', locale) :
              !bName ? t('debate.pick_b', locale) :
              aName === bName ? t('debate.pick_two_diff', locale) :
@@ -371,7 +371,7 @@ function SavedDebatesList({
         fontFamily: sans,
         fontSize: 11,
         fontWeight: 600,
-        color: '#8C6520',
+        color: 'var(--color-acc-deep)',
         textTransform: 'uppercase',
         letterSpacing: '0.18em',
         marginBottom: 14,
@@ -389,8 +389,8 @@ function SavedDebatesList({
               textAlign: 'left',
               padding: '14px 18px',
               background: '#FFFCF4',
-              border: '4px solid #221E18',
-              boxShadow: '4px 4px 0 0 #B8862F',
+              border: '4px solid var(--color-ink)',
+              boxShadow: '4px 4px 0 0 var(--color-acc)',
               borderRadius: 0,
               cursor: 'pointer',
               fontFamily: 'inherit',
@@ -410,16 +410,16 @@ function SavedDebatesList({
                 fontFamily: serif,
                 fontSize: 17,
                 fontWeight: 500,
-                color: '#221E18',
+                color: 'var(--color-ink)',
               }}>
                 <em style={{ fontStyle: 'italic' }}>{d.a_name}</em>
-                <span style={{ color: '#8C6520', margin: '0 8px', fontStyle: 'normal' }}>×</span>
+                <span style={{ color: 'var(--color-acc-deep)', margin: '0 8px', fontStyle: 'normal' }}>×</span>
                 <em style={{ fontStyle: 'italic' }}>{d.b_name}</em>
               </span>
               <span style={{
                 fontFamily: sans,
                 fontSize: 11,
-                color: '#8C6520',
+                color: 'var(--color-acc-deep)',
                 letterSpacing: 0.3,
               }}>
                 {fmtRel(d.created_at)}
@@ -429,7 +429,7 @@ function SavedDebatesList({
               fontFamily: serif,
               fontStyle: 'italic',
               fontSize: 14.5,
-              color: '#4A4338',
+              color: 'var(--color-ink-soft)',
               lineHeight: 1.4,
             }}>
               on {d.topic}
@@ -459,7 +459,7 @@ function SpeechBubble({
       height: 80,
       borderRadius: '50%',
       background: '#FFFCF4',
-      border: '2px solid #D6CDB6',
+      border: '2px solid var(--color-line)',
       flexShrink: 0,
       overflow: 'hidden',
       display: 'flex',
@@ -480,7 +480,7 @@ function SpeechBubble({
         fontSize: 16,
         fontWeight: 500,
         fontStyle: 'italic',
-        color: '#221E18',
+        color: 'var(--color-ink)',
         lineHeight: 1.1,
       }}>
         {speakerName}
@@ -488,7 +488,7 @@ function SpeechBubble({
       <div style={{
         fontFamily: sans,
         fontSize: 11,
-        color: '#8C6520',
+        color: 'var(--color-acc-deep)',
         letterSpacing: 0.3,
         marginTop: 2,
       }}>
@@ -503,12 +503,12 @@ function SpeechBubble({
       minWidth: 0,
       position: 'relative',
       background: '#FFFCF4',
-      border: '1px solid #D6CDB6',
+      border: '1px solid var(--color-line)',
       borderRadius: 18,
       padding: '18px 22px',
       fontFamily: serif,
       fontSize: 17,
-      color: '#221E18',
+      color: 'var(--color-ink)',
       lineHeight: 1.6,
       boxShadow: '0 2px 8px rgba(34, 30, 24, 0.04)',
     }}>
@@ -522,9 +522,9 @@ function SpeechBubble({
           width: 16,
           height: 16,
           background: '#FFFCF4',
-          borderTop: '1px solid #D6CDB6',
-          borderLeft: isLeft ? '1px solid #D6CDB6' : 'none',
-          borderRight: !isLeft ? '1px solid #D6CDB6' : 'none',
+          borderTop: '1px solid var(--color-line)',
+          borderLeft: isLeft ? '1px solid var(--color-line)' : 'none',
+          borderRight: !isLeft ? '1px solid var(--color-line)' : 'none',
           borderBottom: 'none',
           transform: `rotate(${isLeft ? '-45deg' : '45deg'})`,
           borderTopLeftRadius: 2,
@@ -599,10 +599,10 @@ function PhilosopherPicker({
           fontFamily: sans,
           fontSize: 14,
           padding: '11px 14px',
-          border: '1px solid #D6CDB6',
+          border: '1px solid var(--color-line)',
           borderRadius: 8,
           background: '#FFFCF4',
-          color: '#221E18',
+          color: 'var(--color-ink)',
           outline: 'none',
           width: '100%',
           boxSizing: 'border-box',
@@ -612,7 +612,7 @@ function PhilosopherPicker({
       <div style={{
         fontFamily: sans,
         fontSize: 11,
-        color: '#8C6520',
+        color: 'var(--color-acc-deep)',
         marginBottom: 6,
         letterSpacing: 0.3,
       }}>
@@ -634,7 +634,7 @@ function PhilosopherPicker({
             padding: '12px',
             fontFamily: sans,
             fontSize: 13,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             fontStyle: 'italic',
           }}>
             No matches.
@@ -651,7 +651,7 @@ function PhilosopherPicker({
                 textAlign: 'left',
                 padding: '8px 12px',
                 background: isSelected ? accent : 'transparent',
-                color: isSelected ? '#FAF6EC' : '#221E18',
+                color: isSelected ? 'var(--color-cream)' : 'var(--color-ink)',
                 border: 'none',
                 borderRadius: 6,
                 cursor: 'pointer',

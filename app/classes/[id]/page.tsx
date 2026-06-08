@@ -143,7 +143,7 @@ export default async function ClassDetailPage({
         <MullWordmark />
         <Link href="/classes" style={{
           fontFamily: pixel, fontSize: 11,
-          color: '#4A4338', textDecoration: 'none',
+          color: 'var(--color-ink-soft)', textDecoration: 'none',
           letterSpacing: 0.4, textTransform: 'uppercase',
         }}>
           ◂ {t('cls.nav_all_classes', locale)}
@@ -152,7 +152,7 @@ export default async function ClassDetailPage({
 
       <div style={{
         fontFamily: pixel, fontSize: 12,
-        color: '#8C6520', textTransform: 'uppercase',
+        color: 'var(--color-acc-deep)', textTransform: 'uppercase',
         letterSpacing: '0.18em', marginBottom: 14,
       }}>
         ▸ {isTeacher ? t('cls.role_teaching', locale) : t('cls.role_enrolled', locale)}
@@ -163,10 +163,10 @@ export default async function ClassDetailPage({
         fontFamily: pixel,
         fontSize: 28,
         margin: '0 0 14px',
-        color: '#221E18',
+        color: 'var(--color-ink)',
         letterSpacing: '0.06em',
         textTransform: 'uppercase',
-        textShadow: '3px 3px 0 #B8862F',
+        textShadow: '3px 3px 0 var(--color-acc)',
         lineHeight: 1.1,
       }}>
         {cls.name}
@@ -177,7 +177,7 @@ export default async function ClassDetailPage({
           fontFamily: serif,
           fontStyle: 'italic',
           fontSize: 16,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           margin: '0 0 12px',
         }}>
           {[cls.term, cls.school_name].filter(Boolean).join(' · ')}
@@ -188,7 +188,7 @@ export default async function ClassDetailPage({
         <p style={{
           fontFamily: serif,
           fontSize: 16.5,
-          color: '#221E18',
+          color: 'var(--color-ink)',
           margin: '0 0 28px',
           lineHeight: 1.6,
         }}>
@@ -216,9 +216,9 @@ export default async function ClassDetailPage({
             style={{
               display: 'inline-block',
               padding: '10px 16px',
-              background: '#221E18',
-              color: '#FAF6EC',
-              border: '3px solid #221E18',
+              background: 'var(--color-ink)',
+              color: 'var(--color-cream)',
+              border: '3px solid var(--color-ink)',
               boxShadow: '3px 3px 0 0 #2F5D5C',
               borderRadius: 0,
               fontFamily: pixel,
@@ -240,11 +240,11 @@ export default async function ClassDetailPage({
         <h2 style={{
           fontFamily: pixel,
           fontSize: 14,
-          color: '#221E18',
+          color: 'var(--color-ink)',
           textTransform: 'uppercase',
           letterSpacing: '0.18em',
           marginBottom: 16,
-          textShadow: '2px 2px 0 #B8862F',
+          textShadow: '2px 2px 0 var(--color-acc)',
         }}>
           ▸ {t(studentCount === 1 ? 'cls.roster_heading_one' : 'cls.roster_heading_many', locale, { count: studentCount })}
         </h2>
@@ -252,12 +252,12 @@ export default async function ClassDetailPage({
           <p style={{
             padding: '20px 18px',
             background: '#FFFCF4',
-            border: '3px dashed #8C6520',
+            border: '3px dashed var(--color-acc-deep)',
             borderRadius: 0,
             fontFamily: serif,
             fontStyle: 'italic',
             fontSize: 15,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             margin: 0,
             textAlign: 'center',
           }}>
@@ -269,11 +269,11 @@ export default async function ClassDetailPage({
               <li key={r.user_id} style={{
                 padding: '10px 14px',
                 background: '#FFFCF4',
-                border: '2px solid #221E18',
+                border: '2px solid var(--color-ink)',
                 borderRadius: 0,
                 fontFamily: serif,
                 fontSize: 15,
-                color: '#221E18',
+                color: 'var(--color-ink)',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'baseline',
@@ -281,7 +281,7 @@ export default async function ClassDetailPage({
               }}>
                 <span>
                   {r.pseudonym
-                    ? <em style={{ color: '#8C6520' }}>{r.pseudonym}</em>
+                    ? <em style={{ color: 'var(--color-acc-deep)' }}>{r.pseudonym}</em>
                     : isTeacher
                       ? <RosterUserCell userId={r.user_id} locale={locale} />
                       : (r.user_id === user.id ? t('cls.roster_you', locale) : t('cls.roster_classmate', locale))}
@@ -289,7 +289,7 @@ export default async function ClassDetailPage({
                 <span style={{
                   fontFamily: pixel,
                   fontSize: 10,
-                  color: '#8C6520',
+                  color: 'var(--color-acc-deep)',
                   letterSpacing: 0.4,
                   textTransform: 'uppercase',
                 }}>
@@ -318,7 +318,7 @@ export default async function ClassDetailPage({
           <h2 style={{
             fontFamily: pixel,
             fontSize: 14,
-            color: '#221E18',
+            color: 'var(--color-ink)',
             textTransform: 'uppercase',
             letterSpacing: '0.18em',
             margin: 0,
@@ -333,10 +333,10 @@ export default async function ClassDetailPage({
               style={{
                 display: 'inline-block',
                 padding: '8px 14px',
-                background: '#B8862F',
+                background: 'var(--color-acc)',
                 color: '#1A1612',
-                border: '3px solid #221E18',
-                boxShadow: '3px 3px 0 0 #221E18',
+                border: '3px solid var(--color-ink)',
+                boxShadow: '3px 3px 0 0 var(--color-ink)',
                 borderRadius: 0,
                 fontFamily: pixel,
                 fontSize: 11,
@@ -360,7 +360,7 @@ export default async function ClassDetailPage({
             fontFamily: serif,
             fontStyle: 'italic',
             fontSize: 15,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             margin: 0,
             textAlign: 'center',
           }}>
@@ -375,7 +375,7 @@ export default async function ClassDetailPage({
               const submissionCount = countsByAssignment.get(a.id) ?? 0;
               const overdue =
                 !!a.due_at && new Date(a.due_at).getTime() < Date.now() && !submittedByMe;
-              const shadowColor = submittedByMe ? '#2F5D5C' : (overdue ? '#7A2E2E' : '#B8862F');
+              const shadowColor = submittedByMe ? '#2F5D5C' : (overdue ? '#7A2E2E' : 'var(--color-acc)');
               return (
                 <li key={a.id}>
                   <Link
@@ -385,7 +385,7 @@ export default async function ClassDetailPage({
                       display: 'block',
                       padding: '14px 16px',
                       background: '#FFFCF4',
-                      border: '3px solid #221E18',
+                      border: '3px solid var(--color-ink)',
                       boxShadow: `3px 3px 0 0 ${shadowColor}`,
                       borderRadius: 0,
                       textDecoration: 'none',
@@ -405,7 +405,7 @@ export default async function ClassDetailPage({
                         fontFamily: serif,
                         fontSize: 17,
                         fontWeight: 500,
-                        color: '#221E18',
+                        color: 'var(--color-ink)',
                       }}>
                         {a.title}
                       </span>
@@ -426,7 +426,7 @@ export default async function ClassDetailPage({
                     <div style={{
                       fontFamily: pixel,
                       fontSize: 10,
-                      color: '#8C6520',
+                      color: 'var(--color-acc-deep)',
                       letterSpacing: 0.4,
                       textTransform: 'uppercase',
                       marginBottom: 6,
@@ -442,7 +442,7 @@ export default async function ClassDetailPage({
                       fontFamily: serif,
                       fontStyle: 'italic',
                       fontSize: 14.5,
-                      color: '#4A4338',
+                      color: 'var(--color-ink-soft)',
                       margin: 0,
                       lineHeight: 1.5,
                       display: '-webkit-box',
@@ -466,7 +466,7 @@ export default async function ClassDetailPage({
         style={{
           marginTop: 48,
           paddingTop: 24,
-          borderTop: '2px dashed #D6CDB6',
+          borderTop: '2px dashed var(--color-line)',
           display: 'flex',
           flexWrap: 'wrap',
           gap: 12,
@@ -496,13 +496,13 @@ async function RosterUserCell({ userId, locale }: { userId: string; locale: Loca
     return (
       <>
         {profile.display_name || `@${profile.handle}`}
-        <span style={{ color: '#8C6520', fontStyle: 'italic' }}> · @{profile.handle}</span>
+        <span style={{ color: 'var(--color-acc-deep)', fontStyle: 'italic' }}> · @{profile.handle}</span>
       </>
     );
   }
   // No public profile — show short ID. Teacher gets visibility
   // without leaking PII.
-  return <em style={{ color: '#8C6520' }}>{t('cls.student_short', locale, { id: userId.slice(0, 6) })}</em>;
+  return <em style={{ color: 'var(--color-acc-deep)' }}>{t('cls.student_short', locale, { id: userId.slice(0, 6) })}</em>;
 }
 
 // Localize the assignment-kind enum (dilemma / exercise / diary_prompt)

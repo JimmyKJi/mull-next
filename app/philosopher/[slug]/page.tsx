@@ -198,7 +198,7 @@ export default async function PhilosopherDetailPage({
         <div className="mb-6 flex items-center justify-between gap-4">
           <Link
             href="/philosopher"
-            className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"
+            className="text-[13px] text-ink-soft hover:text-ink hover:underline"
           >
             ← {t('philindex.eyebrow', locale)}
           </Link>
@@ -229,19 +229,19 @@ export default async function PhilosopherDetailPage({
             </div>
             <div>
               <h1
-                className="pr-2 text-[28px] font-medium leading-[1.05] text-[#221E18] sm:text-[40px]"
+                className="pr-2 text-[28px] font-medium leading-[1.05] text-ink sm:text-[40px]"
                 style={{ fontFamily: 'var(--font-editorial)' }}
               >
                 {p.name}
               </h1>
               <p
-                className="mt-1 text-[12px] tracking-[0.18em] text-[#8C6520]"
+                className="mt-1 text-[12px] tracking-[0.18em] text-acc-deep"
                 style={{ fontFamily: 'var(--font-pixel-display)' }}
               >
                 {p.dates}
               </p>
               <p
-                className="mt-4 border-l-4 px-4 py-3 text-[16px] italic leading-[1.55] text-[#221E18]"
+                className="mt-4 border-l-4 px-4 py-3 text-[16px] italic leading-[1.55] text-ink"
                 style={{
                   borderColor: color.deep,
                   background: '#FFFCF4',
@@ -260,7 +260,7 @@ export default async function PhilosopherDetailPage({
           {bio ? (
             <PixelWindow title={t('phil.section_about', locale).toUpperCase()} badge="▶ PROFILE">
               <div
-                className="space-y-4 text-[15.5px] leading-[1.65] text-[#221E18]"
+                className="space-y-4 text-[15.5px] leading-[1.65] text-ink"
                 style={{ fontFamily: 'var(--font-editorial)' }}
               >
                 {bio.split('\n\n').map((para, i) => (
@@ -294,12 +294,12 @@ export default async function PhilosopherDetailPage({
                 </div>
                 <div className="min-w-0 flex-1">
                   <div
-                    className="text-[20px] font-medium text-[#221E18]"
+                    className="text-[20px] font-medium text-ink"
                     style={{ fontFamily: 'var(--font-editorial)' }}
                   >
                     {p.archetypeName} →
                   </div>
-                  <p className="mt-1 text-[13.5px] leading-[1.5] text-[#4A4338]">
+                  <p className="mt-1 text-[13.5px] leading-[1.5] text-ink-soft">
                     {archetype.spirit}
                   </p>
                 </div>
@@ -310,7 +310,7 @@ export default async function PhilosopherDetailPage({
           {/* Defining dimensions */}
           <PixelWindow title={t('phil.section_dimensions', locale).toUpperCase()} badge="▶ FINGERPRINT">
             <p
-              className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
+              className="mb-4 text-[14px] leading-[1.6] text-ink-soft"
               style={{ fontFamily: 'var(--font-editorial)' }}
             >
               {t('phil.dimensions_helper', locale)}
@@ -338,7 +338,7 @@ export default async function PhilosopherDetailPage({
                           {key}
                         </span>
                         <span
-                          className="text-[16px] font-medium text-[#221E18]"
+                          className="text-[16px] font-medium text-ink"
                           style={{ fontFamily: 'var(--font-editorial)' }}
                         >
                           {name}
@@ -373,7 +373,7 @@ export default async function PhilosopherDetailPage({
           {/* Nearest thinkers */}
           <PixelWindow title={t('phil.section_nearest', locale).toUpperCase()} badge="▶ NEAREST">
             <p
-              className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
+              className="mb-4 text-[14px] leading-[1.6] text-ink-soft"
               style={{ fontFamily: 'var(--font-editorial)' }}
             >
               {t('phil.nearest_helper', locale)}
@@ -403,7 +403,7 @@ export default async function PhilosopherDetailPage({
                       <div className="min-w-0 flex-1">
                         <div className="flex items-baseline justify-between gap-3">
                           <span
-                            className="text-[16px] font-medium text-[#221E18]"
+                            className="text-[16px] font-medium text-ink"
                             style={{ fontFamily: 'var(--font-editorial)' }}
                           >
                             {ol.name}
@@ -419,7 +419,7 @@ export default async function PhilosopherDetailPage({
                           </span>
                         </div>
                         <p
-                          className="mt-1 text-[13px] leading-[1.5] text-[#4A4338]"
+                          className="mt-1 text-[13px] leading-[1.5] text-ink-soft"
                           style={{ fontFamily: 'var(--font-editorial)' }}
                         >
                           {ol.keyIdea}
@@ -437,7 +437,7 @@ export default async function PhilosopherDetailPage({
           {relatedTopics.length > 0 ? (
             <PixelWindow title={t('nav.topics', locale).toUpperCase()} badge="▶ EXPLORE">
               <p
-                className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
+                className="mb-4 text-[14px] leading-[1.6] text-ink-soft"
                 style={{ fontFamily: 'var(--font-editorial)' }}
               >
                 {t('phil.topics_helper', locale, { name: p.name })}
@@ -455,13 +455,13 @@ export default async function PhilosopherDetailPage({
                       }}
                     >
                       <div
-                        className="text-[15px] font-medium text-[#221E18]"
+                        className="text-[15px] font-medium text-ink"
                         style={{ fontFamily: 'var(--font-editorial)' }}
                       >
                         {rt.title}
                       </div>
                       <div
-                        className="mt-1 text-[12.5px] italic leading-[1.5] text-[#4A4338]"
+                        className="mt-1 text-[12.5px] italic leading-[1.5] text-ink-soft"
                         style={{ fontFamily: 'var(--font-editorial)' }}
                       >
                         {rt.summary}
@@ -477,7 +477,7 @@ export default async function PhilosopherDetailPage({
           {matchups.length > 0 ? (
             <PixelWindow title={t('nav.matchups', locale).toUpperCase()} badge="▶ COMPARE">
               <p
-                className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
+                className="mb-4 text-[14px] leading-[1.6] text-ink-soft"
                 style={{ fontFamily: 'var(--font-editorial)' }}
               >
                 {t('phil.matchups_helper', locale)}
@@ -495,10 +495,10 @@ export default async function PhilosopherDetailPage({
                       }}
                     >
                       <div
-                        className="text-[15px] font-medium text-[#221E18]"
+                        className="text-[15px] font-medium text-ink"
                         style={{ fontFamily: 'var(--font-editorial)' }}
                       >
-                        {p.name} <span style={{ color: '#8C6520', fontFamily: 'var(--font-pixel-display)', fontSize: 10 }}>VS</span> {displayName(m.partner)}
+                        {p.name} <span style={{ color: 'var(--color-acc-deep)', fontFamily: 'var(--font-pixel-display)', fontSize: 10 }}>VS</span> {displayName(m.partner)}
                       </div>
                     </Link>
                   </li>
@@ -511,7 +511,7 @@ export default async function PhilosopherDetailPage({
           {suggestedExercises.length > 0 ? (
             <PixelWindow title={t('phil.section_exercises', locale).toUpperCase()} badge="▶ PRACTICE">
               <p
-                className="mb-4 text-[14px] leading-[1.6] text-[#4A4338]"
+                className="mb-4 text-[14px] leading-[1.6] text-ink-soft"
                 style={{ fontFamily: 'var(--font-editorial)' }}
               >
                 {t('phil.exercises_helper', locale, { name: p.name })}
@@ -529,12 +529,12 @@ export default async function PhilosopherDetailPage({
                       }}
                     >
                       <div
-                        className="text-[17px] font-medium text-[#221E18]"
+                        className="text-[17px] font-medium text-ink"
                         style={{ fontFamily: 'var(--font-editorial)' }}
                       >
                         {ex.name} →
                       </div>
-                      <p className="mt-1 text-[13.5px] leading-[1.55] text-[#4A4338]">
+                      <p className="mt-1 text-[13.5px] leading-[1.55] text-ink-soft">
                         {ex.summary}
                       </p>
                     </Link>

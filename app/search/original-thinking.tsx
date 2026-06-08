@@ -210,7 +210,7 @@ export default async function OriginalThinking() {
         <h2 style={{
           fontFamily: 'var(--font-pixel-display, "Courier New", monospace)',
           fontSize: 22, fontWeight: 400,
-          margin: 0, color: '#221E18', letterSpacing: '0.04em',
+          margin: 0, color: 'var(--color-ink)', letterSpacing: '0.04em',
           textShadow: '3px 3px 0 #6B3E8C', lineHeight: 1.1,
         }}>
           {t('srch2.original_h2', locale).toUpperCase()}
@@ -225,7 +225,7 @@ export default async function OriginalThinking() {
       </div>
       <p style={{
         fontFamily: serif, fontStyle: 'italic',
-        fontSize: 16, color: '#4A4338',
+        fontSize: 16, color: 'var(--color-ink-soft)',
         margin: '0 0 22px', lineHeight: 1.55,
       }}>
         {t('srch2.original_blurb', locale)}
@@ -252,7 +252,7 @@ export default async function OriginalThinking() {
             <li key={`${r.sourceType}:${r.id}`} style={{
               padding: '18px 22px',
               background: '#FFFCF4',
-              border: '4px solid #221E18',
+              border: '4px solid var(--color-ink)',
               boxShadow: '4px 4px 0 0 #6B3E8C',
               borderRadius: 0,
             }}>
@@ -277,7 +277,7 @@ export default async function OriginalThinking() {
                   )}
                 </span>
                 <span style={{
-                  fontFamily: sans, fontSize: 11.5, color: '#8C6520',
+                  fontFamily: sans, fontSize: 11.5, color: 'var(--color-acc-deep)',
                 }}>
                   {new Date(r.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                 </span>
@@ -286,7 +286,7 @@ export default async function OriginalThinking() {
               {r.title && (
                 <div style={{
                   fontFamily: serif, fontSize: 19, fontWeight: 500,
-                  color: '#221E18', marginBottom: 6, lineHeight: 1.3,
+                  color: 'var(--color-ink)', marginBottom: 6, lineHeight: 1.3,
                 }}>
                   {r.title}
                 </div>
@@ -298,7 +298,7 @@ export default async function OriginalThinking() {
               {r.context && (
                 <p style={{
                   fontFamily: serif, fontStyle: 'italic',
-                  fontSize: 14.5, color: '#8C6520',
+                  fontSize: 14.5, color: 'var(--color-acc-deep)',
                   margin: '0 0 10px', lineHeight: 1.5,
                 }}>
                   {r.context}
@@ -306,7 +306,7 @@ export default async function OriginalThinking() {
               )}
 
               <p style={{
-                fontFamily: serif, fontSize: 16, color: '#221E18',
+                fontFamily: serif, fontSize: 16, color: 'var(--color-ink)',
                 lineHeight: 1.6, margin: 0, marginBottom: 12,
                 whiteSpace: 'pre-wrap',
               }}>
@@ -316,7 +316,7 @@ export default async function OriginalThinking() {
               {r.diagnosis && (
                 <div style={{
                   padding: '10px 14px',
-                  background: '#F1EAD8',
+                  background: 'var(--color-cream-2)',
                   borderRadius: 6,
                 }}>
                   <div style={{
@@ -328,7 +328,7 @@ export default async function OriginalThinking() {
                   </div>
                   <div style={{
                     fontFamily: serif, fontStyle: 'italic',
-                    fontSize: 14.5, color: '#4A4338', lineHeight: 1.5,
+                    fontSize: 14.5, color: 'var(--color-ink-soft)', lineHeight: 1.5,
                   }}>
                     {r.diagnosis}
                   </div>
@@ -342,7 +342,7 @@ export default async function OriginalThinking() {
                 }}>
                   {r.kinship.traditions.map(tr => (
                     <span key={tr} style={{
-                      fontFamily: sans, fontSize: 11.5, color: '#8C6520',
+                      fontFamily: sans, fontSize: 11.5, color: 'var(--color-acc-deep)',
                       padding: '3px 10px',
                       background: '#F5EFDC',
                       border: '1px solid #E2D8B6',

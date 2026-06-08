@@ -105,16 +105,16 @@ export function TrajectoryChart({ trajectory, accent }: Props) {
       <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
         <div>
           <p
-            className="text-[14px] leading-[1.55] text-[#4A4338]"
+            className="text-[14px] leading-[1.55] text-ink-soft"
             style={{ fontFamily: "var(--font-editorial)" }}
           >
-            <strong className="text-[#221E18]">{DIM_NAMES[chosenKey]}</strong>{" "}
+            <strong className="text-ink">{DIM_NAMES[chosenKey]}</strong>{" "}
             ({chosenKey}) — the dimension that moved most across your last{" "}
             {trajectory.length} entries.
           </p>
         </div>
         <div
-          className="flex items-center gap-2 text-[10px] tracking-[0.18em] text-[#8C6520]"
+          className="flex items-center gap-2 text-[10px] tracking-[0.18em] text-acc-deep"
           style={{ fontFamily: "var(--font-pixel-display)" }}
         >
           <span>{startVal.toFixed(1)}</span>
@@ -131,7 +131,7 @@ export function TrajectoryChart({ trajectory, accent }: Props) {
         </div>
       </div>
       <div
-        className="overflow-hidden border-2 border-[#221E18] bg-[#FFFCF4] p-2"
+        className="overflow-hidden border-2 border-ink bg-[#FFFCF4] p-2"
         style={{ boxShadow: "3px 3px 0 0 #B8862F" }}
       >
         <svg

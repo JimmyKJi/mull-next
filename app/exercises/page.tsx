@@ -49,7 +49,7 @@ function durationBucket(duration: string): { label: string; color: string } {
   const m = duration.match(/(\d+)/);
   const n = m ? parseInt(m[1], 10) : 10;
   if (n <= 5) return { label: '⚡ Quick', color: '#6B7F4F' };
-  if (n <= 15) return { label: '◐ Medium', color: '#B8862F' };
+  if (n <= 15) return { label: '◐ Medium', color: 'var(--color-acc)' };
   return { label: '◑ Long', color: '#7C5A8C' };
 }
 
@@ -94,7 +94,7 @@ export default async function ExercisesPage() {
         <div style={{
           fontFamily: pixel,
           fontSize: 10,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           letterSpacing: 0.6,
           textTransform: 'uppercase',
           marginBottom: 8,
@@ -110,8 +110,8 @@ export default async function ExercisesPage() {
             display: 'block',
             padding: '24px 26px',
             background: '#F8EBC9',
-            border: '4px solid #221E18',
-            boxShadow: '6px 6px 0 0 #B8862F',
+            border: '4px solid var(--color-ink)',
+            boxShadow: '6px 6px 0 0 var(--color-acc)',
             borderRadius: 0,
             textDecoration: 'none',
             color: 'inherit',
@@ -132,7 +132,7 @@ export default async function ExercisesPage() {
               fontWeight: 500,
               margin: 0,
               letterSpacing: '-0.4px',
-              color: '#221E18',
+              color: 'var(--color-ink)',
               lineHeight: 1.15,
             }}>
               {featuredLocal.name}
@@ -152,7 +152,7 @@ export default async function ExercisesPage() {
             fontFamily: serif,
             fontStyle: 'italic',
             fontSize: 17,
-            color: '#4A4338',
+            color: 'var(--color-ink-soft)',
             margin: '0 0 10px',
             lineHeight: 1.5,
           }}>
@@ -174,7 +174,7 @@ export default async function ExercisesPage() {
             <span style={{
               fontFamily: sans,
               fontSize: 12,
-              color: '#8C6520',
+              color: 'var(--color-acc-deep)',
               opacity: 0.85,
             }}>
               {featuredLocal.tradition}
@@ -182,7 +182,7 @@ export default async function ExercisesPage() {
             <span style={{
               fontFamily: pixel,
               fontSize: 10,
-              color: '#8C6520',
+              color: 'var(--color-acc-deep)',
               letterSpacing: 0.6,
               textTransform: 'uppercase',
             }}>
@@ -239,7 +239,7 @@ export default async function ExercisesPage() {
               fontWeight: 500,
               margin: '0 0 6px',
               letterSpacing: '-0.3px',
-              color: '#221E18',
+              color: 'var(--color-ink)',
             }}>
               {t(`excat.${cat}.label`, locale)}
             </h2>
@@ -247,7 +247,7 @@ export default async function ExercisesPage() {
               fontFamily: serif,
               fontStyle: 'italic',
               fontSize: 14.5,
-              color: '#4A4338',
+              color: 'var(--color-ink-soft)',
               margin: '0 0 18px',
               lineHeight: 1.55,
             }}>
@@ -268,7 +268,7 @@ export default async function ExercisesPage() {
                       display: 'block',
                       padding: '16px 18px',
                       background: '#FFFCF4',
-                      border: '3px solid #221E18',
+                      border: '3px solid var(--color-ink)',
                       boxShadow: `3px 3px 0 0 ${meta.accent}`,
                       borderRadius: 0,
                       textDecoration: 'none',
@@ -288,7 +288,7 @@ export default async function ExercisesPage() {
                           fontFamily: serif,
                           fontSize: 19,
                           fontWeight: 500,
-                          color: '#221E18',
+                          color: 'var(--color-ink)',
                           lineHeight: 1.2,
                         }}>
                           {ex.name}
@@ -310,7 +310,7 @@ export default async function ExercisesPage() {
                         fontFamily: serif,
                         fontStyle: 'italic',
                         fontSize: 14,
-                        color: '#4A4338',
+                        color: 'var(--color-ink-soft)',
                         lineHeight: 1.5,
                       }}>
                         {ex.summary}
@@ -318,7 +318,7 @@ export default async function ExercisesPage() {
                       <span style={{
                         fontFamily: sans,
                         fontSize: 11,
-                        color: '#8C6520',
+                        color: 'var(--color-acc-deep)',
                         opacity: 0.85,
                       }}>
                         {ex.tradition}
@@ -336,13 +336,13 @@ export default async function ExercisesPage() {
         marginTop: 48,
         fontFamily: sans,
         fontSize: 12.5,
-        color: '#8C6520',
+        color: 'var(--color-acc-deep)',
         opacity: 0.75,
         lineHeight: 1.6,
       }}>
         {t('exercises.footer', locale, { email: 'jimmy.kaian.ji@gmail.com' }).split('jimmy.kaian.ji@gmail.com').map((part, i, arr) => (
           <span key={i}>{part}{i < arr.length - 1 && (
-            <a href="mailto:jimmy.kaian.ji@gmail.com" style={{ color: '#8C6520', textDecoration: 'underline', textUnderlineOffset: 3 }}>jimmy.kaian.ji@gmail.com</a>
+            <a href="mailto:jimmy.kaian.ji@gmail.com" style={{ color: 'var(--color-acc-deep)', textDecoration: 'underline', textUnderlineOffset: 3 }}>jimmy.kaian.ji@gmail.com</a>
           )}</span>
         ))}
       </p>

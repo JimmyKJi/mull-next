@@ -51,7 +51,7 @@ export default async function DiaryEntryPage({ params }: { params: Promise<{ id:
       <div className="mb-6 flex items-center justify-between gap-4">
         <Link
           href="/diary"
-          className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"
+          className="text-[13px] text-ink-soft hover:text-ink hover:underline"
         >
           ← {t('nav.all_entries', locale)}
         </Link>
@@ -67,7 +67,7 @@ export default async function DiaryEntryPage({ params }: { params: Promise<{ id:
 
       {entry.title && (
         <h1
-          className="mt-5 text-[28px] font-medium leading-[1.15] text-[#221E18] sm:text-[36px]"
+          className="mt-5 text-[28px] font-medium leading-[1.15] text-ink sm:text-[36px]"
           style={{ fontFamily: 'var(--font-prose)' }}
         >
           {entry.title}
@@ -77,12 +77,12 @@ export default async function DiaryEntryPage({ params }: { params: Promise<{ id:
       <article style={{
         fontFamily: serif,
         fontSize: 19,
-        color: '#221E18',
+        color: 'var(--color-ink)',
         lineHeight: 1.7,
         whiteSpace: 'pre-wrap',
         padding: '24px 28px',
         background: '#FFFCF4',
-        border: '4px solid #221E18',
+        border: '4px solid var(--color-ink)',
         boxShadow: '5px 5px 0 0 #2F5D5C',
         borderRadius: 0,
       }}>
@@ -92,7 +92,7 @@ export default async function DiaryEntryPage({ params }: { params: Promise<{ id:
       <div style={{
         fontFamily: sans,
         fontSize: 12,
-        color: '#8C6520',
+        color: 'var(--color-acc-deep)',
         marginTop: 12,
         opacity: 0.75,
       }}>
@@ -104,15 +104,15 @@ export default async function DiaryEntryPage({ params }: { params: Promise<{ id:
         <div style={{
           marginTop: 32,
           padding: '20px 24px',
-          background: '#F8EDC8',
-          border: '4px solid #221E18',
-          boxShadow: '5px 5px 0 0 #B8862F',
+          background: 'var(--color-acc-soft)',
+          border: '4px solid var(--color-ink)',
+          boxShadow: '5px 5px 0 0 var(--color-acc)',
           borderRadius: 0,
         }}>
           <div style={{
             fontFamily: 'var(--font-pixel-display)',
             fontSize: 11,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             textTransform: 'uppercase',
             letterSpacing: '0.18em',
             marginBottom: 12,
@@ -123,7 +123,7 @@ export default async function DiaryEntryPage({ params }: { params: Promise<{ id:
             fontFamily: serif,
             fontStyle: 'italic',
             fontSize: 17,
-            color: '#221E18',
+            color: 'var(--color-ink)',
             margin: 0,
             lineHeight: 1.6,
           }}>
@@ -146,7 +146,7 @@ export default async function DiaryEntryPage({ params }: { params: Promise<{ id:
             fontFamily: sans,
             fontSize: 11,
             fontWeight: 600,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             textTransform: 'uppercase',
             letterSpacing: '0.16em',
             marginBottom: 10,
@@ -163,7 +163,7 @@ export default async function DiaryEntryPage({ params }: { params: Promise<{ id:
                 <strong style={{ fontVariantNumeric: 'tabular-nums' }}>
                   {s.delta > 0 ? '+' : ''}{s.delta.toFixed(1)}
                 </strong>{' '}
-                <span style={{ color: '#4A4338' }}>{s.name}</span>
+                <span style={{ color: 'var(--color-ink-soft)' }}>{s.name}</span>
               </span>
             ))}
           </div>
@@ -185,7 +185,7 @@ export default async function DiaryEntryPage({ params }: { params: Promise<{ id:
           flexWrap: 'wrap',
           gap: 12,
           paddingTop: 24,
-          borderTop: '2px dashed #D6CDB6',
+          borderTop: '2px dashed var(--color-line)',
         }}
       >
         <Link
@@ -194,10 +194,10 @@ export default async function DiaryEntryPage({ params }: { params: Promise<{ id:
           style={{
             display: 'inline-block',
             padding: '10px 16px',
-            background: '#221E18',
-            color: '#FAF6EC',
-            border: '3px solid #221E18',
-            boxShadow: '3px 3px 0 0 #B8862F',
+            background: 'var(--color-ink)',
+            color: 'var(--color-cream)',
+            border: '3px solid var(--color-ink)',
+            boxShadow: '3px 3px 0 0 var(--color-acc)',
             borderRadius: 0,
             fontFamily: 'var(--font-pixel-display)',
             fontSize: 11,
@@ -217,7 +217,7 @@ export default async function DiaryEntryPage({ params }: { params: Promise<{ id:
             padding: '10px 16px',
             background: '#FFFCF4',
             color: '#2F5D5C',
-            border: '3px solid #221E18',
+            border: '3px solid var(--color-ink)',
             boxShadow: '3px 3px 0 0 #2F5D5C',
             borderRadius: 0,
             fontFamily: 'var(--font-pixel-display)',

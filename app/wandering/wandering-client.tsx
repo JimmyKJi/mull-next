@@ -96,7 +96,7 @@ export default function WanderingClient({
 
   if (responses === null) {
     return (
-      <div className="text-center text-[14px] text-[#8C6520]" style={{ fontFamily: serif }}>
+      <div className="text-center text-[14px] text-acc-deep" style={{ fontFamily: serif }}>
         {t("wndr.loading", locale)}
       </div>
     );
@@ -113,11 +113,11 @@ export default function WanderingClient({
     <div className="space-y-5">
       {/* The question card */}
       <div
-        className="border-[4px] border-[#221E18] p-6"
+        className="border-[4px] border-ink p-6"
         style={{
           background: "#5D5777", // threshold-ish, since wandering is deep
-          color: "#F8EDC8",
-          boxShadow: "5px 5px 0 0 #221E18",
+          color: "var(--color-acc-soft)",
+          boxShadow: "5px 5px 0 0 var(--color-ink)",
         }}
       >
         <div
@@ -132,7 +132,7 @@ export default function WanderingClient({
         </div>
         <h2
           className="mt-3 text-[26px] leading-tight"
-          style={{ fontFamily: serif, color: "#F8EDC8" }}
+          style={{ fontFamily: serif, color: "var(--color-acc-soft)" }}
         >
           {question.prompt}
         </h2>
@@ -183,7 +183,7 @@ export default function WanderingClient({
       </ul>
 
       <p
-        className="text-[13px] italic text-[#8C6520]"
+        className="text-[13px] italic text-acc-deep"
         style={{ fontFamily: serif }}
       >
         {t("wndr.scaffolding_note", locale)}
@@ -216,7 +216,7 @@ function BeatPanel({
     return (
       <div
         className="border-l-[5px] border-[#5D5777] bg-[#FFFCF4] px-4 py-3"
-        style={{ boxShadow: "3px 3px 0 0 #8C6520" }}
+        style={{ boxShadow: "3px 3px 0 0 var(--color-acc-deep)" }}
       >
         <div className="flex items-baseline justify-between gap-2">
           <span
@@ -228,14 +228,14 @@ function BeatPanel({
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="text-[10px] tracking-[0.18em] text-[#8C6520] hover:text-[#221E18]"
+            className="text-[10px] tracking-[0.18em] text-acc-deep hover:text-ink"
             style={{ fontFamily: pixel, textTransform: "uppercase" }}
           >
             {t("wndr.edit", locale)}
           </button>
         </div>
         <p
-          className="mt-2 text-[14.5px] leading-[1.55] text-[#221E18]"
+          className="mt-2 text-[14.5px] leading-[1.55] text-ink"
           style={{ fontFamily: serif }}
         >
           {existing.text}
@@ -247,7 +247,7 @@ function BeatPanel({
   return (
     <div
       className="border-l-[5px] border-[#5D5777] bg-[#FFFCF4] p-4"
-      style={{ boxShadow: "3px 3px 0 0 #8C6520" }}
+      style={{ boxShadow: "3px 3px 0 0 var(--color-acc-deep)" }}
     >
       <div className="flex items-baseline justify-between gap-2">
         <span
@@ -263,7 +263,7 @@ function BeatPanel({
               setText(existing.text);
               setOpen(false);
             }}
-            className="text-[10px] tracking-[0.18em] text-[#8C6520]"
+            className="text-[10px] tracking-[0.18em] text-acc-deep"
             style={{ fontFamily: pixel, textTransform: "uppercase" }}
           >
             {t("wndr.cancel", locale)}
@@ -289,10 +289,10 @@ function BeatPanel({
           width: "100%",
           padding: "10px 12px",
           background: "#FBF6E8",
-          border: "2px solid #221E18",
+          border: "2px solid var(--color-ink)",
           fontFamily: serif,
           fontSize: 15,
-          color: "#221E18",
+          color: "var(--color-ink)",
           resize: "vertical",
           minHeight: 100,
           borderRadius: 0,
@@ -305,11 +305,11 @@ function BeatPanel({
           setOpen(false);
         }}
         disabled={!text.trim()}
-        className="mt-3 border-[3px] border-[#221E18] px-3 py-2 text-[11px] tracking-[0.18em] text-[#1A1820]"
+        className="mt-3 border-[3px] border-ink px-3 py-2 text-[11px] tracking-[0.18em] text-[#1A1820]"
         style={{
           fontFamily: pixel,
           textTransform: "uppercase",
-          background: text.trim() ? "#F8C75E" : "#D6CDB6",
+          background: text.trim() ? "#F8C75E" : "var(--color-line)",
           boxShadow: text.trim() ? "3px 3px 0 0 #5D5777" : "none",
           cursor: text.trim() ? "pointer" : "default",
           opacity: text.trim() ? 1 : 0.5,
@@ -399,7 +399,7 @@ function RosterCard({
       href={`/philosopher/${philosopherSlug(p.name)}`}
       className="pixel-press flex items-start gap-3 border-2 px-3 py-2.5 transition-all hover:translate-x-[-1px] hover:translate-y-[-1px]"
       style={{
-        borderColor: "#221E18",
+        borderColor: "var(--color-ink)",
         background: "#FFFCF4",
         boxShadow: `3px 3px 0 0 ${color.deep}`,
         textDecoration: "none",
@@ -426,16 +426,16 @@ function RosterCard({
           {chip}
         </span>
         <div
-          className="mt-1 text-[14.5px] font-medium leading-tight text-[#221E18]"
+          className="mt-1 text-[14.5px] font-medium leading-tight text-ink"
           style={{ fontFamily: "var(--font-prose)" }}
         >
           {p.name}
         </div>
-        <div className="mt-0.5 text-[10.5px] tracking-wide text-[#8C6520]">
+        <div className="mt-0.5 text-[10.5px] tracking-wide text-acc-deep">
           {p.dates}
         </div>
         <p
-          className="mt-1 text-[12px] italic leading-snug text-[#4A4338]"
+          className="mt-1 text-[12px] italic leading-snug text-ink-soft"
           style={{
             fontFamily: serif,
             display: "-webkit-box",
@@ -455,14 +455,14 @@ function NoVectorNudge({ locale }: { locale: Locale }) {
   return (
     <div
       className="border-2 border-dashed px-3 py-2.5"
-      style={{ borderColor: "#B8862F", background: "#FBF6E8" }}
+      style={{ borderColor: "var(--color-acc)", background: "#FBF6E8" }}
     >
       <p className="text-[13px] italic leading-[1.5] text-[#5C4528]" style={{ fontFamily: serif }}>
         {t("wndr.no_vector_nudge", locale)}
       </p>
       <Link
         href="/quiz/journey"
-        className="mt-2 inline-block text-[10px] tracking-[0.18em] text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-2 hover:text-[#221E18]"
+        className="mt-2 inline-block text-[10px] tracking-[0.18em] text-acc-deep underline decoration-acc/40 underline-offset-2 hover:text-ink"
         style={{ fontFamily: pixel, textTransform: "uppercase" }}
       >
         {t("wndr.no_vector_cta", locale)}

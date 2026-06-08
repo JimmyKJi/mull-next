@@ -37,7 +37,7 @@ export default async function NewPvpChallengePage() {
           style={{
             fontFamily: pixel,
             fontSize: 11,
-            color: "#4A4338",
+            color: "var(--color-ink-soft)",
             textDecoration: "none",
             letterSpacing: 0.4,
             textTransform: "uppercase",
@@ -50,7 +50,7 @@ export default async function NewPvpChallengePage() {
         style={{
           fontFamily: pixel,
           fontSize: 22,
-          color: "#221E18",
+          color: "var(--color-ink)",
           letterSpacing: "0.04em",
           textTransform: "uppercase",
           textShadow: "3px 3px 0 #2F5D5C",

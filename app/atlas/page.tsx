@@ -40,10 +40,10 @@ export default async function AtlasPage() {
         }
       />
       <AtlasView locale={locale} />
-      <p className="mt-12 text-center text-[13px] text-[#8C6520]">
+      <p className="mt-12 text-center text-[13px] text-acc-deep">
         <Link
           href="/"
-          className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           ← {t("atl.back_to_mull", locale)}
         </Link>

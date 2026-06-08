@@ -24,9 +24,9 @@ export default function LogoutButton({ locale = 'en' }: { locale?: Locale }) {
       style={{
         padding: '6px 14px',
         background: 'transparent',
-        border: '2px solid #221E18',
+        border: '2px solid var(--color-ink)',
         borderRadius: 0,
-        color: '#4A4338',
+        color: 'var(--color-ink-soft)',
         fontFamily: "var(--font-pixel-display, 'Courier New', monospace)",
         fontSize: 11,
         letterSpacing: 0.4,

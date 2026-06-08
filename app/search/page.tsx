@@ -33,7 +33,7 @@ export default async function SearchPage({
       <div className="mb-6 flex items-center justify-end gap-4">
         <Link
           href="/account"
-          className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"
+          className="text-[13px] text-ink-soft hover:text-ink hover:underline"
         >
           {t('nav.account_arrow', locale)}
         </Link>
@@ -56,22 +56,22 @@ export default async function SearchPage({
 
       <section className="mt-12">
         <div
-          className="flex items-center gap-3 text-[10px] tracking-[0.22em] text-[#8C6520]"
+          className="flex items-center gap-3 text-[10px] tracking-[0.22em] text-acc-deep"
           style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
-          <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
+          <span aria-hidden className="inline-block h-2 w-2 bg-acc" />
           ▶ FIND SOMEONE
         </div>
         <h2
-          className="mt-4 text-[22px] leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[28px]"
+          className="mt-4 text-[22px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[28px]"
           style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
-          <span style={{ textShadow: '3px 3px 0 #B8862F' }}>
+          <span style={{ textShadow: '3px 3px 0 var(--color-acc)' }}>
             {t('search.find_someone', locale).toUpperCase()}
           </span>
         </h2>
         <p
-          className="mt-4 text-[15.5px] italic leading-[1.55] text-[#4A4338]"
+          className="mt-4 text-[15.5px] italic leading-[1.55] text-ink-soft"
           style={{ fontFamily: 'var(--font-prose)' }}
         >
           {t('search.subtitle', locale)}
@@ -87,10 +87,10 @@ export default async function SearchPage({
       <div className="mt-16 flex justify-center">
         <Link
           href="/account/profile"
-          className="pixel-press inline-block border-[3px] border-[#221E18] bg-[#F8EDC8] px-4 py-2.5 text-[11px] tracking-[0.08em] text-[#221E18] no-underline"
+          className="pixel-press inline-block border-[3px] border-ink bg-acc-soft px-4 py-2.5 text-[11px] tracking-[0.08em] text-ink no-underline"
           style={{
             fontFamily: 'var(--font-pixel-display)',
-            boxShadow: '3px 3px 0 0 #B8862F',
+            boxShadow: '3px 3px 0 0 var(--color-acc)',
             textTransform: 'uppercase',
             transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
           }}

@@ -78,7 +78,7 @@ export default function PilgrimageDayClient({ day, locale }: Props) {
 
   if (state === "loading") {
     return (
-      <div className="text-center text-[14px] text-[#8C6520]" style={{ fontFamily: serif }}>
+      <div className="text-center text-[14px] text-acc-deep" style={{ fontFamily: serif }}>
         {t("pilgrimage.loading", locale)}
       </div>
     );
@@ -87,24 +87,24 @@ export default function PilgrimageDayClient({ day, locale }: Props) {
   if (state === null) {
     return (
       <div
-        className="border-[3px] border-[#221E18] bg-[#FFFCF4] p-6"
-        style={{ boxShadow: "4px 4px 0 0 #B8862F" }}
+        className="border-[3px] border-ink bg-[#FFFCF4] p-6"
+        style={{ boxShadow: "4px 4px 0 0 var(--color-acc)" }}
       >
         <div
-          className="text-[10px] tracking-[0.22em] text-[#8C6520]"
+          className="text-[10px] tracking-[0.22em] text-acc-deep"
           style={{ fontFamily: pixel }}
         >
           {t("pilgrimage.not_enrolled", locale)}
         </div>
         <p
-          className="mt-3 text-[15px] leading-[1.6] text-[#221E18]"
+          className="mt-3 text-[15px] leading-[1.6] text-ink"
           style={{ fontFamily: serif }}
         >
           {t("pilgrimage.not_enrolled_body", locale)}
         </p>
         <Link
           href="/pilgrimage"
-          className="mt-4 inline-block border-[3px] border-[#221E18] bg-[#F8C75E] px-4 py-2 text-[11px] tracking-[0.18em] text-[#1A1820] hover:bg-[#B8862F]"
+          className="mt-4 inline-block border-[3px] border-ink bg-[#F8C75E] px-4 py-2 text-[11px] tracking-[0.18em] text-[#1A1820] hover:bg-acc"
           style={{
             fontFamily: pixel,
             textTransform: "uppercase",
@@ -119,7 +119,7 @@ export default function PilgrimageDayClient({ day, locale }: Props) {
 
   if (!arc || !dayData) {
     return (
-      <div className="text-[14px] text-[#8C6520]" style={{ fontFamily: serif }}>
+      <div className="text-[14px] text-acc-deep" style={{ fontFamily: serif }}>
         {t("pilgrimage.day_not_found", locale)}
       </div>
     );
@@ -171,7 +171,7 @@ export default function PilgrimageDayClient({ day, locale }: Props) {
       <article
         className="border-[4px] bg-[#FFFCF4] p-6"
         style={{
-          borderColor: "#221E18",
+          borderColor: "var(--color-ink)",
           boxShadow: `5px 5px 0 0 ${color.deep}`,
         }}
       >
@@ -186,19 +186,19 @@ export default function PilgrimageDayClient({ day, locale }: Props) {
           {t("pilgrimage.the_arc", locale, { arch: archName })}
         </div>
         <h2
-          className="mt-2 text-[28px] leading-tight text-[#221E18]"
+          className="mt-2 text-[28px] leading-tight text-ink"
           style={{ fontFamily: serif }}
         >
           {dayData.title}
         </h2>
         <p
-          className="mt-4 text-[16px] leading-[1.65] text-[#221E18]"
+          className="mt-4 text-[16px] leading-[1.65] text-ink"
           style={{ fontFamily: serif }}
         >
           {dayData.framing}
         </p>
         <p
-          className="mt-5 border-l-4 px-4 py-3 text-[18px] leading-[1.55] text-[#221E18]"
+          className="mt-5 border-l-4 px-4 py-3 text-[18px] leading-[1.55] text-ink"
           style={{
             fontFamily: serif,
             fontWeight: 500,
@@ -209,7 +209,7 @@ export default function PilgrimageDayClient({ day, locale }: Props) {
           {dayData.prompt}
         </p>
         <p
-          className="mt-3 text-[13.5px] italic leading-[1.55] text-[#8C6520]"
+          className="mt-3 text-[13.5px] italic leading-[1.55] text-acc-deep"
           style={{ fontFamily: serif }}
         >
           {dayData.expect}
@@ -219,12 +219,12 @@ export default function PilgrimageDayClient({ day, locale }: Props) {
       {/* Submission */}
       {!submitted ? (
         <div
-          className="border-[3px] border-[#221E18] bg-[#FFFCF4] p-5"
-          style={{ boxShadow: "3px 3px 0 0 #B8862F" }}
+          className="border-[3px] border-ink bg-[#FFFCF4] p-5"
+          style={{ boxShadow: "3px 3px 0 0 var(--color-acc)" }}
         >
           <label
             htmlFor="pilgrim-response"
-            className="text-[10px] tracking-[0.22em] text-[#8C6520]"
+            className="text-[10px] tracking-[0.22em] text-acc-deep"
             style={{ fontFamily: pixel, textTransform: "uppercase" }}
           >
             {t("pilgrimage.your_response", locale)}
@@ -240,11 +240,11 @@ export default function PilgrimageDayClient({ day, locale }: Props) {
               width: "100%",
               padding: "12px 14px",
               background: "#FBF6E8",
-              border: "2px solid #221E18",
+              border: "2px solid var(--color-ink)",
               fontFamily: serif,
               fontSize: 15.5,
               lineHeight: 1.6,
-              color: "#221E18",
+              color: "var(--color-ink)",
               resize: "vertical",
               minHeight: 180,
               borderRadius: 0,
@@ -254,11 +254,11 @@ export default function PilgrimageDayClient({ day, locale }: Props) {
             type="button"
             onClick={submit}
             disabled={!text.trim()}
-            className="mt-4 w-full border-[3px] border-[#221E18] px-4 py-3 text-[12px] tracking-[0.18em] text-[#1A1820] hover:opacity-90"
+            className="mt-4 w-full border-[3px] border-ink px-4 py-3 text-[12px] tracking-[0.18em] text-[#1A1820] hover:opacity-90"
             style={{
               fontFamily: pixel,
               textTransform: "uppercase",
-              background: text.trim() ? "#F8C75E" : "#D6CDB6",
+              background: text.trim() ? "#F8C75E" : "var(--color-line)",
               boxShadow: text.trim() ? "4px 4px 0 0 #2F5D5C" : "none",
               cursor: text.trim() ? "pointer" : "default",
             }}
@@ -286,7 +286,7 @@ export default function PilgrimageDayClient({ day, locale }: Props) {
             {t("pilgrimage.day_complete", locale, { n: day })}
           </div>
           <p
-            className="mt-3 text-[15px] leading-[1.6] text-[#221E18]"
+            className="mt-3 text-[15px] leading-[1.6] text-ink"
             style={{ fontFamily: serif }}
           >
             {t("pilgrimage.saved_note", locale, { n: Math.min(30, day + 1) })}
@@ -295,7 +295,7 @@ export default function PilgrimageDayClient({ day, locale }: Props) {
             {day < 30 && (
               <Link
                 href={`/pilgrimage/day/${day + 1}`}
-                className="border-[3px] border-[#221E18] bg-[#F8C75E] px-4 py-2 text-[11px] tracking-[0.18em] text-[#1A1820] hover:bg-[#B8862F]"
+                className="border-[3px] border-ink bg-[#F8C75E] px-4 py-2 text-[11px] tracking-[0.18em] text-[#1A1820] hover:bg-acc"
                 style={{
                   fontFamily: pixel,
                   textTransform: "uppercase",
@@ -307,7 +307,7 @@ export default function PilgrimageDayClient({ day, locale }: Props) {
             )}
             <Link
               href="/pilgrimage"
-              className="border-[3px] border-[#221E18] bg-[#FFFCF4] px-4 py-2 text-[11px] tracking-[0.18em] text-[#221E18] hover:bg-[#F8EDC8]"
+              className="border-[3px] border-ink bg-[#FFFCF4] px-4 py-2 text-[11px] tracking-[0.18em] text-ink hover:bg-acc-soft"
               style={{ fontFamily: pixel, textTransform: "uppercase" }}
             >
               {t("pilgrimage.back_progress", locale)}
@@ -315,7 +315,7 @@ export default function PilgrimageDayClient({ day, locale }: Props) {
           </div>
           {done && (
             <p
-              className="mt-4 text-[13px] italic text-[#8C6520]"
+              className="mt-4 text-[13px] italic text-acc-deep"
               style={{ fontFamily: serif }}
             >
               {t("pilgrimage.edit_note", locale)}
@@ -329,7 +329,7 @@ export default function PilgrimageDayClient({ day, locale }: Props) {
         {day > 1 ? (
           <Link
             href={`/pilgrimage/day/${day - 1}`}
-            className="text-[#8C6520] hover:text-[#221E18]"
+            className="text-acc-deep hover:text-ink"
             style={{ textTransform: "uppercase" }}
           >
             {t("pilgrimage.prev_day_nav", locale, { n: day - 1 })}
@@ -340,7 +340,7 @@ export default function PilgrimageDayClient({ day, locale }: Props) {
         {day < 30 ? (
           <Link
             href={`/pilgrimage/day/${day + 1}`}
-            className="text-[#8C6520] hover:text-[#221E18]"
+            className="text-acc-deep hover:text-ink"
             style={{ textTransform: "uppercase" }}
           >
             {t("pilgrimage.next_day_nav", locale, { n: day + 1 })}

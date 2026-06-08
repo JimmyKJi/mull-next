@@ -48,8 +48,8 @@ export default function DiaryEntryActions({ entryId, locale = 'en' }: { entryId:
     }}>
       <Link href="/diary" style={{
         padding: '10px 20px',
-        background: '#221E18',
-        color: '#FAF6EC',
+        background: 'var(--color-ink)',
+        color: 'var(--color-cream)',
         borderRadius: 6,
         textDecoration: 'none',
         fontFamily: sans,
@@ -60,8 +60,8 @@ export default function DiaryEntryActions({ entryId, locale = 'en' }: { entryId:
       </Link>
       <Link href="/account" style={{
         padding: '10px 20px',
-        border: '1px solid #221E18',
-        color: '#221E18',
+        border: '1px solid var(--color-ink)',
+        color: 'var(--color-ink)',
         borderRadius: 6,
         textDecoration: 'none',
         fontFamily: sans,

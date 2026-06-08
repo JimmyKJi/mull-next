@@ -56,9 +56,9 @@ export default function LanguageSwitcher({ initial = 'en' }: { initial?: Locale 
           // arrow sits at the right.
           padding: '7px 8px 7px 31px',
           background: '#FFFCF4',
-          border: '2px solid #221E18',
+          border: '2px solid var(--color-ink)',
           borderRadius: 0,
-          color: '#221E18',
+          color: 'var(--color-ink)',
           cursor: 'pointer',
         }}
       >

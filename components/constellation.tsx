@@ -149,7 +149,7 @@ export function Constellation({
               cx={userPos[0]}
               cy={userPos[1]}
               r={32}
-              fill="#8C6520"
+              style={{ fill: "var(--color-acc-deep)" }}
               opacity={0.12}
               className="mull-constellation-pulse"
             />
@@ -159,7 +159,7 @@ export function Constellation({
               cy={userPos[1]}
               r={14}
               fill="none"
-              stroke="#8C6520"
+              style={{ stroke: "var(--color-acc-deep)" }}
               strokeWidth={1.5}
               opacity={0.5}
             />
@@ -168,7 +168,7 @@ export function Constellation({
               cx={userPos[0]}
               cy={userPos[1]}
               r={6}
-              fill="#221E18"
+              style={{ fill: "var(--color-ink)" }}
             >
               <title>{t("cnst.you_sit_here", locale)}</title>
             </circle>
@@ -212,7 +212,7 @@ export function Constellation({
 // Quiet axis labels for the interactive variant. Edges only, deeply
 // tinted so they don't compete with the points.
 function AxisLabels({ locale }: { locale: Locale }) {
-  const c = "#8C6520";
+  const c = "var(--color-acc-deep)";
   const o = 0.45;
   const fz = 11;
   return (
@@ -221,8 +221,7 @@ function AxisLabels({ locale }: { locale: Locale }) {
       fontSize={fz}
       fontWeight={500}
       letterSpacing="0.18em"
-      style={{ textTransform: "uppercase" }}
-      fill={c}
+      style={{ textTransform: "uppercase", fill: c }}
       opacity={o}
     >
       {/* X axis ends — sit ~24 from the edge so they don't crowd */}
@@ -239,7 +238,7 @@ function AxisLabels({ locale }: { locale: Locale }) {
         y1={42}
         x2={W / 2}
         y2={H - 30}
-        stroke={c}
+        style={{ stroke: c }}
         strokeWidth={0.5}
         opacity={0.2}
         strokeDasharray="2 6"
@@ -249,7 +248,7 @@ function AxisLabels({ locale }: { locale: Locale }) {
         y1={H / 2}
         x2={W - 62}
         y2={H / 2}
-        stroke={c}
+        style={{ stroke: c }}
         strokeWidth={0.5}
         opacity={0.2}
         strokeDasharray="2 6"

@@ -50,7 +50,7 @@ function PrivacyBodyEn() {
             experience, the experience is the bug — please email me at{' '}
             <a
               href="mailto:jimmy.kaian.ji@gmail.com"
-              className="not-italic text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+              className="not-italic text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
             >
               jimmy.kaian.ji@gmail.com
             </a>
@@ -118,7 +118,7 @@ function PrivacyBodyEn() {
               on the{' '}
               <Link
                 href="/methodology"
-                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
               >
                 methodology page
               </Link>
@@ -168,12 +168,12 @@ function PrivacyBodyEn() {
               your dilemma responses — only you see them. The{' '}
               <Link
                 href="/account"
-                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
               >
                 public profile settings
               </Link>{' '}
               let you opt in to making any combination of these visible at{' '}
-              <code className="rounded border border-[#D6CDB6] bg-[#F5EFDC] px-1.5 py-0.5 text-[12.5px]">
+              <code className="rounded border border-line bg-[#F5EFDC] px-1.5 py-0.5 text-[12.5px]">
                 mull.world/u/&lt;handle&gt;
               </code>
               . Default is everything off; you choose individually what to
@@ -205,7 +205,7 @@ function PrivacyBodyEn() {
               of these off in{' '}
               <Link
                 href="/account"
-                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
               >
                 account settings
               </Link>
@@ -224,7 +224,7 @@ function PrivacyBodyEn() {
               JSON file from{' '}
               <Link
                 href="/account"
-                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
               >
                 account settings
               </Link>
@@ -259,7 +259,7 @@ function PrivacyBodyEn() {
               <strong>Contact.</strong> Email{' '}
               <a
                 href="mailto:jimmy.kaian.ji@gmail.com"
-                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
               >
                 jimmy.kaian.ji@gmail.com
               </a>
@@ -269,11 +269,11 @@ function PrivacyBodyEn() {
         </PixelWindow>
       </div>
 
-      <p className="mt-12 text-center text-[13px] text-[#8C6520]">
+      <p className="mt-12 text-center text-[13px] text-acc-deep">
         Last updated: {LAST_UPDATED}.{' '}
         <Link
           href="/"
-          className="ml-2 underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          className="ml-2 underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           ← Back to Mull
         </Link>
@@ -299,7 +299,7 @@ function PrivacyBodyZh() {
             用大白话说清楚。如果下面的任何内容与你实际体验到的相矛盾，那么以实际体验为准、文字才是漏洞——请发邮件给我：{' '}
             <a
               href="mailto:jimmy.kaian.ji@gmail.com"
-              className="not-italic text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+              className="not-italic text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
             >
               jimmy.kaian.ji@gmail.com
             </a>
@@ -347,7 +347,7 @@ function PrivacyBodyZh() {
               完整的技术细节——确切的提示词、确切的数据流向——都在{' '}
               <Link
                 href="/methodology"
-                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
               >
                 方法论页面
               </Link>
@@ -387,12 +387,12 @@ function PrivacyBodyZh() {
               默认情况下，你的账户是私密的。你的原型、你的地图、你的困境回应——只有你自己能看到。通过{' '}
               <Link
                 href="/account"
-                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
               >
                 公开资料设置
               </Link>
               ，你可以选择把这些内容的任意组合，公开在{' '}
-              <code className="rounded border border-[#D6CDB6] bg-[#F5EFDC] px-1.5 py-0.5 text-[12.5px]">
+              <code className="rounded border border-line bg-[#F5EFDC] px-1.5 py-0.5 text-[12.5px]">
                 mull.world/u/&lt;handle&gt;
               </code>
               。默认是全部关闭；你可以逐项选择要分享什么。
@@ -417,7 +417,7 @@ function PrivacyBodyZh() {
               此外，在你首次注册时还会有一封欢迎邮件。要关闭其中任何一项，可前往{' '}
               <Link
                 href="/account"
-                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
               >
                 账户设置
               </Link>
@@ -435,7 +435,7 @@ function PrivacyBodyZh() {
               <strong>下载我们持有的关于你的全部数据</strong>，导出为单个 JSON 文件，就在{' '}
               <Link
                 href="/account"
-                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
               >
                 账户设置
               </Link>
@@ -462,7 +462,7 @@ function PrivacyBodyZh() {
               <strong>联系。</strong>发邮件至{' '}
               <a
                 href="mailto:jimmy.kaian.ji@gmail.com"
-                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
               >
                 jimmy.kaian.ji@gmail.com
               </a>
@@ -472,11 +472,11 @@ function PrivacyBodyZh() {
         </PixelWindow>
       </div>
 
-      <p className="mt-12 text-center text-[13px] text-[#8C6520]">
+      <p className="mt-12 text-center text-[13px] text-acc-deep">
         最近更新：{LAST_UPDATED_ZH}。{' '}
         <Link
           href="/"
-          className="ml-2 underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          className="ml-2 underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           ← 返回 Mull
         </Link>
@@ -495,7 +495,7 @@ function Prose({
   return (
     <div
       className={
-        'space-y-4 text-[15.5px] leading-[1.65] text-[#221E18] [&_strong]:text-[#221E18] ' +
+        'space-y-4 text-[15.5px] leading-[1.65] text-ink [&_strong]:text-ink ' +
         (className ?? '')
       }
       style={{ fontFamily: 'var(--font-prose)' }}
@@ -508,8 +508,8 @@ function Prose({
 function ProseLi({ children }: { children: React.ReactNode }) {
   return (
     <li
-      className="border-l-4 px-4 py-2 text-[14.5px] leading-[1.6] text-[#221E18]"
-      style={{ borderColor: '#B8862F', background: '#FFFCF4', fontFamily: 'var(--font-prose)' }}
+      className="border-l-4 px-4 py-2 text-[14.5px] leading-[1.6] text-ink"
+      style={{ borderColor: 'var(--color-acc)', background: '#FFFCF4', fontFamily: 'var(--font-prose)' }}
     >
       {children}
     </li>

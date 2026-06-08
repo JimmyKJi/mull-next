@@ -98,10 +98,10 @@ export default function ProfileForm({ initial, userEmail, locale = 'en' }: { ini
     fontFamily: sans,
     fontSize: 16,  // ≥16 prevents iOS Safari focus-zoom
     padding: '11px 14px',
-    border: '1px solid #D6CDB6',
+    border: '1px solid var(--color-line)',
     borderRadius: 8,
     background: '#FFFCF4',
-    color: '#221E18',
+    color: 'var(--color-ink)',
     outline: 'none',
     width: '100%',
     boxSizing: 'border-box',
@@ -111,7 +111,7 @@ export default function ProfileForm({ initial, userEmail, locale = 'en' }: { ini
     fontFamily: sans,
     fontSize: 11,
     fontWeight: 600,
-    color: '#8C6520',
+    color: 'var(--color-acc-deep)',
     textTransform: 'uppercase',
     letterSpacing: '0.16em',
     display: 'block',
@@ -123,7 +123,7 @@ export default function ProfileForm({ initial, userEmail, locale = 'en' }: { ini
       <div>
         <label htmlFor="handle" style={labelStyle}>{t('profile.handle_label', locale)}</label>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontFamily: serif, fontSize: 18, color: '#8C6520' }}>mull.world/u/</span>
+          <span style={{ fontFamily: serif, fontSize: 18, color: 'var(--color-acc-deep)' }}>mull.world/u/</span>
           <input
             id="handle"
             type="text"
@@ -170,7 +170,7 @@ export default function ProfileForm({ initial, userEmail, locale = 'en' }: { ini
           rows={3}
           style={{ ...inputStyle, resize: 'vertical', minHeight: 80, fontFamily: serif, fontSize: 16, lineHeight: 1.5 }}
         />
-        <div style={{ fontFamily: sans, fontSize: 11, color: '#8C6520', marginTop: 4, opacity: 0.75 }}>
+        <div style={{ fontFamily: sans, fontSize: 11, color: 'var(--color-acc-deep)', marginTop: 4, opacity: 0.75 }}>
           {bio.length}/280
         </div>
       </div>
@@ -195,7 +195,7 @@ export default function ProfileForm({ initial, userEmail, locale = 'en' }: { ini
         <p style={{
           fontFamily: sans,
           fontSize: 12,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           margin: '8px 0 0',
           opacity: 0.85,
           lineHeight: 1.55,
@@ -207,14 +207,14 @@ export default function ProfileForm({ initial, userEmail, locale = 'en' }: { ini
       <div style={{
         padding: '14px 16px',
         background: '#F5EFDC',
-        borderLeft: '3px solid #B8862F',
+        borderLeft: '3px solid var(--color-acc)',
         borderRadius: 6,
         fontFamily: sans,
         fontSize: 13,
-        color: '#4A4338',
+        color: 'var(--color-ink-soft)',
         lineHeight: 1.55,
       }}>
-        <strong style={{ color: '#221E18' }}>{t('profile.never_visible', locale)}</strong> {t('profile.never_visible_body', locale, { email: userEmail })}
+        <strong style={{ color: 'var(--color-ink)' }}>{t('profile.never_visible', locale)}</strong> {t('profile.never_visible_body', locale, { email: userEmail })}
       </div>
 
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
@@ -226,8 +226,8 @@ export default function ProfileForm({ initial, userEmail, locale = 'en' }: { ini
             fontSize: 14.5,
             fontWeight: 500,
             padding: '12px 24px',
-            background: handleValid ? '#221E18' : '#A39880',
-            color: '#FAF6EC',
+            background: handleValid ? 'var(--color-ink)' : '#A39880',
+            color: 'var(--color-cream)',
             border: 'none',
             borderRadius: 8,
             cursor: handleValid && !submitting ? 'pointer' : 'not-allowed',
@@ -310,19 +310,19 @@ function Checkbox({ label, checked, onChange }: { label: string; checked: boolea
       gap: 10,
       padding: '8px 12px',
       background: checked ? '#F5EFDC' : 'transparent',
-      border: '1px solid ' + (checked ? '#D6CDB6' : '#EBE3CA'),
+      border: '1px solid ' + (checked ? 'var(--color-line)' : '#EBE3CA'),
       borderRadius: 6,
       cursor: 'pointer',
       fontFamily: sans,
       fontSize: 14,
-      color: '#221E18',
+      color: 'var(--color-ink)',
       transition: 'background 0.12s ease',
     }}>
       <input
         type="checkbox"
         checked={checked}
         onChange={e => onChange(e.target.checked)}
-        style={{ accentColor: '#B8862F' }}
+        style={{ accentColor: 'var(--color-acc)' }}
       />
       {label}
     </label>

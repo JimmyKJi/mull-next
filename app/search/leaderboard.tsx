@@ -56,7 +56,7 @@ export default async function Leaderboard({ locale = 'en' as Locale }: { locale?
       <section style={sectionStyle}>
         <h2 style={headingStyle}>{t('leaderboard.title', locale)}</h2>
         <p style={{
-          fontFamily: sans, fontSize: 14, color: '#8C6520',
+          fontFamily: sans, fontSize: 14, color: 'var(--color-acc-deep)',
           fontStyle: 'italic', margin: 0,
         }}>
           {t('leaderboard.unavailable', locale)}
@@ -76,7 +76,7 @@ export default async function Leaderboard({ locale = 'en' as Locale }: { locale?
         <h2 style={headingStyle}>{t('leaderboard.title', locale)}</h2>
         <span style={{
           fontFamily: sans, fontSize: 11, fontWeight: 600,
-          color: '#8C6520', textTransform: 'uppercase',
+          color: 'var(--color-acc-deep)', textTransform: 'uppercase',
           letterSpacing: '0.16em',
         }}>
           {t('leaderboard.eyebrow_activity', locale)}
@@ -84,7 +84,7 @@ export default async function Leaderboard({ locale = 'en' as Locale }: { locale?
       </div>
       <p style={{
         fontFamily: serif, fontStyle: 'italic',
-        fontSize: 16, color: '#4A4338',
+        fontSize: 16, color: 'var(--color-ink-soft)',
         margin: '0 0 18px', lineHeight: 1.55,
       }}>
         {t('leaderboard.subtitle', locale)}
@@ -94,7 +94,7 @@ export default async function Leaderboard({ locale = 'en' as Locale }: { locale?
         <div style={{
           padding: '20px 18px',
           background: '#FFFCF4',
-          border: '3px dashed #B8862F',
+          border: '3px dashed var(--color-acc)',
           borderRadius: 0,
         }}>
           <EmptyStateSprite
@@ -124,13 +124,13 @@ export default async function Leaderboard({ locale = 'en' as Locale }: { locale?
                     alignItems: 'center',
                     gap: 14,
                     padding: '12px 16px',
-                    background: rank <= 3 ? '#F8EDC8' : '#FFFCF4',
-                    border: '3px solid #221E18',
+                    background: rank <= 3 ? 'var(--color-acc-soft)' : '#FFFCF4',
+                    border: '3px solid var(--color-ink)',
                     boxShadow: rank === 1
-                      ? '3px 3px 0 0 #B8862F'
+                      ? '3px 3px 0 0 var(--color-acc)'
                       : rank <= 3
-                        ? '3px 3px 0 0 #8C6520'
-                        : '3px 3px 0 0 #D6CDB6',
+                        ? '3px 3px 0 0 var(--color-acc-deep)'
+                        : '3px 3px 0 0 var(--color-line)',
                     borderRadius: 0,
                     textDecoration: 'none',
                     color: 'inherit',
@@ -142,7 +142,7 @@ export default async function Leaderboard({ locale = 'en' as Locale }: { locale?
                     fontFamily: serif,
                     fontSize: 20,
                     fontWeight: 500,
-                    color: rank === 1 ? '#B8862F' : rank <= 3 ? '#8C6520' : '#A39880',
+                    color: rank === 1 ? 'var(--color-acc)' : rank <= 3 ? 'var(--color-acc-deep)' : '#A39880',
                     fontVariantNumeric: 'tabular-nums',
                     minWidth: 28,
                     textAlign: 'right',
@@ -170,7 +170,7 @@ export default async function Leaderboard({ locale = 'en' as Locale }: { locale?
                     <span style={{
                       display: 'block',
                       fontFamily: serif, fontSize: 17, fontWeight: 500,
-                      color: '#221E18', lineHeight: 1.25,
+                      color: 'var(--color-ink)', lineHeight: 1.25,
                       overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                     }}>
                       {showName}
@@ -178,7 +178,7 @@ export default async function Leaderboard({ locale = 'en' as Locale }: { locale?
                     <span style={{
                       display: 'block',
                       fontFamily: sans, fontSize: 12,
-                      color: '#8C6520', letterSpacing: 0.2,
+                      color: 'var(--color-acc-deep)', letterSpacing: 0.2,
                       overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                     }}>
                       @{row.handle}
@@ -199,13 +199,13 @@ export default async function Leaderboard({ locale = 'en' as Locale }: { locale?
                   }}>
                     <span style={{
                       fontSize: 18, fontWeight: 600,
-                      color: '#221E18',
+                      color: 'var(--color-ink)',
                       fontVariantNumeric: 'tabular-nums',
                     }}>
                       {row.total_count}
                     </span>
                     <span style={{
-                      fontSize: 10, color: '#8C6520',
+                      fontSize: 10, color: 'var(--color-acc-deep)',
                       textTransform: 'uppercase', letterSpacing: '0.14em',
                       marginTop: 2,
                     }}>
@@ -222,7 +222,7 @@ export default async function Leaderboard({ locale = 'en' as Locale }: { locale?
       <p style={{
         marginTop: 14,
         fontFamily: sans, fontSize: 12,
-        color: '#8C6520', opacity: 0.75, lineHeight: 1.55,
+        color: 'var(--color-acc-deep)', opacity: 0.75, lineHeight: 1.55,
       }}>
         {t('leaderboard.privacy_note', locale)}
       </p>
@@ -240,8 +240,8 @@ const headingStyle: React.CSSProperties = {
   fontSize: 22,
   fontWeight: 400,
   margin: 0,
-  color: '#221E18',
+  color: 'var(--color-ink)',
   letterSpacing: '0.04em',
-  textShadow: '3px 3px 0 #B8862F',
+  textShadow: '3px 3px 0 var(--color-acc)',
   lineHeight: 1.1,
 };

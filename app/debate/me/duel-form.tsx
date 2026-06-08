@@ -89,7 +89,7 @@ export default function DuelForm({ philosophers, locale = 'en' }: { philosophers
           fontFamily: sans,
           fontSize: 11,
           fontWeight: 600,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           textTransform: 'uppercase',
           letterSpacing: '0.18em',
           marginBottom: 14,
@@ -101,7 +101,7 @@ export default function DuelForm({ philosophers, locale = 'en' }: { philosophers
             fontFamily: serif,
             fontStyle: 'italic',
             fontSize: 17,
-            color: '#4A4338',
+            color: 'var(--color-ink-soft)',
             margin: '0 0 32px',
             lineHeight: 1.55,
           }}>
@@ -133,10 +133,10 @@ export default function DuelForm({ philosophers, locale = 'en' }: { philosophers
             className="pixel-press"
             style={{
               padding: '12px 22px',
-              background: '#221E18',
-              color: '#FAF6EC',
-              border: '4px solid #221E18',
-              boxShadow: '4px 4px 0 0 #B8862F',
+              background: 'var(--color-ink)',
+              color: 'var(--color-cream)',
+              border: '4px solid var(--color-ink)',
+              boxShadow: '4px 4px 0 0 var(--color-acc)',
               borderRadius: 0,
               cursor: 'pointer',
               fontFamily: 'var(--font-pixel-display)',
@@ -169,7 +169,7 @@ export default function DuelForm({ philosophers, locale = 'en' }: { philosophers
           fontFamily: sans,
           fontSize: 11,
           fontWeight: 600,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           textTransform: 'uppercase',
           letterSpacing: '0.18em',
           display: 'block',
@@ -187,10 +187,10 @@ export default function DuelForm({ philosophers, locale = 'en' }: { philosophers
             fontFamily: serif,
             fontSize: 18,
             padding: '14px 18px',
-            border: '1px solid #D6CDB6',
+            border: '1px solid var(--color-line)',
             borderRadius: 10,
             background: '#FFFCF4',
-            color: '#221E18',
+            color: 'var(--color-ink)',
             outline: 'none',
             width: '100%',
             boxSizing: 'border-box',
@@ -206,9 +206,9 @@ export default function DuelForm({ philosophers, locale = 'en' }: { philosophers
                 fontFamily: sans,
                 fontSize: 12,
                 padding: '6px 12px',
-                background: topic === suggestion.text ? '#221E18' : '#F5EFDC',
-                color: topic === suggestion.text ? '#FAF6EC' : '#4A4338',
-                border: '1px solid #D6CDB6',
+                background: topic === suggestion.text ? 'var(--color-ink)' : '#F5EFDC',
+                color: topic === suggestion.text ? 'var(--color-cream)' : 'var(--color-ink-soft)',
+                border: '1px solid var(--color-line)',
                 borderRadius: 999,
                 cursor: 'pointer',
               }}
@@ -228,8 +228,8 @@ export default function DuelForm({ philosophers, locale = 'en' }: { philosophers
             fontSize: 15,
             fontWeight: 500,
             padding: '14px 28px',
-            background: ready ? '#221E18' : '#A39880',
-            color: '#FAF6EC',
+            background: ready ? 'var(--color-ink)' : '#A39880',
+            color: 'var(--color-cream)',
             border: 'none',
             borderRadius: 8,
             cursor: ready && !submitting ? 'pointer' : 'not-allowed',
@@ -240,7 +240,7 @@ export default function DuelForm({ philosophers, locale = 'en' }: { philosophers
           {submitting ? t('debate.generating', locale) : t('debate.stage_debate', locale)}
         </button>
         {!ready && (
-          <span style={{ fontFamily: sans, fontSize: 12.5, color: '#8C6520' }}>
+          <span style={{ fontFamily: sans, fontSize: 12.5, color: 'var(--color-acc-deep)' }}>
             {!philName ? t('duel.pick_thinker', locale) : topic.trim().length < 4 ? t('debate.choose_topic', locale) : ''}
           </span>
         )}
@@ -280,8 +280,8 @@ function DuelBubble({
       width: 80,
       height: 80,
       borderRadius: '50%',
-      background: isUser ? '#221E18' : '#FFFCF4',
-      border: isUser ? '2px solid #B8862F' : '2px solid #D6CDB6',
+      background: isUser ? 'var(--color-ink)' : '#FFFCF4',
+      border: isUser ? '2px solid var(--color-acc)' : '2px solid var(--color-line)',
       flexShrink: 0,
       overflow: 'hidden',
       display: 'flex',
@@ -313,7 +313,7 @@ function DuelBubble({
         fontSize: 16,
         fontWeight: 500,
         fontStyle: 'italic',
-        color: '#221E18',
+        color: 'var(--color-ink)',
         lineHeight: 1.1,
       }}>
         {speakerName}
@@ -321,7 +321,7 @@ function DuelBubble({
       <div style={{
         fontFamily: sans,
         fontSize: 11,
-        color: '#8C6520',
+        color: 'var(--color-acc-deep)',
         letterSpacing: 0.3,
         marginTop: 2,
       }}>
@@ -336,12 +336,12 @@ function DuelBubble({
       minWidth: 0,
       position: 'relative',
       background: isUser ? '#F5EFDC' : '#FFFCF4',
-      border: '1px solid #D6CDB6',
+      border: '1px solid var(--color-line)',
       borderRadius: 18,
       padding: '18px 22px',
       fontFamily: serif,
       fontSize: 17,
-      color: '#221E18',
+      color: 'var(--color-ink)',
       lineHeight: 1.6,
       boxShadow: '0 2px 8px rgba(34, 30, 24, 0.04)',
     }}>
@@ -354,9 +354,9 @@ function DuelBubble({
           width: 16,
           height: 16,
           background: isUser ? '#F5EFDC' : '#FFFCF4',
-          borderTop: '1px solid #D6CDB6',
-          borderLeft: isLeft ? '1px solid #D6CDB6' : 'none',
-          borderRight: !isLeft ? '1px solid #D6CDB6' : 'none',
+          borderTop: '1px solid var(--color-line)',
+          borderLeft: isLeft ? '1px solid var(--color-line)' : 'none',
+          borderRight: !isLeft ? '1px solid var(--color-line)' : 'none',
           transform: `rotate(${isLeft ? '-45deg' : '45deg'})`,
           borderTopLeftRadius: 2,
         }}
@@ -426,10 +426,10 @@ function PhilosopherPicker({
           fontFamily: sans,
           fontSize: 14,
           padding: '11px 14px',
-          border: '1px solid #D6CDB6',
+          border: '1px solid var(--color-line)',
           borderRadius: 8,
           background: '#FFFCF4',
-          color: '#221E18',
+          color: 'var(--color-ink)',
           outline: 'none',
           width: '100%',
           boxSizing: 'border-box',
@@ -439,7 +439,7 @@ function PhilosopherPicker({
       <div style={{
         fontFamily: sans,
         fontSize: 11,
-        color: '#8C6520',
+        color: 'var(--color-acc-deep)',
         marginBottom: 6,
         letterSpacing: 0.3,
       }}>
@@ -461,7 +461,7 @@ function PhilosopherPicker({
             padding: '12px',
             fontFamily: sans,
             fontSize: 13,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             fontStyle: 'italic',
           }}>
             {t('duel.no_matches', locale)}
@@ -478,7 +478,7 @@ function PhilosopherPicker({
                 textAlign: 'left',
                 padding: '8px 12px',
                 background: isSelected ? '#7A2E2E' : 'transparent',
-                color: isSelected ? '#FAF6EC' : '#221E18',
+                color: isSelected ? 'var(--color-cream)' : 'var(--color-ink)',
                 border: 'none',
                 borderRadius: 6,
                 cursor: 'pointer',

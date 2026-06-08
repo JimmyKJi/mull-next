@@ -38,7 +38,7 @@ export default async function NotFound() {
       <div style={{
         padding: '32px 30px',
         background: '#FFFCF4',
-        border: '4px solid #221E18',
+        border: '4px solid var(--color-ink)',
         boxShadow: '6px 6px 0 0 #7A2E2E',
         borderRadius: 0,
         textAlign: 'center',
@@ -57,7 +57,7 @@ export default async function NotFound() {
           fontFamily: pixel,
           fontSize: 32,
           margin: '0 0 16px',
-          color: '#221E18',
+          color: 'var(--color-ink)',
           letterSpacing: '0.06em',
           textTransform: 'uppercase',
           textShadow: '3px 3px 0 #7A2E2E',
@@ -69,7 +69,7 @@ export default async function NotFound() {
           fontFamily: serif,
           fontStyle: 'italic',
           fontSize: 17,
-          color: '#4A4338',
+          color: 'var(--color-ink-soft)',
           margin: '0 0 24px',
           lineHeight: 1.55,
         }}>
@@ -92,7 +92,7 @@ export default async function NotFound() {
           <Link href="/" className="pixel-press" style={ctaPrimary}>
             ▸ {t('nf.home', locale)}
           </Link>
-          <Link href="/quiz?mode=quick" className="pixel-press" style={ctaSecondary('#B8862F')}>
+          <Link href="/quiz?mode=quick" className="pixel-press" style={ctaSecondary('var(--color-acc)')}>
             ▸ {t('nf.take_quiz', locale)}
           </Link>
           <Link href="/search" className="pixel-press" style={ctaSecondary('#2F5D5C')}>
@@ -107,10 +107,10 @@ export default async function NotFound() {
 const ctaPrimary: React.CSSProperties = {
   display: 'inline-block',
   padding: '10px 18px',
-  background: '#221E18',
-  color: '#FAF6EC',
-  border: '3px solid #221E18',
-  boxShadow: '3px 3px 0 0 #B8862F',
+  background: 'var(--color-ink)',
+  color: 'var(--color-cream)',
+  border: '3px solid var(--color-ink)',
+  boxShadow: '3px 3px 0 0 var(--color-acc)',
   borderRadius: 0,
   fontFamily: pixel,
   fontSize: 11,

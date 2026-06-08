@@ -150,7 +150,7 @@ export default function CurationPanel({ locale = 'en' as Locale }: { locale?: Lo
               background: pick ? '#FBF6E8' : '#FFFCF4',
               border: '1px solid',
               borderColor: pick ? '#E2D8B6' : '#EBE3CA',
-              borderLeft: `3px solid ${pick ? '#B8862F' : '#D6CDB6'}`,
+              borderLeft: `3px solid ${pick ? 'var(--color-acc)' : 'var(--color-line)'}`,
               borderRadius: 8,
               minHeight: 110,
               display: 'flex', flexDirection: 'column',
@@ -158,7 +158,7 @@ export default function CurationPanel({ locale = 'en' as Locale }: { locale?: Lo
               <div style={{
                 display: 'flex', justifyContent: 'space-between',
                 fontFamily: sans, fontSize: 11, fontWeight: 600,
-                color: pick ? '#B8862F' : '#8C6520',
+                color: pick ? 'var(--color-acc)' : 'var(--color-acc-deep)',
                 textTransform: 'uppercase', letterSpacing: '0.16em',
                 marginBottom: 8,
               }}>
@@ -169,7 +169,7 @@ export default function CurationPanel({ locale = 'en' as Locale }: { locale?: Lo
                     disabled={busy === 'clear:' + slot}
                     style={{
                       background: 'none', border: 'none', cursor: 'pointer',
-                      color: '#8C6520', fontSize: 14,
+                      color: 'var(--color-acc-deep)', fontSize: 14,
                     }}
                     title={t('crt.clear_slot', locale)}
                   >
@@ -181,12 +181,12 @@ export default function CurationPanel({ locale = 'en' as Locale }: { locale?: Lo
                 <>
                   <div style={{
                     fontFamily: sans, fontSize: 11,
-                    color: '#8C6520', marginBottom: 4,
+                    color: 'var(--color-acc-deep)', marginBottom: 4,
                   }}>
                     {t(SOURCE_LABEL_KEY[pick.source_type], locale)} · {pick.author_handle ? `@${pick.author_handle}` : t('crt.no_profile', locale)}
                   </div>
                   <div style={{
-                    fontFamily: serif, fontSize: 14, color: '#221E18',
+                    fontFamily: serif, fontSize: 14, color: 'var(--color-ink)',
                     lineHeight: 1.4, flex: 1,
                     overflow: 'hidden', display: '-webkit-box',
                     WebkitLineClamp: 4, WebkitBoxOrient: 'vertical' as const,
@@ -198,7 +198,7 @@ export default function CurationPanel({ locale = 'en' as Locale }: { locale?: Lo
                       marginTop: 8, padding: '6px 8px',
                       background: '#F5EFDC', borderRadius: 4,
                       fontFamily: serif, fontStyle: 'italic',
-                      fontSize: 12, color: '#4A4338',
+                      fontSize: 12, color: 'var(--color-ink-soft)',
                     }}>
                       {pick.curator_note}
                     </div>
@@ -207,7 +207,7 @@ export default function CurationPanel({ locale = 'en' as Locale }: { locale?: Lo
               ) : (
                 <div style={{
                   fontFamily: serif, fontStyle: 'italic',
-                  fontSize: 14, color: '#8C6520',
+                  fontSize: 14, color: 'var(--color-acc-deep)',
                 }}>
                   {t('crt.slot_empty', locale)}
                 </div>
@@ -223,7 +223,7 @@ export default function CurationPanel({ locale = 'en' as Locale }: { locale?: Lo
         flexWrap: 'wrap', marginBottom: 18,
       }}>
         <span style={{
-          fontFamily: sans, fontSize: 12, color: '#8C6520',
+          fontFamily: sans, fontSize: 12, color: 'var(--color-acc-deep)',
           textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 600,
         }}>{t('crt.filter_label', locale)}</span>
         {(['all', 'dilemma', 'diary', 'exercise'] as FilterValue[]).map(v => (
@@ -234,16 +234,16 @@ export default function CurationPanel({ locale = 'en' as Locale }: { locale?: Lo
               padding: '5px 12px',
               borderRadius: 999,
               border: '1px solid',
-              borderColor: filter === v ? '#221E18' : '#D6CDB6',
-              background: filter === v ? '#221E18' : 'transparent',
-              color: filter === v ? '#FAF6EC' : '#4A4338',
+              borderColor: filter === v ? 'var(--color-ink)' : 'var(--color-line)',
+              background: filter === v ? 'var(--color-ink)' : 'transparent',
+              color: filter === v ? 'var(--color-cream)' : 'var(--color-ink-soft)',
               fontFamily: sans, fontSize: 12.5, cursor: 'pointer',
             }}
           >
             {v === 'all' ? t('crt.filter_all', locale) : t(SOURCE_LABEL_KEY[v], locale)}
           </button>
         ))}
-        <span style={{ marginLeft: 'auto', fontFamily: sans, fontSize: 12, color: '#4A4338' }}>
+        <span style={{ marginLeft: 'auto', fontFamily: sans, fontSize: 12, color: 'var(--color-ink-soft)' }}>
           {t('crt.from_last', locale)}
           <select
             value={days}
@@ -251,7 +251,7 @@ export default function CurationPanel({ locale = 'en' as Locale }: { locale?: Lo
             style={{
               marginLeft: 6, padding: '3px 8px',
               fontFamily: sans, fontSize: 12.5,
-              border: '1px solid #D6CDB6', borderRadius: 4, background: '#FFFCF4',
+              border: '1px solid var(--color-line)', borderRadius: 4, background: '#FFFCF4',
             }}
           >
             <option value={7}>{t('crt.days', locale, { n: 7 })}</option>
@@ -264,7 +264,7 @@ export default function CurationPanel({ locale = 'en' as Locale }: { locale?: Lo
 
       {/* Status / errors */}
       {loading && (
-        <p style={{ fontFamily: sans, fontSize: 13, color: '#8C6520' }}>
+        <p style={{ fontFamily: sans, fontSize: 13, color: 'var(--color-acc-deep)' }}>
           {t('crt.loading_candidates', locale)}
         </p>
       )}
@@ -281,7 +281,7 @@ export default function CurationPanel({ locale = 'en' as Locale }: { locale?: Lo
         <div style={{
           padding: '20px 18px',
           background: '#FFFCF4',
-          border: '3px dashed #8C6520',
+          border: '3px dashed var(--color-acc-deep)',
           borderRadius: 0,
         }}>
           <EmptyStateSprite
@@ -297,8 +297,8 @@ export default function CurationPanel({ locale = 'en' as Locale }: { locale?: Lo
             <li key={draftKey} style={{
               padding: '14px 18px',
               background: '#FFFCF4',
-              border: '3px solid #221E18',
-              boxShadow: '3px 3px 0 0 #B8862F',
+              border: '3px solid var(--color-ink)',
+              boxShadow: '3px 3px 0 0 var(--color-acc)',
               borderRadius: 0,
             }}>
               <div style={{
@@ -307,16 +307,16 @@ export default function CurationPanel({ locale = 'en' as Locale }: { locale?: Lo
               }}>
                 <span style={{
                   fontFamily: sans, fontSize: 11, fontWeight: 600,
-                  color: '#8C6520', textTransform: 'uppercase',
+                  color: 'var(--color-acc-deep)', textTransform: 'uppercase',
                   letterSpacing: '0.14em',
                 }}>
                   {t(SOURCE_LABEL_KEY[c.source_type], locale)}
                   {c.author_handle && (
-                    <> · <Link href={`/u/${c.author_handle}`} style={{ color: '#8C6520' }}>@{c.author_handle}</Link></>
+                    <> · <Link href={`/u/${c.author_handle}`} style={{ color: 'var(--color-acc-deep)' }}>@{c.author_handle}</Link></>
                   )}
                   {c.word_count != null && <> · {t('crt.word_count', locale, { n: c.word_count })}</>}
                 </span>
-                <span style={{ fontFamily: sans, fontSize: 11, color: '#8C6520' }}>
+                <span style={{ fontFamily: sans, fontSize: 11, color: 'var(--color-acc-deep)' }}>
                   {new Date(c.entry_created_at).toLocaleDateString('en-US', {
                     month: 'short', day: 'numeric',
                   })}
@@ -325,14 +325,14 @@ export default function CurationPanel({ locale = 'en' as Locale }: { locale?: Lo
               {c.entry_label && (
                 <div style={{
                   fontFamily: serif, fontStyle: 'italic',
-                  fontSize: 14, color: '#4A4338',
+                  fontSize: 14, color: 'var(--color-ink-soft)',
                   marginBottom: 6, lineHeight: 1.4,
                 }}>
                   {c.entry_label}
                 </div>
               )}
               <p style={{
-                fontFamily: serif, fontSize: 15.5, color: '#221E18',
+                fontFamily: serif, fontSize: 15.5, color: 'var(--color-ink)',
                 margin: '0 0 12px', lineHeight: 1.55, whiteSpace: 'pre-wrap',
                 maxHeight: 200, overflow: 'hidden',
               }}>
@@ -349,7 +349,7 @@ export default function CurationPanel({ locale = 'en' as Locale }: { locale?: Lo
                   style={{
                     flex: 1, minWidth: 200,
                     padding: '6px 10px', fontFamily: sans, fontSize: 13,
-                    border: '1px solid #D6CDB6', borderRadius: 4, background: '#FAF6EC',
+                    border: '1px solid var(--color-line)', borderRadius: 4, background: 'var(--color-cream)',
                   }}
                 />
                 {[1, 2, 3].map(slot => (
@@ -360,7 +360,7 @@ export default function CurationPanel({ locale = 'en' as Locale }: { locale?: Lo
                     style={{
                       padding: '6px 12px',
                       fontFamily: sans, fontSize: 12.5, fontWeight: 500,
-                      background: '#221E18', color: '#FAF6EC',
+                      background: 'var(--color-ink)', color: 'var(--color-cream)',
                       border: 'none', borderRadius: 4,
                       cursor: busy ? 'wait' : 'pointer',
                       opacity: busy === draftKey + ':' + slot ? 0.6 : 1,

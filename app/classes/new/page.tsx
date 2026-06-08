@@ -34,7 +34,7 @@ export default async function ClassCreatePage() {
         <Link href="/classes" style={{
           fontFamily: pixel,
           fontSize: 11,
-          color: '#4A4338',
+          color: 'var(--color-ink-soft)',
           textDecoration: 'none',
           letterSpacing: 0.4,
           textTransform: 'uppercase',
@@ -46,7 +46,7 @@ export default async function ClassCreatePage() {
       <div style={{
         fontFamily: pixel,
         fontSize: 12,
-        color: '#8C6520',
+        color: 'var(--color-acc-deep)',
         textTransform: 'uppercase',
         letterSpacing: '0.18em',
         marginBottom: 14,
@@ -57,10 +57,10 @@ export default async function ClassCreatePage() {
         fontFamily: pixel,
         fontSize: 28,
         margin: '0 0 14px',
-        color: '#221E18',
+        color: 'var(--color-ink)',
         letterSpacing: '0.06em',
         textTransform: 'uppercase',
-        textShadow: '3px 3px 0 #B8862F',
+        textShadow: '3px 3px 0 var(--color-acc)',
         lineHeight: 1.1,
       }}>
         {t('cls.new_title', locale)}
@@ -69,7 +69,7 @@ export default async function ClassCreatePage() {
         fontFamily: serif,
         fontStyle: 'italic',
         fontSize: 16,
-        color: '#4A4338',
+        color: 'var(--color-ink-soft)',
         margin: '0 0 28px',
         lineHeight: 1.55,
       }}>

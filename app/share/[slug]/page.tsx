@@ -74,7 +74,7 @@ export default async function SharePage({
       alignItems: 'center',
       justifyContent: 'flex-start',
       padding: '40px 16px',
-      background: '#FAF6EC',
+      background: 'var(--color-cream)',
       fontFamily: sans,
     }}>
       {/* The card — designed to be screenshotted. 9:16-ish aspect
@@ -89,15 +89,15 @@ export default async function SharePage({
           maxWidth: 380,
           minHeight: 640,
           background: '#FFFCF4',
-          border: '4px solid #221E18',
-          boxShadow: '6px 6px 0 0 #B8862F',
+          border: '4px solid var(--color-ink)',
+          boxShadow: '6px 6px 0 0 var(--color-acc)',
           borderRadius: 0,
           padding: '24px 24px 28px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           textAlign: 'center',
-          color: '#221E18',
+          color: 'var(--color-ink)',
           position: 'relative',
         }}
       >
@@ -106,8 +106,8 @@ export default async function SharePage({
           position: 'absolute',
           top: 0, left: 0, right: 0,
           height: 8,
-          background: '#B8862F',
-          borderBottom: '2px solid #221E18',
+          background: 'var(--color-acc)',
+          borderBottom: '2px solid var(--color-ink)',
         }} />
 
         {/* Top row: Mull. wordmark + ARCHETYPE label */}
@@ -123,7 +123,7 @@ export default async function SharePage({
           <div style={{
             fontFamily: pixel,
             fontSize: 10,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             textTransform: 'uppercase',
             letterSpacing: '0.18em',
           }}>
@@ -135,9 +135,9 @@ export default async function SharePage({
         <div style={{
           width: 180,
           height: 180,
-          background: '#F8EDC8',
-          border: '4px solid #221E18',
-          boxShadow: '4px 4px 0 0 #8C6520',
+          background: 'var(--color-acc-soft)',
+          border: '4px solid var(--color-ink)',
+          boxShadow: '4px 4px 0 0 var(--color-acc-deep)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -157,7 +157,7 @@ export default async function SharePage({
           fontFamily: serif,
           fontStyle: 'italic',
           fontSize: 22,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           fontWeight: 400,
           marginBottom: 4,
           lineHeight: 1,
@@ -180,13 +180,13 @@ export default async function SharePage({
           <div style={{
             fontFamily: pixel,
             fontSize: 12,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             textTransform: 'uppercase',
             letterSpacing: '0.18em',
             marginBottom: 22,
             padding: '4px 12px',
-            border: '2px solid #8C6520',
-            background: '#F8EDC8',
+            border: '2px solid var(--color-acc-deep)',
+            background: 'var(--color-acc-soft)',
           }}>
             ▸ {t('shp.alignment_pct', locale, { pct })}
           </div>
@@ -197,7 +197,7 @@ export default async function SharePage({
           fontFamily: serif,
           fontStyle: 'italic',
           fontSize: 17,
-          color: '#4A4338',
+          color: 'var(--color-ink-soft)',
           lineHeight: 1.45,
           marginBottom: 22,
           maxWidth: 320,
@@ -210,7 +210,7 @@ export default async function SharePage({
           <div style={{
             paddingTop: 18,
             paddingBottom: 8,
-            borderTop: '2px dashed #D6CDB6',
+            borderTop: '2px dashed var(--color-line)',
             width: '100%',
             display: 'flex',
             flexDirection: 'column',
@@ -220,7 +220,7 @@ export default async function SharePage({
               fontFamily: serif,
               fontStyle: 'italic',
               fontSize: 14,
-              color: '#221E18',
+              color: 'var(--color-ink)',
               lineHeight: 1.5,
               marginBottom: 6,
               maxWidth: 320,
@@ -231,7 +231,7 @@ export default async function SharePage({
               <div style={{
                 fontFamily: pixel,
                 fontSize: 10,
-                color: '#8C6520',
+                color: 'var(--color-acc-deep)',
                 letterSpacing: 0.4,
                 textTransform: 'uppercase',
               }}>
@@ -247,7 +247,7 @@ export default async function SharePage({
           paddingTop: 18,
           fontFamily: pixel,
           fontSize: 10,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           letterSpacing: '0.18em',
           textTransform: 'uppercase',
         }}>
@@ -280,7 +280,7 @@ export default async function SharePage({
           fontFamily: serif,
           fontStyle: 'italic',
           fontSize: 13,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           margin: '0 0 18px',
           lineHeight: 1.55,
           opacity: 0.9,
@@ -290,11 +290,11 @@ export default async function SharePage({
         <Link href="/account" style={{
           fontFamily: pixel,
           fontSize: 11,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           textDecoration: 'none',
           letterSpacing: 0.4,
           textTransform: 'uppercase',
-          borderBottom: '2px solid #8C6520',
+          borderBottom: '2px solid var(--color-acc-deep)',
           paddingBottom: 1,
         }}>
           ◂ {t('shp.back_to_account', locale)}

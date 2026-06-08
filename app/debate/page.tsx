@@ -44,13 +44,13 @@ export default async function DebatePage() {
       <div className="mb-6 flex items-center justify-end gap-4">
         <Link
           href="/dilemma"
-          className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"
+          className="text-[13px] text-ink-soft hover:text-ink hover:underline"
         >
           {t('nav.dilemma_arrow', locale)}
         </Link>
         <Link
           href="/account"
-          className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"
+          className="text-[13px] text-ink-soft hover:text-ink hover:underline"
         >
           {t('nav.account_arrow', locale)}
         </Link>
@@ -68,7 +68,7 @@ export default async function DebatePage() {
       <p style={{
         fontFamily: sans,
         fontSize: 12.5,
-        color: '#8C6520',
+        color: 'var(--color-acc-deep)',
         marginBottom: 18,
         opacity: 0.85,
         lineHeight: 1.55,
@@ -91,12 +91,12 @@ export default async function DebatePage() {
         <div style={{
           fontFamily: sans,
           fontSize: 13,
-          color: '#4A4338',
+          color: 'var(--color-ink-soft)',
           lineHeight: 1.55,
         }}>
-          <strong style={{ color: '#221E18' }}>{t('debate.you_in_debate', locale)}</strong>{' '}
+          <strong style={{ color: 'var(--color-ink)' }}>{t('debate.you_in_debate', locale)}</strong>{' '}
           {t('debate.you_in_debate_body', locale)}
-          {' '}<span style={{ color: '#8C6520', fontStyle: 'italic' }}>{t('debate.mull_plus', locale)}</span>
+          {' '}<span style={{ color: 'var(--color-acc-deep)', fontStyle: 'italic' }}>{t('debate.mull_plus', locale)}</span>
         </div>
         <Link href="/debate/me" style={{
           fontFamily: sans,
@@ -104,7 +104,7 @@ export default async function DebatePage() {
           fontWeight: 500,
           padding: '8px 14px',
           background: '#7A2E2E',
-          color: '#FAF6EC',
+          color: 'var(--color-cream)',
           borderRadius: 6,
           textDecoration: 'none',
           letterSpacing: 0.3,
@@ -119,7 +119,7 @@ export default async function DebatePage() {
       <p style={{
         fontFamily: sans,
         fontSize: 12,
-        color: '#8C6520',
+        color: 'var(--color-acc-deep)',
         marginTop: 48,
         opacity: 0.75,
         textAlign: 'center',

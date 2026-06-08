@@ -91,43 +91,43 @@ export default async function DilemmaArchiveDatePage({
       <div className="mb-6 flex items-center justify-end gap-3">
         <Link
           href="/dilemma/archive"
-          className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"
+          className="text-[13px] text-ink-soft hover:text-ink hover:underline"
         >
           ← {t('archive.back_to_archive', locale)}
         </Link>
       </div>
 
       <div
-        className="flex flex-wrap items-center gap-3 text-[10px] tracking-[0.22em] text-[#8C6520]"
+        className="flex flex-wrap items-center gap-3 text-[10px] tracking-[0.22em] text-acc-deep"
         style={{ fontFamily: 'var(--font-pixel-display)' }}
       >
-        <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
+        <span aria-hidden className="inline-block h-2 w-2 bg-acc" />
         <span>▶ {t('archive.past_eyebrow', locale).toUpperCase()}</span>
         <span className="opacity-60">·</span>
-        <span className="text-[#221E18]">{dateLabel.toUpperCase()}</span>
+        <span className="text-ink">{dateLabel.toUpperCase()}</span>
       </div>
 
       <div
-        className="mt-7 border-4 border-[#221E18] bg-[#FFFCF4]"
-        style={{ boxShadow: '6px 6px 0 0 #8C6520' }}
+        className="mt-7 border-4 border-ink bg-[#FFFCF4]"
+        style={{ boxShadow: '6px 6px 0 0 var(--color-acc-deep)' }}
       >
         <div
-          className="border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
+          className="border-b-4 border-ink bg-ink px-4 py-2 text-[10px] tracking-[0.22em] text-acc-soft"
           style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
           ▶ PAST QUESTION
         </div>
         <div className="px-6 py-7 sm:px-8 sm:py-9">
           <h1
-            className="text-[24px] font-medium leading-[1.3] text-[#221E18] sm:text-[28px] md:text-[32px]"
+            className="text-[24px] font-medium leading-[1.3] text-ink sm:text-[28px] md:text-[32px]"
             style={{ fontFamily: 'var(--font-prose)' }}
           >
             {dilemma.prompt}
           </h1>
           {dilemma.hint ? (
             <p
-              className="mt-5 border-l-4 px-4 py-2 text-[15.5px] italic leading-[1.55] text-[#4A4338]"
-              style={{ borderColor: '#B8862F', fontFamily: 'var(--font-prose)' }}
+              className="mt-5 border-l-4 px-4 py-2 text-[15.5px] italic leading-[1.55] text-ink-soft"
+              style={{ borderColor: 'var(--color-acc)', fontFamily: 'var(--font-prose)' }}
             >
               {dilemma.hint}
             </p>
@@ -139,7 +139,7 @@ export default async function DilemmaArchiveDatePage({
         <DilemmaArchiveForm targetDate={date} locale={locale} />
       </div>
 
-      <p className="mt-12 text-center text-[12px] tracking-[0.16em] text-[#8C6520] opacity-75">
+      <p className="mt-12 text-center text-[12px] tracking-[0.16em] text-acc-deep opacity-75">
         {t('archive.past_footer_note', locale)}
       </p>
 
@@ -148,11 +148,11 @@ export default async function DilemmaArchiveDatePage({
           today's-dilemma path for users who'd rather catch up live. */}
       <nav
         aria-label={t('a11y.continue_elsewhere', locale)}
-        className="mt-10 flex flex-wrap justify-center gap-3 border-t-2 border-dashed border-[#D6CDB6] pt-6"
+        className="mt-10 flex flex-wrap justify-center gap-3 border-t-2 border-dashed border-line pt-6"
       >
         <Link
           href="/dilemma/archive"
-          className="pixel-press inline-block border-[3px] border-[#221E18] bg-[#FFFCF4] px-4 py-2.5 text-[11px] tracking-[0.08em] text-[#2F5D5C] no-underline"
+          className="pixel-press inline-block border-[3px] border-ink bg-[#FFFCF4] px-4 py-2.5 text-[11px] tracking-[0.08em] text-[#2F5D5C] no-underline"
           style={{
             fontFamily: 'var(--font-pixel-display)',
             boxShadow: '3px 3px 0 0 #2F5D5C',
@@ -164,10 +164,10 @@ export default async function DilemmaArchiveDatePage({
         </Link>
         <Link
           href="/dilemma"
-          className="pixel-press inline-block border-[3px] border-[#221E18] bg-[#221E18] px-4 py-2.5 text-[11px] tracking-[0.08em] text-[#FAF6EC] no-underline"
+          className="pixel-press inline-block border-[3px] border-ink bg-ink px-4 py-2.5 text-[11px] tracking-[0.08em] text-cream no-underline"
           style={{
             fontFamily: 'var(--font-pixel-display)',
-            boxShadow: '3px 3px 0 0 #B8862F',
+            boxShadow: '3px 3px 0 0 var(--color-acc)',
             textTransform: 'uppercase',
             transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
           }}

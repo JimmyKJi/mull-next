@@ -92,7 +92,7 @@ export default async function PhilosopherIndexPage() {
             <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-editorial)' }}>
               {t('philindex.subtitle', locale, { n: PHILOSOPHERS.length })}
             </p>
-            <p className="text-[14px] text-[#8C6520]">{t('philindex.intro', locale)}</p>
+            <p className="text-[14px] text-acc-deep">{t('philindex.intro', locale)}</p>
           </div>
         }
       />
@@ -103,12 +103,12 @@ export default async function PhilosopherIndexPage() {
       {nearestToYou.length > 0 ? (
         <section className="mb-8">
           <div
-            className="mb-2 text-[10px] tracking-[0.18em] text-[#8C6520]"
+            className="mb-2 text-[10px] tracking-[0.18em] text-acc-deep"
             style={{ fontFamily: "var(--font-pixel-display)", textTransform: 'uppercase' }}
           >
             ◆ {t('philindex.nearest_you', locale)}
           </div>
-          <p className="mb-3 text-[13px] italic text-[#4A4338]" style={{ fontFamily: 'var(--font-editorial)' }}>
+          <p className="mb-3 text-[13px] italic text-ink-soft" style={{ fontFamily: 'var(--font-editorial)' }}>
             {t('philindex.nearest_you_helper', locale, { n: PHILOSOPHERS.length })}
           </p>
           <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3">
@@ -120,7 +120,7 @@ export default async function PhilosopherIndexPage() {
                     href={`/philosopher/${philosopherSlug(p.name)}`}
                     className="pixel-press flex items-start gap-3 border-2 px-3 py-2.5 transition-all hover:translate-x-[-1px] hover:translate-y-[-1px]"
                     style={{
-                      borderColor: '#221E18',
+                      borderColor: 'var(--color-ink)',
                       background: '#FFFCF4',
                       boxShadow: `3px 3px 0 0 ${color.deep}`,
                       textDecoration: 'none',
@@ -136,16 +136,16 @@ export default async function PhilosopherIndexPage() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <div
-                        className="text-[14.5px] font-medium leading-tight text-[#221E18]"
+                        className="text-[14.5px] font-medium leading-tight text-ink"
                         style={{ fontFamily: 'var(--font-prose)' }}
                       >
                         {loc(p).name}
                       </div>
-                      <div className="mt-0.5 text-[10.5px] tracking-wide text-[#8C6520]">
+                      <div className="mt-0.5 text-[10.5px] tracking-wide text-acc-deep">
                         {loc(p).dates}
                       </div>
                       <p
-                        className="mt-1 text-[12px] italic leading-snug text-[#4A4338]"
+                        className="mt-1 text-[12px] italic leading-snug text-ink-soft"
                         style={{
                           fontFamily: 'var(--font-editorial)',
                           display: '-webkit-box',
@@ -170,17 +170,17 @@ export default async function PhilosopherIndexPage() {
       {featured ? (
         <section className="mb-8">
           <div
-            className="mb-2 text-[10px] tracking-[0.18em] text-[#8C6520]"
+            className="mb-2 text-[10px] tracking-[0.18em] text-acc-deep"
             style={{ fontFamily: "var(--font-pixel-display)", textTransform: 'uppercase' }}
           >
             ◇ Featured profile today
           </div>
           <Link
             href={`/philosopher/${philosopherSlug(featured.name)}`}
-            className="pixel-press flex items-start gap-5 border-4 border-[#221E18] p-5 sm:p-6"
+            className="pixel-press flex items-start gap-5 border-4 border-ink p-5 sm:p-6"
             style={{
               background: '#F8EBC9',
-              boxShadow: '6px 6px 0 0 #B8862F',
+              boxShadow: '6px 6px 0 0 var(--color-acc)',
               textDecoration: 'none',
               color: 'inherit',
               transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
@@ -189,9 +189,9 @@ export default async function PhilosopherIndexPage() {
             <div
               className="shrink-0 border-4 p-2"
               style={{
-                borderColor: '#221E18',
+                borderColor: 'var(--color-ink)',
                 background: '#FFFCF4',
-                boxShadow: '3px 3px 0 0 #B8862F',
+                boxShadow: '3px 3px 0 0 var(--color-acc)',
               }}
               aria-hidden
             >
@@ -203,25 +203,25 @@ export default async function PhilosopherIndexPage() {
             </div>
             <div className="min-w-0 flex-1">
               <h2
-                className="text-[24px] font-medium leading-[1.1] text-[#221E18] sm:text-[30px]"
+                className="text-[24px] font-medium leading-[1.1] text-ink sm:text-[30px]"
                 style={{ fontFamily: 'var(--font-editorial)' }}
               >
                 {loc(featured).name}
               </h2>
               <div
-                className="mt-1 text-[11px] tracking-[0.18em] text-[#8C6520]"
+                className="mt-1 text-[11px] tracking-[0.18em] text-acc-deep"
                 style={{ fontFamily: 'var(--font-pixel-display)' }}
               >
                 {loc(featured).dates}
               </div>
               <p
-                className="mt-3 text-[14.5px] italic leading-[1.55] text-[#4A4338]"
+                className="mt-3 text-[14.5px] italic leading-[1.55] text-ink-soft"
                 style={{ fontFamily: 'var(--font-editorial)' }}
               >
                 {loc(featured).keyIdea}
               </p>
               <div
-                className="mt-3 text-[10px] tracking-[0.18em] text-[#8C6520]"
+                className="mt-3 text-[10px] tracking-[0.18em] text-acc-deep"
                 style={{ fontFamily: 'var(--font-pixel-display)', textTransform: 'uppercase' }}
               >
                 READ THE FULL PROFILE ▶
@@ -236,12 +236,12 @@ export default async function PhilosopherIndexPage() {
       {featuredList.length > 0 ? (
         <section className="mb-8">
           <div
-            className="mb-2 text-[10px] tracking-[0.18em] text-[#8C6520]"
+            className="mb-2 text-[10px] tracking-[0.18em] text-acc-deep"
             style={{ fontFamily: "var(--font-pixel-display)", textTransform: 'uppercase' }}
           >
             ★ Long-form profiles · {featuredList.length}
           </div>
-          <p className="mb-3 text-[13px] italic text-[#4A4338]" style={{ fontFamily: 'var(--font-editorial)' }}>
+          <p className="mb-3 text-[13px] italic text-ink-soft" style={{ fontFamily: 'var(--font-editorial)' }}>
             These have hand-written extended profiles — 200-400 words of editorial prose, not just a one-liner.
           </p>
           <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
@@ -251,15 +251,15 @@ export default async function PhilosopherIndexPage() {
                   href={`/philosopher/${philosopherSlug(fp.name)}`}
                   className="block border-2 px-3 py-2 transition-all hover:translate-x-[-1px] hover:translate-y-[-1px]"
                   style={{
-                    borderColor: '#221E18',
+                    borderColor: 'var(--color-ink)',
                     background: '#FFFCF4',
-                    boxShadow: '2px 2px 0 0 #B8862F',
+                    boxShadow: '2px 2px 0 0 var(--color-acc)',
                   }}
                 >
-                  <div className="text-[13.5px] font-medium text-[#221E18]" style={{ fontFamily: 'var(--font-editorial)' }}>
+                  <div className="text-[13.5px] font-medium text-ink" style={{ fontFamily: 'var(--font-editorial)' }}>
                     {loc(fp).name}
                   </div>
-                  <div className="mt-0.5 text-[10.5px] tracking-wide text-[#8C6520]">
+                  <div className="mt-0.5 text-[10.5px] tracking-wide text-acc-deep">
                     {loc(fp).dates}
                   </div>
                 </Link>
@@ -275,12 +275,12 @@ export default async function PhilosopherIndexPage() {
       <div className="mb-8 flex flex-wrap items-center gap-3">
         <Link
           href="/map"
-          className="border-2 border-[#221E18] bg-[#F8C75E] px-3 py-1.5 text-[12px] tracking-[0.18em] text-[#1A1820] hover:bg-[#B8862F]"
+          className="border-2 border-ink bg-[#F8C75E] px-3 py-1.5 text-[12px] tracking-[0.18em] text-[#1A1820] hover:bg-acc"
           style={{ fontFamily: "var(--font-pixel-display)", textTransform: "uppercase" }}
         >
           ▶ EXPLORE THE MAP VISUALLY
         </Link>
-        <span className="text-[13px] text-[#8C6520]">
+        <span className="text-[13px] text-acc-deep">
           — or browse alphabetically below, grouped by archetype.
         </span>
       </div>
@@ -314,13 +314,13 @@ export default async function PhilosopherIndexPage() {
                 <div className="min-w-0 flex-1">
                   <Link
                     href={`/archetype/${arch.key}`}
-                    className="text-[20px] font-medium text-[#221E18] hover:text-[var(--acc-deep)] hover:underline sm:text-[22px]"
+                    className="text-[20px] font-medium text-ink hover:text-[var(--acc-deep)] hover:underline sm:text-[22px]"
                     style={{ fontFamily: 'var(--font-prose)', color: color.deep }}
                   >
                     {archName} →
                   </Link>
                   <p
-                    className="mt-1 text-[14px] italic leading-[1.4] text-[#4A4338]"
+                    className="mt-1 text-[14px] italic leading-[1.4] text-ink-soft"
                     style={{ fontFamily: 'var(--font-prose)' }}
                   >
                     {arch.spirit}
@@ -341,12 +341,12 @@ export default async function PhilosopherIndexPage() {
                       }}
                     >
                       <div
-                        className="text-[15px] font-medium text-[#221E18]"
+                        className="text-[15px] font-medium text-ink"
                         style={{ fontFamily: 'var(--font-prose)' }}
                       >
                         {loc(p).name}
                       </div>
-                      <div className="mt-0.5 text-[11.5px] tracking-wide text-[#8C6520]">
+                      <div className="mt-0.5 text-[11.5px] tracking-wide text-acc-deep">
                         {loc(p).dates}
                       </div>
                     </Link>
@@ -358,10 +358,10 @@ export default async function PhilosopherIndexPage() {
         })}
       </div>
 
-      <p className="mt-12 text-center text-[13px] text-[#8C6520]">
+      <p className="mt-12 text-center text-[13px] text-acc-deep">
         <Link
           href="/"
-          className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           ← {t('philindex.back_home', locale)}
         </Link>

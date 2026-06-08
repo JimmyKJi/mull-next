@@ -185,7 +185,7 @@ export default async function ClassInsightsPage({
         <MullWordmark />
         <Link href={`/classes/${cls.id}`} style={{
           fontFamily: pixel, fontSize: 11,
-          color: '#4A4338', textDecoration: 'none',
+          color: 'var(--color-ink-soft)', textDecoration: 'none',
           letterSpacing: 0.4, textTransform: 'uppercase',
         }}>
           ◂ {cls.name.toUpperCase()}
@@ -194,7 +194,7 @@ export default async function ClassInsightsPage({
 
       <div style={{
         fontFamily: pixel, fontSize: 12,
-        color: '#8C6520', textTransform: 'uppercase',
+        color: 'var(--color-acc-deep)', textTransform: 'uppercase',
         letterSpacing: '0.18em', marginBottom: 14,
       }}>
         ▸ {t('cls.insights_eyebrow', locale)} · {cls.name.toUpperCase()}
@@ -204,10 +204,10 @@ export default async function ClassInsightsPage({
         fontFamily: pixel,
         fontSize: 26,
         margin: '0 0 14px',
-        color: '#221E18',
+        color: 'var(--color-ink)',
         letterSpacing: '0.06em',
         textTransform: 'uppercase',
-        textShadow: '3px 3px 0 #B8862F',
+        textShadow: '3px 3px 0 var(--color-acc)',
         lineHeight: 1.1,
       }}>
         {t('cls.insights_title', locale)}
@@ -217,7 +217,7 @@ export default async function ClassInsightsPage({
         fontFamily: serif,
         fontStyle: 'italic',
         fontSize: 16.5,
-        color: '#4A4338',
+        color: 'var(--color-ink-soft)',
         margin: '0 0 26px',
         lineHeight: 1.55,
       }}>
@@ -264,7 +264,7 @@ export default async function ClassInsightsPage({
                       flex: '0 0 160px',
                       fontFamily: serif,
                       fontSize: 15,
-                      color: '#221E18',
+                      color: 'var(--color-ink)',
                     }}>
                       {archetype.replace(/^The /, '')}
                     </span>
@@ -272,7 +272,7 @@ export default async function ClassInsightsPage({
                       <div style={{
                         height: '100%',
                         width: `${pct}%`,
-                        background: '#B8862F',
+                        background: 'var(--color-acc)',
                       }} />
                     </div>
                     <span style={countStyle}>
@@ -300,7 +300,7 @@ export default async function ClassInsightsPage({
                       flex: '0 0 160px',
                       fontFamily: serif,
                       fontSize: 14,
-                      color: '#221E18',
+                      color: 'var(--color-ink)',
                     }}>
                       {d.name}
                     </span>
@@ -321,7 +321,7 @@ export default async function ClassInsightsPage({
                         width: 4,
                         top: -2,
                         bottom: -2,
-                        background: '#221E18',
+                        background: 'var(--color-ink)',
                       }} />
                     </div>
                     <span style={countStyle}>
@@ -346,7 +346,7 @@ export default async function ClassInsightsPage({
                       flex: '0 0 160px',
                       fontFamily: serif,
                       fontSize: 15,
-                      color: '#221E18',
+                      color: 'var(--color-ink)',
                     }}>
                       {s.name}
                     </span>
@@ -385,11 +385,11 @@ function Section({ title, children }: { title: string; children: React.ReactNode
       <h2 style={{
         fontFamily: pixel,
         fontSize: 14,
-        color: '#221E18',
+        color: 'var(--color-ink)',
         textTransform: 'uppercase',
         letterSpacing: '0.18em',
         marginBottom: 12,
-        textShadow: '2px 2px 0 #B8862F',
+        textShadow: '2px 2px 0 var(--color-acc)',
       }}>
         {title}
       </h2>
@@ -403,14 +403,14 @@ function StatTile({ label, value, accent }: { label: string; value: number; acce
     <div style={{
       padding: '14px 16px',
       background: '#FFFCF4',
-      border: '3px solid #221E18',
+      border: '3px solid var(--color-ink)',
       boxShadow: `3px 3px 0 0 ${accent}`,
       borderRadius: 0,
     }}>
       <div style={{
         fontFamily: pixel,
         fontSize: 24,
-        color: '#221E18',
+        color: 'var(--color-ink)',
         lineHeight: 1,
         letterSpacing: 0.4,
         fontVariantNumeric: 'tabular-nums',
@@ -436,7 +436,7 @@ function EmptyClass({ classId, locale }: { classId: string; locale: Locale }) {
     <div style={{
       padding: '24px 22px',
       background: '#FFFCF4',
-      border: '3px dashed #8C6520',
+      border: '3px dashed var(--color-acc-deep)',
       borderRadius: 0,
       textAlign: 'center',
     }}>
@@ -444,7 +444,7 @@ function EmptyClass({ classId, locale }: { classId: string; locale: Locale }) {
         fontFamily: serif,
         fontStyle: 'italic',
         fontSize: 16,
-        color: '#8C6520',
+        color: 'var(--color-acc-deep)',
         margin: '0 0 14px',
         lineHeight: 1.55,
       }}>
@@ -456,10 +456,10 @@ function EmptyClass({ classId, locale }: { classId: string; locale: Locale }) {
         style={{
           display: 'inline-block',
           padding: '10px 16px',
-          background: '#221E18',
-          color: '#FAF6EC',
-          border: '3px solid #221E18',
-          boxShadow: '3px 3px 0 0 #B8862F',
+          background: 'var(--color-ink)',
+          color: 'var(--color-cream)',
+          border: '3px solid var(--color-ink)',
+          boxShadow: '3px 3px 0 0 var(--color-acc)',
           borderRadius: 0,
           fontFamily: pixel,
           fontSize: 11,
@@ -479,7 +479,7 @@ const subtitleStyle: React.CSSProperties = {
   fontFamily: serif,
   fontStyle: 'italic',
   fontSize: 14.5,
-  color: '#4A4338',
+  color: 'var(--color-ink-soft)',
   margin: '0 0 14px',
   lineHeight: 1.55,
 };
@@ -498,22 +498,22 @@ const rowStyle: React.CSSProperties = {
   gap: 12,
   padding: '10px 14px',
   background: '#FFFCF4',
-  border: '2px solid #221E18',
+  border: '2px solid var(--color-ink)',
   borderRadius: 0,
 };
 
 const barTrackStyle: React.CSSProperties = {
   flex: 1,
   height: 10,
-  background: '#FAF6EC',
-  border: '2px solid #221E18',
+  background: 'var(--color-cream)',
+  border: '2px solid var(--color-ink)',
   position: 'relative',
 };
 
 const countStyle: React.CSSProperties = {
   fontFamily: pixel,
   fontSize: 12,
-  color: '#8C6520',
+  color: 'var(--color-acc-deep)',
   letterSpacing: 0.4,
   fontVariantNumeric: 'tabular-nums',
   flex: '0 0 48px',

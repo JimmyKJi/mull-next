@@ -82,20 +82,20 @@ export default function ReferralCard({ initialCode = null, initialCount = 0 }: P
       marginTop: 28,
       padding: '20px 24px',
       background: '#FFFCF4',
-      border: '4px solid #221E18',
-      boxShadow: '5px 5px 0 0 #B8862F',
+      border: '4px solid var(--color-ink)',
+      boxShadow: '5px 5px 0 0 var(--color-acc)',
       borderRadius: 0,
     }}>
       <div style={{
         fontFamily: pixel, fontSize: 12,
-        color: '#8C6520', textTransform: 'uppercase',
+        color: 'var(--color-acc-deep)', textTransform: 'uppercase',
         letterSpacing: '0.18em', marginBottom: 10,
       }}>
         ▸ {t('crd.referral_eyebrow', locale)}
       </div>
       <p style={{
         fontFamily: serif, fontStyle: 'italic',
-        fontSize: 15.5, color: '#4A4338',
+        fontSize: 15.5, color: 'var(--color-ink-soft)',
         margin: '0 0 16px', lineHeight: 1.55,
       }}>
         {t('crd.referral_lead', locale)}
@@ -118,12 +118,12 @@ export default function ReferralCard({ initialCode = null, initialCount = 0 }: P
             flex: '1 1 240px',
             minWidth: 0,
             padding: '10px 12px',
-            border: '3px solid #221E18',
+            border: '3px solid var(--color-ink)',
             borderRadius: 0,
-            background: '#F8EDC8',
+            background: 'var(--color-acc-soft)',
             fontFamily: 'ui-monospace, Menlo, monospace',
             fontSize: 13,
-            color: '#221E18',
+            color: 'var(--color-ink)',
             outline: 'none',
           }}
         />
@@ -133,11 +133,11 @@ export default function ReferralCard({ initialCode = null, initialCount = 0 }: P
           className="pixel-press"
           style={{
             padding: '10px 18px',
-            background: copied ? '#2F5D5C' : '#221E18',
-            color: '#FAF6EC',
-            border: '3px solid #221E18',
+            background: copied ? '#2F5D5C' : 'var(--color-ink)',
+            color: 'var(--color-cream)',
+            border: '3px solid var(--color-ink)',
             borderRadius: 0,
-            boxShadow: '3px 3px 0 0 #B8862F',
+            boxShadow: '3px 3px 0 0 var(--color-acc)',
             fontFamily: pixel,
             fontSize: 12,
             letterSpacing: '0.08em',
@@ -151,7 +151,7 @@ export default function ReferralCard({ initialCode = null, initialCount = 0 }: P
       </div>
       <p style={{
         fontFamily: serif, fontStyle: 'italic', fontSize: 13,
-        color: '#8C6520',
+        color: 'var(--color-acc-deep)',
         margin: '12px 0 0', opacity: 0.85, lineHeight: 1.5,
       }}>
         {t('crd.referral_note', locale)}

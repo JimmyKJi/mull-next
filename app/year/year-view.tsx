@@ -58,7 +58,7 @@ export default function YearView({ locale }: { locale: Locale }) {
 
   if (events === null || anthology === null) {
     return (
-      <div className="text-center text-[14px] text-[#8C6520]" style={{ fontFamily: serif }}>
+      <div className="text-center text-[14px] text-acc-deep" style={{ fontFamily: serif }}>
         {t("yr.loading", locale)}
       </div>
     );
@@ -115,15 +115,15 @@ export default function YearView({ locale }: { locale: Locale }) {
 
       {/* The 12-month × 6-skill heatmap */}
       <div
-        className="border-[3px] border-[#221E18] bg-[#FFFCF4]"
-        style={{ boxShadow: "4px 4px 0 0 #B8862F" }}
+        className="border-[3px] border-ink bg-[#FFFCF4]"
+        style={{ boxShadow: "4px 4px 0 0 var(--color-acc)" }}
       >
         <div
-          className="flex items-center justify-between border-b-2 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
+          className="flex items-center justify-between border-b-2 border-ink bg-ink px-4 py-2 text-[10px] tracking-[0.22em] text-acc-soft"
           style={{ fontFamily: pixel }}
         >
           <span>▶ {t("yr.heatmap_header", locale, { year })}</span>
-          <span className="text-[#B8862F]">YEAR.SYS</span>
+          <span className="text-acc">YEAR.SYS</span>
         </div>
         <div className="overflow-x-auto p-4">
           <table style={{ borderCollapse: "collapse", minWidth: 540 }}>
@@ -137,7 +137,7 @@ export default function YearView({ locale }: { locale: Locale }) {
                       fontFamily: pixel,
                       fontSize: 9,
                       letterSpacing: "0.18em",
-                      color: mi === new Date().getUTCMonth() ? "#221E18" : "#8C6520",
+                      color: mi === new Date().getUTCMonth() ? "var(--color-ink)" : "var(--color-acc-deep)",
                       padding: "0 6px",
                     }}
                   >
@@ -200,7 +200,7 @@ export default function YearView({ locale }: { locale: Locale }) {
           </table>
         </div>
         <div
-          className="border-t-2 border-[#221E18] bg-[#FBF6E8] px-4 py-2 text-[12px] italic text-[#5C4528]"
+          className="border-t-2 border-ink bg-[#FBF6E8] px-4 py-2 text-[12px] italic text-[#5C4528]"
           style={{ fontFamily: serif }}
         >
           {topMonth && topMonth.total > 0 ? (
@@ -229,11 +229,11 @@ export default function YearView({ locale }: { locale: Locale }) {
           <Link
             key={c.href}
             href={c.href}
-            className="border-2 border-[#221E18] bg-[#FFFCF4] px-3 py-2 text-center text-[11px] tracking-[0.18em] text-[#221E18] hover:bg-[#F8EDC8]"
+            className="border-2 border-ink bg-[#FFFCF4] px-3 py-2 text-center text-[11px] tracking-[0.18em] text-ink hover:bg-acc-soft"
             style={{
               fontFamily: pixel,
               textTransform: "uppercase",
-              boxShadow: "2px 2px 0 0 #B8862F",
+              boxShadow: "2px 2px 0 0 var(--color-acc)",
             }}
           >
             ▶ {c.label}
@@ -255,11 +255,11 @@ function Stat({
 }) {
   return (
     <div
-      className="border-2 border-[#221E18] bg-[#FFFCF4] p-3 text-center"
+      className="border-2 border-ink bg-[#FFFCF4] p-3 text-center"
       style={{ boxShadow: `2px 2px 0 0 ${color}` }}
     >
       <div
-        className="text-[22px] leading-none text-[#221E18]"
+        className="text-[22px] leading-none text-ink"
         style={{ fontFamily: pixel }}
       >
         {value}

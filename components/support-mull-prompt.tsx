@@ -29,7 +29,7 @@ type Props = {
 export function SupportMullPrompt({
   lead,
   detail,
-  accent = "#B8862F",
+  accent = "var(--color-acc)",
 }: Props) {
   const [locale, setLocale] = useState<Locale>("en");
 
@@ -73,7 +73,7 @@ export function SupportMullPrompt({
         style={{
           fontFamily: serif,
           fontSize: 15.5,
-          color: "#221E18",
+          color: "var(--color-ink)",
           margin: "0 0 6px",
           lineHeight: 1.55,
         }}
@@ -85,7 +85,7 @@ export function SupportMullPrompt({
           fontFamily: serif,
           fontStyle: "italic",
           fontSize: 13.5,
-          color: "#4A4338",
+          color: "var(--color-ink-soft)",
           margin: "0 0 14px",
           lineHeight: 1.55,
         }}
@@ -101,7 +101,7 @@ export function SupportMullPrompt({
           padding: "10px 16px",
           background: "#F8C75E",
           color: "#1A1820",
-          border: "2px solid #221E18",
+          border: "2px solid var(--color-ink)",
           boxShadow: "3px 3px 0 0 #2F5D5C",
           fontFamily: pixel,
           fontSize: 11,
@@ -117,7 +117,7 @@ export function SupportMullPrompt({
           marginTop: 10,
           fontFamily: pixel,
           fontSize: 9,
-          color: "#8C6520",
+          color: "var(--color-acc-deep)",
           letterSpacing: 0.4,
           textTransform: "uppercase",
           margin: "10px 0 0",

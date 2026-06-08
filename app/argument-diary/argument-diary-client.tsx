@@ -118,11 +118,11 @@ export default function ArgumentDiaryClient({
     <div className="space-y-6">
       {/* Input */}
       <div
-        className="border-[3px] border-[#221E18] bg-[#FFFCF4] p-5"
+        className="border-[3px] border-ink bg-[#FFFCF4] p-5"
         style={{ boxShadow: "4px 4px 0 0 #8C3717" }}
       >
         <label
-          className="text-[10px] tracking-[0.22em] text-[#8C6520]"
+          className="text-[10px] tracking-[0.22em] text-acc-deep"
           style={{ fontFamily: pixel, textTransform: "uppercase" }}
         >
           {t("argdiary.account_label", locale)}
@@ -138,11 +138,11 @@ export default function ArgumentDiaryClient({
             width: "100%",
             padding: "10px 12px",
             background: "#FBF6E8",
-            border: "2px solid #221E18",
+            border: "2px solid var(--color-ink)",
             fontFamily: serif,
             fontSize: 15.5,
             lineHeight: 1.6,
-            color: "#221E18",
+            color: "var(--color-ink)",
             resize: "vertical",
             minHeight: 180,
             borderRadius: 0,
@@ -152,7 +152,7 @@ export default function ArgumentDiaryClient({
           className="mt-1 flex justify-between text-[10px] tracking-[0.18em]"
           style={{
             fontFamily: pixel,
-            color: account.length > MAX_CHARS ? "#8C3717" : "#8C6520",
+            color: account.length > MAX_CHARS ? "#8C3717" : "var(--color-acc-deep)",
             textTransform: "uppercase",
           }}
         >
@@ -162,7 +162,7 @@ export default function ArgumentDiaryClient({
         </div>
 
         <label
-          className="mt-4 block text-[10px] tracking-[0.22em] text-[#8C6520]"
+          className="mt-4 block text-[10px] tracking-[0.22em] text-acc-deep"
           style={{ fontFamily: pixel, textTransform: "uppercase" }}
         >
           {t("argdiary.context_label", locale)}
@@ -177,10 +177,10 @@ export default function ArgumentDiaryClient({
             width: "100%",
             padding: "8px 12px",
             background: "#FBF6E8",
-            border: "2px solid #221E18",
+            border: "2px solid var(--color-ink)",
             fontFamily: serif,
             fontSize: 14,
-            color: "#221E18",
+            color: "var(--color-ink)",
             borderRadius: 0,
           }}
         />
@@ -205,12 +205,12 @@ export default function ArgumentDiaryClient({
           type="button"
           onClick={submit}
           disabled={submitting || !account.trim()}
-          className="mt-4 w-full border-[3px] border-[#221E18] px-4 py-3 text-[12px] tracking-[0.18em] text-[#1A1820]"
+          className="mt-4 w-full border-[3px] border-ink px-4 py-3 text-[12px] tracking-[0.18em] text-[#1A1820]"
           style={{
             fontFamily: pixel,
             textTransform: "uppercase",
             background:
-              submitting || !account.trim() ? "#D6CDB6" : "#F8C75E",
+              submitting || !account.trim() ? "var(--color-line)" : "#F8C75E",
             boxShadow:
               submitting || !account.trim() ? "none" : "4px 4px 0 0 #8C3717",
             cursor:
@@ -229,11 +229,11 @@ export default function ArgumentDiaryClient({
       {/* History */}
       {history.length > 1 && (
         <details
-          className="border-2 border-[#221E18] bg-[#FFFCF4] px-3 py-2"
+          className="border-2 border-ink bg-[#FFFCF4] px-3 py-2"
           style={{ fontFamily: serif }}
         >
           <summary
-            className="cursor-pointer text-[12px] text-[#8C6520]"
+            className="cursor-pointer text-[12px] text-acc-deep"
             style={{ fontFamily: pixel, letterSpacing: "0.18em", textTransform: "uppercase" }}
           >
             {t("argdiary.past_entries", locale, {
@@ -246,10 +246,10 @@ export default function ArgumentDiaryClient({
               .map((h) => (
                 <li key={h.id}>
                   <details
-                    className="border-l-2 border-[#8C6520] bg-[#FBF6E8] px-3 py-2"
+                    className="border-l-2 border-acc-deep bg-[#FBF6E8] px-3 py-2"
                   >
                     <summary
-                      className="cursor-pointer text-[13px] text-[#221E18]"
+                      className="cursor-pointer text-[13px] text-ink"
                       style={{ fontFamily: serif }}
                     >
                       {new Date(h.ts).toLocaleDateString(
@@ -280,7 +280,7 @@ function AnalysisCard({
     <div className="space-y-3">
       <Section title={t("argdiary.section_steelman", locale)} accent="#2F5D5C">
         <p
-          className="text-[15px] leading-[1.65] text-[#221E18]"
+          className="text-[15px] leading-[1.65] text-ink"
           style={{ fontFamily: serif }}
         >
           {entry.analysis.steelman}
@@ -298,7 +298,7 @@ function AnalysisCard({
                 {f.name}
               </div>
               <p
-                className="mt-1 text-[14.5px] leading-[1.55] text-[#221E18]"
+                className="mt-1 text-[14.5px] leading-[1.55] text-ink"
                 style={{ fontFamily: serif }}
               >
                 {f.explanation}
@@ -328,7 +328,7 @@ function AnalysisCard({
                 />
               </div>
               <p
-                className="mt-1 text-[14.5px] leading-[1.55] text-[#221E18]"
+                className="mt-1 text-[14.5px] leading-[1.55] text-ink"
                 style={{ fontFamily: serif }}
               >
                 {k.take}
@@ -352,8 +352,8 @@ function Section({
 }) {
   return (
     <div
-      className="border-l-[5px] border-[#221E18] bg-[#FFFCF4] p-4"
-      style={{ borderLeftColor: accent, boxShadow: "3px 3px 0 0 #B8862F" }}
+      className="border-l-[5px] border-ink bg-[#FFFCF4] p-4"
+      style={{ borderLeftColor: accent, boxShadow: "3px 3px 0 0 var(--color-acc)" }}
     >
       <div
         className="text-[10px] tracking-[0.22em]"
@@ -401,8 +401,8 @@ function SaveTakeButton({
         gap: 4,
         padding: "2px 8px",
         background: saved ? "#2F5D5C" : "#FFFCF4",
-        color: saved ? "#F8EDC8" : "#8C6520",
-        border: "1.5px solid #221E18",
+        color: saved ? "var(--color-acc-soft)" : "var(--color-acc-deep)",
+        border: "1.5px solid var(--color-ink)",
         fontFamily: pixel,
         fontSize: 9,
         letterSpacing: "0.18em",

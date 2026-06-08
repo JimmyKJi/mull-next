@@ -169,18 +169,18 @@ export function SiteNav({ locale = "en" }: { locale?: Locale }) {
       {/* Pixel-game top nav — chunky 4px ink border on the bottom, flat
           cream surface, hard shadows, no rounded corners. Reads as the
           title bar of an 8-bit window. */}
-      <nav className="sticky top-0 z-40 border-b-4 border-[#221E18] bg-[#FAF6EC]">
+      <nav className="sticky top-0 z-40 border-b-4 border-ink bg-cream">
         <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-4 px-4 sm:px-8">
           {/* Wordmark → home */}
           <Link
             href="/"
-            className="flex shrink-0 items-center gap-2.5 hover:text-[#8C6520]"
+            className="flex shrink-0 items-center gap-2.5 hover:text-acc-deep"
           >
             <span className="slow-bob inline-block">
               <MullMark size={22} />
             </span>
             <span
-              className="text-[14px] tracking-[0.12em] text-[#221E18]"
+              className="text-[14px] tracking-[0.12em] text-ink"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
               MULL
@@ -209,14 +209,14 @@ export function SiteNav({ locale = "en" }: { locale?: Locale }) {
                     className={
                       "flex items-center gap-1.5 px-2.5 py-1.5 text-[14px] font-medium leading-none transition-colors " +
                       (active || expanded
-                        ? "text-[#221E18]"
-                        : "text-[#4A4338] hover:text-[#221E18]")
+                        ? "text-ink"
+                        : "text-ink-soft hover:text-ink")
                     }
                   >
                     <span
                       className={
                         active
-                          ? "underline decoration-[3px] decoration-[#B8862F] underline-offset-[6px]"
+                          ? "underline decoration-[3px] decoration-acc underline-offset-[6px]"
                           : ""
                       }
                     >
@@ -231,7 +231,7 @@ export function SiteNav({ locale = "en" }: { locale?: Locale }) {
                     <div
                       role="menu"
                       aria-label={t(g.key, locale)}
-                      className="absolute left-0 top-full z-50 mt-[6px] min-w-[210px] border-4 border-[#221E18] bg-[#FFFCF4] p-1.5 shadow-[6px_6px_0_0_#8C6520]"
+                      className="absolute left-0 top-full z-50 mt-[6px] min-w-[210px] border-4 border-ink bg-[#FFFCF4] p-1.5 shadow-[6px_6px_0_0_var(--color-acc-deep)]"
                     >
                       <ul>
                         {g.items.map((it) => {
@@ -245,8 +245,8 @@ export function SiteNav({ locale = "en" }: { locale?: Locale }) {
                                 className={
                                   "block whitespace-nowrap px-3 py-2 text-[14px] leading-none transition-none " +
                                   (itActive
-                                    ? "bg-[#B8862F] text-[#1A1612]"
-                                    : "text-[#221E18] hover:bg-[#F8EDC8]")
+                                    ? "bg-acc text-[#1A1612]"
+                                    : "text-ink hover:bg-acc-soft")
                                 }
                               >
                                 {t(it.key, locale)}
@@ -274,7 +274,7 @@ export function SiteNav({ locale = "en" }: { locale?: Locale }) {
             <button
               type="button"
               onClick={() => setOpen(true)}
-              className="hidden items-center gap-2 border-2 border-[#221E18] bg-[#FFFCF4] px-3 py-1.5 text-[13px] font-medium leading-none text-[#221E18] hover:bg-[#F8EDC8] sm:inline-flex"
+              className="hidden items-center gap-2 border-2 border-ink bg-[#FFFCF4] px-3 py-1.5 text-[13px] font-medium leading-none text-ink hover:bg-acc-soft sm:inline-flex"
               aria-label={t("nav.search_short", locale)}
             >
               <span>{t("nav.search_short", locale)}</span>
@@ -282,7 +282,7 @@ export function SiteNav({ locale = "en" }: { locale?: Locale }) {
             </button>
             <Link
               href="/account"
-              className="hidden border-2 border-[#221E18] bg-[#221E18] px-3.5 py-1.5 text-[13px] font-medium leading-none text-[#FAF6EC] hover:border-[#8C6520] hover:bg-[#8C6520] sm:inline-block"
+              className="hidden border-2 border-ink bg-ink px-3.5 py-1.5 text-[13px] font-medium leading-none text-cream hover:border-acc-deep hover:bg-acc-deep sm:inline-block"
             >
               {t("nav.account_btn", locale)}
             </Link>
@@ -293,7 +293,7 @@ export function SiteNav({ locale = "en" }: { locale?: Locale }) {
               aria-haspopup="true"
               aria-expanded={mobileOpen}
               aria-label={t("nav.menu", locale)}
-              className="inline-flex items-center gap-1.5 border-2 border-[#221E18] bg-[#FFFCF4] px-2.5 py-1.5 text-[12px] font-medium leading-none text-[#221E18] hover:bg-[#F8EDC8] md:hidden"
+              className="inline-flex items-center gap-1.5 border-2 border-ink bg-[#FFFCF4] px-2.5 py-1.5 text-[12px] font-medium leading-none text-ink hover:bg-acc-soft md:hidden"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
               <span aria-hidden>{mobileOpen ? "✕" : "☰"}</span>
@@ -327,7 +327,7 @@ export function SiteNav({ locale = "en" }: { locale?: Locale }) {
         type="button"
         onClick={() => setOpen(true)}
         aria-label={t("palette.open", locale)}
-        className="pixel-press fixed right-[18px] z-[60] flex h-12 w-12 items-center justify-center border-4 border-[#221E18] bg-[#221E18] text-[#FAF6EC] shadow-[3px_3px_0_0_#B8862F] sm:hidden"
+        className="pixel-press fixed right-[18px] z-[60] flex h-12 w-12 items-center justify-center border-4 border-ink bg-ink text-cream shadow-[3px_3px_0_0_var(--color-acc)] sm:hidden"
         style={{
           bottom: 'calc(18px + env(safe-area-inset-bottom, 0px))',
           fontFamily: "var(--font-pixel-display)",
@@ -363,7 +363,7 @@ function MobileMenu({
 }) {
   return (
     <div
-      className="fixed inset-x-0 bottom-0 top-16 z-50 bg-[#221E18]/50 md:hidden"
+      className="fixed inset-x-0 bottom-0 top-16 z-50 bg-ink/50 md:hidden"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
@@ -371,13 +371,13 @@ function MobileMenu({
     >
       <FocusTrap onEscape={onClose}>
         <div
-          className="max-h-full overflow-y-auto border-b-4 border-[#221E18] bg-[#FAF6EC] px-4 py-4"
+          className="max-h-full overflow-y-auto border-b-4 border-ink bg-cream px-4 py-4"
           onClick={(e) => e.stopPropagation()}
         >
           {NAV_GROUPS.map((g) => (
             <div key={g.key} className="mb-4">
               <div
-                className="mb-1.5 px-1 text-[11px] uppercase tracking-[0.2em] text-[#8C6520]"
+                className="mb-1.5 px-1 text-[11px] uppercase tracking-[0.2em] text-acc-deep"
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
                 {t(g.key, locale)}
@@ -393,8 +393,8 @@ function MobileMenu({
                         className={
                           "block border-2 px-3 py-2.5 text-[14px] leading-none " +
                           (active
-                            ? "border-[#221E18] bg-[#B8862F] text-[#1A1612]"
-                            : "border-[#EBE3CA] bg-[#FFFCF4] text-[#221E18] hover:bg-[#F8EDC8]")
+                            ? "border-ink bg-acc text-[#1A1612]"
+                            : "border-[#EBE3CA] bg-[#FFFCF4] text-ink hover:bg-acc-soft")
                         }
                       >
                         {t(it.key, locale)}
@@ -410,7 +410,7 @@ function MobileMenu({
               screens that hide it from the bar. */}
           <div className="mb-4">
             <div
-              className="mb-1.5 px-1 text-[11px] uppercase tracking-[0.2em] text-[#8C6520]"
+              className="mb-1.5 px-1 text-[11px] uppercase tracking-[0.2em] text-acc-deep"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
               {t("a11y.language", locale)}
@@ -423,14 +423,14 @@ function MobileMenu({
             <button
               type="button"
               onClick={onOpenSearch}
-              className="flex-1 border-2 border-[#221E18] bg-[#FFFCF4] px-3 py-2.5 text-[14px] font-medium leading-none text-[#221E18] hover:bg-[#F8EDC8]"
+              className="flex-1 border-2 border-ink bg-[#FFFCF4] px-3 py-2.5 text-[14px] font-medium leading-none text-ink hover:bg-acc-soft"
             >
               {t("nav.search_short", locale)}
             </button>
             <Link
               href="/account"
               onClick={onClose}
-              className="flex-1 border-2 border-[#221E18] bg-[#221E18] px-3 py-2.5 text-center text-[14px] font-medium leading-none text-[#FAF6EC] hover:border-[#8C6520] hover:bg-[#8C6520]"
+              className="flex-1 border-2 border-ink bg-ink px-3 py-2.5 text-center text-[14px] font-medium leading-none text-cream hover:border-acc-deep hover:bg-acc-deep"
             >
               {t("nav.account_btn", locale)}
             </Link>
@@ -577,7 +577,7 @@ function CommandPalette({ locale, onClose }: { locale: Locale; onClose: () => vo
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center bg-[#221E18]/60 px-4 pt-[12vh]"
+      className="fixed inset-0 z-50 flex items-start justify-center bg-ink/60 px-4 pt-[12vh]"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
@@ -586,13 +586,13 @@ function CommandPalette({ locale, onClose }: { locale: Locale; onClose: () => vo
       <FocusTrap onEscape={onClose}>
       {/* Pixel dialog box: 4-px ink border, hard amber shadow */}
       <div
-        className="w-full max-w-[640px] overflow-hidden border-4 border-[#221E18] bg-[#FFFCF4] shadow-[8px_8px_0_0_#8C6520]"
+        className="w-full max-w-[640px] overflow-hidden border-4 border-ink bg-[#FFFCF4] shadow-[8px_8px_0_0_var(--color-acc-deep)]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Title bar */}
-        <div className="flex items-center justify-between border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2">
+        <div className="flex items-center justify-between border-b-4 border-ink bg-ink px-4 py-2">
           <span
-            className="text-[12px] tracking-[0.16em] text-[#F8EDC8]"
+            className="text-[12px] tracking-[0.16em] text-acc-soft"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
             {t("palette.title", locale)}
@@ -600,7 +600,7 @@ function CommandPalette({ locale, onClose }: { locale: Locale; onClose: () => vo
           <button
             type="button"
             onClick={onClose}
-            className="text-[14px] text-[#F8EDC8] hover:text-[#B8862F]"
+            className="text-[14px] text-acc-soft hover:text-acc"
             style={{ fontFamily: "var(--font-pixel-display)" }}
             aria-label={t("nav.close", locale)}
           >
@@ -614,11 +614,11 @@ function CommandPalette({ locale, onClose }: { locale: Locale; onClose: () => vo
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={onKey}
-          className="w-full border-b-2 border-[#221E18] bg-[#F8EDC8] px-5 py-3 text-[15px] leading-tight text-[#221E18] placeholder:text-[#8C6520]/70 focus:outline-none"
+          className="w-full border-b-2 border-ink bg-acc-soft px-5 py-3 text-[15px] leading-tight text-ink placeholder:text-acc-deep/70 focus:outline-none"
         />
         <div className="max-h-[60vh] overflow-y-auto bg-[#FFFCF4] p-2">
           {items.length === 0 ? (
-            <div className="px-3 py-8 text-center text-[14px] text-[#8C6520]">
+            <div className="px-3 py-8 text-center text-[14px] text-acc-deep">
               {t("palette.empty", locale)}
             </div>
           ) : (
@@ -631,7 +631,7 @@ function CommandPalette({ locale, onClose }: { locale: Locale; onClose: () => vo
             />
           )}
         </div>
-        <div className="flex items-center justify-between border-t-2 border-[#221E18] bg-[#221E18] px-4 py-1.5 text-[12px] leading-none text-[#F8EDC8]">
+        <div className="flex items-center justify-between border-t-2 border-ink bg-ink px-4 py-1.5 text-[12px] leading-none text-acc-soft">
           <span>{t("palette.footer_hint", locale)}</span>
           <span>
             {locale === "en"
@@ -667,7 +667,7 @@ function ItemList({
       out.push(
         <div
           key={`g-${item.group}`}
-          className="mt-2 px-3 pb-1 text-[11px] uppercase tracking-[0.22em] text-[#8C6520]"
+          className="mt-2 px-3 pb-1 text-[11px] uppercase tracking-[0.22em] text-acc-deep"
           style={{ fontFamily: "var(--font-pixel-display)" }}
         >
           {t(PALETTE_GROUP_KEY[item.group as PaletteItem["group"]], locale)}
@@ -685,13 +685,13 @@ function ItemList({
         className={
           "flex w-full items-baseline justify-between gap-3 px-3 py-2 text-left text-[14px] leading-none transition-none " +
           (isActive
-            ? "bg-[#B8862F] text-[#1A1612]"
-            : "text-[#221E18] hover:bg-[#F8EDC8]")
+            ? "bg-acc text-[#1A1612]"
+            : "text-ink hover:bg-acc-soft")
         }
       >
         <span className="font-medium">{isActive ? "▶ " : "  "}{item.label}</span>
         {item.hint ? (
-          <span className={`ml-auto truncate text-[12px] ${isActive ? "text-[#3A2F18]" : "text-[#8C6520]"}`}>
+          <span className={`ml-auto truncate text-[12px] ${isActive ? "text-[#3A2F18]" : "text-acc-deep"}`}>
             {item.hint}
           </span>
         ) : null}

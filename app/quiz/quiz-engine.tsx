@@ -339,7 +339,7 @@ export function QuizEngine({ questions, mode, locale }: Props) {
 
   if (!question) {
     return (
-      <div className="mx-auto max-w-[720px] px-6 py-32 text-center text-[#4A4338]">
+      <div className="mx-auto max-w-[720px] px-6 py-32 text-center text-ink-soft">
         Loading…
       </div>
     );
@@ -388,7 +388,7 @@ export function QuizEngine({ questions, mode, locale }: Props) {
         <div
           role="status"
           aria-live="polite"
-          className="mb-4 inline-flex items-center gap-2 border-[3px] border-[#221E18] bg-[#F8EDC8] px-3 py-1.5 text-[10px] tracking-[0.16em] text-[#221E18]"
+          className="mb-4 inline-flex items-center gap-2 border-[3px] border-ink bg-acc-soft px-3 py-1.5 text-[10px] tracking-[0.16em] text-ink"
           style={{
             fontFamily: "var(--font-pixel-display)",
             boxShadow: '3px 3px 0 0 #2F5D5C',
@@ -401,11 +401,11 @@ export function QuizEngine({ questions, mode, locale }: Props) {
       {/* Top status row — chapter + progress dots */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div
-          className="text-[10px] tracking-[0.24em] text-[#8C6520]"
+          className="text-[10px] tracking-[0.24em] text-acc-deep"
           style={{ fontFamily: "var(--font-pixel-display)" }}
         >
           CHAPTER {chapter + 1} / {totalChapters} ·
-          <span className="ml-2 text-[#B8862F]">
+          <span className="ml-2 text-acc">
             {positionInChapter} / {QUESTIONS_PER_CHAPTER}
           </span>
         </div>
@@ -416,14 +416,14 @@ export function QuizEngine({ questions, mode, locale }: Props) {
       <div className="mt-8 pixel-panel">
         {/* Title bar */}
         <div
-          className="flex items-center justify-between border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
+          className="flex items-center justify-between border-b-4 border-ink bg-ink px-4 py-2 text-[10px] tracking-[0.22em] text-acc-soft"
           style={{ fontFamily: "var(--font-pixel-display)" }}
         >
           <span>QUESTION {String(idx + 1).padStart(2, "0")} / {questions.length}</span>
           {isMulti ? (
-            <span className="text-[#B8862F]">PICK UP TO {maxPicks}</span>
+            <span className="text-acc">PICK UP TO {maxPicks}</span>
           ) : (
-            <span className="text-[#B8862F]">PICK ONE</span>
+            <span className="text-acc">PICK ONE</span>
           )}
         </div>
 
@@ -431,12 +431,12 @@ export function QuizEngine({ questions, mode, locale }: Props) {
         <div className="px-6 py-8 sm:px-10 sm:py-10">
           <div className="flex items-start gap-5">
             <div
-              className="hidden shrink-0 pt-1 text-[44px] leading-none text-[#B8862F] sm:block"
+              className="hidden shrink-0 pt-1 text-[44px] leading-none text-acc sm:block"
               aria-hidden
             >
               {decorGlyph}
             </div>
-            <h1 className="text-[22px] font-medium leading-[1.4] text-[#221E18] sm:text-[28px]">
+            <h1 className="text-[22px] font-medium leading-[1.4] text-ink sm:text-[28px]">
               {prompt}
             </h1>
           </div>
@@ -445,7 +445,7 @@ export function QuizEngine({ questions, mode, locale }: Props) {
               continue" instruction so users don't think they're stuck. */}
           {isMulti && (
             <p
-              className="mt-6 text-[12.5px] tracking-[0.04em] text-[#8C6520] sm:text-[13px]"
+              className="mt-6 text-[12.5px] tracking-[0.04em] text-acc-deep sm:text-[13px]"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
               ▸ TAP UP TO {maxPicks} · THEN CONTINUE →
@@ -475,24 +475,24 @@ export function QuizEngine({ questions, mode, locale }: Props) {
                       // Pixel-border answer card. No rounded corners,
                       // 3-px border, hard amber shadow on hover.
                       "group flex w-full items-start gap-4 border-[3px] bg-[#FFFCF4] px-5 py-4 text-left transition-all duration-150 " +
-                      "hover:translate-x-[-2px] hover:translate-y-[-2px] hover:bg-[#FFF9E8] hover:shadow-[4px_4px_0_0_#8C6520] " +
+                      "hover:translate-x-[-2px] hover:translate-y-[-2px] hover:bg-[#FFF9E8] hover:shadow-[4px_4px_0_0_var(--color-acc-deep)] " +
                       (selected
-                        ? "border-[#8C6520] bg-[#F8EDC8] shadow-[4px_4px_0_0_#221E18]"
+                        ? "border-acc-deep bg-acc-soft shadow-[4px_4px_0_0_var(--color-ink)]"
                         : otherLocked
-                          ? "border-[#D6CDB6] opacity-40"
-                          : "border-[#D6CDB6]")
+                          ? "border-line opacity-40"
+                          : "border-line")
                     }
                   >
                     <span
                       className={
                         "mt-1.5 inline-block h-3 w-3 shrink-0 border-2 transition-colors " +
                         (selected
-                          ? "border-[#8C6520] bg-[#8C6520]"
-                          : "border-[#D6CDB6] group-hover:border-[#8C6520]")
+                          ? "border-acc-deep bg-acc-deep"
+                          : "border-line group-hover:border-acc-deep")
                       }
                       aria-hidden
                     />
-                    <span className="text-[15px] leading-[1.55] text-[#221E18] sm:text-[16px]">
+                    <span className="text-[15px] leading-[1.55] text-ink sm:text-[16px]">
                       {text}
                     </span>
                   </button>
@@ -509,14 +509,14 @@ export function QuizEngine({ questions, mode, locale }: Props) {
           type="button"
           onClick={goBack}
           disabled={idx === 0}
-          className="border-2 border-[#221E18] bg-[#FFFCF4] px-4 py-2 text-[13px] font-medium leading-none text-[#221E18] hover:bg-[#F8EDC8] disabled:cursor-not-allowed disabled:border-[#D6CDB6] disabled:text-[#8C6520]/40"
+          className="border-2 border-ink bg-[#FFFCF4] px-4 py-2 text-[13px] font-medium leading-none text-ink hover:bg-acc-soft disabled:cursor-not-allowed disabled:border-line disabled:text-acc-deep/40"
         >
           ← {t("quiz.back", locale)}
         </button>
         <button
           type="button"
           onClick={skip}
-          className="border-2 border-[#221E18]/40 bg-transparent px-3 py-2 text-[12px] tracking-[0.06em] text-[#8C6520] hover:border-[#221E18] hover:bg-[#F8EDC8] hover:text-[#221E18]"
+          className="border-2 border-ink/40 bg-transparent px-3 py-2 text-[12px] tracking-[0.06em] text-acc-deep hover:border-ink hover:bg-acc-soft hover:text-ink"
           style={{ fontFamily: "var(--font-pixel-display)" }}
         >
           {t("quiz.skip", locale).toUpperCase()}
@@ -529,8 +529,8 @@ export function QuizEngine({ questions, mode, locale }: Props) {
             className={
               "border-2 px-5 py-2 text-[13px] font-medium leading-none transition-all " +
               (multiPicks.length === 0
-                ? "cursor-not-allowed border-[#D6CDB6] bg-[#EBE3CA] text-[#8C6520]/50"
-                : "border-[#221E18] bg-[#221E18] text-[#FAF6EC] shadow-[3px_3px_0_0_#8C6520] hover:bg-[#8C6520] hover:shadow-[3px_3px_0_0_#221E18]")
+                ? "cursor-not-allowed border-line bg-[#EBE3CA] text-acc-deep/50"
+                : "border-ink bg-ink text-cream shadow-[3px_3px_0_0_var(--color-acc-deep)] hover:bg-acc-deep hover:shadow-[3px_3px_0_0_var(--color-ink)]")
             }
           >
             {t("quiz.continue", locale)} →
@@ -577,23 +577,23 @@ function ComputingScreen() {
     <div className="mx-auto flex min-h-[80vh] max-w-[720px] flex-col items-center justify-center px-6 py-16 text-center">
       <div className="pixel-panel pixel-panel--ink w-full max-w-[520px]">
         <div
-          className="border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.24em] text-[#F8EDC8]"
+          className="border-b-4 border-ink bg-ink px-4 py-2 text-[10px] tracking-[0.24em] text-acc-soft"
           style={{ fontFamily: "var(--font-pixel-display)" }}
         >
           <span className="pixel-blink">▶</span> MAPPING_YOUR_PLACE.EXE
         </div>
         <div className="px-8 py-12">
           <div
-            className="text-[64px] leading-none text-[#B8862F] pixel-float"
+            className="text-[64px] leading-none text-acc pixel-float"
             aria-hidden
           >
             ✦
           </div>
           <h1
-            className="mt-6 text-[20px] leading-[1.2] tracking-[0.04em] text-[#F8EDC8] sm:text-[24px]"
+            className="mt-6 text-[20px] leading-[1.2] tracking-[0.04em] text-acc-soft sm:text-[24px]"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
-            <span style={{ textShadow: "3px 3px 0 #B8862F" }}>
+            <span style={{ textShadow: "3px 3px 0 var(--color-acc)" }}>
               COMPUTING YOUR RESULT
             </span>
           </h1>
@@ -603,7 +603,7 @@ function ComputingScreen() {
           <p
             aria-live="polite"
             aria-atomic="true"
-            className="mt-7 min-h-[2.5em] text-[12px] leading-[1.6] tracking-[0.18em] text-[#F8EDC8]/85"
+            className="mt-7 min-h-[2.5em] text-[12px] leading-[1.6] tracking-[0.18em] text-acc-soft/85"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
             {COMPUTING_STAGES[stage]}
@@ -613,7 +613,7 @@ function ComputingScreen() {
             {[0, 1, 2].map((i) => (
               <span
                 key={i}
-                className="inline-block h-3 w-3 bg-[#B8862F]"
+                className="inline-block h-3 w-3 bg-acc"
                 style={{
                   animation: `pixel-blink 1.2s steps(2, end) ${i * 0.2}s infinite`,
                 }}
@@ -716,27 +716,27 @@ function ChapterTransition({
         onBlur={() => setPaused(false)}
       >
         <div
-          className="border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.24em] text-[#F8EDC8]"
+          className="border-b-4 border-ink bg-ink px-4 py-2 text-[10px] tracking-[0.24em] text-acc-soft"
           style={{ fontFamily: "var(--font-pixel-display)" }}
         >
           CHAPTER {chapter} / {totalChapters}
         </div>
         <div className="px-8 py-12">
           <div
-            className="text-[64px] leading-none text-[#B8862F]"
+            className="text-[64px] leading-none text-acc"
             aria-hidden
           >
             {glyph}
           </div>
           <h1
-            className="mt-6 px-2 text-[26px] leading-[1.1] tracking-[0.04em] text-[#F8EDC8] sm:text-[36px]"
+            className="mt-6 px-2 text-[26px] leading-[1.1] tracking-[0.04em] text-acc-soft sm:text-[36px]"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
-            <span style={{ textShadow: "3px 3px 0 #B8862F" }}>
+            <span style={{ textShadow: "3px 3px 0 var(--color-acc)" }}>
               {title}
             </span>
           </h1>
-          <p className="mx-auto mt-7 max-w-[420px] text-[15px] leading-[1.65] text-[#F8EDC8]/85 sm:text-[16px]">
+          <p className="mx-auto mt-7 max-w-[420px] text-[15px] leading-[1.65] text-acc-soft/85 sm:text-[16px]">
             {line}
           </p>
           <div className="mt-10">
@@ -757,21 +757,21 @@ function ChapterTransition({
             transition, just step jumps. */}
         <div
           aria-hidden
-          className="border-t-4 border-[#221E18] bg-[#0E0B07]"
+          className="border-t-4 border-ink bg-[#0E0B07]"
           style={{ height: 6 }}
         >
           <div
             style={{
               height: '100%',
               width: `${progress * 100}%`,
-              background: '#B8862F',
+              background: 'var(--color-acc)',
               transition: reduced ? 'none' : 'width 80ms linear',
             }}
           />
         </div>
       </div>
       <p
-        className="mt-4 text-[10px] tracking-[0.2em] text-[#8C6520]"
+        className="mt-4 text-[10px] tracking-[0.2em] text-acc-deep"
         style={{ fontFamily: "var(--font-pixel-display)" }}
       >
         {paused ? '▸ HOVERED — TIMER PAUSED' : `▸ AUTO-ADVANCE IN ${Math.ceil((1 - progress) * (totalMsRef.current / 1000))}s`}
@@ -807,10 +807,10 @@ function ProgressDots({
             className={
               "inline-block transition-all " +
               (here
-                ? "h-2.5 w-2.5 bg-[#8C6520]"
+                ? "h-2.5 w-2.5 bg-acc-deep"
                 : filled
-                  ? "h-2 w-2 bg-[#B8862F]/60"
-                  : "h-2 w-2 bg-[#D6CDB6]")
+                  ? "h-2 w-2 bg-acc/60"
+                  : "h-2 w-2 bg-line")
             }
           />
         );

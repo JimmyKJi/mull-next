@@ -43,7 +43,7 @@ export default function AtlasView({ locale }: { locale: Locale }) {
 
   if (events === null) {
     return (
-      <div className="text-center text-[14px] text-[#8C6520]" style={{ fontFamily: serif }}>
+      <div className="text-center text-[14px] text-acc-deep" style={{ fontFamily: serif }}>
         {t("atl.loading", locale)}
       </div>
     );
@@ -83,15 +83,15 @@ export default function AtlasView({ locale }: { locale: Locale }) {
 
       {/* Six skill bars */}
       <div
-        className="border-[3px] border-[#221E18] bg-[#FFFCF4]"
-        style={{ boxShadow: "4px 4px 0 0 #B8862F" }}
+        className="border-[3px] border-ink bg-[#FFFCF4]"
+        style={{ boxShadow: "4px 4px 0 0 var(--color-acc)" }}
       >
         <div
-          className="flex items-center justify-between border-b-2 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
+          className="flex items-center justify-between border-b-2 border-ink bg-ink px-4 py-2 text-[10px] tracking-[0.22em] text-acc-soft"
           style={{ fontFamily: pixel }}
         >
           <span>▶ {t("atl.your_six_skills", locale)}</span>
-          <span className="text-[#B8862F]">ATLAS.SYS</span>
+          <span className="text-acc">ATLAS.SYS</span>
         </div>
         <div className="px-4 py-4 sm:px-6 sm:py-5">
           <ul className="space-y-3">
@@ -111,17 +111,17 @@ export default function AtlasView({ locale }: { locale: Locale }) {
 function EmptyState({ locale }: { locale: Locale }) {
   return (
     <div
-      className="border-[3px] border-[#221E18] bg-[#FFFCF4] p-6"
-      style={{ boxShadow: "4px 4px 0 0 #B8862F" }}
+      className="border-[3px] border-ink bg-[#FFFCF4] p-6"
+      style={{ boxShadow: "4px 4px 0 0 var(--color-acc)" }}
     >
       <div
-        className="text-[10px] tracking-[0.22em] text-[#8C6520]"
+        className="text-[10px] tracking-[0.22em] text-acc-deep"
         style={{ fontFamily: pixel }}
       >
         ▶ {t("atl.empty_badge", locale)}
       </div>
       <p
-        className="mt-3 text-[15px] leading-[1.6] text-[#221E18]"
+        className="mt-3 text-[15px] leading-[1.6] text-ink"
         style={{ fontFamily: serif }}
       >
         {t("atl.empty_body", locale)}
@@ -130,7 +130,7 @@ function EmptyState({ locale }: { locale: Locale }) {
         <li>
           <Link
             href="/spar"
-            className="block border-2 border-[#221E18] bg-[#F8C75E] px-3 py-2 text-center text-[11px] tracking-[0.18em] text-[#1A1820] hover:bg-[#B8862F]"
+            className="block border-2 border-ink bg-[#F8C75E] px-3 py-2 text-center text-[11px] tracking-[0.18em] text-[#1A1820] hover:bg-acc"
             style={{
               fontFamily: pixel,
               textTransform: "uppercase",
@@ -143,11 +143,11 @@ function EmptyState({ locale }: { locale: Locale }) {
         <li>
           <Link
             href="/dilemma"
-            className="block border-2 border-[#221E18] bg-[#F8C75E] px-3 py-2 text-center text-[11px] tracking-[0.18em] text-[#1A1820] hover:bg-[#B8862F]"
+            className="block border-2 border-ink bg-[#F8C75E] px-3 py-2 text-center text-[11px] tracking-[0.18em] text-[#1A1820] hover:bg-acc"
             style={{
               fontFamily: pixel,
               textTransform: "uppercase",
-              boxShadow: "2px 2px 0 0 #B8862F",
+              boxShadow: "2px 2px 0 0 var(--color-acc)",
             }}
           >
             ▶ {t("atl.cta_todays_dilemma", locale)}
@@ -156,7 +156,7 @@ function EmptyState({ locale }: { locale: Locale }) {
         <li>
           <Link
             href="/pilgrimage"
-            className="block border-2 border-[#221E18] bg-[#F8C75E] px-3 py-2 text-center text-[11px] tracking-[0.18em] text-[#1A1820] hover:bg-[#B8862F]"
+            className="block border-2 border-ink bg-[#F8C75E] px-3 py-2 text-center text-[11px] tracking-[0.18em] text-[#1A1820] hover:bg-acc"
             style={{
               fontFamily: pixel,
               textTransform: "uppercase",
@@ -182,12 +182,12 @@ function BigStat({
 }) {
   return (
     <div
-      className="border-[3px] border-[#221E18] bg-[#FFFCF4] p-3 text-center"
+      className="border-[3px] border-ink bg-[#FFFCF4] p-3 text-center"
       style={{ boxShadow: `3px 3px 0 0 ${color}` }}
     >
       <div
         className="text-[30px] leading-none"
-        style={{ fontFamily: pixel, color: "#221E18" }}
+        style={{ fontFamily: pixel, color: "var(--color-ink)" }}
       >
         {value}
       </div>
@@ -223,17 +223,17 @@ function SkillBar({ skill, xp, locale }: { skill: Skill; xp: number; locale: Loc
           }}
         >
           {meta.name}
-          <span className="ml-2 text-[#221E18]">{t("atl.level", locale, { level })}</span>
+          <span className="ml-2 text-ink">{t("atl.level", locale, { level })}</span>
         </div>
         <div
-          className="text-[10px] tracking-[0.14em] text-[#8C6520]"
+          className="text-[10px] tracking-[0.14em] text-acc-deep"
           style={{ fontFamily: pixel, textTransform: "uppercase" }}
         >
           {t("atl.xp_progress", locale, { xp, next: cumNext })}
         </div>
       </div>
       <div
-        className="mt-1 h-3 border-2 border-[#221E18] bg-[#FBF6E8]"
+        className="mt-1 h-3 border-2 border-ink bg-[#FBF6E8]"
         title={meta.description}
       >
         <div
@@ -258,11 +258,11 @@ function RecentEvents({ events, locale }: { events: CapabilityEvent[]; locale: L
   const recent = events.slice(-10).reverse();
   return (
     <div
-      className="border-2 border-[#221E18] bg-[#FFFCF4] p-4"
-      style={{ boxShadow: "3px 3px 0 0 #8C6520" }}
+      className="border-2 border-ink bg-[#FFFCF4] p-4"
+      style={{ boxShadow: "3px 3px 0 0 var(--color-acc-deep)" }}
     >
       <div
-        className="text-[10px] tracking-[0.22em] text-[#8C6520]"
+        className="text-[10px] tracking-[0.22em] text-acc-deep"
         style={{ fontFamily: pixel, textTransform: "uppercase" }}
       >
         ▶ {t("atl.recent_moves", locale)}
@@ -280,7 +280,7 @@ function RecentEvents({ events, locale }: { events: CapabilityEvent[]; locale: L
                 background: "#FBF6E8",
               }}
             >
-              <span className="text-[#221E18]">
+              <span className="text-ink">
                 {e.label ?? labelFromSource(e.source, locale)}
               </span>
               <span

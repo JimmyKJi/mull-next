@@ -53,7 +53,7 @@ export default async function ArenaLeaderboardPage() {
           style={{
             fontFamily: pixel,
             fontSize: 11,
-            color: "#4A4338",
+            color: "var(--color-ink-soft)",
             textDecoration: "none",
             letterSpacing: 0.4,
             textTransform: "uppercase",
@@ -72,7 +72,7 @@ export default async function ArenaLeaderboardPage() {
               fontFamily: serif,
               fontStyle: "italic",
               fontSize: 16,
-              color: "#4A4338",
+              color: "var(--color-ink-soft)",
               lineHeight: 1.55,
             }}
           >
@@ -86,7 +86,7 @@ export default async function ArenaLeaderboardPage() {
           style={{
             padding: "14px 16px",
             background: "#F8C75E",
-            border: "3px solid #221E18",
+            border: "3px solid var(--color-ink)",
             boxShadow: "4px 4px 0 0 #2F5D5C",
             marginBottom: 20,
             display: "flex",
@@ -128,12 +128,12 @@ export default async function ArenaLeaderboardPage() {
           style={{
             padding: "24px 22px",
             background: "#FFFCF4",
-            border: "3px dashed #8C6520",
+            border: "3px dashed var(--color-acc-deep)",
             textAlign: "center",
             fontFamily: serif,
             fontStyle: "italic",
             fontSize: 16,
-            color: "#8C6520",
+            color: "var(--color-acc-deep)",
           }}
         >
           {t("arena.lb_empty", locale)}
@@ -154,9 +154,9 @@ export default async function ArenaLeaderboardPage() {
               style={{
                 padding: "12px 16px",
                 background:
-                  user?.id === r.user_id ? "#F8EDC8" : "#FFFCF4",
-                border: "2px solid #221E18",
-                boxShadow: "3px 3px 0 0 #B8862F",
+                  user?.id === r.user_id ? "var(--color-acc-soft)" : "#FFFCF4",
+                border: "2px solid var(--color-ink)",
+                boxShadow: "3px 3px 0 0 var(--color-acc)",
                 display: "grid",
                 gridTemplateColumns: "40px 1fr auto",
                 alignItems: "center",
@@ -169,10 +169,10 @@ export default async function ArenaLeaderboardPage() {
                   fontSize: 14,
                   color:
                     i === 0
-                      ? "#B8862F"
+                      ? "var(--color-acc)"
                       : i < 3
-                        ? "#8C6520"
-                        : "#4A4338",
+                        ? "var(--color-acc-deep)"
+                        : "var(--color-ink-soft)",
                   letterSpacing: 0.5,
                   textAlign: "center",
                 }}
@@ -185,7 +185,7 @@ export default async function ArenaLeaderboardPage() {
                     fontFamily: serif,
                     fontSize: 16,
                     fontWeight: 500,
-                    color: "#221E18",
+                    color: "var(--color-ink)",
                   }}
                 >
                   {r.display_name || (r.handle ? `@${r.handle}` : t("arena.anonymous", locale))}
@@ -194,7 +194,7 @@ export default async function ArenaLeaderboardPage() {
                   style={{
                     fontFamily: pixel,
                     fontSize: 10,
-                    color: "#8C6520",
+                    color: "var(--color-acc-deep)",
                     letterSpacing: 0.4,
                     textTransform: "uppercase",
                     marginTop: 2,
@@ -207,7 +207,7 @@ export default async function ArenaLeaderboardPage() {
                 style={{
                   fontFamily: pixel,
                   fontSize: 16,
-                  color: "#221E18",
+                  color: "var(--color-ink)",
                   letterSpacing: 0.5,
                 }}
               >

@@ -134,7 +134,7 @@ export default async function ConsentPage() {
               {emph(t("consent.who_p1_a", locale))}
               <a
                 href="mailto:jimmy.kaian.ji@gmail.com"
-                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
               >
                 jimmy.kaian.ji@gmail.com
               </a>
@@ -166,7 +166,7 @@ export default async function ConsentPage() {
               {emph(t("consent.owns_p1_a", locale))}
               <Link
                 href="/account/profile"
-                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
               >
                 {t("consent.owns_p1_link", locale)}
               </Link>
@@ -177,21 +177,21 @@ export default async function ConsentPage() {
         </PixelWindow>
       </div>
 
-      <p className="mt-12 text-[13px] leading-[1.6] text-[#8C6520] opacity-80">
+      <p className="mt-12 text-[13px] leading-[1.6] text-acc-deep opacity-80">
         {t("consent.footer_a", locale)}
         <a
           href="mailto:jimmy.kaian.ji@gmail.com"
-          className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           jimmy.kaian.ji@gmail.com
         </a>
         {t("consent.footer_b", locale)}
       </p>
 
-      <p className="mt-10 text-center text-[13px] text-[#8C6520]">
+      <p className="mt-10 text-center text-[13px] text-acc-deep">
         <Link
           href="/"
-          className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           {t("consent.back_to_mull", locale)}
         </Link>
@@ -224,7 +224,7 @@ function Prose({
   return (
     <div
       className={
-        "space-y-4 text-[15.5px] leading-[1.65] text-[#4A4338] [&_strong]:text-[#221E18] " +
+        "space-y-4 text-[15.5px] leading-[1.65] text-ink-soft [&_strong]:text-ink " +
         (className ?? "")
       }
       style={{ fontFamily: "var(--font-editorial)" }}
@@ -237,9 +237,9 @@ function Prose({
 function Bullet({ children }: { children: React.ReactNode }) {
   return (
     <li
-      className="border-l-4 px-4 py-2.5 text-[14.5px] leading-[1.6] text-[#4A4338]"
+      className="border-l-4 px-4 py-2.5 text-[14.5px] leading-[1.6] text-ink-soft"
       style={{
-        borderColor: "#B8862F",
+        borderColor: "var(--color-acc)",
         background: "#FFFCF4",
         fontFamily: "var(--font-editorial)",
       }}

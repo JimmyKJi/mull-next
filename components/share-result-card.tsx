@@ -133,11 +133,11 @@ export default function ShareResultCard({
     <div style={{
       marginTop: 22,
       paddingTop: 22,
-      borderTop: '4px solid #221E18',
+      borderTop: '4px solid var(--color-ink)',
     }}>
       <div style={{
         fontFamily: pixel, fontSize: 11,
-        color: '#8C6520', textTransform: 'uppercase',
+        color: 'var(--color-acc-deep)', textTransform: 'uppercase',
         letterSpacing: '0.18em', marginBottom: 12,
       }}>
         ▸ {t('crd.share_eyebrow', locale)}
@@ -205,10 +205,10 @@ export default function ShareResultCard({
           className="pixel-press"
           style={{
             ...pixelShareButton,
-            background: '#B8862F',
+            background: 'var(--color-acc)',
             color: '#1A1612',
-            borderColor: '#221E18',
-            boxShadow: '3px 3px 0 0 #221E18',
+            borderColor: 'var(--color-ink)',
+            boxShadow: '3px 3px 0 0 var(--color-ink)',
             cursor: challengeBusy ? 'wait' : 'pointer',
           }}
         >
@@ -220,15 +220,15 @@ export default function ShareResultCard({
         <div style={{
           marginTop: 14,
           padding: '12px 14px',
-          background: '#F8EDC8',
-          border: '3px solid #221E18',
-          boxShadow: '3px 3px 0 0 #B8862F',
+          background: 'var(--color-acc-soft)',
+          border: '3px solid var(--color-ink)',
+          boxShadow: '3px 3px 0 0 var(--color-acc)',
           borderRadius: 0,
         }}>
           <div style={{
             fontFamily: pixel,
             fontSize: 10,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             letterSpacing: 0.4,
             textTransform: 'uppercase',
             marginBottom: 8,
@@ -239,7 +239,7 @@ export default function ShareResultCard({
             style={{
               fontFamily: 'ui-monospace, Menlo, monospace',
               fontSize: 12,
-              color: '#221E18',
+              color: 'var(--color-ink)',
               wordBreak: 'break-all',
             }}
           >
@@ -263,19 +263,19 @@ const pixelShareButton: React.CSSProperties = {
   alignItems: 'center',
   padding: '10px 16px',
   background: '#FFFCF4',
-  color: '#221E18',
-  border: '3px solid #221E18',
+  color: 'var(--color-ink)',
+  border: '3px solid var(--color-ink)',
   borderRadius: 0,
   fontFamily: pixel,
   fontSize: 12,
   letterSpacing: 0.4,
   textTransform: 'uppercase',
-  boxShadow: '3px 3px 0 0 #B8862F',
+  boxShadow: '3px 3px 0 0 var(--color-acc)',
   transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end), background 80ms steps(2, end)',
 };
 
 const copiedStyle: React.CSSProperties = {
-  background: '#F8EDC8',
-  color: '#8C6520',
+  background: 'var(--color-acc-soft)',
+  color: 'var(--color-acc-deep)',
   boxShadow: '3px 3px 0 0 #2F5D5C',
 };

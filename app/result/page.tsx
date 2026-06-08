@@ -172,23 +172,23 @@ import Link from "next/link";
 
 function SparseFallback({ locale }: { locale: Locale }) {
   return (
-    <main className="min-h-[100svh] bg-[#FAF6EC] px-6 py-24 text-[#221E18] sm:px-10 sm:py-32">
+    <main className="min-h-[100svh] bg-cream px-6 py-24 text-ink sm:px-10 sm:py-32">
       <div className="mx-auto max-w-[640px] text-center">
         <div
-          className="text-[11px] uppercase tracking-[0.24em] text-[#8C6520]"
+          className="text-[11px] uppercase tracking-[0.24em] text-acc-deep"
           style={{ fontFamily: "var(--font-pixel-display)" }}
         >
           {t("res.sparse_eyebrow", locale)}
         </div>
         <h1
-          className="mt-6 text-[36px] leading-none tracking-[0.04em] text-[#221E18] sm:text-[56px]"
+          className="mt-6 text-[36px] leading-none tracking-[0.04em] text-ink sm:text-[56px]"
           style={{ fontFamily: "var(--font-pixel-display)" }}
         >
-          <span style={{ textShadow: "4px 4px 0 #B8862F" }}>
+          <span style={{ textShadow: "4px 4px 0 var(--color-acc)" }}>
             {t("res.sparse_title", locale)}
           </span>
         </h1>
-        <p className="mx-auto mt-8 max-w-[480px] text-[16px] leading-[1.65] text-[#4A4338] sm:text-[17px]">
+        <p className="mx-auto mt-8 max-w-[480px] text-[16px] leading-[1.65] text-ink-soft sm:text-[17px]">
           {t("res.sparse_body", locale)}
         </p>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-5">
@@ -197,7 +197,7 @@ function SparseFallback({ locale }: { locale: Locale }) {
           </Link>
           <Link
             href="/archetype"
-            className="text-[14px] text-[#4A4338] underline decoration-[#D6CDB6] decoration-2 underline-offset-4 hover:text-[#221E18] hover:decoration-[#8C6520]"
+            className="text-[14px] text-ink-soft underline decoration-line decoration-2 underline-offset-4 hover:text-ink hover:decoration-acc-deep"
           >
             {t("res.sparse_browse", locale)}
           </Link>

@@ -117,9 +117,9 @@ export default function DilemmaReminderCard({ locale = 'en' as Locale }: { local
           type="checkbox"
           checked={prefs.enabled}
           onChange={e => save({ ...prefs, enabled: e.target.checked })}
-          style={{ accentColor: '#B8862F', marginRight: 12, width: 20, height: 20 }}
+          style={{ accentColor: 'var(--color-acc)', marginRight: 12, width: 20, height: 20 }}
         />
-        <span style={{ fontFamily: sans, fontSize: 14.5, color: '#221E18' }}>
+        <span style={{ fontFamily: sans, fontSize: 14.5, color: 'var(--color-ink)' }}>
           {prefs.enabled
             ? (() => {
                 // Format the user's chosen hour in their locale so the
@@ -190,22 +190,22 @@ const cardStyle: React.CSSProperties = {
   marginTop: 32,
   padding: '22px 26px',
   background: '#FFFCF4',
-  border: '4px solid #221E18',
-  boxShadow: '5px 5px 0 0 #B8862F',
+  border: '4px solid var(--color-ink)',
+  boxShadow: '5px 5px 0 0 var(--color-acc)',
   borderRadius: 0,
 };
 const eyebrow: React.CSSProperties = {
   fontFamily: pixel, fontSize: 12,
-  color: '#8C6520', textTransform: 'uppercase',
+  color: 'var(--color-acc-deep)', textTransform: 'uppercase',
   letterSpacing: '0.18em', marginBottom: 10,
 };
 const heading: React.CSSProperties = {
   fontFamily: serif, fontSize: 22, fontWeight: 500,
-  color: '#221E18', margin: '0 0 6px',
+  color: 'var(--color-ink)', margin: '0 0 6px',
 };
 const blurb: React.CSSProperties = {
   fontFamily: serif, fontStyle: 'italic',
-  fontSize: 15, color: '#4A4338',
+  fontSize: 15, color: 'var(--color-ink-soft)',
   margin: '0 0 16px', lineHeight: 1.55,
 };
 const toggleRow: React.CSSProperties = {
@@ -216,15 +216,15 @@ const fieldRow: React.CSSProperties = {
   display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap',
 };
 const fieldLabel: React.CSSProperties = {
-  fontFamily: pixel, fontSize: 11, color: '#8C6520',
+  fontFamily: pixel, fontSize: 11, color: 'var(--color-acc-deep)',
   letterSpacing: 0.4,
   minWidth: 120,
 };
 const helpText: React.CSSProperties = {
   fontFamily: serif, fontStyle: 'italic',
-  fontSize: 13, color: '#8C6520',
+  fontSize: 13, color: 'var(--color-acc-deep)',
   margin: 0, opacity: 0.85, lineHeight: 1.5,
 };
 const loadingText: React.CSSProperties = {
-  fontFamily: sans, fontSize: 13, color: '#8C6520', margin: 0,
+  fontFamily: sans, fontSize: 13, color: 'var(--color-acc-deep)', margin: 0,
 };

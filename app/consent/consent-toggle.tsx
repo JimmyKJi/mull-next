@@ -47,7 +47,7 @@ export default function ConsentToggle({ locale }: { locale: Locale }) {
   if (current === "loading") {
     return (
       <p
-        className="text-[14px] text-[#8C6520]"
+        className="text-[14px] text-acc-deep"
         style={{ fontFamily: "var(--font-editorial)" }}
       >
         {t("consent.toggle_loading", locale)}
@@ -65,7 +65,7 @@ export default function ConsentToggle({ locale }: { locale: Locale }) {
   return (
     <div>
       <p
-        className="mb-4 text-[15px] leading-[1.6] text-[#221E18]"
+        className="mb-4 text-[15px] leading-[1.6] text-ink"
         style={{ fontFamily: "var(--font-editorial)" }}
       >
         {statusLine}
@@ -78,8 +78,8 @@ export default function ConsentToggle({ locale }: { locale: Locale }) {
           style={{
             padding: "12px 14px",
             background: current === "yes" ? "#2F5D5C" : "#F8C75E",
-            color: current === "yes" ? "#F8EDC8" : "#1A1820",
-            border: "3px solid #221E18",
+            color: current === "yes" ? "var(--color-acc-soft)" : "#1A1820",
+            border: "3px solid var(--color-ink)",
             boxShadow: current === "yes" ? "none" : "4px 4px 0 0 #2F5D5C",
             fontFamily: pixel,
             fontSize: 11,
@@ -101,9 +101,9 @@ export default function ConsentToggle({ locale }: { locale: Locale }) {
           style={{
             padding: "12px 14px",
             background: current === "no" ? "#1F1814" : "transparent",
-            color: current === "no" ? "#F8EDC8" : "#4A4338",
-            border: "3px solid #221E18",
-            boxShadow: current === "no" ? "none" : "4px 4px 0 0 #8C6520",
+            color: current === "no" ? "var(--color-acc-soft)" : "var(--color-ink-soft)",
+            border: "3px solid var(--color-ink)",
+            boxShadow: current === "no" ? "none" : "4px 4px 0 0 var(--color-acc-deep)",
             fontFamily: pixel,
             fontSize: 11,
             letterSpacing: "0.16em",
@@ -122,7 +122,7 @@ export default function ConsentToggle({ locale }: { locale: Locale }) {
         <button
           type="button"
           onClick={clear}
-          className="mt-3 text-[12px] text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          className="mt-3 text-[12px] text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           {t("consent.toggle_reset", locale)}
         </button>

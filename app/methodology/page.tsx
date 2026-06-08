@@ -128,10 +128,10 @@ function MethodologyBodyEn({ locale }: { locale: Locale }) {
       {/* ─── Table of Contents — small pixel chips, jump anchors ─── */}
       <nav
         aria-label="On this page"
-        className="mb-10 border-y-2 border-[#221E18] bg-[#FBF6E8] px-3 py-3"
+        className="mb-10 border-y-2 border-ink bg-[#FBF6E8] px-3 py-3"
       >
         <div
-          className="mb-2 text-[10px] tracking-[0.22em] text-[#8C6520]"
+          className="mb-2 text-[10px] tracking-[0.22em] text-acc-deep"
           style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
           ▶ ON THIS PAGE
@@ -141,10 +141,10 @@ function MethodologyBodyEn({ locale }: { locale: Locale }) {
             <li key={s.id}>
               <a
                 href={`#${s.id}`}
-                className="inline-flex items-center gap-1.5 border-2 border-[#221E18] bg-[#FFFCF4] px-2.5 py-1 text-[11px] tracking-[0.06em] text-[#221E18] transition-colors hover:bg-[#F8C75E]"
+                className="inline-flex items-center gap-1.5 border-2 border-ink bg-[#FFFCF4] px-2.5 py-1 text-[11px] tracking-[0.06em] text-ink transition-colors hover:bg-[#F8C75E]"
                 style={{ fontFamily: 'var(--font-pixel-display)' }}
               >
-                <span className="text-[#8C6520]">{s.n}</span>
+                <span className="text-acc-deep">{s.n}</span>
                 <span>{s.label.toUpperCase()}</span>
               </a>
             </li>
@@ -279,9 +279,9 @@ function MethodologyBodyEn({ locale }: { locale: Locale }) {
 
             {/* Pipeline schematic — five labelled boxes, arrows between,
                 with sample numbers so the math is visible at a glance. */}
-            <div className="mt-6 border-2 border-[#221E18] bg-[#FFFCF4] p-4">
+            <div className="mt-6 border-2 border-ink bg-[#FFFCF4] p-4">
               <div
-                className="mb-3 text-[10px] tracking-[0.22em] text-[#8C6520]"
+                className="mb-3 text-[10px] tracking-[0.22em] text-acc-deep"
                 style={{ fontFamily: 'var(--font-pixel-display)' }}
               >
                 ▶ EXAMPLE — ONE ANSWER, END-TO-END
@@ -338,7 +338,7 @@ function MethodologyBodyEn({ locale }: { locale: Locale }) {
                         The Cartographer
                       </strong>
                       <br />
-                      <span className="text-[12px] text-[#4A4338]">
+                      <span className="text-[12px] text-ink-soft">
                         (~85% alignment)
                       </span>
                     </>
@@ -425,7 +425,7 @@ function MethodologyBodyEn({ locale }: { locale: Locale }) {
             <Prose className="mt-5">
               <p>
                 System prompts for each of the above live under{' '}
-                <code className="rounded border border-[#D6CDB6] bg-[#F5EFDC] px-1.5 py-0.5 text-[12.5px]">
+                <code className="rounded border border-line bg-[#F5EFDC] px-1.5 py-0.5 text-[12.5px]">
                   app/api/
                 </code>{' '}
                 if you ever want to read them. Anthropic doesn&apos;t train on
@@ -461,7 +461,7 @@ function MethodologyBodyEn({ locale }: { locale: Locale }) {
               </NotItem>
               <NotItem>
                 <strong>Cookies.</strong> Two:{' '}
-                <code className="rounded border border-[#D6CDB6] bg-[#F5EFDC] px-1.5 py-0.5 text-[12.5px]">
+                <code className="rounded border border-line bg-[#F5EFDC] px-1.5 py-0.5 text-[12.5px]">
                   mull_locale
                 </code>{' '}
                 (your language preference) and the Supabase auth session
@@ -475,7 +475,7 @@ function MethodologyBodyEn({ locale }: { locale: Locale }) {
                 You can{' '}
                 <Link
                   href="/account/profile"
-                  className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                  className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
                 >
                   download all of this as JSON or delete your account outright
                 </Link>{' '}
@@ -547,11 +547,11 @@ function MethodologyBodyEn({ locale }: { locale: Locale }) {
         </section>
       </div>
 
-      <p className="mt-12 text-[13px] leading-[1.6] text-[#8C6520] opacity-80">
+      <p className="mt-12 text-[13px] leading-[1.6] text-acc-deep opacity-80">
         Questions, push-back, or factual corrections welcome at{' '}
         <a
           href="mailto:jimmy.kaian.ji@gmail.com"
-          className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           jimmy.kaian.ji@gmail.com
         </a>
@@ -559,10 +559,10 @@ function MethodologyBodyEn({ locale }: { locale: Locale }) {
         last full review.
       </p>
 
-      <p className="mt-10 text-center text-[13px] text-[#8C6520]">
+      <p className="mt-10 text-center text-[13px] text-acc-deep">
         <Link
           href="/"
-          className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           ← Back to Mull
         </Link>
@@ -597,10 +597,10 @@ function MethodologyBodyZh({ locale }: { locale: Locale }) {
       {/* ─── 目录 ─── */}
       <nav
         aria-label="本页内容"
-        className="mb-10 border-y-2 border-[#221E18] bg-[#FBF6E8] px-3 py-3"
+        className="mb-10 border-y-2 border-ink bg-[#FBF6E8] px-3 py-3"
       >
         <div
-          className="mb-2 text-[10px] tracking-[0.22em] text-[#8C6520]"
+          className="mb-2 text-[10px] tracking-[0.22em] text-acc-deep"
           style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
           ▶ 本页内容
@@ -610,10 +610,10 @@ function MethodologyBodyZh({ locale }: { locale: Locale }) {
             <li key={s.id}>
               <a
                 href={`#${s.id}`}
-                className="inline-flex items-center gap-1.5 border-2 border-[#221E18] bg-[#FFFCF4] px-2.5 py-1 text-[11px] tracking-[0.06em] text-[#221E18] transition-colors hover:bg-[#F8C75E]"
+                className="inline-flex items-center gap-1.5 border-2 border-ink bg-[#FFFCF4] px-2.5 py-1 text-[11px] tracking-[0.06em] text-ink transition-colors hover:bg-[#F8C75E]"
                 style={{ fontFamily: 'var(--font-pixel-display)' }}
               >
-                <span className="text-[#8C6520]">{s.n}</span>
+                <span className="text-acc-deep">{s.n}</span>
                 <span>{s.label}</span>
               </a>
             </li>
@@ -693,9 +693,9 @@ function MethodologyBodyZh({ locale }: { locale: Locale }) {
             </Prose>
 
             {/* 流程示意图——五个带标签的方框，中间以箭头相连，附样例数字 */}
-            <div className="mt-6 border-2 border-[#221E18] bg-[#FFFCF4] p-4">
+            <div className="mt-6 border-2 border-ink bg-[#FFFCF4] p-4">
               <div
-                className="mb-3 text-[10px] tracking-[0.22em] text-[#8C6520]"
+                className="mb-3 text-[10px] tracking-[0.22em] text-acc-deep"
                 style={{ fontFamily: 'var(--font-pixel-display)' }}
               >
                 ▶ 示例——一个答案，从头到尾
@@ -750,7 +750,7 @@ function MethodologyBodyZh({ locale }: { locale: Locale }) {
                     <>
                       <strong className="text-[#1E3A5F]">制图师</strong>
                       <br />
-                      <span className="text-[12px] text-[#4A4338]">
+                      <span className="text-[12px] text-ink-soft">
                         （约 85% 契合）
                       </span>
                     </>
@@ -829,7 +829,7 @@ function MethodologyBodyZh({ locale }: { locale: Locale }) {
             <Prose className="mt-5">
               <p>
                 上述每一项的系统提示都放在{' '}
-                <code className="rounded border border-[#D6CDB6] bg-[#F5EFDC] px-1.5 py-0.5 text-[12.5px]">
+                <code className="rounded border border-line bg-[#F5EFDC] px-1.5 py-0.5 text-[12.5px]">
                   app/api/
                 </code>{' '}
                 目录下，如果你想读，随时可以去看。Anthropic 默认不会用 API 流量来训练模型；Mull 也没有选择加入任何其他用途。
@@ -854,7 +854,7 @@ function MethodologyBodyZh({ locale }: { locale: Locale }) {
               </NotItem>
               <NotItem>
                 <strong>Cookie。</strong> 共两个：{' '}
-                <code className="rounded border border-[#D6CDB6] bg-[#F5EFDC] px-1.5 py-0.5 text-[12.5px]">
+                <code className="rounded border border-line bg-[#F5EFDC] px-1.5 py-0.5 text-[12.5px]">
                   mull_locale
                 </code>{' '}
                 （你的语言偏好）和 Supabase 的认证会话令牌。两者对网站的运作都是严格必需的；我们不设置任何用于分析、广告或追踪的 Cookie。
@@ -865,7 +865,7 @@ function MethodologyBodyZh({ locale }: { locale: Locale }) {
                 你可以在公开资料设置页，{' '}
                 <Link
                   href="/account/profile"
-                  className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                  className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
                 >
                   把这一切下载为 JSON，或干脆直接删除你的账户
                 </Link>
@@ -909,21 +909,21 @@ function MethodologyBodyZh({ locale }: { locale: Locale }) {
         </section>
       </div>
 
-      <p className="mt-12 text-[13px] leading-[1.6] text-[#8C6520] opacity-80">
+      <p className="mt-12 text-[13px] leading-[1.6] text-acc-deep opacity-80">
         欢迎把问题、异议或事实更正发送至{' '}
         <a
           href="mailto:jimmy.kaian.ji@gmail.com"
-          className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           jimmy.kaian.ji@gmail.com
         </a>
         。本页每季度审阅一次；顶部的日期反映的是最近一次完整审阅。
       </p>
 
-      <p className="mt-10 text-center text-[13px] text-[#8C6520]">
+      <p className="mt-10 text-center text-[13px] text-acc-deep">
         <Link
           href="/"
-          className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           ← 返回 Mull
         </Link>
@@ -942,11 +942,11 @@ function DimensionGrid({ locale }: { locale: Locale }) {
       {DIM_KEYS.map((k) => (
         <div
           key={k}
-          className="flex gap-3 border-2 border-[#221E18] bg-[#FFFCF4] px-3 py-2.5"
-          style={{ boxShadow: '2px 2px 0 0 #B8862F' }}
+          className="flex gap-3 border-2 border-ink bg-[#FFFCF4] px-3 py-2.5"
+          style={{ boxShadow: '2px 2px 0 0 var(--color-acc)' }}
         >
           <div
-            className="shrink-0 self-start border-2 border-[#221E18] bg-[#F8C75E] px-2 py-1 text-[11px] font-bold leading-none text-[#1A1820]"
+            className="shrink-0 self-start border-2 border-ink bg-[#F8C75E] px-2 py-1 text-[11px] font-bold leading-none text-[#1A1820]"
             style={{
               fontFamily: 'var(--font-pixel-display)',
               letterSpacing: '0.05em',
@@ -956,13 +956,13 @@ function DimensionGrid({ locale }: { locale: Locale }) {
           </div>
           <div className="min-w-0">
             <div
-              className="text-[14px] font-medium leading-tight text-[#221E18]"
+              className="text-[14px] font-medium leading-tight text-ink"
               style={{ fontFamily: 'var(--font-editorial)' }}
             >
               {t(`dim.${k}.name`, locale) || DIM_NAMES[k]}
             </div>
             <div
-              className="mt-1 text-[12.5px] leading-[1.45] text-[#4A4338]"
+              className="mt-1 text-[12.5px] leading-[1.45] text-ink-soft"
               style={{ fontFamily: 'var(--font-editorial)' }}
             >
               {t(`dim.${k}.desc`, locale) || DIM_DESCRIPTIONS[k]}
@@ -977,10 +977,10 @@ function DimensionGrid({ locale }: { locale: Locale }) {
 function SectionEyebrow({ n, word = 'SECTION' }: { n: string; word?: string }) {
   return (
     <div
-      className="mb-2 ml-1 inline-flex items-center gap-2 text-[10px] tracking-[0.22em] text-[#8C6520]"
+      className="mb-2 ml-1 inline-flex items-center gap-2 text-[10px] tracking-[0.22em] text-acc-deep"
       style={{ fontFamily: 'var(--font-pixel-display)' }}
     >
-      <span className="border border-[#8C6520] px-1.5 py-0.5 text-[#221E18]">
+      <span className="border border-acc-deep px-1.5 py-0.5 text-ink">
         {n}
       </span>
       <span>· {word}</span>
@@ -998,7 +998,7 @@ function Prose({
   return (
     <div
       className={
-        'space-y-4 text-[15.5px] leading-[1.65] text-[#4A4338] [&_strong]:text-[#221E18] ' +
+        'space-y-4 text-[15.5px] leading-[1.65] text-ink-soft [&_strong]:text-ink ' +
         (className ?? '')
       }
       style={{ fontFamily: 'var(--font-editorial)' }}
@@ -1011,9 +1011,9 @@ function Prose({
 function NotItem({ children }: { children: React.ReactNode }) {
   return (
     <li
-      className="border-l-4 px-4 py-2.5 text-[14.5px] leading-[1.6] text-[#4A4338]"
+      className="border-l-4 px-4 py-2.5 text-[14.5px] leading-[1.6] text-ink-soft"
       style={{
-        borderColor: '#B8862F',
+        borderColor: 'var(--color-acc)',
         background: '#FFFCF4',
         fontFamily: 'var(--font-editorial)',
       }}
@@ -1034,7 +1034,7 @@ function PipelineBox({
 }) {
   return (
     <div
-      className="flex flex-col border-2 border-[#221E18] bg-[#F8EDC8] p-2.5"
+      className="flex flex-col border-2 border-ink bg-acc-soft p-2.5"
       style={{ boxShadow: '2px 2px 0 0 #7A8B43' }}
     >
       <div
@@ -1044,7 +1044,7 @@ function PipelineBox({
         {label.toUpperCase()}
       </div>
       <div
-        className="text-[12px] leading-[1.4] text-[#221E18]"
+        className="text-[12px] leading-[1.4] text-ink"
         style={{ fontFamily: 'var(--font-editorial)' }}
       >
         {body}
@@ -1087,25 +1087,25 @@ function AIIntegrationCard({
   const outLabel = locale === 'zh' ? '输出' : 'Output';
   return (
     <div
-      className="border-2 border-[#221E18] bg-[#FFFCF4] p-4"
+      className="border-2 border-ink bg-[#FFFCF4] p-4"
       style={{ boxShadow: '3px 3px 0 0 #3F2454' }}
     >
       <div className="mb-2 flex items-center gap-2">
         <span
-          className="border border-[#221E18] bg-[#6B3E8C] px-1.5 py-0.5 text-[10px] tracking-[0.1em] text-[#FFFCF4]"
+          className="border border-ink bg-[#6B3E8C] px-1.5 py-0.5 text-[10px] tracking-[0.1em] text-[#FFFCF4]"
           style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
           {n}
         </span>
         <h3
-          className="text-[16px] font-medium leading-tight text-[#221E18]"
+          className="text-[16px] font-medium leading-tight text-ink"
           style={{ fontFamily: 'var(--font-editorial)' }}
         >
           {where}
         </h3>
       </div>
       <p
-        className="text-[14px] leading-[1.55] text-[#221E18]"
+        className="text-[14px] leading-[1.55] text-ink"
         style={{ fontFamily: 'var(--font-editorial)' }}
       >
         {what}
@@ -1122,13 +1122,13 @@ function Kv({ label, value }: { label: string; value: string }) {
   return (
     <>
       <dt
-        className="text-[10px] tracking-[0.22em] text-[#8C6520]"
+        className="text-[10px] tracking-[0.22em] text-acc-deep"
         style={{ fontFamily: 'var(--font-pixel-display)' }}
       >
         {label.toUpperCase()}
       </dt>
       <dd
-        className="text-[13px] leading-[1.5] text-[#4A4338]"
+        className="text-[13px] leading-[1.5] text-ink-soft"
         style={{ fontFamily: 'var(--font-editorial)' }}
       >
         {value}

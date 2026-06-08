@@ -38,7 +38,7 @@ export default async function CuratePage() {
             {subtitleParts[0]}
             <Link
               href="/search"
-              className="not-italic text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+              className="not-italic text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
             >
               {linkLabel}
             </Link>
@@ -49,7 +49,7 @@ export default async function CuratePage() {
 
       <CurationPanel locale={locale} />
 
-      <p className="mt-9 text-[13px] leading-[1.6] text-[#8C6520] opacity-90">
+      <p className="mt-9 text-[13px] leading-[1.6] text-acc-deep opacity-90">
         {t('crt.footer_note', locale)}
       </p>
     </main>

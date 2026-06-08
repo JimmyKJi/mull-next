@@ -38,10 +38,10 @@ export default async function LettersPage() {
         accent={{ primary: "#9067B0", deep: "#3F2454", soft: "#E8DCF0" }}
         meantime={{ href: "/quiz/journey", label: t("ltr.meantime", locale) }}
       />
-      <p className="mt-12 text-center text-[13px] text-[#8C6520]">
+      <p className="mt-12 text-center text-[13px] text-acc-deep">
         <Link
           href="/"
-          className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           {t("ltr.back", locale)}
         </Link>

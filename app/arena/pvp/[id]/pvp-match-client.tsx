@@ -166,7 +166,7 @@ export default function PvpMatchClient(props: Props) {
           style={{
             fontFamily: pixel,
             fontSize: 10,
-            color: "#8C6520",
+            color: "var(--color-acc-deep)",
             letterSpacing: "0.22em",
             textTransform: "uppercase",
             marginBottom: 8,
@@ -190,7 +190,7 @@ export default function PvpMatchClient(props: Props) {
             fontFamily: serif,
             fontSize: 22,
             fontWeight: 500,
-            color: "#221E18",
+            color: "var(--color-ink)",
             lineHeight: 1.3,
             margin: "0 0 8px",
           }}
@@ -202,7 +202,7 @@ export default function PvpMatchClient(props: Props) {
             fontFamily: serif,
             fontStyle: "italic",
             fontSize: 15,
-            color: "#4A4338",
+            color: "var(--color-ink-soft)",
             margin: 0,
             lineHeight: 1.5,
           }}
@@ -230,7 +230,7 @@ export default function PvpMatchClient(props: Props) {
           style={{
             padding: "16px 20px",
             background: "#F8C75E",
-            border: "3px solid #221E18",
+            border: "3px solid var(--color-ink)",
             boxShadow: "4px 4px 0 0 #2F5D5C",
             marginBottom: 16,
           }}
@@ -263,7 +263,7 @@ export default function PvpMatchClient(props: Props) {
           style={{
             padding: "16px 20px",
             background: "#1F1814",
-            border: "3px solid #B8862F",
+            border: "3px solid var(--color-acc)",
             marginBottom: 16,
           }}
         >
@@ -272,7 +272,7 @@ export default function PvpMatchClient(props: Props) {
               fontFamily: serif,
               fontStyle: "italic",
               fontSize: 16,
-              color: "#F8EDC8",
+              color: "var(--color-acc-soft)",
               margin: 0,
               lineHeight: 1.55,
             }}
@@ -309,9 +309,9 @@ export default function PvpMatchClient(props: Props) {
               fontFamily: serif,
               fontSize: 16,
               lineHeight: 1.55,
-              border: "3px solid #221E18",
+              border: "3px solid var(--color-ink)",
               background: "#FFFCF4",
-              color: "#221E18",
+              color: "var(--color-ink)",
               resize: "vertical",
               minHeight: 140,
             }}
@@ -331,7 +331,7 @@ export default function PvpMatchClient(props: Props) {
               style={{
                 fontFamily: pixel,
                 fontSize: 10,
-                color: "#8C6520",
+                color: "var(--color-acc-deep)",
                 letterSpacing: 0.4,
                 textTransform: "uppercase",
               }}
@@ -368,7 +368,7 @@ export default function PvpMatchClient(props: Props) {
           style={{
             padding: "16px 20px",
             background: "#1F1814",
-            border: "3px solid #B8862F",
+            border: "3px solid var(--color-acc)",
             marginBottom: 16,
           }}
         >
@@ -377,7 +377,7 @@ export default function PvpMatchClient(props: Props) {
               fontFamily: serif,
               fontStyle: "italic",
               fontSize: 16,
-              color: "#F8EDC8",
+              color: "var(--color-acc-soft)",
               margin: "0 0 12px",
               lineHeight: 1.55,
             }}
@@ -447,7 +447,7 @@ function TurnBubble({
         style={{
           fontFamily: pixel,
           fontSize: 10,
-          color: mine ? "#2F5D5C" : "#8C6520",
+          color: mine ? "#2F5D5C" : "var(--color-acc-deep)",
           letterSpacing: 0.4,
           textTransform: "uppercase",
           marginBottom: 4,
@@ -460,13 +460,13 @@ function TurnBubble({
         style={{
           padding: "14px 18px",
           background: mine ? "#E5F0EE" : "#FFFCF4",
-          border: "3px solid #221E18",
+          border: "3px solid var(--color-ink)",
           boxShadow: mine
             ? "3px 3px 0 0 #2F5D5C"
-            : "3px 3px 0 0 #B8862F",
+            : "3px 3px 0 0 var(--color-acc)",
           fontFamily: serif,
           fontSize: 16,
-          color: "#221E18",
+          color: "var(--color-ink)",
           lineHeight: 1.6,
           whiteSpace: "pre-wrap",
         }}
@@ -517,7 +517,7 @@ function VerdictPanel({
   const verdictColor = iWon
     ? "#2F5D5C"
     : isDraw
-      ? "#8C6520"
+      ? "var(--color-acc-deep)"
       : "#7A2E2E";
   const verdictLabel = iWon
     ? t("arena.match_you_won", locale)
@@ -546,7 +546,7 @@ function VerdictPanel({
           style={{
             fontFamily: pixel,
             fontSize: 11,
-            color: "#8C6520",
+            color: "var(--color-acc-deep)",
             letterSpacing: 0.4,
             textTransform: "uppercase",
             marginBottom: 6,
@@ -570,7 +570,7 @@ function VerdictPanel({
           style={{
             fontFamily: serif,
             fontSize: 15,
-            color: "#221E18",
+            color: "var(--color-ink)",
             marginBottom: 12,
           }}
         >
@@ -598,7 +598,7 @@ function VerdictPanel({
         style={{
           padding: "16px 20px",
           background: "#1F1814",
-          border: "3px solid #B8862F",
+          border: "3px solid var(--color-acc)",
           marginBottom: 18,
         }}
       >
@@ -606,7 +606,7 @@ function VerdictPanel({
           style={{
             fontFamily: pixel,
             fontSize: 10,
-            color: "#B8862F",
+            color: "var(--color-acc)",
             letterSpacing: 0.4,
             textTransform: "uppercase",
             marginBottom: 8,
@@ -618,7 +618,7 @@ function VerdictPanel({
           style={{
             fontFamily: serif,
             fontSize: 16,
-            color: "#F8EDC8",
+            color: "var(--color-acc-soft)",
             margin: 0,
             lineHeight: 1.65,
           }}
@@ -635,7 +635,7 @@ function VerdictPanel({
             padding: "12px 18px",
             background: "#F8C75E",
             color: "#1A1820",
-            border: "3px solid #221E18",
+            border: "3px solid var(--color-ink)",
             boxShadow: "3px 3px 0 0 #2F5D5C",
             fontFamily: pixel,
             fontSize: 12,
@@ -661,8 +661,8 @@ function VerdictPanel({
 const headerWrap: React.CSSProperties = {
   padding: "16px 18px",
   background: "#FFFCF4",
-  border: "4px solid #221E18",
-  boxShadow: "5px 5px 0 0 #B8862F",
+  border: "4px solid var(--color-ink)",
+  boxShadow: "5px 5px 0 0 var(--color-acc)",
   marginBottom: 18,
 };
 
@@ -670,7 +670,7 @@ const btnPrimary: React.CSSProperties = {
   padding: "12px 18px",
   background: "#F8C75E",
   color: "#1A1820",
-  border: "3px solid #221E18",
+  border: "3px solid var(--color-ink)",
   boxShadow: "3px 3px 0 0 #2F5D5C",
   fontFamily: pixel,
   fontSize: 12,
@@ -681,7 +681,7 @@ const btnPrimary: React.CSSProperties = {
 
 const btnDisabled: React.CSSProperties = {
   ...btnPrimary,
-  background: "#D6CDB6",
+  background: "var(--color-line)",
   cursor: "not-allowed",
   boxShadow: "none",
 };
@@ -689,8 +689,8 @@ const btnDisabled: React.CSSProperties = {
 const btnGhost: React.CSSProperties = {
   padding: "12px 18px",
   background: "transparent",
-  color: "#4A4338",
-  border: "2px solid #8C6520",
+  color: "var(--color-ink-soft)",
+  border: "2px solid var(--color-acc-deep)",
   fontFamily: pixel,
   fontSize: 11,
   letterSpacing: "0.18em",

@@ -33,14 +33,14 @@ export default async function DryRunCheckoutPage({
       <div style={{
         padding: '32px 28px',
         background: '#FFFCF4',
-        border: '4px solid #221E18',
-        boxShadow: '6px 6px 0 0 #B8862F',
+        border: '4px solid var(--color-ink)',
+        boxShadow: '6px 6px 0 0 var(--color-acc)',
         borderRadius: 0,
       }}>
         <div style={{
           fontFamily: pixel,
           fontSize: 12,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           textTransform: 'uppercase',
           letterSpacing: '0.18em',
           marginBottom: 16,
@@ -61,7 +61,7 @@ export default async function DryRunCheckoutPage({
             <p style={{
               fontFamily: pixel,
               fontSize: 14,
-              color: '#4A4338',
+              color: 'var(--color-ink-soft)',
               margin: '0 0 26px',
               letterSpacing: 0.4,
               textTransform: 'uppercase',
@@ -79,7 +79,7 @@ export default async function DryRunCheckoutPage({
           fontFamily: serif,
           fontStyle: 'italic',
           fontSize: 15,
-          color: '#4A4338',
+          color: 'var(--color-ink-soft)',
           margin: '0 0 28px',
           lineHeight: 1.6,
         }}>
@@ -89,12 +89,12 @@ export default async function DryRunCheckoutPage({
         <Link href="/billing" className="pixel-press" style={{
           display: 'inline-block',
           padding: '12px 22px',
-          background: '#221E18',
-          color: '#FAF6EC',
+          background: 'var(--color-ink)',
+          color: 'var(--color-cream)',
           textDecoration: 'none',
           borderRadius: 0,
-          border: '4px solid #221E18',
-          boxShadow: '4px 4px 0 0 #B8862F',
+          border: '4px solid var(--color-ink)',
+          boxShadow: '4px 4px 0 0 var(--color-acc)',
           fontFamily: pixel,
           fontSize: 12,
           letterSpacing: '0.08em',

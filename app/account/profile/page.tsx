@@ -49,7 +49,7 @@ export default async function ProfileSettingsPage() {
       <div className="mb-6 flex items-center justify-between gap-4">
         <Link
           href="/account"
-          className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"
+          className="text-[13px] text-ink-soft hover:text-ink hover:underline"
         >
           ← {t('nav.account', locale)}
         </Link>
@@ -69,7 +69,7 @@ export default async function ProfileSettingsPage() {
 
       <ProfileForm initial={profile} userEmail={user.email || ''} locale={locale} />
 
-      <p className="mt-9 text-[12px] leading-[1.6] text-[#8C6520] opacity-80">
+      <p className="mt-9 text-[12px] leading-[1.6] text-acc-deep opacity-80">
         {t('profile.privacy_footer', locale)}
       </p>
 

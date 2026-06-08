@@ -97,7 +97,7 @@ export default async function ArenaPvpPage() {
           style={{
             fontFamily: pixel,
             fontSize: 11,
-            color: "#4A4338",
+            color: "var(--color-ink-soft)",
             textDecoration: "none",
             letterSpacing: 0.4,
             textTransform: "uppercase",
@@ -112,7 +112,7 @@ export default async function ArenaPvpPage() {
           style={{
             fontFamily: pixel,
             fontSize: 24,
-            color: "#221E18",
+            color: "var(--color-ink)",
             letterSpacing: "0.04em",
             textTransform: "uppercase",
             textShadow: "3px 3px 0 #2F5D5C",
@@ -126,13 +126,13 @@ export default async function ArenaPvpPage() {
             fontFamily: serif,
             fontStyle: "italic",
             fontSize: 16,
-            color: "#4A4338",
+            color: "var(--color-ink-soft)",
             margin: 0,
             lineHeight: 1.55,
           }}
         >
           {t("arena.pvp_sub_a", locale)}
-          <strong style={{ color: "#221E18" }}>{myPvpElo}</strong>
+          <strong style={{ color: "var(--color-ink)" }}>{myPvpElo}</strong>
           {t("arena.pvp_sub_b", locale, { n: ratingRes.data?.pvp_debates_count ?? 0 })}
         </p>
       </header>
@@ -219,7 +219,7 @@ export default async function ArenaPvpPage() {
               padding: "8px 14px",
               background: "#F8C75E",
               color: "#1A1820",
-              border: "2px solid #221E18",
+              border: "2px solid var(--color-ink)",
               boxShadow: "3px 3px 0 0 #2F5D5C",
               fontFamily: pixel,
               fontSize: 10,
@@ -236,11 +236,11 @@ export default async function ArenaPvpPage() {
             style={{
               padding: "20px 18px",
               background: "#FFFCF4",
-              border: "3px dashed #8C6520",
+              border: "3px dashed var(--color-acc-deep)",
               fontFamily: serif,
               fontStyle: "italic",
               fontSize: 15,
-              color: "#8C6520",
+              color: "var(--color-acc-deep)",
               margin: 0,
               textAlign: "center",
             }}
@@ -296,7 +296,7 @@ function MatchRow({
 }) {
   const baseTopic = getArenaTopic(match.topic_slug);
   const topic = baseTopic ? localizeArenaTopic(baseTopic, locale) : null;
-  const accent = flavour === "your-turn" ? "#7A2E2E" : "#8C6520";
+  const accent = flavour === "your-turn" ? "#7A2E2E" : "var(--color-acc-deep)";
   return (
     <li>
       <Link
@@ -305,7 +305,7 @@ function MatchRow({
           display: "block",
           padding: "14px 16px",
           background: "#FFFCF4",
-          border: "3px solid #221E18",
+          border: "3px solid var(--color-ink)",
           boxShadow: `3px 3px 0 0 ${accent}`,
           textDecoration: "none",
           color: "inherit",
@@ -324,7 +324,7 @@ function MatchRow({
         >
           {flavour === "your-turn" ? t("arena.match_your_turn", locale) : t("arena.pvp_waiting_opp", locale)}
         </div>
-        <div style={{ fontSize: 16, fontWeight: 500, color: "#221E18" }}>
+        <div style={{ fontSize: 16, fontWeight: 500, color: "var(--color-ink)" }}>
           {topic?.title ?? match.topic_slug}
         </div>
       </Link>
@@ -353,8 +353,8 @@ function OpenChallengeRow({
         style={{
           display: "block",
           padding: "14px 16px",
-          background: mine ? "#F8EDC8" : "#FFFCF4",
-          border: "3px solid #221E18",
+          background: mine ? "var(--color-acc-soft)" : "#FFFCF4",
+          border: "3px solid var(--color-ink)",
           boxShadow: "3px 3px 0 0 #2F5D5C",
           textDecoration: "none",
           color: "inherit",
@@ -375,7 +375,7 @@ function OpenChallengeRow({
               fontFamily: serif,
               fontSize: 16,
               fontWeight: 500,
-              color: "#221E18",
+              color: "var(--color-ink)",
             }}
           >
             {topic?.title ?? challenge.topic_slug}
@@ -384,7 +384,7 @@ function OpenChallengeRow({
             style={{
               fontFamily: pixel,
               fontSize: 10,
-              color: "#8C6520",
+              color: "var(--color-acc-deep)",
               letterSpacing: 0.4,
               textTransform: "uppercase",
             }}
@@ -399,7 +399,7 @@ function OpenChallengeRow({
             fontFamily: serif,
             fontStyle: "italic",
             fontSize: 14,
-            color: "#4A4338",
+            color: "var(--color-ink-soft)",
             lineHeight: 1.45,
           }}
         >

@@ -43,7 +43,7 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel, locale = '
       marginTop: 24,
       padding: '20px 24px',
       background: '#FFFCF4',
-      border: '4px solid #221E18',
+      border: '4px solid var(--color-ink)',
       boxShadow: `5px 5px 0 0 ${accent}`,
       borderRadius: 0,
     }}>
@@ -64,8 +64,8 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel, locale = '
           <span style={{
             padding: '3px 8px',
             background: '#6B3E8C',
-            color: '#FAF6EC',
-            border: '2px solid #221E18',
+            color: 'var(--color-cream)',
+            border: '2px solid var(--color-ink)',
             fontFamily: pixel,
             fontSize: 10,
             letterSpacing: '0.18em',
@@ -79,7 +79,7 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel, locale = '
         <p style={{
           fontFamily: serif,
           fontSize: 16.5,
-          color: '#221E18',
+          color: 'var(--color-ink)',
           margin: '0 0 14px',
           lineHeight: 1.6,
         }}>
@@ -91,7 +91,7 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel, locale = '
         <>
           <div style={{
             fontFamily: pixel, fontSize: 10.5,
-            color: '#8C6520', textTransform: 'uppercase',
+            color: 'var(--color-acc-deep)', textTransform: 'uppercase',
             letterSpacing: '0.18em', marginBottom: 10, marginTop: 16,
           }}>
             {t('crd.diag_kindred_thinkers', locale)}
@@ -109,9 +109,9 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel, locale = '
                     color: 'inherit',
                     display: 'block',
                     padding: '11px 14px',
-                    background: '#FAF6EC',
-                    border: '3px solid #221E18',
-                    boxShadow: '3px 3px 0 0 #B8862F',
+                    background: 'var(--color-cream)',
+                    border: '3px solid var(--color-ink)',
+                    boxShadow: '3px 3px 0 0 var(--color-acc)',
                     borderRadius: 0,
                     transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
                   }}
@@ -126,11 +126,11 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel, locale = '
                   }}>
                     <span style={{
                       fontFamily: serif, fontSize: 17, fontWeight: 500,
-                      color: '#221E18',
+                      color: 'var(--color-ink)',
                     }}>{kp.name}</span>
                     {kp.similarity > 0 && (
                       <span style={{
-                        fontFamily: pixel, fontSize: 11, color: '#8C6520',
+                        fontFamily: pixel, fontSize: 11, color: 'var(--color-acc-deep)',
                         fontVariantNumeric: 'tabular-nums', letterSpacing: 0.4,
                       }}>
                         {t('crd.diag_pct_kin', locale, { pct: Math.round(kp.similarity * 100) })}
@@ -140,7 +140,7 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel, locale = '
                   {kp.why && (
                     <p style={{
                       fontFamily: serif, fontStyle: 'italic',
-                      fontSize: 14.5, color: '#4A4338',
+                      fontSize: 14.5, color: 'var(--color-ink-soft)',
                       margin: 0, lineHeight: 1.5,
                     }}>
                       {kp.why}
@@ -157,7 +157,7 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel, locale = '
         <>
           <div style={{
             fontFamily: pixel, fontSize: 10.5,
-            color: '#8C6520', textTransform: 'uppercase',
+            color: 'var(--color-acc-deep)', textTransform: 'uppercase',
             letterSpacing: '0.18em', marginBottom: 10, marginTop: 16,
           }}>
             {t('crd.diag_also_echoes', locale)}
@@ -175,8 +175,8 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel, locale = '
                     color: 'inherit',
                     display: 'block',
                     padding: '8px 12px',
-                    background: '#FAF6EC',
-                    border: '2px dashed #8C6520',
+                    background: 'var(--color-cream)',
+                    border: '2px dashed var(--color-acc-deep)',
                     borderRadius: 0,
                   }}
                 >
@@ -189,11 +189,11 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel, locale = '
                   }}>
                     <span style={{
                       fontFamily: serif, fontSize: 15, fontWeight: 500,
-                      color: '#221E18',
+                      color: 'var(--color-ink)',
                     }}>{kp.name}</span>
                     {kp.similarity > 0 && (
                       <span style={{
-                        fontFamily: pixel, fontSize: 10.5, color: '#8C6520',
+                        fontFamily: pixel, fontSize: 10.5, color: 'var(--color-acc-deep)',
                         fontVariantNumeric: 'tabular-nums', letterSpacing: 0.4,
                         opacity: 0.85,
                       }}>
@@ -204,7 +204,7 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel, locale = '
                   {kp.why && (
                     <p style={{
                       fontFamily: serif, fontStyle: 'italic',
-                      fontSize: 13.5, color: '#4A4338',
+                      fontSize: 13.5, color: 'var(--color-ink-soft)',
                       margin: 0, lineHeight: 1.45,
                     }}>
                       {kp.why}
@@ -221,7 +221,7 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel, locale = '
         <>
           <div style={{
             fontFamily: pixel, fontSize: 10.5,
-            color: '#8C6520', textTransform: 'uppercase',
+            color: 'var(--color-acc-deep)', textTransform: 'uppercase',
             letterSpacing: '0.18em', marginBottom: 10, marginTop: 16,
           }}>
             {t('crd.diag_traditions', locale)}

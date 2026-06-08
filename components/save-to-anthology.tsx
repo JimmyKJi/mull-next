@@ -49,14 +49,14 @@ export default function SaveToAnthology({
         gap: 6,
         padding: "4px 10px",
         background: saved ? "#2F5D5C" : "#FFFCF4",
-        color: saved ? "#F8EDC8" : "#8C6520",
-        border: "2px solid #221E18",
+        color: saved ? "var(--color-acc-soft)" : "var(--color-acc-deep)",
+        border: "2px solid var(--color-ink)",
         fontFamily: pixel,
         fontSize: 10,
         letterSpacing: "0.16em",
         textTransform: "uppercase",
         cursor: saved ? "default" : "pointer",
-        boxShadow: saved ? "none" : "2px 2px 0 0 #B8862F",
+        boxShadow: saved ? "none" : "2px 2px 0 0 var(--color-acc)",
         transition: "background 120ms",
       }}
     >

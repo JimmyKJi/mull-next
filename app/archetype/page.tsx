@@ -43,7 +43,7 @@ export default async function ArchetypeIndexPage() {
         }
       />
 
-      <p className="-mt-6 mb-10 max-w-[680px] text-[14px] leading-[1.6] text-[#4A4338] sm:mb-12">
+      <p className="-mt-6 mb-10 max-w-[680px] text-[14px] leading-[1.6] text-ink-soft sm:mb-12">
         {t('arch_index.intro', locale)}
       </p>
 
@@ -109,18 +109,18 @@ export default async function ArchetypeIndexPage() {
                     className="flex-1 border-t-2 px-3 py-3 text-center"
                     style={{ borderColor: color.deep }}
                   >
-                    <h2 className="text-[18px] font-medium leading-tight text-[#221E18]">
+                    <h2 className="text-[18px] font-medium leading-tight text-ink">
                       {name}
                     </h2>
                     <p
-                      className="mt-1 text-[13px] italic leading-[1.4] text-[#8C6520]"
+                      className="mt-1 text-[13px] italic leading-[1.4] text-acc-deep"
                       style={{ fontFamily: 'var(--font-prose)' }}
                     >
                       {a.spirit}
                     </p>
                     {blurb ? (
                       <p
-                        className="mt-3 text-[13px] leading-[1.55] text-[#4A4338]"
+                        className="mt-3 text-[13px] leading-[1.55] text-ink-soft"
                         style={{ fontFamily: 'var(--font-prose)' }}
                       >
                         {blurb}
@@ -148,10 +148,10 @@ export default async function ArchetypeIndexPage() {
         })}
       </ul>
 
-      <p className="mt-12 text-center text-[13px] text-[#8C6520]">
+      <p className="mt-12 text-center text-[13px] text-acc-deep">
         <Link
           href="/"
-          className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           ← {t('arch_index.back_to_home', locale)}
         </Link>

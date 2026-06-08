@@ -57,18 +57,18 @@ export default function SignupPage() {
   return (
     <main className="mx-auto flex min-h-[calc(100vh-64px)] max-w-[480px] flex-col px-6 pb-32 pt-12 sm:pt-16">
       <div
-        className="border-4 border-[#221E18] bg-[#FFFCF4]"
-        style={{ boxShadow: '6px 6px 0 0 #8C6520' }}
+        className="border-4 border-ink bg-[#FFFCF4]"
+        style={{ boxShadow: '6px 6px 0 0 var(--color-acc-deep)' }}
       >
         {/* Title bar */}
         <div
-          className="flex items-center justify-between border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
+          className="flex items-center justify-between border-b-4 border-ink bg-ink px-4 py-2 text-[10px] tracking-[0.22em] text-acc-soft"
           style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
           <span>▶ {confirmSent
             ? t('auth.check_email', locale).toUpperCase()
             : t('auth.create_account', locale).toUpperCase()}</span>
-          <span className="text-[#B8862F]">AUTH.SYS</span>
+          <span className="text-acc">AUTH.SYS</span>
         </div>
 
         <div className="px-6 py-7 sm:px-8">
@@ -84,15 +84,15 @@ export default function SignupPage() {
           ) : (
             <>
               <h1
-                className="text-[24px] leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[32px]"
+                className="text-[24px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[32px]"
                 style={{ fontFamily: 'var(--font-pixel-display)' }}
               >
-                <span style={{ textShadow: '3px 3px 0 #B8862F' }}>
+                <span style={{ textShadow: '3px 3px 0 var(--color-acc)' }}>
                   {t('auth.create_account', locale).toUpperCase()}
                 </span>
               </h1>
               <p
-                className="mt-4 text-[15px] italic leading-[1.5] text-[#4A4338]"
+                className="mt-4 text-[15px] italic leading-[1.5] text-ink-soft"
                 style={{ fontFamily: 'var(--font-prose)' }}
               >
                 {t('auth.signup_subtitle', locale)}
@@ -100,7 +100,7 @@ export default function SignupPage() {
 
               <form onSubmit={handleSubmit} className="mt-7 flex flex-col gap-5">
                 <label
-                  className="flex flex-col gap-1.5 text-[12px] tracking-[0.18em] text-[#8C6520]"
+                  className="flex flex-col gap-1.5 text-[12px] tracking-[0.18em] text-acc-deep"
                   style={{ fontFamily: 'var(--font-pixel-display)' }}
                 >
                   {t('auth.email', locale).toUpperCase()}
@@ -110,13 +110,13 @@ export default function SignupPage() {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                     autoComplete="email"
-                    className="border-2 border-[#221E18] bg-[#FFFCF4] px-3 py-2.5 text-[16px] text-[#221E18] focus:bg-[#F8EDC8] focus:outline-none"
+                    className="border-2 border-ink bg-[#FFFCF4] px-3 py-2.5 text-[16px] text-ink focus:bg-acc-soft focus:outline-none"
                     style={{ fontFamily: 'var(--font-prose)' }}
                   />
                 </label>
 
                 <label
-                  className="flex flex-col gap-1.5 text-[12px] tracking-[0.18em] text-[#8C6520]"
+                  className="flex flex-col gap-1.5 text-[12px] tracking-[0.18em] text-acc-deep"
                   style={{ fontFamily: 'var(--font-pixel-display)' }}
                 >
                   {t('auth.password', locale).toUpperCase()}
@@ -127,10 +127,10 @@ export default function SignupPage() {
                     required
                     autoComplete="new-password"
                     minLength={6}
-                    className="border-2 border-[#221E18] bg-[#FFFCF4] px-3 py-2.5 text-[16px] text-[#221E18] focus:bg-[#F8EDC8] focus:outline-none"
+                    className="border-2 border-ink bg-[#FFFCF4] px-3 py-2.5 text-[16px] text-ink focus:bg-acc-soft focus:outline-none"
                     style={{ fontFamily: 'var(--font-prose)' }}
                   />
-                  <span className="mt-1 text-[11.5px] tracking-normal text-[#8C6520]" style={{ fontFamily: 'var(--font-prose)' }}>
+                  <span className="mt-1 text-[11.5px] tracking-normal text-acc-deep" style={{ fontFamily: 'var(--font-prose)' }}>
                     {t('auth.password_hint', locale)}
                   </span>
                 </label>
@@ -158,11 +158,11 @@ export default function SignupPage() {
           )}
         </div>
 
-        <div className="border-t-2 border-[#221E18] bg-[#F8EDC8] px-6 py-3 text-center text-[13px] text-[#4A4338] sm:px-8">
+        <div className="border-t-2 border-ink bg-acc-soft px-6 py-3 text-center text-[13px] text-ink-soft sm:px-8">
           {t('auth.already_account', locale)}{' '}
           <Link
             href="/login"
-            className="font-medium text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+            className="font-medium text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
           >
             {t('auth.signin', locale)} →
           </Link>
@@ -186,26 +186,26 @@ function ConfirmState({
   return (
     <>
       <h1
-        className="text-[22px] leading-[1.1] tracking-[0.04em] text-[#221E18] sm:text-[28px]"
+        className="text-[22px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[28px]"
         style={{ fontFamily: 'var(--font-pixel-display)' }}
       >
-        <span style={{ textShadow: '3px 3px 0 #B8862F' }}>
+        <span style={{ textShadow: '3px 3px 0 var(--color-acc)' }}>
           {t('auth.check_email', locale).toUpperCase()}
         </span>
       </h1>
       <p
-        className="mt-4 text-[16px] italic leading-[1.55] text-[#4A4338]"
+        className="mt-4 text-[16px] italic leading-[1.55] text-ink-soft"
         style={{ fontFamily: 'var(--font-prose)' }}
       >
         {before}
-        <strong className="text-[#221E18]">{email}</strong>
+        <strong className="text-ink">{email}</strong>
         {after || ''}
       </p>
-      <p className="mt-6 text-[13px] text-[#8C6520]">
+      <p className="mt-6 text-[13px] text-acc-deep">
         {t('auth.didnt_arrive', locale)}{' '}
         <button
           onClick={onTryAgain}
-          className="border-0 bg-transparent p-0 text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          className="border-0 bg-transparent p-0 text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
           style={{ font: 'inherit' }}
         >
           {t('auth.try_again', locale)}

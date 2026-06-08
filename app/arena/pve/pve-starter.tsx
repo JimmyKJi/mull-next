@@ -94,7 +94,7 @@ export default function PveStarter({
             fontFamily: serif,
             fontStyle: "italic",
             fontSize: 14,
-            color: "#8C6520",
+            color: "var(--color-acc-deep)",
             margin: "0 0 14px",
           }}
         >
@@ -112,7 +112,7 @@ export default function PveStarter({
                 style={{
                   fontFamily: pixel,
                   fontSize: 10,
-                  color: "#8C6520",
+                  color: "var(--color-acc-deep)",
                   letterSpacing: "0.22em",
                   textTransform: "uppercase",
                   marginBottom: 4,
@@ -125,7 +125,7 @@ export default function PveStarter({
                   fontFamily: serif,
                   fontStyle: "italic",
                   fontSize: 13,
-                  color: "#4A4338",
+                  color: "var(--color-ink-soft)",
                   margin: "0 0 8px",
                   lineHeight: 1.45,
                 }}
@@ -160,18 +160,18 @@ export default function PveStarter({
                             : picked
                               ? "#F8C75E"
                               : "#FFFCF4",
-                          border: "3px solid #221E18",
+                          border: "3px solid var(--color-ink)",
                           boxShadow: locked
                             ? "none"
                             : picked
                               ? "4px 4px 0 0 #2F5D5C"
-                              : "3px 3px 0 0 #B8862F",
+                              : "3px 3px 0 0 var(--color-acc)",
                           cursor: locked ? "not-allowed" : "pointer",
                           opacity: locked ? 0.55 : 1,
                           textAlign: "left",
                           fontFamily: serif,
                           fontSize: 16,
-                          color: "#221E18",
+                          color: "var(--color-ink)",
                           transition: "background 120ms ease",
                         }}
                       >
@@ -184,7 +184,7 @@ export default function PveStarter({
                               ? "#7A2E2E"
                               : picked
                                 ? "#1A1820"
-                                : "#8C6520",
+                                : "var(--color-acc-deep)",
                             letterSpacing: 0.4,
                             textTransform: "uppercase",
                             marginTop: 4,
@@ -220,7 +220,7 @@ export default function PveStarter({
               fontFamily: serif,
               fontStyle: "italic",
               fontSize: 13,
-              color: "#4A4338",
+              color: "var(--color-ink-soft)",
               margin: 0,
               lineHeight: 1.5,
             }}
@@ -244,10 +244,10 @@ export default function PveStarter({
               fontSize: 10,
               padding: "6px 12px",
               background: "#FFFCF4",
-              border: "2px solid #221E18",
-              boxShadow: "2px 2px 0 0 #B8862F",
+              border: "2px solid var(--color-ink)",
+              boxShadow: "2px 2px 0 0 var(--color-acc)",
               cursor: "pointer",
-              color: "#221E18",
+              color: "var(--color-ink)",
               letterSpacing: 0.5,
               textTransform: "uppercase",
             }}
@@ -264,7 +264,7 @@ export default function PveStarter({
                 style={{
                   fontFamily: pixel,
                   fontSize: 10,
-                  color: "#8C6520",
+                  color: "var(--color-acc-deep)",
                   letterSpacing: "0.22em",
                   textTransform: "uppercase",
                   marginBottom: 8,
@@ -296,16 +296,16 @@ export default function PveStarter({
                           textAlign: "left",
                           padding: "12px 14px",
                           background: picked ? "#F8C75E" : "#FFFCF4",
-                          border: "3px solid #221E18",
+                          border: "3px solid var(--color-ink)",
                           boxShadow: picked
                             ? "4px 4px 0 0 #2F5D5C"
-                            : "3px 3px 0 0 #B8862F",
+                            : "3px 3px 0 0 var(--color-acc)",
                           cursor: "pointer",
                           fontFamily: serif,
                         }}
                       >
                         <div
-                          style={{ fontSize: 15.5, fontWeight: 500, color: "#221E18", lineHeight: 1.25 }}
+                          style={{ fontSize: 15.5, fontWeight: 500, color: "var(--color-ink)", lineHeight: 1.25 }}
                         >
                           {t.title}
                         </div>
@@ -313,7 +313,7 @@ export default function PveStarter({
                           style={{
                             fontSize: 13.5,
                             fontStyle: "italic",
-                            color: picked ? "#1A1820" : "#4A4338",
+                            color: picked ? "#1A1820" : "var(--color-ink-soft)",
                             marginTop: 4,
                             lineHeight: 1.45,
                           }}
@@ -339,9 +339,9 @@ export default function PveStarter({
           style={{
             width: "100%",
             padding: "16px 22px",
-            background: !opponent || !topicSlug ? "#D6CDB6" : "#F8C75E",
+            background: !opponent || !topicSlug ? "var(--color-line)" : "#F8C75E",
             color: "#1A1820",
-            border: "3px solid #221E18",
+            border: "3px solid var(--color-ink)",
             boxShadow: "4px 4px 0 0 #2F5D5C",
             cursor: !opponent || !topicSlug ? "not-allowed" : "pointer",
             fontFamily: pixel,
@@ -387,11 +387,11 @@ function SectionHead({ n, title, locale }: { n: number; title: string; locale: L
       style={{
         fontFamily: pixel,
         fontSize: 11,
-        color: "#221E18",
+        color: "var(--color-ink)",
         letterSpacing: "0.2em",
         textTransform: "uppercase",
         marginBottom: 10,
-        textShadow: "2px 2px 0 #B8862F",
+        textShadow: "2px 2px 0 var(--color-acc)",
       }}
     >
       {t("arena.pve_step", locale, { n, title: title.toUpperCase() })}

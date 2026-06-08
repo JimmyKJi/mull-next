@@ -532,11 +532,11 @@ function HoverCard({
             />
           </div>
           <div className="min-w-0">
-            <div className="text-[18px] font-medium leading-tight text-[#F8EDC8]">
+            <div className="text-[18px] font-medium leading-tight text-acc-soft">
               {p.name}
             </div>
             {p.dates ? (
-              <div className="mt-0.5 text-[12px] text-[#B8862F]">
+              <div className="mt-0.5 text-[12px] text-acc">
                 {p.dates}
               </div>
             ) : null}
@@ -551,7 +551,7 @@ function HoverCard({
             style={{ borderColor: color.deep }}
           >
             <p
-              className="text-[14px] leading-[1.45] text-[#F8EDC8]/90"
+              className="text-[14px] leading-[1.45] text-acc-soft/90"
               style={{ fontFamily: "var(--font-editorial)" }}
             >
               <em>&ldquo;{p.keyIdea}&rdquo;</em>
@@ -566,7 +566,7 @@ function HoverCard({
           <button
             type="button"
             onClick={onTogglePin}
-            className="block w-full border-t-2 px-3 py-2 text-center text-[11px] tracking-[0.18em] hover:bg-[#221E18]/40"
+            className="block w-full border-t-2 px-3 py-2 text-center text-[11px] tracking-[0.18em] hover:bg-ink/40"
             style={{
               borderColor: color.deep,
               color: color.soft,
@@ -613,12 +613,12 @@ function SearchBar({
   return (
     <div className="absolute left-1/2 top-4 z-20 w-[88%] max-w-[360px] -translate-x-1/2 sm:w-auto">
       <div
-        className="border-4 border-[#221E18] bg-[#FFFCF4]"
-        style={{ boxShadow: "4px 4px 0 0 #B8862F" }}
+        className="border-4 border-ink bg-[#FFFCF4]"
+        style={{ boxShadow: "4px 4px 0 0 var(--color-acc)" }}
       >
         <div className="flex items-stretch">
           <span
-            className="flex items-center border-r-2 border-[#221E18] bg-[#221E18] px-3 text-[12px] tracking-[0.16em] text-[#F8EDC8]"
+            className="flex items-center border-r-2 border-ink bg-ink px-3 text-[12px] tracking-[0.16em] text-acc-soft"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
             {t("cnst.find", locale)} ▶
@@ -628,14 +628,14 @@ function SearchBar({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder={t("cnst.search_placeholder", locale, { count: PHILOSOPHER_POSITIONS_3D.length })}
-            className="min-w-0 flex-1 bg-transparent px-3 py-1.5 text-[18px] leading-none text-[#221E18] placeholder:text-[#8C6520]/60 focus:outline-none"
+            className="min-w-0 flex-1 bg-transparent px-3 py-1.5 text-[18px] leading-none text-ink placeholder:text-acc-deep/60 focus:outline-none"
             style={{ fontFamily: "var(--font-pixel-body)" }}
           />
           {value ? (
             <button
               type="button"
               onClick={() => onChange("")}
-              className="border-l-2 border-[#221E18] bg-[#FFFCF4] px-2 text-[16px] text-[#8C6520] hover:bg-[#F8EDC8]"
+              className="border-l-2 border-ink bg-[#FFFCF4] px-2 text-[16px] text-acc-deep hover:bg-acc-soft"
               style={{ fontFamily: "var(--font-pixel-display)" }}
               aria-label={t("cnst.clear_search", locale)}
             >
@@ -645,7 +645,7 @@ function SearchBar({
         </div>
         {matchCount !== null ? (
           <div
-            className="border-t-2 border-[#221E18] bg-[#F8EDC8] px-3 py-1 text-[12px] tracking-[0.14em] text-[#8C6520]"
+            className="border-t-2 border-ink bg-acc-soft px-3 py-1 text-[12px] tracking-[0.14em] text-acc-deep"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
             {matchCount === 0 ? (
@@ -691,7 +691,7 @@ function Legend({
   return (
     <div
       className="absolute bottom-4 left-4 z-10 max-w-[220px] border-4 border-[#3A3528] bg-[#0E1419]/95 p-3 backdrop-blur-md"
-      style={{ boxShadow: "4px 4px 0 0 #221E18" }}
+      style={{ boxShadow: "4px 4px 0 0 var(--color-ink)" }}
     >
       {/* Cloud size toggle — opt-in to all 560 */}
       <div className="flex items-center justify-between">
@@ -708,8 +708,8 @@ function Legend({
         className={
           "mt-1.5 flex w-full items-center justify-between px-2 py-1.5 text-left text-[12px] transition-colors " +
           (showAll
-            ? "bg-[#B8862F] text-[#1A1612]"
-            : "bg-[#1A2129] text-[#F1EAD8] hover:bg-[#28323F]")
+            ? "bg-acc text-[#1A1612]"
+            : "bg-[#1A2129] text-cream-2 hover:bg-[#28323F]")
         }
       >
         <span className="font-medium">
@@ -723,7 +723,7 @@ function Legend({
         <button
           type="button"
           onClick={onClearPins}
-          className="mt-1 flex w-full items-center justify-between px-2 py-1 text-[11px] text-[#B8862F] hover:bg-[#1A2129]"
+          className="mt-1 flex w-full items-center justify-between px-2 py-1 text-[11px] text-acc hover:bg-[#1A2129]"
         >
           <span>★ {t("cnst.n_pinned", locale, { count: pinnedCount })}</span>
           <span className="text-[10px] opacity-70">{t("cnst.clear", locale)}</span>
@@ -741,7 +741,7 @@ function Legend({
         <button
           type="button"
           onClick={onAll}
-          className="text-[10px] uppercase tracking-[0.16em] text-[#B8862F] hover:text-[#F1EAD8]"
+          className="text-[10px] uppercase tracking-[0.16em] text-acc hover:text-cream-2"
           title={t("cnst.show_all_title", locale)}
         >
           {t("cnst.all", locale)}
@@ -773,7 +773,7 @@ function Legend({
                 <span
                   className="text-[12px] capitalize transition-colors"
                   style={{
-                    color: isOn ? "#F1EAD8" : "#5A5448",
+                    color: isOn ? "var(--color-cream-2)" : "#5A5448",
                   }}
                 >
                   {locale === "zh" ? t(`arch.${a.key}.name`, "zh") : a.key}
@@ -797,18 +797,18 @@ function Legend({
 function AxesCaption({ locale }: { locale: Locale }) {
   return (
     <div className="pointer-events-none absolute bottom-4 right-4 z-10 max-w-[260px] rounded-xl border border-[#3A3528]/60 bg-[#0E1419]/85 p-3 text-[11px] leading-relaxed text-[#9A8B6A] backdrop-blur-md">
-      <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#B8862F]">
+      <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-acc">
         {t("cnst.axes", locale)}
       </div>
       <ul className="mt-2 space-y-1">
         <li>
-          <span className="text-[#D6CDB6]/80">X</span> · {t("cnst.axis_x", locale)}
+          <span className="text-line/80">X</span> · {t("cnst.axis_x", locale)}
         </li>
         <li>
-          <span className="text-[#D6CDB6]/80">Y</span> · {t("cnst.axis_y", locale)}
+          <span className="text-line/80">Y</span> · {t("cnst.axis_y", locale)}
         </li>
         <li>
-          <span className="text-[#D6CDB6]/80">Z</span> · {t("cnst.axis_z", locale)}
+          <span className="text-line/80">Z</span> · {t("cnst.axis_z", locale)}
         </li>
       </ul>
       <div className="mt-2 border-t border-[#3A3528]/40 pt-2 text-[10px] text-[#5A5448]">
@@ -826,7 +826,7 @@ function EmptyState({ onAll, locale }: { onAll: () => void; locale: Locale }) {
     <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center">
       <div className="pointer-events-auto rounded-xl border border-[#3A3528] bg-[#0E1419]/95 p-6 text-center">
         <div
-          className="font-display text-[20px] italic text-[#F1EAD8]"
+          className="font-display text-[20px] italic text-cream-2"
           style={{ fontFamily: "var(--font-display)" }}
         >
           {t("cnst.map_empty", locale)}
@@ -834,7 +834,7 @@ function EmptyState({ onAll, locale }: { onAll: () => void; locale: Locale }) {
         <button
           type="button"
           onClick={onAll}
-          className="mt-3 rounded-full bg-[#8C6520] px-4 py-1.5 text-[13px] text-[#FAF6EC] hover:bg-[#B8862F]"
+          className="mt-3 rounded-full bg-acc-deep px-4 py-1.5 text-[13px] text-cream hover:bg-acc"
         >
           {t("cnst.show_all_arch", locale)}
         </button>

@@ -294,7 +294,7 @@ export default async function ResearchAdminPage() {
           style={{
             fontFamily: pixel,
             fontSize: 11,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             textTransform: 'uppercase',
             letterSpacing: '0.18em',
             marginBottom: 8,
@@ -307,10 +307,10 @@ export default async function ResearchAdminPage() {
             fontFamily: pixel,
             fontSize: 28,
             margin: 0,
-            color: '#221E18',
+            color: 'var(--color-ink)',
             letterSpacing: '0.06em',
             textTransform: 'uppercase',
-            textShadow: '3px 3px 0 #B8862F',
+            textShadow: '3px 3px 0 var(--color-acc)',
           }}
         >
           RESEARCH CONSOLE
@@ -320,7 +320,7 @@ export default async function ResearchAdminPage() {
             fontFamily: serif,
             fontStyle: 'italic',
             fontSize: 15,
-            color: '#4A4338',
+            color: 'var(--color-ink-soft)',
             margin: '12px 0 0',
             maxWidth: 640,
             lineHeight: 1.55,
@@ -361,7 +361,7 @@ export default async function ResearchAdminPage() {
       </section>
 
       {/* ── Corpus size ──────────────────────────────────────────── */}
-      <section style={cardStyle('#B8862F')}>
+      <section style={cardStyle('var(--color-acc)')}>
         <h2 style={sectionTitle}>▸ RESEARCH CORPUS</h2>
         <p style={sectionSub}>
           Consented quiz completions captured with their full per-question
@@ -385,7 +385,7 @@ export default async function ResearchAdminPage() {
             style={{
               fontFamily: serif,
               fontStyle: 'italic',
-              color: '#8C6520',
+              color: 'var(--color-acc-deep)',
               margin: '16px 0 0',
               fontSize: 14,
             }}
@@ -470,7 +470,7 @@ export default async function ResearchAdminPage() {
             style={{
               fontFamily: serif,
               fontStyle: 'italic',
-              color: '#8C6520',
+              color: 'var(--color-acc-deep)',
               margin: '16px 0 0',
               fontSize: 14,
             }}
@@ -496,17 +496,17 @@ export default async function ResearchAdminPage() {
                       marginBottom: 8,
                     }}
                   >
-                    <span style={{ fontFamily: serif, fontSize: 14, color: '#221E18' }}>
+                    <span style={{ fontFamily: serif, fontSize: 14, color: 'var(--color-ink)' }}>
                       <strong>{k}</strong>{' '}
-                      <span style={{ color: '#8C6520', fontSize: 12.5 }}>
+                      <span style={{ color: 'var(--color-acc-deep)', fontSize: 12.5 }}>
                         {DIM_NAMES[k]}
                       </span>
                     </span>
                     <div
                       style={{
                         height: 10,
-                        background: '#FAF6EC',
-                        border: '2px solid #221E18',
+                        background: 'var(--color-cream)',
+                        border: '2px solid var(--color-ink)',
                       }}
                     >
                       <div
@@ -521,7 +521,7 @@ export default async function ResearchAdminPage() {
                       style={{
                         fontFamily: pixel,
                         fontSize: 12,
-                        color: '#221E18',
+                        color: 'var(--color-ink)',
                         textAlign: 'right',
                         fontVariantNumeric: 'tabular-nums',
                       }}
@@ -561,7 +561,7 @@ export default async function ResearchAdminPage() {
         style={{
           fontFamily: pixel,
           fontSize: 10,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           letterSpacing: 0.4,
           textTransform: 'uppercase',
           marginTop: 28,
@@ -611,7 +611,7 @@ function QuestionSet({
             style={{
               fontFamily: serif,
               fontStyle: 'italic',
-              color: '#8C6520',
+              color: 'var(--color-acc-deep)',
               margin: '16px 0 0',
               fontSize: 14,
             }}
@@ -645,14 +645,14 @@ function QuestionDistribution({
     <div
       style={{
         padding: '14px 0 16px',
-        borderBottom: '2px dashed #D6CDB6',
+        borderBottom: '2px dashed var(--color-line)',
       }}
     >
       <div
         style={{
           fontFamily: pixel,
           fontSize: 10,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           letterSpacing: 0.4,
           textTransform: 'uppercase',
           marginBottom: 6,
@@ -666,7 +666,7 @@ function QuestionDistribution({
         style={{
           fontFamily: serif,
           fontSize: 15.5,
-          color: '#221E18',
+          color: 'var(--color-ink)',
           margin: '0 0 10px',
           lineHeight: 1.4,
         }}
@@ -722,7 +722,7 @@ function DistRow({
           style={{
             fontFamily: serif,
             fontSize: 14,
-            color: '#221E18',
+            color: 'var(--color-ink)',
             marginBottom: 3,
             textTransform: capitalize ? 'capitalize' : 'none',
             lineHeight: 1.35,
@@ -733,8 +733,8 @@ function DistRow({
         <div
           style={{
             height: 8,
-            background: '#FAF6EC',
-            border: '2px solid #221E18',
+            background: 'var(--color-cream)',
+            border: '2px solid var(--color-ink)',
           }}
         >
           <div
@@ -750,7 +750,7 @@ function DistRow({
         style={{
           fontFamily: pixel,
           fontSize: 11.5,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           textAlign: 'right',
           fontVariantNumeric: 'tabular-nums',
           letterSpacing: 0.3,
@@ -776,7 +776,7 @@ function BigStat({
       style={{
         padding: '14px 16px',
         background: '#FFFCF4',
-        border: '3px solid #221E18',
+        border: '3px solid var(--color-ink)',
         boxShadow: `3px 3px 0 0 ${accent}`,
       }}
     >
@@ -796,7 +796,7 @@ function BigStat({
         style={{
           fontFamily: pixel,
           fontSize: 28,
-          color: '#221E18',
+          color: 'var(--color-ink)',
           lineHeight: 1,
           fontVariantNumeric: 'tabular-nums',
         }}
@@ -811,7 +811,7 @@ function BigStat({
 function regionAccent(region: LocaleRegion): string {
   if (region === 'western') return '#2F5D5C';
   if (region === 'eastern') return '#7A2E5A';
-  return '#8C6520';
+  return 'var(--color-acc-deep)';
 }
 
 // One summary card per language region: total responses, the quick/detailed
@@ -828,7 +828,7 @@ function RegionCard({ region }: { region: RegionAgg }) {
       style={{
         padding: '16px 18px',
         background: '#FFFCF4',
-        border: '3px solid #221E18',
+        border: '3px solid var(--color-ink)',
         boxShadow: `3px 3px 0 0 ${accent}`,
       }}
     >
@@ -849,7 +849,7 @@ function RegionCard({ region }: { region: RegionAgg }) {
           fontFamily: serif,
           fontStyle: 'italic',
           fontSize: 12,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           marginBottom: 12,
         }}
       >
@@ -859,23 +859,23 @@ function RegionCard({ region }: { region: RegionAgg }) {
         style={{
           fontFamily: pixel,
           fontSize: 30,
-          color: '#221E18',
+          color: 'var(--color-ink)',
           lineHeight: 1,
           fontVariantNumeric: 'tabular-nums',
         }}
       >
         {region.total.toLocaleString()}
       </div>
-      <div style={{ fontFamily: serif, fontSize: 13, color: '#4A4338', marginTop: 6 }}>
+      <div style={{ fontFamily: serif, fontSize: 13, color: 'var(--color-ink-soft)', marginTop: 6 }}>
         {region.quick.toLocaleString()} quick · {region.detailed.toLocaleString()} detailed
       </div>
       {top.length > 0 ? (
-        <div style={{ marginTop: 12, borderTop: '2px dashed #D6CDB6', paddingTop: 10 }}>
+        <div style={{ marginTop: 12, borderTop: '2px dashed var(--color-line)', paddingTop: 10 }}>
           <div
             style={{
               fontFamily: pixel,
               fontSize: 9,
-              color: '#8C6520',
+              color: 'var(--color-acc-deep)',
               textTransform: 'uppercase',
               letterSpacing: '0.18em',
               marginBottom: 6,
@@ -893,13 +893,13 @@ function RegionCard({ region }: { region: RegionAgg }) {
                   justifyContent: 'space-between',
                   fontFamily: serif,
                   fontSize: 13,
-                  color: '#221E18',
+                  color: 'var(--color-ink)',
                   textTransform: 'capitalize',
                   marginBottom: 3,
                 }}
               >
                 <span>{k}</span>
-                <span style={{ color: '#8C6520', fontVariantNumeric: 'tabular-nums' }}>
+                <span style={{ color: 'var(--color-acc-deep)', fontVariantNumeric: 'tabular-nums' }}>
                   {c} · {pct}%
                 </span>
               </div>
@@ -913,7 +913,7 @@ function RegionCard({ region }: { region: RegionAgg }) {
             fontFamily: serif,
             fontStyle: 'italic',
             fontSize: 13,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
           }}
         >
           No responses yet.
@@ -945,7 +945,7 @@ function MiniSignedBar({
         style={{
           fontFamily: pixel,
           fontSize: 9,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           width: 12,
           flexShrink: 0,
         }}
@@ -956,8 +956,8 @@ function MiniSignedBar({
         style={{
           flex: 1,
           height: 9,
-          background: '#FAF6EC',
-          border: '2px solid #221E18',
+          background: 'var(--color-cream)',
+          border: '2px solid var(--color-ink)',
         }}
       >
         <div
@@ -972,7 +972,7 @@ function MiniSignedBar({
         style={{
           fontFamily: pixel,
           fontSize: 11,
-          color: na ? '#B8AE96' : '#221E18',
+          color: na ? '#B8AE96' : 'var(--color-ink)',
           width: 46,
           textAlign: 'right',
           fontVariantNumeric: 'tabular-nums',
@@ -1014,7 +1014,7 @@ function RegionDimCompare({ regions }: { regions: RegionAgg[] }) {
           style={{
             fontFamily: serif,
             fontStyle: 'italic',
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             margin: '16px 0 0',
             fontSize: 14,
           }}
@@ -1035,9 +1035,9 @@ function RegionDimCompare({ regions }: { regions: RegionAgg[] }) {
                 marginBottom: 10,
               }}
             >
-              <span style={{ fontFamily: serif, fontSize: 13.5, color: '#221E18' }}>
+              <span style={{ fontFamily: serif, fontSize: 13.5, color: 'var(--color-ink)' }}>
                 <strong>{k}</strong>{' '}
-                <span style={{ color: '#8C6520', fontSize: 12 }}>{DIM_NAMES[k]}</span>
+                <span style={{ color: 'var(--color-acc-deep)', fontSize: 12 }}>{DIM_NAMES[k]}</span>
               </span>
               <MiniSignedBar
                 tag="W"
@@ -1065,7 +1065,7 @@ const DEMO_FIELD_ACCENT: Record<DemographicField, string> = {
   gender: '#7A2E5A',
   cultural_group: '#7A4A2E',
   education: '#5A3A6A',
-  religion: '#B8862F',
+  religion: 'var(--color-acc)',
 };
 
 // Optional self-reported demographics, aggregate only. One band per field
@@ -1089,7 +1089,7 @@ function DemographicsBreakdown({ data }: { data: DemographicsAgg }) {
           style={{
             fontFamily: serif,
             fontStyle: 'italic',
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             margin: '16px 0 0',
             fontSize: 14,
           }}
@@ -1111,12 +1111,12 @@ function DemographicsBreakdown({ data }: { data: DemographicsAgg }) {
 function DemoFieldBlock({ field }: { field: DemoFieldAgg }) {
   const accent = DEMO_FIELD_ACCENT[field.field];
   return (
-    <div style={{ padding: '12px 0 14px', borderBottom: '2px dashed #D6CDB6' }}>
+    <div style={{ padding: '12px 0 14px', borderBottom: '2px dashed var(--color-line)' }}>
       <div
         style={{
           fontFamily: pixel,
           fontSize: 10,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           letterSpacing: 0.4,
           textTransform: 'uppercase',
           marginBottom: 10,
@@ -1131,7 +1131,7 @@ function DemoFieldBlock({ field }: { field: DemoFieldAgg }) {
             fontFamily: serif,
             fontStyle: 'italic',
             fontSize: 13.5,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
           }}
         >
           No answers yet.
@@ -1172,10 +1172,10 @@ function ExportLink({
       style={{
         display: 'inline-block',
         padding: '8px 14px',
-        background: muted ? 'transparent' : '#221E18',
-        color: muted ? '#8C6520' : '#F8EDC8',
-        border: `2px solid ${muted ? '#8C6520' : '#221E18'}`,
-        boxShadow: muted ? 'none' : '3px 3px 0 0 #B8862F',
+        background: muted ? 'transparent' : 'var(--color-ink)',
+        color: muted ? 'var(--color-acc-deep)' : 'var(--color-acc-soft)',
+        border: `2px solid ${muted ? 'var(--color-acc-deep)' : 'var(--color-ink)'}`,
+        boxShadow: muted ? 'none' : '3px 3px 0 0 var(--color-acc)',
         fontFamily: pixel,
         fontSize: 11,
         letterSpacing: '0.12em',
@@ -1192,7 +1192,7 @@ function cardStyle(accent: string): React.CSSProperties {
   return {
     padding: '24px 26px',
     background: '#FFFCF4',
-    border: '4px solid #221E18',
+    border: '4px solid var(--color-ink)',
     boxShadow: `4px 4px 0 0 ${accent}`,
     borderRadius: 0,
     marginBottom: 24,
@@ -1202,7 +1202,7 @@ function cardStyle(accent: string): React.CSSProperties {
 const sectionTitle: React.CSSProperties = {
   fontFamily: pixel,
   fontSize: 16,
-  color: '#221E18',
+  color: 'var(--color-ink)',
   margin: '0 0 6px',
   letterSpacing: '0.18em',
   textTransform: 'uppercase',
@@ -1212,6 +1212,6 @@ const sectionSub: React.CSSProperties = {
   fontFamily: serif,
   fontStyle: 'italic',
   fontSize: 14,
-  color: '#4A4338',
+  color: 'var(--color-ink-soft)',
   margin: 0,
 };

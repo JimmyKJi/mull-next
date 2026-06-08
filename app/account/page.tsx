@@ -149,21 +149,21 @@ const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 const statCardStyle: React.CSSProperties = {
   padding: '16px 20px',
   background: '#FFFCF4',
-  border: '4px solid #221E18',
-  boxShadow: '4px 4px 0 0 #B8862F',
+  border: '4px solid var(--color-ink)',
+  boxShadow: '4px 4px 0 0 var(--color-acc)',
   borderRadius: 0,
 };
 const statValueStyle: React.CSSProperties = {
   fontFamily: pixel,
   fontSize: 28,
-  color: '#221E18',
+  color: 'var(--color-ink)',
   lineHeight: 1,
   letterSpacing: 0.4,
 };
 const statLabelStyle: React.CSSProperties = {
   fontFamily: pixel,
   fontSize: 10,
-  color: '#8C6520',
+  color: 'var(--color-acc-deep)',
   textTransform: 'uppercase',
   letterSpacing: '0.18em',
   marginTop: 8,
@@ -177,9 +177,9 @@ const accountSubChip: React.CSSProperties = {
   display: 'inline-block',
   padding: '6px 10px',
   background: '#FFFCF4',
-  color: '#8C6520',
-  border: '2px solid #221E18',
-  boxShadow: '2px 2px 0 0 #B8862F',
+  color: 'var(--color-acc-deep)',
+  border: '2px solid var(--color-ink)',
+  boxShadow: '2px 2px 0 0 var(--color-acc)',
   borderRadius: 0,
   fontFamily: pixel,
   fontSize: 10,
@@ -194,10 +194,10 @@ const accountSubChip: React.CSSProperties = {
 const accountJumpChip: React.CSSProperties = {
   display: 'inline-block',
   padding: '8px 12px',
-  background: '#F8EDC8',
-  color: '#221E18',
-  border: '2px solid #221E18',
-  boxShadow: '3px 3px 0 0 #8C6520',
+  background: 'var(--color-acc-soft)',
+  color: 'var(--color-ink)',
+  border: '2px solid var(--color-ink)',
+  boxShadow: '3px 3px 0 0 var(--color-acc-deep)',
   borderRadius: 0,
   fontFamily: pixel,
   fontSize: 11,
@@ -216,7 +216,7 @@ function pixelActionLink(bg: string, color: string, shadow: string): React.CSSPr
     padding: '10px 18px',
     background: bg,
     color,
-    border: '3px solid #221E18',
+    border: '3px solid var(--color-ink)',
     boxShadow: `3px 3px 0 0 ${shadow}`,
     borderRadius: 0,
     fontFamily: pixel,
@@ -451,8 +451,8 @@ export default async function AccountPage() {
 
       {locale !== 'en' && (
         <div
-          className="mb-6 border-l-4 px-4 py-2.5 text-[13px] leading-[1.55] text-[#4A4338]"
-          style={{ borderColor: '#B8862F', background: '#F5EFDC' }}
+          className="mb-6 border-l-4 px-4 py-2.5 text-[13px] leading-[1.55] text-ink-soft"
+          style={{ borderColor: 'var(--color-acc)', background: '#F5EFDC' }}
         >
           {t('i18n.content_notice', locale)}
         </div>
@@ -461,17 +461,17 @@ export default async function AccountPage() {
       {/* Pixel page header — "ACCOUNT" + signed-in pill. */}
       <header className="mb-8">
         <div
-          className="flex items-center gap-3 text-[10px] tracking-[0.24em] text-[#8C6520]"
+          className="flex items-center gap-3 text-[10px] tracking-[0.24em] text-acc-deep"
           style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
-          <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F]" />
+          <span aria-hidden className="inline-block h-2 w-2 bg-acc" />
           ▶ YOUR ACCOUNT
         </div>
         <h1
-          className="mt-5 pr-2 text-[28px] leading-[1.05] tracking-[0.04em] text-[#221E18] sm:text-[40px]"
+          className="mt-5 pr-2 text-[28px] leading-[1.05] tracking-[0.04em] text-ink sm:text-[40px]"
           style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
-          <span style={{ textShadow: '3px 3px 0 #B8862F' }}>
+          <span style={{ textShadow: '3px 3px 0 var(--color-acc)' }}>
             {t('account.title', locale).toUpperCase()}
           </span>
         </h1>
@@ -481,12 +481,12 @@ export default async function AccountPage() {
             pixel chips so features like the yearly retrospective don't
             read as footnotes. */}
         <div
-          className="mt-6 border-2 border-[#221E18] bg-[#FFFCF4] p-3 text-[13.5px] text-[#4A4338]"
-          style={{ boxShadow: '3px 3px 0 0 #8C6520' }}
+          className="mt-6 border-2 border-ink bg-[#FFFCF4] p-3 text-[13.5px] text-ink-soft"
+          style={{ boxShadow: '3px 3px 0 0 var(--color-acc-deep)' }}
         >
           <div>
             {t('account.signed_in_as', locale)}{' '}
-            <strong className="text-[#221E18]">{user.email}</strong>
+            <strong className="text-ink">{user.email}</strong>
           </div>
           <div className="mt-3 flex flex-wrap gap-2">
             <Link href="/account/profile" className="pixel-press" style={accountSubChip}>
@@ -536,9 +536,9 @@ export default async function AccountPage() {
             {wrappedMonth && (
               <Link href={`/wrapped/${wrappedYear}`} className="pixel-press" style={{
                 ...accountJumpChip,
-                background: '#B8862F',
+                background: 'var(--color-acc)',
                 color: '#1A1612',
-                boxShadow: '3px 3px 0 0 #221E18',
+                boxShadow: '3px 3px 0 0 var(--color-ink)',
               }}>
                 ▸ {wrappedYear} WRAPPED
               </Link>
@@ -556,7 +556,7 @@ export default async function AccountPage() {
           <div style={{
             fontFamily: 'var(--font-pixel-display)',
             fontSize: 11,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             textTransform: 'uppercase',
             letterSpacing: '0.18em',
             marginBottom: 14,
@@ -576,7 +576,7 @@ export default async function AccountPage() {
             fontFamily: serif,
             fontStyle: 'italic',
             fontSize: 17,
-            color: '#4A4338',
+            color: 'var(--color-ink-soft)',
             margin: '0 0 24px',
             lineHeight: 1.55,
           }}>
@@ -676,17 +676,17 @@ export default async function AccountPage() {
                 className={isMilestone ? 'pixel-milestone' : undefined}
                 style={{
                   padding: '16px 20px',
-                  background: '#221E18',
-                  border: '4px solid #221E18',
-                  boxShadow: '4px 4px 0 0 #B8862F',
+                  background: 'var(--color-ink)',
+                  border: '4px solid var(--color-ink)',
+                  boxShadow: '4px 4px 0 0 var(--color-acc)',
                   borderRadius: 0,
-                  color: '#FAF6EC',
+                  color: 'var(--color-cream)',
                 }}
               >
                 <div style={{
                   fontFamily: 'var(--font-pixel-display)',
                   fontSize: 28,
-                  color: '#F8EDC8',
+                  color: 'var(--color-acc-soft)',
                   lineHeight: 1,
                   letterSpacing: 0.4,
                 }}>{
@@ -718,19 +718,19 @@ export default async function AccountPage() {
         <h2 style={{
           fontFamily: pixel,
           fontSize: 16,
-          color: '#221E18',
+          color: 'var(--color-ink)',
           textTransform: 'uppercase',
           letterSpacing: '0.18em',
           marginBottom: 18,
-          textShadow: '2px 2px 0 #B8862F',
+          textShadow: '2px 2px 0 var(--color-acc)',
         }}>
           ▸ {t('account.latest_result', locale).toUpperCase()}
         </h2>
 
         {latestQuiz ? (
           <div style={{
-            border: '4px solid #221E18',
-            boxShadow: '5px 5px 0 0 #B8862F',
+            border: '4px solid var(--color-ink)',
+            boxShadow: '5px 5px 0 0 var(--color-acc)',
             borderRadius: 0,
             padding: '28px 32px',
             background: '#FFFCF4'
@@ -762,10 +762,10 @@ export default async function AccountPage() {
                     width: 100,
                     height: 100,
                     flexShrink: 0,
-                    background: '#F8EDC8',
+                    background: 'var(--color-acc-soft)',
                     borderRadius: 0,
-                    border: '4px solid #221E18',
-                    boxShadow: '4px 4px 0 0 #8C6520',
+                    border: '4px solid var(--color-ink)',
+                    boxShadow: '4px 4px 0 0 var(--color-acc-deep)',
                     padding: 10,
                     textDecoration: 'none',
                   }}
@@ -794,7 +794,7 @@ export default async function AccountPage() {
                 <div style={{
                   fontFamily: pixel,
                   fontSize: 11,
-                  color: '#8C6520',
+                  color: 'var(--color-acc-deep)',
                   letterSpacing: 0.4,
                   textTransform: 'uppercase',
                 }}>
@@ -804,7 +804,7 @@ export default async function AccountPage() {
             </div>
             <div style={{ marginBottom: 24 }} />
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-              <Link href="/" className="pixel-press" style={pixelActionLink('#221E18', '#FAF6EC', '#B8862F')}>
+              <Link href="/" className="pixel-press" style={pixelActionLink('var(--color-ink)', 'var(--color-cream)', 'var(--color-acc)')}>
                 {t('account.take_it_again', locale).toUpperCase()}
               </Link>
               <Link
@@ -812,8 +812,8 @@ export default async function AccountPage() {
                 className="pixel-press"
                 style={
                   respondedToday
-                    ? pixelActionLink('#FFFCF4', '#4A4338', '#D6CDB6')
-                    : pixelActionLink('#B8862F', '#1A1612', '#221E18')
+                    ? pixelActionLink('#FFFCF4', 'var(--color-ink-soft)', 'var(--color-line)')
+                    : pixelActionLink('var(--color-acc)', '#1A1612', 'var(--color-ink)')
                 }
               >
                 {(respondedToday ? t('account.todays_dilemma_answered', locale) : t('account.todays_dilemma_arrow', locale)).toUpperCase()}
@@ -833,11 +833,11 @@ export default async function AccountPage() {
           </div>
         ) : (
           <div style={{
-            border: '3px dashed #8C6520',
+            border: '3px dashed var(--color-acc-deep)',
             borderRadius: 0,
             padding: '36px 28px',
             textAlign: 'center',
-            color: '#4A4338',
+            color: 'var(--color-ink-soft)',
             background: '#FFFCF4'
           }}>
             <p style={{
@@ -848,7 +848,7 @@ export default async function AccountPage() {
             }}>
               {t('account.no_quiz_yet', locale)}
             </p>
-            <Link href="/" className="pixel-press" style={pixelActionLink('#B8862F', '#1A1612', '#221E18')}>
+            <Link href="/" className="pixel-press" style={pixelActionLink('var(--color-acc)', '#1A1612', 'var(--color-ink)')}>
               {t('account.take_quiz_arrow', locale).toUpperCase()}
             </Link>
           </div>
@@ -860,7 +860,7 @@ export default async function AccountPage() {
           <h2 style={{
             fontFamily: pixel,
             fontSize: 16,
-            color: '#221E18',
+            color: 'var(--color-ink)',
             textTransform: 'uppercase',
             letterSpacing: '0.18em',
             marginBottom: 18,
@@ -874,7 +874,7 @@ export default async function AccountPage() {
               fails to load, the shimmer keeps animating instead of
               leaving a blank ink rectangle. */}
           <div style={{
-            border: '4px solid #221E18',
+            border: '4px solid var(--color-ink)',
             boxShadow: '5px 5px 0 0 #2F5D5C',
             borderRadius: 0,
             overflow: 'hidden',
@@ -909,7 +909,7 @@ export default async function AccountPage() {
           <p style={{
             fontFamily: pixel,
             fontSize: 11,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             marginTop: 14,
             letterSpacing: 0.4,
             textTransform: 'uppercase',
@@ -921,16 +921,16 @@ export default async function AccountPage() {
           <div style={{
             marginTop: 18,
             padding: '14px 16px',
-            background: '#F8EDC8',
-            border: '3px solid #221E18',
-            boxShadow: '3px 3px 0 0 #B8862F',
+            background: 'var(--color-acc-soft)',
+            border: '3px solid var(--color-ink)',
+            boxShadow: '3px 3px 0 0 var(--color-acc)',
             borderRadius: 0,
             fontFamily: serif,
             fontSize: 14,
-            color: '#221E18',
+            color: 'var(--color-ink)',
             lineHeight: 1.55,
           }}>
-            <strong style={{ color: '#221E18' }}>{t('account.trajectory_explainer_title', locale)}</strong>{' '}
+            <strong style={{ color: 'var(--color-ink)' }}>{t('account.trajectory_explainer_title', locale)}</strong>{' '}
             {t('account.trajectory_explainer_body', locale)}
           </div>
         </section>
@@ -944,7 +944,7 @@ export default async function AccountPage() {
           style={{
             fontFamily: pixel,
             fontSize: 10,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             letterSpacing: '0.24em',
             textTransform: 'uppercase',
             margin: '0 0 12px',
@@ -969,7 +969,7 @@ export default async function AccountPage() {
             style={{
               fontFamily: pixel,
               fontSize: 10,
-              color: '#8C6520',
+              color: 'var(--color-acc-deep)',
               letterSpacing: '0.24em',
               textTransform: 'uppercase',
               margin: '0 0 12px',
@@ -1055,12 +1055,12 @@ function FirstStepCard({
     <Link href={href} className="pixel-press" style={{
       display: 'block',
       padding: '20px 22px',
-      background: primary ? '#F8EDC8' : '#FFFCF4',
-      border: '4px solid #221E18',
+      background: primary ? 'var(--color-acc-soft)' : '#FFFCF4',
+      border: '4px solid var(--color-ink)',
       boxShadow: `5px 5px 0 0 ${accent}`,
       borderRadius: 0,
       textDecoration: 'none',
-      color: '#221E18',
+      color: 'var(--color-ink)',
       transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
     }}>
       <div style={{
@@ -1069,14 +1069,14 @@ function FirstStepCard({
         fontWeight: 500,
         marginBottom: 8,
         letterSpacing: '-0.2px',
-        color: '#221E18',
+        color: 'var(--color-ink)',
       }}>
         {title}
       </div>
       <p style={{
         fontFamily: sans,
         fontSize: 13.5,
-        color: '#4A4338',
+        color: 'var(--color-ink-soft)',
         margin: '0 0 14px',
         lineHeight: 1.55,
       }}>

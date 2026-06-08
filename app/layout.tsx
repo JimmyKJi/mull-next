@@ -89,7 +89,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#FAF6EC",
+  themeColor: "var(--color-cream)",
   // Don't lock max-scale; users zooming for accessibility is fine.
 };
 
@@ -183,8 +183,8 @@ export default async function RootLayout({
     >
       <body
         style={{
-          background: "#FAF6EC",
-          color: "#221E18",
+          background: "var(--color-cream)",
+          color: "var(--color-ink)",
           margin: 0,
           padding: 0,
           minHeight: "100vh",

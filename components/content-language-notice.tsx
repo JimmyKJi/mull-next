@@ -76,13 +76,13 @@ export function ContentLanguageNotice({
   return (
     <div
       style={{
-        borderLeft: "4px solid #B8862F",
+        borderLeft: "4px solid var(--color-acc)",
         background: "#F5EFDC",
         padding: "10px 14px",
         marginBottom,
         fontSize: 13,
         lineHeight: 1.55,
-        color: "#4A4338",
+        color: "var(--color-ink-soft)",
         fontFamily: "var(--font-editorial), Georgia, serif",
         fontStyle: "italic",
       }}

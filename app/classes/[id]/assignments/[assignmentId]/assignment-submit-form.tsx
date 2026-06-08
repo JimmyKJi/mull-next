@@ -60,7 +60,7 @@ export default function AssignmentSubmitForm({
       <div style={{
         fontFamily: pixel,
         fontSize: 12,
-        color: savedAt ? '#2F5D5C' : '#8C6520',
+        color: savedAt ? '#2F5D5C' : 'var(--color-acc-deep)',
         textTransform: 'uppercase',
         letterSpacing: '0.18em',
         marginBottom: 0,
@@ -92,7 +92,7 @@ export default function AssignmentSubmitForm({
         <span style={{
           fontFamily: pixel,
           fontSize: 11,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           letterSpacing: 0.4,
           textTransform: 'uppercase',
         }}>
@@ -112,7 +112,7 @@ export default function AssignmentSubmitForm({
           fontFamily: serif,
           fontStyle: 'italic',
           fontSize: 13.5,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           margin: 0,
           padding: '10px 12px',
           background: '#E5F0EE',
@@ -129,7 +129,7 @@ export default function AssignmentSubmitForm({
       <p style={{
         fontFamily: serif,
         fontSize: 12.5,
-        color: '#8C6520',
+        color: 'var(--color-acc-deep)',
         margin: 0,
         lineHeight: 1.5,
       }}>

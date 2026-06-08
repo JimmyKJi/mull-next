@@ -64,9 +64,9 @@ export default async function SparPage() {
           marginBottom: 24,
           padding: "20px 22px",
           background: "#1A1612",
-          color: "#F8EDC8",
-          border: "4px solid #221E18",
-          boxShadow: "5px 5px 0 0 #B8862F",
+          color: "var(--color-acc-soft)",
+          border: "4px solid var(--color-ink)",
+          boxShadow: "5px 5px 0 0 var(--color-acc)",
         }}
       >
         <div
@@ -94,7 +94,7 @@ export default async function SparPage() {
             style={{
               fontFamily: pixel,
               fontSize: 9,
-              color: "#B8862F",
+              color: "var(--color-acc)",
               letterSpacing: "0.2em",
               textTransform: "uppercase",
             }}
@@ -109,13 +109,13 @@ export default async function SparPage() {
           style={{
             fontFamily: "var(--font-editorial)",
             fontSize: 22,
-            color: "#F8EDC8",
+            color: "var(--color-acc-soft)",
             lineHeight: 1.3,
             margin: "0 0 10px",
           }}
         >
           <strong>{t("spar.vs", locale, { name: philosopherDisplay })}</strong>
-          <span style={{ color: "#B8862F" }}> · </span>
+          <span style={{ color: "var(--color-acc)" }}> · </span>
           <em>&ldquo;{topic.title}&rdquo;</em>
         </div>
         <p
@@ -146,24 +146,24 @@ export default async function SparPage() {
           fontFamily: "var(--font-editorial)",
           fontStyle: "italic",
           fontSize: 14,
-          color: "#8C6520",
+          color: "var(--color-acc-deep)",
           lineHeight: 1.55,
         }}
       >
         {t("spar.cost_prefix", locale)}
         <Link
           href="/arena"
-          className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           {t("spar.the_arena", locale)}
         </Link>
         {locale === "zh" ? "。" : "."}
       </p>
 
-      <p className="mt-10 text-center text-[13px] text-[#8C6520]">
+      <p className="mt-10 text-center text-[13px] text-acc-deep">
         <Link
           href="/"
-          className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           {t("pilgrimage.back_mull", locale)}
         </Link>

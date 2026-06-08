@@ -126,7 +126,7 @@ export default async function DilemmaPage() {
       <div className="mb-6 flex items-center justify-end gap-3">
         <Link
           href="/account"
-          className="text-[13px] text-[#4A4338] hover:text-[#221E18] hover:underline"
+          className="text-[13px] text-ink-soft hover:text-ink hover:underline"
         >
           {t('nav.account_arrow', locale)}
         </Link>
@@ -134,13 +134,13 @@ export default async function DilemmaPage() {
 
       {/* Pixel eyebrow with date + streak + archive link */}
       <div
-        className="flex flex-wrap items-center gap-3 text-[10px] tracking-[0.22em] text-[#8C6520]"
+        className="flex flex-wrap items-center gap-3 text-[10px] tracking-[0.22em] text-acc-deep"
         style={{ fontFamily: 'var(--font-pixel-display)' }}
       >
-        <span aria-hidden className="inline-block h-2 w-2 bg-[#B8862F] pixel-blink" />
+        <span aria-hidden className="inline-block h-2 w-2 bg-acc pixel-blink" />
         <span>▶ {t('dilemma.eyebrow', locale).toUpperCase()}</span>
         <span className="opacity-60">·</span>
-        <span className="text-[#221E18]">
+        <span className="text-ink">
           {new Date(today.dateKey).toLocaleDateString(
             locale === 'en' ? 'en-GB' : locale,
             { weekday: 'long', day: 'numeric', month: 'long' },
@@ -157,7 +157,7 @@ export default async function DilemmaPage() {
         {user ? (
           <Link
             href="/dilemma/archive"
-            className="ml-auto text-[#8C6520] underline decoration-[#B8862F]/50 underline-offset-3 hover:decoration-[#8C6520]"
+            className="ml-auto text-acc-deep underline decoration-acc/50 underline-offset-3 hover:decoration-acc-deep"
           >
             {t('dilemma.see_archive', locale).toUpperCase()} →
           </Link>
@@ -166,11 +166,11 @@ export default async function DilemmaPage() {
 
       {/* Prompt panel — pixel-bordered, big Cormorant question */}
       <div
-        className="mt-7 border-4 border-[#221E18] bg-[#FFFCF4]"
-        style={{ boxShadow: '6px 6px 0 0 #8C6520' }}
+        className="mt-7 border-4 border-ink bg-[#FFFCF4]"
+        style={{ boxShadow: '6px 6px 0 0 var(--color-acc-deep)' }}
       >
         <div
-          className="border-b-4 border-[#221E18] bg-[#221E18] px-4 py-2 text-[10px] tracking-[0.22em] text-[#F8EDC8]"
+          className="border-b-4 border-ink bg-ink px-4 py-2 text-[10px] tracking-[0.22em] text-acc-soft"
           style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
           ▶ {(archetypeName
@@ -180,20 +180,20 @@ export default async function DilemmaPage() {
         </div>
         <div className="px-6 py-7 sm:px-8 sm:py-9">
           <h1
-            className="text-[24px] font-medium leading-[1.3] text-[#221E18] sm:text-[30px] md:text-[34px]"
+            className="text-[24px] font-medium leading-[1.3] text-ink sm:text-[30px] md:text-[34px]"
             style={{ fontFamily: 'var(--font-prose)' }}
           >
             {localizedPrompt}
           </h1>
           {archetypeName ? (
-            <p className="mt-3 text-[12px] leading-[1.5] text-[#8C6520]">
+            <p className="mt-3 text-[12px] leading-[1.5] text-acc-deep">
               {t('dilemma.personalized_note', locale)}
             </p>
           ) : null}
           {localizedHint ? (
             <p
-              className="mt-5 border-l-4 px-4 py-2 text-[15.5px] italic leading-[1.55] text-[#4A4338]"
-              style={{ borderColor: '#B8862F', fontFamily: 'var(--font-prose)' }}
+              className="mt-5 border-l-4 px-4 py-2 text-[15.5px] italic leading-[1.55] text-ink-soft"
+              style={{ borderColor: 'var(--color-acc)', fontFamily: 'var(--font-prose)' }}
             >
               {localizedHint}
             </p>
@@ -208,8 +208,8 @@ export default async function DilemmaPage() {
         <div style={{
           padding: '28px 32px',
           background: '#FFFCF4',
-          border: '4px solid #221E18',
-          boxShadow: '5px 5px 0 0 #B8862F',
+          border: '4px solid var(--color-ink)',
+          boxShadow: '5px 5px 0 0 var(--color-acc)',
           borderRadius: 0,
           textAlign: 'center',
         }}>
@@ -217,7 +217,7 @@ export default async function DilemmaPage() {
             fontFamily: serif,
             fontStyle: 'italic',
             fontSize: 18,
-            color: '#4A4338',
+            color: 'var(--color-ink-soft)',
             margin: '0 0 20px',
           }}>
             {t('dilemma.account_required_msg', locale)}
@@ -229,10 +229,10 @@ export default async function DilemmaPage() {
               style={{
                 display: 'inline-block',
                 padding: '12px 22px',
-                background: '#B8862F',
+                background: 'var(--color-acc)',
                 color: '#1A1612',
-                border: '4px solid #221E18',
-                boxShadow: '4px 4px 0 0 #221E18',
+                border: '4px solid var(--color-ink)',
+                boxShadow: '4px 4px 0 0 var(--color-ink)',
                 borderRadius: 0,
                 fontFamily: 'var(--font-pixel-display)',
                 fontSize: 12,
@@ -251,9 +251,9 @@ export default async function DilemmaPage() {
                 display: 'inline-block',
                 padding: '12px 22px',
                 background: '#FFFCF4',
-                color: '#221E18',
-                border: '4px solid #221E18',
-                boxShadow: '4px 4px 0 0 #B8862F',
+                color: 'var(--color-ink)',
+                border: '4px solid var(--color-ink)',
+                boxShadow: '4px 4px 0 0 var(--color-acc)',
                 borderRadius: 0,
                 fontFamily: 'var(--font-pixel-display)',
                 fontSize: 12,
@@ -271,7 +271,7 @@ export default async function DilemmaPage() {
         <div style={{
           padding: '28px 32px',
           background: '#FFFCF4',
-          border: '4px solid #221E18',
+          border: '4px solid var(--color-ink)',
           boxShadow: '5px 5px 0 0 #2F5D5C',
           borderRadius: 0,
         }}>
@@ -288,7 +288,7 @@ export default async function DilemmaPage() {
           <p style={{
             fontFamily: serif,
             fontSize: 17,
-            color: '#221E18',
+            color: 'var(--color-ink)',
             lineHeight: 1.6,
             margin: '0 0 18px',
             whiteSpace: 'pre-wrap',
@@ -298,16 +298,16 @@ export default async function DilemmaPage() {
           {existing.analysis && (
             <div style={{
               padding: '14px 16px',
-              background: '#F8EDC8',
-              border: '3px solid #221E18',
-              boxShadow: '3px 3px 0 0 #B8862F',
+              background: 'var(--color-acc-soft)',
+              border: '3px solid var(--color-ink)',
+              boxShadow: '3px 3px 0 0 var(--color-acc)',
               borderRadius: 0,
               marginBottom: 16,
             }}>
               <div style={{
                 fontFamily: 'var(--font-pixel-display)',
                 fontSize: 10,
-                color: '#8C6520',
+                color: 'var(--color-acc-deep)',
                 textTransform: 'uppercase',
                 letterSpacing: '0.18em',
                 marginBottom: 8,
@@ -318,7 +318,7 @@ export default async function DilemmaPage() {
                 fontFamily: serif,
                 fontStyle: 'italic',
                 fontSize: 16,
-                color: '#221E18',
+                color: 'var(--color-ink)',
                 margin: 0,
                 lineHeight: 1.5,
               }}>
@@ -339,7 +339,7 @@ export default async function DilemmaPage() {
                 fontFamily: sans,
                 fontSize: 10,
                 fontWeight: 600,
-                color: '#8C6520',
+                color: 'var(--color-acc-deep)',
                 textTransform: 'uppercase',
                 letterSpacing: '0.16em',
                 marginBottom: 8,
@@ -356,7 +356,7 @@ export default async function DilemmaPage() {
                     <strong style={{ fontVariantNumeric: 'tabular-nums' }}>
                       {s.delta > 0 ? '+' : ''}{s.delta.toFixed(1)}
                     </strong>{' '}
-                    <span style={{ color: '#4A4338' }}>{s.name}</span>
+                    <span style={{ color: 'var(--color-ink-soft)' }}>{s.name}</span>
                   </span>
                 ))}
               </div>
@@ -365,7 +365,7 @@ export default async function DilemmaPage() {
           <div style={{
             marginTop: 22,
             paddingTop: 18,
-            borderTop: '2px dashed #D6CDB6',
+            borderTop: '2px dashed var(--color-line)',
             display: 'flex',
             gap: 12,
             flexWrap: 'wrap',
@@ -377,10 +377,10 @@ export default async function DilemmaPage() {
               style={{
                 display: 'inline-block',
                 padding: '10px 16px',
-                background: '#221E18',
-                color: '#FAF6EC',
-                border: '3px solid #221E18',
-                boxShadow: '3px 3px 0 0 #B8862F',
+                background: 'var(--color-ink)',
+                color: 'var(--color-cream)',
+                border: '3px solid var(--color-ink)',
+                boxShadow: '3px 3px 0 0 var(--color-acc)',
                 borderRadius: 0,
                 fontFamily: 'var(--font-pixel-display)',
                 fontSize: 11,
@@ -395,7 +395,7 @@ export default async function DilemmaPage() {
             <span style={{
               fontFamily: sans,
               fontSize: 12,
-              color: '#8C6520',
+              color: 'var(--color-acc-deep)',
               alignSelf: 'center',
             }}>
               {t('dilemma.next_arrives', locale)}
@@ -416,7 +416,7 @@ export default async function DilemmaPage() {
             fontFamily: sans,
             fontSize: 11,
             fontWeight: 600,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             textTransform: 'uppercase',
             letterSpacing: '0.18em',
             marginBottom: 6,
@@ -427,7 +427,7 @@ export default async function DilemmaPage() {
             fontFamily: serif,
             fontStyle: 'italic',
             fontSize: 15,
-            color: '#4A4338',
+            color: 'var(--color-ink-soft)',
             margin: '0 0 18px',
           }}>
             {t('dilemma.recent_helper', locale)}
@@ -438,8 +438,8 @@ export default async function DilemmaPage() {
                 key={r.id}
                 style={{
                   background: '#FFFCF4',
-                  border: '3px solid #221E18',
-                  boxShadow: '3px 3px 0 0 #B8862F',
+                  border: '3px solid var(--color-ink)',
+                  boxShadow: '3px 3px 0 0 var(--color-acc)',
                   borderRadius: 0,
                   padding: '14px 18px',
                 }}
@@ -449,14 +449,14 @@ export default async function DilemmaPage() {
                   listStyle: 'none',
                   fontFamily: serif,
                   fontSize: 16,
-                  color: '#221E18',
+                  color: 'var(--color-ink)',
                   lineHeight: 1.4,
                 }}>
                   <span style={{
                     display: 'block',
                     fontFamily: 'var(--font-pixel-display)',
                     fontSize: 10,
-                    color: '#8C6520',
+                    color: 'var(--color-acc-deep)',
                     textTransform: 'uppercase',
                     letterSpacing: '0.18em',
                     marginBottom: 8,
@@ -470,7 +470,7 @@ export default async function DilemmaPage() {
                 <p style={{
                   fontFamily: serif,
                   fontSize: 15.5,
-                  color: '#221E18',
+                  color: 'var(--color-ink)',
                   lineHeight: 1.6,
                   margin: '12px 0 0',
                   whiteSpace: 'pre-wrap',
@@ -482,11 +482,11 @@ export default async function DilemmaPage() {
                     fontFamily: serif,
                     fontStyle: 'italic',
                     fontSize: 14.5,
-                    color: '#4A4338',
+                    color: 'var(--color-ink-soft)',
                     lineHeight: 1.55,
                     margin: '10px 0 0',
                     paddingLeft: 12,
-                    borderLeft: '2px solid #D6CDB6',
+                    borderLeft: '2px solid var(--color-line)',
                   }}>
                     {r.analysis}
                   </p>
@@ -504,7 +504,7 @@ export default async function DilemmaPage() {
       <p style={{
         fontFamily: sans,
         fontSize: 12,
-        color: '#8C6520',
+        color: 'var(--color-acc-deep)',
         marginTop: 32,
         opacity: 0.75,
         textAlign: 'center',

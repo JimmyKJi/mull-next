@@ -59,7 +59,7 @@ export default function GlobalError({
     }}>
       <div style={{
         background: '#FFFCF4',
-        border: '4px solid #221E18',
+        border: '4px solid var(--color-ink)',
         boxShadow: '6px 6px 0 0 #7A2E2E',
         borderRadius: 0,
         padding: '32px 30px',
@@ -89,7 +89,7 @@ export default function GlobalError({
           fontFamily: serif,
           fontStyle: 'italic',
           fontSize: 17,
-          color: '#4A4338',
+          color: 'var(--color-ink-soft)',
           margin: '0 0 28px',
           lineHeight: 1.55,
         }}>
@@ -107,10 +107,10 @@ export default function GlobalError({
             className="pixel-press"
             style={{
               padding: '12px 22px',
-              background: '#221E18',
-              color: '#FAF6EC',
-              border: '4px solid #221E18',
-              boxShadow: '4px 4px 0 0 #B8862F',
+              background: 'var(--color-ink)',
+              color: 'var(--color-cream)',
+              border: '4px solid var(--color-ink)',
+              boxShadow: '4px 4px 0 0 var(--color-acc)',
               borderRadius: 0,
               fontFamily: pixel,
               fontSize: 12,
@@ -128,9 +128,9 @@ export default function GlobalError({
             style={{
               padding: '12px 22px',
               background: 'transparent',
-              color: '#221E18',
-              border: '4px solid #221E18',
-              boxShadow: '4px 4px 0 0 #B8862F',
+              color: 'var(--color-ink)',
+              border: '4px solid var(--color-ink)',
+              boxShadow: '4px 4px 0 0 var(--color-acc)',
               borderRadius: 0,
               fontFamily: pixel,
               fontSize: 12,
@@ -147,7 +147,7 @@ export default function GlobalError({
           <p style={{
             fontFamily: pixel,
             fontSize: 10,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             marginTop: 32,
             letterSpacing: 0.4,
             opacity: 0.85,

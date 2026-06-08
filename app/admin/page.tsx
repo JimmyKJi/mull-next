@@ -153,23 +153,23 @@ export default async function AdminPage() {
         <div>
           <div style={{
             fontFamily: pixel, fontSize: 11,
-            color: '#8C6520', textTransform: 'uppercase',
+            color: 'var(--color-acc-deep)', textTransform: 'uppercase',
             letterSpacing: '0.18em', marginBottom: 8,
           }}>
             ▸ ADMIN · LIVE
           </div>
           <h1 style={{
             fontFamily: pixel, fontSize: 28,
-            margin: 0, color: '#221E18',
+            margin: 0, color: 'var(--color-ink)',
             letterSpacing: '0.06em',
             textTransform: 'uppercase',
-            textShadow: '3px 3px 0 #B8862F',
+            textShadow: '3px 3px 0 var(--color-acc)',
           }}>
             LAUNCH DASHBOARD
           </h1>
         </div>
         <div style={{
-          fontFamily: pixel, fontSize: 11, color: '#8C6520',
+          fontFamily: pixel, fontSize: 11, color: 'var(--color-acc-deep)',
           textAlign: 'right', lineHeight: 1.5,
           letterSpacing: 0.4,
           textTransform: 'uppercase',
@@ -246,7 +246,7 @@ export default async function AdminPage() {
 
       {/* Archetype distribution */}
       {stats.archDistribution.length > 0 && (
-        <section style={cardStyle('#B8862F')}>
+        <section style={cardStyle('var(--color-acc)')}>
           <h2 style={sectionTitle}>▸ ARCHETYPE DISTRIBUTION</h2>
           <p style={sectionSub}>How recent quiz takers are landing across the ten archetypes.</p>
           <div style={{ marginTop: 18 }}>
@@ -263,24 +263,24 @@ export default async function AdminPage() {
                 }}>
                   <span style={{
                     fontFamily: serif, fontSize: 15,
-                    color: '#221E18', textTransform: 'capitalize',
+                    color: 'var(--color-ink)', textTransform: 'capitalize',
                   }}>{key}</span>
                   <div style={{
                     height: 10,
-                    background: '#FAF6EC',
-                    border: '2px solid #221E18',
+                    background: 'var(--color-cream)',
+                    border: '2px solid var(--color-ink)',
                     borderRadius: 0,
                     overflow: 'hidden',
                   }}>
                     <div style={{
                       width: `${pct}%`,
                       height: '100%',
-                      background: '#B8862F',
+                      background: 'var(--color-acc)',
                       transition: 'width 0.4s steps(8, end)',
                     }} />
                   </div>
                   <span style={{
-                    fontFamily: pixel, fontSize: 12, color: '#8C6520',
+                    fontFamily: pixel, fontSize: 12, color: 'var(--color-acc-deep)',
                     textAlign: 'right',
                     letterSpacing: 0.4,
                     fontVariantNumeric: 'tabular-nums',
@@ -315,7 +315,7 @@ export default async function AdminPage() {
             {stats.errors.recent.map(e => (
               <li key={e.id} style={{
                 padding: '12px 0',
-                borderBottom: '2px dashed #D6CDB6',
+                borderBottom: '2px dashed var(--color-line)',
               }}>
                 <div style={{
                   fontFamily: pixel, fontSize: 10, color: '#7A2E2E',
@@ -327,7 +327,7 @@ export default async function AdminPage() {
                 </div>
                 <p style={{
                   fontFamily: 'ui-monospace, Menlo, monospace',
-                  fontSize: 13, color: '#221E18',
+                  fontSize: 13, color: 'var(--color-ink)',
                   margin: 0, lineHeight: 1.5, whiteSpace: 'pre-wrap',
                   wordBreak: 'break-word',
                 }}>{e.message}</p>
@@ -344,7 +344,7 @@ export default async function AdminPage() {
         {stats.feedback.recent.length === 0 ? (
           <p style={{
             fontFamily: serif, fontStyle: 'italic',
-            color: '#8C6520', margin: '14px 0 0',
+            color: 'var(--color-acc-deep)', margin: '14px 0 0',
           }}>
             No feedback yet. Friends will leave thoughts via the floating button.
           </p>
@@ -353,10 +353,10 @@ export default async function AdminPage() {
             {stats.feedback.recent.map(f => (
               <li key={f.id} style={{
                 padding: '14px 0',
-                borderBottom: '2px dashed #D6CDB6',
+                borderBottom: '2px dashed var(--color-line)',
               }}>
                 <div style={{
-                  fontFamily: pixel, fontSize: 10, color: '#8C6520',
+                  fontFamily: pixel, fontSize: 10, color: 'var(--color-acc-deep)',
                   marginBottom: 6, letterSpacing: 0.4,
                   textTransform: 'uppercase',
                 }}>
@@ -364,7 +364,7 @@ export default async function AdminPage() {
                   {f.page_url && ` · ${f.page_url}`}
                 </div>
                 <p style={{
-                  fontFamily: serif, fontSize: 15, color: '#221E18',
+                  fontFamily: serif, fontSize: 15, color: 'var(--color-ink)',
                   margin: 0, lineHeight: 1.55, whiteSpace: 'pre-wrap',
                 }}>{f.body}</p>
               </li>
@@ -393,7 +393,7 @@ function StatCard({
     <div style={{
       padding: '18px 20px',
       background: '#FFFCF4',
-      border: '4px solid #221E18',
+      border: '4px solid var(--color-ink)',
       boxShadow: `4px 4px 0 0 ${accent}`,
       borderRadius: 0,
     }}>
@@ -404,14 +404,14 @@ function StatCard({
       }}>▸ {label.toUpperCase()}</div>
       <div style={{
         fontFamily: pixel, fontSize: 36,
-        color: '#221E18', lineHeight: 1, marginBottom: 10,
+        color: 'var(--color-ink)', lineHeight: 1, marginBottom: 10,
         letterSpacing: 0.4,
         fontVariantNumeric: 'tabular-nums',
       }}>{total.toLocaleString()}</div>
       {(day !== null || hour !== null) && (
         <div style={{
           fontFamily: serif, fontStyle: 'italic',
-          fontSize: 13, color: '#4A4338',
+          fontSize: 13, color: 'var(--color-ink-soft)',
         }}>
           {day !== null && <>+{day} last 24h</>}
           {day !== null && hour !== null && ' · '}
@@ -429,8 +429,8 @@ function MiniStat({ label, value }: { label: string; value: number }) {
   return (
     <div style={{
       padding: '12px 14px',
-      background: '#FAF6EC',
-      border: '3px solid #221E18',
+      background: 'var(--color-cream)',
+      border: '3px solid var(--color-ink)',
       borderRadius: 0,
       display: 'flex',
       justifyContent: 'space-between',
@@ -438,12 +438,12 @@ function MiniStat({ label, value }: { label: string; value: number }) {
     }}>
       <span style={{
         fontFamily: pixel, fontSize: 11,
-        color: '#8C6520', letterSpacing: 0.4,
+        color: 'var(--color-acc-deep)', letterSpacing: 0.4,
         textTransform: 'uppercase',
       }}>{label.toUpperCase()}</span>
       <span style={{
         fontFamily: pixel, fontSize: 22,
-        color: '#221E18', letterSpacing: 0.4,
+        color: 'var(--color-ink)', letterSpacing: 0.4,
         fontVariantNumeric: 'tabular-nums',
       }}>{value.toLocaleString()}</span>
     </div>
@@ -457,7 +457,7 @@ function cardStyle(accent: string): React.CSSProperties {
   return {
     padding: '24px 26px',
     background: '#FFFCF4',
-    border: '4px solid #221E18',
+    border: '4px solid var(--color-ink)',
     boxShadow: `4px 4px 0 0 ${accent}`,
     borderRadius: 0,
     marginBottom: 24,
@@ -467,10 +467,10 @@ function cardStyle(accent: string): React.CSSProperties {
 const adminNavLink: React.CSSProperties = {
   display: 'inline-block',
   padding: '8px 14px',
-  background: '#221E18',
+  background: 'var(--color-ink)',
   color: '#F8EBC9',
-  border: '2px solid #221E18',
-  boxShadow: '3px 3px 0 0 #B8862F',
+  border: '2px solid var(--color-ink)',
+  boxShadow: '3px 3px 0 0 var(--color-acc)',
   fontFamily: pixel,
   fontSize: 11,
   letterSpacing: '0.12em',
@@ -480,12 +480,12 @@ const adminNavLink: React.CSSProperties = {
 
 const sectionTitle: React.CSSProperties = {
   fontFamily: pixel, fontSize: 16,
-  color: '#221E18', margin: '0 0 6px',
+  color: 'var(--color-ink)', margin: '0 0 6px',
   letterSpacing: '0.18em',
   textTransform: 'uppercase',
 };
 
 const sectionSub: React.CSSProperties = {
   fontFamily: serif, fontStyle: 'italic',
-  fontSize: 14, color: '#4A4338', margin: 0,
+  fontSize: 14, color: 'var(--color-ink-soft)', margin: 0,
 };

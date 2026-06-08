@@ -49,7 +49,7 @@ export default function NextActionCard({
     body = t('uic.next_today_body', locale);
     cta = t('uic.next_today_cta', locale);
     href = '/dilemma';
-    accent = '#B8862F';
+    accent = 'var(--color-acc)';
   } else if (streak >= 7 && hasShareable && topArchetypeKey) {
     eyebrow = t('uic.next_streak_eyebrow', locale, { n: streak });
     title = t('uic.next_week_title', locale);
@@ -86,7 +86,7 @@ export default function NextActionCard({
     <section style={{
       padding: '20px 24px',
       background: '#FFFCF4',
-      border: '4px solid #221E18',
+      border: '4px solid var(--color-ink)',
       boxShadow: `5px 5px 0 0 ${accent}`,
       borderRadius: 0,
       marginBottom: 28,
@@ -110,7 +110,7 @@ export default function NextActionCard({
           fontFamily: serif,
           fontSize: 22,
           fontWeight: 500,
-          color: '#221E18',
+          color: 'var(--color-ink)',
           margin: '0 0 4px',
           letterSpacing: '-0.3px',
           lineHeight: 1.25,
@@ -121,7 +121,7 @@ export default function NextActionCard({
           fontFamily: serif,
           fontStyle: 'italic',
           fontSize: 15,
-          color: '#4A4338',
+          color: 'var(--color-ink-soft)',
           margin: 0,
           lineHeight: 1.5,
         }}>
@@ -133,9 +133,9 @@ export default function NextActionCard({
         className="pixel-press"
         style={{
           padding: '12px 20px',
-          background: '#221E18',
-          color: '#FAF6EC',
-          border: '4px solid #221E18',
+          background: 'var(--color-ink)',
+          color: 'var(--color-cream)',
+          border: '4px solid var(--color-ink)',
           borderRadius: 0,
           boxShadow: `4px 4px 0 0 ${accent}`,
           fontFamily: pixel,

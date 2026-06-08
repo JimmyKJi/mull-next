@@ -42,7 +42,7 @@ export default async function QuizPage({
   } = await supabase.auth.getUser();
 
   return (
-    <main className="min-h-[100svh] bg-[#FAF6EC] text-[#221E18]">
+    <main className="min-h-[100svh] bg-cream text-ink">
       {/* First-time visitors see the research-consent screen; once
           they've decided (yes or no), the gate becomes a no-op and
           renders the quiz directly. */}

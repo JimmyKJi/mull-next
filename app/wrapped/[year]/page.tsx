@@ -175,7 +175,7 @@ export default async function WrappedPage({
       alignItems: 'center',
       justifyContent: 'flex-start',
       padding: '32px 16px',
-      background: '#FAF6EC',
+      background: 'var(--color-cream)',
     }}>
       {/* Screenshot-target card. 9:16-ish aspect (~380×720) so phone
           screenshots crop perfectly to IG stories + TikTok shares. */}
@@ -187,15 +187,15 @@ export default async function WrappedPage({
           maxWidth: 380,
           minHeight: 720,
           background: '#FFFCF4',
-          border: '4px solid #221E18',
-          boxShadow: '6px 6px 0 0 #B8862F',
+          border: '4px solid var(--color-ink)',
+          boxShadow: '6px 6px 0 0 var(--color-acc)',
           borderRadius: 0,
           padding: '24px 24px 28px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           textAlign: 'center',
-          color: '#221E18',
+          color: 'var(--color-ink)',
           position: 'relative',
         }}
       >
@@ -204,8 +204,8 @@ export default async function WrappedPage({
           position: 'absolute',
           top: 0, left: 0, right: 0,
           height: 8,
-          background: '#B8862F',
-          borderBottom: '2px solid #221E18',
+          background: 'var(--color-acc)',
+          borderBottom: '2px solid var(--color-ink)',
         }} />
 
         {/* Top row: Mull wordmark + YEAR badge */}
@@ -221,7 +221,7 @@ export default async function WrappedPage({
           <div style={{
             fontFamily: pixel,
             fontSize: 10,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             textTransform: 'uppercase',
             letterSpacing: '0.18em',
           }}>
@@ -234,11 +234,11 @@ export default async function WrappedPage({
           fontFamily: pixel,
           fontSize: 22,
           margin: '0 0 18px',
-          color: '#221E18',
+          color: 'var(--color-ink)',
           letterSpacing: '0.04em',
           textTransform: 'uppercase',
           lineHeight: 1.15,
-          textShadow: '3px 3px 0 #B8862F',
+          textShadow: '3px 3px 0 var(--color-acc)',
         }}>
           {t('wr.headline_l1', locale)}<br />{t('wr.headline_l2', locale)}
         </h1>
@@ -263,16 +263,16 @@ export default async function WrappedPage({
           <div style={{
             width: '100%',
             padding: '14px 14px',
-            background: '#F8EDC8',
-            border: '3px solid #221E18',
-            boxShadow: '3px 3px 0 0 #B8862F',
+            background: 'var(--color-acc-soft)',
+            border: '3px solid var(--color-ink)',
+            boxShadow: '3px 3px 0 0 var(--color-acc)',
             borderRadius: 0,
             marginBottom: 24,
           }}>
             <div style={{
               fontFamily: pixel,
               fontSize: 9,
-              color: '#8C6520',
+              color: 'var(--color-acc-deep)',
               textTransform: 'uppercase',
               letterSpacing: '0.18em',
               marginBottom: 8,
@@ -284,7 +284,7 @@ export default async function WrappedPage({
               fontStyle: 'italic',
               fontSize: 16,
               lineHeight: 1.45,
-              color: '#221E18',
+              color: 'var(--color-ink)',
             }}>
               {t('wr.moved_a', locale)}
               <strong style={{ fontStyle: 'normal' }}>
@@ -312,9 +312,9 @@ export default async function WrappedPage({
               style={{
                 width: 96,
                 height: 96,
-                background: '#F8EDC8',
-                border: '4px solid #221E18',
-                boxShadow: '4px 4px 0 0 #8C6520',
+                background: 'var(--color-acc-soft)',
+                border: '4px solid var(--color-ink)',
+                boxShadow: '4px 4px 0 0 var(--color-acc-deep)',
                 padding: 8,
                 marginBottom: 12,
               }}
@@ -326,7 +326,7 @@ export default async function WrappedPage({
               fontFamily: serif,
               fontStyle: 'italic',
               fontSize: 13,
-              color: '#8C6520',
+              color: 'var(--color-acc-deep)',
               marginBottom: 2,
             }}>
               {t('wr.ended_as', locale)}
@@ -335,7 +335,7 @@ export default async function WrappedPage({
               fontFamily: serif,
               fontSize: 22,
               fontWeight: 500,
-              color: '#221E18',
+              color: 'var(--color-ink)',
               lineHeight: 1.1,
             }}>
               {locale === 'zh' ? '' : 'The '}{lastArchetype.flavor ? `${lastArchetype.flavor} ` : ''}{archBareName(lastArchetype.archetype, locale)}
@@ -352,7 +352,7 @@ export default async function WrappedPage({
             <div style={{
               fontFamily: pixel,
               fontSize: 9,
-              color: '#8C6520',
+              color: 'var(--color-acc-deep)',
               textTransform: 'uppercase',
               letterSpacing: '0.18em',
               marginBottom: 10,
@@ -376,7 +376,7 @@ export default async function WrappedPage({
                     fontSize: 14,
                   }}
                 >
-                  <span style={{ color: '#221E18' }}>
+                  <span style={{ color: 'var(--color-ink)' }}>
                     {t(`dim.${s.key}.name`, locale) || DIM_NAMES[s.key as keyof typeof DIM_NAMES] || s.key}
                   </span>
                   <span style={{
@@ -400,7 +400,7 @@ export default async function WrappedPage({
           paddingTop: 18,
           fontFamily: pixel,
           fontSize: 10,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           letterSpacing: '0.18em',
           textTransform: 'uppercase',
         }}>
@@ -433,7 +433,7 @@ export default async function WrappedPage({
           fontFamily: serif,
           fontStyle: 'italic',
           fontSize: 13,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           margin: '0 0 18px',
           lineHeight: 1.55,
         }}>
@@ -442,11 +442,11 @@ export default async function WrappedPage({
         <Link href="/account" style={{
           fontFamily: pixel,
           fontSize: 11,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           textDecoration: 'none',
           letterSpacing: 0.4,
           textTransform: 'uppercase',
-          borderBottom: '2px solid #8C6520',
+          borderBottom: '2px solid var(--color-acc-deep)',
           paddingBottom: 1,
         }}>
           ◂ {t('wr.back_account', locale)}
@@ -461,14 +461,14 @@ function StatTile({ value, label, accent }: { value: number; label: string; acce
     <div style={{
       padding: '12px 8px',
       background: '#FFFCF4',
-      border: '3px solid #221E18',
+      border: '3px solid var(--color-ink)',
       boxShadow: `3px 3px 0 0 ${accent}`,
       borderRadius: 0,
     }}>
       <div style={{
         fontFamily: pixel,
         fontSize: 28,
-        color: '#221E18',
+        color: 'var(--color-ink)',
         lineHeight: 1,
         letterSpacing: 0.4,
       }}>
@@ -494,15 +494,15 @@ function EmptyYear({ year, locale }: { year: number; locale: Locale }) {
       <div style={{
         padding: '32px 30px',
         background: '#FFFCF4',
-        border: '4px solid #221E18',
-        boxShadow: '6px 6px 0 0 #B8862F',
+        border: '4px solid var(--color-ink)',
+        boxShadow: '6px 6px 0 0 var(--color-acc)',
         borderRadius: 0,
         textAlign: 'center',
       }}>
         <div style={{
           fontFamily: pixel,
           fontSize: 12,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           textTransform: 'uppercase',
           letterSpacing: '0.18em',
           marginBottom: 14,
@@ -523,7 +523,7 @@ function EmptyYear({ year, locale }: { year: number; locale: Locale }) {
           fontFamily: serif,
           fontStyle: 'italic',
           fontSize: 16,
-          color: '#4A4338',
+          color: 'var(--color-ink-soft)',
           margin: '0 0 28px',
           lineHeight: 1.55,
         }}>
@@ -535,10 +535,10 @@ function EmptyYear({ year, locale }: { year: number; locale: Locale }) {
           style={{
             display: 'inline-block',
             padding: '12px 22px',
-            background: '#221E18',
-            color: '#FAF6EC',
-            border: '4px solid #221E18',
-            boxShadow: '4px 4px 0 0 #B8862F',
+            background: 'var(--color-ink)',
+            color: 'var(--color-cream)',
+            border: '4px solid var(--color-ink)',
+            boxShadow: '4px 4px 0 0 var(--color-acc)',
             borderRadius: 0,
             fontFamily: pixel,
             fontSize: 12,

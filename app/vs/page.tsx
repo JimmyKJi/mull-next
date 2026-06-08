@@ -116,7 +116,7 @@ export default async function VsIndexPage() {
         eyebrow={t('vs.eyebrow', locale)}
         title={t('vs.title', locale)}
         subtitle={
-          <p style={{ fontFamily: serif, fontStyle: 'italic', fontSize: 16, color: '#4A4338', lineHeight: 1.55 }}>
+          <p style={{ fontFamily: serif, fontStyle: 'italic', fontSize: 16, color: 'var(--color-ink-soft)', lineHeight: 1.55 }}>
             {t('vs.subtitle', locale, { n: totalPairs })}
           </p>
         }
@@ -127,7 +127,7 @@ export default async function VsIndexPage() {
         <div style={{
           fontFamily: pixel,
           fontSize: 10,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           letterSpacing: 0.6,
           textTransform: 'uppercase',
           marginBottom: 8,
@@ -143,8 +143,8 @@ export default async function VsIndexPage() {
             display: 'block',
             padding: '26px 26px',
             background: '#F8EBC9',
-            border: '4px solid #221E18',
-            boxShadow: '6px 6px 0 0 #B8862F',
+            border: '4px solid var(--color-ink)',
+            boxShadow: '6px 6px 0 0 var(--color-acc)',
             borderRadius: 0,
             textDecoration: 'none',
             color: 'inherit',
@@ -162,7 +162,7 @@ export default async function VsIndexPage() {
               fontFamily: serif,
               fontSize: 26,
               fontWeight: 500,
-              color: '#221E18',
+              color: 'var(--color-ink)',
               lineHeight: 1.15,
             }}>
               {featuredName1}
@@ -170,7 +170,7 @@ export default async function VsIndexPage() {
             <div style={{
               fontFamily: pixel,
               fontSize: 14,
-              color: '#8C6520',
+              color: 'var(--color-acc-deep)',
               letterSpacing: 1,
               textTransform: 'uppercase',
             }}>
@@ -180,7 +180,7 @@ export default async function VsIndexPage() {
               fontFamily: serif,
               fontSize: 26,
               fontWeight: 500,
-              color: '#221E18',
+              color: 'var(--color-ink)',
               lineHeight: 1.15,
             }}>
               {featuredName2}
@@ -192,7 +192,7 @@ export default async function VsIndexPage() {
               fontFamily: serif,
               fontStyle: 'italic',
               fontSize: 14.5,
-              color: '#4A4338',
+              color: 'var(--color-ink-soft)',
               lineHeight: 1.5,
             }}>
               {t('vs.splits_you_note', locale)}
@@ -202,7 +202,7 @@ export default async function VsIndexPage() {
             marginTop: 12,
             fontFamily: pixel,
             fontSize: 10,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             letterSpacing: 0.6,
             textTransform: 'uppercase',
           }}>
@@ -264,14 +264,14 @@ export default async function VsIndexPage() {
               fontWeight: 500,
               margin: 0,
               letterSpacing: '-0.3px',
-              color: '#221E18',
+              color: 'var(--color-ink)',
             }}>
               {g.label}
             </h2>
             <span style={{
               fontFamily: sans,
               fontSize: 11,
-              color: '#8C6520',
+              color: 'var(--color-acc-deep)',
               opacity: 0.7,
               marginLeft: 'auto',
             }}>
@@ -282,7 +282,7 @@ export default async function VsIndexPage() {
             fontFamily: serif,
             fontStyle: 'italic',
             fontSize: 14.5,
-            color: '#4A4338',
+            color: 'var(--color-ink-soft)',
             margin: '0 0 16px',
             lineHeight: 1.55,
           }}>
@@ -305,11 +305,11 @@ export default async function VsIndexPage() {
                     display: 'block',
                     padding: '14px 16px',
                     background: '#FFFCF4',
-                    border: '3px solid #221E18',
+                    border: '3px solid var(--color-ink)',
                     boxShadow: `3px 3px 0 0 ${g.accent}`,
                     borderRadius: 0,
                     textDecoration: 'none',
-                    color: '#221E18',
+                    color: 'var(--color-ink)',
                     height: '100%',
                     transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
                   }}
@@ -318,10 +318,10 @@ export default async function VsIndexPage() {
                     fontFamily: serif,
                     fontSize: 17,
                     fontWeight: 500,
-                    color: '#221E18',
+                    color: 'var(--color-ink)',
                     lineHeight: 1.25,
                   }}>
-                    {p.name1} <span style={{ color: '#8C6520', fontFamily: pixel, fontSize: 10 }}>{t('vs.vs_badge', locale)}</span> {p.name2}
+                    {p.name1} <span style={{ color: 'var(--color-acc-deep)', fontFamily: pixel, fontSize: 10 }}>{t('vs.vs_badge', locale)}</span> {p.name2}
                   </div>
                 </Link>
               </li>
@@ -335,13 +335,13 @@ export default async function VsIndexPage() {
         marginTop: 36,
         padding: '20px 22px',
         background: '#FFFCF4',
-        border: '3px solid #221E18',
+        border: '3px solid var(--color-ink)',
         boxShadow: '4px 4px 0 0 #6B7F4F',
       }}>
         <p style={{
           fontFamily: serif,
           fontSize: 16,
-          color: '#221E18',
+          color: 'var(--color-ink)',
           margin: '0 0 6px',
           lineHeight: 1.5,
         }}>
@@ -351,11 +351,11 @@ export default async function VsIndexPage() {
           fontFamily: serif,
           fontStyle: 'italic',
           fontSize: 14.5,
-          color: '#4A4338',
+          color: 'var(--color-ink-soft)',
           margin: '0 0 12px',
           lineHeight: 1.5,
         }}>
-          {t('vs.construct_body_pre', locale, { n: PHILOSOPHERS.length })}<code style={{ fontFamily: pixel, fontSize: 12, color: '#8C6520' }}>/vs/[slug-a]/[slug-b]</code>{t('vs.construct_body_post', locale)}
+          {t('vs.construct_body_pre', locale, { n: PHILOSOPHERS.length })}<code style={{ fontFamily: pixel, fontSize: 12, color: 'var(--color-acc-deep)' }}>/vs/[slug-a]/[slug-b]</code>{t('vs.construct_body_post', locale)}
         </p>
         <Link
           href="/philosopher"
@@ -364,9 +364,9 @@ export default async function VsIndexPage() {
             fontFamily: pixel,
             fontSize: 11,
             padding: '8px 14px',
-            background: '#221E18',
+            background: 'var(--color-ink)',
             color: '#F8EBC9',
-            border: '2px solid #221E18',
+            border: '2px solid var(--color-ink)',
             textDecoration: 'none',
             letterSpacing: 0.6,
             textTransform: 'uppercase',

@@ -136,7 +136,7 @@ export default async function TopicDetailPage({
         <div className="mb-6 flex items-center justify-between gap-4">
           <Link href="/topic" style={{
             fontFamily: pixel, fontSize: 11,
-            color: '#4A4338', textDecoration: 'none',
+            color: 'var(--color-ink-soft)', textDecoration: 'none',
             letterSpacing: 0.4, textTransform: 'uppercase',
           }}>
             ◂ {t('topic.back_all', locale)}
@@ -146,7 +146,7 @@ export default async function TopicDetailPage({
         <div style={{
           fontFamily: pixel,
           fontSize: 12,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           textTransform: 'uppercase',
           letterSpacing: '0.18em',
           marginBottom: 14,
@@ -158,10 +158,10 @@ export default async function TopicDetailPage({
           fontFamily: pixel,
           fontSize: 32,
           margin: '0 0 16px',
-          color: '#221E18',
+          color: 'var(--color-ink)',
           letterSpacing: '0.06em',
           textTransform: 'uppercase',
-          textShadow: '3px 3px 0 #B8862F',
+          textShadow: '3px 3px 0 var(--color-acc)',
           lineHeight: 1.1,
         }}>
           {topic.title.toUpperCase()}
@@ -171,7 +171,7 @@ export default async function TopicDetailPage({
           fontFamily: serif,
           fontStyle: 'italic',
           fontSize: 19,
-          color: '#4A4338',
+          color: 'var(--color-ink-soft)',
           margin: '0 0 36px',
           lineHeight: 1.55,
           maxWidth: 600,
@@ -183,8 +183,8 @@ export default async function TopicDetailPage({
         <article style={{
           padding: '28px 32px',
           background: '#FFFCF4',
-          border: '4px solid #221E18',
-          boxShadow: '5px 5px 0 0 #B8862F',
+          border: '4px solid var(--color-ink)',
+          boxShadow: '5px 5px 0 0 var(--color-acc)',
           borderRadius: 0,
           marginBottom: 36,
         }}>
@@ -192,7 +192,7 @@ export default async function TopicDetailPage({
             <p key={i} style={{
               fontFamily: serif,
               fontSize: 17,
-              color: '#221E18',
+              color: 'var(--color-ink)',
               margin: i === 0 ? '0 0 16px' : '0 0 16px',
               lineHeight: 1.65,
             }}>
@@ -244,18 +244,18 @@ export default async function TopicDetailPage({
                       gap: 10,
                       padding: '10px 12px',
                       background: '#FFFCF4',
-                      border: '3px solid #221E18',
-                      boxShadow: '3px 3px 0 0 #B8862F',
+                      border: '3px solid var(--color-ink)',
+                      boxShadow: '3px 3px 0 0 var(--color-acc)',
                       borderRadius: 0,
                       textDecoration: 'none',
-                      color: '#221E18',
+                      color: 'var(--color-ink)',
                       transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
                     }}
                   >
                     <div className="pixel-crisp" style={{
                       width: 36, height: 36,
-                      background: '#F8EDC8',
-                      border: '2px solid #221E18',
+                      background: 'var(--color-acc-soft)',
+                      border: '2px solid var(--color-ink)',
                       padding: 2,
                       flexShrink: 0,
                     }}>
@@ -270,7 +270,7 @@ export default async function TopicDetailPage({
                         fontFamily: serif,
                         fontSize: 15,
                         fontWeight: 500,
-                        color: '#221E18',
+                        color: 'var(--color-ink)',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
                         whiteSpace: 'nowrap',
@@ -280,7 +280,7 @@ export default async function TopicDetailPage({
                       <div style={{
                         fontFamily: pixel,
                         fontSize: 9,
-                        color: '#8C6520',
+                        color: 'var(--color-acc-deep)',
                         letterSpacing: 0.4,
                         textTransform: 'uppercase',
                         marginTop: 2,
@@ -321,7 +321,7 @@ export default async function TopicDetailPage({
                         display: 'block',
                         padding: '14px 14px',
                         background: color.soft,
-                        border: '3px solid #221E18',
+                        border: '3px solid var(--color-ink)',
                         boxShadow: `3px 3px 0 0 ${color.deep}`,
                         borderRadius: 0,
                         textDecoration: 'none',
@@ -332,7 +332,7 @@ export default async function TopicDetailPage({
                       <div className="pixel-crisp" style={{
                         width: 48, height: 48,
                         background: '#FFFCF4',
-                        border: '2px solid #221E18',
+                        border: '2px solid var(--color-ink)',
                         padding: 4,
                         marginBottom: 10,
                       }}>
@@ -352,7 +352,7 @@ export default async function TopicDetailPage({
                         fontFamily: serif,
                         fontStyle: 'italic',
                         fontSize: 13.5,
-                        color: '#221E18',
+                        color: 'var(--color-ink)',
                         margin: 0,
                         lineHeight: 1.45,
                       }}>
@@ -379,18 +379,18 @@ export default async function TopicDetailPage({
 const sectionH2: React.CSSProperties = {
   fontFamily: pixel,
   fontSize: 14,
-  color: '#221E18',
+  color: 'var(--color-ink)',
   textTransform: 'uppercase',
   letterSpacing: '0.18em',
   marginBottom: 10,
-  textShadow: '2px 2px 0 #B8862F',
+  textShadow: '2px 2px 0 var(--color-acc)',
 };
 
 const subtitle: React.CSSProperties = {
   fontFamily: serif,
   fontStyle: 'italic',
   fontSize: 15,
-  color: '#4A4338',
+  color: 'var(--color-ink-soft)',
   margin: 0,
   lineHeight: 1.55,
 };
@@ -398,8 +398,8 @@ const subtitle: React.CSSProperties = {
 const dimChip: React.CSSProperties = {
   padding: '6px 12px',
   background: '#FFFCF4',
-  border: '2px solid #221E18',
+  border: '2px solid var(--color-ink)',
   fontFamily: serif,
   fontSize: 14,
-  color: '#221E18',
+  color: 'var(--color-ink)',
 };

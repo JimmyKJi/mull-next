@@ -73,7 +73,7 @@ export default async function ArenaPage() {
               fontFamily: "var(--font-editorial)",
               fontStyle: "italic",
               fontSize: 16,
-              color: "#4A4338",
+              color: "var(--color-ink-soft)",
               lineHeight: 1.55,
             }}
           >
@@ -93,9 +93,9 @@ export default async function ArenaPage() {
           marginBottom: 28,
           padding: "18px 20px",
           background: "#1A1612",
-          color: "#F8EDC8",
-          border: "4px solid #221E18",
-          boxShadow: "5px 5px 0 0 #B8862F",
+          color: "var(--color-acc-soft)",
+          border: "4px solid var(--color-ink)",
+          boxShadow: "5px 5px 0 0 var(--color-acc)",
           textDecoration: "none",
         }}
         className="transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
@@ -125,7 +125,7 @@ export default async function ArenaPage() {
             style={{
               fontFamily: pixel,
               fontSize: 9,
-              color: "#B8862F",
+              color: "var(--color-acc)",
               letterSpacing: "0.2em",
               textTransform: "uppercase",
             }}
@@ -140,7 +140,7 @@ export default async function ArenaPage() {
           style={{
             fontFamily: "var(--font-editorial)",
             fontSize: 20,
-            color: "#F8EDC8",
+            color: "var(--color-acc-soft)",
             lineHeight: 1.3,
             marginBottom: 8,
           }}
@@ -167,7 +167,7 @@ export default async function ArenaPage() {
             padding: "6px 12px",
             background: "#F8C75E",
             color: "#1A1820",
-            border: "2px solid #221E18",
+            border: "2px solid var(--color-ink)",
             fontFamily: pixel,
             fontSize: 11,
             letterSpacing: "0.18em",
@@ -250,11 +250,11 @@ export default async function ArenaPage() {
         style={{
           fontFamily: pixel,
           fontSize: 11,
-          color: "#221E18",
+          color: "var(--color-ink)",
           letterSpacing: "0.2em",
           textTransform: "uppercase",
           marginBottom: 12,
-          textShadow: "2px 2px 0 #B8862F",
+          textShadow: "2px 2px 0 var(--color-acc)",
         }}
       >
         {t("arena.roster", locale, { n: ARENA_PHILOSOPHERS.length })}
@@ -275,8 +275,8 @@ export default async function ArenaPage() {
             style={{
               padding: "12px 14px",
               background: "#FFFCF4",
-              border: "2px solid #221E18",
-              boxShadow: "3px 3px 0 0 #B8862F",
+              border: "2px solid var(--color-ink)",
+              boxShadow: "3px 3px 0 0 var(--color-acc)",
             }}
           >
             <div
@@ -284,7 +284,7 @@ export default async function ArenaPage() {
                 fontFamily: serif,
                 fontSize: 16,
                 fontWeight: 500,
-                color: "#221E18",
+                color: "var(--color-ink)",
                 marginBottom: 2,
               }}
             >
@@ -294,7 +294,7 @@ export default async function ArenaPage() {
               style={{
                 fontFamily: pixel,
                 fontSize: 10,
-                color: "#8C6520",
+                color: "var(--color-acc-deep)",
                 letterSpacing: 0.4,
                 textTransform: "uppercase",
               }}
@@ -311,7 +311,7 @@ export default async function ArenaPage() {
           fontFamily: serif,
           fontStyle: "italic",
           fontSize: 14,
-          color: "#8C6520",
+          color: "var(--color-acc-deep)",
           lineHeight: 1.5,
         }}
       >
@@ -327,8 +327,8 @@ function Stat({ label, value }: { label: string; value: string }) {
       style={{
         padding: "10px 12px",
         background: "#FFFCF4",
-        border: "3px solid #221E18",
-        boxShadow: "3px 3px 0 0 #B8862F",
+        border: "3px solid var(--color-ink)",
+        boxShadow: "3px 3px 0 0 var(--color-acc)",
         textAlign: "center",
       }}
     >
@@ -336,7 +336,7 @@ function Stat({ label, value }: { label: string; value: string }) {
         style={{
           fontFamily: pixel,
           fontSize: 9,
-          color: "#8C6520",
+          color: "var(--color-acc-deep)",
           letterSpacing: 0.4,
           textTransform: "uppercase",
           marginBottom: 4,
@@ -348,7 +348,7 @@ function Stat({ label, value }: { label: string; value: string }) {
         style={{
           fontFamily: pixel,
           fontSize: 18,
-          color: "#221E18",
+          color: "var(--color-ink)",
           letterSpacing: 0.5,
         }}
       >
@@ -376,8 +376,8 @@ function DoorCard({
       style={{
         padding: "18px 22px",
         background: disabled ? "#F2EFE3" : "#FFFCF4",
-        border: "4px solid #221E18",
-        boxShadow: disabled ? "none" : "5px 5px 0 0 #B8862F",
+        border: "4px solid var(--color-ink)",
+        boxShadow: disabled ? "none" : "5px 5px 0 0 var(--color-acc)",
         opacity: disabled ? 0.55 : 1,
         transition: "transform 80ms steps(2, end), box-shadow 80ms steps(2, end)",
       }}
@@ -386,7 +386,7 @@ function DoorCard({
         style={{
           fontFamily: pixel,
           fontSize: 10,
-          color: "#8C6520",
+          color: "var(--color-acc-deep)",
           letterSpacing: 0.4,
           textTransform: "uppercase",
           marginBottom: 8,
@@ -399,7 +399,7 @@ function DoorCard({
           fontFamily: serif,
           fontSize: 20,
           fontWeight: 500,
-          color: "#221E18",
+          color: "var(--color-ink)",
           marginBottom: 6,
           letterSpacing: "-0.2px",
         }}
@@ -410,7 +410,7 @@ function DoorCard({
         style={{
           fontFamily: serif,
           fontSize: 15,
-          color: "#4A4338",
+          color: "var(--color-ink-soft)",
           margin: 0,
           lineHeight: 1.55,
         }}

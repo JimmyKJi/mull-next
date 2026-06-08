@@ -54,15 +54,15 @@ export default function ProgressionPanel({
       <header style={{ marginBottom: 22 }}>
         <h2 style={{
           fontFamily: pixel, fontSize: 22,
-          margin: 0, color: '#221E18', letterSpacing: '0.06em',
+          margin: 0, color: 'var(--color-ink)', letterSpacing: '0.06em',
           textTransform: 'uppercase',
-          textShadow: '3px 3px 0 #B8862F',
+          textShadow: '3px 3px 0 var(--color-acc)',
         }}>
           ▸ {t('progression.title', locale).toUpperCase()}
         </h2>
         <p style={{
           fontFamily: serif, fontStyle: 'italic',
-          fontSize: 15, color: '#4A4338',
+          fontSize: 15, color: 'var(--color-ink-soft)',
           margin: '12px 0 0', lineHeight: 1.55,
         }}>
           {t('progression.subtitle', locale, {
@@ -107,7 +107,7 @@ export default function ProgressionPanel({
               marginTop: 10,
               fontFamily: pixel,
               fontSize: 10,
-              color: '#8C6520',
+              color: 'var(--color-acc-deep)',
               letterSpacing: 0.4,
               textTransform: 'uppercase',
             }}
@@ -133,7 +133,7 @@ export default function ProgressionPanel({
                 }}>
                   <h4 style={{
                     fontFamily: serif, fontSize: 17, fontWeight: 500,
-                    color: '#221E18', margin: 0,
+                    color: 'var(--color-ink)', margin: 0,
                   }}>
                     {meta.label}
                   </h4>
@@ -147,7 +147,7 @@ export default function ProgressionPanel({
                   </span>
                 </div>
                 <p style={{
-                  fontFamily: sans, fontSize: 13, color: '#8C6520',
+                  fontFamily: sans, fontSize: 13, color: 'var(--color-acc-deep)',
                   margin: '0 0 12px', opacity: 0.85, lineHeight: 1.5,
                 }}>
                   {meta.blurb}
@@ -161,11 +161,11 @@ export default function ProgressionPanel({
                     return (
                       <li key={m.key} style={{
                         padding: '12px 14px',
-                        background: done ? '#F8EDC8' : '#FFFCF4',
-                        border: '3px solid #221E18',
+                        background: done ? 'var(--color-acc-soft)' : '#FFFCF4',
+                        border: '3px solid var(--color-ink)',
                         boxShadow: done
                           ? `3px 3px 0 0 ${meta.accent}`
-                          : '3px 3px 0 0 #D6CDB6',
+                          : '3px 3px 0 0 var(--color-line)',
                         borderRadius: 0,
                       }}>
                         <div style={{
@@ -175,13 +175,13 @@ export default function ProgressionPanel({
                         }}>
                           <span style={{
                             fontFamily: serif, fontSize: 15.5,
-                            color: '#221E18', fontWeight: 500,
+                            color: 'var(--color-ink)', fontWeight: 500,
                           }}>
                             {done ? '✓ ' : ''}{m.name}
                           </span>
                           <span style={{
                             fontFamily: pixel, fontSize: 11,
-                            color: done ? meta.accent : '#8C6520',
+                            color: done ? meta.accent : 'var(--color-acc-deep)',
                             fontVariantNumeric: 'tabular-nums',
                             letterSpacing: 0.4,
                           }}>
@@ -190,15 +190,15 @@ export default function ProgressionPanel({
                         </div>
                         <p style={{
                           fontFamily: sans, fontSize: 13,
-                          color: '#4A4338', lineHeight: 1.5,
+                          color: 'var(--color-ink-soft)', lineHeight: 1.5,
                           margin: '0 0 10px',
                         }}>
                           {m.description}
                         </p>
                         {/* Pixel progress bar — segmented look via stepped width */}
                         <div style={{
-                          height: 8, background: '#FAF6EC',
-                          border: '2px solid #221E18',
+                          height: 8, background: 'var(--color-cream)',
+                          border: '2px solid var(--color-ink)',
                           borderRadius: 0, overflow: 'hidden',
                         }}>
                           <div style={{
@@ -223,15 +223,15 @@ export default function ProgressionPanel({
 
 const subhead: React.CSSProperties = {
   fontFamily: pixel, fontSize: 12,
-  color: '#8C6520', textTransform: 'uppercase',
+  color: 'var(--color-acc-deep)', textTransform: 'uppercase',
   letterSpacing: 0.4, margin: '0 0 14px',
 };
 
 const emptyState: React.CSSProperties = {
   fontFamily: serif, fontStyle: 'italic',
-  fontSize: 14, color: '#8C6520',
+  fontSize: 14, color: 'var(--color-acc-deep)',
   padding: '12px 16px', background: '#FFFCF4',
-  border: '2px dashed #8C6520', borderRadius: 0,
+  border: '2px dashed var(--color-acc-deep)', borderRadius: 0,
   margin: 0,
 };
 
@@ -261,9 +261,9 @@ function BadgeTile({
         position: 'relative',
         width: 72,
         height: 88,
-        background: earned ? '#F8EDC8' : '#FFFCF4',
-        border: earned ? '3px solid #221E18' : '2px dashed #8C6520',
-        boxShadow: earned ? '3px 3px 0 0 #B8862F' : 'none',
+        background: earned ? 'var(--color-acc-soft)' : '#FFFCF4',
+        border: earned ? '3px solid var(--color-ink)' : '2px dashed var(--color-acc-deep)',
+        boxShadow: earned ? '3px 3px 0 0 var(--color-acc)' : 'none',
         borderRadius: 0,
         display: 'flex',
         flexDirection: 'column',
@@ -282,8 +282,8 @@ function BadgeTile({
           fontFamily: serif,
           fontSize: 26,
           lineHeight: 1,
-          color: earned ? '#8C6520' : '#A39880',
-          textShadow: earned ? '1px 1px 0 #B8862F' : 'none',
+          color: earned ? 'var(--color-acc-deep)' : '#A39880',
+          textShadow: earned ? '1px 1px 0 var(--color-acc)' : 'none',
         }}
       >
         {badge.glyph}
@@ -292,7 +292,7 @@ function BadgeTile({
         style={{
           fontFamily: pixel,
           fontSize: 8,
-          color: earned ? '#221E18' : '#8C6520',
+          color: earned ? 'var(--color-ink)' : 'var(--color-acc-deep)',
           letterSpacing: 0.4,
           textTransform: 'uppercase',
           textAlign: 'center',
@@ -324,9 +324,9 @@ function BadgeTile({
           maxWidth: 280,
           padding: '10px 12px',
           background: '#1A1820',
-          border: '2px solid #B8862F',
+          border: '2px solid var(--color-acc)',
           boxShadow: '4px 4px 0 0 #2F5D5C',
-          color: '#F8EDC8',
+          color: 'var(--color-acc-soft)',
           opacity: 0,
           pointerEvents: 'none',
           transition: 'opacity 140ms steps(3, end)',
@@ -339,7 +339,7 @@ function BadgeTile({
             display: 'block',
             fontFamily: pixel,
             fontSize: 10,
-            color: '#B8862F',
+            color: 'var(--color-acc)',
             letterSpacing: 0.4,
             textTransform: 'uppercase',
             marginBottom: 4,
@@ -353,7 +353,7 @@ function BadgeTile({
             fontFamily: serif,
             fontSize: 15,
             fontWeight: 500,
-            color: '#F8EDC8',
+            color: 'var(--color-acc-soft)',
             marginBottom: 4,
           }}
         >
@@ -365,7 +365,7 @@ function BadgeTile({
             fontFamily: serif,
             fontSize: 13,
             fontStyle: 'italic',
-            color: '#D6CDB6',
+            color: 'var(--color-line)',
             lineHeight: 1.5,
           }}
         >

@@ -96,11 +96,11 @@ export async function AccountAdminPanel({ isAdmin }: Props) {
           marginBottom: 24,
           padding: "18px 22px",
           background: "#FFFCF4",
-          border: "4px solid #221E18",
-          boxShadow: "4px 4px 0 0 #B8862F",
+          border: "4px solid var(--color-ink)",
+          boxShadow: "4px 4px 0 0 var(--color-acc)",
         }}
       >
-        <div style={{ fontFamily: pixel, fontSize: 10, color: "#8C6520", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 8 }}>
+        <div style={{ fontFamily: pixel, fontSize: 10, color: "var(--color-acc-deep)", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 8 }}>
           ▸ ADMIN · STATS UNAVAILABLE
         </div>
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
@@ -124,12 +124,12 @@ export async function AccountAdminPanel({ isAdmin }: Props) {
         marginBottom: 28,
         padding: "20px 22px",
         background: "#FFFCF4",
-        border: "4px solid #221E18",
-        boxShadow: "5px 5px 0 0 #B8862F",
+        border: "4px solid var(--color-ink)",
+        boxShadow: "5px 5px 0 0 var(--color-acc)",
       }}
     >
       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 14, gap: 12, flexWrap: "wrap" }}>
-        <div style={{ fontFamily: pixel, fontSize: 10, color: "#8C6520", letterSpacing: "0.18em", textTransform: "uppercase" }}>
+        <div style={{ fontFamily: pixel, fontSize: 10, color: "var(--color-acc-deep)", letterSpacing: "0.18em", textTransform: "uppercase" }}>
           ▸ ADMIN · AT A GLANCE
         </div>
         {stats.spend.paused ? (
@@ -231,7 +231,7 @@ function StatCell({
       <div
         style={{
           fontFamily: pixel, fontSize: 22,
-          color: "#221E18", lineHeight: 1,
+          color: "var(--color-ink)", lineHeight: 1,
           fontVariantNumeric: "tabular-nums",
         }}
       >
@@ -241,7 +241,7 @@ function StatCell({
         <div
           style={{
             fontFamily: serif, fontStyle: "italic", fontSize: 12,
-            color: "#4A4338", marginTop: 4, lineHeight: 1.3,
+            color: "var(--color-ink-soft)", marginTop: 4, lineHeight: 1.3,
           }}
         >
           {delta}
@@ -259,10 +259,10 @@ function AdminLink({ href, label }: { href: string; label: string }) {
       style={{
         display: "inline-block",
         padding: "8px 12px",
-        background: "#221E18",
+        background: "var(--color-ink)",
         color: "#F8EBC9",
-        border: "2px solid #221E18",
-        boxShadow: "2px 2px 0 0 #B8862F",
+        border: "2px solid var(--color-ink)",
+        boxShadow: "2px 2px 0 0 var(--color-acc)",
         fontFamily: pixel,
         fontSize: 10,
         letterSpacing: 0.5,

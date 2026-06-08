@@ -61,7 +61,7 @@ function AboutBodyEn() {
             <p className="text-[16px] italic" style={{ fontFamily: "var(--font-editorial)" }}>
               Built on nights and weekends. Funded by nothing in particular.
             </p>
-            <p className="text-[14px] text-[#8C6520]">
+            <p className="text-[14px] text-acc-deep">
               This page exists so anyone using Mull can know what they&apos;re
               using — what it is, what it isn&apos;t, what it costs to run,
               and who pays.
@@ -226,7 +226,7 @@ function AboutBodyEn() {
               bug, write to{' '}
               <a
                 href="mailto:jimmy.kaian.ji@gmail.com"
-                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
               >
                 jimmy.kaian.ji@gmail.com
               </a>
@@ -234,10 +234,10 @@ function AboutBodyEn() {
             </p>
           </Prose>
           <div
-            className="mt-5 border-l-4 px-5 py-4 text-[14.5px] leading-[1.65] text-[#4A4338]"
-            style={{ borderColor: '#B8862F', background: '#FBF6E8' }}
+            className="mt-5 border-l-4 px-5 py-4 text-[14.5px] leading-[1.65] text-ink-soft"
+            style={{ borderColor: 'var(--color-acc)', background: '#FBF6E8' }}
           >
-            <strong className="text-[#221E18]">A short note from Jimmy:</strong>{' '}
+            <strong className="text-ink">A short note from Jimmy:</strong>{' '}
             Mull is currently running entirely free — no subscriptions, no
             ads, no data sale. The full Stripe wiring is built and dormant; we&apos;ll
             flip it on if and when keeping the site running needs it. Until
@@ -253,7 +253,7 @@ function AboutBodyEn() {
                   href="https://ko-fi.com/mull"
                   target="_blank"
                   rel="noopener"
-                  className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                  className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
                 >
                   tip on Ko-fi
                 </a>{' '}
@@ -282,7 +282,7 @@ function AboutBodyEn() {
           <div className="mt-5 overflow-x-auto">
             <table className="w-full border-collapse text-[14px]">
               <thead>
-                <tr className="border-b-2 border-[#221E18]">
+                <tr className="border-b-2 border-ink">
                   <Th>FEATURE</Th>
                   <Th>COST PER USE</Th>
                   <Th>WHY</Th>
@@ -315,7 +315,7 @@ function AboutBodyEn() {
           <div className="mt-3 overflow-x-auto">
             <table className="w-full border-collapse text-[14px]">
               <thead>
-                <tr className="border-b-2 border-[#221E18]">
+                <tr className="border-b-2 border-ink">
                   <Th>ACTIVE USERS</Th>
                   <Th>MONTHLY COST (CASH, INC. VAT)</Th>
                   <Th>WHO PAYS</Th>
@@ -342,7 +342,7 @@ function AboutBodyEn() {
           <div className="mt-3 overflow-x-auto">
             <table className="w-full border-collapse text-[14px]">
               <thead>
-                <tr className="border-b-2 border-[#221E18]">
+                <tr className="border-b-2 border-ink">
                   <Th>FEATURE</Th>
                   <Th>FREE</Th>
                   <Th>MULL+ ($4.99/mo)</Th>
@@ -362,7 +362,7 @@ function AboutBodyEn() {
             </table>
           </div>
 
-          <p className="mt-3 text-[13px] leading-[1.55] text-[#8C6520]">
+          <p className="mt-3 text-[13px] leading-[1.55] text-acc-deep">
             Hard global cap regardless of tier: max 10 Spars + 5 Arena
             debates + 5 Argument Diary calls per day per user, and a
             site-wide daily AI-spend ceiling that auto-pauses new
@@ -376,14 +376,14 @@ function AboutBodyEn() {
               tips). Flip the flag in lib/feature-flags.ts to restore the
               tip ask and swap the heading back. */}
           <div
-            className="mt-6 border-2 px-5 py-4 text-[14px] leading-[1.65] text-[#4A4338]"
+            className="mt-6 border-2 px-5 py-4 text-[14px] leading-[1.65] text-ink-soft"
             style={{
               borderColor: '#E2D8B6',
               background: '#F5EFDC',
-              boxShadow: '3px 3px 0 0 #B8862F',
+              boxShadow: '3px 3px 0 0 var(--color-acc)',
             }}
           >
-            <strong className="text-[#221E18]">
+            <strong className="text-ink">
               {TIPPING_ENABLED
                 ? 'How to support Mull right now:'
                 : 'How Mull stays free:'}
@@ -395,7 +395,7 @@ function AboutBodyEn() {
                   href="https://ko-fi.com/mull"
                   target="_blank"
                   rel="noopener"
-                  className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                  className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
                 >
                   Ko-fi
                 </a>{' '}
@@ -411,10 +411,10 @@ function AboutBodyEn() {
         </PixelWindow>
       </div>
 
-      <p className="mt-12 text-center text-[13px] text-[#8C6520]">
+      <p className="mt-12 text-center text-[13px] text-acc-deep">
         <Link
           href="/"
-          className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           ← Back to Mull
         </Link>
@@ -440,7 +440,7 @@ function AboutBodyZh() {
             <p className="text-[16px] italic" style={{ fontFamily: "var(--font-editorial)" }}>
               在深夜与周末间打磨，没有任何特定的资金来源。
             </p>
-            <p className="text-[14px] text-[#8C6520]">
+            <p className="text-[14px] text-acc-deep">
               这个页面的存在，是为了让每一位使用 Mull 的人都清楚自己在用什么——它是什么、不是什么、运营成本几何，又由谁来承担。
             </p>
           </div>
@@ -531,7 +531,7 @@ function AboutBodyZh() {
               由 <strong>Jimmy Ji</strong> 打造，他是伦敦国王学院的一名哲学学生。Mull 目前是一个单人项目，尽管它还年轻，终会成长。如果你愿意帮忙、想对某个问题提出异议、推荐一位思想家，或报告一个 bug，欢迎写信至{' '}
               <a
                 href="mailto:jimmy.kaian.ji@gmail.com"
-                className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
               >
                 jimmy.kaian.ji@gmail.com
               </a>
@@ -539,10 +539,10 @@ function AboutBodyZh() {
             </p>
           </Prose>
           <div
-            className="mt-5 border-l-4 px-5 py-4 text-[14.5px] leading-[1.65] text-[#4A4338]"
-            style={{ borderColor: '#B8862F', background: '#FBF6E8' }}
+            className="mt-5 border-l-4 px-5 py-4 text-[14.5px] leading-[1.65] text-ink-soft"
+            style={{ borderColor: 'var(--color-acc)', background: '#FBF6E8' }}
           >
-            <strong className="text-[#221E18]">Jimmy 的一点说明：</strong>{' '}
+            <strong className="text-ink">Jimmy 的一点说明：</strong>{' '}
             Mull 目前完全免费运行——没有订阅、没有广告、不出售数据。完整的 Stripe 收款已经搭好，只是处于休眠状态；只有当维持网站运转确实需要时，我们才会把它开启。在那之前，这些成本都由我自掏腰包
             {TIPPING_ENABLED ? (
               <>
@@ -551,7 +551,7 @@ function AboutBodyZh() {
                   href="https://ko-fi.com/mull"
                   target="_blank"
                   rel="noopener"
-                  className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                  className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
                 >
                   在 Ko-fi 上打赏
                 </a>
@@ -576,7 +576,7 @@ function AboutBodyZh() {
           <div className="mt-5 overflow-x-auto">
             <table className="w-full border-collapse text-[14px]">
               <thead>
-                <tr className="border-b-2 border-[#221E18]">
+                <tr className="border-b-2 border-ink">
                   <Th>功能</Th>
                   <Th>单次成本</Th>
                   <Th>原因</Th>
@@ -604,7 +604,7 @@ function AboutBodyZh() {
           <div className="mt-3 overflow-x-auto">
             <table className="w-full border-collapse text-[14px]">
               <thead>
-                <tr className="border-b-2 border-[#221E18]">
+                <tr className="border-b-2 border-ink">
                   <Th>活跃用户</Th>
                   <Th>月度成本（现金，含税）</Th>
                   <Th>由谁承担</Th>
@@ -629,7 +629,7 @@ function AboutBodyZh() {
           <div className="mt-3 overflow-x-auto">
             <table className="w-full border-collapse text-[14px]">
               <thead>
-                <tr className="border-b-2 border-[#221E18]">
+                <tr className="border-b-2 border-ink">
                   <Th>功能</Th>
                   <Th>免费</Th>
                   <Th>MULL+（$4.99/月）</Th>
@@ -649,19 +649,19 @@ function AboutBodyZh() {
             </table>
           </div>
 
-          <p className="mt-3 text-[13px] leading-[1.55] text-[#8C6520]">
+          <p className="mt-3 text-[13px] leading-[1.55] text-acc-deep">
             无论哪个档位都有硬性总上限：每位用户每天最多 10 场交锋 + 5 场竞技场辩论 + 5 次争论日记调用；另有一道全站每日 AI 支出上限，一旦超出便自动暂停新的推理。这是为了控制成本，而非压榨留存。
           </p>
 
           <div
-            className="mt-6 border-2 px-5 py-4 text-[14px] leading-[1.65] text-[#4A4338]"
+            className="mt-6 border-2 px-5 py-4 text-[14px] leading-[1.65] text-ink-soft"
             style={{
               borderColor: '#E2D8B6',
               background: '#F5EFDC',
-              boxShadow: '3px 3px 0 0 #B8862F',
+              boxShadow: '3px 3px 0 0 var(--color-acc)',
             }}
           >
-            <strong className="text-[#221E18]">
+            <strong className="text-ink">
               {TIPPING_ENABLED
                 ? '如何立刻支持 Mull：'
                 : 'Mull 如何保持免费：'}
@@ -673,7 +673,7 @@ function AboutBodyZh() {
                   href="https://ko-fi.com/mull"
                   target="_blank"
                   rel="noopener"
-                  className="text-[#8C6520] underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+                  className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
                 >
                   Ko-fi
                 </a>{' '}
@@ -685,10 +685,10 @@ function AboutBodyZh() {
         </PixelWindow>
       </div>
 
-      <p className="mt-12 text-center text-[13px] text-[#8C6520]">
+      <p className="mt-12 text-center text-[13px] text-acc-deep">
         <Link
           href="/"
-          className="underline decoration-[#B8862F]/40 underline-offset-3 hover:decoration-[#8C6520]"
+          className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           ← 返回 Mull
         </Link>
@@ -711,7 +711,7 @@ function Prose({
   return (
     <div
       className={
-        'space-y-4 text-[15.5px] leading-[1.65] text-[#4A4338] [&_strong]:text-[#221E18] ' +
+        'space-y-4 text-[15.5px] leading-[1.65] text-ink-soft [&_strong]:text-ink ' +
         (className ?? '')
       }
       style={{ fontFamily: 'var(--font-editorial)' }}
@@ -724,10 +724,10 @@ function Prose({
 function Promise({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <li
-      className="border-l-4 px-4 py-3 text-[14.5px] leading-[1.55] text-[#4A4338]"
-      style={{ borderColor: '#B8862F', background: '#FFFCF4' }}
+      className="border-l-4 px-4 py-3 text-[14.5px] leading-[1.55] text-ink-soft"
+      style={{ borderColor: 'var(--color-acc)', background: '#FFFCF4' }}
     >
-      <strong className="block text-[15.5px] text-[#221E18]" style={{ fontFamily: 'var(--font-editorial)' }}>
+      <strong className="block text-[15.5px] text-ink" style={{ fontFamily: 'var(--font-editorial)' }}>
         {title}
       </strong>
       <span className="mt-1 inline-block">{children}</span>
@@ -738,7 +738,7 @@ function Promise({ title, children }: { title: string; children: React.ReactNode
 function Th({ children }: { children: React.ReactNode }) {
   return (
     <th
-      className="px-2 py-2 text-left text-[10px] font-medium tracking-[0.16em] text-[#8C6520]"
+      className="px-2 py-2 text-left text-[10px] font-medium tracking-[0.16em] text-acc-deep"
       style={{ fontFamily: 'var(--font-pixel-display)' }}
     >
       {children}
@@ -747,7 +747,7 @@ function Th({ children }: { children: React.ReactNode }) {
 }
 
 function Tr({ cells, netClass }: { cells: string[]; netClass: 'positive' | 'neutral' }) {
-  const netColor = netClass === 'positive' ? '#2F5D5C' : '#8C6520';
+  const netColor = netClass === 'positive' ? '#2F5D5C' : 'var(--color-acc-deep)';
   return (
     <tr className="border-b border-[#EBE3CA]">
       {cells.map((c, i) => (
@@ -756,7 +756,7 @@ function Tr({ cells, netClass }: { cells: string[]; netClass: 'positive' | 'neut
           className={`px-2 py-3 text-[14px] ${
             i === cells.length - 1 ? 'font-medium' : ''
           }`}
-          style={{ color: i === cells.length - 1 ? netColor : '#221E18' }}
+          style={{ color: i === cells.length - 1 ? netColor : 'var(--color-ink)' }}
         >
           {c}
         </td>

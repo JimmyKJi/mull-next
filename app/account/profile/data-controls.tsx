@@ -65,13 +65,13 @@ export default function DataControls({ locale = 'en' }: { locale?: Locale }) {
     <section className="pixel-form" style={{
       marginTop: 56,
       paddingTop: 28,
-      borderTop: '4px solid #221E18',
+      borderTop: '4px solid var(--color-ink)',
     }}>
       <div style={{
         fontFamily: sans,
         fontSize: 11,
         fontWeight: 600,
-        color: '#8C6520',
+        color: 'var(--color-acc-deep)',
         textTransform: 'uppercase',
         letterSpacing: '0.18em',
         marginBottom: 14,
@@ -89,8 +89,8 @@ export default function DataControls({ locale = 'en' }: { locale?: Locale }) {
             fontSize: 14,
             padding: '11px 18px',
             background: 'transparent',
-            color: '#221E18',
-            border: '1px solid #221E18',
+            color: 'var(--color-ink)',
+            border: '1px solid var(--color-ink)',
             borderRadius: 8,
             cursor: exporting ? 'wait' : 'pointer',
             textAlign: 'left',
@@ -102,7 +102,7 @@ export default function DataControls({ locale = 'en' }: { locale?: Locale }) {
         <p style={{
           fontFamily: sans,
           fontSize: 12,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           margin: 0,
           opacity: 0.75,
           lineHeight: 1.55,
@@ -150,7 +150,7 @@ export default function DataControls({ locale = 'en' }: { locale?: Locale }) {
           <p style={{
             fontFamily: sans,
             fontSize: 13,
-            color: '#4A4338',
+            color: 'var(--color-ink-soft)',
             margin: '0 0 14px',
             lineHeight: 1.55,
           }}>
@@ -159,7 +159,7 @@ export default function DataControls({ locale = 'en' }: { locale?: Locale }) {
           <label style={{
             fontFamily: sans,
             fontSize: 12,
-            color: '#4A4338',
+            color: 'var(--color-ink-soft)',
             display: 'block',
             marginBottom: 8,
           }}>
@@ -174,10 +174,10 @@ export default function DataControls({ locale = 'en' }: { locale?: Locale }) {
               fontFamily: sans,
               fontSize: 13,
               padding: '9px 12px',
-              border: '1px solid #D6CDB6',
+              border: '1px solid var(--color-line)',
               borderRadius: 6,
               background: '#FFFCF4',
-              color: '#221E18',
+              color: 'var(--color-ink)',
               outline: 'none',
               width: '100%',
               boxSizing: 'border-box',
@@ -193,8 +193,8 @@ export default function DataControls({ locale = 'en' }: { locale?: Locale }) {
                 fontFamily: sans,
                 fontSize: 13.5,
                 padding: '10px 18px',
-                background: ready ? '#C7522A' : '#D6CDB6',
-                color: '#FAF6EC',
+                background: ready ? '#C7522A' : 'var(--color-line)',
+                color: 'var(--color-cream)',
                 border: 'none',
                 borderRadius: 8,
                 cursor: ready && !deleting ? 'pointer' : 'not-allowed',
@@ -212,8 +212,8 @@ export default function DataControls({ locale = 'en' }: { locale?: Locale }) {
                 fontSize: 13.5,
                 padding: '10px 18px',
                 background: 'transparent',
-                color: '#4A4338',
-                border: '1px solid #4A4338',
+                color: 'var(--color-ink-soft)',
+                border: '1px solid var(--color-ink-soft)',
                 borderRadius: 8,
                 cursor: 'pointer',
               }}

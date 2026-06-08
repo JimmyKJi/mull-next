@@ -29,13 +29,13 @@ export function HeroSprites() {
       <div className="absolute right-0 top-0 w-full">
         <div className="pixel-panel pixel-panel--ink mx-auto w-full max-w-[340px]">
           <div
-            className="flex items-center justify-between border-b-4 border-[#221E18] bg-[#221E18] px-3 py-1.5"
+            className="flex items-center justify-between border-b-4 border-ink bg-ink px-3 py-1.5"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
-            <span className="text-[9px] tracking-[0.18em] text-[#F8EDC8]">
+            <span className="text-[9px] tracking-[0.18em] text-acc-soft">
               ▶ MAP_PREVIEW
             </span>
-            <span className="text-[9px] tracking-[0.16em] text-[#B8862F]">
+            <span className="text-[9px] tracking-[0.16em] text-acc">
               {PHILOSOPHER_POSITIONS.length} pts
             </span>
           </div>
@@ -78,7 +78,7 @@ export function HeroSprites() {
                 <ArchetypeSprite archetypeKey={key} size={84} />
               </div>
               <div
-                className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap border-2 border-[#221E18] bg-[#FFFCF4] px-1.5 py-0.5 text-[9px] tracking-[0.12em] text-[#221E18]"
+                className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap border-2 border-ink bg-[#FFFCF4] px-1.5 py-0.5 text-[9px] tracking-[0.12em] text-ink"
                 style={{
                   top: "100%",
                   marginTop: 4,
@@ -138,7 +138,7 @@ function MapPreview() {
       </svg>
       {/* Small labels at the four corners — what the axes mean */}
       <div
-        className="mt-1 flex justify-between text-[8px] tracking-[0.16em] text-[#8C6520]"
+        className="mt-1 flex justify-between text-[8px] tracking-[0.16em] text-acc-deep"
         style={{ fontFamily: "var(--font-pixel-display)" }}
       >
         <span>EMBODIED</span>

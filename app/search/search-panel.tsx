@@ -85,10 +85,10 @@ export default function SearchPanel({ locale = 'en' }: { locale?: Locale }) {
             fontStyle: 'italic',
             fontSize: 18,
             padding: '14px 18px',
-            border: '1px solid #D6CDB6',
+            border: '1px solid var(--color-line)',
             borderRadius: 10,
             background: '#FFFCF4',
-            color: '#221E18',
+            color: 'var(--color-ink)',
             outline: 'none',
             width: '100%',
             boxSizing: 'border-box',
@@ -102,7 +102,7 @@ export default function SearchPanel({ locale = 'en' }: { locale?: Locale }) {
             transform: 'translateY(-50%)',
             fontFamily: sans,
             fontSize: 12,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             opacity: 0.7,
             letterSpacing: 0.3,
           }}>
@@ -141,8 +141,8 @@ export default function SearchPanel({ locale = 'en' }: { locale?: Locale }) {
                 display: 'block',
                 padding: '14px 18px',
                 background: '#FFFCF4',
-                border: '3px solid #221E18',
-                boxShadow: '3px 3px 0 0 #B8862F',
+                border: '3px solid var(--color-ink)',
+                boxShadow: '3px 3px 0 0 var(--color-acc)',
                 borderRadius: 0,
                 textDecoration: 'none',
                 color: 'inherit',
@@ -159,14 +159,14 @@ export default function SearchPanel({ locale = 'en' }: { locale?: Locale }) {
                     fontFamily: serif,
                     fontSize: 19,
                     fontWeight: 500,
-                    color: '#221E18',
+                    color: 'var(--color-ink)',
                   }}>
                     {r.display_name || r.handle}
                   </span>
                   <span style={{
                     fontFamily: sans,
                     fontSize: 12.5,
-                    color: '#8C6520',
+                    color: 'var(--color-acc-deep)',
                   }}>
                     @{r.handle}
                   </span>
@@ -177,7 +177,7 @@ export default function SearchPanel({ locale = 'en' }: { locale?: Locale }) {
                     fontFamily: serif,
                     fontStyle: 'italic',
                     fontSize: 14,
-                    color: '#4A4338',
+                    color: 'var(--color-ink-soft)',
                     lineHeight: 1.5,
                   }}>
                     {r.bio.length > 140 ? r.bio.slice(0, 140) + '…' : r.bio}
@@ -194,7 +194,7 @@ export default function SearchPanel({ locale = 'en' }: { locale?: Locale }) {
           marginTop: 32,
           fontFamily: sans,
           fontSize: 13,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           textAlign: 'center',
           opacity: 0.7,
           lineHeight: 1.6,

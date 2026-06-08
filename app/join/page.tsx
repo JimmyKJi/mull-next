@@ -35,7 +35,7 @@ export default async function JoinPage() {
         <MullWordmark />
         <Link href="/classes" style={{
           fontFamily: pixel, fontSize: 11,
-          color: '#4A4338', textDecoration: 'none',
+          color: 'var(--color-ink-soft)', textDecoration: 'none',
           letterSpacing: 0.4, textTransform: 'uppercase',
         }}>
           ◂ {t('join.your_classes', locale)}
@@ -45,7 +45,7 @@ export default async function JoinPage() {
       <div style={{
         fontFamily: pixel,
         fontSize: 12,
-        color: '#8C6520',
+        color: 'var(--color-acc-deep)',
         textTransform: 'uppercase',
         letterSpacing: '0.18em',
         marginBottom: 14,
@@ -56,7 +56,7 @@ export default async function JoinPage() {
         fontFamily: pixel,
         fontSize: 26,
         margin: '0 0 14px',
-        color: '#221E18',
+        color: 'var(--color-ink)',
         letterSpacing: '0.06em',
         textTransform: 'uppercase',
         textShadow: '3px 3px 0 #2F5D5C',
@@ -68,7 +68,7 @@ export default async function JoinPage() {
         fontFamily: serif,
         fontStyle: 'italic',
         fontSize: 16,
-        color: '#4A4338',
+        color: 'var(--color-ink-soft)',
         margin: '0 0 26px',
         lineHeight: 1.55,
       }}>

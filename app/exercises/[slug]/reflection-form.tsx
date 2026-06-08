@@ -100,7 +100,7 @@ export default function ReflectionForm({
         marginTop: 36,
         padding: '22px 26px',
         background: '#FFFCF4',
-        border: '1px dashed #D6CDB6',
+        border: '1px dashed var(--color-line)',
         borderRadius: 10,
         textAlign: 'center',
       }}>
@@ -108,7 +108,7 @@ export default function ReflectionForm({
           fontFamily: serif,
           fontStyle: 'italic',
           fontSize: 17,
-          color: '#4A4338',
+          color: 'var(--color-ink-soft)',
           margin: '0 0 16px',
           lineHeight: 1.55,
         }}>
@@ -117,8 +117,8 @@ export default function ReflectionForm({
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
           <Link href="/signup" style={{
             padding: '10px 20px',
-            background: '#221E18',
-            color: '#FAF6EC',
+            background: 'var(--color-ink)',
+            color: 'var(--color-cream)',
             borderRadius: 6,
             textDecoration: 'none',
             fontFamily: sans,
@@ -129,8 +129,8 @@ export default function ReflectionForm({
           </Link>
           <Link href="/login" style={{
             padding: '10px 20px',
-            border: '1px solid #221E18',
-            color: '#221E18',
+            border: '1px solid var(--color-ink)',
+            color: 'var(--color-ink)',
             borderRadius: 6,
             textDecoration: 'none',
             fontFamily: sans,
@@ -151,7 +151,7 @@ export default function ReflectionForm({
         marginTop: 36,
         padding: '28px 32px',
         background: '#FFFCF4',
-        border: '4px solid #221E18',
+        border: '4px solid var(--color-ink)',
         boxShadow: '5px 5px 0 0 #2F5D5C',
         borderRadius: 0,
       }}>
@@ -168,16 +168,16 @@ export default function ReflectionForm({
         {result.analysis ? (
           <div style={{
             padding: '14px 16px',
-            background: '#F8EDC8',
-            border: '3px solid #221E18',
-            boxShadow: '3px 3px 0 0 #B8862F',
+            background: 'var(--color-acc-soft)',
+            border: '3px solid var(--color-ink)',
+            boxShadow: '3px 3px 0 0 var(--color-acc)',
             borderRadius: 0,
             marginBottom: 16,
           }}>
             <div style={{
               fontFamily: 'var(--font-pixel-display)',
               fontSize: 10,
-              color: '#8C6520',
+              color: 'var(--color-acc-deep)',
               textTransform: 'uppercase',
               letterSpacing: '0.18em',
               marginBottom: 8,
@@ -188,7 +188,7 @@ export default function ReflectionForm({
               fontFamily: serif,
               fontStyle: 'italic',
               fontSize: 16,
-              color: '#221E18',
+              color: 'var(--color-ink)',
               margin: 0,
               lineHeight: 1.55,
             }}>
@@ -199,7 +199,7 @@ export default function ReflectionForm({
           <p style={{
             fontFamily: sans,
             fontSize: 13,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             marginBottom: 16,
             fontStyle: 'italic',
           }}>
@@ -223,7 +223,7 @@ export default function ReflectionForm({
               fontFamily: sans,
               fontSize: 10,
               fontWeight: 600,
-              color: '#8C6520',
+              color: 'var(--color-acc-deep)',
               textTransform: 'uppercase',
               letterSpacing: '0.16em',
               marginBottom: 8,
@@ -240,7 +240,7 @@ export default function ReflectionForm({
                   <strong style={{ fontVariantNumeric: 'tabular-nums' }}>
                     {s.delta > 0 ? '+' : ''}{s.delta.toFixed(1)}
                   </strong>{' '}
-                  <span style={{ color: '#4A4338' }}>{s.name}</span>
+                  <span style={{ color: 'var(--color-ink-soft)' }}>{s.name}</span>
                 </span>
               ))}
             </div>
@@ -259,8 +259,8 @@ export default function ReflectionForm({
             onClick={() => { setResult(null); setContent(''); }}
             style={{
               padding: '10px 20px',
-              background: '#221E18',
-              color: '#FAF6EC',
+              background: 'var(--color-ink)',
+              color: 'var(--color-cream)',
               border: 'none',
               borderRadius: 6,
               cursor: 'pointer',
@@ -273,9 +273,9 @@ export default function ReflectionForm({
           </button>
           <Link href="/account" style={{
             padding: '10px 20px',
-            border: '1px solid #221E18',
+            border: '1px solid var(--color-ink)',
             borderRadius: 6,
-            color: '#221E18',
+            color: 'var(--color-ink)',
             textDecoration: 'none',
             fontFamily: sans,
             fontSize: 14,
@@ -294,7 +294,7 @@ export default function ReflectionForm({
         fontFamily: sans,
         fontSize: 11,
         fontWeight: 600,
-        color: '#8C6520',
+        color: 'var(--color-acc-deep)',
         textTransform: 'uppercase',
         letterSpacing: '0.18em',
       }}>
@@ -311,10 +311,10 @@ export default function ReflectionForm({
           fontSize: 17,
           lineHeight: 1.6,
           padding: '20px 22px',
-          border: '1px solid #D6CDB6',
+          border: '1px solid var(--color-line)',
           borderRadius: 12,
           background: '#FFFCF4',
-          color: '#221E18',
+          color: 'var(--color-ink)',
           outline: 'none',
           resize: 'vertical',
           minHeight: 200,
@@ -330,7 +330,7 @@ export default function ReflectionForm({
         <span style={{
           fontFamily: sans,
           fontSize: 12,
-          color: tooShort ? '#7A2E2E' : '#8C6520',
+          color: tooShort ? '#7A2E2E' : 'var(--color-acc-deep)',
           letterSpacing: 0.3,
         }}>
           {charCount}/8000
@@ -344,8 +344,8 @@ export default function ReflectionForm({
             fontSize: 14.5,
             fontWeight: 500,
             padding: '12px 24px',
-            background: ready ? '#221E18' : '#A39880',
-            color: '#FAF6EC',
+            background: ready ? 'var(--color-ink)' : '#A39880',
+            color: 'var(--color-cream)',
             border: 'none',
             borderRadius: 8,
             cursor: ready && !submitting ? 'pointer' : 'not-allowed',
@@ -374,20 +374,20 @@ export default function ReflectionForm({
         alignItems: 'flex-start',
         gap: 10,
         padding: '10px 14px',
-        background: makePublic ? '#F8EDC8' : '#FFFCF4',
-        border: '2px solid #221E18',
+        background: makePublic ? 'var(--color-acc-soft)' : '#FFFCF4',
+        border: '2px solid var(--color-ink)',
         borderRadius: 0,
         cursor: 'pointer',
         fontFamily: sans,
         fontSize: 13,
-        color: '#4A4338',
+        color: 'var(--color-ink-soft)',
         lineHeight: 1.5,
       }}>
         <input
           type="checkbox"
           checked={makePublic}
           onChange={e => setMakePublic(e.target.checked)}
-          style={{ marginTop: 2, accentColor: '#B8862F', flexShrink: 0 }}
+          style={{ marginTop: 2, accentColor: 'var(--color-acc)', flexShrink: 0 }}
         />
         <span>{t('reflect.public_toggle', locale)}</span>
       </label>

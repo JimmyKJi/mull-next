@@ -64,7 +64,7 @@ export default function AssignmentCreateForm({ classId, locale }: { classId: str
         <legend style={{
           fontFamily: 'var(--font-pixel-display)',
           fontSize: 11,
-          color: '#8C6520',
+          color: 'var(--color-acc-deep)',
           letterSpacing: '0.18em',
           textTransform: 'uppercase',
           padding: 0,
@@ -79,9 +79,9 @@ export default function AssignmentCreateForm({ classId, locale }: { classId: str
               style={{
                 flex: '1 1 160px',
                 padding: '10px 12px',
-                background: kind === opt.value ? '#F8EDC8' : '#FFFCF4',
-                border: '3px solid #221E18',
-                boxShadow: kind === opt.value ? '3px 3px 0 0 #B8862F' : 'none',
+                background: kind === opt.value ? 'var(--color-acc-soft)' : '#FFFCF4',
+                border: '3px solid var(--color-ink)',
+                boxShadow: kind === opt.value ? '3px 3px 0 0 var(--color-acc)' : 'none',
                 cursor: 'pointer',
                 fontFamily: "var(--font-prose)",
                 fontSize: 14,
@@ -93,10 +93,10 @@ export default function AssignmentCreateForm({ classId, locale }: { classId: str
                 value={opt.value}
                 checked={kind === opt.value}
                 onChange={() => setKind(opt.value)}
-                style={{ marginRight: 8, accentColor: '#B8862F' }}
+                style={{ marginRight: 8, accentColor: 'var(--color-acc)' }}
               />
               <strong>{opt.label}</strong>
-              <div style={{ fontStyle: 'italic', color: '#8C6520', marginTop: 4, fontSize: 12.5 }}>
+              <div style={{ fontStyle: 'italic', color: 'var(--color-acc-deep)', marginTop: 4, fontSize: 12.5 }}>
                 {opt.hint}
               </div>
             </label>

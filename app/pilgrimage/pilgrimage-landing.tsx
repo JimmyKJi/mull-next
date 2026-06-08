@@ -130,7 +130,7 @@ export function PilgrimageLanding({
   if (phase.kind === "loading") {
     return (
       <div
-        className="text-center text-[14px] text-[#8C6520]"
+        className="text-center text-[14px] text-acc-deep"
         style={{ fontFamily: serif }}
       >
         {t("pilgrimage.loading_landing", locale)}
@@ -141,23 +141,23 @@ export function PilgrimageLanding({
   if (phase.kind === "need-quiz") {
     return (
       <div
-        className="border-[3px] border-[#221E18] bg-[#FFFCF4] p-6"
-        style={{ boxShadow: "4px 4px 0 0 #B8862F" }}
+        className="border-[3px] border-ink bg-[#FFFCF4] p-6"
+        style={{ boxShadow: "4px 4px 0 0 var(--color-acc)" }}
       >
         <div
-          className="text-[10px] tracking-[0.22em] text-[#8C6520]"
+          className="text-[10px] tracking-[0.22em] text-acc-deep"
           style={{ fontFamily: pixel }}
         >
           {t("pilgrimage.need_arch", locale)}
         </div>
         <h2
-          className="mt-3 text-[20px] leading-tight text-[#221E18]"
+          className="mt-3 text-[20px] leading-tight text-ink"
           style={{ fontFamily: serif }}
         >
           {t("pilgrimage.need_arch_title", locale)}
         </h2>
         <p
-          className="mt-3 text-[15px] leading-[1.55] text-[#4A4338]"
+          className="mt-3 text-[15px] leading-[1.55] text-ink-soft"
           style={{ fontFamily: serif }}
         >
           {t("pilgrimage.need_arch_body", locale)}
@@ -165,7 +165,7 @@ export function PilgrimageLanding({
         <div className="mt-5 flex flex-wrap gap-3">
           <Link
             href="/quiz/journey"
-            className="border-[3px] border-[#221E18] bg-[#F8C75E] px-4 py-2 text-[11px] tracking-[0.18em] text-[#1A1820] hover:bg-[#B8862F]"
+            className="border-[3px] border-ink bg-[#F8C75E] px-4 py-2 text-[11px] tracking-[0.18em] text-[#1A1820] hover:bg-acc"
             style={{
               fontFamily: pixel,
               textTransform: "uppercase",
@@ -176,7 +176,7 @@ export function PilgrimageLanding({
           </Link>
           <Link
             href="/quiz?mode=quick"
-            className="border-[3px] border-[#221E18] bg-[#FFFCF4] px-4 py-2 text-[11px] tracking-[0.18em] text-[#221E18] hover:bg-[#F8EDC8]"
+            className="border-[3px] border-ink bg-[#FFFCF4] px-4 py-2 text-[11px] tracking-[0.18em] text-ink hover:bg-acc-soft"
             style={{ fontFamily: pixel, textTransform: "uppercase" }}
           >
             {t("pilgrimage.cta_classic", locale)}
@@ -219,13 +219,13 @@ export function PilgrimageLanding({
             {t("pilgrimage.your_arc", locale, { arch: archName })}
           </div>
           <h2
-            className="mt-3 text-[22px] leading-tight text-[#221E18]"
+            className="mt-3 text-[22px] leading-tight text-ink"
             style={{ fontFamily: serif }}
           >
             {arc.spirit}
           </h2>
           <p
-            className="mt-4 text-[15.5px] leading-[1.65] text-[#221E18]"
+            className="mt-4 text-[15.5px] leading-[1.65] text-ink"
             style={{ fontFamily: serif }}
           >
             {welcome}
@@ -246,7 +246,7 @@ export function PilgrimageLanding({
                 }}
               >
                 <div className="opacity-60">{t("pilgrimage.days_range", locale, { a: i * 10 + 1, b: (i + 1) * 10 })}</div>
-                <div className="mt-1" style={{ fontFamily: serif, fontSize: 13, color: "#221E18", textTransform: "none", letterSpacing: 0 }}>
+                <div className="mt-1" style={{ fontFamily: serif, fontSize: 13, color: "var(--color-ink)", textTransform: "none", letterSpacing: 0 }}>
                   {p}
                 </div>
               </div>
@@ -255,7 +255,7 @@ export function PilgrimageLanding({
           <button
             type="button"
             onClick={() => enroll(phase.archetype, phase.flavor)}
-            className="mt-6 w-full border-[3px] border-[#221E18] px-4 py-3 text-[12px] tracking-[0.18em] text-[#1A1820] hover:opacity-90"
+            className="mt-6 w-full border-[3px] border-ink px-4 py-3 text-[12px] tracking-[0.18em] text-[#1A1820] hover:opacity-90"
             style={{
               fontFamily: pixel,
               textTransform: "uppercase",
@@ -267,7 +267,7 @@ export function PilgrimageLanding({
           </button>
         </div>
         <p
-          className="text-center text-[13px] text-[#8C6520]"
+          className="text-center text-[13px] text-acc-deep"
           style={{ fontFamily: serif, fontStyle: "italic" }}
         >
           {t("pilgrimage.pace_note", locale)}
@@ -317,7 +317,7 @@ function EnrolledView({
               {t("pilgrimage.arc_in_progress", locale, { arch: archName })}
             </div>
             <div
-              className="mt-1 text-[18px] leading-tight text-[#221E18]"
+              className="mt-1 text-[18px] leading-tight text-ink"
               style={{ fontFamily: serif }}
             >
               {t("pilgrimage.phase_day", locale, {
@@ -362,7 +362,7 @@ function EnrolledView({
                     : isToday
                       ? color.primary
                       : "#E2D8B6",
-                  border: `1px solid ${isToday ? color.deep : "#D6CDB6"}`,
+                  border: `1px solid ${isToday ? color.deep : "var(--color-line)"}`,
                 }}
               />
             );
@@ -376,24 +376,24 @@ function EnrolledView({
         className="block border-[4px] p-5 transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
         style={{
           background: "#FFFCF4",
-          borderColor: "#221E18",
+          borderColor: "var(--color-ink)",
           boxShadow: `5px 5px 0 0 ${color.deep}`,
         }}
       >
         <div
-          className="text-[10px] tracking-[0.22em] text-[#8C6520]"
+          className="text-[10px] tracking-[0.22em] text-acc-deep"
           style={{ fontFamily: pixel, textTransform: "uppercase" }}
         >
           {t("pilgrimage.today_day", locale, { n: state.currentDay })}
         </div>
         <h3
-          className="mt-2 text-[22px] leading-tight text-[#221E18]"
+          className="mt-2 text-[22px] leading-tight text-ink"
           style={{ fontFamily: serif }}
         >
           {today.title}
         </h3>
         <p
-          className="mt-3 text-[15px] leading-[1.55] text-[#4A4338]"
+          className="mt-3 text-[15px] leading-[1.55] text-ink-soft"
           style={{ fontFamily: serif }}
         >
           {today.framing}
@@ -408,11 +408,11 @@ function EnrolledView({
 
       {/* Browse all days */}
       <details
-        className="border-2 border-[#221E18] bg-[#FFFCF4] px-3 py-2"
+        className="border-2 border-ink bg-[#FFFCF4] px-3 py-2"
         style={{ fontFamily: serif }}
       >
         <summary
-          className="cursor-pointer text-[12px] text-[#8C6520]"
+          className="cursor-pointer text-[12px] text-acc-deep"
           style={{ fontFamily: pixel, letterSpacing: "0.18em", textTransform: "uppercase" }}
         >
           {t("pilgrimage.browse_all", locale)}
@@ -427,12 +427,12 @@ function EnrolledView({
                   href={`/pilgrimage/day/${d.day}`}
                   className="flex items-baseline gap-3 border-l-2 px-2 py-1.5 text-[13.5px] leading-tight hover:bg-[#F5EFDC]"
                   style={{
-                    borderColor: done ? color.deep : isToday ? color.primary : "#D6CDB6",
-                    color: "#221E18",
+                    borderColor: done ? color.deep : isToday ? color.primary : "var(--color-line)",
+                    color: "var(--color-ink)",
                   }}
                 >
                   <span
-                    className="text-[10px] tracking-[0.18em] text-[#8C6520]"
+                    className="text-[10px] tracking-[0.18em] text-acc-deep"
                     style={{ fontFamily: pixel, textTransform: "uppercase", minWidth: 30 }}
                   >
                     {done ? "✓" : "·"} {String(d.day).padStart(2, "0")}

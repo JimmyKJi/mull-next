@@ -39,15 +39,15 @@ export default function ClassInviteShare({
     <section style={{
       marginTop: 24,
       padding: '20px 22px',
-      background: '#F8EDC8',
-      border: '4px solid #221E18',
-      boxShadow: '5px 5px 0 0 #B8862F',
+      background: 'var(--color-acc-soft)',
+      border: '4px solid var(--color-ink)',
+      boxShadow: '5px 5px 0 0 var(--color-acc)',
       borderRadius: 0,
     }}>
       <div style={{
         fontFamily: pixel,
         fontSize: 12,
-        color: '#8C6520',
+        color: 'var(--color-acc-deep)',
         textTransform: 'uppercase',
         letterSpacing: '0.18em',
         marginBottom: 12,
@@ -58,7 +58,7 @@ export default function ClassInviteShare({
         fontFamily: serif,
         fontStyle: 'italic',
         fontSize: 15.5,
-        color: '#221E18',
+        color: 'var(--color-ink)',
         margin: '0 0 16px',
         lineHeight: 1.55,
       }}>
@@ -81,10 +81,10 @@ export default function ClassInviteShare({
             minWidth: 0,
             padding: '10px 12px',
             background: '#FFFCF4',
-            border: '3px solid #221E18',
+            border: '3px solid var(--color-ink)',
             fontFamily: 'ui-monospace, Menlo, monospace',
             fontSize: 13,
-            color: '#221E18',
+            color: 'var(--color-ink)',
             overflow: 'auto',
             whiteSpace: 'nowrap',
           }}>
@@ -96,10 +96,10 @@ export default function ClassInviteShare({
             className="pixel-press"
             style={{
               padding: '10px 16px',
-              background: copiedKind === 'url' ? '#2F5D5C' : '#221E18',
-              color: '#FAF6EC',
-              border: '3px solid #221E18',
-              boxShadow: '3px 3px 0 0 #B8862F',
+              background: copiedKind === 'url' ? '#2F5D5C' : 'var(--color-ink)',
+              color: 'var(--color-cream)',
+              border: '3px solid var(--color-ink)',
+              boxShadow: '3px 3px 0 0 var(--color-acc)',
               borderRadius: 0,
               fontFamily: pixel,
               fontSize: 11,
@@ -120,13 +120,13 @@ export default function ClassInviteShare({
           justifyContent: 'space-between',
           padding: '8px 12px',
           background: '#FFFCF4',
-          border: '2px dashed #8C6520',
+          border: '2px dashed var(--color-acc-deep)',
         }}>
           <span style={{
             fontFamily: serif,
             fontStyle: 'italic',
             fontSize: 13,
-            color: '#4A4338',
+            color: 'var(--color-ink-soft)',
           }}>
             {t('cls.share_code_directly', locale)}
           </span>
@@ -137,8 +137,8 @@ export default function ClassInviteShare({
             style={{
               padding: '6px 14px',
               background: 'transparent',
-              border: '2px solid #221E18',
-              color: '#221E18',
+              border: '2px solid var(--color-ink)',
+              color: 'var(--color-ink)',
               fontFamily: pixel,
               fontSize: 16,
               letterSpacing: 0.6,

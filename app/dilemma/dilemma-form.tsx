@@ -106,7 +106,7 @@ export default function DilemmaForm({
       <div style={{
         padding: '28px 32px',
         background: '#FFFCF4',
-        border: '4px solid #221E18',
+        border: '4px solid var(--color-ink)',
         boxShadow: '5px 5px 0 0 #2F5D5C',
         borderRadius: 0,
       }}>
@@ -123,7 +123,7 @@ export default function DilemmaForm({
         <p style={{
           fontFamily: serif,
           fontSize: 17,
-          color: '#221E18',
+          color: 'var(--color-ink)',
           lineHeight: 1.6,
           margin: '0 0 18px',
           whiteSpace: 'pre-wrap',
@@ -133,16 +133,16 @@ export default function DilemmaForm({
         {result.analysis ? (
           <div style={{
             padding: '14px 16px',
-            background: '#F8EDC8',
-            border: '3px solid #221E18',
-            boxShadow: '3px 3px 0 0 #B8862F',
+            background: 'var(--color-acc-soft)',
+            border: '3px solid var(--color-ink)',
+            boxShadow: '3px 3px 0 0 var(--color-acc)',
             borderRadius: 0,
             marginBottom: 16,
           }}>
             <div style={{
               fontFamily: 'var(--font-pixel-display)',
               fontSize: 10,
-              color: '#8C6520',
+              color: 'var(--color-acc-deep)',
               textTransform: 'uppercase',
               letterSpacing: '0.18em',
               marginBottom: 8,
@@ -153,7 +153,7 @@ export default function DilemmaForm({
               fontFamily: serif,
               fontStyle: 'italic',
               fontSize: 16,
-              color: '#221E18',
+              color: 'var(--color-ink)',
               margin: 0,
               lineHeight: 1.5,
             }}>
@@ -164,7 +164,7 @@ export default function DilemmaForm({
           <p style={{
             fontFamily: sans,
             fontSize: 13,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             marginBottom: 16,
             fontStyle: 'italic',
           }}>
@@ -189,7 +189,7 @@ export default function DilemmaForm({
               fontFamily: sans,
               fontSize: 10,
               fontWeight: 600,
-              color: '#8C6520',
+              color: 'var(--color-acc-deep)',
               textTransform: 'uppercase',
               letterSpacing: '0.16em',
               marginBottom: 8,
@@ -206,7 +206,7 @@ export default function DilemmaForm({
                   <strong style={{ fontVariantNumeric: 'tabular-nums' }}>
                     {s.delta > 0 ? '+' : ''}{s.delta.toFixed(1)}
                   </strong>{' '}
-                  <span style={{ color: '#4A4338' }}>{s.name}</span>
+                  <span style={{ color: 'var(--color-ink-soft)' }}>{s.name}</span>
                 </span>
               ))}
             </div>
@@ -223,9 +223,9 @@ export default function DilemmaForm({
         }}>
           <Link href="/account" style={{
             padding: '9px 18px',
-            border: '1px solid #221E18',
+            border: '1px solid var(--color-ink)',
             borderRadius: 6,
-            color: '#221E18',
+            color: 'var(--color-ink)',
             textDecoration: 'none',
             fontFamily: sans,
             fontSize: 13.5,
@@ -246,7 +246,7 @@ export default function DilemmaForm({
           <span style={{
             fontFamily: sans,
             fontSize: 12,
-            color: '#8C6520',
+            color: 'var(--color-acc-deep)',
             alignSelf: 'center',
           }}>
             {t('dilemma.next_arrives', locale)}
@@ -269,10 +269,10 @@ export default function DilemmaForm({
           fontSize: 17,
           lineHeight: 1.6,
           padding: '20px 22px',
-          border: '1px solid #D6CDB6',
+          border: '1px solid var(--color-line)',
           borderRadius: 12,
           background: '#FFFCF4',
-          color: '#221E18',
+          color: 'var(--color-ink)',
           outline: 'none',
           resize: 'vertical',
           minHeight: 200,
@@ -288,9 +288,9 @@ export default function DilemmaForm({
           <div style={{
             height: '100%',
             width: `${Math.min(100, (charCount / 4000) * 100)}%`,
-            background: charCount < 30 ? '#D6CDB6'
+            background: charCount < 30 ? 'var(--color-line)'
                       : charCount > 3700 ? '#C7522A'
-                      : '#B8862F',
+                      : 'var(--color-acc)',
             transition: 'width 0.18s ease, background 0.2s ease',
           }} />
         </div>
@@ -305,7 +305,7 @@ export default function DilemmaForm({
         <span style={{
           fontFamily: sans,
           fontSize: 12,
-          color: tooShort ? '#7A2E2E' : '#8C6520',
+          color: tooShort ? '#7A2E2E' : 'var(--color-acc-deep)',
           letterSpacing: 0.3,
         }}>
           {wordCount} {t(wordCount === 1 ? 'dilemma.words' : 'dilemma.words_plural', locale)} · {charCount}/4000
@@ -319,8 +319,8 @@ export default function DilemmaForm({
             fontSize: 14.5,
             fontWeight: 500,
             padding: '12px 24px',
-            background: ready ? '#221E18' : '#A39880',
-            color: '#FAF6EC',
+            background: ready ? 'var(--color-ink)' : '#A39880',
+            color: 'var(--color-cream)',
             border: 'none',
             borderRadius: 8,
             cursor: ready && !submitting ? 'pointer' : 'not-allowed',
@@ -349,23 +349,23 @@ export default function DilemmaForm({
         alignItems: 'flex-start',
         gap: 10,
         padding: '10px 14px',
-        background: makePublic ? '#F8EDC8' : '#FFFCF4',
-        border: '2px solid #221E18',
+        background: makePublic ? 'var(--color-acc-soft)' : '#FFFCF4',
+        border: '2px solid var(--color-ink)',
         borderRadius: 0,
         cursor: 'pointer',
         fontFamily: sans,
         fontSize: 13,
-        color: '#4A4338',
+        color: 'var(--color-ink-soft)',
         lineHeight: 1.5,
       }}>
         <input
           type="checkbox"
           checked={makePublic}
           onChange={e => setMakePublic(e.target.checked)}
-          style={{ marginTop: 2, accentColor: '#B8862F', flexShrink: 0 }}
+          style={{ marginTop: 2, accentColor: 'var(--color-acc)', flexShrink: 0 }}
         />
         <span>
-          <strong style={{ color: '#221E18' }}>{t('dilemma.show_on_public', locale)}</strong>{' '}
+          <strong style={{ color: 'var(--color-ink)' }}>{t('dilemma.show_on_public', locale)}</strong>{' '}
           <span style={{ fontStyle: locale === 'en' ? 'normal' : 'italic' }}>
             Your most recent 5 public dilemma responses appear at <code className="pixel-kbd" style={{ fontSize: 11 }}>mull.world/u/&lt;your-handle&gt;</code> if you've set one up. Private by default.
           </span>
@@ -379,7 +379,7 @@ export default function DilemmaForm({
       <p style={{
         fontFamily: sans,
         fontSize: 12,
-        color: '#8C6520',
+        color: 'var(--color-acc-deep)',
         margin: 0,
         opacity: 0.75,
         lineHeight: 1.55,
