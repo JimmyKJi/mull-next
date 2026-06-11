@@ -54,6 +54,13 @@ type Props = {
    *  caption). The in-canvas 3D axis labels stay English — the WebGL
    *  text renderer uses an SDF font without CJK glyphs. Defaults 'en'. */
   locale?: Locale;
+  /** Whether to render the heavy DOM chrome (archetype legend). The
+   *  legend is ~434px tall — taller than the reduced inline height we
+   *  use on phones — so on the touch *preview* we hide it and let the
+   *  user open FULLSCREEN (where the canvas is tall enough to hold it)
+   *  for the full filtering UI. Desktop + fullscreen pass `true`.
+   *  Defaults `true`. */
+  chrome?: boolean;
 };
 
 // Scale the [-1,1] projection into a roomier 3D space so points
@@ -66,6 +73,7 @@ export function Constellation3D({
   height = 640,
   variant = "interactive",
   locale = "en",
+  chrome = true,
 }: Props) {
   const isInteractive = variant === "interactive";
   const [hovered, setHovered] = useState<Hovered>(null);
@@ -209,8 +217,10 @@ export function Constellation3D({
         />
       ) : null}
 
-      {/* Archetype legend — sidebar with toggles. */}
-      {isInteractive ? (
+      {/* Archetype legend — sidebar with toggles. Suppressed on the
+          touch preview (chrome=false): it's ~434px tall and would
+          spill off the reduced inline canvas. FULLSCREEN restores it. */}
+      {isInteractive && chrome ? (
         <Legend
           enabled={enabled}
           onToggle={toggleArchetype}
@@ -628,7 +638,7 @@ function SearchBar({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder={t("cnst.search_placeholder", locale, { count: PHILOSOPHER_POSITIONS_3D.length })}
-            className="min-w-0 flex-1 bg-transparent px-3 py-1.5 text-[18px] leading-none text-ink placeholder:text-acc-deep/60 focus:outline-none"
+            className="min-w-0 flex-1 bg-transparent px-3 py-2.5 text-[18px] leading-none text-ink placeholder:text-acc-deep/60 focus:outline-none"
             style={{ fontFamily: "var(--font-pixel-body)" }}
           />
           {value ? (
@@ -741,7 +751,7 @@ function Legend({
         <button
           type="button"
           onClick={onAll}
-          className="text-[10px] uppercase tracking-[0.16em] text-acc hover:text-cream-2"
+          className="-my-1.5 -mr-1.5 px-2 py-1.5 text-[10px] uppercase tracking-[0.16em] text-acc hover:text-cream-2"
           title={t("cnst.show_all_title", locale)}
         >
           {t("cnst.all", locale)}
@@ -796,7 +806,7 @@ function Legend({
 // ────────────────────────────────────────────────────────────────
 function AxesCaption({ locale }: { locale: Locale }) {
   return (
-    <div className="pointer-events-none absolute bottom-4 right-4 z-10 max-w-[260px] rounded-xl border border-[#3A3528]/60 bg-[#0E1419]/85 p-3 text-[11px] leading-relaxed text-[#9A8B6A] backdrop-blur-md">
+    <div className="pointer-events-none absolute bottom-4 right-4 z-10 hidden max-w-[260px] rounded-xl border border-[#3A3528]/60 bg-[#0E1419]/85 p-3 text-[11px] leading-relaxed text-[#9A8B6A] backdrop-blur-md sm:block">
       <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-acc">
         {t("cnst.axes", locale)}
       </div>

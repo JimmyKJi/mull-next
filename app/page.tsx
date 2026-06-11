@@ -650,15 +650,15 @@ export default async function HomeV2() {
             >
               ▸ {t("home.also_label", locale)}
             </span>
-            <Link href="/wrapped" className="hover:text-ink">{t("home.also_wrapped", locale)}</Link>
+            <Link href="/wrapped" className="py-1.5 hover:text-ink">{t("home.also_wrapped", locale)}</Link>
             <span>·</span>
-            <Link href="/classes" className="hover:text-ink">{t("home.also_classes", locale)}</Link>
+            <Link href="/classes" className="py-1.5 hover:text-ink">{t("home.also_classes", locale)}</Link>
             <span>·</span>
-            <Link href="/install" className="hover:text-ink">{t("home.add_home", locale)}</Link>
+            <Link href="/install" className="py-1.5 hover:text-ink">{t("home.add_home", locale)}</Link>
             <span>·</span>
-            <Link href="/about" className="hover:text-ink">{t("home.also_about", locale)}</Link>
+            <Link href="/about" className="py-1.5 hover:text-ink">{t("home.also_about", locale)}</Link>
             <span>·</span>
-            <Link href="/methodology" className="hover:text-ink">{t("nav.methodology", locale)}</Link>
+            <Link href="/methodology" className="py-1.5 hover:text-ink">{t("nav.methodology", locale)}</Link>
           </div>
         </ScrollReveal>
 
@@ -729,7 +729,7 @@ export default async function HomeV2() {
                           name below). The horizontal "NO. NN  NAME"
                           version broke on long names. */}
                       <div
-                        className="flex flex-col items-center border-b-4 px-3 py-2 text-center tracking-[0.16em]"
+                        className="flex min-h-[60px] flex-col items-center justify-center border-b-4 px-3 py-2 text-center tracking-[0.16em]"
                         style={{
                           borderColor: color.deep,
                           backgroundColor: color.deep,
@@ -740,7 +740,10 @@ export default async function HomeV2() {
                         <span className="text-[9px] opacity-70">
                           NO. {String(ARCHETYPES.indexOf(a) + 1).padStart(2, "0")}
                         </span>
-                        <span className="mt-0.5 text-[11px]">
+                        {/* Reserve two lines so 1- and 2-line names keep the
+                            header (and the sprite/tagline/footer rows below it)
+                            vertically aligned across every tile. */}
+                        <span className="mt-0.5 flex min-h-[2lh] items-center text-[11px] leading-[1.15]">
                           {t(`arch.${a.key}.name`, locale).toUpperCase()}
                         </span>
                       </div>
@@ -802,7 +805,7 @@ export default async function HomeV2() {
 
           <Link
             href="/archetype"
-            className="mt-8 inline-block text-[14px] text-acc-deep hover:text-ink hover:underline sm:hidden"
+            className="mt-8 inline-block py-1.5 text-[14px] text-acc-deep hover:text-ink hover:underline sm:hidden"
           >
             {t("home.view_all_essays", locale)}
           </Link>
@@ -876,13 +879,13 @@ export default async function HomeV2() {
               />
             </div>
             <nav className="flex flex-wrap gap-5 text-acc-soft">
-              <Link href="/about" className="hover:text-acc">{t("nav.about", locale)}</Link>
-              <Link href="/topic" className="hover:text-acc">{t("nav.topics", locale)}</Link>
-              <Link href="/vs" className="hover:text-acc">{t("nav.matchups", locale)}</Link>
-              <Link href="/install" className="hover:text-acc">{t("home.add_home", locale)}</Link>
-              <Link href="/methodology" className="hover:text-acc">{t("nav.methodology", locale)}</Link>
-              <Link href="/privacy" className="hover:text-acc">{t("home.footer_privacy", locale)}</Link>
-              <Link href="/terms" className="hover:text-acc">{t("home.footer_terms", locale)}</Link>
+              <Link href="/about" className="py-1.5 hover:text-acc">{t("nav.about", locale)}</Link>
+              <Link href="/topic" className="py-1.5 hover:text-acc">{t("nav.topics", locale)}</Link>
+              <Link href="/vs" className="py-1.5 hover:text-acc">{t("nav.matchups", locale)}</Link>
+              <Link href="/install" className="py-1.5 hover:text-acc">{t("home.add_home", locale)}</Link>
+              <Link href="/methodology" className="py-1.5 hover:text-acc">{t("nav.methodology", locale)}</Link>
+              <Link href="/privacy" className="py-1.5 hover:text-acc">{t("home.footer_privacy", locale)}</Link>
+              <Link href="/terms" className="py-1.5 hover:text-acc">{t("home.footer_terms", locale)}</Link>
               {/* Tip jar — Mull is free to use; this lets users who want
                   to chip in cover the AI bill. Hidden for now via
                   TIPPING_ENABLED (legal hold on accepting tips); flip the

@@ -96,7 +96,7 @@ export function PixelWindow({
     >
       {title || badge ? (
         <div
-          className="flex items-center justify-between border-b-4 px-4 py-2 text-[10px] tracking-[0.22em]"
+          className="flex items-center justify-between gap-3 border-b-4 px-4 py-2 text-[10px] leading-[1.3] tracking-[0.22em]"
           style={{
             borderColor: tokens.border,
             background: tokens.titleBg,
@@ -105,7 +105,7 @@ export function PixelWindow({
           }}
         >
           <span>{title}</span>
-          {badge ? <span className="text-acc">{badge}</span> : null}
+          {badge ? <span className="shrink-0 text-acc">{badge}</span> : null}
         </div>
       ) : null}
       <div className={(flush ? "" : "px-5 py-5 sm:px-7 sm:py-6 ") + (bodyClassName ?? "")}>

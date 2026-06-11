@@ -117,6 +117,10 @@ export function ConstellationMount({
           height={inlineHeight}
           variant={variant}
           locale={locale}
+          // On the touch preview, suppress the tall archetype legend —
+          // it doesn't fit the reduced inline height and overlaps the
+          // search bar. FULLSCREEN (below) restores the full chrome.
+          chrome={!isTouch}
         />
         {/* Touch-only fullscreen trigger. Hidden on hover-capable
             devices since they have plenty of viewport to interact
@@ -215,6 +219,8 @@ export function ConstellationMount({
                 height={typeof window !== 'undefined' ? window.innerHeight - 56 : 600}
                 variant={variant}
                 locale={locale}
+                // Full viewport height here — the legend fits, so show it.
+                chrome
               />
             </div>
           </FocusTrap>

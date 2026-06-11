@@ -174,7 +174,7 @@ export function SiteNav({ locale = "en" }: { locale?: Locale }) {
           {/* Wordmark → home */}
           <Link
             href="/"
-            className="flex shrink-0 items-center gap-2.5 hover:text-acc-deep"
+            className="-my-2 flex shrink-0 items-center gap-2.5 py-3 hover:text-acc-deep"
           >
             <span className="slow-bob inline-block">
               <MullMark size={22} />
@@ -293,7 +293,7 @@ export function SiteNav({ locale = "en" }: { locale?: Locale }) {
               aria-haspopup="true"
               aria-expanded={mobileOpen}
               aria-label={t("nav.menu", locale)}
-              className="inline-flex items-center gap-1.5 border-2 border-ink bg-[#FFFCF4] px-2.5 py-1.5 text-[12px] font-medium leading-none text-ink hover:bg-acc-soft md:hidden"
+              className="inline-flex items-center gap-1.5 border-2 border-ink bg-[#FFFCF4] px-3 py-3.5 text-[12px] font-medium leading-none text-ink hover:bg-acc-soft md:hidden"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
               <span aria-hidden>{mobileOpen ? "✕" : "☰"}</span>
@@ -391,7 +391,7 @@ function MobileMenu({
                         href={it.href}
                         onClick={onClose}
                         className={
-                          "block border-2 px-3 py-2.5 text-[14px] leading-none " +
+                          "block border-2 px-3 py-3 text-[14px] leading-none " +
                           (active
                             ? "border-ink bg-acc text-[#1A1612]"
                             : "border-[#EBE3CA] bg-[#FFFCF4] text-ink hover:bg-acc-soft")
@@ -423,14 +423,14 @@ function MobileMenu({
             <button
               type="button"
               onClick={onOpenSearch}
-              className="flex-1 border-2 border-ink bg-[#FFFCF4] px-3 py-2.5 text-[14px] font-medium leading-none text-ink hover:bg-acc-soft"
+              className="flex-1 border-2 border-ink bg-[#FFFCF4] px-3 py-3 text-[14px] font-medium leading-none text-ink hover:bg-acc-soft"
             >
               {t("nav.search_short", locale)}
             </button>
             <Link
               href="/account"
               onClick={onClose}
-              className="flex-1 border-2 border-ink bg-ink px-3 py-2.5 text-center text-[14px] font-medium leading-none text-cream hover:border-acc-deep hover:bg-acc-deep"
+              className="flex-1 border-2 border-ink bg-ink px-3 py-3 text-center text-[14px] font-medium leading-none text-cream hover:border-acc-deep hover:bg-acc-deep"
             >
               {t("nav.account_btn", locale)}
             </Link>

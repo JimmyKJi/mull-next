@@ -74,7 +74,7 @@ export default async function ArchetypeIndexPage() {
                       CARTOGRAPHER, TOUCHSTONE, LIGHTHOUSE because
                       they overflowed the card width. */}
                   <div
-                    className="flex flex-col items-center border-b-4 px-3 py-2 text-center tracking-[0.16em]"
+                    className="flex min-h-[60px] flex-col items-center justify-center border-b-4 px-3 py-2 text-center tracking-[0.16em]"
                     style={{
                       borderColor: color.deep,
                       backgroundColor: color.deep,
@@ -85,7 +85,9 @@ export default async function ArchetypeIndexPage() {
                     <span className="text-[9px] opacity-70">
                       NO. {String(ARCHETYPES.indexOf(a) + 1).padStart(2, '0')}
                     </span>
-                    <span className="mt-0.5 text-[11px]">
+                    {/* Reserve two lines so 1- and 2-line names keep the
+                        sprite row aligned across every tile. */}
+                    <span className="mt-0.5 flex min-h-[2lh] items-center text-[11px] leading-[1.15]">
                       {a.key.toUpperCase()}
                     </span>
                   </div>
@@ -151,7 +153,7 @@ export default async function ArchetypeIndexPage() {
       <p className="mt-12 text-center text-[13px] text-acc-deep">
         <Link
           href="/"
-          className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
+          className="inline-block py-2 underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           ← {t('arch_index.back_to_home', locale)}
         </Link>

@@ -134,7 +134,7 @@ export default async function ArchetypeDetailPage({
       <div className="mb-6 flex items-center justify-between gap-4">
         <Link
           href="/archetype"
-          className="text-[13px] text-ink-soft hover:text-ink hover:underline"
+          className="inline-flex py-1.5 text-[13px] text-ink-soft hover:text-ink hover:underline"
         >
           ← {t('arch_detail.back_to_index', locale)}
         </Link>
@@ -143,7 +143,7 @@ export default async function ArchetypeDetailPage({
       {/* ─── Hero — pixel sprite + name + spirit ─── */}
       <PixelWindow
         title={`▶ ARCHETYPE NO. ${String(ARCHETYPES.indexOf(archetype) + 1).padStart(2, '0')}`}
-        badge="ARCHETYPE_PROFILE.MD"
+        badge="PROFILE.MD"
         accent={{ primary: color.primary, deep: color.deep, soft: color.soft }}
       >
         <div className="grid grid-cols-1 items-center gap-6 sm:grid-cols-[auto_1fr]">
@@ -166,7 +166,7 @@ export default async function ArchetypeDetailPage({
               {t('arch_detail.eyebrow', locale).toUpperCase()}
             </div>
             <h1
-              className="mt-2 pr-2 text-[28px] leading-[1.05] tracking-[0.04em] sm:text-[40px] md:text-[48px]"
+              className="mt-2 break-words pr-2 text-[20px] leading-[1.3] tracking-[0.04em] sm:text-[40px] md:text-[48px]"
               style={{
                 color: color.deep,
                 fontFamily: 'var(--font-pixel-display)',

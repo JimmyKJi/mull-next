@@ -50,7 +50,7 @@ export default async function MapPage() {
           ▶ {t("map.eyebrow", locale)}
         </div>
         <h1
-          className="mt-4 text-[36px] leading-none tracking-[0.04em] text-ink sm:text-[52px]"
+          className="mt-4 break-words pr-2 text-[24px] leading-[1.3] tracking-[0.04em] text-ink sm:text-[40px] md:text-[52px]"
           style={{ fontFamily: pixel }}
         >
           <span style={{ textShadow: "4px 4px 0 var(--color-acc)" }}>{t("map.title", locale)}</span>
@@ -65,21 +65,21 @@ export default async function MapPage() {
         <div className="mt-5 flex flex-wrap items-center gap-3 text-[13px]">
           <Link
             href="/philosopher"
-            className="border-2 border-ink bg-[#FFFCF4] px-3 py-1.5 text-[12px] tracking-[0.18em] text-ink hover:bg-acc-soft"
+            className="border-2 border-ink bg-[#FFFCF4] px-3 py-2.5 text-[12px] tracking-[0.18em] text-ink hover:bg-acc-soft"
             style={{ fontFamily: pixel, textTransform: "uppercase" }}
           >
             ▶ {t("map.browse_alpha", locale)}
           </Link>
           <Link
             href="/quiz/journey"
-            className="border-2 border-ink bg-[#F8C75E] px-3 py-1.5 text-[12px] tracking-[0.18em] text-[#1A1820] hover:bg-acc"
+            className="border-2 border-ink bg-[#F8C75E] px-3 py-2.5 text-[12px] tracking-[0.18em] text-[#1A1820] hover:bg-acc"
             style={{ fontFamily: pixel, textTransform: "uppercase" }}
           >
             ▶ {t("map.find_place", locale)}
           </Link>
           <Link
             href="/archetype"
-            className="text-[13px] text-acc-deep underline decoration-line underline-offset-3 hover:text-ink hover:decoration-acc-deep"
+            className="inline-block py-1 text-[13px] text-acc-deep underline decoration-line underline-offset-3 hover:text-ink hover:decoration-acc-deep"
           >
             {t("map.or_archetypes", locale, { count: ARCHETYPES.length })} ↗
           </Link>
@@ -145,7 +145,7 @@ export default async function MapPage() {
               <li key={a.key}>
                 <Link
                   href={`/archetype/${a.key}`}
-                  className="text-ink underline decoration-line underline-offset-3 hover:decoration-acc-deep"
+                  className="block py-1.5 text-ink underline decoration-line underline-offset-3 hover:decoration-acc-deep"
                 >
                   {t(`arch.${a.key}.name`, locale)}
                 </Link>
