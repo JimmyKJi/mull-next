@@ -485,4 +485,585 @@ export const EXERCISE_EXTRAS: Record<string, ExerciseExtras> = {
       { name: "Red team / blue team", note: "Institutional version used in security and policy — formally assign teams to attack and defend a plan." },
     ],
   },
+
+  // ─── Morning intention ─────────────────────────────────────────────
+  'morning-intention': {
+    longerAbout:
+      "The Stoics called the underlying skill prosoche — continuous attention to the present and to one's own judgments. The morning was where it got primed. Epictetus told his students to begin the day by rehearsing what is and isn't 'up to us'; Marcus Aurelius opens the second book of the Meditations with 'Begin each day by telling yourself: today I shall be meeting with interference, ingratitude, insolence, disloyalty, ill-will, and selfishness.' The line reads as gloom until you notice what it's doing — it sets a stance before the day can set one for you.\n\n" +
+      "What separates an intention from a goal is the locus of control. A goal lives in the world, where other people, weather, and accident get a vote. An intention lives in your own conduct, which the Stoics regarded as the one province genuinely yours. Setting one is a small act of taking back the steering you actually have, and declining to stake your morning on the steering you don't.\n\n" +
+      "The modern wellness habit of 'setting an intention' — borrowed loosely from yoga's sankalpa — descends from this, though often emptied of the Stoic spine. The version worth keeping is closer to Marcus: not a wish for the day to be pleasant, but a decision about who you'll be when it isn't.",
+    commonPitfalls: [
+      "Naming an outcome ('finish the draft') instead of a quality ('work without rushing'). Outcomes aren't yours to set; conduct is.",
+      "Choosing an intention so abstract it can't be falsified. 'Be present' survives nothing; 'don't check my phone before the meeting' survives the morning.",
+      "Setting it and never returning to it. The midday reread is what turns a sentence into a practice.",
+    ],
+    workedExample:
+      "You wake knowing today holds a performance review you've been dreading. The vague version: 'I want today to go well.' The intention version: 'Today I want to bring steadiness to the review — I'll listen fully before I defend.' You name the friction (the moment your manager raises the missed deadline) and how the intention meets it (a breath, then a question, instead of the instant explanation). At noon you reread the line. You'd already half-forgotten it, which is exactly why you wrote it down.",
+    relatedThinkers: [
+      { name: "Marcus Aurelius", note: "Meditations II.1 — the morning rehearsal of the day's friction." },
+      { name: "Epictetus", note: "Enchiridion 1 — begin by sorting what is and isn't within your power." },
+      { name: "Pierre Hadot", note: "Recovered prosoche (attention) as the central Stoic 'spiritual exercise' in Philosophy as a Way of Life." },
+    ],
+    furtherReading: [
+      { title: "Meditations", author: "Marcus Aurelius", year: "c. 170 CE", note: "Book II opens with the canonical morning preparation." },
+      { title: "Philosophy as a Way of Life", author: "Pierre Hadot", year: "1995", note: "The scholarly case that Stoicism was a set of daily exercises, attention chief among them." },
+    ],
+    relatedExercises: ['three-line-evening', 'stoic-preview', 'examen'],
+    kindredPractices: [
+      { name: "Sankalpa", note: "The yogic intention set at the start of practice — a resolve stated in the present tense." },
+      { name: "Examen (forward version)", note: "The Ignatian review run forward — previewing the day's likely temptations rather than reviewing the past one." },
+    ],
+  },
+
+  // ─── Three-line evening ────────────────────────────────────────────
+  'three-line-evening': {
+    longerAbout:
+      "The nightly self-review is one of the oldest recorded contemplative habits in the West. The Pythagoreans were told, in the Golden Verses, not to let sleep close their eyes until they had thrice reviewed the day's deeds: 'Where have I gone wrong? What have I done? What duty have I left undone?' Seneca describes his own version in On Anger — each night, lights out and his wife gone quiet, he arraigns the whole day before himself: 'I examine my entire day and retrace my deeds and words.'\n\n" +
+      "What the Stoics understood, and what the three-line compression preserves, is that the value is in the regularity, not the length. Seneca wasn't writing a memoir; he was keeping a short standing appointment with himself. The Christian examen later formalized the same move into a daily discipline. The brevity here is a feature borrowed from hard experience: the journal you can keep for a year beats the one you abandon in February.\n\n" +
+      "Three lines force a triage that longer entries let you dodge. You can't list everything, so you choose the moment that mattered — and the choosing is itself a small act of judgment, repeated nightly, that slowly trains what you notice.",
+    commonPitfalls: [
+      "Summarizing the day as a whole ('good day') instead of a single moment. The specificity is the point — one scene, not a verdict.",
+      "Skipping the 'badly' line on good days and the 'well' line on bad ones. The discipline is to find both every night, even when one is small.",
+      "Rereading and editing. This isn't an archive to curate; the writing is the practice, and closing the notebook is part of it.",
+    ],
+    workedExample:
+      "A flat, unremarkable Tuesday. Line 1: 'Today went well when I caught myself about to interrupt Sam and let them finish.' Line 2: 'Today went badly when I scrolled for forty minutes instead of starting the thing I was avoiding.' Line 3: 'Tomorrow I'd choose differently if I put my phone in the other room before 9am.' Ninety seconds; nothing literary. But a week of these, read together, shows you a person who keeps choosing the phone over the hard first task — a pattern no single night could have shown you.",
+    relatedThinkers: [
+      { name: "Seneca", note: "On Anger III.36 — the locus classicus of the nightly self-examination." },
+      { name: "Pythagoras", note: "The Golden Verses prescribe a threefold review of the day before sleep." },
+      { name: "Ignatius of Loyola", note: "The Examen turned the practice into a structured daily spiritual exercise." },
+    ],
+    furtherReading: [
+      { title: "On Anger", author: "Seneca", year: "c. 45 CE", note: "Book III, chapter 36 describes Seneca's own nightly accounting in detail." },
+      { title: "Letters from a Stoic", author: "Seneca", note: "The Letters return repeatedly to the habit of daily self-reckoning." },
+    ],
+    relatedExercises: ['morning-intention', 'examen', 'letter-future-self'],
+    kindredPractices: [
+      { name: "Ignatian examen", note: "The fuller Christian version — review the day for where you moved toward or away from your values." },
+      { name: "Five-minute journal", note: "A modern structured-prompt journal in the same minimal-dose spirit." },
+    ],
+  },
+
+  // ─── Metta (loving-kindness) ───────────────────────────────────────
+  'loving-kindness': {
+    longerAbout:
+      "Metta is the first of the four brahmaviharas — the 'divine abodes' of loving-kindness, compassion, sympathetic joy, and equanimity. Its founding text is the Karaniya Metta Sutta, a short poem in the Pali canon that ends on the image of a mother protecting her only child: 'even so let one cultivate a boundless heart toward all beings.' In the fifth century the monk Buddhaghosa, in the Visuddhimagga, laid out the graded sequence the practice still uses — self, friend, neutral person, enemy — and warned against starting with the people who make it hardest.\n\n" +
+      "The order isn't arbitrary. Buddhaghosa observed that goodwill, like water, runs easiest downhill and pools where there's least resistance. You begin with yourself and the easily-loved not because they need it most but because they teach the felt sense of the thing, which you then carry to the harder circles. Trying to begin with the difficult person tends to produce strain dressed up as virtue.\n\n" +
+      "Brought West largely by Sharon Salzberg in the 1990s, metta has since been studied empirically — Barbara Fredrickson's work found that a few weeks of it measurably widened people's daily positive emotion and even their sense of social connection. The tradition would call this unsurprising: the heart, like a muscle, grows in the direction it's repeatedly asked to move.",
+    commonPitfalls: [
+      "Trying to manufacture a warm feeling. The practice directs attention and repeats the phrases; the feeling, when it comes, is a byproduct, not the assignment.",
+      "Starting with the hardest person to prove you can. Buddhaghosa specifically warns against this — begin where goodwill flows easily and extend outward.",
+      "Treating resistance as failure. The circle that snags is the most informative one; it shows where your goodwill currently draws its border.",
+    ],
+    workedExample:
+      "You move through the circles and they go smoothly until the fourth — the difficult person, a coworker who takes credit for shared work. 'May you be safe, may you be well, may you be at peace.' The words come out clenched. You notice the clench. You don't force past it; you just keep returning the phrases to them, gently, for the minute. Nothing dramatic resolves. But the next time you see them, the reflexive tightening in your chest arrives a half-second slower than usual — a gap that wasn't there before.",
+    relatedThinkers: [
+      { name: "The Buddha", note: "The Karaniya Metta Sutta (Sutta Nipata 1.8) is the canonical source." },
+      { name: "Buddhaghosa", note: "The Visuddhimagga (5th c.) systematized the graded sequence of recipients." },
+      { name: "Sharon Salzberg", note: "Did the most to bring metta to a Western lay audience; her Lovingkindness (1995) is the standard guide." },
+      { name: "Barbara Fredrickson", note: "Psychologist whose studies measured the practice's effect on positive emotion and social connection." },
+    ],
+    furtherReading: [
+      { title: "Lovingkindness", author: "Sharon Salzberg", year: "1995", note: "The accessible modern manual, faithful to the Theravada source." },
+      { title: "The Path of Purification (Visuddhimagga)", author: "Buddhaghosa", year: "c. 430 CE", note: "The classical treatment of the brahmaviharas and the order of practice." },
+    ],
+    relatedExercises: ['breath-count', 'body-scan', 'mindful-eating'],
+    kindredPractices: [
+      { name: "Tonglen", note: "A Tibetan practice in the same family: breathe in another's suffering, breathe out relief." },
+      { name: "Compassion cultivation (CCT)", note: "Thupten Jinpa's secular protocol, developed at Stanford from the same Buddhist roots." },
+    ],
+  },
+
+  // ─── Breath count to ten ───────────────────────────────────────────
+  'breath-count': {
+    longerAbout:
+      "Counting the breath — susokukan in Japanese Zen — is the practice traditionally given to beginners, and quietly kept by many who are not. Its lineage runs back to the Anapanasati Sutta, the Buddha's discourse on mindfulness of breathing, but Zen pared it to a numbered minimum. Dogen, in the Fukanzazengi, insisted that zazen is not a technique for achieving anything; the counting is a fence around the attention, not a ladder to somewhere.\n\n" +
+      "The design is deliberately unforgiving. There's no narrative, no scenery, no progress to report — only ten numbers and the plain fact of whether you held them. This is why it humbles people who are good at things. The point was never to reach ten cleanly. The point is the instant you notice you've drifted to four-then-elsewhere, because that instant of noticing is the actual repetition the practice trains: not concentration, but the return.\n\n" +
+      "Shunryu Suzuki put the attitude precisely in Zen Mind, Beginner's Mind — the beginner's willingness to start again, without grievance, is the whole of it. Counting back from ten to one starts you over with no record kept. The slate is clean every breath, which is both the difficulty and the mercy.",
+    commonPitfalls: [
+      "Berating yourself for losing count. The self-criticism is just more thinking; the instruction is to start at one without comment.",
+      "Controlling the breath to make counting easier. Let the breath do what it does — you're counting it, not conducting it.",
+      "Mistaking a long clean run for success. A wandering mind caught and returned a dozen times has done more of the actual training than an unbroken count.",
+    ],
+    workedExample:
+      "You sit and count. One on the exhale, two, three — and somewhere around four you're abruptly planning tomorrow's lunch, with no memory of the transition. You were gone and didn't know it. You start at one. It happens again at three. And again. After ten minutes you've reached ten exactly twice and started over perhaps thirty times. By the old scorekeeping that's a failure. By the practice's own terms you did thirty repetitions of the one move that matters — the noticing and the return — which is twenty-eight more than a flawless run would have given you.",
+    relatedThinkers: [
+      { name: "The Buddha", note: "The Anapanasati Sutta is the canonical root of breath-based meditation." },
+      { name: "Dogen", note: "The Fukanzazengi (13th c.) frames zazen as goalless sitting, not a means to an end." },
+      { name: "Shunryu Suzuki", note: "Zen Mind, Beginner's Mind articulates the begin-again attitude the count requires." },
+    ],
+    furtherReading: [
+      { title: "Zen Mind, Beginner's Mind", author: "Shunryu Suzuki", year: "1970", note: "The classic Western introduction to Soto Zen practice and posture." },
+      { title: "The Three Pillars of Zen", author: "Philip Kapleau", year: "1965", note: "Includes detailed instruction on breath-counting for beginners." },
+    ],
+    relatedExercises: ['body-scan', 'loving-kindness', 'mindful-eating'],
+    kindredPractices: [
+      { name: "Shikantaza", note: "'Just sitting' — the count's advanced sibling, which drops the number and rests in bare awareness." },
+      { name: "Mantra repetition", note: "A parallel concentration device across traditions: a repeated word in place of a count." },
+    ],
+  },
+
+  // ─── Mindful eating ────────────────────────────────────────────────
+  'mindful-eating': {
+    longerAbout:
+      "The most famous instruction in modern mindful eating is Thich Nhat Hanh's tangerine: eat it as if eating, not as if already reaching for the next thing. In The Miracle of Mindfulness he contrasts the person who pops the sections in before finishing the last one with the person who actually meets the fruit. The clinical version is older than the bumper-sticker fame suggests — the raisin exercise, in which a single raisin is examined, smelled, and slowly eaten, is the very first practice Jon Kabat-Zinn assigns in his eight-week MBSR course.\n\n" +
+      "The choice of food is the lesson in miniature. A whole meal is too much to attend to at first; a single raisin or wedge of fruit is small enough that there's nowhere to hide. With nothing to distract you, the ordinary turns strange: a raisin you've eaten a thousand times turns out to have a smell, a structure, a sequence of flavors you'd never once registered. The mild disorientation is the point — it shows how much of life passes through a half-attentive fog.\n\n" +
+      "There's an older, more austere relative of this in the canon — the contemplation of food's unattractiveness (ahare patikulasanna), meant to loosen craving. Modern mindful eating keeps the attentiveness and drops the aversion. The aim isn't to spoil the meal but to actually be present for it.",
+    commonPitfalls: [
+      "Reaching for a phone, book, or podcast within the first minute. The urge to fill the attention is the very habit being studied — notice it rather than obeying it.",
+      "Turning it into a performance of slowness. The aim is genuine attention, not theatrical chewing; pace follows from noticing, not the reverse.",
+      "Picking a whole meal on the first try. Start with one piece of fruit. The smaller the object, the harder it is to drift.",
+    ],
+    workedExample:
+      "You sit with a single clementine and nothing else — no screen, no music. You look at it first: the dimpled skin, the small give as you press it. Peeling it releases a sharp citrus mist you've never consciously smelled despite eating dozens of them. One segment. You notice it's both sweeter and more sour than the idea of 'clementine' in your head. Between segments you set your hand down and feel the immediate, almost physical pull to speed up and be done. You stay. The fruit, it turns out, was more interesting than the entire afternoon of half-watched videos it would normally have accompanied.",
+    relatedThinkers: [
+      { name: "Thich Nhat Hanh", note: "The Miracle of Mindfulness — the tangerine as the emblem of eating with full presence." },
+      { name: "Jon Kabat-Zinn", note: "Made the raisin exercise the opening practice of the MBSR curriculum." },
+      { name: "Jan Chozen Bays", note: "Zen teacher and physician whose Mindful Eating gathered the practice into a full method." },
+    ],
+    furtherReading: [
+      { title: "The Miracle of Mindfulness", author: "Thich Nhat Hanh", year: "1975", note: "The source of the tangerine teaching and a gentle introduction to everyday mindfulness." },
+      { title: "Mindful Eating", author: "Jan Chozen Bays", year: "2009", note: "A practical book-length treatment blending Zen and clinical nutrition." },
+    ],
+    relatedExercises: ['breath-count', 'body-scan', 'loving-kindness'],
+    kindredPractices: [
+      { name: "Oryoki", note: "The formal, fully-attentive Zen meal practice, choreographed down to the placement of the bowls." },
+      { name: "Saying grace", note: "The pause-and-acknowledge before eating found across traditions — a brief reorientation of attention to the food." },
+    ],
+  },
+
+  // ─── Letter to your future self ────────────────────────────────────
+  'letter-future-self': {
+    longerAbout:
+      "Writing to the self you'll become is a modern, near-universal practice without a single founding text — but it rests on a long tradition of self-address. Marcus Aurelius's Meditations were written to no audience but their author; the Greek title, Ta eis heauton, means simply 'to himself.' The letter to a future self extends that across time: a message from who you are now to who you'll have become, sealed before you know what the years will do.\n\n" +
+      "Psychology has lately given the practice a sharper rationale. Hal Hershfield's research on 'future-self continuity' finds that most people relate to their future selves almost as strangers — brain scans show we think about 'me in ten years' using the circuitry we use for other people. The more vividly and warmly you can picture that future person, the better you tend to treat them: saving more, deciding more patiently, keeping the promises that benefit them. The letter is a way of shortening that imaginative distance by hand.\n\n" +
+      "There's a philosophical depth here too. Derek Parfit argued that the connection between you-now and you-in-thirty-years is a matter of degree, not an all-or-nothing identity — more like the bond between close relatives than a single unbroken self. The letter doesn't resolve that puzzle, but it takes a stance toward it: it treats the future self as kin worth writing to, rather than a stranger you'll be surprised to meet.",
+    commonPitfalls: [
+      "Slipping into advice. The future self has already lived the intervening years; what they can't get back is a record of who you were before them.",
+      "Writing to an idealized self instead of a real one. Address the actual person who will read it, with the actual life they may have.",
+      "Making it a to-do list for the future. The letter preserves a self; it doesn't assign tasks to one.",
+    ],
+    workedExample:
+      "You write to yourself five years out. You resist the urge to advise ('you should have...') and instead report: here's what I'm afraid of right now, here's the friendship I hope you've kept, here's the small daily thing — the walk after dinner — that's currently holding me together and that I suspect you'll have quietly dropped. You name one belief you hold fiercely today and admit you're not sure they'll still hold it. Sealing the envelope, you notice the letter told you more about your present values than any direct question would have — you found out what you cared about by deciding what was worth preserving.",
+    relatedThinkers: [
+      { name: "Marcus Aurelius", note: "The Meditations are the great example of philosophical self-address — literally 'to himself.'" },
+      { name: "Hal Hershfield", note: "Psychologist whose work on future-self continuity explains why vividly picturing your later self changes present behavior." },
+      { name: "Derek Parfit", note: "Reasons and Persons argues identity over time is a matter of degree — reframing what 'your future self' even is." },
+    ],
+    furtherReading: [
+      { title: "Reasons and Persons", author: "Derek Parfit", year: "1984", note: "Part Three on personal identity is the deep background for why writing to a 'future self' is stranger than it looks." },
+      { title: "Your Future Self", author: "Hal Hershfield", year: "2023", note: "The accessible account of the continuity research and how to act on it." },
+    ],
+    relatedExercises: ['memento-mori', 'three-line-evening', 'morning-intention'],
+    kindredPractices: [
+      { name: "FutureMe letters", note: "The online service (since 2002) that emails your letter back to you on a date you set." },
+      { name: "Time capsule", note: "The object version of the same impulse — sealing the present away for a later self to open." },
+    ],
+  },
+
+  // ─── Body scan ─────────────────────────────────────────────────────
+  'body-scan': {
+    longerAbout:
+      "The body scan as most people meet it today comes from Jon Kabat-Zinn, who made it the second formal practice of Mindfulness-Based Stress Reduction, the eight-week clinical program he founded at the University of Massachusetts in 1979. Lying still and moving attention region by region through the body, the practitioner is asked only to notice — not to relax, not to fix — whatever is already there.\n\n" +
+      "Kabat-Zinn was adapting something older. The technique descends most directly from the Burmese Vipassana of U Ba Khin and his student S.N. Goenka, in which the meditator sweeps attention through the body observing raw sensation (vedana) without reacting — the discipline being equanimity toward whatever is pleasant or unpleasant. A parallel root runs through Yoga Nidra's 'rotation of consciousness,' the systematic naming of body parts that the Satyananda lineage formalized in the twentieth century.\n\n" +
+      "What unites these sources is a wager about attention and the body: that we carry a great deal of unfelt holding — a clamped jaw, raised shoulders, a braced stomach — and that simply attending to it, without an agenda to change it, is often enough to loosen it. The body, the practice assumes, has been trying to tell you something all day. The scan is a way of finally listening.",
+    commonPitfalls: [
+      "Trying to relax each region. The instruction is to notice, not to fix; relaxation, when it comes, is a side effect of attention, not its goal.",
+      "Rushing to 'finish' the body. The pace is slow on purpose — a region given two breaths reveals what a region given two seconds never will.",
+      "Treating numbness or 'nothing there' as failure. 'Nothing' is a finding too; not every region has a message, and noticing the blank is part of the scan.",
+    ],
+    workedExample:
+      "You lie down at the end of a long day and move attention from the toes upward. Feet, calves, knees — mostly quiet. Then you arrive at your shoulders and find them hiked up near your ears, where they have apparently been for hours, holding a tension you never consciously felt. You don't order them down. You just keep your attention there, breathing, and within a minute they drop on their own with a small involuntary sigh. The day's stress had been living in your trapezius the whole time, unbilled, and the scan was simply the first moment you'd checked the account.",
+    relatedThinkers: [
+      { name: "Jon Kabat-Zinn", note: "Founded MBSR and made the body scan a core clinical mindfulness practice." },
+      { name: "S.N. Goenka", note: "Carried the Burmese Vipassana body-sweeping technique (from U Ba Khin) to a worldwide lay audience." },
+      { name: "Swami Satyananda", note: "Systematized Yoga Nidra's 'rotation of consciousness' through the body." },
+    ],
+    furtherReading: [
+      { title: "Full Catastrophe Living", author: "Jon Kabat-Zinn", year: "1990", note: "The foundational MBSR text, with the body scan as a central practice." },
+      { title: "The Art of Living", author: "William Hart", year: "1987", note: "A clear account of Goenka's Vipassana, including the body-sweeping method." },
+    ],
+    relatedExercises: ['breath-count', 'loving-kindness', 'mindful-eating'],
+    kindredPractices: [
+      { name: "Yoga Nidra", note: "A guided 'rotation of consciousness' through the body, done lying down at the edge of sleep." },
+      { name: "Progressive muscle relaxation", note: "Jacobson's clinical cousin — deliberately tensing and releasing each muscle group in turn." },
+    ],
+  },
+
+  // ─── Burden-of-proof check ─────────────────────────────────────────
+  'burden-of-proof': {
+    longerAbout:
+      "The principle is older than analytic philosophy; it's Roman law. The maxim ei incumbit probatio qui dicit, non qui negat — the proof lies on the one who asserts, not the one who denies — set the default that the claimant, not the doubter, owes the argument. Carried into philosophy, it becomes a tool for sorting who has work to do before anyone has done any.\n\n" +
+      "Bertrand Russell gave the idea its most memorable image. If he asserted that a china teapot orbits the sun between Earth and Mars, too small for any telescope to find, he couldn't expect others to disprove it — and they'd be right to stay unconvinced, because the burden sits with the one making the strange positive claim, not the one declining to accept it. The same logic powers Sagan's 'extraordinary claims require extraordinary evidence' and Hitchens's blunter razor: what's asserted without evidence can be dismissed without evidence.\n\n" +
+      "Most real-world confusion comes from the burden being quietly switched. Someone makes an assertion, then demands you refute it, and if you can't, claims victory — as though failure to disprove were the same as proof. Naming the swap out loud usually ends the move, because once it's visible it's obviously illegitimate.",
+    commonPitfalls: [
+      "Accepting a burden swap. 'You can't prove it's false, so it's true' inverts the rule; non-disproof is not evidence.",
+      "Forgetting that 'extraordinary' is relative to background knowledge. A mundane claim needs little; one that overturns a great deal needs a great deal.",
+      "Using the principle only against others. Your own positive claims carry the same burden you're holding opponents to.",
+    ],
+    workedExample:
+      "In an online thread someone claims a supplement cures a condition, and when challenged replies: 'Well, you can't prove it doesn't work.' You stop and locate the burden. The positive claim — 'this cures X' — is theirs to support, and they've offered nothing but a demand that you disprove it. You point out, without heat, that the absence of a disproof isn't evidence of a cure; if it were, every untested claim ever made would be true by default. The conversation either produces actual evidence or ends. Either outcome is cleaner than the disproof chase they were trying to start.",
+    relatedThinkers: [
+      { name: "Bertrand Russell", note: "The celestial-teapot analogy (1952) — the burden sits with the one asserting, not the one doubting." },
+      { name: "Antony Flew", note: "'The Presumption of Atheism' (1976) made burden-of-proof central to a famous philosophical debate." },
+      { name: "Carl Sagan", note: "'Extraordinary claims require extraordinary evidence' scales the burden to the claim's strangeness." },
+    ],
+    furtherReading: [
+      { title: "Is There a God?", author: "Bertrand Russell", year: "1952", note: "The short essay containing the teapot — two pages that fixed the idea in popular thought." },
+      { title: "Burden of Proof, Presumption and Argumentation", author: "Douglas Walton", year: "2014", note: "The rigorous modern treatment of how burdens actually shift in real argument." },
+    ],
+    relatedExercises: ['hidden-premises', 'fallacy-hunt', 'necessary-sufficient'],
+    kindredPractices: [
+      { name: "Hitchens's razor", note: "'What can be asserted without evidence can be dismissed without evidence' — the principle as a one-line blade." },
+      { name: "Presumption of innocence", note: "The legal form — the prosecution bears the burden, the accused need prove nothing." },
+    ],
+  },
+
+  // ─── Necessary vs sufficient ───────────────────────────────────────
+  'necessary-sufficient': {
+    longerAbout:
+      "The distinction is bread-and-butter logic, but it earns its keep in the messy business of talking about causes. A necessary condition is one without which the effect can't occur; a sufficient condition is one whose presence guarantees it. Oxygen is necessary for fire but not sufficient — a room full of air doesn't ignite. A lit match in dry tinder is closer to sufficient but not necessary — there are other ways to start a fire. Most of the words we fight over ('the cause', 'the reason', 'because') blur the two together.\n\n" +
+      "The philosopher who mapped the messiness most carefully was J.L. Mackie, whose 'INUS condition' — an insufficient but necessary part of an unnecessary but sufficient condition — sounds like a tongue-twister and is actually a precise description of how ordinary causes work. A short circuit causes a house fire: not alone (it needs oxygen, flammable material, no working sprinkler), and not uniquely (other things could have started it). It's one necessary piece of one sufficient package among several. Almost every everyday cause has this shape.\n\n" +
+      "This matters outside the seminar because policy and blame both run on it. 'Poverty causes crime,' 'social media causes depression,' 'the diet caused the weight loss' — each is usually a claim about a necessary-but-not-sufficient piece, wearing the grammar of a sufficient one. Pulling the two apart is often the whole disagreement.",
+    commonPitfalls: [
+      "Hearing 'necessary' and 'sufficient' as the same strength. 'You need X' and 'X is enough' are different claims and often have different truth values.",
+      "Treating a single necessary condition as 'the cause.' Most effects need a package; singling out one piece is usually a rhetorical choice, not a factual one.",
+      "Forgetting that a condition can be neither. Some alleged causes correlate without being required or guaranteeing anything — the hardest and most common case to catch.",
+    ],
+    workedExample:
+      "A friend insists that 'hard work causes success.' You run the two tests. Is hard work necessary for success? Mostly yes — luck-only success is rare and unstable. Is it sufficient? Plainly no — plenty of people work brutally hard and don't succeed, because they also needed opportunity, timing, health, capital. So the honest claim narrows from 'hard work causes success' to 'hard work is usually necessary for success but never sufficient.' That single revision dissolves the argument you were about to have, because your friend was defending the necessity and you were attacking the sufficiency — and you were both right.",
+    relatedThinkers: [
+      { name: "Aristotle", note: "His analysis of the four 'causes' (aitia) is the ancient root of thinking carefully about what produces what." },
+      { name: "J.L. Mackie", note: "The Cement of the Universe introduced the INUS condition, the precise anatomy of an everyday cause." },
+      { name: "David Hume", note: "Forced the whole question open by asking what, beyond constant conjunction, we even mean by 'cause.'" },
+    ],
+    furtherReading: [
+      { title: "The Cement of the Universe", author: "J.L. Mackie", year: "1974", note: "The classic modern analysis of causation and conditions; source of the INUS idea." },
+      { title: "A Concise Introduction to Logic", author: "Patrick Hurley", note: "A standard primer that drills the necessary/sufficient distinction with clear exercises." },
+    ],
+    relatedExercises: ['modus-tollens', 'hidden-premises', 'ockhams-razor'],
+    kindredPractices: [
+      { name: "Causal diagrams (DAGs)", note: "The modern statistical tool for laying out which conditions actually feed which effects." },
+      { name: "Five whys", note: "A diagnostic that, done well, separates the necessary links in a causal chain from the incidental ones." },
+    ],
+  },
+
+  // ─── Modus tollens practice ────────────────────────────────────────
+  'modus-tollens': {
+    longerAbout:
+      "Modus tollens — 'the mode that denies' — is one of the oldest validated argument forms in the Western tradition. The Stoic logician Chrysippus listed it among his five 'indemonstrables,' the basic inference patterns from which all others could be built, in the third century BCE. Its shape is simple: if P then Q; not Q; therefore not P. If the theory predicts rain and the ground is dry, the theory has a problem.\n\n" +
+      "The form became the backbone of a whole philosophy of science when Karl Popper made it the engine of falsification. A scientific theory, Popper argued, earns its standing not by being confirmed but by surviving attempts to refute it: you derive a risky prediction, check it, and if the prediction fails, modus tollens forces a retreat. A single black swan refutes 'all swans are white' in a way that ten thousand white swans can never confirm it.\n\n" +
+      "There's a famous catch worth holding onto — the Duhem-Quine thesis. When a prediction fails, modus tollens tells you something in your reasoning is false, but not which thing. Maybe the theory is wrong — or maybe an auxiliary assumption, the instrument, or the background conditions are. The disconfirmed theory takes a hit, but it can sometimes legitimately pass the blame to a neighbor. This is why a failed prediction owes you an explanation rather than an automatic surrender.",
+    commonPitfalls: [
+      "Confusing it with its invalid mirror, denying the antecedent: 'if P then Q; not P; therefore not Q' does not follow.",
+      "Treating a single failed prediction as a knockout. Modus tollens shows something is wrong, not that the headline theory specifically is — check the auxiliary assumptions first.",
+      "Only running it on other people's theories. Aim a risky prediction at one of your own beliefs and actually check it.",
+    ],
+    workedExample:
+      "You believe a colleague dislikes you. Stated as a conditional: if they dislike me (P), then they'll avoid working with me (Q). You watch. In fact they volunteered to pair with you twice this month (not-Q). Modus tollens does its quiet work: not-Q gives you not-P — the avoidance you predicted didn't happen, so the dislike you assumed takes a real hit. You pause before concluding outright that they like you (maybe your conditional was too crude), but the belief that felt like fact this morning is now a hypothesis that failed its first test.",
+    relatedThinkers: [
+      { name: "Chrysippus", note: "The Stoic logician who catalogued modus tollens among his five basic indemonstrable inferences." },
+      { name: "Karl Popper", note: "Built falsificationism on modus tollens — theories advance by surviving attempted refutation." },
+      { name: "Duhem & Quine", note: "Showed that a failed prediction indicts the whole web of assumptions, not one theory in isolation." },
+    ],
+    furtherReading: [
+      { title: "The Logic of Scientific Discovery", author: "Karl Popper", year: "1959", note: "The case that science progresses by falsification — modus tollens as method." },
+      { title: "Two Dogmas of Empiricism", author: "W.V.O. Quine", year: "1951", note: "The essay behind the holism that complicates any clean falsification." },
+    ],
+    relatedExercises: ['necessary-sufficient', 'bayesian-update', 'hidden-premises'],
+    kindredPractices: [
+      { name: "Falsification test", note: "Before holding a belief, ask: what observation would prove it wrong? If nothing could, modus tollens has nothing to grip." },
+      { name: "Debugging by elimination", note: "The programmer's version — a failing test denies the consequent and sends you hunting the false premise." },
+    ],
+  },
+
+  // ─── Bayesian update ───────────────────────────────────────────────
+  'bayesian-update': {
+    longerAbout:
+      "The theorem is named for Thomas Bayes, an English Presbyterian minister whose solution to a problem in probability was published in 1763, two years after his death, by his friend Richard Price. It might have stayed a curiosity if Pierre-Simon Laplace hadn't independently rediscovered and vastly extended it a few years later, turning it into a general method for reasoning from evidence back to cause. For two centuries it was mistrusted by statisticians who disliked its central move — treating a degree of belief as a probability.\n\n" +
+      "That move was given its footing by Frank Ramsey and Bruno de Finetti, who argued that your subjective probabilities are coherent only if they obey the probability axioms — on pain of a 'Dutch book,' a set of bets you'd accept that guarantees you lose. Bayes' rule then tells you not what to believe from scratch but how much to move when evidence arrives: your new confidence is your old confidence reweighted by how well each hypothesis predicted what you just saw.\n\n" +
+      "The everyday version needs no arithmetic, only honesty about two things people prefer to skip: what you actually believed before the evidence (the prior), and how expected the evidence was on each hypothesis (the likelihood). Most reasoning errors are failures at one of these — ignoring the base rate, or treating evidence as decisive when it was nearly as likely under the hypothesis you're rejecting as under the one you're adopting.",
+    commonPitfalls: [
+      "Ignoring the prior. A positive result for a rare condition can still leave it unlikely if the base rate is low enough — the base rate is part of the calculation, not a distraction from it.",
+      "Over-updating on evidence that both hypotheses predict equally well. If the new fact was just as likely whether you're right or wrong, it shouldn't move you at all.",
+      "Refusing to state a prior because it feels arbitrary. A rough honest number beats a hidden one; the discipline is making the starting belief explicit so the update is visible.",
+    ],
+    workedExample:
+      "You wake to silence from a normally-prompt friend who's gone quiet for three days. Prior: 60% they're just busy, 30% something's wrong, 10% they're upset with you. The new evidence: a cheerful text, 'sorry, swamped!' Ask how likely that message is under each story. Very likely if they were busy; unlikely if something were wrong; unlikely if they were upset (an upset friend rarely sends a breezy apology). The evidence fits 'busy' far better, so it gets boosted toward, say, 90%, and the worry stories shrink. You didn't need a formula — you needed to ask, for each story, 'how expected was this text if that story were true?'",
+    relatedThinkers: [
+      { name: "Thomas Bayes", note: "The minister whose 1763 posthumous essay first stated the rule for updating on evidence." },
+      { name: "Pierre-Simon Laplace", note: "Rediscovered and generalized the method into a working tool for scientific inference." },
+      { name: "Frank Ramsey", note: "Grounded subjective probability with the Dutch-book argument — beliefs must obey the axioms or you can be made to lose for sure." },
+    ],
+    furtherReading: [
+      { title: "The Theory That Would Not Die", author: "Sharon Bertsch McGrayne", year: "2011", note: "A readable history of Bayes' rule and its long climb from disrepute to ubiquity." },
+      { title: "The Signal and the Noise", author: "Nate Silver", year: "2012", note: "An accessible case for Bayesian thinking in forecasting and everyday judgment." },
+    ],
+    relatedExercises: ['modus-tollens', 'necessary-sufficient', 'ockhams-razor'],
+    kindredPractices: [
+      { name: "Superforecasting", note: "Philip Tetlock's research on forecasters who win by making many small updates instead of few large ones." },
+      { name: "Calibration training", note: "Practicing confidence estimates against outcomes so that your '70% sure' is right about 70% of the time." },
+    ],
+  },
+
+  // ─── Naming hidden premises ────────────────────────────────────────
+  'hidden-premises': {
+    longerAbout:
+      "The technical name for an argument with a suppressed premise is an enthymeme, and Aristotle treated it as the basic unit of real-world persuasion. We almost never state every step; we lean on what we assume the listener already grants. 'She's a politician, so don't trust her' is an enthymeme — the unstated premise, 'politicians aren't trustworthy,' is doing the actual work while staying out of sight, where it can't be challenged.\n\n" +
+      "Stephen Toulmin gave the hidden step a more precise role with his notion of the 'warrant' — the often-unspoken general rule that licenses the move from evidence to conclusion. Data: the ground is wet. Claim: it rained. Warrant (unstated): wet ground means rain — which quietly ignores sprinklers, hoses, and dew. Toulmin's point was that the warrant is exactly where arguments are weakest and least examined, precisely because it's the part nobody says out loud.\n\n" +
+      "Modern argumentation theory, especially the pragma-dialectics of Frans van Eemeren, treats reconstructing these 'unexpressed premises' as a core skill — and a charitable one, since you have to supply the premise that makes the argument valid before you test whether it's true. The reliable discovery is that the load-bearing assumption, once written down, is frequently the one the arguer would least want to defend.",
+    commonPitfalls: [
+      "Supplying an uncharitably weak hidden premise to make refutation easy. Add the premise that makes the argument strongest, then test that one.",
+      "Confusing a hidden premise with the conclusion restated. The missing piece is a general bridge, not a paraphrase of the claim.",
+      "Stopping at one. Many arguments hide a chain of assumptions; the interesting one is often two steps down, not the first you find.",
+    ],
+    workedExample:
+      "A headline argues: 'This product is natural, so it's safe.' You reconstruct it. Stated premise: the product is natural. Conclusion: it's safe. The conclusion doesn't follow on its own, so you supply the bridge that would make it valid: 'whatever is natural is safe.' Written out, that premise is plainly false — arsenic, hemlock, and snake venom are all entirely natural. The argument's whole weight was resting on an unstated rule its author would never have asserted directly, and naming it out loud is the entire refutation.",
+    relatedThinkers: [
+      { name: "Aristotle", note: "Named the enthymeme — the everyday syllogism with a premise left unspoken — in the Rhetoric." },
+      { name: "Stephen Toulmin", note: "His 'warrant' is the usually-unstated rule licensing the leap from evidence to claim." },
+      { name: "Frans van Eemeren", note: "Made reconstructing 'unexpressed premises' central to the pragma-dialectical analysis of argument." },
+    ],
+    furtherReading: [
+      { title: "The Uses of Argument", author: "Stephen Toulmin", year: "1958", note: "Introduces the warrant and the anatomy of everyday arguments." },
+      { title: "A Rulebook for Arguments", author: "Anthony Weston", year: "1986", note: "A short, practical guide that drills the spotting of missing premises." },
+    ],
+    relatedExercises: ['argument-map', 'burden-of-proof', 'fallacy-hunt'],
+    kindredPractices: [
+      { name: "Enthymeme reconstruction", note: "Aristotle's own move — restore the suppressed premise and judge the argument whole." },
+      { name: "'What would have to be true?'", note: "A one-question version: ask what would need to hold for the conclusion to follow, then check whether it does." },
+    ],
+  },
+
+  // ─── Ockham's razor ────────────────────────────────────────────────
+  'ockhams-razor': {
+    longerAbout:
+      "William of Ockham, a fourteenth-century Franciscan, is remembered for a sentence he never quite wrote. The famous Latin — entia non sunt multiplicanda praeter necessitatem, 'entities must not be multiplied beyond necessity' — was put in his mouth by later writers (the phrasing is John Punch's, in 1639). What Ockham actually said was closer to 'plurality should not be posited without necessity' and 'it is futile to do with more what can be done with fewer.' The idea outgrew its author and kept his name.\n\n" +
+      "As a working principle the razor is a tie-breaker, not a truth-detector. When two theories account for the same evidence equally well, prefer the one that assumes less, because it has fewer places to be wrong and is easier to test. Newton built a version into the Principia as his first rule of reasoning; the sentiment recurs in the line often pinned on Einstein, that an account should be as simple as possible but no simpler. That last clause is the whole discipline: simplicity is a virtue only among theories that explain the same amount.\n\n" +
+      "The razor is one of the most misused tools in popular reasoning, usually by people who wield it to kill a theory simply for being complicated. But a more complex theory that explains things the simpler one can't isn't being extravagant — it's earning its parts. Modern statistics even formalizes the trade-off: model-selection methods penalize extra parameters but reward the explanatory power they buy, which is exactly Ockham's bargain made quantitative.",
+    commonPitfalls: [
+      "Using it to dismiss a theory for being complex, full stop. The razor only applies when the rival explains the evidence equally well — complexity that buys extra explanation is legitimate.",
+      "Confusing 'simpler' with 'more familiar' or 'easier for me.' Fewer assumed entities is the measure, not lower effort or comfort.",
+      "Forgetting the 'but no simpler' clause. An account that drops a needed part isn't parsimonious; it's just inadequate.",
+    ],
+    workedExample:
+      "Your houseplant is wilting. Two explanations: (A) you've been underwatering it, or (B) a fungal pathogen has colonized the roots, complicated by a nutrient lockout from your tap water's pH. Both fit the drooping leaves. Ockham says start with A, because it assumes far less and is trivially testable — water it and wait. If it perks up, the elaborate theory was never needed. If it keeps wilting despite watering, the simple story has failed to explain the evidence, and now B has earned the right to its extra moving parts. The razor didn't decide the truth; it ordered the investigation.",
+    relatedThinkers: [
+      { name: "William of Ockham", note: "The 14th-c. Franciscan whose name attached to parsimony, though not to the famous Latin phrasing." },
+      { name: "Isaac Newton", note: "Made parsimony his first 'Rule of Reasoning in Philosophy' in the Principia." },
+      { name: "Albert Einstein", note: "Associated with the qualifier that matters most: as simple as possible, but no simpler." },
+    ],
+    furtherReading: [
+      { title: "Ockham's Razors: A User's Manual", author: "Elliott Sober", year: "2015", note: "The definitive modern examination of when parsimony is and isn't a good guide." },
+      { title: "The Principia (Rules of Reasoning)", author: "Isaac Newton", year: "1687", note: "Newton's own statement of the simplicity rule, in his own words." },
+    ],
+    relatedExercises: ['necessary-sufficient', 'bayesian-update', 'hidden-premises'],
+    kindredPractices: [
+      { name: "Model selection", note: "The statistical formalization — criteria like AIC penalize extra parameters but credit the fit they earn." },
+      { name: "KISS principle", note: "The engineering folk-version: keep it simple — fewer parts, fewer failure modes." },
+    ],
+  },
+
+  // ─── Disjunction elimination ───────────────────────────────────────
+  'disjunction-elimination': {
+    longerAbout:
+      "The move 'either P or Q; not P; therefore Q' has two ancestries. As a formal rule it sits among Chrysippus's Stoic indemonstrables (the fifth), and logicians call this particular shape the disjunctive syllogism. Its most quoted expression, though, is Sherlock Holmes's: 'when you have eliminated the impossible, whatever remains, however improbable, must be the truth' — a line Conan Doyle gave him as early as The Sign of Four.\n\n" +
+      "The rule is valid, which is exactly what makes it dangerous in casual use. The logic is airtight given the disjunction — but the disjunction itself is an assumption, and it's usually where the reasoning breaks. Holmes can only land on the improbable remainder if his list of possibilities was genuinely complete. In real life, 'it's either A or B' is constantly a disguised 'it's either A or B or some C I haven't thought of,' and the whole elimination collapses the moment the unlisted option turns out to be the truth.\n\n" +
+      "There's a second, quieter trap: the kind of 'or.' Logicians distinguish the inclusive or (at least one, maybe both) from the exclusive or (exactly one). Disjunctive syllogism is safe either way, but everyday reasoning slides between them and sometimes rules out a possibility that was never actually excluded. So the practice has two halves: use the rule when the alternatives are truly exhaustive, and — far more often — catch yourself when they aren't.",
+    commonPitfalls: [
+      "Assuming the disjunction is complete. 'It's either A or B' is the step that fails most often; the real list was longer the whole time.",
+      "Eliminating an option on weak grounds just to force a clean answer. The remainder is only as solid as the ruling-out that produced it.",
+      "Forgetting to confirm the survivor. Even after eliminating the rest, check that the last option actually fits the evidence rather than merely being what's left.",
+    ],
+    workedExample:
+      "Your bike is gone from the rack. You reason: either it was stolen, or a friend borrowed it, or I left it somewhere else. You rule out 'borrowed' (no one has the lock code) and lean toward 'stolen.' Then you stop and check the list for completeness — and remember a fourth option you'd omitted: the building moved bikes during the rack repair you got an email about. You check the relocated rack. There it is. The disjunctive syllogism was running perfectly; it just had the wrong menu, and the answer was an item that was never on it.",
+    relatedThinkers: [
+      { name: "Chrysippus", note: "Catalogued the disjunctive syllogism among the Stoic indemonstrables in the 3rd c. BCE." },
+      { name: "Arthur Conan Doyle", note: "Gave Holmes the popular formulation — eliminate the impossible, and the remainder, however improbable, is the truth." },
+      { name: "John Venn", note: "Whose diagrams make vivid the inclusive-vs-exclusive 'or' distinction the rule depends on." },
+    ],
+    furtherReading: [
+      { title: "Stoic Logic", author: "Benson Mates", year: "1953", note: "The scholarly account of Chrysippus's logic and the indemonstrable inference forms." },
+      { title: "The Sign of Four", author: "Arthur Conan Doyle", year: "1890", note: "Where Holmes states the elimination principle that dramatizes the rule's appeal and its hazard." },
+    ],
+    relatedExercises: ['modus-tollens', 'necessary-sufficient', 'reductio'],
+    kindredPractices: [
+      { name: "Differential diagnosis", note: "Medicine's disciplined version — list the possible causes, then test to eliminate, while guarding against the one you forgot to list." },
+      { name: "Process of elimination", note: "The everyday cousin — only as reliable as the completeness of the options you started with." },
+    ],
+  },
+
+  // ─── Charitable interpretation ─────────────────────────────────────
+  'charitable-interpretation': {
+    longerAbout:
+      "The 'principle of charity' got its name from Neil Wilson in 1959, but its philosophical weight comes from Quine and especially Donald Davidson, who made it a condition of understanding anyone at all. Davidson's argument is radical: to interpret another person's words, you have no choice but to assume they're mostly right and mostly consistent, because an interpretation that made them come out massively false or contradictory would more likely be a bad interpretation than an accurate portrait of a fool. Charity isn't generosity; it's the price of admission to understanding.\n\n" +
+      "On the page this becomes a discipline of restraint. Before answering a position, you state it in a form its holder would endorse — not the weakest reading you can plausibly pin on them, but the strongest the words will bear. The test is concrete and unforgiving: would they recognize themselves in your account, and want to add nothing? If not, you're arguing with a figure of your own construction, and any victory is against a phantom.\n\n" +
+      "It's worth distinguishing this from its close cousin, steelmanning. Charity is interpretive — get the view they actually hold right. Steelmanning is constructive — build the best version of the view, even past what they said. Charity comes first and is the more basic obligation: you can't responsibly improve an argument you haven't yet understood.",
+    commonPitfalls: [
+      "Charitable in name only — restating the view in words that secretly smuggle in its weakness ('they basically think feelings beat facts').",
+      "Skipping the recognition test. If the holder wouldn't say 'yes, that's it,' you haven't yet earned the right to reply.",
+      "Confusing charity with agreement. Interpreting a view at its strongest doesn't commit you to it; it commits you to arguing against the real thing.",
+    ],
+    workedExample:
+      "A relative says they oppose a new bike lane. The uncharitable reading writes itself: 'they don't care about cyclists' safety.' You resist it and restate their actual view: 'You think the lane will remove parking that local shops depend on, and that the city pushed it through without consulting the businesses it affects.' You check — would they endorse that? They do, and add a detail about a specific store. Now you're positioned to respond to a real concern about process and small-business impact, a very different and far more productive conversation than the one you'd have had with the strawman.",
+    relatedThinkers: [
+      { name: "Donald Davidson", note: "Made charity a precondition of interpretation itself — you can only understand someone by assuming they're mostly right." },
+      { name: "W.V.O. Quine", note: "Word and Object grounds the principle in the practical problem of translating an unfamiliar language." },
+      { name: "Neil L. Wilson", note: "Coined the phrase 'principle of charity' in 1959." },
+    ],
+    furtherReading: [
+      { title: "Inquiries into Truth and Interpretation", author: "Donald Davidson", year: "1984", note: "The essays where charity becomes a load-bearing part of a theory of meaning." },
+      { title: "A Rulebook for Arguments", author: "Anthony Weston", year: "1986", note: "Puts the principle to practical, everyday use for ordinary disagreements." },
+    ],
+    relatedExercises: ['steelmanning', 'ideological-turing-test', 'concession-and-counter'],
+    kindredPractices: [
+      { name: "Rapoport's rules", note: "Anatol Rapoport's protocol — restate your target's position so well they thank you, before any criticism." },
+      { name: "Active listening", note: "The therapeutic cousin — reflect back what you heard until the other person confirms you've got it." },
+    ],
+  },
+
+  // ─── Concession-and-counter ────────────────────────────────────────
+  'concession-and-counter': {
+    longerAbout:
+      "Classical rhetoric had a name for granting ground on purpose — concessio — and treated it not as weakness but as a setup. Quintilian, drilling Roman orators in the Institutio Oratoria, taught that conceding the points you can afford to concede earns you the standing to contest the one that matters. An argument that disputes everything signals an opponent who can't be reasoned with; one that concedes the obvious signals one who can.\n\n" +
+      "The structure trades on a fact about how people listen. As long as someone feels their valid point hasn't been heard, they spend their attention defending it rather than considering yours. Naming what they've gotten right — genuinely, in terms they'd accept — discharges that defensiveness and frees them to actually weigh the counter. The small but crucial hinge is the connective: 'and also' rather than 'but.' 'But' retroactively cancels the concession ('you're right, BUT' means 'you're not really right'); 'and also' lets the conceded point stand while you add to it.\n\n" +
+      "The twentieth century rediscovered this through Carl Rogers. The so-called Rogerian argument, adapted for writing by Young, Becker, and Pike, asks you to restate the opposing view to its holder's satisfaction before advancing your own — the therapist's empathy turned into a rhetorical strategy. It works for the same reason the therapy does: people change their minds in the presence of feeling understood, almost never in its absence.",
+    commonPitfalls: [
+      "Conceding something trivial or insincere. The concession only works if it's a point you genuinely grant and they genuinely care about.",
+      "Using 'but,' which erases the concession. 'And also' keeps the granted point alive while you add the counter.",
+      "Rushing past the concession to get to the rebuttal. Let the agreement land fully before you pivot, or it reads as a tactic rather than a recognition.",
+    ],
+    workedExample:
+      "A coworker argues the team should ship the feature now rather than polish it for two more weeks. Instead of opening with the risks (your real position), you start: 'You're right that we've been gold-plating this, and that shipping sooner would get us real user feedback we badly need.' You mean it. Then: 'And also, the data-loss bug in the export flow is the kind of first impression we don't get to retake — so I'd ship this week, but with that one path fixed first.' Because they heard their core point affirmed, they engage with the bug instead of re-litigating the timeline, and you converge on 'ship soon, minus the one landmine' in a fraction of the time.",
+    relatedThinkers: [
+      { name: "Quintilian", note: "The Institutio Oratoria taught concessio — yielding minor points to win the major one." },
+      { name: "Aristotle", note: "The Rhetoric anatomizes how establishing goodwill and common ground precedes effective persuasion." },
+      { name: "Carl Rogers", note: "His client-centered method became the 'Rogerian argument' — understand the other side before advancing your own." },
+    ],
+    furtherReading: [
+      { title: "Rhetoric: Discovery and Change", author: "Young, Becker & Pike", year: "1970", note: "The text that turned Rogers's therapeutic empathy into a teachable argumentative method." },
+      { title: "Rhetoric", author: "Aristotle", note: "The foundational treatment of persuasion, including the role of common ground and goodwill." },
+    ],
+    relatedExercises: ['charitable-interpretation', 'reframe-disagreement', 'anticipating-objections'],
+    kindredPractices: [
+      { name: "Rogerian argument", note: "Restate the opposing position to its holder's satisfaction before making your own case." },
+      { name: "'Yes, and' (improv)", note: "The stage discipline of accepting an offer before building on it — the same move, played for invention." },
+    ],
+  },
+
+  // ─── Ideological Turing test ───────────────────────────────────────
+  'ideological-turing-test': {
+    longerAbout:
+      "The economist Bryan Caplan proposed the test on his blog in 2011, borrowing the frame from Alan Turing. Turing's original imitation game asked whether a machine could converse well enough that a judge couldn't tell it from a human. Caplan's version asks whether you can argue for a view you reject well enough that its actual believers can't tell you're a critic in disguise. Passing means you've understood the position from the inside — not just its claims, but the felt reasons someone holds it.\n\n" +
+      "It's the most demanding member of the steelmanning family. Charitable interpretation asks you to get the view right; steelmanning asks you to build its strongest form; the ideological Turing test asks you to inhabit it convincingly enough to be mistaken for a native. That last step exposes a particular kind of ignorance — the comfortable conviction that the other side is simply stupid or wicked, which survives only as long as you never have to reproduce their reasoning in a form they'd applaud.\n\n" +
+      "The underlying idea is old. Mill, in On Liberty, warned that 'he who knows only his own side of the case knows little of that' — you don't really understand your own position until you can state the opposing one in its full force. The test makes Mill's warning operational and falsifiable: show your essay to a believer and find out, empirically, whether you understand them or only think you do.",
+    commonPitfalls: [
+      "Writing a version dripping with tells — the faint sneer, the giveaway caricature — that no actual believer would produce. If they can spot you, you've failed the test by definition.",
+      "Capturing the claims but not the motivations. The hardest and most important part is why a reasonable person finds the view compelling, not merely what it asserts.",
+      "Picking a view you've never seriously engaged. You can't pass a test on a position you've only met through its opponents.",
+    ],
+    workedExample:
+      "You favor open borders and decide to write the restrictionist essay in the first person. You can list the slogans, but to pass you have to reach the reasons a thoughtful person holds the view: that a wage floor and a welfare state may depend on bounded membership; that communities have a legitimate interest in the pace, not just the fact, of change; that 'the world's poor' is a real moral claim and so is 'my unemployed neighbor.' You show it to a restrictionist friend. They say it sounds like one of them — except you missed the argument about assimilation capacity, which they consider central. You revise. Whatever you now think of the view, you can no longer pretend its holders are simply heartless, because you just made their case in a form they signed off on.",
+    relatedThinkers: [
+      { name: "Bryan Caplan", note: "Coined the 'ideological Turing test' in 2011, adapting Turing's imitation game to belief." },
+      { name: "Alan Turing", note: "His 1950 imitation game is the original — indistinguishability as the test of a capacity." },
+      { name: "John Stuart Mill", note: "On Liberty Ch. 2: knowing only your own side of an argument is barely knowing it at all." },
+    ],
+    furtherReading: [
+      { title: "On Liberty", author: "John Stuart Mill", year: "1859", note: "Chapter 2 is the classical argument for why you must be able to state the other side." },
+      { title: "The Scout Mindset", author: "Julia Galef", year: "2021", note: "A modern treatment of the habits — including this test — that keep reasoning honest." },
+    ],
+    relatedExercises: ['steelmanning', 'charitable-interpretation', 'switch-sides'],
+    kindredPractices: [
+      { name: "Devil's advocate", note: "The lighter, looser cousin — argue the other side once, without the bar of fooling a believer." },
+      { name: "Red team", note: "The institutional form — a group tasked with making the adversary's case as convincingly as possible." },
+    ],
+  },
+
+  // ─── Reframing the disagreement ────────────────────────────────────
+  'reframe-disagreement': {
+    longerAbout:
+      "A great deal of conflict is two people defending positions when the real disagreement is about something underneath them. The canonical naming comes from Roger Fisher and William Ury's Getting to Yes, the 1981 book from the Harvard Negotiation Project: separate positions (what each side says it wants) from interests (why they want it). Two siblings fight over an orange and split it in half — only to discover one wanted the juice and the other the peel for baking. The position was 'the orange'; the interests were never actually in conflict.\n\n" +
+      "Therapy arrived at the same insight from a different door. Couples researchers like John Gottman observe that the surface argument — about dishes, money, the in-laws — is frequently a proxy for a deeper unmet need about respect, security, or being known. Sue Johnson's emotionally-focused therapy treats the recurring fight as a clue: the content keeps changing but the underlying bid stays the same, and resolving the content never helps because the content was never the problem.\n\n" +
+      "The practice borrows the move from both traditions. Instead of pressing your position harder, you ask what would have to be true for it to be right — surfacing the value or experience feeding it — and do the same for the other side. Sometimes the underlying interests turn out to be compatible all along, and the fight dissolves. Sometimes they're genuinely opposed, and you've at least traded a confused argument for an honest one.",
+    commonPitfalls: [
+      "Reframing as a tactic to win rather than to understand. If you're hunting the deeper level only to outflank them, people feel it, and it backfires.",
+      "Assuming the deeper disagreement is always resolvable. Sometimes the surface fight hides a real clash of values; naming it honestly is still progress, even without resolution.",
+      "Diagnosing only their underlying interest, not your own. The move requires excavating both sides, including the value you hadn't noticed you were defending.",
+    ],
+    workedExample:
+      "You and your partner keep fighting about how much to spend on a vacation. The surface positions: you say 'too expensive,' they say 'we deserve it.' You ask what's underneath. For you: a deep need for a financial cushion, rooted in a childhood where money was precarious. For them: a need to feel the relationship still makes room for joy, not just obligations. Named that way, the disagreement isn't about the trip's price at all — it's security versus aliveness, two values you both actually share. The conversation that was supposed to happen ('how do we honor both?') replaces the one you kept having ('is $2,000 too much?'), and the budget sorts itself out once the real thing is on the table.",
+    relatedThinkers: [
+      { name: "Fisher & Ury", note: "Getting to Yes drew the foundational distinction between positions and underlying interests." },
+      { name: "John Gottman", note: "His couples research shows the surface fight is usually a proxy for a deeper, recurring need." },
+      { name: "Sue Johnson", note: "Emotionally-focused therapy treats the repeating argument as a signal of an unmet attachment bid." },
+    ],
+    furtherReading: [
+      { title: "Getting to Yes", author: "Roger Fisher & William Ury", year: "1981", note: "The negotiation classic; 'focus on interests, not positions' is its central move." },
+      { title: "Difficult Conversations", author: "Stone, Patton & Heen", year: "1999", note: "The Harvard Negotiation Project's guide to finding the real conversation beneath the surface one." },
+    ],
+    relatedExercises: ['concession-and-counter', 'charitable-interpretation', 'switch-sides'],
+    kindredPractices: [
+      { name: "Double crux", note: "Find the single underlying belief that, if it flipped, would change each side's conclusion — then argue about that." },
+      { name: "Interests, not positions", note: "The negotiator's habit of asking 'why do they want this?' instead of bargaining over the stated demand." },
+    ],
+  },
+
+  // ─── Stoic preview ─────────────────────────────────────────────────
+  'stoic-preview': {
+    longerAbout:
+      "Premeditatio malorum — the premeditation of evils — was a daily Stoic discipline, and the conversational version simply points it at a hard talk you're about to have. Seneca recommended rehearsing exile, loss, and death in advance so that, when they came, they arrived as expected guests rather than ambushes: 'the unexpected blow falls heaviest.' Epictetus, in the Enchiridion, told his students to rehearse the disturbance before the event — to picture the crowded baths, the jostling, the theft, and to decide who they'd be in it beforehand.\n\n" +
+      "Applied to a confrontation, the move is to imagine, vividly and concretely, the version where it goes badly: the raised voice, the cruelest thing they might say, the moment your own composure could break. The aim isn't to frighten yourself but to rob those moments of their surprise. Surprise is what hijacks us; a sharp remark you've already lived through in imagination lands with a fraction of its force, leaving you free to respond as the person you decided to be rather than the one the moment provokes.\n\n" +
+      "The discipline has a modern, evidence-backed cousin. Gabriele Oettingen's research on 'mental contrasting' found that pairing a wished-for outcome with vivid anticipation of the obstacles in the way produces far better follow-through than positive visualization alone. Picturing the hard parts, it turns out, isn't pessimism — it's preparation, and the Stoics had the mechanism two thousand years before the studies confirmed it.",
+    commonPitfalls: [
+      "Letting the rehearsal curdle into dread. The point is preparation, not anticipatory suffering — visualize the bad outcome, then deliberately turn to how you'd want to meet it.",
+      "Imagining the worst but skipping the response. Half the exercise is deciding, in advance, who you want to be in the hard moment.",
+      "Mistaking vivid fear for accurate prediction. The worst case is usually less likely than it feels; rehearsing it prepares you without committing you to expect it.",
+    ],
+    workedExample:
+      "You have to tell a friend you can't lend them money again. You spend three minutes on the bad version: their face falling, the accusation that you don't really care, the silence after. Then three minutes on the response: you decide that even if they're hurt, you want to stay warm and clear, neither defensive nor cold. Two minutes naming the stake: you want to keep the friendship and keep the boundary, and you'd accept some temporary hurt to do both. When the conversation comes and they do say something sharp, you notice it land softly — you've already met this moment in rehearsal, so instead of snapping back you say the warm, clear thing you'd chosen. The preparation didn't prevent the hard moment; it changed who showed up for it.",
+    relatedThinkers: [
+      { name: "Seneca", note: "Urged daily premeditatio malorum — rehearse misfortune so it can't ambush you; 'the unexpected blow falls heaviest.'" },
+      { name: "Epictetus", note: "The Enchiridion advises rehearsing a disturbance, and your intended response, before the event." },
+      { name: "Gabriele Oettingen", note: "Her 'mental contrasting' research shows that vividly anticipating obstacles improves follow-through." },
+    ],
+    furtherReading: [
+      { title: "Letters from a Stoic", author: "Seneca", note: "Letters 91 and 107 lay out the premeditation of misfortune in Seneca's own voice." },
+      { title: "Rethinking Positive Thinking", author: "Gabriele Oettingen", year: "2014", note: "The empirical case that imagining obstacles beats imagining success." },
+    ],
+    relatedExercises: ['negative-visualization', 'premortem', 'anticipating-objections'],
+    kindredPractices: [
+      { name: "Premortem", note: "The project version of the same logic — imagine the plan has already failed, then trace why." },
+      { name: "Mental contrasting (WOOP)", note: "Oettingen's protocol: Wish, Outcome, Obstacle, Plan — pair the goal with its likely obstacles." },
+    ],
+  },
+
+  // ─── The ten-word version ──────────────────────────────────────────
+  'ten-word-version': {
+    longerAbout:
+      "Compression has always been the test prose hides from. Blaise Pascal apologized in a 1657 letter that he'd made it longer than usual only because he 'had not the time to make it shorter' — the joke being that brevity is the expensive thing, the product of more work, not less. The precis, a standard exercise in classical and Anglo-American education, drilled exactly this: reduce a passage to a fraction of its length while keeping its argument intact, and discover how much was scaffolding.\n\n" +
+      "The newsroom made a craft of it. The inverted pyramid puts the irreducible claim in the first sentence — the 'lede' — on the theory that everything after it is elaboration a hurried reader can drop. Strunk and White compressed the whole ethic into three words, 'omit needless words,' and Hemingway's 'iceberg theory' pushed further: most of a piece's substance should sit below the surface, the visible tenth carrying the weight precisely because the rest has been cut.\n\n" +
+      "What the ten-word constraint does that gentle editing doesn't is make hiding impossible. Qualifications, hedges, and rhetorical throat-clearing are the first to go, and what's left is the actual claim, stripped of its protective padding. If that bare claim sounds trivial, you were padding a platitude; if it sounds wrong, the qualifications were doing more than refine the argument — they were concealing that you didn't quite believe it.",
+    commonPitfalls: [
+      "Cheating the count with hyphenates and clauses to smuggle the hedges back in. The constraint only works if you actually obey it.",
+      "Mistaking a hard-to-compress idea for a deep one. Some ideas resist ten words because they're genuinely complex; many resist because they're muddled. Be honest about which.",
+      "Stopping at the brutal version. The ten-word cut is a diagnostic, not the final draft — learn what's load-bearing, then restore only the qualifications that earn their place.",
+    ],
+    workedExample:
+      "You've written a long, hedged paragraph arguing for remote work. The ten-word version: 'Trust people to work where they focus; measure output, not presence.' Read aloud, it's clear and defensible — the compression confirms there's a real claim under the padding. You try a different paragraph, your case against a colleague's proposal, and the ten-word version comes out as 'Their plan is risky and we should probably be careful' — which, stripped of its qualifications, reveals itself as content-free caution dressed up as analysis. The first argument survived the cut; the second didn't, and now you know which of your two paragraphs was actually saying something.",
+    relatedThinkers: [
+      { name: "Blaise Pascal", note: "Source of the 'I would have written a shorter letter if I'd had the time' insight (Lettres Provinciales, 1657)." },
+      { name: "Strunk & White", note: "The Elements of Style distilled the ethic to 'omit needless words.'" },
+      { name: "Ernest Hemingway", note: "His 'iceberg theory' — most of the meaning carried by what's left out — is compression as an aesthetic." },
+    ],
+    furtherReading: [
+      { title: "The Elements of Style", author: "Strunk & White", year: "1959", note: "The slim classic on cutting everything that isn't doing work." },
+      { title: "Politics and the English Language", author: "George Orwell", year: "1946", note: "Orwell's rules for concision and against the padding that hides empty thought." },
+    ],
+    relatedExercises: ['translation-under-constraint', 'sixty-second-case', 'argument-map'],
+    kindredPractices: [
+      { name: "Elevator pitch", note: "The business version — the whole case in the time between floors." },
+      { name: "BLUF (bottom line up front)", note: "The military and email convention of leading with the conclusion, then supporting it." },
+    ],
+  },
 };
