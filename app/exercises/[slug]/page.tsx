@@ -87,7 +87,7 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
         className="mt-5 pr-2 text-[26px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[36px] md:text-[44px]"
         style={{ fontFamily: 'var(--font-pixel-display)' }}
       >
-        <span style={{ textShadow: '3px 3px 0 var(--color-acc)' }}>
+        <span style={{ textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))' }}>
           {ex.name.toUpperCase()}
         </span>
       </h1>

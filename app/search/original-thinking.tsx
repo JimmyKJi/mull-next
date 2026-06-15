@@ -211,7 +211,7 @@ export default async function OriginalThinking() {
           fontFamily: 'var(--font-pixel-display, "Courier New", monospace)',
           fontSize: 22, fontWeight: 400,
           margin: 0, color: 'var(--color-ink)', letterSpacing: '0.04em',
-          textShadow: '3px 3px 0 #6B3E8C', lineHeight: 1.1,
+          textShadow: '3px 3px 0 var(--pixel-shadow, #6B3E8C)', lineHeight: 1.1,
         }}>
           {t('srch2.original_h2', locale).toUpperCase()}
         </h2>

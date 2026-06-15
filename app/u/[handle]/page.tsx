@@ -690,7 +690,7 @@ function pixelSectionH2(accent: string): React.CSSProperties {
     textTransform: 'uppercase',
     letterSpacing: '0.18em',
     margin: '0 0 16px',
-    textShadow: `2px 2px 0 ${accent}`,
+    textShadow: `2px 2px 0 var(--pixel-shadow, ${accent})`,
   };
 }
 

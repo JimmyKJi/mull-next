@@ -238,7 +238,7 @@ export default async function WrappedPage({
           letterSpacing: '0.04em',
           textTransform: 'uppercase',
           lineHeight: 1.15,
-          textShadow: '3px 3px 0 var(--color-acc)',
+          textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))',
         }}>
           {t('wr.headline_l1', locale)}<br />{t('wr.headline_l2', locale)}
         </h1>

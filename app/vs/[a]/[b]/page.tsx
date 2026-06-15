@@ -209,7 +209,7 @@ export default async function VsPage({
           color: 'var(--color-ink)',
           letterSpacing: '0.04em',
           textTransform: 'uppercase',
-          textShadow: '3px 3px 0 var(--color-acc)',
+          textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))',
           lineHeight: 1.1,
         }}>
           {paName.toUpperCase()} <span style={{ color: 'var(--color-acc-deep)' }}>{t('vs.vs_badge', locale)}</span> {pbName.toUpperCase()}
@@ -539,7 +539,7 @@ const sectionH2: React.CSSProperties = {
   textTransform: 'uppercase',
   letterSpacing: '0.18em',
   marginBottom: 10,
-  textShadow: '2px 2px 0 var(--color-acc)',
+  textShadow: '2px 2px 0 var(--pixel-shadow, var(--color-acc))',
 };
 
 const subtitle: React.CSSProperties = {

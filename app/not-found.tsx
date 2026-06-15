@@ -60,7 +60,7 @@ export default async function NotFound() {
           color: 'var(--color-ink)',
           letterSpacing: '0.06em',
           textTransform: 'uppercase',
-          textShadow: '3px 3px 0 #7A2E2E',
+          textShadow: '3px 3px 0 var(--pixel-shadow, #7A2E2E)',
           lineHeight: 1.1,
         }}>
           {t('nf.title', locale)}

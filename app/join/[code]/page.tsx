@@ -110,7 +110,7 @@ export default async function JoinByCodePage({
         color: 'var(--color-ink)',
         letterSpacing: '0.06em',
         textTransform: 'uppercase',
-        textShadow: '3px 3px 0 #2F5D5C',
+        textShadow: '3px 3px 0 var(--pixel-shadow, #2F5D5C)',
         lineHeight: 1.15,
       }}>
         {t('join.join_label', locale)} {preview?.name?.toUpperCase()}

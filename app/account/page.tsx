@@ -471,7 +471,7 @@ export default async function AccountPage() {
           className="mt-5 pr-2 text-[28px] leading-[1.05] tracking-[0.04em] text-ink sm:text-[40px]"
           style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
-          <span style={{ textShadow: '3px 3px 0 var(--color-acc)' }}>
+          <span style={{ textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))' }}>
             {t('account.title', locale).toUpperCase()}
           </span>
         </h1>
@@ -722,7 +722,7 @@ export default async function AccountPage() {
           textTransform: 'uppercase',
           letterSpacing: '0.18em',
           marginBottom: 18,
-          textShadow: '2px 2px 0 var(--color-acc)',
+          textShadow: '2px 2px 0 var(--pixel-shadow, var(--color-acc))',
         }}>
           ▸ {t('account.latest_result', locale).toUpperCase()}
         </h2>
@@ -864,7 +864,7 @@ export default async function AccountPage() {
             textTransform: 'uppercase',
             letterSpacing: '0.18em',
             marginBottom: 18,
-            textShadow: '2px 2px 0 #2F5D5C',
+            textShadow: '2px 2px 0 var(--pixel-shadow, #2F5D5C)',
           }}>
             ▸ {t('account.your_trajectory', locale).toUpperCase()}
           </h2>

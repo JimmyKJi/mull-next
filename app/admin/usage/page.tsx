@@ -85,7 +85,7 @@ export default async function AdminUsagePage() {
       </div>
       <h1
         className="text-[36px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[44px]"
-        style={{ fontFamily: pixel, textShadow: "3px 3px 0 var(--color-acc)" }}
+        style={{ fontFamily: pixel, textShadow: "3px 3px 0 var(--pixel-shadow, var(--color-acc))" }}
       >
         AI SPEND + KILL SWITCH
       </h1>

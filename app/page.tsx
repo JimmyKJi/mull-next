@@ -134,7 +134,7 @@ export default async function HomeV2() {
                 className="mt-6 text-[64px] leading-none tracking-[0.04em] text-ink sm:text-[96px] md:text-[128px]"
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
-                <span className="inline-block" style={{ textShadow: "6px 6px 0 var(--color-acc)" }}>
+                <span className="inline-block" style={{ textShadow: "6px 6px 0 var(--pixel-shadow, var(--color-acc))" }}>
                   MULL
                 </span>
               </h1>
@@ -283,7 +283,7 @@ export default async function HomeV2() {
               className="mt-4 text-[26px] leading-[1.05] tracking-[0.04em] text-ink sm:text-[34px]"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
-              <span style={{ textShadow: "3px 3px 0 var(--color-acc)" }}>{t("home.rhythm_title", locale)}</span>
+              <span style={{ textShadow: "3px 3px 0 var(--pixel-shadow, var(--color-acc))" }}>{t("home.rhythm_title", locale)}</span>
             </h2>
             <p
               className="mt-3 max-w-[680px] text-[15px] leading-[1.55] text-ink-soft sm:text-[16px]"
@@ -447,7 +447,7 @@ export default async function HomeV2() {
                 className="mt-5 pr-2 text-[28px] leading-[1.05] tracking-[0.04em] text-ink sm:text-[40px] md:text-[48px]"
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
-                <span style={{ textShadow: "3px 3px 0 var(--color-acc)" }}>
+                <span style={{ textShadow: "3px 3px 0 var(--pixel-shadow, var(--color-acc))" }}>
                   {t("home.n_thinkers", locale, { count: PHILOSOPHERS.length })}
                 </span>
               </h2>
@@ -501,7 +501,7 @@ export default async function HomeV2() {
             className="mt-5 text-[28px] leading-none tracking-[0.04em] text-ink sm:text-[40px]"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
-            <span style={{ textShadow: "4px 4px 0 var(--color-acc)" }}>{t("home.what_title", locale)}</span>
+            <span style={{ textShadow: "4px 4px 0 var(--pixel-shadow, var(--color-acc))" }}>{t("home.what_title", locale)}</span>
           </h2>
 
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -538,7 +538,7 @@ export default async function HomeV2() {
                     className="text-[64px] leading-none text-acc"
                     style={{
                       fontFamily: "var(--font-pixel-display)",
-                      textShadow: "4px 4px 0 var(--color-ink)",
+                      textShadow: "4px 4px 0 var(--pixel-shadow, var(--color-ink))",
                     }}
                   >
                     {card.num}
@@ -570,7 +570,7 @@ export default async function HomeV2() {
             className="mt-5 text-[28px] leading-none tracking-[0.04em] text-ink sm:text-[40px]"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
-            <span style={{ textShadow: "4px 4px 0 var(--color-acc)" }}>{t("home.can_title", locale)}</span>
+            <span style={{ textShadow: "4px 4px 0 var(--pixel-shadow, var(--color-acc))" }}>{t("home.can_title", locale)}</span>
           </h2>
           <p
             className="mt-5 max-w-[640px] text-[16px] leading-[1.55] text-ink-soft"
@@ -681,7 +681,7 @@ export default async function HomeV2() {
                 className="mt-5 pr-2 text-[22px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[32px] md:text-[40px]"
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
-                <span style={{ textShadow: "3px 3px 0 var(--color-acc)" }}>
+                <span style={{ textShadow: "3px 3px 0 var(--pixel-shadow, var(--color-acc))" }}>
                   {t("home.arch_title", locale)}
                 </span>
               </h2>
@@ -825,7 +825,7 @@ export default async function HomeV2() {
                 className="mt-5 px-2 text-[28px] leading-[1.05] tracking-[0.04em] text-acc-soft sm:text-[44px] md:text-[52px]"
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
-                <span style={{ textShadow: "3px 3px 0 var(--color-acc)" }}>
+                <span style={{ textShadow: "3px 3px 0 var(--pixel-shadow, var(--color-acc))" }}>
                   {t("home.where_sit", locale)}
                 </span>
               </h2>

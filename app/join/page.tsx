@@ -59,7 +59,7 @@ export default async function JoinPage() {
         color: 'var(--color-ink)',
         letterSpacing: '0.06em',
         textTransform: 'uppercase',
-        textShadow: '3px 3px 0 #2F5D5C',
+        textShadow: '3px 3px 0 var(--pixel-shadow, #2F5D5C)',
         lineHeight: 1.1,
       }}>
         {t('join.heading', locale)}

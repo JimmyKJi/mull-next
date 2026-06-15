@@ -207,7 +207,7 @@ export default async function ClassInsightsPage({
         color: 'var(--color-ink)',
         letterSpacing: '0.06em',
         textTransform: 'uppercase',
-        textShadow: '3px 3px 0 var(--color-acc)',
+        textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))',
         lineHeight: 1.1,
       }}>
         {t('cls.insights_title', locale)}
@@ -389,7 +389,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
         textTransform: 'uppercase',
         letterSpacing: '0.18em',
         marginBottom: 12,
-        textShadow: '2px 2px 0 var(--color-acc)',
+        textShadow: '2px 2px 0 var(--pixel-shadow, var(--color-acc))',
       }}>
         {title}
       </h2>

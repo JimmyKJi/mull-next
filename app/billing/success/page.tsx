@@ -78,7 +78,7 @@ export default async function BillingSuccessPage() {
           color: 'var(--color-ink)',
           letterSpacing: '0.06em',
           textTransform: 'uppercase',
-          textShadow: '3px 3px 0 var(--color-acc)',
+          textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))',
           lineHeight: 1.1,
         }}>
           {activated ? t('bsucc.heading_in', locale) : t('bsucc.heading_moment', locale)}

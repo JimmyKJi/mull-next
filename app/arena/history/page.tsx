@@ -96,7 +96,7 @@ export default async function ArenaHistoryPage() {
           color: "var(--color-ink)",
           letterSpacing: "0.04em",
           textTransform: "uppercase",
-          textShadow: "3px 3px 0 var(--color-acc)",
+          textShadow: "3px 3px 0 var(--pixel-shadow, var(--color-acc))",
           marginBottom: 8,
         }}
       >

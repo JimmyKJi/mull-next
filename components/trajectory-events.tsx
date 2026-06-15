@@ -335,7 +335,7 @@ const sectionH2: React.CSSProperties = {
   textTransform: 'uppercase',
   letterSpacing: '0.18em',
   marginBottom: 8,
-  textShadow: '2px 2px 0 var(--color-acc)',
+  textShadow: '2px 2px 0 var(--pixel-shadow, var(--color-acc))',
 };
 
 const sectionSubtitle: React.CSSProperties = {

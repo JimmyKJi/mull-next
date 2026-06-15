@@ -62,7 +62,7 @@ export default function ComingSoonCard({
         </div>
         <h2
           className="text-[28px] leading-tight"
-          style={{ fontFamily: pixel, color: "var(--color-ink)", textShadow: `3px 3px 0 ${accent.primary}` }}
+          style={{ fontFamily: pixel, color: "var(--color-ink)", textShadow: `3px 3px 0 var(--pixel-shadow, ${accent.primary})` }}
         >
           {title.toUpperCase()}
         </h2>

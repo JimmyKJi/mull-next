@@ -310,7 +310,7 @@ export default async function ResearchAdminPage() {
             color: 'var(--color-ink)',
             letterSpacing: '0.06em',
             textTransform: 'uppercase',
-            textShadow: '3px 3px 0 var(--color-acc)',
+            textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))',
           }}
         >
           RESEARCH CONSOLE

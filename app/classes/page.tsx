@@ -109,7 +109,7 @@ export default async function ClassesIndexPage() {
         color: 'var(--color-ink)',
         letterSpacing: '0.06em',
         textTransform: 'uppercase',
-        textShadow: '3px 3px 0 var(--color-acc)',
+        textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))',
         lineHeight: 1.1,
       }}>
         {t('cls.index_title', locale)}
@@ -180,7 +180,7 @@ export default async function ClassesIndexPage() {
             textTransform: 'uppercase',
             letterSpacing: '0.18em',
             marginBottom: 16,
-            textShadow: '2px 2px 0 var(--color-acc)',
+            textShadow: '2px 2px 0 var(--pixel-shadow, var(--color-acc))',
           }}>
             ▸ {t('cls.section_teaching', locale, { count: taught.length })}
           </h2>
@@ -199,7 +199,7 @@ export default async function ClassesIndexPage() {
             textTransform: 'uppercase',
             letterSpacing: '0.18em',
             marginBottom: 16,
-            textShadow: '2px 2px 0 #2F5D5C',
+            textShadow: '2px 2px 0 var(--pixel-shadow, #2F5D5C)',
           }}>
             ▸ {t('cls.section_enrolled', locale, { count: studentMemberships.length })}
           </h2>

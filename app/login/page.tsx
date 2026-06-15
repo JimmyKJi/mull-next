@@ -59,7 +59,7 @@ export default function LoginPage() {
             className="text-[26px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[36px]"
             style={{ fontFamily: 'var(--font-pixel-display)' }}
           >
-            <span style={{ textShadow: '3px 3px 0 var(--color-acc)' }}>
+            <span style={{ textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))' }}>
               {t('auth.welcome_back', locale).toUpperCase()}
             </span>
           </h1>

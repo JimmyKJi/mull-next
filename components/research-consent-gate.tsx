@@ -177,7 +177,7 @@ function ConsentScreen({
               textTransform: "uppercase",
               lineHeight: 1.2,
               margin: "0 0 16px",
-              textShadow: "3px 3px 0 var(--color-acc)",
+              textShadow: "3px 3px 0 var(--pixel-shadow, var(--color-acc))",
             }}
           >
             {t("consent.title", locale)}
@@ -332,7 +332,7 @@ function DemographicsStep({
               textTransform: "uppercase",
               lineHeight: 1.2,
               margin: "0 0 12px",
-              textShadow: "3px 3px 0 var(--color-acc)",
+              textShadow: "3px 3px 0 var(--pixel-shadow, var(--color-acc))",
             }}
           >
             {t("demo.gate_title", locale)}

@@ -166,7 +166,7 @@ export default async function ClassDetailPage({
         color: 'var(--color-ink)',
         letterSpacing: '0.06em',
         textTransform: 'uppercase',
-        textShadow: '3px 3px 0 var(--color-acc)',
+        textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))',
         lineHeight: 1.1,
       }}>
         {cls.name}
@@ -244,7 +244,7 @@ export default async function ClassDetailPage({
           textTransform: 'uppercase',
           letterSpacing: '0.18em',
           marginBottom: 16,
-          textShadow: '2px 2px 0 var(--color-acc)',
+          textShadow: '2px 2px 0 var(--pixel-shadow, var(--color-acc))',
         }}>
           ▸ {t(studentCount === 1 ? 'cls.roster_heading_one' : 'cls.roster_heading_many', locale, { count: studentCount })}
         </h2>
@@ -322,7 +322,7 @@ export default async function ClassDetailPage({
             textTransform: 'uppercase',
             letterSpacing: '0.18em',
             margin: 0,
-            textShadow: '2px 2px 0 #2F5D5C',
+            textShadow: '2px 2px 0 var(--pixel-shadow, #2F5D5C)',
           }}>
             ▸ {t('cls.assignments_heading', locale, { count: (assignments ?? []).length })}
           </h2>

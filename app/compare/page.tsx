@@ -212,7 +212,7 @@ export default async function ComparePage({
         className="mt-5 pr-2 text-[24px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[32px] md:text-[40px]"
         style={{ fontFamily: 'var(--font-pixel-display)' }}
       >
-        <span style={{ textShadow: '3px 3px 0 var(--color-acc)' }}>
+        <span style={{ textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))' }}>
           {youName.toUpperCase()} VS {themName.toUpperCase()}
         </span>
       </h1>
@@ -507,7 +507,7 @@ function ComparePicker({ initialYou, initialThem, locale }: { initialYou: string
         className="mt-5 pr-2 text-[26px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[34px]"
         style={{ fontFamily: 'var(--font-pixel-display)' }}
       >
-        <span style={{ textShadow: '3px 3px 0 var(--color-acc)' }}>{t('compare.picker_title', locale)}</span>
+        <span style={{ textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))' }}>{t('compare.picker_title', locale)}</span>
       </h1>
       <p
         className="mt-5 text-[16px] italic leading-[1.55] text-ink-soft"

@@ -686,3 +686,29 @@ select:focus-visible {
   cursor: not-allowed !important;
   transform: none !important;
 }
+
+/* ──────────────────────────────────────────────────────────────────
+   Chinese (CJK) title shadows.
+
+   The chunky 8-bit titles use a hard offset drop-shadow (e.g.
+   `text-shadow: 4px 4px 0 var(--color-acc)`). On the Latin pixel font
+   (Press Start 2P) that reads as a crisp retro shadow. But Press Start
+   2P has no CJK glyphs, so Chinese titles fall back to a dense system
+   font — and the hard amber offset then peeks out around every stroke,
+   producing a vibrating yellow/black doubled overlay that is painful to
+   read.
+
+   Every hard title shadow routes its color through
+   `var(--pixel-shadow, <real-accent>)`, so in English (and all other
+   locales) it resolves to its real accent. Here we set
+   `--pixel-shadow: transparent` for Simplified Chinese, collapsing the
+   offset ghost so CJK titles render as clean solid characters.
+   PixelPageHeader paints its shadow from a CSS class rather than an
+   inline color, so it gets the companion rule below.
+   ────────────────────────────────────────────────────────────────── */
+html[lang="zh-Hans"] {
+  --pixel-shadow: transparent;
+}
+html[lang="zh-Hans"] .mull-pixel-title-shadow {
+  text-shadow: none;
+}

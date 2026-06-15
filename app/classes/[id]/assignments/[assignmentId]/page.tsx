@@ -256,7 +256,7 @@ async function TeacherSubmissionsView({
           textTransform: 'uppercase',
           letterSpacing: '0.18em',
           marginBottom: 16,
-          textShadow: '2px 2px 0 #2F5D5C',
+          textShadow: '2px 2px 0 var(--pixel-shadow, #2F5D5C)',
         }}>
           ▸ {t('cls.submissions_heading', locale, { count: submissions.length, total: roster.length })}
         </h2>

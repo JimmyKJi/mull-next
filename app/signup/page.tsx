@@ -87,7 +87,7 @@ export default function SignupPage() {
                 className="text-[24px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[32px]"
                 style={{ fontFamily: 'var(--font-pixel-display)' }}
               >
-                <span style={{ textShadow: '3px 3px 0 var(--color-acc)' }}>
+                <span style={{ textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))' }}>
                   {t('auth.create_account', locale).toUpperCase()}
                 </span>
               </h1>
@@ -189,7 +189,7 @@ function ConfirmState({
         className="text-[22px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[28px]"
         style={{ fontFamily: 'var(--font-pixel-display)' }}
       >
-        <span style={{ textShadow: '3px 3px 0 var(--color-acc)' }}>
+        <span style={{ textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))' }}>
           {t('auth.check_email', locale).toUpperCase()}
         </span>
       </h1>

@@ -275,7 +275,7 @@ function Head({ n, title, locale }: { n: number; title: string; locale: Locale }
         letterSpacing: "0.2em",
         textTransform: "uppercase",
         marginBottom: 10,
-        textShadow: "2px 2px 0 var(--color-acc)",
+        textShadow: "2px 2px 0 var(--pixel-shadow, var(--color-acc))",
       }}
     >
       {t("arena.pve_step", locale, { n, title: title.toUpperCase() })}

@@ -66,7 +66,7 @@ export default async function SearchPage({
           className="mt-4 text-[22px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[28px]"
           style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
-          <span style={{ textShadow: '3px 3px 0 var(--color-acc)' }}>
+          <span style={{ textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))' }}>
             {t('search.find_someone', locale).toUpperCase()}
           </span>
         </h2>

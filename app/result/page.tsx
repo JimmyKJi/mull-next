@@ -184,7 +184,7 @@ function SparseFallback({ locale }: { locale: Locale }) {
           className="mt-6 text-[36px] leading-none tracking-[0.04em] text-ink sm:text-[56px]"
           style={{ fontFamily: "var(--font-pixel-display)" }}
         >
-          <span style={{ textShadow: "4px 4px 0 var(--color-acc)" }}>
+          <span style={{ textShadow: "4px 4px 0 var(--pixel-shadow, var(--color-acc))" }}>
             {t("res.sparse_title", locale)}
           </span>
         </h1>

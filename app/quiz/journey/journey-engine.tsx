@@ -617,7 +617,7 @@ function GateScreen({
               textTransform: "uppercase",
               lineHeight: 1.2,
               margin: "0 0 18px",
-              textShadow: "3px 3px 0 var(--color-acc)",
+              textShadow: "3px 3px 0 var(--pixel-shadow, var(--color-acc))",
             }}
           >
             {t("journey.gate_title", locale)}

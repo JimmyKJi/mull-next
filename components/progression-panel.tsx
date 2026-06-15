@@ -56,7 +56,7 @@ export default function ProgressionPanel({
           fontFamily: pixel, fontSize: 22,
           margin: 0, color: 'var(--color-ink)', letterSpacing: '0.06em',
           textTransform: 'uppercase',
-          textShadow: '3px 3px 0 var(--color-acc)',
+          textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))',
         }}>
           ▸ {t('progression.title', locale).toUpperCase()}
         </h2>
@@ -283,7 +283,7 @@ function BadgeTile({
           fontSize: 26,
           lineHeight: 1,
           color: earned ? 'var(--color-acc-deep)' : '#A39880',
-          textShadow: earned ? '1px 1px 0 var(--color-acc)' : 'none',
+          textShadow: earned ? '1px 1px 0 var(--pixel-shadow, var(--color-acc))' : 'none',
         }}
       >
         {badge.glyph}

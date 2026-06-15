@@ -254,7 +254,7 @@ export default async function ArenaPage() {
           letterSpacing: "0.2em",
           textTransform: "uppercase",
           marginBottom: 12,
-          textShadow: "2px 2px 0 var(--color-acc)",
+          textShadow: "2px 2px 0 var(--pixel-shadow, var(--color-acc))",
         }}
       >
         {t("arena.roster", locale, { n: ARENA_PHILOSOPHERS.length })}

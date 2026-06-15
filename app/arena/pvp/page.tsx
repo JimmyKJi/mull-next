@@ -115,7 +115,7 @@ export default async function ArenaPvpPage() {
             color: "var(--color-ink)",
             letterSpacing: "0.04em",
             textTransform: "uppercase",
-            textShadow: "3px 3px 0 #2F5D5C",
+            textShadow: "3px 3px 0 var(--pixel-shadow, #2F5D5C)",
             marginBottom: 10,
           }}
         >

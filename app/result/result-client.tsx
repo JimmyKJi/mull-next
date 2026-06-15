@@ -214,14 +214,14 @@ export function ResultClient({
                       {parts.article ? (
                         <div
                           className="text-[28px] sm:text-[40px] md:text-[44px]"
-                          style={{ textShadow: `3px 3px 0 ${color.primary}` }}
+                          style={{ textShadow: `3px 3px 0 var(--pixel-shadow, ${color.primary})` }}
                         >
                           {parts.article.toUpperCase()}
                         </div>
                       ) : null}
                       <div
                         className={`${parts.article ? "mt-2 " : ""}text-[34px] sm:text-[52px] md:text-[64px]`}
-                        style={{ textShadow: `3px 3px 0 ${color.primary}` }}
+                        style={{ textShadow: `3px 3px 0 var(--pixel-shadow, ${color.primary})` }}
                       >
                         {parts.main.toUpperCase()}
                       </div>
@@ -386,7 +386,7 @@ export function ResultClient({
             className="mt-4 pr-2 text-[24px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[32px] md:text-[40px]"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
-            <span style={{ textShadow: "3px 3px 0 var(--color-acc)" }}>
+            <span style={{ textShadow: "3px 3px 0 var(--pixel-shadow, var(--color-acc))" }}>
               {t("res.nearest_three", locale)}
             </span>
           </h2>
@@ -469,7 +469,7 @@ export function ResultClient({
               className="mt-4 pr-2 text-[24px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[32px] md:text-[40px]"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
-              <span style={{ textShadow: "3px 3px 0 var(--color-acc)" }}>
+              <span style={{ textShadow: "3px 3px 0 var(--pixel-shadow, var(--color-acc))" }}>
                 {t("res.you_on_map", locale)}
               </span>
             </h2>
@@ -792,7 +792,7 @@ function AlignmentCounter({
           style={{
             color,
             fontFamily: "var(--font-pixel-display)",
-            textShadow: "2px 2px 0 var(--color-acc)",
+            textShadow: "2px 2px 0 var(--pixel-shadow, var(--color-acc))",
           }}
         >
           {display}
@@ -802,7 +802,7 @@ function AlignmentCounter({
           style={{
             color,
             fontFamily: "var(--font-pixel-display)",
-            textShadow: "2px 2px 0 var(--color-acc)",
+            textShadow: "2px 2px 0 var(--pixel-shadow, var(--color-acc))",
           }}
         >
           %

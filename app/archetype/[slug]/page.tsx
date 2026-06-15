@@ -172,7 +172,7 @@ export default async function ArchetypeDetailPage({
                 fontFamily: 'var(--font-pixel-display)',
               }}
             >
-              <span style={{ textShadow: `3px 3px 0 ${color.primary}` }}>
+              <span style={{ textShadow: `3px 3px 0 var(--pixel-shadow, ${color.primary})` }}>
                 {name.toUpperCase()}
               </span>
             </h1>
