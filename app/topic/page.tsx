@@ -25,7 +25,7 @@ const sans = "'Inter', system-ui, sans-serif";
 
 export const metadata: Metadata = {
   title: 'Topics in philosophy',
-  description: 'Short, readable primers on 32 philosophical concepts — free will, stoicism, Buddhism, the trolley problem, and more. Each ends with where you sit on the map.',
+  description: 'Short, readable primers on 34 philosophical concepts — free will, stoicism, Buddhism, the trolley problem, and more. Each ends with where you sit on the map.',
   alternates: { canonical: 'https://mull.world/topic' },
 };
 

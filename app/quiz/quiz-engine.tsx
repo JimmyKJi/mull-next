@@ -340,7 +340,7 @@ export function QuizEngine({ questions, mode, locale }: Props) {
   if (!question) {
     return (
       <div className="mx-auto max-w-[720px] px-6 py-32 text-center text-ink-soft">
-        Loading…
+        Gathering the questions…
       </div>
     );
   }

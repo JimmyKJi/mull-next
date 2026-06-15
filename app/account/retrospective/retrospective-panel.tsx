@@ -129,7 +129,7 @@ export default function RetrospectivePanel({ locale = 'en' }: { locale?: Locale 
             }}>
               <EmptyStateSprite
                 variant="book"
-                caption={`Nothing to retrospect on for ${result.year} yet — you haven't taken a quiz, answered a dilemma, written a diary entry, or saved an exercise reflection in that period.`}
+                caption={`Nothing to look back on for ${result.year} yet — you haven't taken a quiz, answered a dilemma, written a diary entry, or saved an exercise reflection in that period.`}
               />
             </div>
           );

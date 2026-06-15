@@ -289,7 +289,7 @@ function RevealScene({
         <div style={{ marginTop: 24 }}>
           <SupportMullPrompt
             lead="If The Inheritor gave you something, consider keeping it open."
-            detail="The narrative quiz costs nothing to take, but a small AI fee per playthrough. Tips from people who can afford it keep Mull free for everyone else."
+            detail="The narrative quiz is free to take, but each playthrough runs a small AI bill. Tips from people who can afford it keep Mull free for everyone else."
           />
         </div>
       </div>
