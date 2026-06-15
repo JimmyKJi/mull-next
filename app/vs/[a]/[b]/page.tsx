@@ -186,6 +186,7 @@ export default async function VsPage({
             fontFamily: pixel, fontSize: 11,
             color: 'var(--color-ink-soft)', textDecoration: 'none',
             letterSpacing: 0.4, textTransform: 'uppercase',
+            display: 'inline-block', padding: '10px 0',
           }}>
             {t('vs.all_matchups', locale)}
           </Link>

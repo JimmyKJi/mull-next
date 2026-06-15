@@ -227,7 +227,7 @@ export default async function VsIndexPage() {
             style={{
               fontFamily: pixel,
               fontSize: 9.5,
-              padding: '6px 10px',
+              padding: '11px 11px',
               border: `2px solid ${g.accent}`,
               color: g.accent,
               textDecoration: 'none',

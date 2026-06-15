@@ -296,7 +296,7 @@ export default async function PhilosopherIndexPage() {
             <PixelWindow
               key={arch.key}
               title={`THE ${arch.key.toUpperCase()} · ${list.length}`}
-              badge="▶ ARCHETYPE CLUSTER"
+              badge="▶ CLUSTER"
               accent={{ primary: color.primary, deep: color.deep, soft: color.soft }}
             >
               <div className="flex items-center gap-4">
@@ -314,7 +314,7 @@ export default async function PhilosopherIndexPage() {
                 <div className="min-w-0 flex-1">
                   <Link
                     href={`/archetype/${arch.key}`}
-                    className="text-[20px] font-medium text-ink hover:text-[var(--acc-deep)] hover:underline sm:text-[22px]"
+                    className="inline-block py-1.5 text-[20px] font-medium text-ink hover:text-[var(--acc-deep)] hover:underline sm:text-[22px]"
                     style={{ fontFamily: 'var(--font-prose)', color: color.deep }}
                   >
                     {archName} →
@@ -361,7 +361,7 @@ export default async function PhilosopherIndexPage() {
       <p className="mt-12 text-center text-[13px] text-acc-deep">
         <Link
           href="/"
-          className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
+          className="inline-block py-2 underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           ← {t('philindex.back_home', locale)}
         </Link>

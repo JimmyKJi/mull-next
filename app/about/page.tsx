@@ -266,7 +266,7 @@ function AboutBodyEn() {
           </div>
         </PixelWindow>
 
-        <PixelWindow title="THE ECONOMICS, OPENLY" badge="▶ COSTS + WHO PAYS">
+        <PixelWindow title="THE ECONOMICS, OPENLY" badge="▶ WHO PAYS">
           <Prose>
             <p>
               Real products with real databases and AI inference cost
@@ -414,7 +414,7 @@ function AboutBodyEn() {
       <p className="mt-12 text-center text-[13px] text-acc-deep">
         <Link
           href="/"
-          className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
+          className="inline-block py-2 underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           ← Back to Mull
         </Link>

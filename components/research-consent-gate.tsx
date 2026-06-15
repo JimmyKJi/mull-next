@@ -264,7 +264,7 @@ function ConsentScreen({
               href="/consent"
               style={{
                 textAlign: "center",
-                paddingTop: 6,
+                padding: "14px 0",
                 fontFamily: serif,
                 fontSize: 14,
                 color: "var(--color-acc-deep)",

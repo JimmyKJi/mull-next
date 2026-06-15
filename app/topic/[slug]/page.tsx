@@ -138,6 +138,7 @@ export default async function TopicDetailPage({
             fontFamily: pixel, fontSize: 11,
             color: 'var(--color-ink-soft)', textDecoration: 'none',
             letterSpacing: 0.4, textTransform: 'uppercase',
+            display: 'inline-block', padding: '10px 0',
           }}>
             ◂ {t('topic.back_all', locale)}
           </Link>

@@ -141,7 +141,7 @@ function MethodologyBodyEn({ locale }: { locale: Locale }) {
             <li key={s.id}>
               <a
                 href={`#${s.id}`}
-                className="inline-flex items-center gap-1.5 border-2 border-ink bg-[#FFFCF4] px-2.5 py-1 text-[11px] tracking-[0.06em] text-ink transition-colors hover:bg-[#F8C75E]"
+                className="inline-flex items-center gap-1.5 border-2 border-ink bg-[#FFFCF4] px-2.5 py-2 text-[11px] tracking-[0.06em] text-ink transition-colors hover:bg-[#F8C75E]"
                 style={{ fontFamily: 'var(--font-pixel-display)' }}
               >
                 <span className="text-acc-deep">{s.n}</span>
@@ -562,7 +562,7 @@ function MethodologyBodyEn({ locale }: { locale: Locale }) {
       <p className="mt-10 text-center text-[13px] text-acc-deep">
         <Link
           href="/"
-          className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
+          className="inline-block py-2 underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           ← Back to Mull
         </Link>
@@ -610,7 +610,7 @@ function MethodologyBodyZh({ locale }: { locale: Locale }) {
             <li key={s.id}>
               <a
                 href={`#${s.id}`}
-                className="inline-flex items-center gap-1.5 border-2 border-ink bg-[#FFFCF4] px-2.5 py-1 text-[11px] tracking-[0.06em] text-ink transition-colors hover:bg-[#F8C75E]"
+                className="inline-flex items-center gap-1.5 border-2 border-ink bg-[#FFFCF4] px-2.5 py-2 text-[11px] tracking-[0.06em] text-ink transition-colors hover:bg-[#F8C75E]"
                 style={{ fontFamily: 'var(--font-pixel-display)' }}
               >
                 <span className="text-acc-deep">{s.n}</span>
@@ -923,7 +923,7 @@ function MethodologyBodyZh({ locale }: { locale: Locale }) {
       <p className="mt-10 text-center text-[13px] text-acc-deep">
         <Link
           href="/"
-          className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
+          className="inline-block py-2 underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           ← 返回 Mull
         </Link>

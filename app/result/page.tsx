@@ -197,7 +197,7 @@ function SparseFallback({ locale }: { locale: Locale }) {
           </Link>
           <Link
             href="/archetype"
-            className="text-[14px] text-ink-soft underline decoration-line decoration-2 underline-offset-4 hover:text-ink hover:decoration-acc-deep"
+            className="inline-block py-2 text-[14px] text-ink-soft underline decoration-line decoration-2 underline-offset-4 hover:text-ink hover:decoration-acc-deep"
           >
             {t("res.sparse_browse", locale)}
           </Link>

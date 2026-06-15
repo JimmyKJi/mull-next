@@ -692,13 +692,13 @@ export function ResultClient({
           >
             {t("res.also", locale)}
           </span>
-          <Link href="/quiz?mode=quick" className="hover:text-ink underline decoration-line underline-offset-3 hover:decoration-acc-deep">
+          <Link href="/quiz?mode=quick" className="py-1.5 hover:text-ink underline decoration-line underline-offset-3 hover:decoration-acc-deep">
             {t("res.retake_classic", locale)}
           </Link>
           {isSignedIn && (
             <>
               <span>·</span>
-              <Link href="/account" className="hover:text-ink underline decoration-line underline-offset-3 hover:decoration-acc-deep">
+              <Link href="/account" className="py-1.5 hover:text-ink underline decoration-line underline-offset-3 hover:decoration-acc-deep">
                 {t("res.see_trajectory", locale)}
               </Link>
             </>
