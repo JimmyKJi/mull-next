@@ -3,11 +3,90 @@
 This doc hands off enough state for the next session to pick up cold.
 Newest updates first.
 
-**Last session ended:** 2026-06-07 (vector-space UX sweep + deeper
-daily dilemma). Prior: 2026-05-27.
+**Last session ended:** 2026-06-18 (generator + dimension-context
+refinement, corpus accuracy audit, site-wide content sweep). Prior:
+2026-06-07, 2026-05-27.
 **Branch:** `claude/zen-wu-4cd09b`. Ship with
 `git push origin HEAD:redesign-2026` — that auto-deploys to
 `mull.world` via Vercel (see "How to ship" below).
+
+---
+
+## Updates from the 2026-06-18 session
+
+**Theme: refine the philosopher generator + its supporting "context"
+(dimension definitions), audit the corpus for accuracy, then sweep the
+site for stale/inaccurate user-facing content.** Jimmy's brief:
+> "refine the generator and context that we've been working based off
+> of, making the content more natural, more human, more accurate … be
+> sure to double check and audit. Then … do a site-wide swipe and
+> improve on all the content using the newly improved generator and
+> context. Then update the handoff doc on everything"
+
+Five commits on `claude/zen-wu-4cd09b`, oldest first (all pushed to
+`redesign-2026` → auto-deploy):
+
+| Commit | Title | Shape of change |
+|---|---|---|
+| `aa37c0a` | Diversify Wave 2 blurbs | Broke the em-dash template monotony in the generated `keyIdea` blurbs (88% → 37% em-dash). Reworded `i:` strings in `scripts/gen-philosophers.mjs` ENTRIES, regenerated both files. |
+| `63e1818` | 3 corpus accuracy fixes + accent-insensitive search | (1) `Kumarajila`→`Kumārajīva`; (2) bogus "Spinozism in Bayle" duplicate folded into Pierre Bayle (corpus 552→551); (3) "Whitehead's pupil — David Ray Griffin" display-name prefix stripped → `David Ray Griffin`. Plus `foldForSearch` in `lib/philosophers.ts` makes `matchesPhilosopherSearch` diacritic-blind so "kumarajiva" / "anzaldua" / "soren" find the accented names. The load-bearing `philosopherSlug` was left untouched. |
+| `5473922` | Sync dimension definitions | `DIM_DESCRIPTIONS` (lib/dimensions.ts) had drifted terser than the polished `dim.*.desc` copy users actually read. Brought the canonical copy in line. De-jargoned Mystical Receptivity: "the apophatic" → "the unsayable" (en only). |
+| `0a68a8d` | Fix stale `iconoclast` key | The archetype was renamed iconoclast→hammer but six dead-key refs lingered: 5 `relatedArchetypes` arrays in `lib/topics.ts` (rendered chips linking to `/archetype/iconoclast` → `notFound()` 404) + the mobile Diogenes sprite on the home page (fell through `ARCHETYPE_COLORS` to a default colour). All → `hammer`. |
+| `0072ba9` | Dynamic THINKERS count | The home "THINKERS" card body said "Over 500 philosophers" right beneath its own live `551` headline stat. Now `{count}`-interpolated from `PHILOSOPHERS.length` so it can't restale. |
+
+### How the generator + corpus actually work (re-confirmed this session)
+
+- `scripts/gen-philosophers.mjs` emits the **`keyIdea` (`i:`) verbatim** —
+  there is no procedural sentence assembly. So "more natural" means
+  rewording the hand-authored `i:` strings, then `node
+  scripts/gen-philosophers.mjs --apply` (splices BOTH
+  `lib/philosophers.ts` and `public/mull.html`), then `node
+  scripts/sync-mull-html-aliases.mjs --apply` to restore the per-entry
+  aliases that `--apply` wipes from mull.html.
+- Setting an entry's `i:` to `(see X)` or `(already in db …)` REMOVES it
+  from output (the emit-skip logic at the dedup loop). That's how the
+  Bayle duplicate was folded without leaving a stub.
+- **Audit verdict:** the Wave 2 corpus is accurate. All 16 "Her …"
+  blurb openers map to actual women (no mis-gendering); the 3 fixes
+  above were the only real defects across 385 entries. Calibration
+  clean — 551 corpus, **0** entries below the 0.92 isolation threshold.
+  `npx tsc --noEmit` → 0 throughout.
+
+### Dimension definitions live in TWO places (edit both)
+
+- `lib/translations.ts` `dim.XX.desc` (en) — **human-facing**: what
+  users read on /methodology + /archetype via `t()`. This was the
+  *better, fuller* copy.
+- `lib/dimensions.ts` `DIM_DESCRIPTIONS` — **machine-facing**: injected
+  into the dilemma/exercises/diary AI scoring prompts (plus a dead `||`
+  fallback on /methodology). This was the *terser, drifted* copy.
+
+`5473922` points the machine copy at the human copy so the model scores
+against the same definitions users see. If you change a dimension
+definition, change BOTH. The 7 non-en `dim.*.desc` locales remain
+frozen under the i18n freeze — en-only edits.
+
+### Site-wide swipe — what was checked, what was left alone
+
+Changed: dimension definitions, the iconoclast bug, the home THINKERS
+count. **Audited and deliberately left intact** (already strong; the
+project's conservative mandate): the quiz chapter microcopy
+(`app/quiz/quiz-engine.tsx` `CHAPTER_TITLES`/`CHAPTER_LINES` — literate
+and rhythmic by design), `lib/dim-narration.ts` compare-mode pole
+fragments (well-written but machine-spliced via a fragile verb-regex —
+risky to touch), all of `lib/archetypes.ts` long-form essays, and the
+methodology page (it renders the improved dims via `t()`; no stale
+counts). A thorough read-only defect sweep across user-facing routes
+surfaced exactly one issue — the home count, now fixed. No broken
+internal links; every `archetypeKey`/`withKey` literal in the app is
+one of the canonical 10 archetypes.
+
+### Correction to the 2026-06-07 handoff (below)
+
+That section lists the `SUGGESTED_TOPICS` debate chips under "What's
+next … (NOT started)." They were in fact shipped later the same day —
+`lib/debate-topics.ts` + chip reordering in both debate forms (commit
+`b3981a2`). That vector-space next-item is done.
 
 ---
 
