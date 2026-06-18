@@ -1,6 +1,6 @@
 # Philosopher calibration report
 
-Generated: 2026-05-27T22:34:35.756Z.  Corpus size: 552.
+Generated: 2026-06-18T18:35:11.786Z.  Corpus size: 552.
 
 Top-1 nearest-kin similarity — mean 0.992, median 0.994.
 Entries below the isolation threshold (0.92): **0**.

@@ -4705,7 +4705,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Anaximander",
     "dates": "~610–546 BCE",
-    "keyIdea": "The boundless (apeiron) is the source of all things — pre-Socratic first physics.",
+    "keyIdea": "Pre-Socratic first physics: the boundless (apeiron) is the source of all things.",
     "vector": [
       5,
       6,
@@ -4783,7 +4783,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Zeno of Elea",
     "dates": "~490–430 BCE",
-    "keyIdea": "Paradoxes of motion — reason undermines the senses; reality is one and unchanging.",
+    "keyIdea": "His paradoxes of motion turn reason against the senses; reality stays one and unchanging.",
     "vector": [
       5,
       4,
@@ -4835,7 +4835,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Leucippus",
     "dates": "~5th c. BCE",
-    "keyIdea": "First atomist — reality is void plus indivisible atoms in motion.",
+    "keyIdea": "The first atomist held reality to be nothing but void and indivisible atoms in motion.",
     "vector": [
       5,
       6,
@@ -4913,7 +4913,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Antisthenes",
     "dates": "~445–365 BCE",
-    "keyIdea": "Virtue alone suffices for happiness — Cynic forerunner, friend of Socrates.",
+    "keyIdea": "A forerunner of the Cynics and friend of Socrates, he taught that virtue alone suffices for happiness.",
     "vector": [
       5,
       5,
@@ -4965,7 +4965,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Chrysippus",
     "dates": "~279–206 BCE",
-    "keyIdea": "Second founder of Stoicism — propositional logic, fate, and assent.",
+    "keyIdea": "The second founder of Stoicism, who built out its propositional logic, its fate, and its theory of assent.",
     "vector": [
       7,
       6,
@@ -4991,7 +4991,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Posidonius",
     "dates": "~135–51 BCE",
-    "keyIdea": "Middle Stoic synthesizer — astronomy, geography, sympathetic cosmos.",
+    "keyIdea": "A middle Stoic who synthesized astronomy, geography, and a sympathetic cosmos.",
     "vector": [
       7,
       6,
@@ -5017,7 +5017,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Musonius Rufus",
     "dates": "~25–95",
-    "keyIdea": "Stoic teacher of Epictetus — women equally capable of philosophy.",
+    "keyIdea": "Teacher of Epictetus, and a Stoic who held women equally capable of philosophy.",
     "vector": [
       7,
       6,
@@ -5043,7 +5043,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Hierocles the Stoic",
     "dates": "2nd c.",
-    "keyIdea": "Oikeiōsis — concentric circles of moral concern radiating outward.",
+    "keyIdea": "Oikeiōsis: concentric circles of moral concern radiating outward.",
     "vector": [
       7,
       6,
@@ -5095,7 +5095,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Carneades",
     "dates": "~214–129 BCE",
-    "keyIdea": "Pithanon — the persuasive — as guide where certainty fails.",
+    "keyIdea": "When certainty fails, the pithanon (the persuasive) becomes the only guide.",
     "vector": [
       5,
       6,
@@ -5121,7 +5121,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Aenesidemus",
     "dates": "1st c. BCE",
-    "keyIdea": "Revived Pyrrhonism — the ten tropes against dogmatic claims.",
+    "keyIdea": "He revived Pyrrhonism, marshalling the ten tropes against every dogmatic claim.",
     "vector": [
       5,
       6,
@@ -5225,7 +5225,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Proclus",
     "dates": "412–485",
-    "keyIdea": "Systematic Neoplatonism — every cause overflows itself; reality is graded triads.",
+    "keyIdea": "In his systematic Neoplatonism every cause overflows itself, and reality descends in graded triads.",
     "vector": [
       5,
       5,
@@ -5303,7 +5303,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Boethius",
     "dates": "~480–524",
-    "keyIdea": "Consolation of Philosophy — fortune's wheel turned in a death cell.",
+    "keyIdea": "The Consolation of Philosophy turned fortune's wheel from inside a death cell.",
     "vector": [
       8,
       5,
@@ -5329,7 +5329,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Plutarch",
     "dates": "~46–119",
-    "keyIdea": "Lives in parallel — character revealed through moral comparison.",
+    "keyIdea": "In the parallel Lives, character stands revealed through moral comparison.",
     "vector": [
       7,
       6,
@@ -5381,7 +5381,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Marcus Tullius Varro",
     "dates": "116–27 BCE",
-    "keyIdea": "Encyclopedist — three hundred theologies catalogued before judgment.",
+    "keyIdea": "An encyclopedist who catalogued three hundred theologies before venturing judgment.",
     "vector": [
       7,
       6,
@@ -5433,7 +5433,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Origen",
     "dates": "~185–254",
-    "keyIdea": "Allegorical exegesis and apokatastasis — even the devil eventually saved.",
+    "keyIdea": "His allegorical exegesis reached as far as apokatastasis, the claim that even the devil is eventually saved.",
     "vector": [
       7,
       5,
@@ -5485,7 +5485,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Pseudo-Dionysius",
     "dates": "~5th–6th c.",
-    "keyIdea": "Apophatic theology — what God is not, the only honest path.",
+    "keyIdea": "Apophatic theology: saying only what God is not, the one honest path.",
     "vector": [
       7,
       6,
@@ -5511,7 +5511,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Maximus the Confessor",
     "dates": "~580–662",
-    "keyIdea": "Cosmic liturgy — Christ as the recapitulation of all logoi.",
+    "keyIdea": "A cosmic liturgy in which Christ recapitulates all the logoi.",
     "vector": [
       7,
       5,
@@ -5563,7 +5563,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Bonaventure",
     "dates": "1221–1274",
-    "keyIdea": "Itinerarium — the soul's journey through nature to God's depths.",
+    "keyIdea": "The Itinerarium charts the soul's journey through nature into God's depths.",
     "vector": [
       7,
       6,
@@ -5589,7 +5589,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Avicebron (Ibn Gabirol)",
     "dates": "~1021–1058",
-    "keyIdea": "Fons Vitae — universal matter and form even in spiritual substances.",
+    "keyIdea": "In Fons Vitae, even spiritual substances are composed of universal matter and form.",
     "vector": [
       5,
       6,
@@ -5615,7 +5615,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Peter Abelard",
     "dates": "1079–1142",
-    "keyIdea": "Conceptualism — universals as concepts in the mind, neither things nor names.",
+    "keyIdea": "For his conceptualism, universals are concepts in the mind, neither things nor names.",
     "vector": [
       5,
       5,
@@ -5641,7 +5641,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Heloise of Argenteuil",
     "dates": "~1098–1164",
-    "keyIdea": "Letters to Abelard — love as the truest motive, not law or duty.",
+    "keyIdea": "Her letters to Abelard make love the truest motive, above law or duty.",
     "vector": [
       5,
       7,
@@ -5745,7 +5745,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Marguerite Porete",
     "dates": "~1250–1310",
-    "keyIdea": "Mirror of Simple Souls — the soul annihilated into divine love.",
+    "keyIdea": "Her Mirror of Simple Souls follows the soul as it is annihilated into divine love.",
     "vector": [
       7,
       5,
@@ -5797,7 +5797,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Marsilius of Padua",
     "dates": "~1275–1342",
-    "keyIdea": "Defender of the Peace — secular sovereignty over spiritual authority.",
+    "keyIdea": "In the Defender of the Peace, secular sovereignty outranks spiritual authority.",
     "vector": [
       5,
       6,
@@ -5823,7 +5823,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Marsilio Ficino",
     "dates": "1433–1499",
-    "keyIdea": "Renaissance Neoplatonism — soul as the bond between God and matter.",
+    "keyIdea": "For his Renaissance Neoplatonism, the soul is the bond between God and matter.",
     "vector": [
       5,
       5,
@@ -5849,7 +5849,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Pico della Mirandola",
     "dates": "1463–1494",
-    "keyIdea": "Oration on the Dignity of Man — self-fashioning as the human birthright.",
+    "keyIdea": "His Oration on the Dignity of Man makes self-fashioning the human birthright.",
     "vector": [
       5,
       6,
@@ -5875,7 +5875,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Pietro Pomponazzi",
     "dates": "1462–1525",
-    "keyIdea": "Mortality of the soul — virtue worth pursuing for its own sake.",
+    "keyIdea": "If the soul is mortal, then virtue is worth pursuing for its own sake.",
     "vector": [
       4,
       7,
@@ -5927,7 +5927,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Tommaso Campanella",
     "dates": "1568–1639",
-    "keyIdea": "City of the Sun — utopian republic governed by knowledge.",
+    "keyIdea": "His City of the Sun is a utopian republic governed by knowledge.",
     "vector": [
       5,
       5,
@@ -5953,7 +5953,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Lorenzo Valla",
     "dates": "~1407–1457",
-    "keyIdea": "Philological criticism — the Donation of Constantine exposed as forgery.",
+    "keyIdea": "Through philological criticism he exposed the Donation of Constantine as a forgery.",
     "vector": [
       5,
       6,
@@ -6005,7 +6005,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Hadewijch of Antwerp",
     "dates": "~13th c.",
-    "keyIdea": "Beguine mystic — the storm of love (minne) as God's own life.",
+    "keyIdea": "A Beguine mystic for whom the storm of love (minne) is God's own life.",
     "vector": [
       7,
       6,
@@ -6057,7 +6057,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Hugh of Saint Victor",
     "dates": "~1096–1141",
-    "keyIdea": "Three eyes — flesh, reason, and contemplation each seeing differently.",
+    "keyIdea": "Flesh, reason, and contemplation are three eyes, each seeing differently.",
     "vector": [
       5,
       5,
@@ -6109,7 +6109,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Ramon Llull",
     "dates": "~1232–1316",
-    "keyIdea": "Ars Magna — combinatorial logic to convert through reason alone.",
+    "keyIdea": "His Ars Magna was combinatorial logic meant to convert through reason alone.",
     "vector": [
       5,
       5,
@@ -6135,7 +6135,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Al-Razi (Rhazes)",
     "dates": "~865–925",
-    "keyIdea": "Naturalism and skepticism — five eternal principles, prophecy unnecessary.",
+    "keyIdea": "A naturalist and skeptic who posited five eternal principles and held prophecy unnecessary.",
     "vector": [
       5,
       6,
@@ -6161,7 +6161,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Al-Biruni",
     "dates": "973–1048",
-    "keyIdea": "India — comparative method without polemic; honest description first.",
+    "keyIdea": "On India he practiced comparison without polemic, putting honest description first.",
     "vector": [
       5,
       6,
@@ -6213,7 +6213,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Ibn Khaldun",
     "dates": "1332–1406",
-    "keyIdea": "Muqaddimah — asabiyyah (social cohesion) as the engine of dynastic cycles.",
+    "keyIdea": "In the Muqaddimah, asabiyyah (social cohesion) drives the cycle of dynasties.",
     "vector": [
       5,
       6,
@@ -6265,7 +6265,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Al-Jahiz",
     "dates": "~776–869",
-    "keyIdea": "Book of Animals — early observations on adaptation, sociology of speech.",
+    "keyIdea": "His Book of Animals offered early observations on adaptation and the sociology of speech.",
     "vector": [
       5,
       6,
@@ -6343,7 +6343,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Junayd of Baghdad",
     "dates": "~830–910",
-    "keyIdea": "Sober Sufism — return to the world after fana, carrying knowledge of unity.",
+    "keyIdea": "A sober Sufi who returns to the world after fana, carrying knowledge of unity.",
     "vector": [
       6,
       7,
@@ -6369,7 +6369,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Bahya ibn Paquda",
     "dates": "~1050–1120",
-    "keyIdea": "Duties of the Heart — inner intention as the heart of Jewish piety.",
+    "keyIdea": "In Duties of the Heart, inner intention is the heart of Jewish piety.",
     "vector": [
       6,
       6,
@@ -6395,7 +6395,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Judah Halevi",
     "dates": "~1075–1141",
-    "keyIdea": "Kuzari — Jewish particularity over universal philosophy.",
+    "keyIdea": "His Kuzari sets Jewish particularity above universal philosophy.",
     "vector": [
       6,
       6,
@@ -6447,7 +6447,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Isaac Luria",
     "dates": "1534–1572",
-    "keyIdea": "Lurianic Kabbalah — divine contraction, the shattering, and repair (tikkun).",
+    "keyIdea": "Lurianic Kabbalah tells of divine contraction, the shattering, and repair (tikkun).",
     "vector": [
       6,
       6,
@@ -6499,7 +6499,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Dharmakirti",
     "dates": "~600–660",
-    "keyIdea": "Buddhist logic and epistemology — perception and inference rebuilt.",
+    "keyIdea": "He rebuilt Buddhist logic and epistemology from perception and inference.",
     "vector": [
       7,
       5,
@@ -6525,7 +6525,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Dignaga",
     "dates": "~480–540",
-    "keyIdea": "Pramanasamuccaya — the founder of Buddhist epistemology.",
+    "keyIdea": "The founder of Buddhist epistemology, author of the Pramanasamuccaya.",
     "vector": [
       7,
       5,
@@ -6577,7 +6577,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Vasubandhu",
     "dates": "~4th c.",
-    "keyIdea": "Twenty Verses — defense of mind-only against the realist objection.",
+    "keyIdea": "His Twenty Verses defends mind-only against the realist objection.",
     "vector": [
       7,
       5,
@@ -6603,7 +6603,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Buddhaghosa",
     "dates": "~5th c.",
-    "keyIdea": "Visuddhimagga — the path of purification; Theravada commentary master.",
+    "keyIdea": "The Visuddhimagga lays out the path of purification; he was Theravada's master commentator.",
     "vector": [
       6,
       4,
@@ -6629,7 +6629,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Padmasambhava",
     "dates": "~8th c.",
-    "keyIdea": "Tibetan tantric founder — recognize mind as primordial awareness.",
+    "keyIdea": "The founder of Tibetan tantra, who taught the recognition of mind as primordial awareness.",
     "vector": [
       7,
       5,
@@ -6707,7 +6707,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Longchenpa",
     "dates": "1308–1364",
-    "keyIdea": "Dzogchen master — primordial purity beyond all training.",
+    "keyIdea": "A Dzogchen master who pointed to a primordial purity beyond all training.",
     "vector": [
       7,
       5,
@@ -6733,7 +6733,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Patrul Rinpoche",
     "dates": "1808–1887",
-    "keyIdea": "Words of My Perfect Teacher — the preliminary practices made plain.",
+    "keyIdea": "His Words of My Perfect Teacher makes the preliminary practices plain.",
     "vector": [
       7,
       5,
@@ -6785,7 +6785,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Zhiyi",
     "dates": "538–597",
-    "keyIdea": "Tiantai founder — three truths held in mutual containment.",
+    "keyIdea": "The founder of Tiantai, who held three truths in mutual containment.",
     "vector": [
       7,
       5,
@@ -6863,7 +6863,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Bankei Yotaku",
     "dates": "1622–1693",
-    "keyIdea": "The Unborn — your nature before opinion, prior to all method.",
+    "keyIdea": "The Unborn: your nature before opinion, prior to all method.",
     "vector": [
       5,
       7,
@@ -6915,7 +6915,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Wonhyo",
     "dates": "617–686",
-    "keyIdea": "Korean Buddhist synthesis — drinking from a skull, awakened by it.",
+    "keyIdea": "Korean Buddhist synthesis, awakened by drinking from a skull.",
     "vector": [
       5,
       7,
@@ -6941,7 +6941,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Jinul",
     "dates": "1158–1210",
-    "keyIdea": "Korean Seon — sudden awakening followed by gradual cultivation.",
+    "keyIdea": "In Korean Seon, sudden awakening is followed by gradual cultivation.",
     "vector": [
       5,
       7,
@@ -6967,7 +6967,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Wang Bi",
     "dates": "226–249",
-    "keyIdea": "Neo-Daoist commentary on the Yijing and Laozi — non-being as ground.",
+    "keyIdea": "His Neo-Daoist commentaries on the Yijing and Laozi made non-being the ground.",
     "vector": [
       5,
       7,
@@ -7045,7 +7045,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Han Yu",
     "dates": "768–824",
-    "keyIdea": "Tang Confucian revival — orthodoxy of the Dao against Buddhism.",
+    "keyIdea": "He led the Tang Confucian revival, defending the orthodoxy of the Dao against Buddhism.",
     "vector": [
       4,
       6,
@@ -7071,7 +7071,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Cheng Yi",
     "dates": "1033–1107",
-    "keyIdea": "Investigation of things — Neo-Confucian study as moral cultivation.",
+    "keyIdea": "For this Neo-Confucian, the investigation of things is itself moral cultivation.",
     "vector": [
       5,
       6,
@@ -7149,7 +7149,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Dai Zhen",
     "dates": "1724–1777",
-    "keyIdea": "Evidential learning — feelings investigated yield principles, not blocked by them.",
+    "keyIdea": "In his evidential learning, feelings investigated yield principles rather than blocking them.",
     "vector": [
       5,
       7,
@@ -7175,7 +7175,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Kang Youwei",
     "dates": "1858–1927",
-    "keyIdea": "Great Unity — utopian reformist Confucianism for a modern China.",
+    "keyIdea": "His Great Unity is a utopian, reformist Confucianism for a modern China.",
     "vector": [
       5,
       6,
@@ -7227,7 +7227,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Mou Zongsan",
     "dates": "1909–1995",
-    "keyIdea": "Contemporary New Confucianism — moral metaphysics from intellectual intuition.",
+    "keyIdea": "His contemporary New Confucianism draws a moral metaphysics from intellectual intuition.",
     "vector": [
       5,
       6,
@@ -7279,7 +7279,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Montaigne",
     "dates": "1533–1592",
-    "keyIdea": "Essays — Que sais-je? Skepticism turned into self-portrait.",
+    "keyIdea": "His Essays ask \"Que sais-je?\", turning skepticism into self-portrait.",
     "vector": [
       5,
       6,
@@ -7331,7 +7331,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Johannes Kepler",
     "dates": "1571–1630",
-    "keyIdea": "Planets dance to laws — mysticism and precise measurement together.",
+    "keyIdea": "Planets dance to laws, mysticism and precise measurement kept together.",
     "vector": [
       4,
       6,
@@ -7357,7 +7357,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Hugo Grotius",
     "dates": "1583–1645",
-    "keyIdea": "Natural law and international right — peace built on shared reason.",
+    "keyIdea": "In natural law and international right, peace is built on shared reason.",
     "vector": [
       5,
       6,
@@ -7383,7 +7383,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Margaret Cavendish",
     "dates": "1623–1673",
-    "keyIdea": "Vitalist materialism — matter perceives and reasons throughout.",
+    "keyIdea": "Her vitalist materialism has matter perceiving and reasoning throughout.",
     "vector": [
       4,
       6,
@@ -7409,7 +7409,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Anne Conway",
     "dates": "1631–1679",
-    "keyIdea": "Principles — one substance with infinite gradations; influenced Leibniz.",
+    "keyIdea": "Her Principles posits one substance with infinite gradations, and influenced Leibniz.",
     "vector": [
       4,
       5,
@@ -7461,7 +7461,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Cudworth",
     "dates": "1617–1688",
-    "keyIdea": "Cambridge Platonist — eternal moral truths, plastic nature.",
+    "keyIdea": "A Cambridge Platonist who defended eternal moral truths and a plastic nature.",
     "vector": [
       5,
       5,
@@ -7513,7 +7513,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Spinozism in Bayle",
     "dates": "1647–1706",
-    "keyIdea": "Pierre Bayle — Dictionary that armed the Enlightenment with skeptical entries.",
+    "keyIdea": "Pierre Bayle, whose Dictionary armed the Enlightenment with skeptical entries.",
     "vector": [
       5,
       6,
@@ -7565,7 +7565,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Samuel Pufendorf",
     "dates": "1632–1694",
-    "keyIdea": "Duty grounded in sociability — the moral entity over the natural body.",
+    "keyIdea": "He grounds duty in sociability, the moral entity over the natural body.",
     "vector": [
       5,
       6,
@@ -7591,7 +7591,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Anthony Ashley Cooper (Shaftesbury)",
     "dates": "1671–1713",
-    "keyIdea": "Moral sense — virtue as the harmony of feelings.",
+    "keyIdea": "Moral sense: virtue as the harmony of feelings.",
     "vector": [
       5,
       7,
@@ -7643,7 +7643,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Bernard Mandeville",
     "dates": "1670–1733",
-    "keyIdea": "Fable of the Bees — private vices, public benefits.",
+    "keyIdea": "In the Fable of the Bees, private vices become public benefits.",
     "vector": [
       4,
       6,
@@ -7669,7 +7669,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Adam Smith",
     "dates": "1723–1790",
-    "keyIdea": "Theory of Moral Sentiments — the impartial spectator inside each of us.",
+    "keyIdea": "His Theory of Moral Sentiments installs an impartial spectator inside each of us.",
     "vector": [
       5,
       6,
@@ -7721,7 +7721,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Thomas Reid",
     "dates": "1710–1796",
-    "keyIdea": "Common sense — the principles every philosophy must already presume.",
+    "keyIdea": "Common sense names the principles every philosophy must already presume.",
     "vector": [
       4,
       6,
@@ -7825,7 +7825,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Edmund Burke",
     "dates": "1729–1797",
-    "keyIdea": "Reflections on the Revolution — tradition as compressed wisdom.",
+    "keyIdea": "His Reflections on the Revolution treats tradition as compressed wisdom.",
     "vector": [
       6,
       5,
@@ -7851,7 +7851,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Tom Paine",
     "dates": "1737–1809",
-    "keyIdea": "Rights of Man — common sense against monarchy and dogma.",
+    "keyIdea": "Rights of Man sets common sense against monarchy and dogma.",
     "vector": [
       6,
       6,
@@ -7929,7 +7929,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Condorcet",
     "dates": "1743–1794",
-    "keyIdea": "Sketch of human progress — optimism written in hiding from the guillotine.",
+    "keyIdea": "His Sketch of human progress is optimism written in hiding from the guillotine.",
     "vector": [
       5,
       6,
@@ -7955,7 +7955,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Alexander von Humboldt",
     "dates": "1769–1859",
-    "keyIdea": "Cosmos as woven web — geography that became ecology.",
+    "keyIdea": "He saw the cosmos as a woven web, turning geography into ecology.",
     "vector": [
       6,
       6,
@@ -7981,7 +7981,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Wilhelm von Humboldt",
     "dates": "1767–1835",
-    "keyIdea": "Language shapes thought — Bildung as freely formed individuality.",
+    "keyIdea": "Language shapes thought; Bildung is freely formed individuality.",
     "vector": [
       6,
       6,
@@ -8059,7 +8059,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Friedrich Schlegel",
     "dates": "1772–1829",
-    "keyIdea": "Romantic fragment — irony as freedom from any fixed view.",
+    "keyIdea": "In the Romantic fragment, irony becomes freedom from any fixed view.",
     "vector": [
       6,
       7,
@@ -8111,7 +8111,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Madame de Staël",
     "dates": "1766–1817",
-    "keyIdea": "De l'Allemagne — Romanticism for the French; enthusiasm as a political force.",
+    "keyIdea": "Her De l'Allemagne brought Romanticism to the French and made enthusiasm a political force.",
     "vector": [
       6,
       7,
@@ -8137,7 +8137,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Adam Müller",
     "dates": "1779–1829",
-    "keyIdea": "Romantic conservatism — the organic state against atomistic liberalism.",
+    "keyIdea": "His Romantic conservatism sets the organic state against atomistic liberalism.",
     "vector": [
       5,
       6,
@@ -8163,7 +8163,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Ralph Waldo Emerson",
     "dates": "1803–1882",
-    "keyIdea": "Self-Reliance — the soul resists every membership but its own.",
+    "keyIdea": "In Self-Reliance, the soul resists every membership but its own.",
     "vector": [
       5,
       7,
@@ -8189,7 +8189,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Henry David Thoreau",
     "dates": "1817–1862",
-    "keyIdea": "Walden — simplify, simplify; conscience over civil law.",
+    "keyIdea": "Walden urges us to simplify, simplify, and to put conscience over civil law.",
     "vector": [
       5,
       7,
@@ -8241,7 +8241,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Alexis de Tocqueville",
     "dates": "1805–1859",
-    "keyIdea": "Democracy in America — equality's seductions and its soft despotisms.",
+    "keyIdea": "Democracy in America weighs equality's seductions and its soft despotisms.",
     "vector": [
       5,
       6,
@@ -8319,7 +8319,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "F.H. Bradley",
     "dates": "1846–1924",
-    "keyIdea": "Appearance and Reality — relations contradict; the Absolute alone is real.",
+    "keyIdea": "In Appearance and Reality, relations contradict, and the Absolute alone is real.",
     "vector": [
       6,
       5,
@@ -8345,7 +8345,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "T.H. Green",
     "dates": "1836–1882",
-    "keyIdea": "Idealist ethics — the common good as the proper end of state action.",
+    "keyIdea": "For his idealist ethics, the common good is the proper end of state action.",
     "vector": [
       6,
       5,
@@ -8371,7 +8371,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Henry Sidgwick",
     "dates": "1838–1900",
-    "keyIdea": "Methods of Ethics — utilitarianism, egoism, intuitionism scrupulously compared.",
+    "keyIdea": "His Methods of Ethics compares utilitarianism, egoism, and intuitionism with great scruple.",
     "vector": [
       5,
       6,
@@ -8423,7 +8423,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Pyotr Kropotkin",
     "dates": "1842–1921",
-    "keyIdea": "Mutual Aid — cooperation as a factor of evolution.",
+    "keyIdea": "Mutual Aid makes cooperation a factor of evolution.",
     "vector": [
       6,
       6,
@@ -8475,7 +8475,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Max Stirner",
     "dates": "1806–1856",
-    "keyIdea": "The Ego and Its Own — every cause besides mine is the spook of mine.",
+    "keyIdea": "In The Ego and Its Own, every cause besides mine is the spook of mine.",
     "vector": [
       6,
       7,
@@ -8553,7 +8553,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Émile Durkheim",
     "dates": "1858–1917",
-    "keyIdea": "The conscience collective — society precedes and forms the individual.",
+    "keyIdea": "For him the conscience collective comes first: society precedes and forms the individual.",
     "vector": [
       5,
       5,
@@ -8579,7 +8579,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Max Weber",
     "dates": "1864–1920",
-    "keyIdea": "Protestant Ethic — the iron cage of disenchanted rationality.",
+    "keyIdea": "The Protestant Ethic locks us in the iron cage of disenchanted rationality.",
     "vector": [
       6,
       5,
@@ -8631,7 +8631,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Lev Shestov",
     "dates": "1866–1938",
-    "keyIdea": "Athens and Jerusalem — reason cannot judge the absurdity of faith.",
+    "keyIdea": "Athens and Jerusalem: reason cannot judge the absurdity of faith.",
     "vector": [
       7,
       6,
@@ -8657,7 +8657,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Ban Zhao",
     "dates": "~45–116",
-    "keyIdea": "Lessons for Women — Han Confucian conduct manual by a female scholar.",
+    "keyIdea": "Her Lessons for Women is a Han Confucian conduct manual written by a female scholar.",
     "vector": [
       4,
       6,
@@ -8787,7 +8787,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Macrina the Younger",
     "dates": "~324–379",
-    "keyIdea": "On the Soul and Resurrection — Christian Platonism at her brother's deathbed.",
+    "keyIdea": "Her On the Soul and Resurrection brought Christian Platonism to her brother's deathbed.",
     "vector": [
       7,
       5,
@@ -8813,7 +8813,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Lalleshwari (Lal Ded)",
     "dates": "~1320–1392",
-    "keyIdea": "Kashmiri Shaivite mystic — the verses called vakhs, sung without books.",
+    "keyIdea": "A Kashmiri Shaivite mystic whose verses, the vakhs, were sung without books.",
     "vector": [
       5,
       6,
@@ -8865,7 +8865,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Sor Juana Inés de la Cruz",
     "dates": "1648–1695",
-    "keyIdea": "Mexican nun-philosopher — Respuesta defending women's right to study.",
+    "keyIdea": "A Mexican nun-philosopher whose Respuesta defended women's right to study.",
     "vector": [
       6,
       6,
@@ -8891,7 +8891,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Catharine Macaulay",
     "dates": "1731–1791",
-    "keyIdea": "History of England — republican virtue and women's equal capacity.",
+    "keyIdea": "Her History of England argues for republican virtue and women's equal capacity.",
     "vector": [
       6,
       6,
@@ -8943,7 +8943,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Harriet Martineau",
     "dates": "1802–1876",
-    "keyIdea": "Illustrations of Political Economy — sociology as moral observation.",
+    "keyIdea": "Her Illustrations of Political Economy treats sociology as moral observation.",
     "vector": [
       6,
       6,
@@ -8969,7 +8969,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Harriet Taylor Mill",
     "dates": "1807–1858",
-    "keyIdea": "Enfranchisement of Women — argument that ran through Mill's pen.",
+    "keyIdea": "Her Enfranchisement of Women is the argument that ran through Mill's pen.",
     "vector": [
       6,
       6,
@@ -8995,7 +8995,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Frances Wright",
     "dates": "1795–1852",
-    "keyIdea": "Free thought, abolition, equal education — a Course of Popular Lectures.",
+    "keyIdea": "Free thought, abolition, and equal education filled her Course of Popular Lectures.",
     "vector": [
       6,
       6,
@@ -9021,7 +9021,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Anna Julia Cooper",
     "dates": "1858–1964",
-    "keyIdea": "A Voice from the South — Black women as the measure of any republic.",
+    "keyIdea": "In A Voice from the South, Black women are the measure of any republic.",
     "vector": [
       6,
       6,
@@ -9073,7 +9073,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Charlotte Perkins Gilman",
     "dates": "1860–1935",
-    "keyIdea": "Women and Economics — domestic labor as economic invisibility.",
+    "keyIdea": "Her Women and Economics names domestic labor as economic invisibility.",
     "vector": [
       6,
       6,
@@ -9099,7 +9099,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Emma Goldman",
     "dates": "1869–1940",
-    "keyIdea": "Anarchism and Other Essays — liberty answerable only to itself.",
+    "keyIdea": "In Anarchism and Other Essays, liberty answers only to itself.",
     "vector": [
       6,
       7,
@@ -9125,7 +9125,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Rosa Mayreder",
     "dates": "1858–1938",
-    "keyIdea": "Toward a Critique of Femininity — culture's gender as constructed prison.",
+    "keyIdea": "Her Toward a Critique of Femininity treats culture's gender as a constructed prison.",
     "vector": [
       6,
       6,
@@ -9203,7 +9203,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Edith Wyschogrod",
     "dates": "1930–2009",
-    "keyIdea": "Saints and postmodernism — ethics in the gaps left by metaphysics.",
+    "keyIdea": "In Saints and postmodernism, ethics survives in the gaps left by metaphysics.",
     "vector": [
       6,
       6,
@@ -9255,7 +9255,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Susanne Langer",
     "dates": "1895–1985",
-    "keyIdea": "Philosophy in a New Key — symbol-making as the mark of mind.",
+    "keyIdea": "Her Philosophy in a New Key makes symbol-making the mark of mind.",
     "vector": [
       6,
       6,
@@ -9281,7 +9281,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Mary Calkins",
     "dates": "1863–1930",
-    "keyIdea": "Personalist self-psychology — the self as primary datum of philosophy.",
+    "keyIdea": "In her personalist self-psychology, the self is the primary datum of philosophy.",
     "vector": [
       6,
       6,
@@ -9307,7 +9307,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "L. Susan Stebbing",
     "dates": "1885–1943",
-    "keyIdea": "Thinking to Some Purpose — logic as a citizen's defense against propaganda.",
+    "keyIdea": "Her Thinking to Some Purpose arms the citizen with logic against propaganda.",
     "vector": [
       6,
       6,
@@ -9359,7 +9359,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Philippa Foot",
     "dates": "1920–2010",
-    "keyIdea": "Natural Goodness — virtues as facts about flourishing creatures.",
+    "keyIdea": "In Natural Goodness, the virtues are facts about flourishing creatures.",
     "vector": [
       5,
       6,
@@ -9411,7 +9411,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Mary Midgley",
     "dates": "1919–2018",
-    "keyIdea": "Beast and Man — animals, ethics, science not as enemies.",
+    "keyIdea": "Beast and Man refuses to set animals, ethics, and science against each other.",
     "vector": [
       6,
       6,
@@ -9463,7 +9463,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Hilde Lindemann",
     "dates": "b. 1949",
-    "keyIdea": "Damaged Identities, Narrative Repair — story as moral practice.",
+    "keyIdea": "In Damaged Identities, Narrative Repair, story becomes a moral practice.",
     "vector": [
       6,
       6,
@@ -9515,7 +9515,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Nel Noddings",
     "dates": "1929–2022",
-    "keyIdea": "Caring — relational ethics centered on the encounter between persons.",
+    "keyIdea": "Caring centers a relational ethics on the encounter between persons.",
     "vector": [
       6,
       6,
@@ -9619,7 +9619,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Catharine MacKinnon",
     "dates": "b. 1946",
-    "keyIdea": "Toward a Feminist Theory of the State — sexual hierarchy as the deepest politics.",
+    "keyIdea": "Her Feminist Theory of the State makes sexual hierarchy the deepest politics.",
     "vector": [
       6,
       6,
@@ -9645,7 +9645,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Drucilla Cornell",
     "dates": "1950–2022",
-    "keyIdea": "The imaginary domain — equality requires room to imagine oneself otherwise.",
+    "keyIdea": "In the imaginary domain, equality requires room to imagine oneself otherwise.",
     "vector": [
       6,
       6,
@@ -9697,7 +9697,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Hélène Cixous",
     "dates": "b. 1937",
-    "keyIdea": "Écriture féminine — writing from the body, refusing the binary.",
+    "keyIdea": "Écriture féminine writes from the body, refusing the binary.",
     "vector": [
       6,
       7,
@@ -9723,7 +9723,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Luce Irigaray",
     "dates": "b. 1930",
-    "keyIdea": "Speculum of the Other Woman — sexual difference as philosophical ground.",
+    "keyIdea": "Her Speculum of the Other Woman makes sexual difference philosophical ground.",
     "vector": [
       6,
       6,
@@ -9749,7 +9749,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Patricia Churchland",
     "dates": "b. 1943",
-    "keyIdea": "Neurophilosophy — moral concepts naturalized into mammal brains.",
+    "keyIdea": "Neurophilosophy naturalizes moral concepts into mammal brains.",
     "vector": [
       4,
       5,
@@ -9827,7 +9827,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Miranda Fricker",
     "dates": "b. 1966",
-    "keyIdea": "Epistemic Injustice — the wrongs done to people as knowers.",
+    "keyIdea": "Epistemic Injustice names the wrongs done to people as knowers.",
     "vector": [
       4,
       5,
@@ -9879,7 +9879,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Linda Zagzebski",
     "dates": "b. 1946",
-    "keyIdea": "Virtues of the Mind — epistemic and moral virtue as one fabric.",
+    "keyIdea": "In Virtues of the Mind, epistemic and moral virtue are one fabric.",
     "vector": [
       4,
       5,
@@ -9931,7 +9931,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Sara Ruddick",
     "dates": "1935–2011",
-    "keyIdea": "Maternal Thinking — practices of mothering as cognitive labor.",
+    "keyIdea": "Maternal Thinking treats the practices of mothering as cognitive labor.",
     "vector": [
       6,
       6,
@@ -9983,7 +9983,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Maria Lugones",
     "dates": "1944–2020",
-    "keyIdea": "World-traveling — playful pluralism against the logic of purity.",
+    "keyIdea": "World-traveling sets a playful pluralism against the logic of purity.",
     "vector": [
       6,
       6,
@@ -10009,7 +10009,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Linda Martín Alcoff",
     "dates": "b. 1955",
-    "keyIdea": "Visible Identities — race, gender, and the politics of social epistemology.",
+    "keyIdea": "Visible Identities maps race, gender, and the politics of social epistemology.",
     "vector": [
       6,
       6,
@@ -10061,7 +10061,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Tommie Shelby",
     "dates": "b. 1967",
-    "keyIdea": "Dark Ghettos — political philosophy of structural injustice.",
+    "keyIdea": "Dark Ghettos is a political philosophy of structural injustice.",
     "vector": [
       4,
       5,
@@ -10113,7 +10113,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Karl Popper",
     "dates": "1902–1994",
-    "keyIdea": "Falsifiability — open society defended by fallible knowledge.",
+    "keyIdea": "Falsifiability defends the open society with fallible knowledge.",
     "vector": [
       4,
       5,
@@ -10191,7 +10191,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Paul Feyerabend",
     "dates": "1924–1994",
-    "keyIdea": "Against Method — anything goes; epistemological anarchism.",
+    "keyIdea": "Against Method makes the case for epistemological anarchism: anything goes.",
     "vector": [
       6,
       7,
@@ -10243,7 +10243,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Bas van Fraassen",
     "dates": "b. 1941",
-    "keyIdea": "Constructive empiricism — accept what is observable, suspend on the rest.",
+    "keyIdea": "Constructive empiricism accepts what is observable and suspends on the rest.",
     "vector": [
       4,
       6,
@@ -10269,7 +10269,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Nelson Goodman",
     "dates": "1906–1998",
-    "keyIdea": "Fact, Fiction, and Forecast — grue, and ways of worldmaking.",
+    "keyIdea": "Fact, Fiction, and Forecast gives us grue, and ways of worldmaking.",
     "vector": [
       4,
       5,
@@ -10321,7 +10321,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Wilfrid Sellars",
     "dates": "1912–1989",
-    "keyIdea": "Myth of the Given — manifest and scientific images side by side.",
+    "keyIdea": "The Myth of the Given sets the manifest and scientific images side by side.",
     "vector": [
       4,
       5,
@@ -10373,7 +10373,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "John McDowell",
     "dates": "b. 1942",
-    "keyIdea": "Mind and World — second nature, the space of reasons reaching all the way.",
+    "keyIdea": "In Mind and World, second nature lets the space of reasons reach all the way.",
     "vector": [
       4,
       5,
@@ -10451,7 +10451,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Bernard Bolzano",
     "dates": "1781–1848",
-    "keyIdea": "Theory of science — propositions in themselves before the linguistic turn.",
+    "keyIdea": "His Theory of Science put propositions in themselves before the linguistic turn.",
     "vector": [
       4,
       5,
@@ -10607,7 +10607,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Norbert Wiener",
     "dates": "1894–1964",
-    "keyIdea": "Cybernetics — feedback and control as the science of communication.",
+    "keyIdea": "Cybernetics makes feedback and control the science of communication.",
     "vector": [
       4,
       6,
@@ -10633,7 +10633,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Claude Shannon",
     "dates": "1916–2001",
-    "keyIdea": "A Mathematical Theory of Communication — information measured in bits.",
+    "keyIdea": "A Mathematical Theory of Communication measures information in bits.",
     "vector": [
       4,
       6,
@@ -10711,7 +10711,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Moritz Schlick",
     "dates": "1882–1936",
-    "keyIdea": "Vienna Circle — verification as the criterion of meaning.",
+    "keyIdea": "For the Vienna Circle, verification was the criterion of meaning.",
     "vector": [
       3,
       6,
@@ -10763,7 +10763,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Gilbert Ryle",
     "dates": "1900–1976",
-    "keyIdea": "The Concept of Mind — category mistakes; no ghost in the machine.",
+    "keyIdea": "The Concept of Mind exposes category mistakes: no ghost in the machine.",
     "vector": [
       4,
       5,
@@ -10867,7 +10867,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "David Lewis",
     "dates": "1941–2001",
-    "keyIdea": "On the Plurality of Worlds — every possibility is a real world.",
+    "keyIdea": "On the Plurality of Worlds holds that every possibility is a real world.",
     "vector": [
       4,
       5,
@@ -10893,7 +10893,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Bernard Lonergan",
     "dates": "1904–1984",
-    "keyIdea": "Insight — the structure of intentional consciousness as cognitive method.",
+    "keyIdea": "Insight maps the structure of intentional consciousness as cognitive method.",
     "vector": [
       5,
       5,
@@ -11023,7 +11023,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Pavel Florensky",
     "dates": "1882–1937",
-    "keyIdea": "The Pillar and Ground of the Truth — antinomy embraced as the form of faith.",
+    "keyIdea": "The Pillar and Ground of the Truth embraces antinomy as the form of faith.",
     "vector": [
       6,
       6,
@@ -11075,7 +11075,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Mikhail Bakhtin",
     "dates": "1895–1975",
-    "keyIdea": "The dialogic imagination — selves built in the answer to another voice.",
+    "keyIdea": "The dialogic imagination builds selves in the answer to another voice.",
     "vector": [
       8,
       6,
@@ -11101,7 +11101,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Roland Barthes",
     "dates": "1915–1980",
-    "keyIdea": "The death of the author — text's pleasure lives in the reader.",
+    "keyIdea": "With the death of the author, the text's pleasure lives in the reader.",
     "vector": [
       6,
       7,
@@ -11205,7 +11205,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Étienne Balibar",
     "dates": "b. 1942",
-    "keyIdea": "Citizen subject — equality and liberty as inseparable political invention.",
+    "keyIdea": "His citizen subject makes equality and liberty an inseparable political invention.",
     "vector": [
       7,
       5,
@@ -11231,7 +11231,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Alain Badiou",
     "dates": "b. 1937",
-    "keyIdea": "Being and Event — truth procedures issuing from singular fidelity.",
+    "keyIdea": "In Being and Event, truth procedures issue from singular fidelity.",
     "vector": [
       7,
       5,
@@ -11257,7 +11257,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Jacques Rancière",
     "dates": "b. 1940",
-    "keyIdea": "The distribution of the sensible — politics as redistribution of who counts.",
+    "keyIdea": "The distribution of the sensible recasts politics as redistribution of who counts.",
     "vector": [
       7,
       5,
@@ -11309,7 +11309,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Quentin Meillassoux",
     "dates": "b. 1967",
-    "keyIdea": "After Finitude — the absolute returns through speculative reason.",
+    "keyIdea": "After Finitude lets the absolute return through speculative reason.",
     "vector": [
       7,
       5,
@@ -11335,7 +11335,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Catherine Malabou",
     "dates": "b. 1959",
-    "keyIdea": "Plasticity — the brain as the form that gives and takes form.",
+    "keyIdea": "Plasticity makes the brain the form that gives and takes form.",
     "vector": [
       7,
       5,
@@ -11361,7 +11361,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Bruno Latour",
     "dates": "1947–2022",
-    "keyIdea": "Actor-network theory — humans and nonhumans entangled in collectives.",
+    "keyIdea": "Actor-network theory entangles humans and nonhumans in collectives.",
     "vector": [
       6,
       6,
@@ -11413,7 +11413,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Karen Barad",
     "dates": "b. 1956",
-    "keyIdea": "Agential realism — phenomena, not objects, as the units of reality.",
+    "keyIdea": "Agential realism makes phenomena, not objects, the units of reality.",
     "vector": [
       6,
       6,
@@ -11465,7 +11465,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Philippe Descola",
     "dates": "b. 1949",
-    "keyIdea": "Beyond Nature and Culture — four ontologies organizing how peoples live.",
+    "keyIdea": "Beyond Nature and Culture maps four ontologies organizing how peoples live.",
     "vector": [
       5,
       7,
@@ -11517,7 +11517,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Anna Tsing",
     "dates": "b. 1952",
-    "keyIdea": "The Mushroom at the End of the World — life in capitalist ruins.",
+    "keyIdea": "The Mushroom at the End of the World finds life in capitalist ruins.",
     "vector": [
       7,
       6,
@@ -11569,7 +11569,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Charles Hartshorne",
     "dates": "1897–2000",
-    "keyIdea": "Process theology — God dipolar, suffering with creation.",
+    "keyIdea": "Process theology makes God dipolar, suffering with creation.",
     "vector": [
       6,
       6,
@@ -11621,7 +11621,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Sarvepalli Radhakrishnan",
     "dates": "1888–1975",
-    "keyIdea": "Hindu View of Life — religion as experience, philosophy as its grammar.",
+    "keyIdea": "His Hindu View of Life treats religion as experience, philosophy as its grammar.",
     "vector": [
       6,
       5,
@@ -11647,7 +11647,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Bhimrao Ambedkar",
     "dates": "1891–1956",
-    "keyIdea": "Annihilation of Caste — conversion to Buddhism as moral rebellion.",
+    "keyIdea": "Annihilation of Caste turns conversion to Buddhism into moral rebellion.",
     "vector": [
       6,
       6,
@@ -11673,7 +11673,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Vinoba Bhave",
     "dates": "1895–1982",
-    "keyIdea": "Bhoodan — land gift as Gandhian revolution by walking.",
+    "keyIdea": "Bhoodan made the land gift a Gandhian revolution by walking.",
     "vector": [
       6,
       6,
@@ -11725,7 +11725,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Osho (Rajneesh)",
     "dates": "1931–1990",
-    "keyIdea": "Dynamic meditation — sannyas remade for the modern hedonist.",
+    "keyIdea": "Dynamic meditation remade sannyas for the modern hedonist.",
     "vector": [
       5,
       7,
@@ -11751,7 +11751,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "B.K.S. Iyengar",
     "dates": "1918–2014",
-    "keyIdea": "Light on Yoga — alignment as the embodied form of intelligence.",
+    "keyIdea": "Light on Yoga treats alignment as the embodied form of intelligence.",
     "vector": [
       5,
       8,
@@ -11777,7 +11777,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Daisaku Ikeda",
     "dates": "1928–2023",
-    "keyIdea": "Soka Gakkai humanism — the practitioner's revolution from the inside.",
+    "keyIdea": "Soka Gakkai humanism stages the practitioner's revolution from the inside.",
     "vector": [
       7,
       7,
@@ -11829,7 +11829,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Robert Aitken",
     "dates": "1917–2010",
-    "keyIdea": "American Zen with social engagement — koan and conscience.",
+    "keyIdea": "He brought American Zen a social engagement of koan and conscience.",
     "vector": [
       5,
       7,
@@ -11881,7 +11881,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Pema Chödrön",
     "dates": "b. 1936",
-    "keyIdea": "When Things Fall Apart — basic goodness met in groundlessness.",
+    "keyIdea": "When Things Fall Apart meets basic goodness in groundlessness.",
     "vector": [
       7,
       6,
@@ -11933,7 +11933,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "David Bohm",
     "dates": "1917–1992",
-    "keyIdea": "Wholeness and the Implicate Order — physics and dialogue at the deepest level.",
+    "keyIdea": "Wholeness and the Implicate Order joins physics and dialogue at the deepest level.",
     "vector": [
       5,
       7,
@@ -11985,7 +11985,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "A.K. Coomaraswamy",
     "dates": "1877–1947",
-    "keyIdea": "Traditionalism — sacred art as the vehicle of metaphysical knowledge.",
+    "keyIdea": "His traditionalism makes sacred art the vehicle of metaphysical knowledge.",
     "vector": [
       6,
       6,
@@ -12011,7 +12011,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "René Guénon",
     "dates": "1886–1951",
-    "keyIdea": "The crisis of the modern world — recovery of primordial tradition.",
+    "keyIdea": "The crisis of the modern world calls for a recovery of primordial tradition.",
     "vector": [
       6,
       6,
@@ -12063,7 +12063,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Seyyed Hossein Nasr",
     "dates": "b. 1933",
-    "keyIdea": "Islamic perennialism — science divorced from sacred is metaphysical violence.",
+    "keyIdea": "For Islamic perennialism, science divorced from the sacred is metaphysical violence.",
     "vector": [
       5,
       6,
@@ -12115,7 +12115,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Muhammad Iqbal",
     "dates": "1877–1938",
-    "keyIdea": "Reconstruction of Religious Thought in Islam — the ego as God's collaborator.",
+    "keyIdea": "His Reconstruction of Religious Thought in Islam makes the ego God's collaborator.",
     "vector": [
       5,
       6,
@@ -12167,7 +12167,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Wang Hui",
     "dates": "b. 1959",
-    "keyIdea": "Rise of modern Chinese thought — modernity reread from inside the tradition.",
+    "keyIdea": "His Rise of Modern Chinese Thought rereads modernity from inside the tradition.",
     "vector": [
       5,
       6,
@@ -12219,7 +12219,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Karatani Kojin",
     "dates": "b. 1941",
-    "keyIdea": "Modes of exchange — capital and the gift as paired political histories.",
+    "keyIdea": "Modes of exchange pairs capital and the gift as political histories.",
     "vector": [
       6,
       6,
@@ -12271,7 +12271,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Chen Duxiu",
     "dates": "1879–1942",
-    "keyIdea": "Founder of Chinese Communism — New Youth's call to science and democracy.",
+    "keyIdea": "Founder of Chinese Communism, he made New Youth's call to science and democracy.",
     "vector": [
       6,
       6,
@@ -12323,7 +12323,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Helio Oiticica",
     "dates": "1937–1980",
-    "keyIdea": "Tropicália aesthetics — the parangolé as a wearable proposition.",
+    "keyIdea": "Tropicália aesthetics turns the parangolé into a wearable proposition.",
     "vector": [
       6,
       7,
@@ -12375,7 +12375,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Enrique Dussel",
     "dates": "1934–2023",
-    "keyIdea": "Philosophy of Liberation — the colonial Other as ethical first.",
+    "keyIdea": "Philosophy of Liberation makes the colonial Other ethically first.",
     "vector": [
       6,
       6,
@@ -12427,7 +12427,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Octavio Paz",
     "dates": "1914–1998",
-    "keyIdea": "The Labyrinth of Solitude — masks, otherness, the Mexican condition.",
+    "keyIdea": "The Labyrinth of Solitude reads masks, otherness, the Mexican condition.",
     "vector": [
       5,
       7,
@@ -12479,7 +12479,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Robin Wall Kimmerer",
     "dates": "b. 1953",
-    "keyIdea": "Braiding Sweetgrass — botany held in the grammar of animacy.",
+    "keyIdea": "Braiding Sweetgrass holds botany in the grammar of animacy.",
     "vector": [
       6,
       6,
@@ -12531,7 +12531,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Leanne Betasamosake Simpson",
     "dates": "b. 1971",
-    "keyIdea": "As We Have Always Done — Nishnaabeg intelligence and resurgence.",
+    "keyIdea": "As We Have Always Done draws on Nishnaabeg intelligence and resurgence.",
     "vector": [
       6,
       6,
@@ -12661,7 +12661,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Evan Thompson",
     "dates": "b. 1962",
-    "keyIdea": "Mind in Life — enactivism, the autopoietic biology of consciousness.",
+    "keyIdea": "Mind in Life grounds enactivism in the autopoietic biology of consciousness.",
     "vector": [
       5,
       6,
@@ -12687,7 +12687,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Francisco Varela",
     "dates": "1946–2001",
-    "keyIdea": "Autopoiesis — biology as self-making circular causality.",
+    "keyIdea": "Autopoiesis treats biology as self-making circular causality.",
     "vector": [
       4,
       5,
@@ -12713,7 +12713,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Nick Bostrom",
     "dates": "b. 1973",
-    "keyIdea": "Superintelligence — existential risk from misaligned optimization.",
+    "keyIdea": "Superintelligence warns of existential risk from misaligned optimization.",
     "vector": [
       6,
       5,
@@ -12765,7 +12765,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "William MacAskill",
     "dates": "b. 1987",
-    "keyIdea": "Effective altruism and longtermism — doing the most good with the most rigor.",
+    "keyIdea": "Effective altruism and longtermism do the most good with the most rigor.",
     "vector": [
       5,
       6,
@@ -12817,7 +12817,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Agnes Callard",
     "dates": "b. 1976",
-    "keyIdea": "Aspiration — becoming a person who has the value she's reaching for.",
+    "keyIdea": "Aspiration is becoming a person who has the value she's reaching for.",
     "vector": [
       4,
       6,
@@ -12869,7 +12869,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Susan Wolf",
     "dates": "b. 1952",
-    "keyIdea": "Meaning in Life — engagement with projects of objective worth.",
+    "keyIdea": "Meaning in Life comes from engagement with projects of objective worth.",
     "vector": [
       4,
       6,
@@ -12921,7 +12921,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Talia Mae Bettcher",
     "dates": "b. 1972",
-    "keyIdea": "Trans philosophy — first-person authority over one's own gender.",
+    "keyIdea": "Trans philosophy asserts first-person authority over one's own gender.",
     "vector": [
       6,
       6,
@@ -12973,7 +12973,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Jeff McMahan",
     "dates": "b. 1954",
-    "keyIdea": "Ethics of Killing — moral status across the boundary cases of life.",
+    "keyIdea": "The Ethics of Killing weighs moral status across the boundary cases of life.",
     "vector": [
       4,
       5,
@@ -13051,7 +13051,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Jay Garfield",
     "dates": "b. 1955",
-    "keyIdea": "Engaging Buddhism — analytic philosophy through Madhyamaka eyes.",
+    "keyIdea": "Engaging Buddhism reads analytic philosophy through Madhyamaka eyes.",
     "vector": [
       7,
       5,
@@ -13103,7 +13103,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Ruth Millikan",
     "dates": "b. 1933",
-    "keyIdea": "Biosemantics — content as evolved proper function.",
+    "keyIdea": "Biosemantics treats content as evolved proper function.",
     "vector": [
       4,
       6,
@@ -13181,7 +13181,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Timothy Williamson",
     "dates": "b. 1955",
-    "keyIdea": "Knowledge first — knowing as the unanalyzable starting point.",
+    "keyIdea": "Knowledge first makes knowing the unanalyzable starting point.",
     "vector": [
       4,
       5,
@@ -13259,7 +13259,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Cora Diamond",
     "dates": "b. 1937",
-    "keyIdea": "The Realistic Spirit — reading Wittgenstein and reading lives morally.",
+    "keyIdea": "The Realistic Spirit reads Wittgenstein and reads lives morally.",
     "vector": [
       4,
       6,
@@ -13311,7 +13311,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Sarah Buss",
     "dates": "b. 1953",
-    "keyIdea": "Autonomous Action — the conditions of self-governing agency.",
+    "keyIdea": "Autonomous Action sets out the conditions of self-governing agency.",
     "vector": [
       4,
       5,
@@ -13337,7 +13337,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Sobonfu Somé",
     "dates": "1969–2017",
-    "keyIdea": "West African Dagara teacher — grief rituals, intimacy of community.",
+    "keyIdea": "A West African Dagara teacher, she taught grief rituals and the intimacy of community.",
     "vector": [
       5,
       6,
@@ -13415,7 +13415,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Paulin Hountondji",
     "dates": "1942–2024",
-    "keyIdea": "African Philosophy: Myth and Reality — written discourse over ethnophilosophy.",
+    "keyIdea": "African Philosophy: Myth and Reality argues for written discourse over ethnophilosophy.",
     "vector": [
       5,
       6,
@@ -13441,7 +13441,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Mogobe Ramose",
     "dates": "b. 1949",
-    "keyIdea": "African Philosophy through Ubuntu — wholeness as relational ontology.",
+    "keyIdea": "He reads African philosophy through Ubuntu, wholeness as relational ontology.",
     "vector": [
       5,
       6,
@@ -13519,7 +13519,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Oyèrónkẹ́ Oyěwùmí",
     "dates": "b. 1957",
-    "keyIdea": "The Invention of Women — Yoruba society without the gender category.",
+    "keyIdea": "The Invention of Women describes a Yoruba society without the gender category.",
     "vector": [
       6,
       6,
@@ -13571,7 +13571,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Suzanne Césaire",
     "dates": "1915–1966",
-    "keyIdea": "Tropiques — surrealism and decolonial imagination from Martinique.",
+    "keyIdea": "Tropiques carried surrealism and decolonial imagination from Martinique.",
     "vector": [
       7,
       7,
@@ -13623,7 +13623,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Walter Rodney",
     "dates": "1942–1980",
-    "keyIdea": "How Europe Underdeveloped Africa — political economy of empire.",
+    "keyIdea": "How Europe Underdeveloped Africa lays out the political economy of empire.",
     "vector": [
       7,
       5,
@@ -13675,7 +13675,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Edward Said",
     "dates": "1935–2003",
-    "keyIdea": "Orientalism — knowledge of \"the other\" as a project of empire.",
+    "keyIdea": "Orientalism casts knowledge of \"the other\" as a project of empire.",
     "vector": [
       7,
       5,
@@ -13701,7 +13701,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Paul Gilroy",
     "dates": "b. 1956",
-    "keyIdea": "The Black Atlantic — modernity through the prism of the Middle Passage.",
+    "keyIdea": "The Black Atlantic reads modernity through the prism of the Middle Passage.",
     "vector": [
       7,
       5,
@@ -13753,7 +13753,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Lauren Berlant",
     "dates": "1957–2021",
-    "keyIdea": "Cruel Optimism — attachments to flourishing that obstruct it.",
+    "keyIdea": "Cruel Optimism names attachments to flourishing that obstruct it.",
     "vector": [
       7,
       5,
@@ -13831,7 +13831,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Boaventura de Sousa Santos",
     "dates": "b. 1940",
-    "keyIdea": "Epistemologies of the South — knowledge born of struggle.",
+    "keyIdea": "Epistemologies of the South draws on knowledge born of struggle.",
     "vector": [
       6,
       6,
@@ -13883,7 +13883,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Mariana Ortega",
     "dates": "b. 1965",
-    "keyIdea": "In-Between — multiplicitous selves of Latina lives.",
+    "keyIdea": "In-Between traces the multiplicitous selves of Latina lives.",
     "vector": [
       6,
       6,
@@ -13935,7 +13935,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Walter Mignolo",
     "dates": "b. 1941",
-    "keyIdea": "Local histories/global designs — pluri-versality against the universal.",
+    "keyIdea": "Local histories and global designs set pluri-versality against the universal.",
     "vector": [
       6,
       6,
@@ -13987,7 +13987,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Robert Boyle",
     "dates": "1627–1691",
-    "keyIdea": "Skeptical Chymist — the experimental program; clockmaker God.",
+    "keyIdea": "The Skeptical Chymist launched the experimental program under a clockmaker God.",
     "vector": [
       5,
       6,
@@ -14039,7 +14039,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Antoine Lavoisier",
     "dates": "1743–1794",
-    "keyIdea": "Conservation of mass — chemistry refounded on quantitative method.",
+    "keyIdea": "Conservation of mass refounded chemistry on quantitative method.",
     "vector": [
       4,
       6,
@@ -14247,7 +14247,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Pierre Duhem",
     "dates": "1861–1916",
-    "keyIdea": "Aim and structure of physical theory — theory underdetermined by data.",
+    "keyIdea": "Aim and Structure of Physical Theory shows theory underdetermined by data.",
     "vector": [
       4,
       6,
@@ -14455,7 +14455,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Edward O. Wilson",
     "dates": "1929–2021",
-    "keyIdea": "Consilience — unity of knowledge across the natural sciences.",
+    "keyIdea": "Consilience seeks the unity of knowledge across the natural sciences.",
     "vector": [
       4,
       6,
@@ -14559,7 +14559,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Ilya Prigogine",
     "dates": "1917–2003",
-    "keyIdea": "Dissipative structures — order through far-from-equilibrium flow.",
+    "keyIdea": "Dissipative structures bring order through far-from-equilibrium flow.",
     "vector": [
       5,
       7,
@@ -14585,7 +14585,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "D.S. Wilson",
     "dates": "b. 1949",
-    "keyIdea": "Multilevel selection — group selection rehabilitated for behavior.",
+    "keyIdea": "Multilevel selection rehabilitates group selection for behavior.",
     "vector": [
       4,
       6,
@@ -14715,7 +14715,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   {
     "name": "Karl Friston",
     "dates": "b. 1959",
-    "keyIdea": "Free energy principle — minds as inference engines minimizing surprise.",
+    "keyIdea": "The free energy principle makes minds inference engines minimizing surprise.",
     "vector": [
       4,
       5,
