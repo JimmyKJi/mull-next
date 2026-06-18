@@ -516,7 +516,7 @@ export default async function HomeV2() {
                 glyph: "✦",
                 num: String(PHILOSOPHERS.length),
                 title: t("home.card_thinkers_title", locale),
-                body: t("home.card_thinkers_body", locale),
+                body: t("home.card_thinkers_body", locale, { count: PHILOSOPHERS.length }),
               },
               {
                 glyph: "◇",

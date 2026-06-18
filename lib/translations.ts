@@ -2220,7 +2220,7 @@ export const TRANSLATIONS: TranslationMap = {
   "home.card_dimensions_title": { en: "DIMENSIONS", zh: "维度" },
   "home.card_dimensions_body": { en: "Mull places you in a 16-dimensional space of philosophical tendencies — Trust in Reason, Tragic Vision, Mystical Receptivity, Communal Embeddedness, Self as Illusion, and twelve more. Each quiz answer is a small vector that nudges your position.", zh: "Mull 把你放进一个由哲学倾向构成的 16 维空间——对理性的信任、悲剧意识、神秘感受力、共同体归属、自我即幻象，以及另外十二项。每一个测验答案都是一个微小的向量，轻轻推动你的位置。" },
   "home.card_thinkers_title": { en: "THINKERS", zh: "思想家" },
-  "home.card_thinkers_body": { en: "Over 500 philosophers are positioned alongside you, drawn from their actual writings. Buddha and Hume both score high on Self as Illusion — but for opposite reasons. The dimensions catch real distinctions.", zh: "五百多位哲学家与你并列其中，皆取自他们的实际著作。佛陀与休谟在「自我即幻象」上都得分很高——却出于相反的理由。这些维度能捕捉到真实的差异。" },
+  "home.card_thinkers_body": { en: "{count} philosophers are positioned alongside you, drawn from their actual writings. Buddha and Hume both score high on Self as Illusion — but for opposite reasons. The dimensions catch real distinctions.", zh: "五百多位哲学家与你并列其中，皆取自他们的实际著作。佛陀与休谟在「自我即幻象」上都得分很高——却出于相反的理由。这些维度能捕捉到真实的差异。" },
   "home.card_ofyou_title": { en: "OF YOU", zh: "唯一的你" },
   "home.card_ofyou_body": { en: "You're a continuous point, not a fixed type. A political compass collapses to 4 quadrants. MBTI sorts you into 16 boxes. Mull never collapses you — two people with the same archetype still have different fingerprints.", zh: "你是一个连续的点，而非固定的类型。政治光谱把人坍缩为 4 个象限。MBTI 把你塞进 16 个格子。Mull 从不把你坍缩——两个原型相同的人，依然有着不同的指纹。" },
   "home.can_eyebrow": { en: "WHAT YOU CAN DO HERE", zh: "你在这里能做什么" },
