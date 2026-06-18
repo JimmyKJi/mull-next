@@ -240,7 +240,7 @@ export default async function HomeV2() {
               <div className="mt-6 flex items-center gap-3 lg:hidden">
                 <PhilosopherSprite
                   name="Diogenes"
-                  archetypeKey="iconoclast"
+                  archetypeKey="hammer"
                   size={64}
                   floating
                 />

@@ -59,7 +59,7 @@ There's a third camp: libertarians (in the philosophical sense, not the politica
 
 What's at stake: if there's no free will, do moral responsibility and praise and blame still make sense? Most philosophers think yes, in some form — but the answer reshapes how you think about punishment, addiction, and self-improvement.`,
     relevantDimensions: ['SI', 'CE', 'TR'],
-    relatedArchetypes: ['cartographer', 'pilgrim', 'iconoclast'],
+    relatedArchetypes: ['cartographer', 'pilgrim', 'hammer'],
     philosopherNames: ['Spinoza', 'Kant', 'Schopenhauer', 'William James', 'Sartre', 'Daniel Dennett', 'Galen Strawson'],
   },
   {
@@ -85,7 +85,7 @@ This is freedom, but it's also a weight. Sartre called it "condemned to be free.
 
 Existentialists don't agree on much else. Kierkegaard was a Christian; Sartre was an atheist; Camus rejected the label. What they share is a refusal to look away from the fundamental strangeness of being a self-aware creature who has to keep choosing, with finite time, in the dark.`,
     relevantDimensions: ['SS', 'SI', 'TV'],
-    relatedArchetypes: ['threshold', 'iconoclast', 'pilgrim'],
+    relatedArchetypes: ['threshold', 'hammer', 'pilgrim'],
     philosopherNames: ['Kierkegaard', 'Sartre', 'Simone de Beauvoir', 'Camus', 'Heidegger', 'Karl Jaspers', 'Nietzsche'],
   },
   {
@@ -143,7 +143,7 @@ Twentieth-century existentialists (Sartre, Camus) lived in this aftermath. Camus
 
 Nihilism gets a bad reputation because it's confused with apathy. Real nihilism is the opposite — it's the lucid recognition that nothing has been settled for you, which means everything is genuinely at stake in how you choose to live.`,
     relevantDimensions: ['SI', 'TV', 'SS'],
-    relatedArchetypes: ['iconoclast', 'threshold', 'cartographer'],
+    relatedArchetypes: ['hammer', 'threshold', 'cartographer'],
     philosopherNames: ['Nietzsche', 'Camus', 'Sartre', 'Schopenhauer'],
   },
   {
@@ -158,7 +158,7 @@ Absurdism overlaps with existentialism but is more austere. Existentialists buil
 
 In practice, absurdism looks a lot like comedy. The cosmos doesn't care that you exist; here's a tomato sandwich anyway.`,
     relevantDimensions: ['TV', 'SS', 'SR'],
-    relatedArchetypes: ['threshold', 'iconoclast', 'pilgrim'],
+    relatedArchetypes: ['threshold', 'hammer', 'pilgrim'],
     philosopherNames: ['Camus', 'Kierkegaard', 'Nietzsche', 'Schopenhauer'],
   },
   {
@@ -377,7 +377,7 @@ Authenticity, on this view, isn't a fixed self you discover. It's a stance you t
 
 Critics push back hard. Charles Taylor and Bernard Williams asked: authentic to WHAT? There's no neutral self underneath the social roles, no preference-list waiting to be revealed. We're constituted by our communities, our languages, our histories. The advice to "be yourself" can become its own form of bad faith — pretending you can stand outside your situation and pick a true self. The honest version asks something harder: not who are you, but who do you keep choosing to become, and is the choosing yours?`,
     relevantDimensions: ['SS', 'TV', 'SI'],
-    relatedArchetypes: ['threshold', 'pilgrim', 'iconoclast'],
+    relatedArchetypes: ['threshold', 'pilgrim', 'hammer'],
     philosopherNames: ['Kierkegaard', 'Heidegger', 'Sartre', 'Simone de Beauvoir', 'Charles Taylor', 'Bernard Williams'],
   },
   {
