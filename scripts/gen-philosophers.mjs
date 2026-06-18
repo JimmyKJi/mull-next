@@ -345,7 +345,7 @@ const ENTRIES = [
   { n:`Milarepa`, d:`~1052–1135`, i:`Tibetan yogi-poet — songs from the caves; murder atoned through liberation.`, v:{MR:9,AT:9,TV:8,VA:6,SS:7,ES:5} },
   { n:`Longchenpa`, d:`1308–1364`, i:`A Dzogchen master who pointed to a primordial purity beyond all training.`, v:{MR:10,SI:8,AT:7,TD:7,VA:5} },
   { n:`Patrul Rinpoche`, d:`1808–1887`, i:`His Words of My Perfect Teacher makes the preliminary practices plain.`, v:{MR:8,AT:8,CE:6,RT:7,SS:4} },
-  { n:`Kumarajila`, d:`344–413`, tr:'buddhist-mahayana', i:`Translator of the Lotus and Diamond sutras — Chinese Buddhism's spine.`, v:{MR:8,RT:7,TR:6,UI:6} },
+  { n:`Kumārajīva`, d:`344–413`, tr:'buddhist-mahayana', i:`Translator of the Lotus and Diamond sutras — Chinese Buddhism's spine.`, v:{MR:8,RT:7,TR:6,UI:6} },
   { n:`Zhiyi`, d:`538–597`, i:`The founder of Tiantai, who held three truths in mutual containment.`, v:{MR:9,TD:7,RT:7,UI:6,SI:6} },
   { n:`Fazang`, d:`643–712`, i:`Huayan — Indra's net; each part contains the whole.`, v:{MR:9,TD:8,UI:7,SI:7,CE:5} },
   { n:`Linji Yixuan`, d:`~810–866`, i:`Rinzai Zen — kill the Buddha if you meet him; nothing to find.`, v:{WP:7,SS:9,SR:7,MR:7,SI:7,RT:2} },
@@ -381,8 +381,8 @@ const ENTRIES = [
   { n:`Cudworth`, d:`1617–1688`, i:`A Cambridge Platonist who defended eternal moral truths and a plastic nature.`, v:{TR:8,MR:7,RT:6,TD:7,UI:6} },
   { n:`Henry More`, d:`1614–1687`, i:`Spirit of nature — a Cartesian convinced that ghosts were data.`, v:{MR:7,TR:6,TE:6,RT:6,UI:5} },
   { n:`Ralph Cudworth (re-noted)`, d:`1617–1688`, i:`(see Cudworth)`, v:{} },
-  { n:`Spinozism in Bayle`, d:`1647–1706`, i:`Pierre Bayle, whose Dictionary armed the Enlightenment with skeptical entries.`, v:{SR:9,TR:6,SS:6,UI:5,RT:3} },
-  { n:`Pierre Bayle`, d:`1647–1706`, i:`Historical and Critical Dictionary — skepticism as the wedge of toleration.`, v:{SR:9,TR:6,SS:6,UI:5,RT:3} },
+  { n:`Spinozism in Bayle`, d:`1647–1706`, i:`(see Pierre Bayle)`, v:{} }, // dupe — folded into Pierre Bayle below
+  { n:`Pierre Bayle`, d:`1647–1706`, i:`His Historical and Critical Dictionary made skepticism the wedge of toleration.`, v:{SR:9,TR:6,SS:6,UI:5,RT:3} },
   { n:`Samuel Pufendorf`, d:`1632–1694`, i:`He grounds duty in sociability, the moral entity over the natural body.`, v:{TR:7,UI:7,RT:6,CE:6,PO:6} },
   { n:`Anthony Ashley Cooper (Shaftesbury)`, d:`1671–1713`, i:`Moral sense: virtue as the harmony of feelings.`, v:{VA:7,ES:6,TR:5,CE:6} },
   { n:`Francis Hutcheson`, d:`1694–1746`, i:`Moral sense school — benevolence as the proper object of approval.`, v:{VA:6,UI:6,CE:6,TR:5} },
@@ -602,7 +602,7 @@ const ENTRIES = [
   { n:`Robin Wall Kimmerer`, d:`b. 1953`, i:`Braiding Sweetgrass holds botany in the grammar of animacy.`, v:{ES:7,RT:7,CE:7,VA:6,MR:6} },
   { n:`Glen Coulthard`, d:`b. 1974`, i:`Red Skin, White Masks — Indigenous resurgence as anti-colonial.`, v:{WP:6,SS:6,CE:7,SR:6} },
   { n:`Leanne Betasamosake Simpson`, d:`b. 1971`, i:`As We Have Always Done draws on Nishnaabeg intelligence and resurgence.`, v:{CE:8,RT:7,VA:6,SS:5} },
-  { n:`Whitehead\'s pupil — David Ray Griffin`, d:`1939–2022`, i:`Process theology — God and creativity coevolving in event-time.`, v:{TR:7,MR:7,VA:6,RT:6} },
+  { n:`David Ray Griffin`, d:`1939–2022`, i:`Process theology — God and creativity coevolving in event-time.`, v:{TR:7,MR:7,VA:6,RT:6} },
 
   // ─── 21ST C. & CONTEMPORARY ──────────────────────────────────────
   { n:`Peter Singer (re-noted)`, d:`b. 1946`, i:`(already in db — skip)`, v:{} },

@@ -6757,7 +6757,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     "aliases": ["Patrul", "Rinpoche"]
   },
   {
-    "name": "Kumarajila",
+    "name": "Kumārajīva",
     "dates": "344–413",
     "keyIdea": "Translator of the Lotus and Diamond sutras — Chinese Buddhism's spine.",
     "vector": [
@@ -7511,35 +7511,9 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     "aliases": ["Henry", "More"]
   },
   {
-    "name": "Spinozism in Bayle",
-    "dates": "1647–1706",
-    "keyIdea": "Pierre Bayle, whose Dictionary armed the Enlightenment with skeptical entries.",
-    "vector": [
-      5,
-      6,
-      3,
-      6,
-      7,
-      3,
-      2,
-      9,
-      4,
-      6,
-      6,
-      5,
-      4,
-      5,
-      5,
-      5
-    ],
-    "archetypeKey": "touchstone",
-    "archetypeName": "The Touchstone",
-    "aliases": ["Spinozism", "Bayle"]
-  },
-  {
     "name": "Pierre Bayle",
     "dates": "1647–1706",
-    "keyIdea": "Historical and Critical Dictionary — skepticism as the wedge of toleration.",
+    "keyIdea": "His Historical and Critical Dictionary made skepticism the wedge of toleration.",
     "vector": [
       5,
       6,
@@ -12555,7 +12529,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     "aliases": ["Leanne", "Simpson"]
   },
   {
-    "name": "Whitehead's pupil — David Ray Griffin",
+    "name": "David Ray Griffin",
     "dates": "1939–2022",
     "keyIdea": "Process theology — God and creativity coevolving in event-time.",
     "vector": [
@@ -12578,7 +12552,7 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
     ],
     "archetypeKey": "cartographer",
     "archetypeName": "The Cartographer",
-    "aliases": ["Whitehead's", "Griffin"]
+    "aliases": ["David", "Griffin"]
   },
   {
     "name": "Galen Strawson",
@@ -14741,13 +14715,27 @@ export const PHILOSOPHERS: PhilosopherEntry[] = [
   // ─── END gen-philosophers Wave 2 ───
 ];
 
+// Fold a string for accent-insensitive matching: strip diacritics and
+// lowercase. So a user typing "anzaldua" finds "Anzaldúa", "kumarajiva"
+// finds "Kumārajīva", "soren" finds "Søren". Mirrors the diacritic
+// handling in philosopherSlug below.
+function foldForSearch(s: string): string {
+  return s
+    .normalize('NFKD')
+    .replace(/[̀-ͯ]/g, '')   // strip combining diacritics
+    .replace(/ø/gi, 'o')      // NFKD leaves ø/đ/ł intact — fold the common ones
+    .replace(/đ/gi, 'd')
+    .replace(/ł/gi, 'l')
+    .toLowerCase();
+}
+
 export function matchesPhilosopherSearch(p: PhilosopherEntry, q: string): boolean {
-  const needle = q.toLowerCase().trim();
+  const needle = foldForSearch(q.trim());
   if (!needle) return true;
-  if (p.name.toLowerCase().includes(needle)) return true;
-  if ((p.keyIdea || '').toLowerCase().includes(needle)) return true;
+  if (foldForSearch(p.name).includes(needle)) return true;
+  if (foldForSearch(p.keyIdea || '').includes(needle)) return true;
   for (const a of p.aliases) {
-    if (a.toLowerCase().includes(needle)) return true;
+    if (foldForSearch(a).includes(needle)) return true;
   }
   return false;
 }
