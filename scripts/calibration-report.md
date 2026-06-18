@@ -1,10 +1,10 @@
 # Philosopher calibration report
 
-Generated: 2026-06-18T18:35:11.786Z.  Corpus size: 552.
+Generated: 2026-06-18T22:09:53.429Z.  Corpus size: 551.
 
 Top-1 nearest-kin similarity — mean 0.992, median 0.994.
 Entries below the isolation threshold (0.92): **0**.
-Entries below the archetype-margin threshold (0.02): **354**.
+Entries below the archetype-margin threshold (0.02): **353**.
 
 ## Archetype distribution
 
@@ -15,7 +15,7 @@ Entries below the archetype-margin threshold (0.02): **354**.
 | The Pilgrim | 70 |
 | The Threshold | 66 |
 | The Lighthouse | 55 |
-| The Touchstone | 55 |
+| The Touchstone | 54 |
 | The Keel | 29 |
 | The Hearth | 29 |
 | The Garden | 10 |
@@ -36,7 +36,7 @@ The **Status** column reflects `scripts/calibration-decisions.json` — entries 
 | Hume | 1711–1776 | 0.973 | The Touchstone | ✓ accepted | Montaigne (97%); Richard Rorty (97%); Arcesilaus (97%); Bernard Mandeville (97%); Sextus Empiricus the Younger (97%) |
 | Nagarjuna | ~150–250 CE | 0.973 | The Threshold | ✓ accepted | Vasubandhu (97%); Mahavira (97%); Adi Shankara (97%); Asanga (97%); Tsongkhapa (97%) |
 | Schopenhauer | 1788–1860 | 0.973 | The Threshold | ✓ accepted | Pascal (97%); Wittgenstein (97%); Kierkegaard (96%); Heidegger (96%); Bhartrihari (96%) |
-| Buddha | ~563–483 BCE | 0.973 | The Threshold | ✓ accepted | Dogen (97%); Mahavira (97%); Laozi (96%); Kumarajila (96%); Patanjali (96%) |
+| Buddha | ~563–483 BCE | 0.973 | The Threshold | ✓ accepted | Dogen (97%); Mahavira (97%); Laozi (96%); Kumārajīva (96%); Patanjali (96%) |
 | Kant | 1724–1804 | 0.973 | The Lighthouse | ✓ accepted | Christine Korsgaard (97%); Plato (96%); Anton Wilhelm Amo (96%); Chrysippus (95%); Al-Farabi (95%) |
 | Wittgenstein | 1889–1951 | 0.974 | The Touchstone | ✓ accepted | Walter Benjamin (97%); Frank Jackson (97%); Heidegger (97%); Wang Bi (97%); Derrida (97%) |
 | Sextus Empiricus | ~160–210 CE | 0.974 | The Touchstone | ✓ accepted | Aenesidemus (97%); Sextus Empiricus the Younger (97%); Arcesilaus (97%); Carneades (97%); Lucian of Samosata (97%) |

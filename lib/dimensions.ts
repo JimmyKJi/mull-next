@@ -28,22 +28,22 @@ export const DIM_NAMES: Record<DimKey, string> = {
 };
 
 export const DIM_DESCRIPTIONS: Record<DimKey, string> = {
-  TV: 'Sees suffering and limitation as fundamental to existence; meaning grows through how you face them.',
-  VA: 'Affirms life as it is — pleasure, beauty, being alive — without needing transcendent justification.',
-  WP: 'Believes in shaping rather than accepting; value comes from effort, mastery, creating against resistance.',
+  TV: 'Sees suffering and limitation as fundamental to existence. Meaning grows out of how you face them, not by escaping them.',
+  VA: 'Affirms life as it is — pleasure, beauty, and being alive don\'t need transcendent justification — they\'re already enough.',
+  WP: 'Believes in shaping rather than accepting. Value comes from effort, mastery, creating one\'s own path against resistance.',
   TR: 'Trusts careful reasoning from clear principles as the most reliable path to truth.',
-  TE: 'Trusts direct observation and lived experience over abstract systems.',
-  RT: 'Sees inherited practices and texts as carrying hidden wisdom.',
-  MR: 'Senses there are truths beyond what language and reason can reach; values silence, depth, the apophatic.',
+  TE: 'Trusts direct observation, evidence, and lived experience over abstract systems.',
+  RT: 'Sees inherited practices and texts as carrying hidden wisdom. Long survival is itself evidence.',
+  MR: 'Senses there are truths beyond what language and reason can reach. Values silence, depth, the unsayable.',
   SR: 'Habitually questions claims, suspends judgment, prefers humility about what we can really know.',
-  CE: 'Locates the self in relationships, communities, traditions — we exist through and for others.',
-  SS: 'Locates moral authority in the individual — you author your own life and answer for it yourself.',
-  PO: 'Asks first what helps a life go well — wisdom is what works under real conditions.',
-  TD: 'Pursues understanding for its own sake — the question matters more than any payoff.',
-  AT: 'Values discipline, restraint, simplicity — meaning is found through what you give up.',
-  ES: 'Trusts the body, the senses, the immediate world; suspicious of dualisms.',
-  UI: 'Holds moral principles that apply to everyone, everywhere — not bounded by culture.',
-  SI: 'Suspects the unified "self" is a story we tell — what\'s real is processes, not a fixed essence.'
+  CE: 'Locates the self in relationships, communities, traditions. We exist through and for others, not as detached individuals.',
+  SS: 'Locates moral authority in the individual. You author your own life and answer for it yourself.',
+  PO: 'Asks first what helps a life go well. Wisdom is what works under real conditions, not pure theory.',
+  TD: 'Pursues understanding for its own sake. The question matters more than any payoff.',
+  AT: 'Values discipline, restraint, simplicity. Meaning is found through what you give up, not what you accumulate.',
+  ES: 'Trusts the body, the senses, the immediate world. Suspicious of dualisms that put mind above flesh.',
+  UI: 'Holds moral principles that apply to everyone, everywhere — not bounded by culture or contingency.',
+  SI: 'Suspects the unified "self" is a story we tell. What\'s real is processes, patterns, dependent arising — not a fixed essence.'
 };
 
 // Convert a 16-D delta vector into top movements with names.
