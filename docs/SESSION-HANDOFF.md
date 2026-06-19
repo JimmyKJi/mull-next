@@ -3,12 +3,109 @@
 This doc hands off enough state for the next session to pick up cold.
 Newest updates first.
 
-**Last session ended:** 2026-06-18 (generator + dimension-context
-refinement, corpus accuracy audit, site-wide content sweep). Prior:
-2026-06-07, 2026-05-27.
+**Last session ended:** 2026-06-19 (security hardening — AI/API spend
+gating + a static CSP with a before/after visual audit). Prior:
+2026-06-18, 2026-06-07, 2026-05-27.
 **Branch:** `claude/zen-wu-4cd09b`. Ship with
 `git push origin HEAD:redesign-2026` — that auto-deploys to
 `mull.world` via Vercel (see "How to ship" below).
+
+---
+
+## Updates from the 2026-06-19 session
+
+**Theme: security hardening — gate API/AI usage and make the site
+harder to hack.** Jimmy's brief:
+> "do what is needed to improve website security so the website is less
+> likely to be hacked and api usage is gated. Other aspects should also
+> be improved."
+
+One commit on `claude/zen-wu-4cd09b` (pushed to `redesign-2026` →
+auto-deploy):
+
+| Commit | Title | Shape of change |
+|---|---|---|
+| `c234566` | Harden security: gate every AI endpoint + enforce a static CSP | The two halves below. |
+
+### Half 1 — AI spend gating (the budget holes)
+
+- **`/api/debate/generate` was the open hole**: an unauthenticated
+  Sonnet call (≤4000 tok, ×2 retry) with NO rate limit. Now gated by
+  `aiGate` with a tiered per-IP cap — **2/day anonymous, 6/day
+  signed-in** (Jimmy's exact spec) — plus the site-wide spend
+  kill-switch. The supabase client + user are now resolved once up top
+  and reused by the later `debate_history` save.
+- **`debate/me`, `account/retrospective`, `dilemma/submit-archive`**:
+  added `aiGate` (per-user daily cap + kill-switch). These were
+  authed / Mull+-bounded but had no spend ceiling.
+- **`dilemma/submit`**: added the `readAiSpend()` kill-switch only — its
+  per-user burst limit already logs the `dilemma_submit` cost, so a full
+  `aiGate` would double-count.
+- **`profile/search`** (unauthenticated by design): added a 60/min/IP
+  `rateLimit` so nobody hammers the ILIKE substring scan. Non-AI.
+- **`lib/rate-limit.ts`**: new buckets `debate_generate` / `debate_me` /
+  `retrospective` / `dilemma_archive` / `profile_search`, each with a
+  `BUCKET_COST_CENTS` entry (the `Record<Bucket,number>` type makes tsc
+  reject a bucket added without a cost), `PER_USER_DAILY_CAPS`, and
+  brand-voiced limit messages. `debate_generate` is tiered at the call
+  site via `perUserDaily`; the registry default (6) is the fallback.
+
+### Half 2 — Content-Security-Policy + baseline headers (next.config.ts)
+
+- Every response now carries a **static, nonce-free CSP**. The choice is
+  deliberate: a per-request nonce forces every route to render
+  dynamically, killing static-gen / ISR / CDN caching for the ~550
+  philosopher pages, the 10 archetypes and the SEO essays — i.e. most of
+  the site. `'unsafe-inline'` is acceptable because we never inject
+  user-supplied HTML into a `<script>` (only our own JSON-LD + Next's
+  bootstrap; every `dangerouslySetInnerHTML` feeds trusted first-party
+  SVG/markup).
+- **X-Frame-Options dropped entirely** — clickjacking is handled by CSP
+  `frame-ancestors` instead. Per Next's own headers doc, `frame-ancestors`
+  supersedes XFO and (unlike XFO) can be **relaxed per route**: the
+  public `/badge/*` and `/embed/*` routes omit the ancestor lock so they
+  stay iframe-embeddable on Notion / Substack / personal sites, while
+  every other route is pinned to `'self'`. Implemented via Next's
+  header-override (last-match-wins): the broad `/(.*)` rule sets the
+  locked CSP, then later `/badge/:path*` + `/embed/:path*` blocks re-set
+  the CSP key without the lock.
+- **Dev vs prod**: `script-src` / `connect-src` add `va.vercel-scripts.com`,
+  `ws:` / `wss:` and `'unsafe-eval'` **only in dev** (Turbopack HMR +
+  Vercel analytics *debug* script). Prod loads analytics same-origin from
+  `/_vercel/*` (covered by `'self'`) and never evals. `connect-src` is
+  derived from `NEXT_PUBLIC_SUPABASE_URL` (https origin + wss host).
+- **Baseline hardening** on every response: HSTS (2yr, includeSubDomains,
+  no preload), `X-Content-Type-Options: nosniff`, `Referrer-Policy:
+  strict-origin-when-cross-origin`, and a `Permissions-Policy` locking
+  camera / mic / geolocation and opting out of browsing-topics.
+
+### Verification
+
+- `npx tsc --noEmit` → **0 errors**.
+  `node scripts/check-table-invariants.mjs` → passes (this batch adds no
+  user-scoped tables).
+- **Before/after visual audit** (Jimmy's explicit ask: "capture current
+  visual … enforce csp … run a site-wide audit … if not [the same],
+  fix"). Audited `/`, `/quiz`, `/philosopher/heraclitus`,
+  `/archetype/cartographer`, `/embed/map` (the WebGL/three.js
+  worst-case), `/about`, `/search`, `/billing` in the preview browser.
+  Every route renders **identically** with the CSP enforced and **zero
+  CSP-blocked sub-resources** (verified via `preview_network` `failed`
+  filter + scanning the console for "Content Security Policy"). The only
+  dev-console noise is the benign Turbopack `@babel/runtime …
+  package.json EOF` cold-compile flake — not a CSP violation, and gone in
+  a clean Vercel build.
+
+### Notes for next session
+
+- The CSP allowlist is complete for the current third-party surface
+  (Supabase, Vercel analytics / speed-insights, same-origin everything
+  else). **If you add a new external script / style / font / image / XHR
+  host, add it to the matching directive in `next.config.ts` `headers()`**
+  or the browser will block it in prod.
+- Stripe needs no CSP entry: checkout is server-side and the client does
+  a top-level `window.location.href = checkoutUrl` redirect (not subject
+  to CSP). `/billing` is still in dry-run ("Stripe is not yet live").
 
 ---
 
