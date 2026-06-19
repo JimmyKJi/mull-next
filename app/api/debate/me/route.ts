@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { PHILOSOPHERS } from '@/lib/philosophers';
 import { DIM_KEYS, DIM_NAMES } from '@/lib/dimensions';
 import { createClient } from '@/utils/supabase/server';
+import { aiGate } from '@/lib/rate-limit';
 
 type ClaudeResponse = {
   content?: Array<{ type: string; text?: string }>;
@@ -157,6 +158,15 @@ export async function POST(req: Request) {
       return NextResponse.json({
         error: 'You\'ve hit the prototype limit of 3 personal debates per day. Reset at midnight UTC. (This will become a Mull+ feature.)'
       }, { status: 429 });
+    }
+
+    // Also run the shared AI gate so this Sonnet call honors the site-wide
+    // spend kill-switch and its cost rolls into the daily/monthly total. The
+    // per-IP cap here is generous — the 3/user/day check above binds first for
+    // normal use; this mainly catches account-rotation behind a single IP.
+    const gate = await aiGate(req, { bucket: 'debate_me', userId: user.id });
+    if (!gate.ok) {
+      return NextResponse.json({ error: gate.message }, { status: gate.status });
     }
 
     // Build the user's profile from their data

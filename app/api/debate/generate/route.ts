@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { PHILOSOPHERS } from '@/lib/philosophers';
 import { createClient } from '@/utils/supabase/server';
+import { aiGate } from '@/lib/rate-limit';
 
 type ClaudeResponse = {
   content?: Array<{ type: string; text?: string }>;
@@ -206,6 +207,22 @@ export async function POST(req: Request) {
       );
     }
 
+    // Gate AI spend before the model call. This is a Sonnet request (up to
+    // 4000 tokens, with one automatic retry), so an unbounded anonymous
+    // endpoint is a direct hole in the budget. Tiered per-IP cap: 2/day for
+    // anonymous visitors, 6/day once signed in. aiGate also enforces the
+    // site-wide daily/monthly spend kill-switch (503 when the cap is hit).
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    const gate = await aiGate(req, {
+      bucket: 'debate_generate',
+      userId: user?.id ?? null,
+      perUserDaily: user ? 6 : 2,
+    });
+    if (!gate.ok) {
+      return NextResponse.json({ error: gate.message }, { status: gate.status });
+    }
+
     // One automatic retry — the model occasionally returns markdown-wrapped or
     // truncated JSON the parser can't recover.
     let result = await callClaude(
@@ -232,9 +249,8 @@ export async function POST(req: Request) {
 
     // Save to debate_history if the user is signed in (best-effort, non-blocking
     // for the response). The trigger on this table prunes to most-recent-3.
+    // Reuses the supabase client + user resolved above for the gate.
     try {
-      const supabase = await createClient();
-      const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         await supabase.from('debate_history').insert({
           user_id: user.id,

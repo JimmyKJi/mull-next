@@ -35,15 +35,20 @@ type Bucket =
   // Non-AI (cheap, just per-user spam protection)
   | 'feedback'
   | 'welcome'
+  | 'profile_search'
   // AI-bearing (also rolled into global spend ceiling)
   | 'dilemma_submit'
+  | 'dilemma_archive'
   | 'reflection'
   | 'diary'
   | 'exercise'
   | 'spar_play'
   | 'arena_turn'
   | 'arena_judge'
-  | 'argument_diary';
+  | 'argument_diary'
+  | 'debate_generate'
+  | 'debate_me'
+  | 'retrospective';
 
 type Options = {
   bucket: Bucket;
@@ -119,7 +124,9 @@ export async function rateLimit(req: Request, opts: Options): Promise<Result> {
 const BUCKET_COST_CENTS: Record<Bucket, number> = {
   feedback: 0,        // no AI
   welcome: 0,         // no AI
+  profile_search: 0,  // no AI — DB query only; rate-limited for load, not cost
   dilemma_submit: 1,  // ~$0.005 Haiku — round up
+  dilemma_archive: 1, // single Haiku call (Mull+ archive reflection)
   reflection: 1,
   diary: 1,
   exercise: 1,
@@ -127,6 +134,9 @@ const BUCKET_COST_CENTS: Record<Bucket, number> = {
   spar_play: 8,       // 1 Haiku turn + 1 Sonnet judge, ~$0.05–0.08
   arena_turn: 1,      // 1 Haiku turn alone
   arena_judge: 15,    // Sonnet judge on full transcript, ~$0.15
+  debate_generate: 8, // Sonnet, up to 4000 tok, ×2 retry — anonymous-facing
+  debate_me: 8,       // Sonnet, up to 3500 tok, ×2 retry (you-vs-philosopher)
+  retrospective: 6,   // Sonnet essay, up to 2400 tok (Mull+ retrospective)
 };
 
 // Daily ceiling — defaults to $17/day. Budget math: Jimmy's
@@ -240,8 +250,14 @@ const PER_USER_DAILY_CAPS: Partial<Record<Bucket, number>> = {
   arena_turn: 32,      // ~4 full debates of 8 turns
   arena_judge: 4,      // 4 verdicts/day → $0.60 cap per user
   argument_diary: 3,   // 3 analyses/day → $0.03 cap per user
+  // debate_generate is tiered at the call site (2/IP anon, 6/IP signed-in)
+  // via the perUserDaily override; this is just the fallback default.
+  debate_generate: 6,
+  debate_me: 8,        // generous; the 3/user/day history limit binds first
+  retrospective: 4,    // 4 Mull+ retrospectives/day → ~$0.24 cap
   // Cheap ones get higher caps since they don't move the budget much:
   dilemma_submit: 5,
+  dilemma_archive: 10,
   diary: 10,
   exercise: 10,
   reflection: 10,
@@ -317,6 +333,16 @@ function friendlyPerUserMessage(bucket: Bucket, cap: number): string {
       return `You've submitted ${cap} exercise reflections today. Worth letting them settle. Back tomorrow.`;
     case 'dilemma_submit':
       return `You've submitted ${cap} dilemma responses today. Wait for tomorrow's question.`;
+    case 'dilemma_archive':
+      return `You've explored ${cap} archived dilemmas today. More await tomorrow.`;
+    case 'debate_generate':
+      return cap <= 2
+        ? `You've watched your ${cap} debates for today. Sign in to get more, or come back tomorrow.`
+        : `You've staged ${cap} debates today. The thinkers need a rest — back tomorrow.`;
+    case 'debate_me':
+      return `You've stepped into ${cap} debates today. Let the arguments settle — back tomorrow.`;
+    case 'retrospective':
+      return `You've drawn ${cap} retrospectives today. Give them room to breathe — back tomorrow.`;
     default:
       return `Daily limit reached. Try again tomorrow.`;
   }

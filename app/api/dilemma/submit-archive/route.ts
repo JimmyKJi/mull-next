@@ -19,6 +19,7 @@ import { createClient } from '@/utils/supabase/server';
 import { DIM_KEYS, DIM_NAMES, DIM_DESCRIPTIONS } from '@/lib/dimensions';
 import { getDailyDilemma } from '@/lib/dilemmas';
 import { getUserPlan } from '@/lib/subscription';
+import { aiGate } from '@/lib/rate-limit';
 
 // The earliest date the archive will accept. Anything before this returns 400.
 // Keep in sync with the LAUNCH_DATE constant in app/dilemma/archive/page.tsx.
@@ -148,6 +149,13 @@ export async function POST(req: Request) {
     const { isMullPlus } = await getUserPlan(supabase, user.id);
     if (!isMullPlus) {
       return NextResponse.json({ error: 'Mull+ unlocks past dilemmas.' }, { status: 402 });
+    }
+
+    // Gate AI spend: a single Haiku analysis. Honors the per-user daily cap
+    // and the site-wide spend kill-switch.
+    const gate = await aiGate(req, { bucket: 'dilemma_archive', userId: user.id });
+    if (!gate.ok) {
+      return NextResponse.json({ error: gate.message }, { status: gate.status });
     }
 
     // Compute the dilemma that was actually shown on that historical date.

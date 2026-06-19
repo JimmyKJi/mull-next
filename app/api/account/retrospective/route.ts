@@ -19,6 +19,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { DIM_KEYS, DIM_NAMES } from '@/lib/dimensions';
 import { getUserPlan } from '@/lib/subscription';
+import { aiGate } from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -53,6 +54,14 @@ export async function GET(req: Request) {
       { error: 'Mull+ only.', upgradeUrl: '/billing' },
       { status: 402 },
     );
+  }
+
+  // Gate AI spend: a Sonnet essay (up to 2400 tokens). Mull+ already bounds
+  // who can reach this, but the per-user daily cap + site-wide spend
+  // kill-switch keep a single subscriber from running up the bill.
+  const gate = await aiGate(req, { bucket: 'retrospective', userId: user.id });
+  if (!gate.ok) {
+    return NextResponse.json({ error: gate.message }, { status: gate.status });
   }
 
   const start = `${year}-01-01T00:00:00Z`;

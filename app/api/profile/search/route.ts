@@ -8,6 +8,7 @@
 
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
+import { rateLimit } from '@/lib/rate-limit';
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
@@ -19,6 +20,16 @@ export async function GET(req: Request) {
   }
   if (q.length > 64) {
     return NextResponse.json({ error: 'Query too long.' }, { status: 400 });
+  }
+
+  // Light per-IP rate limit. This endpoint is unauthenticated by design (the
+  // public discovery surface), so cap query volume to keep someone from
+  // hammering the ILIKE substring scan. 60/min is well above any human typing
+  // in a search box but stops a tight scripted loop. Non-fatal: falls open on
+  // a DB hiccup, like every other rateLimit caller.
+  const rl = await rateLimit(req, { bucket: 'profile_search', max: 60, windowSec: 60 });
+  if (!rl.ok) {
+    return NextResponse.json({ error: rl.message }, { status: 429 });
   }
 
   const supabase = await createClient();

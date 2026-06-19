@@ -7,7 +7,7 @@ import {
   dilemmaDateKey,
 } from '@/lib/archetype-dilemmas';
 import { getUserOrientation } from '@/lib/user-orientation';
-import { rateLimit } from '@/lib/rate-limit';
+import { rateLimit, readAiSpend } from '@/lib/rate-limit';
 import { logError } from '@/lib/error-log';
 import {
   buildKinshipPromptFragment,
@@ -158,6 +158,18 @@ export async function POST(req: Request) {
     });
     if (!limit.ok) {
       return NextResponse.json({ error: limit.message }, { status: 429 });
+    }
+
+    // Honor the site-wide AI spend kill-switch. The per-user burst limit above
+    // stops spam; this stops the feature once the daily/monthly cap is hit
+    // (each submit costs a Haiku call). Its cost is already tracked via the
+    // dilemma_submit bucket logged above, so no double-counting here.
+    const spend = await readAiSpend();
+    if (spend.paused) {
+      return NextResponse.json(
+        { error: spend.reason ?? 'Mull is paused for the day — AI cost cap reached. Try again tomorrow.' },
+        { status: 503 },
+      );
     }
 
     // Resolve which dilemma this is. The client sends a dilemmaRef
