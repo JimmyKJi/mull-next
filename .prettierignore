@@ -1,0 +1,27 @@
+# Build output / dependencies
+node_modules/
+.next/
+out/
+build/
+next-env.d.ts
+
+# Lockfiles (package-manager owned)
+package-lock.json
+
+# Static assets. public/mull.html is generator-owned (see AGENTS.md).
+public/
+
+# Generator-owned corpus: lib/philosophers.ts has a gen-philosophers Wave 2
+# region (see AGENTS.md). Re-running the generator re-emits this file, so a
+# formatter pass here would be wiped / cause spurious diffs.
+lib/philosophers.ts
+
+# Frozen translation twins. These parallel-locale files are intentionally
+# held stable; do not reformat them.
+**/*-i18n.ts
+
+# Deliberately skipped (see prior localization-rollout decisions).
+lib/email.ts
+
+# Generated reports
+scripts/calibration-report.md
