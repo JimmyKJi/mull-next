@@ -3,12 +3,155 @@
 This doc hands off enough state for the next session to pick up cold.
 Newest updates first.
 
-**Last session ended:** 2026-06-19 (security hardening — AI/API spend
-gating + a static CSP with a before/after visual audit). Prior:
-2026-06-18, 2026-06-07, 2026-05-27.
+**Last session ended:** 2026-06-20 (two CSP-fallout fixes — blank 3D
+map + mobile pixel-heading overlap — then a codebase-wide Prettier
+formatting unification with a per-file equivalence proof). Prior:
+2026-06-19, 2026-06-18, 2026-06-07, 2026-05-27.
 **Branch:** `claude/zen-wu-4cd09b`. Ship with
 `git push origin HEAD:redesign-2026` — that auto-deploys to
 `mull.world` via Vercel (see "How to ship" below).
+
+---
+
+## Updates from the 2026-06-20 session
+
+**Theme: clean up after the 2026-06-19 CSP lockdown (two fallout bugs),
+then unify the whole codebase's formatting.** Three briefs from Jimmy,
+in order:
+> "also the map doesnt work"
+> "check mobile interface is nice and aesthetically organised, and all
+> function carry over as intended"
+> "clean up all the codebase and unify them in format to improve
+> clarity … this is such a big and crucial process, be sure to double
+> check no bugs were caused by the changes and all things are portrayed
+> as intended."
+
+Four commits on `claude/zen-wu-4cd09b`, oldest first (all pushed to
+`redesign-2026` → auto-deploy):
+
+| Commit | Title | Shape of change |
+|---|---|---|
+| `ece4684` | Fix blank 3D map: isolate axis-label font behind its own Suspense | CSP regression fix. See below. |
+| `100243c` | Fix mobile pixel-heading overlap: loosen tight line-heights site-wide | Pure CSS-value edits. See below. |
+| `48dca64` | chore: add Prettier with project-tuned config | Tooling only, no reformat yet. |
+| `0e834fb` | style: apply Prettier across the codebase (formatting only) | 287 files, mechanical, proven semantics-preserving. |
+
+### `ece4684` — the blank 3D map (a CSP regression from the day before)
+
+The static `connect-src 'self' + Supabase` CSP shipped in `c234566`
+(see the 2026-06-19 section) silently broke the philosopher point cloud.
+Root cause: drei's `<Text>` (troika-three-text) fetches its glyph atlas
+from `cdn.jsdelivr.net` by default, and `<Text>` **suspends** until that
+font resolves. The blocked fetch hung the single `<Suspense>` wrapping
+the whole `<Scene>`, so the entire cloud went blank. Only the
+**interactive** map variant (`/map`, `/result`) draws `AxisLabels`, so
+the ambient home-page map was fine — which is exactly the symptom Jimmy
+saw. Two-part fix: (1) point `AxisLabels` at same-origin
+`/fonts/Inter-Regular.ttf` (raw ttf — troika can't parse woff2) so the
+fetch stays under `connect-src 'self'`; (2) give `AxisLabels` its **own**
+`<Suspense>` so a slow/failed label font can never again take the point
+cloud down with it. Verified the cloud, grid, axes and legend all render
+under a jsdelivr-blocking CSP on localhost.
+
+### `100243c` — mobile pixel-heading overlap
+
+On narrow screens, multi-line Press Start 2P headings collided with
+their own hard drop-shadow: the line-height (1.0–1.3) was too tight for
+the full-height pixel glyphs **plus** the downward shadow, so a wrapped
+second line overlapped the first line's shadow and read as broken.
+Loosened the line-height on every pixel-heading that **explicitly
+overrode** it — the shared `PixelPageHeader` (~35 routes) 1.1 → 1.45,
+plus the bespoke className/inline-style headings on home, result,
+archetype, search, compare, exercises, signup, login, quiz, admin, map,
+billing, journey-gate, vs, topic, not-found, join, classes → ~1.4–1.45.
+Also made `/billing`'s oversized 36px h1 responsive
+(`clamp(22px,6.4vw,36px)`) so "SUPPORTED" stops clipping at the right
+edge. Headings that rely on the font's naturally-loose **default**
+spacing (no explicit line-height) were already fine and left untouched;
+serif/sans headings have no shadow and weren't changed. Verified at
+375px on `/billing`, `/archetype`, `/map`, `/search`.
+
+### `48dca64` + `0e834fb` — the formatting unification (the big one)
+
+There was **no formatter** in the repo before this session — many
+versions of independent iteration had left quote-style, semicolons,
+indentation and wrapping inconsistent. Introduced **Prettier 3.8.4**,
+tuned to the codebase's *dominant* conventions so the diff is minimal:
+
+```json
+// .prettierrc.json
+{ "singleQuote": true, "semi": true, "printWidth": 100,
+  "tabWidth": 2, "trailingComma": "all" }
+```
+
+Then `prettier --write` across **287 source files** (app / components /
+lib / utils / scripts / root configs / `app/globals.css`) in one pass —
+this is the `0e834fb` commit. Two new npm scripts (`format`,
+`format:check`) and the devDep landed in `48dca64`.
+
+**Why this is safe to deploy without a human reading 287 diffs.** Prettier
+is an AST pretty-printer: it re-emits the same syntax tree with canonical
+whitespace/punctuation and **never touches string or template-literal
+contents**. So e.g. hex *color strings* like `'#1E3A5F'` stayed
+upper-case; only `app/globals.css` hex (CSS, lowercased by Prettier —
+same color) and one *numeric* literal `0x6D2B79F5 → 0x6d2b79f5` changed
+case.
+
+**Protected files were excluded** via `.prettierignore` and are
+byte-for-byte untouched — the generator-owned `lib/philosophers.ts` and
+`public/mull.html` (re-running the generator would fight a reformat), the
+14 frozen `*-i18n.ts` translation twins, and the deliberately-skipped
+`lib/email.ts`. (Also the usual `node_modules/`, `.next/`,
+`package-lock.json`, `next-env.d.ts`, `public/`.)
+
+### Verification (the "double-check no bugs" mandate)
+
+The headline proof is a **per-file skeleton-equivalence check**, custom-
+built this session (the script lived in `/tmp`, not committed): for each
+changed file take its git-HEAD and working-tree versions, strip exactly
+the characters Prettier is *allowed* to add/move — all whitespace,
+quotes, semicolons, commas, parens, escape backslashes — **and**
+pre-remove JSX explicit-space expressions `{' '}` / `{" "}` (which
+Prettier inserts to *preserve* a rendered space), then compare. Identical
+skeletons ⇒ provably no token-level logic change.
+
+- **280 / 287 files: pure formatting** (skeletons byte-identical).
+- **7 files: value-preserving normalizations**, each hand-inspected and
+  confirmed benign — trailing-zero trims (`0.020 → 0.02`,
+  `scale(1.10) → 1.1`), hex-numeric lowercasing (`0x6D2B79F5 → 0x6d2b79f5`),
+  and leading union-pipe removal (`type X = | A | B` ≡ `A | B`).
+  (Files: `components/philosopher-sprite.tsx`, `lib/arena/judge.ts`,
+  `lib/capabilities.ts`, `lib/rate-limit.ts`, `app/globals.css`,
+  `scripts/check-philosopher-calibration.mjs`,
+  `scripts/check-quiz-calibration.mjs`.)
+- `npx tsc --noEmit` → **0 errors**.
+- `eslint` → **0 new problems** (the pre-existing 94 errors unchanged).
+  In fact **2 lint warnings cleared**: in
+  `app/account/curate/curation-panel.tsx` a one-line
+  `useEffect(() => { load(); /* eslint-disable-next-line */ }, …)` had its
+  disable-comment moved onto its own line by Prettier, where it now
+  actually suppresses the exhaustive-deps warning. The effect's deps
+  `[filter, days]` and the `load()` call are identical → no runtime change.
+- `check-table-invariants` + philosopher/quiz **calibration scripts**:
+  all exit 0 (including the 2 reformatted scripts).
+- **Live render spot-checks** (home, search, billing, map) in the preview
+  browser: identical; `globals.css` hex-lowercasing computes to the same
+  colors (body bg still `rgb(250,246,236)`); the 3D map still renders.
+
+### Notes for next session
+
+- **The formatter is now load-bearing for cleanliness, not correctness.**
+  Run `npm run format` before committing, or `npm run format:check` in
+  review. ESLint has **no** formatting rules (`eslint.config.mjs` is
+  lint-only) so the two don't fight.
+- **Don't remove anything from `.prettierignore` casually.** The
+  generator-owned and `*-i18n.ts` frozen files are excluded on purpose;
+  formatting them would either be wiped by `gen-philosophers.mjs --apply`
+  or violate the i18n freeze.
+- The mass reformat touched 287 files in one commit, so `git blame` on
+  whitespace-only lines now points at `0e834fb`. Use
+  `git blame --ignore-rev 0e834fb` (or add it to `.git-blame-ignore-revs`)
+  if you need the real authorship of a reformatted line.
 
 ---
 
