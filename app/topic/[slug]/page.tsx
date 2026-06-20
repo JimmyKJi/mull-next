@@ -163,7 +163,7 @@ export default async function TopicDetailPage({
           letterSpacing: '0.06em',
           textTransform: 'uppercase',
           textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))',
-          lineHeight: 1.1,
+          lineHeight: 1.4,
         }}>
           {topic.title.toUpperCase()}
         </h1>

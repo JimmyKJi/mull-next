@@ -383,7 +383,7 @@ export function ResultClient({
             {t("res.stood_near", locale)}
           </div>
           <h2
-            className="mt-4 pr-2 text-[24px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[32px] md:text-[40px]"
+            className="mt-4 pr-2 text-[24px] leading-[1.45] tracking-[0.04em] text-ink sm:text-[32px] md:text-[40px]"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
             <span style={{ textShadow: "3px 3px 0 var(--pixel-shadow, var(--color-acc))" }}>
@@ -466,7 +466,7 @@ export function ResultClient({
               {t("res.where_you_sit", locale)}
             </div>
             <h2
-              className="mt-4 pr-2 text-[24px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[32px] md:text-[40px]"
+              className="mt-4 pr-2 text-[24px] leading-[1.45] tracking-[0.04em] text-ink sm:text-[32px] md:text-[40px]"
               style={{ fontFamily: "var(--font-pixel-display)" }}
             >
               <span style={{ textShadow: "3px 3px 0 var(--pixel-shadow, var(--color-acc))" }}>

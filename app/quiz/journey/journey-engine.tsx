@@ -615,7 +615,7 @@ function GateScreen({
               color: "var(--color-ink)",
               letterSpacing: "0.04em",
               textTransform: "uppercase",
-              lineHeight: 1.2,
+              lineHeight: 1.4,
               margin: "0 0 18px",
               textShadow: "3px 3px 0 var(--pixel-shadow, var(--color-acc))",
             }}

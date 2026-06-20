@@ -84,7 +84,7 @@ export default async function AdminUsagePage() {
         ▶ ADMIN · USAGE DASHBOARD
       </div>
       <h1
-        className="text-[36px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[44px]"
+        className="text-[36px] leading-[1.45] tracking-[0.04em] text-ink sm:text-[44px]"
         style={{ fontFamily: pixel, textShadow: "3px 3px 0 var(--pixel-shadow, var(--color-acc))" }}
       >
         AI SPEND + KILL SWITCH

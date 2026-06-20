@@ -590,7 +590,7 @@ function ComputingScreen() {
             ✦
           </div>
           <h1
-            className="mt-6 text-[20px] leading-[1.2] tracking-[0.04em] text-acc-soft sm:text-[24px]"
+            className="mt-6 text-[20px] leading-[1.45] tracking-[0.04em] text-acc-soft sm:text-[24px]"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
             <span style={{ textShadow: "3px 3px 0 var(--pixel-shadow, var(--color-acc))" }}>
@@ -729,7 +729,7 @@ function ChapterTransition({
             {glyph}
           </div>
           <h1
-            className="mt-6 px-2 text-[26px] leading-[1.1] tracking-[0.04em] text-acc-soft sm:text-[36px]"
+            className="mt-6 px-2 text-[26px] leading-[1.45] tracking-[0.04em] text-acc-soft sm:text-[36px]"
             style={{ fontFamily: "var(--font-pixel-display)" }}
           >
             <span style={{ textShadow: "3px 3px 0 var(--pixel-shadow, var(--color-acc))" }}>

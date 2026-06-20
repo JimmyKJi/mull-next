@@ -208,7 +208,7 @@ export default async function ClassInsightsPage({
         letterSpacing: '0.06em',
         textTransform: 'uppercase',
         textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))',
-        lineHeight: 1.1,
+        lineHeight: 1.4,
       }}>
         {t('cls.insights_title', locale)}
       </h1>

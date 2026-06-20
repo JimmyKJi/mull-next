@@ -84,7 +84,7 @@ export default function SignupPage() {
           ) : (
             <>
               <h1
-                className="text-[24px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[32px]"
+                className="text-[24px] leading-[1.45] tracking-[0.04em] text-ink sm:text-[32px]"
                 style={{ fontFamily: 'var(--font-pixel-display)' }}
               >
                 <span style={{ textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))' }}>
@@ -186,7 +186,7 @@ function ConfirmState({
   return (
     <>
       <h1
-        className="text-[22px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[28px]"
+        className="text-[22px] leading-[1.45] tracking-[0.04em] text-ink sm:text-[28px]"
         style={{ fontFamily: 'var(--font-pixel-display)' }}
       >
         <span style={{ textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))' }}>

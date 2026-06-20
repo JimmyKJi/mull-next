@@ -63,7 +63,7 @@ export default async function SearchPage({
           ▶ FIND SOMEONE
         </div>
         <h2
-          className="mt-4 text-[22px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[28px]"
+          className="mt-4 text-[22px] leading-[1.45] tracking-[0.04em] text-ink sm:text-[28px]"
           style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
           <span style={{ textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))' }}>

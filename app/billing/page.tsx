@@ -70,13 +70,13 @@ export default async function BillingPage() {
       </div>
       <h1 style={{
         fontFamily: pixel,
-        fontSize: 36,
+        fontSize: 'clamp(22px, 6.4vw, 36px)',
         margin: '0 0 14px',
         color: 'var(--color-ink)',
         letterSpacing: '0.06em',
         textTransform: 'uppercase',
         textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))',
-        lineHeight: 1.1,
+        lineHeight: 1.4,
       }}>
         {t('billing.title', locale).toUpperCase()}
       </h1>

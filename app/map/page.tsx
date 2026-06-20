@@ -50,7 +50,7 @@ export default async function MapPage() {
           ▶ {t("map.eyebrow", locale)}
         </div>
         <h1
-          className="mt-4 break-words pr-2 text-[24px] leading-[1.3] tracking-[0.04em] text-ink sm:text-[40px] md:text-[52px]"
+          className="mt-4 break-words pr-2 text-[24px] leading-[1.45] tracking-[0.04em] text-ink sm:text-[40px] md:text-[52px]"
           style={{ fontFamily: pixel }}
         >
           <span style={{ textShadow: "4px 4px 0 var(--pixel-shadow, var(--color-acc))" }}>{t("map.title", locale)}</span>

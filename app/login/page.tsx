@@ -56,7 +56,7 @@ export default function LoginPage() {
 
         <div className="px-6 py-7 sm:px-8">
           <h1
-            className="text-[26px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[36px]"
+            className="text-[26px] leading-[1.45] tracking-[0.04em] text-ink sm:text-[36px]"
             style={{ fontFamily: 'var(--font-pixel-display)' }}
           >
             <span style={{ textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))' }}>

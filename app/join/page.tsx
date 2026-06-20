@@ -60,7 +60,7 @@ export default async function JoinPage() {
         letterSpacing: '0.06em',
         textTransform: 'uppercase',
         textShadow: '3px 3px 0 var(--pixel-shadow, #2F5D5C)',
-        lineHeight: 1.1,
+        lineHeight: 1.4,
       }}>
         {t('join.heading', locale)}
       </h1>

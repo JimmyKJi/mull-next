@@ -210,7 +210,7 @@ export default async function VsPage({
           letterSpacing: '0.04em',
           textTransform: 'uppercase',
           textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))',
-          lineHeight: 1.1,
+          lineHeight: 1.4,
         }}>
           {paName.toUpperCase()} <span style={{ color: 'var(--color-acc-deep)' }}>{t('vs.vs_badge', locale)}</span> {pbName.toUpperCase()}
         </h1>

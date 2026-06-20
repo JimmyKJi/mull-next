@@ -209,7 +209,7 @@ export default async function ComparePage({
         ▶ {t('compare.eyebrow', locale)}
       </div>
       <h1
-        className="mt-5 pr-2 text-[24px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[32px] md:text-[40px]"
+        className="mt-5 pr-2 text-[24px] leading-[1.45] tracking-[0.04em] text-ink sm:text-[32px] md:text-[40px]"
         style={{ fontFamily: 'var(--font-pixel-display)' }}
       >
         <span style={{ textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))' }}>
@@ -504,7 +504,7 @@ function ComparePicker({ initialYou, initialThem, locale }: { initialYou: string
         ▶ {t('compare.eyebrow', locale)}
       </div>
       <h1
-        className="mt-5 pr-2 text-[26px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[34px]"
+        className="mt-5 pr-2 text-[26px] leading-[1.45] tracking-[0.04em] text-ink sm:text-[34px]"
         style={{ fontFamily: 'var(--font-pixel-display)' }}
       >
         <span style={{ textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))' }}>{t('compare.picker_title', locale)}</span>

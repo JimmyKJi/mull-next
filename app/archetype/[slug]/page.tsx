@@ -166,7 +166,7 @@ export default async function ArchetypeDetailPage({
               {t('arch_detail.eyebrow', locale).toUpperCase()}
             </div>
             <h1
-              className="mt-2 break-words pr-2 text-[20px] leading-[1.3] tracking-[0.04em] sm:text-[40px] md:text-[48px]"
+              className="mt-2 break-words pr-2 text-[20px] leading-[1.45] tracking-[0.04em] sm:text-[40px] md:text-[48px]"
               style={{
                 color: color.deep,
                 fontFamily: 'var(--font-pixel-display)',

@@ -678,7 +678,7 @@ export default async function HomeV2() {
                 {t("home.arch_eyebrow", locale)}
               </div>
               <h2
-                className="mt-5 pr-2 text-[22px] leading-[1.1] tracking-[0.04em] text-ink sm:text-[32px] md:text-[40px]"
+                className="mt-5 pr-2 text-[22px] leading-[1.45] tracking-[0.04em] text-ink sm:text-[32px] md:text-[40px]"
                 style={{ fontFamily: "var(--font-pixel-display)" }}
               >
                 <span style={{ textShadow: "3px 3px 0 var(--pixel-shadow, var(--color-acc))" }}>

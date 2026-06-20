@@ -61,7 +61,7 @@ export default async function NotFound() {
           letterSpacing: '0.06em',
           textTransform: 'uppercase',
           textShadow: '3px 3px 0 var(--pixel-shadow, #7A2E2E)',
-          lineHeight: 1.1,
+          lineHeight: 1.4,
         }}>
           {t('nf.title', locale)}
         </h1>

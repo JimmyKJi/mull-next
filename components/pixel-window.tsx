@@ -155,7 +155,7 @@ export function PixelPageHeader({ eyebrow, title, subtitle, accent }: HeaderProp
           set the upper breakpoints (sm/md) so wider screens keep the
           chunkier 32px / 44px the design intends. */}
       <h1
-        className="mull-pixel-title mt-5 pr-2 leading-[1.1] tracking-[0.04em] text-ink sm:text-[32px] md:text-[44px]"
+        className="mull-pixel-title mt-5 pr-2 leading-[1.45] tracking-[0.04em] text-ink sm:text-[32px] md:text-[44px]"
         style={{ fontFamily: "var(--font-pixel-display)" }}
       >
         <span className="mull-pixel-title-shadow" style={{ ['--mull-shadow-color' as string]: shadowColor } as React.CSSProperties}>

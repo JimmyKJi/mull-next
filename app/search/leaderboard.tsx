@@ -243,5 +243,5 @@ const headingStyle: React.CSSProperties = {
   color: 'var(--color-ink)',
   letterSpacing: '0.04em',
   textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))',
-  lineHeight: 1.1,
+  lineHeight: 1.4,
 };
