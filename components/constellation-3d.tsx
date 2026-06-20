@@ -274,7 +274,16 @@ function Scene({
         onHover={onHover}
       />
       {userPos ? <UserPoint position={userPos} /> : null}
-      {isInteractive ? <AxisLabels /> : null}
+      {/* AxisLabels gets its OWN Suspense boundary. <Text> suspends on
+          font load, and we never again want that to take the point
+          cloud down with it (the bug that blanked the whole map). If
+          the labels' font is slow or fails, only the labels wait — the
+          cloud, grid and user point render regardless. */}
+      {isInteractive ? (
+        <Suspense fallback={null}>
+          <AxisLabels />
+        </Suspense>
+      ) : null}
     </>
   );
 }
@@ -441,6 +450,17 @@ function AxisGrid() {
 function AxisLabels() {
   const D = SCENE_SCALE * 1.15;
   const props = {
+    // Self-hosted font is LOAD-BEARING, not cosmetic. drei's <Text>
+    // (troika-three-text) fetches glyph data to render, and with no
+    // `font` set it pulls from troika's default CDN
+    // (cdn.jsdelivr.net/gh/lojjic/unicode-font-resolver). Our CSP
+    // `connect-src` only allows 'self' + Supabase, so that CDN fetch is
+    // blocked — and because <Text> *suspends* until the font resolves,
+    // a blocked fetch hangs the whole <Scene> Suspense and the entire
+    // point cloud goes blank. Pointing at a same-origin TTF keeps the
+    // fetch under 'self'. Must be a raw .ttf/.otf/.woff (troika can't
+    // parse .woff2). Don't drop this back to the default font.
+    font: "/fonts/Inter-Regular.ttf",
     fontSize: 0.18,
     color: "#9A8B6A",
     anchorX: "center" as const,
