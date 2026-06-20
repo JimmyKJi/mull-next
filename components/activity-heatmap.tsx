@@ -11,8 +11,8 @@
 // "logged in three times this month" feel like something instead
 // of nothing.
 
-import { ARCHETYPE_COLORS } from "@/lib/archetype-colors";
-import { type Locale } from "@/lib/translations";
+import { ARCHETYPE_COLORS } from '@/lib/archetype-colors';
+import { type Locale } from '@/lib/translations';
 
 type Props = {
   /** All event timestamps, in any order. Only the date portion
@@ -28,19 +28,19 @@ type Props = {
   locale?: Locale;
 };
 
-const DAY_LABELS = ["Mon", "", "Wed", "", "Fri", "", ""];
-const DAY_LABELS_ZH = ["周一", "", "周三", "", "周五", "", ""];
+const DAY_LABELS = ['Mon', '', 'Wed', '', 'Fri', '', ''];
+const DAY_LABELS_ZH = ['周一', '', '周三', '', '周五', '', ''];
 const WEEKS = 52;
 const CELL = 12; // px
-const GAP = 3;   // px
+const GAP = 3; // px
 
 export function ActivityHeatmap({
   timestamps,
   endDate = new Date(),
   accent = ARCHETYPE_COLORS.hearth, // warm amber default
-  locale = "en",
+  locale = 'en',
 }: Props) {
-  const isZh = locale === "zh";
+  const isZh = locale === 'zh';
   const dayLabels = isZh ? DAY_LABELS_ZH : DAY_LABELS;
   // Bucket timestamps by ISO date (YYYY-MM-DD, UTC). Counts duplicates.
   const counts = new Map<string, number>();
@@ -87,19 +87,18 @@ export function ActivityHeatmap({
       <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
         <p
           className="text-[14px] leading-[1.55] text-ink-soft"
-          style={{ fontFamily: "var(--font-editorial)" }}
+          style={{ fontFamily: 'var(--font-editorial)' }}
         >
           {isZh ? (
             <>
-              过去一年，<strong className="text-ink">{total}</strong> 条记录，遍布{" "}
+              过去一年，<strong className="text-ink">{total}</strong> 条记录，遍布{' '}
               <strong className="text-ink">{days}</strong> 天。
             </>
           ) : (
             <>
-              <strong className="text-ink">{total}</strong>{" "}
-              {total === 1 ? "entry" : "entries"} across{" "}
-              <strong className="text-ink">{days}</strong>{" "}
-              {days === 1 ? "day" : "days"} in the last year.
+              <strong className="text-ink">{total}</strong> {total === 1 ? 'entry' : 'entries'}{' '}
+              across <strong className="text-ink">{days}</strong> {days === 1 ? 'day' : 'days'} in
+              the last year.
             </>
           )}
         </p>
@@ -107,13 +106,13 @@ export function ActivityHeatmap({
       </div>
       <div
         className="overflow-x-auto border-2 border-ink bg-[#FFFCF4] p-3"
-        style={{ boxShadow: "3px 3px 0 0 var(--color-acc)" }}
+        style={{ boxShadow: '3px 3px 0 0 var(--color-acc)' }}
       >
         <div className="flex gap-[3px]">
           {/* Y-axis day labels */}
           <div
             className="flex flex-col gap-[3px] pr-2"
-            style={{ fontFamily: "var(--font-pixel-display)" }}
+            style={{ fontFamily: 'var(--font-pixel-display)' }}
           >
             {dayLabels.map((d, i) => (
               <div
@@ -131,7 +130,13 @@ export function ActivityHeatmap({
             {weeks.map((week, wi) => (
               <div key={wi} className="flex flex-col gap-[3px]">
                 {week.map((day, di) => (
-                  <Cell key={di} count={day.count} date={day.date} accent={accent} locale={locale} />
+                  <Cell
+                    key={di}
+                    count={day.count}
+                    date={day.date}
+                    accent={accent}
+                    locale={locale}
+                  />
                 ))}
               </div>
             ))}
@@ -146,7 +151,7 @@ function Cell({
   count,
   date,
   accent,
-  locale = "en",
+  locale = 'en',
 }: {
   count: number;
   date: string;
@@ -157,27 +162,22 @@ function Cell({
   // form ("条记录"); en keeps the pluralized form.
   const suffix =
     count > 0
-      ? locale === "zh"
+      ? locale === 'zh'
         ? ` · ${count} 条记录`
-        : ` · ${count} ${count === 1 ? "entry" : "entries"}`
-      : "";
+        : ` · ${count} ${count === 1 ? 'entry' : 'entries'}`
+      : '';
   // -1 = future (not yet possible), 0 = empty, 1 / 2-3 / 4+ tiers.
   const bg =
     count < 0
-      ? "transparent"
+      ? 'transparent'
       : count === 0
-        ? "#E2D8B6"
+        ? '#E2D8B6'
         : count === 1
           ? accent.soft
           : count <= 3
             ? accent.primary
             : accent.deep;
-  const border =
-    count < 0
-      ? "transparent"
-      : count === 0
-        ? "var(--color-line)"
-        : accent.deep;
+  const border = count < 0 ? 'transparent' : count === 0 ? 'var(--color-line)' : accent.deep;
   return (
     <div
       title={`${date}${suffix}`}
@@ -193,7 +193,7 @@ function Cell({
 
 function Legend({
   accent,
-  locale = "en",
+  locale = 'en',
 }: {
   accent: { primary: string; deep: string; soft: string };
   locale?: Locale;
@@ -201,16 +201,44 @@ function Legend({
   return (
     <div
       className="flex items-center gap-2 text-[10px] tracking-[0.18em] text-acc-deep"
-      style={{ fontFamily: "var(--font-pixel-display)" }}
+      style={{ fontFamily: 'var(--font-pixel-display)' }}
     >
-      <span>{locale === "zh" ? "少" : "LESS"}</span>
+      <span>{locale === 'zh' ? '少' : 'LESS'}</span>
       <div className="flex gap-[3px]">
-        <div style={{ width: 10, height: 10, background: "#E2D8B6", border: `1px solid var(--color-line)` }} />
-        <div style={{ width: 10, height: 10, background: accent.soft, border: `1px solid ${accent.deep}` }} />
-        <div style={{ width: 10, height: 10, background: accent.primary, border: `1px solid ${accent.deep}` }} />
-        <div style={{ width: 10, height: 10, background: accent.deep, border: `1px solid ${accent.deep}` }} />
+        <div
+          style={{
+            width: 10,
+            height: 10,
+            background: '#E2D8B6',
+            border: `1px solid var(--color-line)`,
+          }}
+        />
+        <div
+          style={{
+            width: 10,
+            height: 10,
+            background: accent.soft,
+            border: `1px solid ${accent.deep}`,
+          }}
+        />
+        <div
+          style={{
+            width: 10,
+            height: 10,
+            background: accent.primary,
+            border: `1px solid ${accent.deep}`,
+          }}
+        />
+        <div
+          style={{
+            width: 10,
+            height: 10,
+            background: accent.deep,
+            border: `1px solid ${accent.deep}`,
+          }}
+        />
       </div>
-      <span>{locale === "zh" ? "多" : "MORE"}</span>
+      <span>{locale === 'zh' ? '多' : 'MORE'}</span>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 // ResultSave — fire-and-forget persistence side effect.
 //
@@ -18,24 +18,24 @@
 //
 // Renders nothing visible.
 
-import { useEffect, useRef } from "react";
-import { getStoredConsent } from "@/components/research-consent-gate";
+import { useEffect, useRef } from 'react';
+import { getStoredConsent } from '@/components/research-consent-gate';
 
-const STASH_KEY = "mull.pending_quiz_attempt";
+const STASH_KEY = 'mull.pending_quiz_attempt';
 // Lightweight archetype-only key for fast client-side personalization
 // across the site (PathwayNext widget, retention nudges, etc.).
 // Set alongside the heavier STASH_KEY so any page can do a single
 // localStorage.getItem('mull.archetype') without parsing JSON.
-const ARCHETYPE_KEY = "mull.archetype";
+const ARCHETYPE_KEY = 'mull.archetype';
 // The user's own 16-D coordinates, stashed for client-side vector-space
 // personalization (the PathwayNext "mind nearest you" station, and any
 // future "near you" surfaces). It's the user's own result — already shown
 // on this very page — not sensitive. Lets client widgets rank content by
 // cosine similarity without a server round-trip or an API call.
-const VECTOR_KEY = "mull.vector";
+const VECTOR_KEY = 'mull.vector';
 // The per-question trail written by the quiz engine's finish(). Must
 // match RESEARCH_ANSWERS_KEY in app/quiz/quiz-engine.tsx.
-const RESEARCH_ANSWERS_KEY = "mull.quiz.research_answers";
+const RESEARCH_ANSWERS_KEY = 'mull.quiz.research_answers';
 
 type ResearchAnswers = {
   questionCount: number;
@@ -47,13 +47,13 @@ type Props = {
   archetype: string;
   flavor: string | null;
   alignmentPct: number;
-  mode: "quick" | "detailed";
+  mode: 'quick' | 'detailed';
 };
 
 // Read + clear the per-question trail the engine stashed. Returns null
 // unless a fresh stash exists whose mode matches this result (guards
 // against a stale trail from a different/earlier attempt bleeding in).
-function takeResearchAnswers(mode: "quick" | "detailed"): ResearchAnswers | null {
+function takeResearchAnswers(mode: 'quick' | 'detailed'): ResearchAnswers | null {
   try {
     const raw = window.localStorage.getItem(RESEARCH_ANSWERS_KEY);
     if (!raw) return null;
@@ -68,14 +68,12 @@ function takeResearchAnswers(mode: "quick" | "detailed"): ResearchAnswers | null
     if (parsed.mode !== mode) return null;
     if (!Array.isArray(parsed.answers)) return null;
     // Staleness guard — only trust a trail written in the last 10 minutes.
-    if (typeof parsed.ts === "number" && Date.now() - parsed.ts > 10 * 60_000) {
+    if (typeof parsed.ts === 'number' && Date.now() - parsed.ts > 10 * 60_000) {
       return null;
     }
     return {
       questionCount:
-        typeof parsed.questionCount === "number"
-          ? parsed.questionCount
-          : parsed.answers.length,
+        typeof parsed.questionCount === 'number' ? parsed.questionCount : parsed.answers.length,
       answers: parsed.answers,
     };
   } catch {
@@ -83,13 +81,7 @@ function takeResearchAnswers(mode: "quick" | "detailed"): ResearchAnswers | null
   }
 }
 
-export function ResultSave({
-  vector,
-  archetype,
-  flavor,
-  alignmentPct,
-  mode,
-}: Props) {
+export function ResultSave({ vector, archetype, flavor, alignmentPct, mode }: Props) {
   const fired = useRef(false);
 
   useEffect(() => {
@@ -104,7 +96,9 @@ export function ResultSave({
       if (Array.isArray(vector) && vector.length === 16) {
         window.localStorage.setItem(VECTOR_KEY, JSON.stringify(vector));
       }
-    } catch { /* storage disabled */ }
+    } catch {
+      /* storage disabled */
+    }
 
     const consent = getStoredConsent(); // "yes" | "no" | null
     const research = takeResearchAnswers(mode);
@@ -126,21 +120,21 @@ export function ResultSave({
 
     (async () => {
       try {
-        const res = await fetch("/api/quiz/save", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+        const res = await fetch('/api/quiz/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
         if (res.status === 401) {
           // Guest — stash for the claimer to pick up post-signup.
           stash(payload);
         } else if (!res.ok) {
-          console.warn("[result] save failed", res.status);
+          console.warn('[result] save failed', res.status);
         }
       } catch (e) {
         // Network down / fetch refused / etc — preserve the result.
         stash(payload);
-        console.warn("[result] save network error; stashed locally", e);
+        console.warn('[result] save network error; stashed locally', e);
       }
     })();
   }, [vector, archetype, flavor, alignmentPct, mode]);
@@ -153,9 +147,9 @@ function stash(payload: {
   archetype: string;
   flavor: string | null;
   alignment_pct: number;
-  mode: "quick" | "detailed";
+  mode: 'quick' | 'detailed';
   taken_at: string;
-  research_consent?: "yes" | "no" | null;
+  research_consent?: 'yes' | 'no' | null;
   research_answers?: unknown[] | null;
   research_question_count?: number | null;
 }) {

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 // JourneyEngine — "The Inheritor" v3.
 //
@@ -20,19 +20,19 @@
 //
 // Scoring + handoff unchanged from v1.
 
-import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { add, zeros } from "@/lib/vectors";
-import type { JourneyScene, RevealEnding } from "@/lib/quiz-journey";
-import { chamberCount, pickEnding } from "@/lib/quiz-journey";
-import { t, type Locale } from "@/lib/translations";
-import { SceneIllustration } from "@/components/scene-illustration";
-import { SupportMullPrompt } from "@/components/support-mull-prompt";
-import { ResearchConsentGate } from "@/components/research-consent-gate";
+import { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { add, zeros } from '@/lib/vectors';
+import type { JourneyScene, RevealEnding } from '@/lib/quiz-journey';
+import { chamberCount, pickEnding } from '@/lib/quiz-journey';
+import { t, type Locale } from '@/lib/translations';
+import { SceneIllustration } from '@/components/scene-illustration';
+import { SupportMullPrompt } from '@/components/support-mull-prompt';
+import { ResearchConsentGate } from '@/components/research-consent-gate';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 
 type Props = {
   scenes: JourneyScene[];
@@ -58,7 +58,7 @@ export function JourneyEngine({ scenes, reveals, locale }: Props) {
   const currentChamberNumber = useMemo(() => {
     let count = 0;
     for (let i = 0; i <= idx; i++) {
-      if (scenes[i]?.kind === "chamber") count++;
+      if (scenes[i]?.kind === 'chamber') count++;
     }
     return count;
   }, [idx, scenes]);
@@ -66,7 +66,7 @@ export function JourneyEngine({ scenes, reveals, locale }: Props) {
   useEffect(() => {
     setRevealed(false);
     setPickedIdx(null);
-    window.scrollTo({ top: 0, behavior: "auto" });
+    window.scrollTo({ top: 0, behavior: 'auto' });
   }, [idx]);
 
   const scene = scenes[idx];
@@ -92,14 +92,14 @@ export function JourneyEngine({ scenes, reveals, locale }: Props) {
   }
 
   function pick(choiceIdx: number) {
-    if (scene.kind !== "chamber") return;
+    if (scene.kind !== 'chamber') return;
     const delta = scene.choices[choiceIdx]?.vector;
     if (!delta) return;
     setVector((prev) => add(prev, delta));
     setPickedIdx(choiceIdx);
     setRevealed(true);
     window.setTimeout(() => {
-      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }, 80);
   }
 
@@ -111,56 +111,56 @@ export function JourneyEngine({ scenes, reveals, locale }: Props) {
   return (
     <div
       style={{
-        background: "#26201A", // warm dark — feels like night by lamplight, not pure black
-        minHeight: "100svh",
-        padding: "24px 14px 48px",
+        background: '#26201A', // warm dark — feels like night by lamplight, not pure black
+        minHeight: '100svh',
+        padding: '24px 14px 48px',
       }}
     >
-      <div style={{ maxWidth: 700, margin: "0 auto" }}>
+      <div style={{ maxWidth: 700, margin: '0 auto' }}>
         {/* Header chrome */}
         <header
           style={{
-            display: "flex",
-            alignItems: "baseline",
-            justifyContent: "space-between",
+            display: 'flex',
+            alignItems: 'baseline',
+            justifyContent: 'space-between',
             gap: 12,
             marginBottom: 20,
-            flexWrap: "wrap",
+            flexWrap: 'wrap',
           }}
         >
           <div
             style={{
-              display: "flex",
-              alignItems: "baseline",
+              display: 'flex',
+              alignItems: 'baseline',
               gap: 10,
-              flexWrap: "wrap",
+              flexWrap: 'wrap',
             }}
           >
             <span
               style={{
                 fontFamily: pixel,
                 fontSize: 10,
-                color: "#1A1820",
-                letterSpacing: "0.22em",
-                textTransform: "uppercase",
-                background: "#F8C75E",
-                border: "2px solid var(--color-ink)",
-                padding: "3px 8px",
+                color: '#1A1820',
+                letterSpacing: '0.22em',
+                textTransform: 'uppercase',
+                background: '#F8C75E',
+                border: '2px solid var(--color-ink)',
+                padding: '3px 8px',
               }}
             >
-              {t("journey.badge", locale)}
+              {t('journey.badge', locale)}
             </span>
-            {scene.kind === "chamber" && (
+            {scene.kind === 'chamber' && (
               <span
                 style={{
                   fontFamily: pixel,
                   fontSize: 10,
-                  color: "var(--color-acc)",
-                  letterSpacing: "0.2em",
-                  textTransform: "uppercase",
+                  color: 'var(--color-acc)',
+                  letterSpacing: '0.2em',
+                  textTransform: 'uppercase',
                 }}
               >
-                {t("journey.chamber_of", locale, {
+                {t('journey.chamber_of', locale, {
                   n: currentChamberNumber,
                   m: totalChambers,
                 })}
@@ -172,23 +172,21 @@ export function JourneyEngine({ scenes, reveals, locale }: Props) {
             style={{
               fontFamily: pixel,
               fontSize: 9,
-              color: "#5C4528",
+              color: '#5C4528',
               letterSpacing: 0.4,
-              textTransform: "uppercase",
-              textDecoration: "none",
+              textTransform: 'uppercase',
+              textDecoration: 'none',
               opacity: 0.75,
             }}
-            title={t("journey.leave_title", locale)}
+            title={t('journey.leave_title', locale)}
           >
-            {t("journey.leave", locale)}
+            {t('journey.leave', locale)}
           </Link>
         </header>
 
         {/* Scene body */}
-        {scene.kind === "frame" && (
-          <FrameScene scene={scene} onAdvance={advance} locale={locale} />
-        )}
-        {scene.kind === "chamber" && (
+        {scene.kind === 'frame' && <FrameScene scene={scene} onAdvance={advance} locale={locale} />}
+        {scene.kind === 'chamber' && (
           <ChamberScene
             scene={scene}
             revealed={revealed}
@@ -198,7 +196,7 @@ export function JourneyEngine({ scenes, reveals, locale }: Props) {
             locale={locale}
           />
         )}
-        {scene.kind === "reveal" && (
+        {scene.kind === 'reveal' && (
           <RevealScene
             scene={scene}
             vector={vector}
@@ -228,45 +226,42 @@ function RevealScene({
   onAdvance,
   locale,
 }: {
-  scene: Extract<JourneyScene, { kind: "reveal" }>;
+  scene: Extract<JourneyScene, { kind: 'reveal' }>;
   vector: number[];
   reveals: Record<string, RevealEnding>;
   onAdvance: () => void;
   locale: Locale;
 }) {
   const { archetypeKey, flavor } = useMemo(() => pickEnding(vector), [vector]);
-  const ending: RevealEnding =
-    reveals[archetypeKey] ?? reveals.cartographer;
+  const ending: RevealEnding = reveals[archetypeKey] ?? reveals.cartographer;
 
   // Compose body: cold-open + recognition + flavor beat + inheritance
   // + ask, joined by paragraph breaks. The shared cold-open already
   // ends with "He looks at you steadily." — the recognition picks up
   // from that beat as Wren's first archetype-specific line.
-  const flavorBeat =
-    (flavor != null && ending.flavorDetails[flavor]) ||
-    ending.flavorDetailDefault;
+  const flavorBeat = (flavor != null && ending.flavorDetails[flavor]) || ending.flavorDetailDefault;
   const body = [
     scene.coldOpen,
     ending.recognition,
     flavorBeat,
     ending.inheritance,
     ending.ask,
-  ].join("\n\n");
+  ].join('\n\n');
   const paragraphs = body.split(/\n\n+/);
 
   return (
     <article
       style={{
-        background: "#FFFCF4",
-        border: "4px solid var(--color-ink)",
-        boxShadow: "6px 6px 0 0 var(--color-acc)",
+        background: '#FFFCF4',
+        border: '4px solid var(--color-ink)',
+        boxShadow: '6px 6px 0 0 var(--color-acc)',
       }}
     >
       <div style={illustrationContainer}>
         <SceneIllustration scene={scene.art} width={360} locale={locale} />
       </div>
 
-      <div style={{ padding: "26px 32px 30px" }}>
+      <div style={{ padding: '26px 32px 30px' }}>
         <div style={eyebrowStyle}>{scene.eyebrow}</div>
         {paragraphs.map((p, i) => (
           <p
@@ -274,8 +269,8 @@ function RevealScene({
             style={{
               fontFamily: serif,
               fontSize: 18,
-              color: "var(--color-ink)",
-              margin: i === paragraphs.length - 1 ? "0 0 24px" : "0 0 16px",
+              color: 'var(--color-ink)',
+              margin: i === paragraphs.length - 1 ? '0 0 24px' : '0 0 16px',
               lineHeight: 1.7,
             }}
             dangerouslySetInnerHTML={{ __html: italicizeMarkers(p) }}
@@ -304,7 +299,7 @@ function FrameScene({
   onAdvance,
   locale,
 }: {
-  scene: Extract<JourneyScene, { kind: "frame" }>;
+  scene: Extract<JourneyScene, { kind: 'frame' }>;
   onAdvance: () => void;
   locale: Locale;
 }) {
@@ -312,9 +307,9 @@ function FrameScene({
   return (
     <article
       style={{
-        background: "#FFFCF4",
-        border: "4px solid var(--color-ink)",
-        boxShadow: "6px 6px 0 0 var(--color-acc)",
+        background: '#FFFCF4',
+        border: '4px solid var(--color-ink)',
+        boxShadow: '6px 6px 0 0 var(--color-acc)',
       }}
     >
       {/* Illustration sits at the top of the cream card */}
@@ -322,18 +317,16 @@ function FrameScene({
         <SceneIllustration scene={scene.art} width={360} locale={locale} />
       </div>
 
-      <div style={{ padding: "26px 32px 30px" }}>
-        {scene.eyebrow && (
-          <div style={eyebrowStyle}>{scene.eyebrow}</div>
-        )}
+      <div style={{ padding: '26px 32px 30px' }}>
+        {scene.eyebrow && <div style={eyebrowStyle}>{scene.eyebrow}</div>}
         {paragraphs.map((p, i) => (
           <p
             key={i}
             style={{
               fontFamily: serif,
               fontSize: 18,
-              color: "var(--color-ink)",
-              margin: i === paragraphs.length - 1 ? "0 0 24px" : "0 0 16px",
+              color: 'var(--color-ink)',
+              margin: i === paragraphs.length - 1 ? '0 0 24px' : '0 0 16px',
               lineHeight: 1.7,
             }}
             dangerouslySetInnerHTML={{ __html: italicizeMarkers(p) }}
@@ -357,7 +350,7 @@ function ChamberScene({
   onAdvance,
   locale,
 }: {
-  scene: Extract<JourneyScene, { kind: "chamber" }>;
+  scene: Extract<JourneyScene, { kind: 'chamber' }>;
   revealed: boolean;
   pickedIdx: number | null;
   onPick: (i: number) => void;
@@ -369,9 +362,9 @@ function ChamberScene({
     <article>
       <div
         style={{
-          background: "#FFFCF4",
-          border: "4px solid var(--color-ink)",
-          boxShadow: "5px 5px 0 0 var(--color-acc)",
+          background: '#FFFCF4',
+          border: '4px solid var(--color-ink)',
+          boxShadow: '5px 5px 0 0 var(--color-acc)',
           marginBottom: 18,
         }}
       >
@@ -380,7 +373,7 @@ function ChamberScene({
           <SceneIllustration scene={scene.art} width={360} locale={locale} />
         </div>
 
-        <div style={{ padding: "24px 30px 28px" }}>
+        <div style={{ padding: '24px 30px 28px' }}>
           <div style={eyebrowStyle}>{scene.eyebrow}</div>
           {paragraphs.map((p, i) => (
             <p
@@ -388,8 +381,8 @@ function ChamberScene({
               style={{
                 fontFamily: serif,
                 fontSize: 17.5,
-                color: "var(--color-ink)",
-                margin: i === paragraphs.length - 1 ? "0 0 18px" : "0 0 14px",
+                color: 'var(--color-ink)',
+                margin: i === paragraphs.length - 1 ? '0 0 18px' : '0 0 14px',
                 lineHeight: 1.7,
               }}
               dangerouslySetInnerHTML={{ __html: italicizeMarkers(p) }}
@@ -402,10 +395,10 @@ function ChamberScene({
               fontFamily: serif,
               fontWeight: 600,
               fontSize: 19,
-              color: "var(--color-ink)",
-              margin: "12px 0 0",
+              color: 'var(--color-ink)',
+              margin: '12px 0 0',
               lineHeight: 1.55,
-              borderLeft: "3px solid var(--color-acc)",
+              borderLeft: '3px solid var(--color-acc)',
               paddingLeft: 14,
             }}
           >
@@ -417,10 +410,10 @@ function ChamberScene({
       {/* Choice cards */}
       <ul
         style={{
-          listStyle: "none",
+          listStyle: 'none',
           padding: 0,
-          margin: "0 0 18px",
-          display: "grid",
+          margin: '0 0 18px',
+          display: 'grid',
           gap: 8,
         }}
       >
@@ -435,38 +428,37 @@ function ChamberScene({
                 onClick={() => !revealed && onPick(i)}
                 disabled={revealed}
                 style={{
-                  display: "block",
-                  width: "100%",
-                  textAlign: "left",
-                  padding: isSilence ? "12px 16px" : "14px 16px",
+                  display: 'block',
+                  width: '100%',
+                  textAlign: 'left',
+                  padding: isSilence ? '12px 16px' : '14px 16px',
                   background: isPicked
-                    ? "#F8C75E"
+                    ? '#F8C75E'
                     : isDimmed
-                      ? "#2F261E"
+                      ? '#2F261E'
                       : isSilence
-                        ? "transparent"
-                        : "#FFFCF4",
+                        ? 'transparent'
+                        : '#FFFCF4',
                   color: isDimmed
-                    ? "#5D5644"
+                    ? '#5D5644'
                     : isSilence
-                      ? "var(--color-line)"
-                      : "var(--color-ink)",
+                      ? 'var(--color-line)'
+                      : 'var(--color-ink)',
                   border: isSilence
-                    ? "2px dashed var(--color-acc-deep)"
-                    : "3px solid var(--color-ink)",
+                    ? '2px dashed var(--color-acc-deep)'
+                    : '3px solid var(--color-ink)',
                   boxShadow: isPicked
-                    ? "4px 4px 0 0 #2F5D5C"
+                    ? '4px 4px 0 0 #2F5D5C'
                     : isDimmed
-                      ? "none"
+                      ? 'none'
                       : isSilence
-                        ? "none"
-                        : "3px 3px 0 0 var(--color-acc)",
-                  cursor: revealed ? "default" : "pointer",
+                        ? 'none'
+                        : '3px 3px 0 0 var(--color-acc)',
+                  cursor: revealed ? 'default' : 'pointer',
                   opacity: isDimmed ? 0.5 : 1,
-                  transition:
-                    "background 120ms ease, opacity 220ms ease, box-shadow 120ms ease",
+                  transition: 'background 120ms ease, opacity 220ms ease, box-shadow 120ms ease',
                   fontFamily: serif,
-                  fontStyle: isSilence ? "italic" : "normal",
+                  fontStyle: isSilence ? 'italic' : 'normal',
                   fontSize: isSilence ? 15 : 16,
                   lineHeight: 1.55,
                 }}
@@ -478,49 +470,50 @@ function ChamberScene({
         })}
       </ul>
 
-      {revealed && (() => {
-        // Per-choice epilogue overrides the scene default when the
-        // picked choice has its own narrative beat (a reveal about
-        // the deceased that the standard "N have answered" line
-        // would flatten). Falls back to scene.epilogue otherwise.
-        const epilogueText =
-          (pickedIdx != null && scene.choiceEpilogues?.[pickedIdx]) ||
-          scene.epilogue;
-        // Multi-paragraph epilogues render with paragraph breaks via
-        // \n\n splitting — the new long-form choice epilogues use this.
-        const paragraphs = epilogueText.split(/\n\n+/);
-        return (
-        <div
-          style={{
-            padding: "18px 22px",
-            background: "#1F1814",
-            border: "3px solid var(--color-acc)",
-            marginBottom: scene.twistClue ? 14 : 20,
-          }}
-        >
-          {paragraphs.map((p, i) => (
-            <p
-              key={i}
+      {revealed &&
+        (() => {
+          // Per-choice epilogue overrides the scene default when the
+          // picked choice has its own narrative beat (a reveal about
+          // the deceased that the standard "N have answered" line
+          // would flatten). Falls back to scene.epilogue otherwise.
+          const epilogueText =
+            (pickedIdx != null && scene.choiceEpilogues?.[pickedIdx]) || scene.epilogue;
+          // Multi-paragraph epilogues render with paragraph breaks via
+          // \n\n splitting — the new long-form choice epilogues use this.
+          const paragraphs = epilogueText.split(/\n\n+/);
+          return (
+            <div
               style={{
-                fontFamily: serif,
-                fontStyle: "italic",
-                fontSize: 16.5,
-                color: "var(--color-acc-soft)",
-                margin: i === paragraphs.length - 1 ? 0 : "0 0 12px",
-                lineHeight: 1.65,
+                padding: '18px 22px',
+                background: '#1F1814',
+                border: '3px solid var(--color-acc)',
+                marginBottom: scene.twistClue ? 14 : 20,
               }}
-              dangerouslySetInnerHTML={{ __html: italicizeMarkers(p) }}
-            />
-          ))}
-        </div>
-      );})()}
+            >
+              {paragraphs.map((p, i) => (
+                <p
+                  key={i}
+                  style={{
+                    fontFamily: serif,
+                    fontStyle: 'italic',
+                    fontSize: 16.5,
+                    color: 'var(--color-acc-soft)',
+                    margin: i === paragraphs.length - 1 ? 0 : '0 0 12px',
+                    lineHeight: 1.65,
+                  }}
+                  dangerouslySetInnerHTML={{ __html: italicizeMarkers(p) }}
+                />
+              ))}
+            </div>
+          );
+        })()}
 
       {revealed && scene.twistClue && (
         <div
           style={{
-            padding: "14px 18px",
-            background: "#2A1818",
-            border: "2px dashed #7A2E2E",
+            padding: '14px 18px',
+            background: '#2A1818',
+            border: '2px dashed #7A2E2E',
             marginBottom: 20,
           }}
         >
@@ -528,22 +521,22 @@ function ChamberScene({
             style={{
               fontFamily: pixel,
               fontSize: 9,
-              color: "var(--color-acc)",
-              letterSpacing: "0.22em",
-              textTransform: "uppercase",
+              color: 'var(--color-acc)',
+              letterSpacing: '0.22em',
+              textTransform: 'uppercase',
               marginBottom: 6,
             }}
           >
-            {t("journey.something_else", locale)}
+            {t('journey.something_else', locale)}
           </div>
           <p
             style={{
               fontFamily: serif,
               fontSize: 15.5,
-              color: "#E5DCC0",
+              color: '#E5DCC0',
               margin: 0,
               lineHeight: 1.6,
-              fontStyle: "italic",
+              fontStyle: 'italic',
             }}
           >
             {scene.twistClue}
@@ -553,7 +546,7 @@ function ChamberScene({
 
       {revealed && (
         <button type="button" onClick={onAdvance} style={advanceBtn}>
-          ▶ {t("journey.continue", locale)}
+          ▶ {t('journey.continue', locale)}
         </button>
       )}
     </article>
@@ -568,86 +561,80 @@ function ChamberScene({
 // path out, and visitors who came for the immersive version have a
 // clear "yes, I want this" commit before the prose starts.
 
-function GateScreen({
-  onBegin,
-  locale,
-}: {
-  onBegin: () => void;
-  locale: Locale;
-}) {
+function GateScreen({ onBegin, locale }: { onBegin: () => void; locale: Locale }) {
   return (
     <div
       style={{
-        background: "#26201A",
-        minHeight: "100svh",
-        padding: "60px 18px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        background: '#26201A',
+        minHeight: '100svh',
+        padding: '60px 18px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
     >
-      <div style={{ maxWidth: 540, width: "100%" }}>
+      <div style={{ maxWidth: 540, width: '100%' }}>
         <div
           style={{
-            background: "#FFFCF4",
-            border: "4px solid var(--color-ink)",
-            boxShadow: "6px 6px 0 0 var(--color-acc)",
-            padding: "32px 30px",
-            textAlign: "center",
+            background: '#FFFCF4',
+            border: '4px solid var(--color-ink)',
+            boxShadow: '6px 6px 0 0 var(--color-acc)',
+            padding: '32px 30px',
+            textAlign: 'center',
           }}
         >
           <div
             style={{
               fontFamily: pixel,
               fontSize: 10,
-              color: "var(--color-acc-deep)",
-              letterSpacing: "0.22em",
-              textTransform: "uppercase",
+              color: 'var(--color-acc-deep)',
+              letterSpacing: '0.22em',
+              textTransform: 'uppercase',
               marginBottom: 22,
             }}
           >
-            {t("journey.gate_eyebrow", locale)}
+            {t('journey.gate_eyebrow', locale)}
           </div>
           <h1
             style={{
               fontFamily: pixel,
               fontSize: 22,
-              color: "var(--color-ink)",
-              letterSpacing: "0.04em",
-              textTransform: "uppercase",
+              color: 'var(--color-ink)',
+              letterSpacing: '0.04em',
+              textTransform: 'uppercase',
               lineHeight: 1.4,
-              margin: "0 0 18px",
-              textShadow: "3px 3px 0 var(--pixel-shadow, var(--color-acc))",
+              margin: '0 0 18px',
+              textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))',
             }}
           >
-            {t("journey.gate_title", locale)}
+            {t('journey.gate_title', locale)}
           </h1>
           <p
             style={{
               fontFamily: serif,
               fontSize: 17,
-              color: "var(--color-ink)",
-              margin: "0 0 12px",
+              color: 'var(--color-ink)',
+              margin: '0 0 12px',
               lineHeight: 1.65,
             }}
           >
-            {t("journey.gate_desc", locale)}
+            {t('journey.gate_desc', locale)}
           </p>
           <p
             style={{
               fontFamily: serif,
               fontSize: 15,
-              fontStyle: "italic",
-              color: "var(--color-acc-deep)",
-              margin: "0 0 28px",
+              fontStyle: 'italic',
+              color: 'var(--color-acc-deep)',
+              margin: '0 0 28px',
               lineHeight: 1.5,
             }}
           >
-            {t("journey.gate_time", locale)}
+            {t('journey.gate_time', locale)}
           </p>
           <div
             style={{
-              display: "grid",
+              display: 'grid',
               gap: 10,
             }}
           >
@@ -655,41 +642,41 @@ function GateScreen({
               type="button"
               onClick={onBegin}
               style={{
-                width: "100%",
-                padding: "16px 20px",
-                background: "#F8C75E",
-                color: "#1A1820",
-                border: "3px solid var(--color-ink)",
-                boxShadow: "4px 4px 0 0 #2F5D5C",
+                width: '100%',
+                padding: '16px 20px',
+                background: '#F8C75E',
+                color: '#1A1820',
+                border: '3px solid var(--color-ink)',
+                boxShadow: '4px 4px 0 0 #2F5D5C',
                 fontFamily: pixel,
                 fontSize: 13,
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
-                cursor: "pointer",
-                transition: "transform 80ms steps(2, end), box-shadow 80ms steps(2, end)",
+                letterSpacing: '0.18em',
+                textTransform: 'uppercase',
+                cursor: 'pointer',
+                transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
               }}
             >
-              {t("journey.gate_begin", locale)}
+              {t('journey.gate_begin', locale)}
             </button>
             <Link
               href="/quiz?mode=quick"
               style={{
-                width: "100%",
-                padding: "14px 18px",
-                background: "transparent",
-                color: "var(--color-ink-soft)",
-                border: "2px solid var(--color-acc-deep)",
+                width: '100%',
+                padding: '14px 18px',
+                background: 'transparent',
+                color: 'var(--color-ink-soft)',
+                border: '2px solid var(--color-acc-deep)',
                 fontFamily: pixel,
                 fontSize: 11,
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
-                cursor: "pointer",
-                textDecoration: "none",
-                textAlign: "center",
-                display: "block",
+                letterSpacing: '0.18em',
+                textTransform: 'uppercase',
+                cursor: 'pointer',
+                textDecoration: 'none',
+                textAlign: 'center',
+                display: 'block',
               }}
             >
-              {t("journey.gate_classic", locale)}
+              {t('journey.gate_classic', locale)}
             </Link>
           </div>
         </div>
@@ -701,41 +688,38 @@ function GateScreen({
 // ─── Tiny utilities + shared style snippets ──────────────────────
 
 function italicizeMarkers(s: string): string {
-  return s.replace(
-    /\*([^*]+)\*/g,
-    '<em style="font-style: italic; color: inherit;">$1</em>',
-  );
+  return s.replace(/\*([^*]+)\*/g, '<em style="font-style: italic; color: inherit;">$1</em>');
 }
 
 const illustrationContainer: React.CSSProperties = {
-  background: "#F0E5CB",
-  borderBottom: "3px solid var(--color-ink)",
-  padding: "16px 14px",
-  display: "flex",
-  justifyContent: "center",
+  background: '#F0E5CB',
+  borderBottom: '3px solid var(--color-ink)',
+  padding: '16px 14px',
+  display: 'flex',
+  justifyContent: 'center',
 };
 
 const eyebrowStyle: React.CSSProperties = {
   fontFamily: pixel,
   fontSize: 10,
-  color: "var(--color-acc-deep)",
-  letterSpacing: "0.22em",
-  textTransform: "uppercase",
+  color: 'var(--color-acc-deep)',
+  letterSpacing: '0.22em',
+  textTransform: 'uppercase',
   marginBottom: 16,
-  textAlign: "center",
+  textAlign: 'center',
 };
 
 const advanceBtn: React.CSSProperties = {
-  width: "100%",
-  padding: "14px 20px",
-  background: "#F8C75E",
-  color: "#1A1820",
-  border: "3px solid var(--color-ink)",
-  boxShadow: "4px 4px 0 0 #2F5D5C",
+  width: '100%',
+  padding: '14px 20px',
+  background: '#F8C75E',
+  color: '#1A1820',
+  border: '3px solid var(--color-ink)',
+  boxShadow: '4px 4px 0 0 #2F5D5C',
   fontFamily: "var(--font-pixel-display, 'Courier New', monospace)",
   fontSize: 12,
-  letterSpacing: "0.18em",
-  textTransform: "uppercase",
-  cursor: "pointer",
-  transition: "transform 80ms steps(2, end), box-shadow 80ms steps(2, end)",
+  letterSpacing: '0.18em',
+  textTransform: 'uppercase',
+  cursor: 'pointer',
+  transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
 };

@@ -8,7 +8,7 @@ import { t } from '@/lib/translations';
 import DiagnosisCard from '@/components/diagnosis-card';
 import type { Kinship } from '@/lib/kinship';
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 
 type DiaryEntry = {
@@ -29,12 +29,16 @@ export default async function DiaryEntryPage({ params }: { params: Promise<{ id:
   const { id } = await params;
   const supabase = await createClient();
   const locale = await getServerLocale();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
   const { data: entry } = await supabase
     .from('diary_entries')
-    .select('id, title, content, vector_delta, analysis, diagnosis, kinship, is_novel, word_count, created_at, updated_at')
+    .select(
+      'id, title, content, vector_delta, analysis, diagnosis, kinship, is_novel, word_count, created_at, updated_at',
+    )
     .eq('id', id)
     .eq('user_id', user.id)
     .maybeSingle<DiaryEntry>();
@@ -42,17 +46,26 @@ export default async function DiaryEntryPage({ params }: { params: Promise<{ id:
   if (!entry) notFound();
 
   const shifts = topShifts(entry.vector_delta || [], 0.3, 5);
-  const localeMap: Record<string, string> = { en: 'en-GB', es: 'es-ES', fr: 'fr-FR', pt: 'pt-BR', ru: 'ru-RU', zh: 'zh-CN', ja: 'ja-JP', ko: 'ko-KR' };
+  const localeMap: Record<string, string> = {
+    en: 'en-GB',
+    es: 'es-ES',
+    fr: 'fr-FR',
+    pt: 'pt-BR',
+    ru: 'ru-RU',
+    zh: 'zh-CN',
+    ja: 'ja-JP',
+    ko: 'ko-KR',
+  };
   const fmtDate = (s: string) =>
-    new Date(s).toLocaleString(localeMap[locale] || 'en-GB', { dateStyle: 'long', timeStyle: 'short' });
+    new Date(s).toLocaleString(localeMap[locale] || 'en-GB', {
+      dateStyle: 'long',
+      timeStyle: 'short',
+    });
 
   return (
     <main className="mx-auto max-w-[820px] px-6 pb-32 pt-10 sm:px-10">
       <div className="mb-6 flex items-center justify-between gap-4">
-        <Link
-          href="/diary"
-          className="text-[13px] text-ink-soft hover:text-ink hover:underline"
-        >
+        <Link href="/diary" className="text-[13px] text-ink-soft hover:text-ink hover:underline">
           ← {t('nav.all_entries', locale)}
         </Link>
       </div>
@@ -61,8 +74,8 @@ export default async function DiaryEntryPage({ params }: { params: Promise<{ id:
         className="flex flex-wrap items-center gap-3 text-[10px] tracking-[0.22em] text-[#2F5D5C]"
         style={{ fontFamily: 'var(--font-pixel-display)' }}
       >
-        <span aria-hidden className="inline-block h-2 w-2 bg-[#2F5D5C]" />
-        ▶ {t('diary.entry_eyebrow_detail', locale, { date: fmtDate(entry.created_at) }).toUpperCase()}
+        <span aria-hidden className="inline-block h-2 w-2 bg-[#2F5D5C]" />▶{' '}
+        {t('diary.entry_eyebrow_detail', locale, { date: fmtDate(entry.created_at) }).toUpperCase()}
       </div>
 
       {entry.title && (
@@ -74,59 +87,69 @@ export default async function DiaryEntryPage({ params }: { params: Promise<{ id:
         </h1>
       )}
 
-      <article style={{
-        fontFamily: serif,
-        fontSize: 19,
-        color: 'var(--color-ink)',
-        lineHeight: 1.7,
-        whiteSpace: 'pre-wrap',
-        padding: '24px 28px',
-        background: '#FFFCF4',
-        border: '4px solid var(--color-ink)',
-        boxShadow: '5px 5px 0 0 #2F5D5C',
-        borderRadius: 0,
-      }}>
+      <article
+        style={{
+          fontFamily: serif,
+          fontSize: 19,
+          color: 'var(--color-ink)',
+          lineHeight: 1.7,
+          whiteSpace: 'pre-wrap',
+          padding: '24px 28px',
+          background: '#FFFCF4',
+          border: '4px solid var(--color-ink)',
+          boxShadow: '5px 5px 0 0 #2F5D5C',
+          borderRadius: 0,
+        }}
+      >
         {entry.content}
       </article>
 
-      <div style={{
-        fontFamily: sans,
-        fontSize: 12,
-        color: 'var(--color-acc-deep)',
-        marginTop: 12,
-        opacity: 0.75,
-      }}>
+      <div
+        style={{
+          fontFamily: sans,
+          fontSize: 12,
+          color: 'var(--color-acc-deep)',
+          marginTop: 12,
+          opacity: 0.75,
+        }}
+      >
         {entry.word_count || '?'} words
         {entry.updated_at !== entry.created_at && ` · edited ${fmtDate(entry.updated_at)}`}
       </div>
 
       {entry.analysis && (
-        <div style={{
-          marginTop: 32,
-          padding: '20px 24px',
-          background: 'var(--color-acc-soft)',
-          border: '4px solid var(--color-ink)',
-          boxShadow: '5px 5px 0 0 var(--color-acc)',
-          borderRadius: 0,
-        }}>
-          <div style={{
-            fontFamily: 'var(--font-pixel-display)',
-            fontSize: 11,
-            color: 'var(--color-acc-deep)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.18em',
-            marginBottom: 12,
-          }}>
+        <div
+          style={{
+            marginTop: 32,
+            padding: '20px 24px',
+            background: 'var(--color-acc-soft)',
+            border: '4px solid var(--color-ink)',
+            boxShadow: '5px 5px 0 0 var(--color-acc)',
+            borderRadius: 0,
+          }}
+        >
+          <div
+            style={{
+              fontFamily: 'var(--font-pixel-display)',
+              fontSize: 11,
+              color: 'var(--color-acc-deep)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.18em',
+              marginBottom: 12,
+            }}
+          >
             ▸ {t('dilemma.what_revealed', locale).toUpperCase()}
           </div>
-          <p style={{
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 17,
-            color: 'var(--color-ink)',
-            margin: 0,
-            lineHeight: 1.6,
-          }}>
+          <p
+            style={{
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: 17,
+              color: 'var(--color-ink)',
+              margin: 0,
+              lineHeight: 1.6,
+            }}
+          >
             {entry.analysis}
           </p>
         </div>
@@ -142,26 +165,32 @@ export default async function DiaryEntryPage({ params }: { params: Promise<{ id:
 
       {shifts.length > 0 && (
         <div style={{ marginTop: 24 }}>
-          <div style={{
-            fontFamily: sans,
-            fontSize: 11,
-            fontWeight: 600,
-            color: 'var(--color-acc-deep)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.16em',
-            marginBottom: 10,
-          }}>
+          <div
+            style={{
+              fontFamily: sans,
+              fontSize: 11,
+              fontWeight: 600,
+              color: 'var(--color-acc-deep)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.16em',
+              marginBottom: 10,
+            }}
+          >
             {t('dilemma.shift_added', locale)}
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14 }}>
-            {shifts.map(s => (
-              <span key={s.key} style={{
-                fontFamily: sans,
-                fontSize: 14,
-                color: s.delta > 0 ? '#2F5D5C' : '#7A2E2E',
-              }}>
+            {shifts.map((s) => (
+              <span
+                key={s.key}
+                style={{
+                  fontFamily: sans,
+                  fontSize: 14,
+                  color: s.delta > 0 ? '#2F5D5C' : '#7A2E2E',
+                }}
+              >
                 <strong style={{ fontVariantNumeric: 'tabular-nums' }}>
-                  {s.delta > 0 ? '+' : ''}{s.delta.toFixed(1)}
+                  {s.delta > 0 ? '+' : ''}
+                  {s.delta.toFixed(1)}
                 </strong>{' '}
                 <span style={{ color: 'var(--color-ink-soft)' }}>{s.name}</span>
               </span>

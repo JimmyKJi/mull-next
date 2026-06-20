@@ -56,7 +56,7 @@ export default function MullWordmark({
   const markSize = Math.round(fontSize * MARK_RATIO);
 
   const textStyle: CSSProperties = {
-    fontFamily: "var(--font-prose)",
+    fontFamily: 'var(--font-prose)',
     fontSize,
     fontWeight: 500,
     color: 'var(--color-ink)',
@@ -90,21 +90,14 @@ export default function MullWordmark({
 
   if (as === 'div') {
     return (
-      <div
-        style={withMark ? wrapperStyle : textStyle}
-        className={className}
-      >
+      <div style={withMark ? wrapperStyle : textStyle} className={className}>
         {content}
       </div>
     );
   }
 
   return (
-    <Link
-      href={href}
-      style={withMark ? wrapperStyle : textStyle}
-      className={className}
-    >
+    <Link href={href} style={withMark ? wrapperStyle : textStyle} className={className}>
       {content}
     </Link>
   );

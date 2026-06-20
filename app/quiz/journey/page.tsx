@@ -12,24 +12,24 @@
 // to the browser. Reading the locale cookie makes this route dynamic,
 // which is fine — it's a noindex alpha and renders no faster static.
 
-import type { Metadata, Viewport } from "next";
-import { JOURNEY_SCENES, JOURNEY_REVEALS } from "@/lib/quiz-journey";
-import { localizeScene, localizeReveals } from "@/lib/quiz-journey-i18n";
-import { getServerLocale } from "@/lib/locale-server";
-import { t } from "@/lib/translations";
-import { JourneyEngine } from "./journey-engine";
+import type { Metadata, Viewport } from 'next';
+import { JOURNEY_SCENES, JOURNEY_REVEALS } from '@/lib/quiz-journey';
+import { localizeScene, localizeReveals } from '@/lib/quiz-journey-i18n';
+import { getServerLocale } from '@/lib/locale-server';
+import { t } from '@/lib/translations';
+import { JourneyEngine } from './journey-engine';
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getServerLocale();
   return {
-    title: t("journey.meta_title", locale),
-    description: t("journey.meta_desc", locale),
+    title: t('journey.meta_title', locale),
+    description: t('journey.meta_desc', locale),
     robots: { index: false, follow: false },
   };
 }
 
 export const viewport: Viewport = {
-  width: "device-width",
+  width: 'device-width',
   initialScale: 1,
 };
 

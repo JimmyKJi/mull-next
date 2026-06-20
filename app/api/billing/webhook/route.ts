@@ -118,16 +118,20 @@ async function onCheckoutCompleted(admin: AdminClient, session: Stripe.Checkout.
     foundingSeat = (count ?? 0) + 1;
   }
 
-  await admin.from('subscriptions').upsert({
-    user_id: userId,
-    stripe_customer_id: typeof session.customer === 'string' ? session.customer : null,
-    stripe_subscription_id: typeof session.subscription === 'string' ? session.subscription : null,
-    plan,
-    status: 'active',
-    current_period_end: null, // filled by invoice.payment_succeeded for recurring
-    founding_seat_number: foundingSeat,
-    updated_at: new Date().toISOString(),
-  }, { onConflict: 'user_id' });
+  await admin.from('subscriptions').upsert(
+    {
+      user_id: userId,
+      stripe_customer_id: typeof session.customer === 'string' ? session.customer : null,
+      stripe_subscription_id:
+        typeof session.subscription === 'string' ? session.subscription : null,
+      plan,
+      status: 'active',
+      current_period_end: null, // filled by invoice.payment_succeeded for recurring
+      founding_seat_number: foundingSeat,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: 'user_id' },
+  );
 }
 
 async function onSubscriptionChange(admin: AdminClient, sub: Stripe.Subscription) {
@@ -140,23 +144,27 @@ async function onSubscriptionChange(admin: AdminClient, sub: Stripe.Subscription
   // On 'deleted' or 'canceled' status, downgrade to free so paid features
   // turn off cleanly. We keep the row (with status=canceled) for the audit
   // trail rather than deleting it.
-  const newPlan = (sub.status === 'canceled' || sub.status === 'incomplete_expired')
-    ? 'free'
-    : (sub.metadata?.plan as Plan | undefined) ?? undefined;
+  const newPlan =
+    sub.status === 'canceled' || sub.status === 'incomplete_expired'
+      ? 'free'
+      : ((sub.metadata?.plan as Plan | undefined) ?? undefined);
 
   // Stripe types reflect current_period_end on the subscription's primary
   // item, not on the subscription root, in recent API versions.
   const periodEndUnix =
-    (sub as unknown as { current_period_end?: number }).current_period_end
-    ?? sub.items?.data?.[0]?.current_period_end
-    ?? null;
+    (sub as unknown as { current_period_end?: number }).current_period_end ??
+    sub.items?.data?.[0]?.current_period_end ??
+    null;
 
-  await admin.from('subscriptions').update({
-    status: sub.status,
-    current_period_end: periodEndUnix ? new Date(periodEndUnix * 1000).toISOString() : null,
-    ...(newPlan ? { plan: newPlan } : {}),
-    updated_at: new Date().toISOString(),
-  }).eq('stripe_subscription_id', sub.id);
+  await admin
+    .from('subscriptions')
+    .update({
+      status: sub.status,
+      current_period_end: periodEndUnix ? new Date(periodEndUnix * 1000).toISOString() : null,
+      ...(newPlan ? { plan: newPlan } : {}),
+      updated_at: new Date().toISOString(),
+    })
+    .eq('stripe_subscription_id', sub.id);
 }
 
 async function onInvoiceEvent(admin: AdminClient, invoice: Stripe.Invoice) {
@@ -170,8 +178,11 @@ async function onInvoiceEvent(admin: AdminClient, invoice: Stripe.Invoice) {
   // case where Stripe doesn't fire a subscription.updated immediately.
   const status = invoice.status === 'paid' ? 'active' : 'past_due';
 
-  await admin.from('subscriptions').update({
-    status,
-    updated_at: new Date().toISOString(),
-  }).eq('stripe_subscription_id', subId);
+  await admin
+    .from('subscriptions')
+    .update({
+      status,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('stripe_subscription_id', subId);
 }

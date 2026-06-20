@@ -8,15 +8,15 @@
 // a "what you've been thinking about" view.
 
 export type AnthologySource =
-  | "spar"
-  | "arena"
-  | "pilgrimage"
-  | "wandering"
-  | "philosopher"
-  | "topic"
-  | "dilemma"
-  | "diary"
-  | "manual";
+  | 'spar'
+  | 'arena'
+  | 'pilgrimage'
+  | 'wandering'
+  | 'philosopher'
+  | 'topic'
+  | 'dilemma'
+  | 'diary'
+  | 'manual';
 
 export type AnthologyEntry = {
   /** Unix ms. */
@@ -35,10 +35,10 @@ export type AnthologyEntry = {
   note?: string;
 };
 
-export const ANTHOLOGY_KEY = "mull.anthology";
+export const ANTHOLOGY_KEY = 'mull.anthology';
 
 export function readAnthology(): AnthologyEntry[] {
-  if (typeof window === "undefined") return [];
+  if (typeof window === 'undefined') return [];
   try {
     const raw = window.localStorage.getItem(ANTHOLOGY_KEY);
     if (!raw) return [];
@@ -49,18 +49,16 @@ export function readAnthology(): AnthologyEntry[] {
   }
 }
 
-export function saveAnthologyEntry(
-  entry: Omit<AnthologyEntry, "ts" | "id">,
-): AnthologyEntry {
+export function saveAnthologyEntry(entry: Omit<AnthologyEntry, 'ts' | 'id'>): AnthologyEntry {
   const full: AnthologyEntry = {
     ...entry,
     ts: Date.now(),
     id:
-      typeof crypto !== "undefined" && "randomUUID" in crypto
+      typeof crypto !== 'undefined' && 'randomUUID' in crypto
         ? crypto.randomUUID()
         : `${Date.now()}-${Math.random().toString(36).slice(2)}`,
   };
-  if (typeof window !== "undefined") {
+  if (typeof window !== 'undefined') {
     const current = readAnthology();
     const next = [...current, full];
     try {
@@ -68,20 +66,20 @@ export function saveAnthologyEntry(
     } catch {
       // ignore quota
     }
-    window.dispatchEvent(new CustomEvent("mull:anthology-change"));
+    window.dispatchEvent(new CustomEvent('mull:anthology-change'));
   }
   return full;
 }
 
 export function removeAnthologyEntry(id: string): void {
-  if (typeof window === "undefined") return;
+  if (typeof window === 'undefined') return;
   const next = readAnthology().filter((e) => e.id !== id);
   try {
     window.localStorage.setItem(ANTHOLOGY_KEY, JSON.stringify(next));
   } catch {
     // ignore
   }
-  window.dispatchEvent(new CustomEvent("mull:anthology-change"));
+  window.dispatchEvent(new CustomEvent('mull:anthology-change'));
 }
 
 /** Count of distinct sources in the anthology — a rough "Range" metric

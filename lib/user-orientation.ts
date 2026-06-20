@@ -48,7 +48,10 @@ export const UNPLACED: UserOrientation = {
  *  for unknown names. Mirrors archetypeNameToSlug in app/search/leaderboard. */
 export function archetypeNameToSlug(name: string | null | undefined): string | null {
   if (!name) return null;
-  const cleaned = name.replace(/^The\s+/i, '').trim().toLowerCase();
+  const cleaned = name
+    .replace(/^The\s+/i, '')
+    .trim()
+    .toLowerCase();
   return ARCHETYPE_KEYS.includes(cleaned) ? cleaned : null;
 }
 

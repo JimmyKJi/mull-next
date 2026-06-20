@@ -25,11 +25,15 @@ type Candidate = {
 
 export async function GET() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Not signed in.' }, { status: 401 });
 
-  const { data, error } = await supabase
-    .rpc('next_reflection_candidate', { in_user_id: user.id, min_age_days: 56 });
+  const { data, error } = await supabase.rpc('next_reflection_candidate', {
+    in_user_id: user.id,
+    min_age_days: 56,
+  });
 
   if (error) {
     console.error('[reflection GET] failed', error);
@@ -41,8 +45,11 @@ export async function GET() {
 
 export async function POST(req: Request) {
   let body: { dilemma_response_id?: unknown; followup_text?: unknown };
-  try { body = await req.json(); }
-  catch { return NextResponse.json({ error: 'Invalid JSON.' }, { status: 400 }); }
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON.' }, { status: 400 });
+  }
 
   const id = typeof body.dilemma_response_id === 'string' ? body.dilemma_response_id : '';
   const text = typeof body.followup_text === 'string' ? body.followup_text.trim() : '';
@@ -58,7 +65,9 @@ export async function POST(req: Request) {
   }
 
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Not signed in.' }, { status: 401 });
 
   // RLS already restricts updates to the row owner, but we double-

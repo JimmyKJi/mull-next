@@ -2,18 +2,15 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { DIM_KEYS, DIM_NAMES, DIM_DESCRIPTIONS } from '@/lib/dimensions';
 import { aiGate } from '@/lib/rate-limit';
-import {
-  buildKinshipPromptFragment,
-  parseAndValidateDiagnosis,
-  type Kinship,
-} from '@/lib/kinship';
+import { buildKinshipPromptFragment, parseAndValidateDiagnosis, type Kinship } from '@/lib/kinship';
 
 function buildSystemPrompt(): string {
-  const dimList = DIM_KEYS.map(k =>
-    `- ${k} (${DIM_NAMES[k]}): ${DIM_DESCRIPTIONS[k]}`
-  ).join('\n');
+  const dimList = DIM_KEYS.map((k) => `- ${k} (${DIM_NAMES[k]}): ${DIM_DESCRIPTIONS[k]}`).join(
+    '\n',
+  );
 
-  return `You are an analyst for Mull, a philosophy mapping tool. You will read a person's free-form journal entry and produce a structured reading: where their thinking sits in 16-dimensional philosophical space, a short observation of what the entry reveals, a deeper diagnosis of the shape of the thinking, the closest historical kin (if any), the traditions the thinking echoes, and a judgement of whether the entry says something genuinely novel.
+  return (
+    `You are an analyst for Mull, a philosophy mapping tool. You will read a person's free-form journal entry and produce a structured reading: where their thinking sits in 16-dimensional philosophical space, a short observation of what the entry reveals, a deeper diagnosis of the shape of the thinking, the closest historical kin (if any), the traditions the thinking echoes, and a judgement of whether the entry says something genuinely novel.
 
 A diary entry can be about anything — a moment, a memory, a question they're sitting with, a frustration, a small good thing, a half-formed thought. Read between the lines: what worldview, values, or tendencies does the writing reveal?
 
@@ -31,8 +28,9 @@ The vector_delta array must contain exactly 16 numbers in the order ${DIM_KEYS.j
 
 The analysis is 2-3 sentences naming a tendency, an underlying assumption, or a tension you noticed. Don't flatter, don't moralize, don't summarize back to them.
 
-Do not over-attribute. If the entry is short, descriptive, or without philosophical content, return mostly zeros and say so plainly in the analysis. In that case kinship.philosophers and traditions should be empty and is_novel should be false.`
-+ buildKinshipPromptFragment();
+Do not over-attribute. If the entry is short, descriptive, or without philosophical content, return mostly zeros and say so plainly in the analysis. In that case kinship.philosophers and traditions should be empty and is_novel should be false.` +
+    buildKinshipPromptFragment()
+  );
 }
 
 type ClaudeResponse = {
@@ -48,16 +46,13 @@ type ClaudeAnalysis = {
   is_novel: boolean;
 };
 
-async function callClaude(
-  content: string,
-  apiKey: string
-): Promise<ClaudeAnalysis | null> {
+async function callClaude(content: string, apiKey: string): Promise<ClaudeAnalysis | null> {
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01'
+      'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
       // Larger token budget for the extended payload.
@@ -66,8 +61,8 @@ async function callClaude(
       model: 'claude-haiku-4-6',
       max_tokens: 1400,
       system: buildSystemPrompt(),
-      messages: [{ role: 'user', content: `Diary entry:\n\n${content.trim()}` }]
-    })
+      messages: [{ role: 'user', content: `Diary entry:\n\n${content.trim()}` }],
+    }),
   });
 
   if (!res.ok) {
@@ -81,8 +76,8 @@ async function callClaude(
     return null;
   }
   const text = (data.content ?? [])
-    .filter(b => b.type === 'text')
-    .map(b => b.text || '')
+    .filter((b) => b.type === 'text')
+    .map((b) => b.text || '')
     .join('')
     .trim();
 
@@ -109,7 +104,7 @@ async function callClaude(
   if (!Array.isArray(parsed.vector_delta) || parsed.vector_delta.length !== 16) {
     return null;
   }
-  const delta = parsed.vector_delta.map(n => {
+  const delta = parsed.vector_delta.map((n) => {
     const v = typeof n === 'number' ? n : 0;
     return Math.max(-2, Math.min(2, v));
   });
@@ -137,7 +132,9 @@ export async function POST(req: Request) {
     }
 
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) {
       return NextResponse.json({ error: 'Not signed in.' }, { status: 401 });
     }
@@ -203,7 +200,7 @@ export async function POST(req: Request) {
         diagnosis: updated.diagnosis,
         kinship: updated.kinship,
         is_novel: updated.is_novel,
-        analyzed: !!apiKey && !!vector_delta
+        analyzed: !!apiKey && !!vector_delta,
       });
     }
 
@@ -238,7 +235,7 @@ export async function POST(req: Request) {
       diagnosis: inserted.diagnosis,
       kinship: inserted.kinship,
       is_novel: inserted.is_novel,
-      analyzed: !!apiKey && !!vector_delta
+      analyzed: !!apiKey && !!vector_delta,
     });
   } catch (e) {
     console.error('[diary] unexpected error', e);

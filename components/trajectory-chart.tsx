@@ -13,7 +13,7 @@
 // and diary VISIBLY consequential. "I've moved 0.4 toward Tragic
 // Vision this week — what was that one about?" is the loop.
 
-import { DIM_KEYS, DIM_NAMES, type DimKey } from "@/lib/dimensions";
+import { DIM_KEYS, DIM_NAMES, type DimKey } from '@/lib/dimensions';
 
 type TrajectoryPoint = {
   timestamp: number;
@@ -38,7 +38,7 @@ export function TrajectoryChart({ trajectory, accent }: Props) {
   // For each dimension, compute the range (max - min) across the
   // trajectory. Pick the dimension with the largest range — that's
   // the most "interesting" movement to show.
-  let bestKey: DimKey = "TV";
+  let bestKey: DimKey = 'TV';
   let bestRange = -Infinity;
   for (const k of DIM_KEYS) {
     const i = DIM_KEYS.indexOf(k);
@@ -90,15 +90,13 @@ export function TrajectoryChart({ trajectory, accent }: Props) {
   const yAt = (v: number) => PAD.top + innerH - ((v - minY) / ySpan) * innerH;
 
   // Pre-compute the polyline points string.
-  const polyline = values.map((v, i) => `${xAt(i)},${yAt(v)}`).join(" ");
+  const polyline = values.map((v, i) => `${xAt(i)},${yAt(v)}`).join(' ');
 
   // Pre-compute the area fill underneath the polyline.
   const area =
-    `${xAt(0)},${PAD.top + innerH} ` +
-    polyline +
-    ` ${xAt(values.length - 1)},${PAD.top + innerH}`;
+    `${xAt(0)},${PAD.top + innerH} ` + polyline + ` ${xAt(values.length - 1)},${PAD.top + innerH}`;
 
-  const a = accent ?? { primary: "#B8862F", deep: "#8C6520", soft: "#F8EDC8" };
+  const a = accent ?? { primary: '#B8862F', deep: '#8C6520', soft: '#F8EDC8' };
 
   return (
     <div>
@@ -106,38 +104,37 @@ export function TrajectoryChart({ trajectory, accent }: Props) {
         <div>
           <p
             className="text-[14px] leading-[1.55] text-ink-soft"
-            style={{ fontFamily: "var(--font-editorial)" }}
+            style={{ fontFamily: 'var(--font-editorial)' }}
           >
-            <strong className="text-ink">{DIM_NAMES[chosenKey]}</strong>{" "}
-            ({chosenKey}) — the dimension that moved most across your last{" "}
-            {trajectory.length} entries.
+            <strong className="text-ink">{DIM_NAMES[chosenKey]}</strong> ({chosenKey}) — the
+            dimension that moved most across your last {trajectory.length} entries.
           </p>
         </div>
         <div
           className="flex items-center gap-2 text-[10px] tracking-[0.18em] text-acc-deep"
-          style={{ fontFamily: "var(--font-pixel-display)" }}
+          style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
           <span>{startVal.toFixed(1)}</span>
           <span>→</span>
           <span style={{ color: a.deep }}>{endVal.toFixed(1)}</span>
           <span
             style={{
-              color: delta > 0 ? "#2F5D5C" : delta < 0 ? "#8C3717" : "#8C6520",
+              color: delta > 0 ? '#2F5D5C' : delta < 0 ? '#8C3717' : '#8C6520',
             }}
           >
-            ({delta > 0 ? "+" : ""}
+            ({delta > 0 ? '+' : ''}
             {delta})
           </span>
         </div>
       </div>
       <div
         className="overflow-hidden border-2 border-ink bg-[#FFFCF4] p-2"
-        style={{ boxShadow: "3px 3px 0 0 #B8862F" }}
+        style={{ boxShadow: '3px 3px 0 0 #B8862F' }}
       >
         <svg
           viewBox={`0 0 ${W} ${H}`}
           width="100%"
-          style={{ display: "block", maxWidth: "100%" }}
+          style={{ display: 'block', maxWidth: '100%' }}
           aria-hidden
         >
           {/* Y-axis ticks (3 levels) */}
@@ -150,7 +147,7 @@ export function TrajectoryChart({ trajectory, accent }: Props) {
                 y2={yAt(v)}
                 stroke="#E2D8B6"
                 strokeWidth={1}
-                strokeDasharray={i === 1 ? "0" : "2 3"}
+                strokeDasharray={i === 1 ? '0' : '2 3'}
               />
               <text
                 x={PAD.left - 6}
@@ -176,14 +173,7 @@ export function TrajectoryChart({ trajectory, accent }: Props) {
           />
           {/* Data points */}
           {values.map((v, i) => (
-            <rect
-              key={i}
-              x={xAt(i) - 3}
-              y={yAt(v) - 3}
-              width={6}
-              height={6}
-              fill={a.deep}
-            />
+            <rect key={i} x={xAt(i) - 3} y={yAt(v) - 3} width={6} height={6} fill={a.deep} />
           ))}
           {/* X-axis label — "OLDEST" left, "LATEST" right */}
           <text

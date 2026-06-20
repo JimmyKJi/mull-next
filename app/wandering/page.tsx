@@ -1,19 +1,19 @@
 // /wandering — this week's wandering question + the 4-beat arc.
 
-import type { Metadata } from "next";
-import Link from "next/link";
-import { PixelPageHeader } from "@/components/pixel-window";
-import { getThisWeeksQuestion } from "@/lib/wandering";
-import { getServerLocale } from "@/lib/locale-server";
-import { t } from "@/lib/translations";
-import WanderingClient from "./wandering-client";
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { PixelPageHeader } from '@/components/pixel-window';
+import { getThisWeeksQuestion } from '@/lib/wandering';
+import { getServerLocale } from '@/lib/locale-server';
+import { t } from '@/lib/translations';
+import WanderingClient from './wandering-client';
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getServerLocale();
   return {
-    title: t("wndr.meta_title", locale),
-    description: t("wndr.meta_description", locale),
-    alternates: { canonical: "https://mull.world/wandering" },
+    title: t('wndr.meta_title', locale),
+    description: t('wndr.meta_description', locale),
+    alternates: { canonical: 'https://mull.world/wandering' },
   };
 }
 
@@ -23,14 +23,11 @@ export default async function WanderingPage() {
   return (
     <main className="mx-auto max-w-[760px] px-6 pb-32 pt-12 sm:px-10 sm:pt-16">
       <PixelPageHeader
-        eyebrow={t("wndr.eyebrow", locale, { week: q.week })}
-        title={t("wndr.title", locale)}
+        eyebrow={t('wndr.eyebrow', locale, { week: q.week })}
+        title={t('wndr.title', locale)}
         subtitle={
-          <p
-            className="text-[16px] italic"
-            style={{ fontFamily: "var(--font-editorial)" }}
-          >
-            {t("wndr.subtitle", locale)}
+          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-editorial)' }}>
+            {t('wndr.subtitle', locale)}
           </p>
         }
       />
@@ -40,7 +37,7 @@ export default async function WanderingPage() {
           href="/"
           className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
-          ← {t("wndr.back_to_mull", locale)}
+          ← {t('wndr.back_to_mull', locale)}
         </Link>
       </p>
     </main>

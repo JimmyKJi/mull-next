@@ -18,7 +18,7 @@ import DilemmaArchiveForm from './archive-form';
 
 const LAUNCH_DATE = '2026-01-01';
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 
 export const metadata: Metadata = {
@@ -54,7 +54,9 @@ export default async function DilemmaArchiveDatePage({
 
   const supabase = await createClient();
   const locale = await getServerLocale();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) {
     redirect(`/login?return_to=${encodeURIComponent(`/dilemma/archive/${date}`)}`);
@@ -83,7 +85,10 @@ export default async function DilemmaArchiveDatePage({
 
   const dateFmt = locale === 'en' ? 'en-GB' : locale;
   const dateLabel = dilemmaDate.toLocaleDateString(dateFmt, {
-    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
   });
 
   return (

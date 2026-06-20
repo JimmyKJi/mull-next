@@ -17,7 +17,7 @@
 // compatibility with existing callers but are now no-ops: the artwork is
 // a single fixed ink color baked into the PNG.
 
-import React from "react";
+import React from 'react';
 
 // Intrinsic dimensions of public/mull-logo.png (see gen-logo-assets.mjs).
 // Used to derive width from the requested height.
@@ -28,7 +28,7 @@ type Props = {
   /** Render HEIGHT in CSS px (width follows aspect). Default 32. */
   size?: number;
   /** Retained for API compatibility; no longer affects rendering. */
-  variant?: "color" | "mono";
+  variant?: 'color' | 'mono';
   /** Retained for API compatibility; no longer affects rendering. */
   ink?: string;
   /** Retained for API compatibility; no longer affects rendering. */
@@ -47,10 +47,10 @@ export function MullMark({ size = 32 }: Props) {
       height={size}
       draggable={false}
       style={{
-        display: "block",
+        display: 'block',
         flexShrink: 0,
-        objectFit: "contain",
-        userSelect: "none",
+        objectFit: 'contain',
+        userSelect: 'none',
       }}
     />
   );

@@ -66,17 +66,29 @@ function readTranslations() {
   let endIdx = -1;
   for (let i = startIdx; i < src.length; i++) {
     const ch = src[i];
-    if (escape) { escape = false; continue; }
-    if (ch === '\\') { escape = true; continue; }
+    if (escape) {
+      escape = false;
+      continue;
+    }
+    if (ch === '\\') {
+      escape = true;
+      continue;
+    }
     if (inStr) {
       if (ch === inStr) inStr = null;
       continue;
     }
-    if (ch === "'" || ch === '"' || ch === '`') { inStr = ch; continue; }
+    if (ch === "'" || ch === '"' || ch === '`') {
+      inStr = ch;
+      continue;
+    }
     if (ch === '{') depth++;
     else if (ch === '}') {
       depth--;
-      if (depth === 0) { endIdx = i; break; }
+      if (depth === 0) {
+        endIdx = i;
+        break;
+      }
     }
   }
   if (endIdx < 0) throw new Error('Could not find end of TRANSLATIONS object');
@@ -123,7 +135,11 @@ ${JSON.stringify(batch, null, 2)}`;
     throw new Error(`API ${res.status}: ${t}`);
   }
   const data = await res.json();
-  const text = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('').trim();
+  const text = (data.content || [])
+    .filter((b) => b.type === 'text')
+    .map((b) => b.text)
+    .join('')
+    .trim();
   let cleaned = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '');
   const start = cleaned.indexOf('{');
   const end = cleaned.lastIndexOf('}');
@@ -145,10 +161,17 @@ ${JSON.stringify(batch, null, 2)}`;
       } catch {}
     }
     if (Object.keys(recovered).length > 0) {
-      console.warn(`\n      JSON parse failed; recovered ${Object.keys(recovered).length} entries by regex`);
+      console.warn(
+        `\n      JSON parse failed; recovered ${Object.keys(recovered).length} entries by regex`,
+      );
       return recovered;
     }
-    throw new Error('JSON parse failed and could not recover: ' + e.message + '\n--- start of response ---\n' + slice.slice(0, 1500));
+    throw new Error(
+      'JSON parse failed and could not recover: ' +
+        e.message +
+        '\n--- start of response ---\n' +
+        slice.slice(0, 1500),
+    );
   }
 }
 
@@ -190,7 +213,7 @@ async function translateLocale(locale, allObj) {
         attempt++;
         process.stdout.write(` retry ${attempt}…`);
         if (attempt >= 3) throw e;
-        await new Promise(r => setTimeout(r, 2000));
+        await new Promise((r) => setTimeout(r, 2000));
       }
     }
   }
@@ -247,7 +270,7 @@ function persist(obj) {
     }
   }
   console.log('✓ Done.');
-})().catch(e => {
+})().catch((e) => {
   console.error(e);
   process.exit(1);
 });

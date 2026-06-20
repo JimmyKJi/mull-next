@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 // PathwayNext — the "trail from here" panel at the bottom of content
 // pages. Renders a row of illustrated stations (archetype sprite,
@@ -15,17 +15,17 @@
 // Mobile: stations stack vertically with a vertical connector. The
 // trail metaphor still works either way.
 
-import { useEffect, useState, useId } from "react";
-import Link from "next/link";
-import { ArchetypeSprite } from "@/components/archetype-sprite";
-import { PhilosopherSprite } from "@/components/philosopher-sprite";
-import type { Pathway, PathwayStation } from "@/lib/pathway";
-import { personalizeWarmTrail } from "@/lib/pathway";
-import { coerceVector16 } from "@/lib/recommendations";
-import { t, type Locale } from "@/lib/translations";
+import { useEffect, useState, useId } from 'react';
+import Link from 'next/link';
+import { ArchetypeSprite } from '@/components/archetype-sprite';
+import { PhilosopherSprite } from '@/components/philosopher-sprite';
+import type { Pathway, PathwayStation } from '@/lib/pathway';
+import { personalizeWarmTrail } from '@/lib/pathway';
+import { coerceVector16 } from '@/lib/recommendations';
+import { t, type Locale } from '@/lib/translations';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 
 type Props = {
@@ -45,7 +45,7 @@ export function PathwayNext({ pathway, locale = 'en', eyebrow, heading }: Props)
 
   useEffect(() => {
     try {
-      const archetypeKey = window.localStorage.getItem("mull.archetype");
+      const archetypeKey = window.localStorage.getItem('mull.archetype');
       if (archetypeKey) {
         // Read the user's own 16-D coordinates too (if present) so the
         // warm trail can lead with the philosopher nearest them in vector
@@ -53,16 +53,20 @@ export function PathwayNext({ pathway, locale = 'en', eyebrow, heading }: Props)
         // back to archetype-only personalization inside personalizeWarmTrail.
         let vector: number[] | null = null;
         try {
-          const rawVec = window.localStorage.getItem("mull.vector");
+          const rawVec = window.localStorage.getItem('mull.vector');
           if (rawVec) vector = coerceVector16(JSON.parse(rawVec));
-        } catch { /* malformed vector — fall back to archetype-only */ }
+        } catch {
+          /* malformed vector — fall back to archetype-only */
+        }
         setTrail(personalizeWarmTrail(pathway, archetypeKey, locale, vector));
         setWarmedUp(true);
       } else if (pathway.warm) {
         // No archetype, but the surface defines a warm fallback.
         // Keep cold for first visit — the quiz CTA matters most then.
       }
-    } catch { /* storage disabled */ }
+    } catch {
+      /* storage disabled */
+    }
   }, [pathway, locale]);
 
   return (
@@ -83,7 +87,9 @@ export function PathwayNext({ pathway, locale = 'en', eyebrow, heading }: Props)
           marginBottom: 4,
         }}
       >
-        ▶ {eyebrow ?? (warmedUp ? t('pathway.eyebrow_warm', locale) : t('pathway.eyebrow_cold', locale))}
+        ▶{' '}
+        {eyebrow ??
+          (warmedUp ? t('pathway.eyebrow_warm', locale) : t('pathway.eyebrow_cold', locale))}
       </div>
       <h2
         id={`${id}-heading`}
@@ -96,9 +102,8 @@ export function PathwayNext({ pathway, locale = 'en', eyebrow, heading }: Props)
           letterSpacing: '-0.3px',
         }}
       >
-        {heading ?? (warmedUp
-          ? t('pathway.heading_warm', locale)
-          : t('pathway.heading_cold', locale))}
+        {heading ??
+          (warmedUp ? t('pathway.heading_warm', locale) : t('pathway.heading_cold', locale))}
       </h2>
 
       <ol
@@ -334,13 +339,7 @@ function PathwayCard({
   );
 }
 
-function StationVisual({
-  visual,
-  accent,
-}: {
-  visual: PathwayStation['visual'];
-  accent: string;
-}) {
+function StationVisual({ visual, accent }: { visual: PathwayStation['visual']; accent: string }) {
   if (visual.kind === 'archetype') {
     return (
       <div
@@ -367,11 +366,7 @@ function StationVisual({
         }}
         aria-hidden
       >
-        <PhilosopherSprite
-          name={visual.name}
-          archetypeKey={visual.archetypeKey}
-          size={56}
-        />
+        <PhilosopherSprite name={visual.name} archetypeKey={visual.archetypeKey} size={56} />
       </div>
     );
   }
@@ -407,15 +402,7 @@ function StationVisual({
 function DashedLineH({ accent }: { accent: string }) {
   return (
     <svg width="20" height="6" viewBox="0 0 20 6" aria-hidden>
-      <line
-        x1="0"
-        y1="3"
-        x2="20"
-        y2="3"
-        stroke={accent}
-        strokeWidth="2"
-        strokeDasharray="3 3"
-      />
+      <line x1="0" y1="3" x2="20" y2="3" stroke={accent} strokeWidth="2" strokeDasharray="3 3" />
     </svg>
   );
 }
@@ -423,15 +410,7 @@ function DashedLineH({ accent }: { accent: string }) {
 function DashedLineV({ accent }: { accent: string }) {
   return (
     <svg width="6" height="20" viewBox="0 0 6 20" aria-hidden>
-      <line
-        x1="3"
-        y1="0"
-        x2="3"
-        y2="20"
-        stroke={accent}
-        strokeWidth="2"
-        strokeDasharray="3 3"
-      />
+      <line x1="3" y1="0" x2="3" y2="20" stroke={accent} strokeWidth="2" strokeDasharray="3 3" />
     </svg>
   );
 }

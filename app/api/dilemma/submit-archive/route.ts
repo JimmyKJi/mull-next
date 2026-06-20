@@ -26,9 +26,9 @@ import { aiGate } from '@/lib/rate-limit';
 const LAUNCH_DATE = '2026-01-01';
 
 function buildSystemPrompt(): string {
-  const dimList = DIM_KEYS.map(k =>
-    `- ${k} (${DIM_NAMES[k]}): ${DIM_DESCRIPTIONS[k]}`
-  ).join('\n');
+  const dimList = DIM_KEYS.map((k) => `- ${k} (${DIM_NAMES[k]}): ${DIM_DESCRIPTIONS[k]}`).join(
+    '\n',
+  );
 
   return `You are an analyst for Mull, a philosophy mapping tool. You will read a person's brief written response to a daily reflective question, and produce a small vector delta indicating which philosophical dimensions their thinking momentarily leans toward in this specific response.
 
@@ -56,7 +56,7 @@ type ClaudeResponse = {
 async function callClaude(
   question: string,
   response: string,
-  apiKey: string
+  apiKey: string,
 ): Promise<{ vector_delta: number[]; analysis: string } | null> {
   const userMessage = `Question of the day: "${question}"\n\nThe person's response:\n${response.trim()}`;
 
@@ -65,7 +65,7 @@ async function callClaude(
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01'
+      'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
       // Haiku in free-mode for cost control — same path as the daily
@@ -73,16 +73,16 @@ async function callClaude(
       model: 'claude-haiku-4-6',
       max_tokens: 600,
       system: buildSystemPrompt(),
-      messages: [{ role: 'user', content: userMessage }]
-    })
+      messages: [{ role: 'user', content: userMessage }],
+    }),
   });
   if (!res.ok) return null;
   const data: ClaudeResponse = await res.json();
   if (data.error) return null;
 
   const text = (data.content ?? [])
-    .filter(b => b.type === 'text')
-    .map(b => b.text || '')
+    .filter((b) => b.type === 'text')
+    .map((b) => b.text || '')
     .join('')
     .trim();
   const start = text.indexOf('{');
@@ -92,10 +92,12 @@ async function callClaude(
   let parsed: { vector_delta?: unknown; analysis?: unknown };
   try {
     parsed = JSON.parse(text.slice(start, end + 1));
-  } catch { return null; }
+  } catch {
+    return null;
+  }
 
   if (!Array.isArray(parsed.vector_delta) || parsed.vector_delta.length !== 16) return null;
-  const delta = parsed.vector_delta.map(n => {
+  const delta = parsed.vector_delta.map((n) => {
     const v = typeof n === 'number' ? n : 0;
     return Math.max(-2, Math.min(2, v));
   });
@@ -121,7 +123,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Response is too short.' }, { status: 400 });
     }
     if (responseText.length > 4000) {
-      return NextResponse.json({ error: 'Response is too long (max 4000 chars).' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Response is too long (max 4000 chars).' },
+        { status: 400 },
+      );
     }
 
     // Check date range: must be >= LAUNCH_DATE and < today (UTC)
@@ -136,11 +141,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Date is before the archive opened.' }, { status: 400 });
     }
     if (targetDate >= todayKey) {
-      return NextResponse.json({ error: 'For today, use the regular dilemma page.' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'For today, use the regular dilemma page.' },
+        { status: 400 },
+      );
     }
 
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) {
       return NextResponse.json({ error: 'Not signed in.' }, { status: 401 });
     }
@@ -171,8 +181,8 @@ export async function POST(req: Request) {
 
     if (existing) {
       return NextResponse.json(
-        { error: 'You already responded to that day\'s dilemma.' },
-        { status: 409 }
+        { error: "You already responded to that day's dilemma." },
+        { status: 409 },
       );
     }
 
@@ -198,7 +208,7 @@ export async function POST(req: Request) {
         response_text: responseText,
         vector_delta,
         analysis,
-        is_public: isPublic
+        is_public: isPublic,
       })
       .select('id, vector_delta, analysis')
       .single();
@@ -213,7 +223,7 @@ export async function POST(req: Request) {
       id: inserted.id,
       vector_delta: inserted.vector_delta,
       analysis: inserted.analysis,
-      analyzed: !!apiKey && !!vector_delta
+      analyzed: !!apiKey && !!vector_delta,
     });
   } catch (e) {
     console.error('[dilemma archive] unexpected error', e);

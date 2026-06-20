@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 // ContentLanguageNotice — slim banner shown on long-form English-only
 // surfaces (archetype detail, philosopher detail, topic, vs, about,
@@ -32,8 +32,8 @@
 // human-translated philosophy (machine translation gets nuance wrong);
 // for now, we tell users honestly rather than hide it.
 
-import { useEffect, useState } from "react";
-import { t, isLocale, type Locale } from "@/lib/translations";
+import { useEffect, useState } from 'react';
+import { t, isLocale, type Locale } from '@/lib/translations';
 
 type Props = {
   /** Optional server-known locale. Used as the initial value on first
@@ -50,44 +50,40 @@ type Props = {
 };
 
 function readCookieLocale(): Locale {
-  if (typeof document === "undefined") return "en";
+  if (typeof document === 'undefined') return 'en';
   // Parse `mull_locale=xx` from the cookie string.
   const m = document.cookie.match(/(?:^|;\s*)mull_locale=([^;]+)/);
   const raw = m ? decodeURIComponent(m[1]) : null;
-  return isLocale(raw) ? raw : "en";
+  return isLocale(raw) ? raw : 'en';
 }
 
-export function ContentLanguageNotice({
-  locale,
-  marginBottom = 24,
-  translatedLocales,
-}: Props) {
+export function ContentLanguageNotice({ locale, marginBottom = 24, translatedLocales }: Props) {
   // Start with the server-supplied locale (or 'en' if not provided).
   // On hydration, swap to the locale read from document.cookie so
   // statically-generated pages still show the notice to non-EN users.
-  const [resolved, setResolved] = useState<Locale>(locale ?? "en");
+  const [resolved, setResolved] = useState<Locale>(locale ?? 'en');
   useEffect(() => {
     const cookieLocale = readCookieLocale();
     if (cookieLocale !== resolved) setResolved(cookieLocale);
   }, [resolved]);
 
-  if (resolved === "en") return null;
+  if (resolved === 'en') return null;
   if (translatedLocales?.includes(resolved)) return null;
   return (
     <div
       style={{
-        borderLeft: "4px solid var(--color-acc)",
-        background: "#F5EFDC",
-        padding: "10px 14px",
+        borderLeft: '4px solid var(--color-acc)',
+        background: '#F5EFDC',
+        padding: '10px 14px',
         marginBottom,
         fontSize: 13,
         lineHeight: 1.55,
-        color: "var(--color-ink-soft)",
-        fontFamily: "var(--font-editorial), Georgia, serif",
-        fontStyle: "italic",
+        color: 'var(--color-ink-soft)',
+        fontFamily: 'var(--font-editorial), Georgia, serif',
+        fontStyle: 'italic',
       }}
     >
-      {t("i18n.content_notice", resolved)}
+      {t('i18n.content_notice', resolved)}
     </div>
   );
 }

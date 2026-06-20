@@ -84,7 +84,8 @@ function computeStreakFromDates(dateKeys: Set<string>): number {
   }
   let streak = 0;
   let graceUsed = false;
-  for (let i = 0; i < 1825; i++) { // 5y safety bound
+  for (let i = 0; i < 1825; i++) {
+    // 5y safety bound
     if (dateKeys.has(toDateKey(cursor))) {
       streak++;
       cursor.setUTCDate(cursor.getUTCDate() - 1);
@@ -142,29 +143,29 @@ export type StatsBundle = {
 // Pure function — given the raw row arrays, compute the stats. Used both
 // by the server-side fetch wrapper and (eventually) tests.
 export function computeUserStatsFromTables(b: StatsBundle): UserStats {
-  const dilemmaDateKeys = new Set(b.dilemmas.map(r => r.dilemma_date));
+  const dilemmaDateKeys = new Set(b.dilemmas.map((r) => r.dilemma_date));
   const dilemmaDateKeysSorted = [...dilemmaDateKeys].sort();
 
   const allWriteDates: Date[] = [
-    ...b.dilemmas.map(r => new Date(r.created_at)),
-    ...b.diary.map(r => new Date(r.created_at)),
-    ...b.exercises.map(r => new Date(r.created_at)),
+    ...b.dilemmas.map((r) => new Date(r.created_at)),
+    ...b.diary.map((r) => new Date(r.created_at)),
+    ...b.exercises.map((r) => new Date(r.created_at)),
   ];
 
   // active days: distinct calendar dates with at least one write
-  const activeDayKeys = new Set(allWriteDates.map(d => toDateKey(d)));
+  const activeDayKeys = new Set(allWriteDates.map((d) => toDateKey(d)));
 
-  const exerciseSlugSet = new Set(b.exercises.map(r => r.exercise_slug));
+  const exerciseSlugSet = new Set(b.exercises.map((r) => r.exercise_slug));
   const categorySet = new Set<string>();
   for (const slug of exerciseSlugSet) {
-    const ex = EXERCISES.find(e => e.slug === slug);
+    const ex = EXERCISES.find((e) => e.slug === slug);
     if (ex) categorySet.add(ex.category);
   }
 
   const publicEntryCount =
-    b.dilemmas.filter(r => r.is_public).length +
-    b.diary.filter(r => r.is_public).length +
-    b.exercises.filter(r => r.is_public).length;
+    b.dilemmas.filter((r) => r.is_public).length +
+    b.diary.filter((r) => r.is_public).length +
+    b.exercises.filter((r) => r.is_public).length;
 
   return {
     dilemmaCount: b.dilemmas.length,
@@ -204,25 +205,18 @@ export async function computeUserStats(
   archetypePagesVisited = 0,
 ): Promise<UserStats> {
   const [dilemmasR, diaryR, exercisesR, debatesR, quizzesR, profileR] = await Promise.all([
-    supabase.from('dilemma_responses')
+    supabase
+      .from('dilemma_responses')
       .select('dilemma_date, created_at, is_public')
       .eq('user_id', userId),
-    supabase.from('diary_entries')
-      .select('created_at, is_public')
-      .eq('user_id', userId),
-    supabase.from('exercise_reflections')
+    supabase.from('diary_entries').select('created_at, is_public').eq('user_id', userId),
+    supabase
+      .from('exercise_reflections')
       .select('exercise_slug, created_at, is_public')
       .eq('user_id', userId),
-    supabase.from('debate_history')
-      .select('created_at')
-      .eq('user_id', userId),
-    supabase.from('quiz_attempts')
-      .select('taken_at')
-      .eq('user_id', userId),
-    supabase.from('public_profiles')
-      .select('user_id')
-      .eq('user_id', userId)
-      .maybeSingle(),
+    supabase.from('debate_history').select('created_at').eq('user_id', userId),
+    supabase.from('quiz_attempts').select('taken_at').eq('user_id', userId),
+    supabase.from('public_profiles').select('user_id').eq('user_id', userId).maybeSingle(),
   ]);
 
   return computeUserStatsFromTables({

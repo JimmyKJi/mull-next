@@ -7,20 +7,20 @@
 //   3. Enrolled — show progress (Day X of 30), the current day's
 //      title, link to today's prompt, recent completed days.
 
-import type { Metadata } from "next";
-import Link from "next/link";
-import { createClient } from "@/utils/supabase/server";
-import { PixelPageHeader } from "@/components/pixel-window";
-import { getServerLocale } from "@/lib/locale-server";
-import { t } from "@/lib/translations";
-import { PilgrimageLanding } from "./pilgrimage-landing";
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { createClient } from '@/utils/supabase/server';
+import { PixelPageHeader } from '@/components/pixel-window';
+import { getServerLocale } from '@/lib/locale-server';
+import { t } from '@/lib/translations';
+import { PilgrimageLanding } from './pilgrimage-landing';
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getServerLocale();
   return {
-    title: t("pilgrimage.meta_title", locale),
-    description: t("pilgrimage.meta_desc", locale),
-    alternates: { canonical: "https://mull.world/pilgrimage" },
+    title: t('pilgrimage.meta_title', locale),
+    description: t('pilgrimage.meta_desc', locale),
+    alternates: { canonical: 'https://mull.world/pilgrimage' },
   };
 }
 
@@ -37,20 +37,20 @@ export default async function PilgrimagePage() {
   let initialFlavor: string | null = null;
   if (user) {
     const { data } = await supabase
-      .from("quiz_attempts")
-      .select("archetype, flavor")
-      .eq("user_id", user.id)
-      .order("taken_at", { ascending: false })
+      .from('quiz_attempts')
+      .select('archetype, flavor')
+      .eq('user_id', user.id)
+      .order('taken_at', { ascending: false })
       .limit(1)
       .maybeSingle();
     if (data) {
       initialArchetype =
-        typeof data.archetype === "string"
+        typeof data.archetype === 'string'
           ? data.archetype
-              .replace(/^The\s+/i, "")
+              .replace(/^The\s+/i, '')
               .toLowerCase()
-              .replace(/[^a-z0-9]+/g, "-")
-              .replace(/^-+|-+$/g, "")
+              .replace(/[^a-z0-9]+/g, '-')
+              .replace(/^-+|-+$/g, '')
           : null;
       initialFlavor = (data.flavor as string | null) ?? null;
     }
@@ -59,14 +59,11 @@ export default async function PilgrimagePage() {
   return (
     <main className="mx-auto max-w-[820px] px-6 pb-32 pt-12 sm:px-10 sm:pt-16">
       <PixelPageHeader
-        eyebrow={t("pilgrimage.header_eyebrow", locale)}
-        title={t("pilgrimage.header_title", locale)}
+        eyebrow={t('pilgrimage.header_eyebrow', locale)}
+        title={t('pilgrimage.header_title', locale)}
         subtitle={
-          <p
-            className="text-[16px] italic"
-            style={{ fontFamily: "var(--font-editorial)" }}
-          >
-            {t("pilgrimage.header_subtitle", locale)}
+          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-editorial)' }}>
+            {t('pilgrimage.header_subtitle', locale)}
           </p>
         }
       />
@@ -82,7 +79,7 @@ export default async function PilgrimagePage() {
           href="/"
           className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
-          {t("pilgrimage.back_mull", locale)}
+          {t('pilgrimage.back_mull', locale)}
         </Link>
       </p>
     </main>

@@ -28,12 +28,16 @@ function isValidTz(tz: unknown): tz is string {
   try {
     new Intl.DateTimeFormat('en-US', { timeZone: tz });
     return true;
-  } catch { return false; }
+  } catch {
+    return false;
+  }
 }
 
 export async function GET() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Not signed in.' }, { status: 401 });
 
   const { data, error } = await supabase
@@ -56,12 +60,17 @@ export async function GET() {
 
 export async function POST(req: Request) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Not signed in.' }, { status: 401 });
 
   let body: { enabled?: unknown; hour?: unknown; tz?: unknown };
-  try { body = await req.json(); }
-  catch { return NextResponse.json({ error: 'Invalid JSON.' }, { status: 400 }); }
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON.' }, { status: 400 });
+  }
 
   const enabled = !!body.enabled;
   const hour = Math.max(0, Math.min(23, Math.round(Number(body.hour))));
@@ -73,17 +82,15 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Invalid time zone.' }, { status: 400 });
   }
 
-  const { error } = await supabase
-    .from('notification_preferences')
-    .upsert(
-      {
-        user_id: user.id,
-        email_dilemma_reminder: enabled,
-        reminder_local_hour: hour,
-        reminder_tz: tz,
-      },
-      { onConflict: 'user_id' }
-    );
+  const { error } = await supabase.from('notification_preferences').upsert(
+    {
+      user_id: user.id,
+      email_dilemma_reminder: enabled,
+      reminder_local_hour: hour,
+      reminder_tz: tz,
+    },
+    { onConflict: 'user_id' },
+  );
 
   if (error) {
     console.error('[notifications POST] upsert failed', error);

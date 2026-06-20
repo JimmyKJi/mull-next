@@ -7,7 +7,7 @@ import { SUGGESTED_DEBATE_TOPICS } from '@/lib/debate-topics';
 import { coerceVector16, rankByDimensionFocus } from '@/lib/recommendations';
 import { t, type Locale } from '@/lib/translations';
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 const VECTOR_KEY = 'mull.vector';
 
@@ -21,7 +21,13 @@ type DuelResult = {
   exchanges: Exchange[];
 };
 
-export default function DuelForm({ philosophers, locale = 'en' }: { philosophers: PhilosopherEntry[]; locale?: Locale }) {
+export default function DuelForm({
+  philosophers,
+  locale = 'en',
+}: {
+  philosophers: PhilosopherEntry[];
+  locale?: Locale;
+}) {
   const [philName, setPhilName] = useState('');
   const [search, setSearch] = useState('');
   const [topic, setTopic] = useState('');
@@ -38,17 +44,23 @@ export default function DuelForm({ philosophers, locale = 'en' }: { philosophers
     try {
       const raw = window.localStorage.getItem(VECTOR_KEY);
       if (raw) setUserVec(coerceVector16(JSON.parse(raw)));
-    } catch { /* storage disabled or malformed — keep canonical order */ }
+    } catch {
+      /* storage disabled or malformed — keep canonical order */
+    }
   }, []);
 
   const suggestedTopics = useMemo(() => {
-    const ranked = rankByDimensionFocus(userVec, SUGGESTED_DEBATE_TOPICS, s => s.relevantDimensions);
-    return ranked.length ? ranked.map(r => r.item) : SUGGESTED_DEBATE_TOPICS;
+    const ranked = rankByDimensionFocus(
+      userVec,
+      SUGGESTED_DEBATE_TOPICS,
+      (s) => s.relevantDimensions,
+    );
+    return ranked.length ? ranked.map((r) => r.item) : SUGGESTED_DEBATE_TOPICS;
   }, [userVec]);
 
   const filtered = useMemo(
-    () => philosophers.filter(p => matchesPhilosopherSearch(p, search)),
-    [search, philosophers]
+    () => philosophers.filter((p) => matchesPhilosopherSearch(p, search)),
+    [search, philosophers],
   );
 
   const ready = !!philName && topic.trim().length >= 4;
@@ -63,7 +75,7 @@ export default function DuelForm({ philosophers, locale = 'en' }: { philosophers
       const res = await fetch('/api/debate/me', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phil_name: philName, topic: topic.trim() })
+        body: JSON.stringify({ phil_name: philName, topic: topic.trim() }),
       });
       const json = await res.json();
       if (!res.ok) {
@@ -80,31 +92,38 @@ export default function DuelForm({ philosophers, locale = 'en' }: { philosophers
     }
   }
 
-  function reset() { setResult(null); setError(null); }
+  function reset() {
+    setResult(null);
+    setError(null);
+  }
 
   if (result) {
     return (
       <div>
-        <div style={{
-          fontFamily: sans,
-          fontSize: 11,
-          fontWeight: 600,
-          color: 'var(--color-acc-deep)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.18em',
-          marginBottom: 14,
-        }}>
+        <div
+          style={{
+            fontFamily: sans,
+            fontSize: 11,
+            fontWeight: 600,
+            color: 'var(--color-acc-deep)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.18em',
+            marginBottom: 14,
+          }}
+        >
           {t('duel.you_vs', locale, { name: result.b.name, topic: result.topic })}
         </div>
         {result.setup && (
-          <p style={{
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 17,
-            color: 'var(--color-ink-soft)',
-            margin: '0 0 32px',
-            lineHeight: 1.55,
-          }}>
+          <p
+            style={{
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: 17,
+              color: 'var(--color-ink-soft)',
+              margin: '0 0 32px',
+              lineHeight: 1.55,
+            }}
+          >
             {result.setup}
           </p>
         )}
@@ -154,7 +173,11 @@ export default function DuelForm({ philosophers, locale = 'en' }: { philosophers
   }
 
   return (
-    <form onSubmit={onSubmit} className="pixel-form" style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
+    <form
+      onSubmit={onSubmit}
+      className="pixel-form"
+      style={{ display: 'flex', flexDirection: 'column', gap: 28 }}
+    >
       <PhilosopherPicker
         search={search}
         setSearch={setSearch}
@@ -165,22 +188,24 @@ export default function DuelForm({ philosophers, locale = 'en' }: { philosophers
       />
 
       <div>
-        <label style={{
-          fontFamily: sans,
-          fontSize: 11,
-          fontWeight: 600,
-          color: 'var(--color-acc-deep)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.18em',
-          display: 'block',
-          marginBottom: 10,
-        }}>
+        <label
+          style={{
+            fontFamily: sans,
+            fontSize: 11,
+            fontWeight: 600,
+            color: 'var(--color-acc-deep)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.18em',
+            display: 'block',
+            marginBottom: 10,
+          }}
+        >
           {t('debate.topic_label', locale)}
         </label>
         <input
           type="text"
           value={topic}
-          onChange={e => setTopic(e.target.value)}
+          onChange={(e) => setTopic(e.target.value)}
           placeholder={t('debate.topic_placeholder', locale)}
           maxLength={240}
           style={{
@@ -197,7 +222,7 @@ export default function DuelForm({ philosophers, locale = 'en' }: { philosophers
           }}
         />
         <div style={{ marginTop: 10, display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-          {suggestedTopics.map(suggestion => (
+          {suggestedTopics.map((suggestion) => (
             <button
               key={suggestion.text}
               type="button"
@@ -241,20 +266,26 @@ export default function DuelForm({ philosophers, locale = 'en' }: { philosophers
         </button>
         {!ready && (
           <span style={{ fontFamily: sans, fontSize: 12.5, color: 'var(--color-acc-deep)' }}>
-            {!philName ? t('duel.pick_thinker', locale) : topic.trim().length < 4 ? t('debate.choose_topic', locale) : ''}
+            {!philName
+              ? t('duel.pick_thinker', locale)
+              : topic.trim().length < 4
+                ? t('debate.choose_topic', locale)
+                : ''}
           </span>
         )}
       </div>
       {error && (
-        <div style={{
-          fontFamily: sans,
-          fontSize: 13,
-          color: '#7A2E2E',
-          background: 'rgba(122, 46, 46, 0.08)',
-          border: '1px solid rgba(122, 46, 46, 0.2)',
-          padding: '10px 14px',
-          borderRadius: 6,
-        }}>
+        <div
+          style={{
+            fontFamily: sans,
+            fontSize: 13,
+            color: '#7A2E2E',
+            background: 'rgba(122, 46, 46, 0.08)',
+            border: '1px solid rgba(122, 46, 46, 0.2)',
+            padding: '10px 14px',
+            borderRadius: 6,
+          }}
+        >
           {error}
         </div>
       )}
@@ -263,7 +294,12 @@ export default function DuelForm({ philosophers, locale = 'en' }: { philosophers
 }
 
 function DuelBubble({
-  speakerName, speakerSubtitle, archetypeKey, text, side, isUser
+  speakerName,
+  speakerSubtitle,
+  archetypeKey,
+  text,
+  side,
+  isUser,
 }: {
   speakerName: string;
   speakerSubtitle: string;
@@ -272,31 +308,37 @@ function DuelBubble({
   side: 'left' | 'right';
   isUser: boolean;
 }) {
-  const figureSvg = archetypeKey ? (FIGURES[archetypeKey] || '') : '';
+  const figureSvg = archetypeKey ? FIGURES[archetypeKey] || '' : '';
   const isLeft = side === 'left';
 
   const portrait = (
-    <div style={{
-      width: 80,
-      height: 80,
-      borderRadius: '50%',
-      background: isUser ? 'var(--color-ink)' : '#FFFCF4',
-      border: isUser ? '2px solid var(--color-acc)' : '2px solid var(--color-line)',
-      flexShrink: 0,
-      overflow: 'hidden',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      color: '#F1C76A',
-    }}>
+    <div
+      style={{
+        width: 80,
+        height: 80,
+        borderRadius: '50%',
+        background: isUser ? 'var(--color-ink)' : '#FFFCF4',
+        border: isUser ? '2px solid var(--color-acc)' : '2px solid var(--color-line)',
+        flexShrink: 0,
+        overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#F1C76A',
+      }}
+    >
       {isUser ? (
-        <span style={{
-          fontFamily: serif,
-          fontSize: 24,
-          fontWeight: 500,
-          fontStyle: 'italic',
-          letterSpacing: 1,
-        }}>YOU</span>
+        <span
+          style={{
+            fontFamily: serif,
+            fontSize: 24,
+            fontWeight: 500,
+            fontStyle: 'italic',
+            letterSpacing: 1,
+          }}
+        >
+          YOU
+        </span>
       ) : (
         <div
           style={{ width: '100%', height: '100%' }}
@@ -308,43 +350,49 @@ function DuelBubble({
 
   const nameLabel = (
     <div style={{ flexShrink: 0, textAlign: isLeft ? 'left' : 'right', minWidth: 0 }}>
-      <div style={{
-        fontFamily: serif,
-        fontSize: 16,
-        fontWeight: 500,
-        fontStyle: 'italic',
-        color: 'var(--color-ink)',
-        lineHeight: 1.1,
-      }}>
+      <div
+        style={{
+          fontFamily: serif,
+          fontSize: 16,
+          fontWeight: 500,
+          fontStyle: 'italic',
+          color: 'var(--color-ink)',
+          lineHeight: 1.1,
+        }}
+      >
         {speakerName}
       </div>
-      <div style={{
-        fontFamily: sans,
-        fontSize: 11,
-        color: 'var(--color-acc-deep)',
-        letterSpacing: 0.3,
-        marginTop: 2,
-      }}>
+      <div
+        style={{
+          fontFamily: sans,
+          fontSize: 11,
+          color: 'var(--color-acc-deep)',
+          letterSpacing: 0.3,
+          marginTop: 2,
+        }}
+      >
         {speakerSubtitle}
       </div>
     </div>
   );
 
   const bubble = (
-    <div style={{
-      flex: 1,
-      minWidth: 0,
-      position: 'relative',
-      background: isUser ? '#F5EFDC' : '#FFFCF4',
-      border: '1px solid var(--color-line)',
-      borderRadius: 18,
-      padding: '18px 22px',
-      fontFamily: serif,
-      fontSize: 17,
-      color: 'var(--color-ink)',
-      lineHeight: 1.6,
-      boxShadow: '0 2px 8px rgba(34, 30, 24, 0.04)',
-    }}>
+    <div
+      style={{
+        flex: 1,
+        minWidth: 0,
+        position: 'relative',
+        background: isUser ? '#F5EFDC' : '#FFFCF4',
+        border: '1px solid var(--color-line)',
+        borderRadius: 18,
+        padding: '18px 22px',
+        fontFamily: serif,
+        fontSize: 17,
+        color: 'var(--color-ink)',
+        lineHeight: 1.6,
+        boxShadow: '0 2px 8px rgba(34, 30, 24, 0.04)',
+      }}
+    >
       <span
         aria-hidden="true"
         style={{
@@ -366,12 +414,14 @@ function DuelBubble({
   );
 
   return (
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: isLeft ? '90px 1fr' : '1fr 90px',
-      gap: 18,
-      alignItems: 'flex-start',
-    }}>
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: isLeft ? '90px 1fr' : '1fr 90px',
+        gap: 18,
+        alignItems: 'flex-start',
+      }}
+    >
       {isLeft ? (
         <>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
@@ -394,7 +444,12 @@ function DuelBubble({
 }
 
 function PhilosopherPicker({
-  search, setSearch, selected, setSelected, options, locale
+  search,
+  setSearch,
+  selected,
+  setSelected,
+  options,
+  locale,
 }: {
   search: string;
   setSearch: (s: string) => void;
@@ -405,22 +460,24 @@ function PhilosopherPicker({
 }) {
   return (
     <div>
-      <label style={{
-        fontFamily: sans,
-        fontSize: 11,
-        fontWeight: 600,
-        color: '#7A2E2E',
-        textTransform: 'uppercase',
-        letterSpacing: '0.18em',
-        display: 'block',
-        marginBottom: 10,
-      }}>
+      <label
+        style={{
+          fontFamily: sans,
+          fontSize: 11,
+          fontWeight: 600,
+          color: '#7A2E2E',
+          textTransform: 'uppercase',
+          letterSpacing: '0.18em',
+          display: 'block',
+          marginBottom: 10,
+        }}
+      >
         {t('duel.opponent_label', locale)}
       </label>
       <input
         type="text"
         value={search}
-        onChange={e => setSearch(e.target.value)}
+        onChange={(e) => setSearch(e.target.value)}
         placeholder={t('duel.search_placeholder', locale)}
         style={{
           fontFamily: sans,
@@ -436,38 +493,46 @@ function PhilosopherPicker({
           marginBottom: 8,
         }}
       />
-      <div style={{
-        fontFamily: sans,
-        fontSize: 11,
-        color: 'var(--color-acc-deep)',
-        marginBottom: 6,
-        letterSpacing: 0.3,
-      }}>
-        {search ? t('duel.matching', locale, { count: options.length, q: search }) : `${options.length} thinker${options.length === 1 ? '' : 's'}`}
+      <div
+        style={{
+          fontFamily: sans,
+          fontSize: 11,
+          color: 'var(--color-acc-deep)',
+          marginBottom: 6,
+          letterSpacing: 0.3,
+        }}
+      >
+        {search
+          ? t('duel.matching', locale, { count: options.length, q: search })
+          : `${options.length} thinker${options.length === 1 ? '' : 's'}`}
       </div>
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 4,
-        maxHeight: 360,
-        overflowY: 'auto',
-        background: '#FFFCF4',
-        border: '1px solid #EBE3CA',
-        borderRadius: 8,
-        padding: 6,
-      }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 4,
+          maxHeight: 360,
+          overflowY: 'auto',
+          background: '#FFFCF4',
+          border: '1px solid #EBE3CA',
+          borderRadius: 8,
+          padding: 6,
+        }}
+      >
         {options.length === 0 && (
-          <div style={{
-            padding: '12px',
-            fontFamily: sans,
-            fontSize: 13,
-            color: 'var(--color-acc-deep)',
-            fontStyle: 'italic',
-          }}>
+          <div
+            style={{
+              padding: '12px',
+              fontFamily: sans,
+              fontSize: 13,
+              color: 'var(--color-acc-deep)',
+              fontStyle: 'italic',
+            }}
+          >
             {t('duel.no_matches', locale)}
           </div>
         )}
-        {options.map(p => {
+        {options.map((p) => {
           const isSelected = selected === p.name;
           return (
             <button
@@ -487,19 +552,23 @@ function PhilosopherPicker({
                 transition: 'background 0.12s ease',
               }}
             >
-              <div style={{
-                fontFamily: serif,
-                fontSize: 16,
-                fontWeight: 500,
-                lineHeight: 1.15,
-              }}>
+              <div
+                style={{
+                  fontFamily: serif,
+                  fontSize: 16,
+                  fontWeight: 500,
+                  lineHeight: 1.15,
+                }}
+              >
                 {p.name}
               </div>
-              <div style={{
-                fontSize: 11,
-                opacity: isSelected ? 0.85 : 0.6,
-                marginTop: 2,
-              }}>
+              <div
+                style={{
+                  fontSize: 11,
+                  opacity: isSelected ? 0.85 : 0.6,
+                  marginTop: 2,
+                }}
+              >
                 {p.dates}
               </div>
             </button>

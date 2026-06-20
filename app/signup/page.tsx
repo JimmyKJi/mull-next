@@ -35,9 +35,7 @@ export default function SignupPage() {
       password,
       options: {
         emailRedirectTo:
-          typeof window !== 'undefined'
-            ? `${window.location.origin}/account`
-            : undefined,
+          typeof window !== 'undefined' ? `${window.location.origin}/account` : undefined,
       },
     });
     if (signUpError) {
@@ -65,9 +63,12 @@ export default function SignupPage() {
           className="flex items-center justify-between border-b-4 border-ink bg-ink px-4 py-2 text-[10px] tracking-[0.22em] text-acc-soft"
           style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
-          <span>▶ {confirmSent
-            ? t('auth.check_email', locale).toUpperCase()
-            : t('auth.create_account', locale).toUpperCase()}</span>
+          <span>
+            ▶{' '}
+            {confirmSent
+              ? t('auth.check_email', locale).toUpperCase()
+              : t('auth.create_account', locale).toUpperCase()}
+          </span>
           <span className="text-acc">AUTH.SYS</span>
         </div>
 
@@ -130,7 +131,10 @@ export default function SignupPage() {
                     className="border-2 border-ink bg-[#FFFCF4] px-3 py-2.5 text-[16px] text-ink focus:bg-acc-soft focus:outline-none"
                     style={{ fontFamily: 'var(--font-prose)' }}
                   />
-                  <span className="mt-1 text-[11.5px] tracking-normal text-acc-deep" style={{ fontFamily: 'var(--font-prose)' }}>
+                  <span
+                    className="mt-1 text-[11.5px] tracking-normal text-acc-deep"
+                    style={{ fontFamily: 'var(--font-prose)' }}
+                  >
                     {t('auth.password_hint', locale)}
                   </span>
                 </label>

@@ -28,14 +28,9 @@
 //   and identifying the flaws is the job. Without this, the verdicts
 //   are mush.
 
-import { LOCALE_FOR_PROMPT, type Locale } from "../translations";
+import { LOCALE_FOR_PROMPT, type Locale } from '../translations';
 
-export type JudgeCriterion =
-  | "validity"
-  | "premises"
-  | "rigor"
-  | "elegance"
-  | "engagement";
+export type JudgeCriterion = 'validity' | 'premises' | 'rigor' | 'elegance' | 'engagement';
 
 export type JudgeSideScores = Record<JudgeCriterion, number>;
 
@@ -47,26 +42,19 @@ export type JudgeOutput = {
   user_kindred_philosopher: string;
   opponent_scores: JudgeSideScores;
   opponent_justifications: Record<JudgeCriterion, string>;
-  verdict: "user" | "opponent" | "draw";
+  verdict: 'user' | 'opponent' | 'draw';
   /** One-paragraph explanation of the verdict — references specific
    *  moves either side made. */
   verdict_reasoning: string;
 };
 
-const CRITERIA: JudgeCriterion[] = [
-  "validity",
-  "premises",
-  "rigor",
-  "elegance",
-  "engagement",
-];
+const CRITERIA: JudgeCriterion[] = ['validity', 'premises', 'rigor', 'elegance', 'engagement'];
 
-export const JUDGE_TOOL_NAME = "submit_verdict";
+export const JUDGE_TOOL_NAME = 'submit_verdict';
 
-const JUDGE_SIDES = ["user", "opponent"] as const;
+const JUDGE_SIDES = ['user', 'opponent'] as const;
 const scoreField = (side: string, c: JudgeCriterion) => `${side}_${c}_score`;
-const justField = (side: string, c: JudgeCriterion) =>
-  `${side}_${c}_justification`;
+const justField = (side: string, c: JudgeCriterion) => `${side}_${c}_justification`;
 
 // Forcing the verdict through an Anthropic tool call (rather than asking
 // for raw JSON text) makes the API serialize the values for us — free-form
@@ -81,59 +69,57 @@ function buildJudgeToolSchema() {
   for (const side of JUDGE_SIDES) {
     for (const c of CRITERIA) {
       properties[scoreField(side, c)] = {
-        type: "integer",
+        type: 'integer',
         minimum: 1,
         maximum: 5,
       };
       properties[justField(side, c)] = {
-        type: "string",
+        type: 'string',
         description: `One or two sentences justifying the ${side}'s ${c} score, naming a specific move from the transcript.`,
       };
       required.push(scoreField(side, c), justField(side, c));
     }
   }
-  properties.user_kindred_philosopher = { type: "string" };
-  properties.verdict = { type: "string", enum: ["user", "opponent", "draw"] };
-  properties.verdict_reasoning = { type: "string" };
-  required.push("user_kindred_philosopher", "verdict", "verdict_reasoning");
-  return { type: "object", properties, required };
+  properties.user_kindred_philosopher = { type: 'string' };
+  properties.verdict = { type: 'string', enum: ['user', 'opponent', 'draw'] };
+  properties.verdict_reasoning = { type: 'string' };
+  required.push('user_kindred_philosopher', 'verdict', 'verdict_reasoning');
+  return { type: 'object', properties, required };
 }
 
 export const JUDGE_TOOL = {
   name: JUDGE_TOOL_NAME,
   description:
-    "Submit the structured verdict for the philosophical debate. Call exactly once with every field filled. Each score and each justification is its own separate top-level field (e.g. user_validity_score, user_validity_justification) — do NOT nest scores or justifications into sub-objects, and do NOT pass a justification as a stringified JSON blob.",
+    'Submit the structured verdict for the philosophical debate. Call exactly once with every field filled. Each score and each justification is its own separate top-level field (e.g. user_validity_score, user_validity_justification) — do NOT nest scores or justifications into sub-objects, and do NOT pass a justification as a stringified JSON blob.',
   input_schema: buildJudgeToolSchema(),
 };
 
 /** Reassemble the flat JUDGE_TOOL input into the nested JudgeOutput shape
  *  the rest of the app consumes. Returns null if any field is missing or
  *  mistyped. */
-function flatToolInputToJudgeOutput(
-  input: Record<string, unknown>,
-): JudgeOutput | null {
+function flatToolInputToJudgeOutput(input: Record<string, unknown>): JudgeOutput | null {
   const buildSide = (side: string) => {
     const scores = {} as JudgeSideScores;
     const justifications = {} as Record<JudgeCriterion, string>;
     for (const c of CRITERIA) {
       const s = input[scoreField(side, c)];
       const j = input[justField(side, c)];
-      if (typeof s !== "number" || typeof j !== "string") return null;
+      if (typeof s !== 'number' || typeof j !== 'string') return null;
       scores[c] = s;
       justifications[c] = j;
     }
     return { scores, justifications };
   };
-  const user = buildSide("user");
-  const opponent = buildSide("opponent");
+  const user = buildSide('user');
+  const opponent = buildSide('opponent');
   if (!user || !opponent) return null;
   const verdict = input.verdict;
-  if (verdict !== "user" && verdict !== "opponent" && verdict !== "draw") {
+  if (verdict !== 'user' && verdict !== 'opponent' && verdict !== 'draw') {
     return null;
   }
   if (
-    typeof input.user_kindred_philosopher !== "string" ||
-    typeof input.verdict_reasoning !== "string"
+    typeof input.user_kindred_philosopher !== 'string' ||
+    typeof input.verdict_reasoning !== 'string'
   ) {
     return null;
   }
@@ -158,16 +144,14 @@ function flatToolInputToJudgeOutput(
  *  and best-effort the justifications, degrading to empty strings rather
  *  than failing the whole verdict. Returns null only if the structural
  *  fields are absent. */
-function nestedToolInputToJudgeOutput(
-  input: Record<string, unknown>,
-): JudgeOutput | null {
+function nestedToolInputToJudgeOutput(input: Record<string, unknown>): JudgeOutput | null {
   const readScores = (v: unknown): JudgeSideScores | null => {
-    if (!v || typeof v !== "object") return null;
+    if (!v || typeof v !== 'object') return null;
     const o = v as Record<string, unknown>;
     const scores = {} as JudgeSideScores;
     for (const c of CRITERIA) {
       const n = o[c];
-      if (typeof n !== "number") return null;
+      if (typeof n !== 'number') return null;
       scores[c] = n;
     }
     return scores;
@@ -176,12 +160,12 @@ function nestedToolInputToJudgeOutput(
   const opponentScores = readScores(input.opponent_scores);
   if (!userScores || !opponentScores) return null;
   const verdict = input.verdict;
-  if (verdict !== "user" && verdict !== "opponent" && verdict !== "draw") {
+  if (verdict !== 'user' && verdict !== 'opponent' && verdict !== 'draw') {
     return null;
   }
   if (
-    typeof input.user_kindred_philosopher !== "string" ||
-    typeof input.verdict_reasoning !== "string"
+    typeof input.user_kindred_philosopher !== 'string' ||
+    typeof input.verdict_reasoning !== 'string'
   ) {
     return null;
   }
@@ -202,14 +186,14 @@ function nestedToolInputToJudgeOutput(
  *  a missing justification is a soft loss, not a hard failure. */
 function coerceJustifications(value: unknown): Record<JudgeCriterion, string> {
   const out = {} as Record<JudgeCriterion, string>;
-  for (const c of CRITERIA) out[c] = "";
+  for (const c of CRITERIA) out[c] = '';
   let obj: Record<string, unknown> | null = null;
-  if (value && typeof value === "object") {
+  if (value && typeof value === 'object') {
     obj = value as Record<string, unknown>;
-  } else if (typeof value === "string") {
+  } else if (typeof value === 'string') {
     try {
       const parsed = JSON.parse(value);
-      if (parsed && typeof parsed === "object") {
+      if (parsed && typeof parsed === 'object') {
         obj = parsed as Record<string, unknown>;
       }
     } catch {
@@ -218,17 +202,17 @@ function coerceJustifications(value: unknown): Record<JudgeCriterion, string> {
   }
   if (obj) {
     for (const c of CRITERIA) {
-      if (typeof obj[c] === "string") out[c] = obj[c] as string;
+      if (typeof obj[c] === 'string') out[c] = obj[c] as string;
     }
   }
   return out;
 }
 
-export function judgeSystemPrompt(locale: Locale = "en"): string {
+export function judgeSystemPrompt(locale: Locale = 'en'): string {
   const languageDirective =
-    locale !== "en" && LOCALE_FOR_PROMPT[locale]
+    locale !== 'en' && LOCALE_FOR_PROMPT[locale]
       ? `\n\nLANGUAGE: Write every human-readable value you pass to the tool — all justifications, the verdict_reasoning, and the user_kindred_philosopher name — in ${LOCALE_FOR_PROMPT[locale]}. Render the chosen philosopher's name in its standard form in that language. The "verdict" value must remain exactly "user", "opponent", or "draw" in English.`
-      : "";
+      : '';
   return `You are the Arena judge — an impartial, rigorous evaluator of philosophical argument.
 
 CRITICAL PRINCIPLE: You are NOT judging which side is "right" in their conclusion. Both sides may hold defensible positions. Your job is to evaluate ARGUMENTATIVE QUALITY only — how well each side reasoned, not which position you find more sympathetic.
@@ -306,14 +290,14 @@ Submit your evaluation by calling the ${JUDGE_TOOL_NAME} tool. Fill every field:
 export function judgeUserPrompt(args: {
   topicPrompt: string;
   opponentName: string;
-  transcript: { speaker: "user" | "opponent"; content: string }[];
+  transcript: { speaker: 'user' | 'opponent'; content: string }[];
 }): string {
   const transcriptText = args.transcript
     .map((t, i) => {
-      const label = t.speaker === "user" ? "USER" : args.opponentName.toUpperCase();
+      const label = t.speaker === 'user' ? 'USER' : args.opponentName.toUpperCase();
       return `Turn ${i + 1} — ${label}:\n${t.content}`;
     })
-    .join("\n\n");
+    .join('\n\n');
   return `TOPIC: ${args.topicPrompt}
 
 OPPONENT: ${args.opponentName}
@@ -331,16 +315,16 @@ export function totalScore(scores: JudgeSideScores): number {
 
 /** Validate the parsed JSON from Claude. Returns null if shape wrong. */
 export function validateJudgeOutput(raw: unknown): JudgeOutput | null {
-  if (!raw || typeof raw !== "object") return null;
+  if (!raw || typeof raw !== 'object') return null;
   const o = raw as Record<string, unknown>;
   if (
     !validateScores(o.user_scores) ||
     !validateScores(o.opponent_scores) ||
     !validateJustifications(o.user_justifications) ||
     !validateJustifications(o.opponent_justifications) ||
-    typeof o.user_kindred_philosopher !== "string" ||
-    !["user", "opponent", "draw"].includes(o.verdict as string) ||
-    typeof o.verdict_reasoning !== "string"
+    typeof o.user_kindred_philosopher !== 'string' ||
+    !['user', 'opponent', 'draw'].includes(o.verdict as string) ||
+    typeof o.verdict_reasoning !== 'string'
   ) {
     return null;
   }
@@ -348,27 +332,23 @@ export function validateJudgeOutput(raw: unknown): JudgeOutput | null {
 }
 
 function validateScores(s: unknown): s is JudgeSideScores {
-  if (!s || typeof s !== "object") return false;
+  if (!s || typeof s !== 'object') return false;
   const o = s as Record<string, unknown>;
-  return CRITERIA.every(
-    (c) => typeof o[c] === "number" && o[c]! >= 0 && o[c]! <= 5,
-  );
+  return CRITERIA.every((c) => typeof o[c] === 'number' && o[c]! >= 0 && o[c]! <= 5);
 }
 
-function validateJustifications(
-  j: unknown,
-): j is Record<JudgeCriterion, string> {
-  if (!j || typeof j !== "object") return false;
+function validateJustifications(j: unknown): j is Record<JudgeCriterion, string> {
+  if (!j || typeof j !== 'object') return false;
   const o = j as Record<string, unknown>;
-  return CRITERIA.every((c) => typeof o[c] === "string");
+  return CRITERIA.every((c) => typeof o[c] === 'string');
 }
 
 /** Strip markdown fences + parse JSON. Returns null on failure. */
 export function parseJudgeJson(raw: string): JudgeOutput | null {
   let text = raw.trim();
-  text = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "");
-  const start = text.indexOf("{");
-  const end = text.lastIndexOf("}");
+  text = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '');
+  const start = text.indexOf('{');
+  const end = text.lastIndexOf('}');
   if (start < 0 || end < 0) return null;
   try {
     const parsed = JSON.parse(text.slice(start, end + 1));
@@ -385,10 +365,8 @@ export function parseJudgeJson(raw: string): JudgeOutput | null {
 export function parseJudgeResponse(data: {
   content?: { type: string; text?: string; name?: string; input?: unknown }[];
 }): JudgeOutput | null {
-  const toolUse = data.content?.find(
-    (c) => c.type === "tool_use" && c.name === JUDGE_TOOL_NAME,
-  );
-  if (toolUse?.input && typeof toolUse.input === "object") {
+  const toolUse = data.content?.find((c) => c.type === 'tool_use' && c.name === JUDGE_TOOL_NAME);
+  if (toolUse?.input && typeof toolUse.input === 'object') {
     const input = toolUse.input as Record<string, unknown>;
     const fromFlat = flatToolInputToJudgeOutput(input);
     if (fromFlat) return fromFlat;
@@ -399,7 +377,7 @@ export function parseJudgeResponse(data: {
     const fromNested = nestedToolInputToJudgeOutput(input);
     if (fromNested) return fromNested;
   }
-  const text = data.content?.find((c) => c.type === "text")?.text ?? "";
+  const text = data.content?.find((c) => c.type === 'text')?.text ?? '';
   return text ? parseJudgeJson(text) : null;
 }
 
@@ -407,11 +385,11 @@ export function parseJudgeResponse(data: {
 export function judgmentToElo(
   user: JudgeSideScores,
   opponent: JudgeSideScores,
-): { verdict: JudgeOutput["verdict"]; userScore: number } {
+): { verdict: JudgeOutput['verdict']; userScore: number } {
   const u = totalScore(user);
   const o = totalScore(opponent);
   const diff = u - o;
-  if (diff >= 3) return { verdict: "user", userScore: 1.0 };
-  if (diff <= -3) return { verdict: "opponent", userScore: 0.0 };
-  return { verdict: "draw", userScore: 0.5 };
+  if (diff >= 3) return { verdict: 'user', userScore: 1.0 };
+  if (diff <= -3) return { verdict: 'opponent', userScore: 0.0 };
+  return { verdict: 'draw', userScore: 0.5 };
 }

@@ -9,25 +9,25 @@
 // Server renders today's challenge metadata; the client component
 // (spar-client.tsx) handles the form + submission + result display.
 
-import type { Metadata, Viewport } from "next";
-import Link from "next/link";
-import { PixelPageHeader } from "@/components/pixel-window";
-import { getDailySpar } from "@/lib/spar";
-import { localizeArenaPhilosopherName } from "@/lib/arena/data";
-import { localizeArenaTopic } from "@/lib/arena/topics-i18n";
-import { getServerLocale } from "@/lib/locale-server";
-import { t } from "@/lib/translations";
-import SparClient from "./spar-client";
+import type { Metadata, Viewport } from 'next';
+import Link from 'next/link';
+import { PixelPageHeader } from '@/components/pixel-window';
+import { getDailySpar } from '@/lib/spar';
+import { localizeArenaPhilosopherName } from '@/lib/arena/data';
+import { localizeArenaTopic } from '@/lib/arena/topics-i18n';
+import { getServerLocale } from '@/lib/locale-server';
+import { t } from '@/lib/translations';
+import SparClient from './spar-client';
 
 export const metadata: Metadata = {
-  title: "Daily Spar · Mull",
+  title: 'Daily Spar · Mull',
   description:
     "One philosopher. One topic. One turn each. The judge calls it in 30 seconds. Today's spar refreshes at midnight UTC.",
-  alternates: { canonical: "https://mull.world/spar" },
+  alternates: { canonical: 'https://mull.world/spar' },
 };
 
 export const viewport: Viewport = {
-  width: "device-width",
+  width: 'device-width',
   initialScale: 1,
 };
 
@@ -46,14 +46,11 @@ export default async function SparPage() {
   return (
     <main className="mx-auto max-w-[760px] px-6 pb-32 pt-10 sm:px-10">
       <PixelPageHeader
-        eyebrow={t("spar.eyebrow", locale)}
-        title={t("spar.title", locale)}
+        eyebrow={t('spar.eyebrow', locale)}
+        title={t('spar.title', locale)}
         subtitle={
-          <p
-            className="text-[16px] italic"
-            style={{ fontFamily: "var(--font-editorial)" }}
-          >
-            {t("spar.subtitle", locale)}
+          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-editorial)' }}>
+            {t('spar.subtitle', locale)}
           </p>
         }
       />
@@ -62,19 +59,19 @@ export default async function SparPage() {
       <div
         style={{
           marginBottom: 24,
-          padding: "20px 22px",
-          background: "#1A1612",
-          color: "var(--color-acc-soft)",
-          border: "4px solid var(--color-ink)",
-          boxShadow: "5px 5px 0 0 var(--color-acc)",
+          padding: '20px 22px',
+          background: '#1A1612',
+          color: 'var(--color-acc-soft)',
+          border: '4px solid var(--color-ink)',
+          boxShadow: '5px 5px 0 0 var(--color-acc)',
         }}
       >
         <div
           style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "baseline",
-            flexWrap: "wrap",
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'baseline',
+            flexWrap: 'wrap',
             gap: 8,
             marginBottom: 12,
           }}
@@ -83,23 +80,23 @@ export default async function SparPage() {
             style={{
               fontFamily: pixel,
               fontSize: 10,
-              color: "#F8C75E",
-              letterSpacing: "0.22em",
-              textTransform: "uppercase",
+              color: '#F8C75E',
+              letterSpacing: '0.22em',
+              textTransform: 'uppercase',
             }}
           >
-            {t("spar.today", locale, { date: today.dateKey })}
+            {t('spar.today', locale, { date: today.dateKey })}
           </span>
           <span
             style={{
               fontFamily: pixel,
               fontSize: 9,
-              color: "var(--color-acc)",
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
+              color: 'var(--color-acc)',
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase',
             }}
           >
-            {t("spar.tier_line", locale, {
+            {t('spar.tier_line', locale, {
               tier: tierLabel,
               elo: today.philosopher.baseElo,
             })}
@@ -107,22 +104,22 @@ export default async function SparPage() {
         </div>
         <div
           style={{
-            fontFamily: "var(--font-editorial)",
+            fontFamily: 'var(--font-editorial)',
             fontSize: 22,
-            color: "var(--color-acc-soft)",
+            color: 'var(--color-acc-soft)',
             lineHeight: 1.3,
-            margin: "0 0 10px",
+            margin: '0 0 10px',
           }}
         >
-          <strong>{t("spar.vs", locale, { name: philosopherDisplay })}</strong>
-          <span style={{ color: "var(--color-acc)" }}> · </span>
+          <strong>{t('spar.vs', locale, { name: philosopherDisplay })}</strong>
+          <span style={{ color: 'var(--color-acc)' }}> · </span>
           <em>&ldquo;{topic.title}&rdquo;</em>
         </div>
         <p
           style={{
-            fontFamily: "var(--font-editorial)",
+            fontFamily: 'var(--font-editorial)',
             fontSize: 15,
-            color: "#E5DCC0",
+            color: '#E5DCC0',
             lineHeight: 1.55,
             margin: 0,
           }}
@@ -143,21 +140,21 @@ export default async function SparPage() {
       <p
         style={{
           marginTop: 26,
-          fontFamily: "var(--font-editorial)",
-          fontStyle: "italic",
+          fontFamily: 'var(--font-editorial)',
+          fontStyle: 'italic',
           fontSize: 14,
-          color: "var(--color-acc-deep)",
+          color: 'var(--color-acc-deep)',
           lineHeight: 1.55,
         }}
       >
-        {t("spar.cost_prefix", locale)}
+        {t('spar.cost_prefix', locale)}
         <Link
           href="/arena"
           className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
-          {t("spar.the_arena", locale)}
+          {t('spar.the_arena', locale)}
         </Link>
-        {locale === "zh" ? "。" : "."}
+        {locale === 'zh' ? '。' : '.'}
       </p>
 
       <p className="mt-10 text-center text-[13px] text-acc-deep">
@@ -165,7 +162,7 @@ export default async function SparPage() {
           href="/"
           className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
-          {t("pilgrimage.back_mull", locale)}
+          {t('pilgrimage.back_mull', locale)}
         </Link>
       </p>
     </main>

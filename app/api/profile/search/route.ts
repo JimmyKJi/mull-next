@@ -67,7 +67,7 @@ export async function GET(req: Request) {
   });
 
   return NextResponse.json({
-    results: ranked.map(r => ({
+    results: ranked.map((r) => ({
       handle: r.handle,
       display_name: r.display_name,
       bio: r.bio,

@@ -34,7 +34,7 @@ export const DIM_NARRATIONS: Record<string, DimNarration> = {
   },
   VA: {
     label: 'Vital affirmation',
-    high: 'affirms life as it is — pleasure and being alive don\'t need outside justification',
+    high: "affirms life as it is — pleasure and being alive don't need outside justification",
     low: 'sees the present life as preparation or backdrop for something else',
   },
   WP: {
@@ -59,8 +59,8 @@ export const DIM_NARRATIONS: Record<string, DimNarration> = {
   },
   MR: {
     label: 'Mystical receptivity',
-    high: 'is open to what bypasses words — the surface of things isn\'t the whole story',
-    low: 'distrusts mystical claims — what can\'t be said cleanly probably isn\'t real',
+    high: "is open to what bypasses words — the surface of things isn't the whole story",
+    low: "distrusts mystical claims — what can't be said cleanly probably isn't real",
   },
   SR: {
     label: 'Skeptical reflex',
@@ -74,8 +74,8 @@ export const DIM_NARRATIONS: Record<string, DimNarration> = {
   },
   SS: {
     label: 'Sovereign self',
-    high: 'trusts their own judgment over the crowd\'s — sovereignty over received opinion',
-    low: 'weights collective wisdom over solo conviction — the herd often knows things you don\'t',
+    high: "trusts their own judgment over the crowd's — sovereignty over received opinion",
+    low: "weights collective wisdom over solo conviction — the herd often knows things you don't",
   },
   PO: {
     label: 'Practical orientation',
@@ -118,7 +118,7 @@ export type CompareLine = {
   aValue: number;
   bValue: number;
   diff: number;
-  poleFlip: boolean;       // true when users sit on opposite sides of the midpoint
+  poleFlip: boolean; // true when users sit on opposite sides of the midpoint
   aText: string;
   bText: string;
 };
@@ -165,27 +165,20 @@ function poleSentence(
   // English (or per-dimension fallback) path.
   const pole = high ? narration.high : narration.low;
   const qualifier =
-    bucket === 'strong'
-      ? 'strongly'
-      : bucket === 'moderate'
-        ? 'moderately'
-        : 'just barely';
+    bucket === 'strong' ? 'strongly' : bucket === 'moderate' ? 'moderately' : 'just barely';
   // Splice the qualifier in: "is grounded" → "is strongly grounded".
   // For pole sentences starting with "is/sees/trusts/affirms/..." we
   // inject after the verb. Otherwise we prefix.
-  const m = pole.match(/^(is|sees|trusts|affirms|values|treats|takes|looks|shapes|distrusts|demands|experiences|finds|mistrusts|thinks|weights|is open|is willing|is rooted|is suspicious|is drawn|is pulled|is grounded)\b\s*/i);
+  const m = pole.match(
+    /^(is|sees|trusts|affirms|values|treats|takes|looks|shapes|distrusts|demands|experiences|finds|mistrusts|thinks|weights|is open|is willing|is rooted|is suspicious|is drawn|is pulled|is grounded)\b\s*/i,
+  );
   if (m) {
     return `${m[0]}${qualifier} ${pole.slice(m[0].length)}`;
   }
   return `${qualifier} ${pole}`;
 }
 
-function buildLine(
-  key: string,
-  aValue: number,
-  bValue: number,
-  locale: Locale,
-): CompareLine {
+function buildLine(key: string, aValue: number, bValue: number, locale: Locale): CompareLine {
   const meta = DIM_NARRATIONS[key];
   const localized = getLocalizedDimNarration(key, locale);
   const diff = Math.abs(aValue - bValue);
@@ -252,7 +245,7 @@ export function topConvergences(
   // have signal on that dimension (one of them at least 1 away from
   // midpoint). Two users both scoring exactly 6 isn't a real
   // convergence, it's a shared lack of opinion.
-  const filtered = rows.filter(r => {
+  const filtered = rows.filter((r) => {
     if (r.poleFlip) return false;
     return Math.abs(r.aValue - MIDPOINT) >= 1 || Math.abs(r.bValue - MIDPOINT) >= 1;
   });

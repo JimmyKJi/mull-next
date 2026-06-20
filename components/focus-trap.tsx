@@ -74,7 +74,7 @@ export default function FocusTrap({
 
       const focusables = Array.from(
         container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
-      ).filter(el => !el.hasAttribute('disabled'));
+      ).filter((el) => !el.hasAttribute('disabled'));
       if (focusables.length === 0) return;
 
       const first = focusables[0];

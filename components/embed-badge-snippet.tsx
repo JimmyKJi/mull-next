@@ -13,7 +13,7 @@ import { useEffect, useState } from 'react';
 import { t, type Locale, isLocale } from '@/lib/translations';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 
 export default function EmbedBadgeSnippet({ handle }: { handle: string }) {
   const [copied, setCopied] = useState(false);
@@ -39,45 +39,53 @@ export default function EmbedBadgeSnippet({ handle }: { handle: string }) {
   }
 
   return (
-    <section style={{
-      marginTop: 32,
-      padding: '22px 24px',
-      background: '#FFFCF4',
-      border: '4px solid var(--color-ink)',
-      boxShadow: '5px 5px 0 0 var(--color-acc)',
-      borderRadius: 0,
-    }}>
-      <div style={{
-        fontFamily: pixel,
-        fontSize: 12,
-        color: 'var(--color-acc-deep)',
-        textTransform: 'uppercase',
-        letterSpacing: '0.18em',
-        marginBottom: 10,
-      }}>
+    <section
+      style={{
+        marginTop: 32,
+        padding: '22px 24px',
+        background: '#FFFCF4',
+        border: '4px solid var(--color-ink)',
+        boxShadow: '5px 5px 0 0 var(--color-acc)',
+        borderRadius: 0,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: pixel,
+          fontSize: 12,
+          color: 'var(--color-acc-deep)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.18em',
+          marginBottom: 10,
+        }}
+      >
         ▸ {t('crd.embed_eyebrow', locale)}
       </div>
-      <p style={{
-        fontFamily: serif,
-        fontStyle: 'italic',
-        fontSize: 15,
-        color: 'var(--color-ink-soft)',
-        margin: '0 0 14px',
-        lineHeight: 1.55,
-      }}>
+      <p
+        style={{
+          fontFamily: serif,
+          fontStyle: 'italic',
+          fontSize: 15,
+          color: 'var(--color-ink-soft)',
+          margin: '0 0 14px',
+          lineHeight: 1.55,
+        }}
+      >
         {t('crd.embed_intro', locale)}
       </p>
 
       {/* Live preview */}
-      <div style={{
-        padding: '14px',
-        background: 'var(--color-acc-soft)',
-        border: '3px solid var(--color-ink)',
-        marginBottom: 14,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
+      <div
+        style={{
+          padding: '14px',
+          background: 'var(--color-acc-soft)',
+          border: '3px solid var(--color-ink)',
+          marginBottom: 14,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         <iframe
           src={`/badge/${handle}`}
           width={320}
@@ -90,17 +98,19 @@ export default function EmbedBadgeSnippet({ handle }: { handle: string }) {
       </div>
 
       {/* Snippet text + copy button */}
-      <div style={{
-        padding: '12px 14px',
-        background: 'var(--color-ink)',
-        color: 'var(--color-acc-soft)',
-        fontFamily: 'ui-monospace, Menlo, monospace',
-        fontSize: 12,
-        lineHeight: 1.55,
-        marginBottom: 12,
-        overflowX: 'auto',
-        whiteSpace: 'pre',
-      }}>
+      <div
+        style={{
+          padding: '12px 14px',
+          background: 'var(--color-ink)',
+          color: 'var(--color-acc-soft)',
+          fontFamily: 'ui-monospace, Menlo, monospace',
+          fontSize: 12,
+          lineHeight: 1.55,
+          marginBottom: 12,
+          overflowX: 'auto',
+          whiteSpace: 'pre',
+        }}
+      >
         {snippet}
       </div>
 

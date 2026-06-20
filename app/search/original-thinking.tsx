@@ -21,7 +21,7 @@ import EmptyStateSprite from '@/components/empty-state-sprite';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 
 // ─── Shared shapes ───────────────────────────────────────────────────
@@ -66,11 +66,11 @@ type Profile = { handle: string | null; display_name: string | null };
 /** Unified shape we render. */
 type OriginalEntry = {
   sourceType: 'diary' | 'dilemma' | 'exercise';
-  sourceLabel: string;          // "Diary", "Today's dilemma", "Exercise · Premortem"
+  sourceLabel: string; // "Diary", "Today's dilemma", "Exercise · Premortem"
   id: string;
-  title: string | null;         // diary entries have titles; others don't
-  context: string | null;       // the prompt the user was responding to (dilemma + exercise)
-  preview: string;              // what we render as the body preview
+  title: string | null; // diary entries have titles; others don't
+  context: string | null; // the prompt the user was responding to (dilemma + exercise)
+  preview: string; // what we render as the body preview
   diagnosis: string | null;
   kinship: Kinship | null;
   created_at: string;
@@ -108,41 +108,50 @@ export default async function OriginalThinking() {
   const [diaryRes, dilemmaRes, exerciseRes] = await Promise.all([
     supabase
       .from('diary_entries')
-      .select(`
+      .select(
+        `
         id, title, content, diagnosis, kinship, created_at, user_id,
         public_profiles!inner ( handle, display_name )
-      `)
+      `,
+      )
       .eq('is_novel', true)
       .eq('is_public', true)
       .order('created_at', { ascending: false })
       .limit(PER_SOURCE_LIMIT),
     supabase
       .from('dilemma_responses')
-      .select(`
+      .select(
+        `
         id, question_text, response_text, dilemma_date, diagnosis, kinship, created_at, user_id,
         public_profiles!inner ( handle, display_name )
-      `)
+      `,
+      )
       .eq('is_novel', true)
       .eq('is_public', true)
       .order('created_at', { ascending: false })
       .limit(PER_SOURCE_LIMIT),
     supabase
       .from('exercise_reflections')
-      .select(`
+      .select(
+        `
         id, exercise_slug, content, diagnosis, kinship, created_at, user_id,
         public_profiles!inner ( handle, display_name )
-      `)
+      `,
+      )
       .eq('is_novel', true)
       .eq('is_public', true)
       .order('created_at', { ascending: false })
       .limit(PER_SOURCE_LIMIT),
   ]);
 
-  if (diaryRes.error) console.error('[search/original-thinking] diary query failed', diaryRes.error);
-  if (dilemmaRes.error) console.error('[search/original-thinking] dilemma query failed', dilemmaRes.error);
-  if (exerciseRes.error) console.error('[search/original-thinking] exercise query failed', exerciseRes.error);
+  if (diaryRes.error)
+    console.error('[search/original-thinking] diary query failed', diaryRes.error);
+  if (dilemmaRes.error)
+    console.error('[search/original-thinking] dilemma query failed', dilemmaRes.error);
+  if (exerciseRes.error)
+    console.error('[search/original-thinking] exercise query failed', exerciseRes.error);
 
-  const diaryRows: OriginalEntry[] = ((diaryRes.data ?? []) as unknown as RawDiary[]).map(r => {
+  const diaryRows: OriginalEntry[] = ((diaryRes.data ?? []) as unknown as RawDiary[]).map((r) => {
     const pp = pickProfile(r.public_profiles);
     return {
       sourceType: 'diary',
@@ -159,42 +168,48 @@ export default async function OriginalThinking() {
     };
   });
 
-  const dilemmaRows: OriginalEntry[] = ((dilemmaRes.data ?? []) as unknown as RawDilemma[]).map(r => {
-    const pp = pickProfile(r.public_profiles);
-    return {
-      sourceType: 'dilemma',
-      sourceLabel: t('srch2.source_dilemma', locale),
-      id: r.id,
-      title: null,
-      context: r.question_text,
-      preview: preview(r.response_text),
-      diagnosis: r.diagnosis,
-      kinship: r.kinship,
-      created_at: r.created_at,
-      author_handle: pp?.handle ?? null,
-      author_display_name: pp?.display_name ?? null,
-    };
-  });
+  const dilemmaRows: OriginalEntry[] = ((dilemmaRes.data ?? []) as unknown as RawDilemma[]).map(
+    (r) => {
+      const pp = pickProfile(r.public_profiles);
+      return {
+        sourceType: 'dilemma',
+        sourceLabel: t('srch2.source_dilemma', locale),
+        id: r.id,
+        title: null,
+        context: r.question_text,
+        preview: preview(r.response_text),
+        diagnosis: r.diagnosis,
+        kinship: r.kinship,
+        created_at: r.created_at,
+        author_handle: pp?.handle ?? null,
+        author_display_name: pp?.display_name ?? null,
+      };
+    },
+  );
 
-  const exerciseRows: OriginalEntry[] = ((exerciseRes.data ?? []) as unknown as RawExercise[]).map(r => {
-    const pp = pickProfile(r.public_profiles);
-    // Resolve the exercise's display name from the slug so the label
-    // reads like "Exercise · Premortem" rather than "exercise-reflections-premortem".
-    const ex = findExercise(r.exercise_slug);
-    return {
-      sourceType: 'exercise',
-      sourceLabel: ex ? t('srch2.source_exercise_named', locale, { name: ex.name }) : t('srch2.source_exercise', locale),
-      id: r.id,
-      title: null,
-      context: ex?.reflection ?? null,
-      preview: preview(r.content),
-      diagnosis: r.diagnosis,
-      kinship: r.kinship,
-      created_at: r.created_at,
-      author_handle: pp?.handle ?? null,
-      author_display_name: pp?.display_name ?? null,
-    };
-  });
+  const exerciseRows: OriginalEntry[] = ((exerciseRes.data ?? []) as unknown as RawExercise[]).map(
+    (r) => {
+      const pp = pickProfile(r.public_profiles);
+      // Resolve the exercise's display name from the slug so the label
+      // reads like "Exercise · Premortem" rather than "exercise-reflections-premortem".
+      const ex = findExercise(r.exercise_slug);
+      return {
+        sourceType: 'exercise',
+        sourceLabel: ex
+          ? t('srch2.source_exercise_named', locale, { name: ex.name })
+          : t('srch2.source_exercise', locale),
+        id: r.id,
+        title: null,
+        context: ex?.reflection ?? null,
+        preview: preview(r.content),
+        diagnosis: r.diagnosis,
+        kinship: r.kinship,
+        created_at: r.created_at,
+        author_handle: pp?.handle ?? null,
+        author_display_name: pp?.display_name ?? null,
+      };
+    },
+  );
 
   // Merge + sort by recency, cap at the cross-source total.
   const rows: OriginalEntry[] = [...diaryRows, ...dilemmaRows, ...exerciseRows]
@@ -203,69 +218,108 @@ export default async function OriginalThinking() {
 
   return (
     <section style={{ marginBottom: 48 }}>
-      <div style={{
-        display: 'flex', justifyContent: 'space-between',
-        alignItems: 'baseline', marginBottom: 8, flexWrap: 'wrap', gap: 8,
-      }}>
-        <h2 style={{
-          fontFamily: 'var(--font-pixel-display, "Courier New", monospace)',
-          fontSize: 22, fontWeight: 400,
-          margin: 0, color: 'var(--color-ink)', letterSpacing: '0.04em',
-          textShadow: '3px 3px 0 var(--pixel-shadow, #6B3E8C)', lineHeight: 1.4,
-        }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'baseline',
+          marginBottom: 8,
+          flexWrap: 'wrap',
+          gap: 8,
+        }}
+      >
+        <h2
+          style={{
+            fontFamily: 'var(--font-pixel-display, "Courier New", monospace)',
+            fontSize: 22,
+            fontWeight: 400,
+            margin: 0,
+            color: 'var(--color-ink)',
+            letterSpacing: '0.04em',
+            textShadow: '3px 3px 0 var(--pixel-shadow, #6B3E8C)',
+            lineHeight: 1.4,
+          }}
+        >
           {t('srch2.original_h2', locale).toUpperCase()}
         </h2>
-        <span style={{
-          fontFamily: sans, fontSize: 11, fontWeight: 600,
-          color: '#6B3E8C', textTransform: 'uppercase',
-          letterSpacing: '0.16em',
-        }}>
+        <span
+          style={{
+            fontFamily: sans,
+            fontSize: 11,
+            fontWeight: 600,
+            color: '#6B3E8C',
+            textTransform: 'uppercase',
+            letterSpacing: '0.16em',
+          }}
+        >
           ✦ {t('srch2.original_badge', locale)}
         </span>
       </div>
-      <p style={{
-        fontFamily: serif, fontStyle: 'italic',
-        fontSize: 16, color: 'var(--color-ink-soft)',
-        margin: '0 0 22px', lineHeight: 1.55,
-      }}>
+      <p
+        style={{
+          fontFamily: serif,
+          fontStyle: 'italic',
+          fontSize: 16,
+          color: 'var(--color-ink-soft)',
+          margin: '0 0 22px',
+          lineHeight: 1.55,
+        }}
+      >
         {t('srch2.original_blurb', locale)}
       </p>
 
       {rows.length === 0 ? (
-        <div style={{
-          padding: '20px 18px',
-          background: '#FFFCF4',
-          border: '3px dashed #6B3E8C',
-          borderRadius: 0,
-        }}>
-          <EmptyStateSprite
-            variant="explorer"
-            caption={t('srch2.original_empty', locale)}
-          />
+        <div
+          style={{
+            padding: '20px 18px',
+            background: '#FFFCF4',
+            border: '3px dashed #6B3E8C',
+            borderRadius: 0,
+          }}
+        >
+          <EmptyStateSprite variant="explorer" caption={t('srch2.original_empty', locale)} />
         </div>
       ) : (
-        <ol style={{
-          listStyle: 'none', padding: 0, margin: 0,
-          display: 'grid', gap: 14,
-        }}>
-          {rows.map(r => (
-            <li key={`${r.sourceType}:${r.id}`} style={{
-              padding: '18px 22px',
-              background: '#FFFCF4',
-              border: '4px solid var(--color-ink)',
-              boxShadow: '4px 4px 0 0 #6B3E8C',
-              borderRadius: 0,
-            }}>
-              <div style={{
-                display: 'flex', justifyContent: 'space-between',
-                alignItems: 'baseline', flexWrap: 'wrap', gap: 8,
-                marginBottom: 8,
-              }}>
-                <span style={{
-                  fontFamily: sans, fontSize: 11, fontWeight: 600,
-                  color: '#6B3E8C', textTransform: 'uppercase',
-                  letterSpacing: '0.16em',
-                }}>
+        <ol
+          style={{
+            listStyle: 'none',
+            padding: 0,
+            margin: 0,
+            display: 'grid',
+            gap: 14,
+          }}
+        >
+          {rows.map((r) => (
+            <li
+              key={`${r.sourceType}:${r.id}`}
+              style={{
+                padding: '18px 22px',
+                background: '#FFFCF4',
+                border: '4px solid var(--color-ink)',
+                boxShadow: '4px 4px 0 0 #6B3E8C',
+                borderRadius: 0,
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'baseline',
+                  flexWrap: 'wrap',
+                  gap: 8,
+                  marginBottom: 8,
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: sans,
+                    fontSize: 11,
+                    fontWeight: 600,
+                    color: '#6B3E8C',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.16em',
+                  }}
+                >
                   ✦ {r.sourceLabel}
                   {r.author_handle && (
                     <>
@@ -276,18 +330,32 @@ export default async function OriginalThinking() {
                     </>
                   )}
                 </span>
-                <span style={{
-                  fontFamily: sans, fontSize: 11.5, color: 'var(--color-acc-deep)',
-                }}>
-                  {new Date(r.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                <span
+                  style={{
+                    fontFamily: sans,
+                    fontSize: 11.5,
+                    color: 'var(--color-acc-deep)',
+                  }}
+                >
+                  {new Date(r.created_at).toLocaleDateString('en-GB', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                  })}
                 </span>
               </div>
 
               {r.title && (
-                <div style={{
-                  fontFamily: serif, fontSize: 19, fontWeight: 500,
-                  color: 'var(--color-ink)', marginBottom: 6, lineHeight: 1.3,
-                }}>
+                <div
+                  style={{
+                    fontFamily: serif,
+                    fontSize: 19,
+                    fontWeight: 500,
+                    color: 'var(--color-ink)',
+                    marginBottom: 6,
+                    lineHeight: 1.3,
+                  }}
+                >
                   {r.title}
                 </div>
               )}
@@ -296,59 +364,92 @@ export default async function OriginalThinking() {
                   reflection prompt the writer was responding to. Helps
                   readers understand the preview without clicking through. */}
               {r.context && (
-                <p style={{
-                  fontFamily: serif, fontStyle: 'italic',
-                  fontSize: 14.5, color: 'var(--color-acc-deep)',
-                  margin: '0 0 10px', lineHeight: 1.5,
-                }}>
+                <p
+                  style={{
+                    fontFamily: serif,
+                    fontStyle: 'italic',
+                    fontSize: 14.5,
+                    color: 'var(--color-acc-deep)',
+                    margin: '0 0 10px',
+                    lineHeight: 1.5,
+                  }}
+                >
                   {r.context}
                 </p>
               )}
 
-              <p style={{
-                fontFamily: serif, fontSize: 16, color: 'var(--color-ink)',
-                lineHeight: 1.6, margin: 0, marginBottom: 12,
-                whiteSpace: 'pre-wrap',
-              }}>
+              <p
+                style={{
+                  fontFamily: serif,
+                  fontSize: 16,
+                  color: 'var(--color-ink)',
+                  lineHeight: 1.6,
+                  margin: 0,
+                  marginBottom: 12,
+                  whiteSpace: 'pre-wrap',
+                }}
+              >
                 {r.preview}
               </p>
 
               {r.diagnosis && (
-                <div style={{
-                  padding: '10px 14px',
-                  background: 'var(--color-cream-2)',
-                  borderRadius: 6,
-                }}>
-                  <div style={{
-                    fontFamily: sans, fontSize: 10, fontWeight: 600,
-                    color: '#6B3E8C', textTransform: 'uppercase',
-                    letterSpacing: '0.18em', marginBottom: 4,
-                  }}>
+                <div
+                  style={{
+                    padding: '10px 14px',
+                    background: 'var(--color-cream-2)',
+                    borderRadius: 6,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontFamily: sans,
+                      fontSize: 10,
+                      fontWeight: 600,
+                      color: '#6B3E8C',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.18em',
+                      marginBottom: 4,
+                    }}
+                  >
                     {t('srch2.original_why', locale)}
                   </div>
-                  <div style={{
-                    fontFamily: serif, fontStyle: 'italic',
-                    fontSize: 14.5, color: 'var(--color-ink-soft)', lineHeight: 1.5,
-                  }}>
+                  <div
+                    style={{
+                      fontFamily: serif,
+                      fontStyle: 'italic',
+                      fontSize: 14.5,
+                      color: 'var(--color-ink-soft)',
+                      lineHeight: 1.5,
+                    }}
+                  >
                     {r.diagnosis}
                   </div>
                 </div>
               )}
 
               {r.kinship && r.kinship.traditions && r.kinship.traditions.length > 0 && (
-                <div style={{
-                  display: 'flex', flexWrap: 'wrap', gap: 6,
-                  marginTop: 10,
-                }}>
-                  {r.kinship.traditions.map(tr => (
-                    <span key={tr} style={{
-                      fontFamily: sans, fontSize: 11.5, color: 'var(--color-acc-deep)',
-                      padding: '3px 10px',
-                      background: '#F5EFDC',
-                      border: '1px solid #E2D8B6',
-                      borderRadius: 999,
-                      letterSpacing: 0.2,
-                    }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: 6,
+                    marginTop: 10,
+                  }}
+                >
+                  {r.kinship.traditions.map((tr) => (
+                    <span
+                      key={tr}
+                      style={{
+                        fontFamily: sans,
+                        fontSize: 11.5,
+                        color: 'var(--color-acc-deep)',
+                        padding: '3px 10px',
+                        background: '#F5EFDC',
+                        border: '1px solid #E2D8B6',
+                        borderRadius: 999,
+                        letterSpacing: 0.2,
+                      }}
+                    >
                       {t('srch2.original_adjacent', locale, { tradition: tr })}
                     </span>
                   ))}

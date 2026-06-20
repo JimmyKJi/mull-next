@@ -28,13 +28,18 @@ export async function POST(req: Request) {
   }
 
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Sign in to join a class.' }, { status: 401 });
 
   const { data, error } = await supabase.rpc('class_join_by_code', { p_code: code });
   if (error) {
     if (error.code === 'P0002' || error.message?.includes('Invalid invite')) {
-      return NextResponse.json({ error: 'Invite code not found or class archived.' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Invite code not found or class archived.' },
+        { status: 404 },
+      );
     }
     console.error('[classes/join] rpc failed', error);
     return NextResponse.json({ error: 'Could not join class.' }, { status: 500 });

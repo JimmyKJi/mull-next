@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { t, type Locale } from '@/lib/translations';
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 
 export default function DilemmaArchiveForm({
@@ -57,7 +57,11 @@ export default function DilemmaArchiveForm({
   }
 
   return (
-    <form onSubmit={onSubmit} className="pixel-form" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+    <form
+      onSubmit={onSubmit}
+      className="pixel-form"
+      style={{ display: 'flex', flexDirection: 'column', gap: 14 }}
+    >
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
@@ -79,50 +83,82 @@ export default function DilemmaArchiveForm({
         }}
       />
       <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-        <div style={{
-          height: 3, background: '#EBE3CA', borderRadius: 2, overflow: 'hidden',
-        }}>
-          <div style={{
-            height: '100%',
-            width: `${Math.min(100, (charCount / 4000) * 100)}%`,
-            background: charCount < 30 ? 'var(--color-line)' : charCount > 3700 ? '#C7522A' : 'var(--color-acc)',
-            transition: 'width 0.18s ease, background 0.2s ease',
-          }} />
+        <div
+          style={{
+            height: 3,
+            background: '#EBE3CA',
+            borderRadius: 2,
+            overflow: 'hidden',
+          }}
+        >
+          <div
+            style={{
+              height: '100%',
+              width: `${Math.min(100, (charCount / 4000) * 100)}%`,
+              background:
+                charCount < 30
+                  ? 'var(--color-line)'
+                  : charCount > 3700
+                    ? '#C7522A'
+                    : 'var(--color-acc)',
+              transition: 'width 0.18s ease, background 0.2s ease',
+            }}
+          />
         </div>
       </div>
-      <div style={{
-        display: 'flex', justifyContent: 'space-between',
-        alignItems: 'center', gap: 12, flexWrap: 'wrap',
-      }}>
-        <span style={{
-          fontFamily: sans, fontSize: 12,
-          color: tooShort ? '#7A2E2E' : 'var(--color-acc-deep)', letterSpacing: 0.3,
-        }}>
-          {wordCount} {t(wordCount === 1 ? 'dilemma.words' : 'dilemma.words_plural', locale)} · {charCount}/4000
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: 12,
+          flexWrap: 'wrap',
+        }}
+      >
+        <span
+          style={{
+            fontFamily: sans,
+            fontSize: 12,
+            color: tooShort ? '#7A2E2E' : 'var(--color-acc-deep)',
+            letterSpacing: 0.3,
+          }}
+        >
+          {wordCount} {t(wordCount === 1 ? 'dilemma.words' : 'dilemma.words_plural', locale)} ·{' '}
+          {charCount}/4000
           {tooShort ? ' · ' + t('dilemma.too_short', locale) : ''}
         </span>
         <button
           type="submit"
           disabled={!ready || submitting}
           style={{
-            fontFamily: sans, fontSize: 14.5, fontWeight: 500,
+            fontFamily: sans,
+            fontSize: 14.5,
+            fontWeight: 500,
             padding: '12px 24px',
             background: ready ? 'var(--color-ink)' : '#A39880',
-            color: 'var(--color-cream)', border: 'none', borderRadius: 8,
+            color: 'var(--color-cream)',
+            border: 'none',
+            borderRadius: 8,
             cursor: ready && !submitting ? 'pointer' : 'not-allowed',
-            opacity: submitting ? 0.7 : 1, letterSpacing: 0.4,
+            opacity: submitting ? 0.7 : 1,
+            letterSpacing: 0.4,
           }}
         >
           {submitting ? t('dilemma.analyzing', locale) : t('archive.submit_past', locale)}
         </button>
       </div>
       {error && (
-        <div style={{
-          fontFamily: sans, fontSize: 13, color: '#7A2E2E',
-          background: 'rgba(122, 46, 46, 0.08)',
-          border: '1px solid rgba(122, 46, 46, 0.2)',
-          padding: '10px 14px', borderRadius: 6,
-        }}>
+        <div
+          style={{
+            fontFamily: sans,
+            fontSize: 13,
+            color: '#7A2E2E',
+            background: 'rgba(122, 46, 46, 0.08)',
+            border: '1px solid rgba(122, 46, 46, 0.2)',
+            padding: '10px 14px',
+            borderRadius: 6,
+          }}
+        >
           {error}
         </div>
       )}

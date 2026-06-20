@@ -26,13 +26,19 @@ function buildSystemPrompt(
     diaryNote: string;
   },
   phil: { name: string; keyIdea: string },
-  topic: string
+  topic: string,
 ): string {
   const userProfile = [
-    user.archetype ? `their nearest archetype is "${user.archetype}"${user.flavor ? ` with a ${user.flavor.toLowerCase()} flavor` : ''}` : null,
-    user.topDims.length ? `their highest-scoring dimensions are: ${user.topDims.map(d => `${d.name} (${d.v.toFixed(1)})`).join(', ')}` : null,
+    user.archetype
+      ? `their nearest archetype is "${user.archetype}"${user.flavor ? ` with a ${user.flavor.toLowerCase()} flavor` : ''}`
+      : null,
+    user.topDims.length
+      ? `their highest-scoring dimensions are: ${user.topDims.map((d) => `${d.name} (${d.v.toFixed(1)})`).join(', ')}`
+      : null,
     user.diaryNote || null,
-  ].filter(Boolean).join('. ');
+  ]
+    .filter(Boolean)
+    .join('. ');
 
   return `You simulate a real philosophical exchange between a contemporary thinker (THE USER, Speaker A) and a historical philosopher (Speaker B), in their actual recorded positions. It feels like two people TALKING TO EACH OTHER — quoting back, restating, answering specific moves the other just made. No lectures, no straw men.
 
@@ -77,21 +83,21 @@ async function callClaude(
   user: Parameters<typeof buildSystemPrompt>[0],
   phil: { name: string; keyIdea: string },
   topic: string,
-  apiKey: string
+  apiKey: string,
 ): Promise<DebateOutput | null> {
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01'
+      'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
       model: 'claude-sonnet-4-6',
       max_tokens: 3500,
       system: buildSystemPrompt(user, phil, topic),
-      messages: [{ role: 'user', content: `Generate the JSON exchange now. Output JSON only.` }]
-    })
+      messages: [{ role: 'user', content: `Generate the JSON exchange now. Output JSON only.` }],
+    }),
   });
   if (!res.ok) {
     console.error('[debate/me] Claude API error', res.status, await res.text());
@@ -103,8 +109,8 @@ async function callClaude(
     return null;
   }
   const text = (data.content ?? [])
-    .filter(b => b.type === 'text')
-    .map(b => b.text || '')
+    .filter((b) => b.type === 'text')
+    .map((b) => b.text || '')
     .join('')
     .trim();
   let cleaned = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '');
@@ -119,8 +125,8 @@ async function callClaude(
   }
   if (!Array.isArray(parsed.exchanges) || parsed.exchanges.length < 2) return null;
   const exchanges = (parsed.exchanges as Array<{ speaker?: unknown; text?: unknown }>)
-    .filter(x => (x.speaker === 'A' || x.speaker === 'B') && typeof x.text === 'string')
-    .map(x => ({ speaker: x.speaker as 'A' | 'B', text: (x.text as string).trim() }));
+    .filter((x) => (x.speaker === 'A' || x.speaker === 'B') && typeof x.text === 'string')
+    .map((x) => ({ speaker: x.speaker as 'A' | 'B', text: (x.text as string).trim() }));
   if (exchanges.length < 2) return null;
   return { setup: typeof parsed.setup === 'string' ? parsed.setup : '', exchanges };
 }
@@ -132,17 +138,25 @@ export async function POST(req: Request) {
     const topic: string = (body?.topic ?? '').toString().trim();
 
     if (!philName || !topic || topic.length < 4 || topic.length > 240) {
-      return NextResponse.json({ error: 'Pick a philosopher and provide a short topic.' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Pick a philosopher and provide a short topic.' },
+        { status: 400 },
+      );
     }
-    const phil = PHILOSOPHERS.find(p => p.name === philName);
+    const phil = PHILOSOPHERS.find((p) => p.name === philName);
     if (!phil) return NextResponse.json({ error: 'Unknown philosopher.' }, { status: 400 });
 
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) {
       return NextResponse.json(
-        { error: 'You need an account to be in the debate. Sign in or take the quiz to build a profile.' },
-        { status: 401 }
+        {
+          error:
+            'You need an account to be in the debate. Sign in or take the quiz to build a profile.',
+        },
+        { status: 401 },
       );
     }
 
@@ -155,9 +169,13 @@ export async function POST(req: Request) {
       .eq('a_name', '(you)')
       .gte('created_at', since);
     if ((recentCount ?? 0) >= 3) {
-      return NextResponse.json({
-        error: 'You\'ve hit the prototype limit of 3 personal debates per day. Reset at midnight UTC. (This will become a Mull+ feature.)'
-      }, { status: 429 });
+      return NextResponse.json(
+        {
+          error:
+            "You've hit the prototype limit of 3 personal debates per day. Reset at midnight UTC. (This will become a Mull+ feature.)",
+        },
+        { status: 429 },
+      );
     }
 
     // Also run the shared AI gate so this Sonnet call honors the site-wide
@@ -191,23 +209,57 @@ export async function POST(req: Request) {
         .limit(20),
     ]);
 
-    const attempts = (attemptsRes.data ?? []) as Array<{ archetype: string; flavor: string | null; taken_at: string; vector: number[] }>;
-    const dilemmas = (dilemmasRes.data ?? []) as Array<{ vector_delta: number[] | null; created_at: string }>;
-    const diaries = (diariesRes.data ?? []) as Array<{ vector_delta: number[] | null; content: string; analysis: string | null; created_at: string }>;
+    const attempts = (attemptsRes.data ?? []) as Array<{
+      archetype: string;
+      flavor: string | null;
+      taken_at: string;
+      vector: number[];
+    }>;
+    const dilemmas = (dilemmasRes.data ?? []) as Array<{
+      vector_delta: number[] | null;
+      created_at: string;
+    }>;
+    const diaries = (diariesRes.data ?? []) as Array<{
+      vector_delta: number[] | null;
+      content: string;
+      analysis: string | null;
+      created_at: string;
+    }>;
 
     if (attempts.length === 0) {
-      return NextResponse.json({
-        error: 'Take the quiz first — Mull needs a sense of how you think to put you in the debate.'
-      }, { status: 400 });
+      return NextResponse.json(
+        {
+          error:
+            'Take the quiz first — Mull needs a sense of how you think to put you in the debate.',
+        },
+        { status: 400 },
+      );
     }
 
     // Compute current position
     const events = [
-      ...attempts.map(a => ({ kind: 'q' as const, ts: new Date(a.taken_at).getTime(), vec: a.vector, delta: null as number[] | null })),
-      ...dilemmas.filter(d => Array.isArray(d.vector_delta) && d.vector_delta!.length === 16)
-        .map(d => ({ kind: 'd' as const, ts: new Date(d.created_at).getTime(), vec: null, delta: d.vector_delta! })),
-      ...diaries.filter(d => Array.isArray(d.vector_delta) && d.vector_delta!.length === 16)
-        .map(d => ({ kind: 'j' as const, ts: new Date(d.created_at).getTime(), vec: null, delta: d.vector_delta! })),
+      ...attempts.map((a) => ({
+        kind: 'q' as const,
+        ts: new Date(a.taken_at).getTime(),
+        vec: a.vector,
+        delta: null as number[] | null,
+      })),
+      ...dilemmas
+        .filter((d) => Array.isArray(d.vector_delta) && d.vector_delta!.length === 16)
+        .map((d) => ({
+          kind: 'd' as const,
+          ts: new Date(d.created_at).getTime(),
+          vec: null,
+          delta: d.vector_delta!,
+        })),
+      ...diaries
+        .filter((d) => Array.isArray(d.vector_delta) && d.vector_delta!.length === 16)
+        .map((d) => ({
+          kind: 'j' as const,
+          ts: new Date(d.created_at).getTime(),
+          vec: null,
+          delta: d.vector_delta!,
+        })),
     ].sort((a, b) => a.ts - b.ts);
 
     let position: number[] = new Array(16).fill(0);
@@ -225,7 +277,7 @@ export async function POST(req: Request) {
 
     // Build a small note from latest diary analyses (no raw text — preserves privacy)
     const recentAnalyses = diaries
-      .map(d => d.analysis)
+      .map((d) => d.analysis)
       .filter((a): a is string => !!a && a.length > 0)
       .slice(0, 3);
     const diaryNote = recentAnalyses.length
@@ -236,7 +288,7 @@ export async function POST(req: Request) {
     if (!apiKey) {
       return NextResponse.json(
         { error: 'Debate generation requires the Anthropic API key, not yet configured.' },
-        { status: 503 }
+        { status: 503 },
       );
     }
 
@@ -249,7 +301,7 @@ export async function POST(req: Request) {
       },
       { name: phil.name, keyIdea: phil.keyIdea },
       topic,
-      apiKey
+      apiKey,
     );
     if (!result) {
       result = await callClaude(
@@ -261,14 +313,18 @@ export async function POST(req: Request) {
         },
         { name: phil.name, keyIdea: phil.keyIdea },
         topic,
-        apiKey
+        apiKey,
       );
     }
 
     if (!result) {
-      return NextResponse.json({
-        error: 'The model returned a malformed response twice. Try again or pick a different topic.'
-      }, { status: 502 });
+      return NextResponse.json(
+        {
+          error:
+            'The model returned a malformed response twice. Try again or pick a different topic.',
+        },
+        { status: 502 },
+      );
     }
 
     // Persist as a debate_history row tagged "(you)" for Speaker A
@@ -292,7 +348,9 @@ export async function POST(req: Request) {
     return NextResponse.json({
       ok: true,
       a: {
-        name: latest.flavor ? `${latest.flavor} ${latest.archetype.replace(/^The /, '')}` : `You — ${latest.archetype.replace(/^The /, '')}`,
+        name: latest.flavor
+          ? `${latest.flavor} ${latest.archetype.replace(/^The /, '')}`
+          : `You — ${latest.archetype.replace(/^The /, '')}`,
         dates: 'you, today',
         archetypeKey: null,
       },

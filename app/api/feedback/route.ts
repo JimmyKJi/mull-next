@@ -15,8 +15,11 @@ export const runtime = 'nodejs';
 
 export async function POST(req: Request) {
   let body: { body?: unknown; page_url?: unknown };
-  try { body = await req.json(); }
-  catch { return NextResponse.json({ error: 'Invalid JSON.' }, { status: 400 }); }
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON.' }, { status: 400 });
+  }
 
   const text = typeof body.body === 'string' ? body.body.trim() : '';
   if (!text || text.length < 2) {
@@ -30,7 +33,9 @@ export async function POST(req: Request) {
   const userAgent = (req.headers.get('user-agent') || '').slice(0, 500);
 
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   // Rate limit: 5 feedback notes per IP per 5 minutes. A real human
   // typing 5+ separate notes in 5 minutes is implausible; bots get
@@ -46,14 +51,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: limit.message }, { status: 429 });
   }
 
-  const { error } = await supabase
-    .from('feedback')
-    .insert({
-      user_id: user?.id ?? null,
-      body: text,
-      page_url: pageUrl,
-      user_agent: userAgent,
-    });
+  const { error } = await supabase.from('feedback').insert({
+    user_id: user?.id ?? null,
+    body: text,
+    page_url: pageUrl,
+    user_agent: userAgent,
+  });
 
   if (error) {
     console.error('[feedback] insert failed', error);

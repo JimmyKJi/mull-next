@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { t, type Locale } from '@/lib/translations';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 
 export default function ClassInviteShare({
   inviteCode,
@@ -21,9 +21,10 @@ export default function ClassInviteShare({
 }) {
   const [copiedKind, setCopiedKind] = useState<'url' | 'code' | null>(null);
 
-  const url = typeof window !== 'undefined'
-    ? `${window.location.origin}/join/${inviteCode}`
-    : `https://mull.world/join/${inviteCode}`;
+  const url =
+    typeof window !== 'undefined'
+      ? `${window.location.origin}/join/${inviteCode}`
+      : `https://mull.world/join/${inviteCode}`;
 
   async function copy(text: string, kind: 'url' | 'code') {
     try {
@@ -36,58 +37,69 @@ export default function ClassInviteShare({
   }
 
   return (
-    <section style={{
-      marginTop: 24,
-      padding: '20px 22px',
-      background: 'var(--color-acc-soft)',
-      border: '4px solid var(--color-ink)',
-      boxShadow: '5px 5px 0 0 var(--color-acc)',
-      borderRadius: 0,
-    }}>
-      <div style={{
-        fontFamily: pixel,
-        fontSize: 12,
-        color: 'var(--color-acc-deep)',
-        textTransform: 'uppercase',
-        letterSpacing: '0.18em',
-        marginBottom: 12,
-      }}>
+    <section
+      style={{
+        marginTop: 24,
+        padding: '20px 22px',
+        background: 'var(--color-acc-soft)',
+        border: '4px solid var(--color-ink)',
+        boxShadow: '5px 5px 0 0 var(--color-acc)',
+        borderRadius: 0,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: pixel,
+          fontSize: 12,
+          color: 'var(--color-acc-deep)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.18em',
+          marginBottom: 12,
+        }}
+      >
         ▸ {t('cls.invite_eyebrow', locale)}
       </div>
-      <p style={{
-        fontFamily: serif,
-        fontStyle: 'italic',
-        fontSize: 15.5,
-        color: 'var(--color-ink)',
-        margin: '0 0 16px',
-        lineHeight: 1.55,
-      }}>
-        {t('cls.invite_body', locale)}
-        {' '}
+      <p
+        style={{
+          fontFamily: serif,
+          fontStyle: 'italic',
+          fontSize: 15.5,
+          color: 'var(--color-ink)',
+          margin: '0 0 16px',
+          lineHeight: 1.55,
+        }}
+      >
+        {t('cls.invite_body', locale)}{' '}
         <strong style={{ fontStyle: 'normal' }}>
-          {t(studentCount === 1 ? 'cls.invite_joined_one' : 'cls.invite_joined_many', locale, { count: studentCount })}
+          {t(studentCount === 1 ? 'cls.invite_joined_one' : 'cls.invite_joined_many', locale, {
+            count: studentCount,
+          })}
         </strong>
       </p>
 
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 10,
-      }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 10,
+        }}
+      >
         {/* URL line */}
         <div style={{ display: 'flex', gap: 8, alignItems: 'stretch', flexWrap: 'wrap' }}>
-          <code style={{
-            flex: '1 1 240px',
-            minWidth: 0,
-            padding: '10px 12px',
-            background: '#FFFCF4',
-            border: '3px solid var(--color-ink)',
-            fontFamily: 'ui-monospace, Menlo, monospace',
-            fontSize: 13,
-            color: 'var(--color-ink)',
-            overflow: 'auto',
-            whiteSpace: 'nowrap',
-          }}>
+          <code
+            style={{
+              flex: '1 1 240px',
+              minWidth: 0,
+              padding: '10px 12px',
+              background: '#FFFCF4',
+              border: '3px solid var(--color-ink)',
+              fontFamily: 'ui-monospace, Menlo, monospace',
+              fontSize: 13,
+              color: 'var(--color-ink)',
+              overflow: 'auto',
+              whiteSpace: 'nowrap',
+            }}
+          >
             {url}
           </code>
           <button
@@ -114,20 +126,24 @@ export default function ClassInviteShare({
         </div>
 
         {/* Bare code — for students typing into /join manually */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '8px 12px',
-          background: '#FFFCF4',
-          border: '2px dashed var(--color-acc-deep)',
-        }}>
-          <span style={{
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 13,
-            color: 'var(--color-ink-soft)',
-          }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '8px 12px',
+            background: '#FFFCF4',
+            border: '2px dashed var(--color-acc-deep)',
+          }}
+        >
+          <span
+            style={{
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: 13,
+              color: 'var(--color-ink-soft)',
+            }}
+          >
             {t('cls.share_code_directly', locale)}
           </span>
           <button

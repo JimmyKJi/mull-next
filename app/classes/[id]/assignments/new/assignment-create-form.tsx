@@ -12,9 +12,15 @@ type Kind = 'dilemma' | 'exercise' | 'diary_prompt';
 
 const KIND_VALUES: Kind[] = ['dilemma', 'exercise', 'diary_prompt'];
 
-export default function AssignmentCreateForm({ classId, locale }: { classId: string; locale: Locale }) {
+export default function AssignmentCreateForm({
+  classId,
+  locale,
+}: {
+  classId: string;
+  locale: Locale;
+}) {
   const router = useRouter();
-  const kindOptions: { value: Kind; label: string; hint: string }[] = KIND_VALUES.map(value => ({
+  const kindOptions: { value: Kind; label: string; hint: string }[] = KIND_VALUES.map((value) => ({
     value,
     label: t(`cls.kind_${value}`, locale),
     hint: t(`cls.kind_${value}_hint`, locale),
@@ -61,19 +67,21 @@ export default function AssignmentCreateForm({ classId, locale }: { classId: str
   return (
     <form className="pixel-form" onSubmit={onSubmit} style={{ display: 'grid', gap: 16 }}>
       <fieldset style={{ border: 'none', padding: 0, margin: 0, display: 'grid', gap: 10 }}>
-        <legend style={{
-          fontFamily: 'var(--font-pixel-display)',
-          fontSize: 11,
-          color: 'var(--color-acc-deep)',
-          letterSpacing: '0.18em',
-          textTransform: 'uppercase',
-          padding: 0,
-          marginBottom: 4,
-        }}>
+        <legend
+          style={{
+            fontFamily: 'var(--font-pixel-display)',
+            fontSize: 11,
+            color: 'var(--color-acc-deep)',
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+            padding: 0,
+            marginBottom: 4,
+          }}
+        >
           {t('cls.field_kind', locale)}
         </legend>
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-          {kindOptions.map(opt => (
+          {kindOptions.map((opt) => (
             <label
               key={opt.value}
               style={{
@@ -83,7 +91,7 @@ export default function AssignmentCreateForm({ classId, locale }: { classId: str
                 border: '3px solid var(--color-ink)',
                 boxShadow: kind === opt.value ? '3px 3px 0 0 var(--color-acc)' : 'none',
                 cursor: 'pointer',
-                fontFamily: "var(--font-prose)",
+                fontFamily: 'var(--font-prose)',
                 fontSize: 14,
               }}
             >
@@ -96,7 +104,14 @@ export default function AssignmentCreateForm({ classId, locale }: { classId: str
                 style={{ marginRight: 8, accentColor: 'var(--color-acc)' }}
               />
               <strong>{opt.label}</strong>
-              <div style={{ fontStyle: 'italic', color: 'var(--color-acc-deep)', marginTop: 4, fontSize: 12.5 }}>
+              <div
+                style={{
+                  fontStyle: 'italic',
+                  color: 'var(--color-acc-deep)',
+                  marginTop: 4,
+                  fontSize: 12.5,
+                }}
+              >
                 {opt.hint}
               </div>
             </label>
@@ -109,7 +124,7 @@ export default function AssignmentCreateForm({ classId, locale }: { classId: str
         <input
           type="text"
           value={title}
-          onChange={e => setTitle(e.target.value)}
+          onChange={(e) => setTitle(e.target.value)}
           placeholder={t('cls.field_title_ph', locale)}
           maxLength={200}
           required
@@ -121,7 +136,7 @@ export default function AssignmentCreateForm({ classId, locale }: { classId: str
         <textarea
           rows={5}
           value={prompt}
-          onChange={e => setPrompt(e.target.value)}
+          onChange={(e) => setPrompt(e.target.value)}
           placeholder={t('cls.field_prompt_ph', locale)}
           maxLength={4000}
           required
@@ -134,7 +149,7 @@ export default function AssignmentCreateForm({ classId, locale }: { classId: str
         <textarea
           rows={3}
           value={instructions}
-          onChange={e => setInstructions(e.target.value)}
+          onChange={(e) => setInstructions(e.target.value)}
           placeholder={t('cls.field_instructions_ph', locale)}
           maxLength={1000}
           style={{ resize: 'vertical' }}
@@ -143,14 +158,14 @@ export default function AssignmentCreateForm({ classId, locale }: { classId: str
 
       <label style={{ display: 'grid', gap: 6 }}>
         <span>{t('cls.field_due_date', locale)}</span>
-        <input
-          type="datetime-local"
-          value={dueAt}
-          onChange={e => setDueAt(e.target.value)}
-        />
+        <input type="datetime-local" value={dueAt} onChange={(e) => setDueAt(e.target.value)} />
       </label>
 
-      {error && <p className="pixel-alert pixel-alert--error" role="alert">{error}</p>}
+      {error && (
+        <p className="pixel-alert pixel-alert--error" role="alert">
+          {error}
+        </p>
+      )}
 
       <button type="submit" disabled={submitting || !title.trim() || !prompt.trim()}>
         {submitting ? t('cls.assignment_submitting', locale) : t('cls.assignment_submit', locale)}

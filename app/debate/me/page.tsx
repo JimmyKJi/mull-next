@@ -7,13 +7,15 @@ import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import { PixelPageHeader } from '@/components/pixel-window';
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 
 export default async function DuelPage() {
   const supabase = await createClient();
   const locale = await getServerLocale();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) redirect('/login?next=/debate/me');
 
   // Check they've taken the quiz at least once
@@ -27,10 +29,7 @@ export default async function DuelPage() {
   return (
     <main className="mx-auto max-w-[860px] px-6 pb-32 pt-10 sm:px-10">
       <div className="mb-6 flex items-center justify-between gap-4">
-        <Link
-          href="/debate"
-          className="text-[13px] text-ink-soft hover:text-ink hover:underline"
-        >
+        <Link href="/debate" className="text-[13px] text-ink-soft hover:text-ink hover:underline">
           ← {t('nav.two_thinker_debate', locale)}
         </Link>
       </div>
@@ -49,28 +48,30 @@ export default async function DuelPage() {
         className="-mt-4 mb-8 border-l-4 px-4 py-2.5 text-[13px] leading-[1.6] text-ink-soft"
         style={{ borderColor: 'var(--color-acc)', background: '#F5EFDC' }}
       >
-        <strong className="text-ink">
-          {t('duel.mull_plus_notice', locale)}
-        </strong>{' '}
+        <strong className="text-ink">{t('duel.mull_plus_notice', locale)}</strong>{' '}
         {t('duel.mull_plus_body', locale)}
       </div>
 
       {!hasQuizzed ? (
-        <div style={{
-          padding: '28px 32px',
-          background: '#FFFCF4',
-          border: '4px solid var(--color-ink)',
-          boxShadow: '5px 5px 0 0 var(--color-acc)',
-          borderRadius: 0,
-          textAlign: 'center',
-        }}>
-          <p style={{
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 18,
-            color: 'var(--color-ink-soft)',
-            margin: '0 0 20px',
-          }}>
+        <div
+          style={{
+            padding: '28px 32px',
+            background: '#FFFCF4',
+            border: '4px solid var(--color-ink)',
+            boxShadow: '5px 5px 0 0 var(--color-acc)',
+            borderRadius: 0,
+            textAlign: 'center',
+          }}
+        >
+          <p
+            style={{
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: 18,
+              color: 'var(--color-ink-soft)',
+              margin: '0 0 20px',
+            }}
+          >
             {t('duel.need_quiz', locale)}
           </p>
           <Link
@@ -99,16 +100,18 @@ export default async function DuelPage() {
         <DuelForm philosophers={PHILOSOPHERS} locale={locale} />
       )}
 
-      <p style={{
-        fontFamily: sans,
-        fontSize: 12,
-        color: 'var(--color-acc-deep)',
-        marginTop: 56,
-        opacity: 0.7,
-        textAlign: 'center',
-        letterSpacing: 0.3,
-        lineHeight: 1.55,
-      }}>
+      <p
+        style={{
+          fontFamily: sans,
+          fontSize: 12,
+          color: 'var(--color-acc-deep)',
+          marginTop: 56,
+          opacity: 0.7,
+          textAlign: 'center',
+          letterSpacing: 0.3,
+          lineHeight: 1.55,
+        }}
+      >
         {t('duel.footer_note', locale)}
       </p>
     </main>

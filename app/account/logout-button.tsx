@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { createClient } from "@/utils/supabase/client";
-import { t, type Locale } from "@/lib/translations";
+import { useRouter } from 'next/navigation';
+import { createClient } from '@/utils/supabase/client';
+import { t, type Locale } from '@/lib/translations';
 
 // LogoutButton — sits in the top-right of /account. Pixel ghost chip
 // (transparent fill, 2px ink border, no shadow) so it reads as a
@@ -13,7 +13,7 @@ export default function LogoutButton({ locale = 'en' }: { locale?: Locale }) {
   async function handleLogout() {
     const supabase = createClient();
     await supabase.auth.signOut();
-    router.push("/");
+    router.push('/');
     router.refresh();
   }
   return (
@@ -32,7 +32,8 @@ export default function LogoutButton({ locale = 'en' }: { locale?: Locale }) {
         letterSpacing: 0.4,
         textTransform: 'uppercase',
         cursor: 'pointer',
-        transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end), background 80ms steps(2, end)',
+        transition:
+          'transform 80ms steps(2, end), box-shadow 80ms steps(2, end), background 80ms steps(2, end)',
       }}
     >
       {t('auth.signout', locale).toUpperCase()}

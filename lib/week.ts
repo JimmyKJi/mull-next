@@ -8,7 +8,7 @@ export function mondayOfWeek(d: Date = new Date()): Date {
   // getUTCDay: 0 = Sunday, 1 = Monday, ..., 6 = Saturday
   // We want Monday as the start; offset Sunday by 6 days.
   const day = u.getUTCDay();
-  const diff = (day + 6) % 7;          // days since last Monday
+  const diff = (day + 6) % 7; // days since last Monday
   u.setUTCDate(u.getUTCDate() - diff);
   return u;
 }

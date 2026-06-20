@@ -49,13 +49,7 @@ export const AGE_RANGE_OPTIONS = [
   PREFER_NOT_TO_SAY,
 ] as const;
 
-export const GENDER_OPTIONS = [
-  'woman',
-  'man',
-  'non_binary',
-  'another',
-  PREFER_NOT_TO_SAY,
-] as const;
+export const GENDER_OPTIONS = ['woman', 'man', 'non_binary', 'another', PREFER_NOT_TO_SAY] as const;
 
 // Broad world-region heritage buckets. Deliberately coarse — this is about
 // cultural background for cross-cultural research, not nationality or race.
@@ -120,14 +114,8 @@ export function isDemographicField(field: string): field is DemographicField {
 }
 
 /** True if `value` is an allowed option code for `field`. */
-export function isValidDemographicValue(
-  field: DemographicField,
-  value: unknown,
-): value is string {
-  return (
-    typeof value === 'string' &&
-    DEMOGRAPHIC_OPTIONS[field].includes(value)
-  );
+export function isValidDemographicValue(field: DemographicField, value: unknown): value is string {
+  return typeof value === 'string' && DEMOGRAPHIC_OPTIONS[field].includes(value);
 }
 
 /** The i18n key for a field's label, e.g. demo.age_range.label. */

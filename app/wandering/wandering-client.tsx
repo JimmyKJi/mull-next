@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 // WanderingClient — renders the week's question + 4 beat panels.
 // Each beat captures the user's response. Beats are independent —
@@ -15,31 +15,31 @@
 // No vector yet (never took the quiz) → a gentle nudge instead, and the
 // beats still work as free-writing scaffolds.
 
-import { useEffect, useState, type ReactNode } from "react";
-import Link from "next/link";
+import { useEffect, useState, type ReactNode } from 'react';
+import Link from 'next/link';
 import {
   type WanderingQuestion,
   type WanderingResponse,
   WANDERING_KEY,
   WANDERING_BEATS,
-} from "@/lib/wandering";
+} from '@/lib/wandering';
 import {
   pickWanderingPhilosophers,
   coerceVector16,
   type WanderingPick,
   type WanderingPicks,
-} from "@/lib/recommendations";
-import { philosopherSlug } from "@/lib/philosophers";
-import { getArchetypeColor } from "@/lib/archetype-colors";
-import { PhilosopherSprite } from "@/components/philosopher-sprite";
-import { emitFeatureEvent } from "@/lib/capabilities";
-import { t, type Locale } from "@/lib/translations";
+} from '@/lib/recommendations';
+import { philosopherSlug } from '@/lib/philosophers';
+import { getArchetypeColor } from '@/lib/archetype-colors';
+import { PhilosopherSprite } from '@/components/philosopher-sprite';
+import { emitFeatureEvent } from '@/lib/capabilities';
+import { t, type Locale } from '@/lib/translations';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "var(--font-editorial), Georgia, serif";
-const VECTOR_KEY = "mull.vector";
+const serif = 'var(--font-editorial), Georgia, serif';
+const VECTOR_KEY = 'mull.vector';
 
-type Beat = "Mon" | "Wed" | "Fri" | "Sun";
+type Beat = 'Mon' | 'Wed' | 'Fri' | 'Sun';
 
 export default function WanderingClient({
   question,
@@ -86,9 +86,9 @@ export default function WanderingClient({
     } catch {
       // ignore
     }
-    const xp = beat === "Sun" ? 2 : 1;
+    const xp = beat === 'Sun' ? 2 : 1;
     emitFeatureEvent(
-      "wandering",
+      'wandering',
       `${beat} response on week ${question.week}: ${trimmed.slice(0, 32)}…`,
       xp,
     );
@@ -97,7 +97,7 @@ export default function WanderingClient({
   if (responses === null) {
     return (
       <div className="text-center text-[14px] text-acc-deep" style={{ fontFamily: serif }}>
-        {t("wndr.loading", locale)}
+        {t('wndr.loading', locale)}
       </div>
     );
   }
@@ -115,30 +115,30 @@ export default function WanderingClient({
       <div
         className="border-[4px] border-ink p-6"
         style={{
-          background: "#5D5777", // threshold-ish, since wandering is deep
-          color: "var(--color-acc-soft)",
-          boxShadow: "5px 5px 0 0 var(--color-ink)",
+          background: '#5D5777', // threshold-ish, since wandering is deep
+          color: 'var(--color-acc-soft)',
+          boxShadow: '5px 5px 0 0 var(--color-ink)',
         }}
       >
         <div
           className="text-[10px] tracking-[0.22em]"
           style={{
             fontFamily: pixel,
-            color: "#F8C75E",
-            textTransform: "uppercase",
+            color: '#F8C75E',
+            textTransform: 'uppercase',
           }}
         >
-          ▶ {t("wndr.this_weeks_question", locale)}
+          ▶ {t('wndr.this_weeks_question', locale)}
         </div>
         <h2
           className="mt-3 text-[26px] leading-tight"
-          style={{ fontFamily: serif, color: "var(--color-acc-soft)" }}
+          style={{ fontFamily: serif, color: 'var(--color-acc-soft)' }}
         >
           {question.prompt}
         </h2>
         <p
           className="mt-3 text-[15px] italic leading-[1.6]"
-          style={{ fontFamily: serif, color: "#E5DCC0" }}
+          style={{ fontFamily: serif, color: '#E5DCC0' }}
         >
           {question.framing}
         </p>
@@ -146,11 +146,11 @@ export default function WanderingClient({
           className="mt-4 inline-block border-2 border-[#F8C75E] px-2.5 py-1 text-[10px] tracking-[0.18em]"
           style={{
             fontFamily: pixel,
-            color: "#F8C75E",
-            textTransform: "uppercase",
+            color: '#F8C75E',
+            textTransform: 'uppercase',
           }}
         >
-          {t("wndr.beats_answered", locale, { done: beatsDone })}
+          {t('wndr.beats_answered', locale, { done: beatsDone })}
         </div>
       </div>
 
@@ -161,9 +161,9 @@ export default function WanderingClient({
           // we haven't hydrated yet → render nothing (no flash); an empty
           // roster after hydration → the "take the quiz" nudge.
           let roster: ReactNode = null;
-          if (b.day === "Wed") {
+          if (b.day === 'Wed') {
             roster = <KindredRoster picks={picks} locale={locale} />;
-          } else if (b.day === "Fri") {
+          } else if (b.day === 'Fri') {
             roster = <FarRoster picks={picks} locale={locale} />;
           }
           return (
@@ -182,11 +182,8 @@ export default function WanderingClient({
         })}
       </ul>
 
-      <p
-        className="text-[13px] italic text-acc-deep"
-        style={{ fontFamily: serif }}
-      >
-        {t("wndr.scaffolding_note", locale)}
+      <p className="text-[13px] italic text-acc-deep" style={{ fontFamily: serif }}>
+        {t('wndr.scaffolding_note', locale)}
       </p>
     </div>
   );
@@ -209,19 +206,19 @@ function BeatPanel({
   locale: Locale;
   roster?: ReactNode;
 }) {
-  const [text, setText] = useState(existing?.text ?? "");
+  const [text, setText] = useState(existing?.text ?? '');
   const [open, setOpen] = useState(!existing);
 
   if (!open && existing) {
     return (
       <div
         className="border-l-[5px] border-[#5D5777] bg-[#FFFCF4] px-4 py-3"
-        style={{ boxShadow: "3px 3px 0 0 var(--color-acc-deep)" }}
+        style={{ boxShadow: '3px 3px 0 0 var(--color-acc-deep)' }}
       >
         <div className="flex items-baseline justify-between gap-2">
           <span
             className="text-[10px] tracking-[0.22em] text-[#5D5777]"
-            style={{ fontFamily: pixel, textTransform: "uppercase" }}
+            style={{ fontFamily: pixel, textTransform: 'uppercase' }}
           >
             ✓ {beat} · {label}
           </span>
@@ -229,15 +226,12 @@ function BeatPanel({
             type="button"
             onClick={() => setOpen(true)}
             className="text-[10px] tracking-[0.18em] text-acc-deep hover:text-ink"
-            style={{ fontFamily: pixel, textTransform: "uppercase" }}
+            style={{ fontFamily: pixel, textTransform: 'uppercase' }}
           >
-            {t("wndr.edit", locale)}
+            {t('wndr.edit', locale)}
           </button>
         </div>
-        <p
-          className="mt-2 text-[14.5px] leading-[1.55] text-ink"
-          style={{ fontFamily: serif }}
-        >
+        <p className="mt-2 text-[14.5px] leading-[1.55] text-ink" style={{ fontFamily: serif }}>
           {existing.text}
         </p>
       </div>
@@ -247,12 +241,12 @@ function BeatPanel({
   return (
     <div
       className="border-l-[5px] border-[#5D5777] bg-[#FFFCF4] p-4"
-      style={{ boxShadow: "3px 3px 0 0 var(--color-acc-deep)" }}
+      style={{ boxShadow: '3px 3px 0 0 var(--color-acc-deep)' }}
     >
       <div className="flex items-baseline justify-between gap-2">
         <span
           className="text-[11px] tracking-[0.22em] text-[#5D5777]"
-          style={{ fontFamily: pixel, textTransform: "uppercase" }}
+          style={{ fontFamily: pixel, textTransform: 'uppercase' }}
         >
           ▶ {beat} · {label}
         </span>
@@ -264,16 +258,13 @@ function BeatPanel({
               setOpen(false);
             }}
             className="text-[10px] tracking-[0.18em] text-acc-deep"
-            style={{ fontFamily: pixel, textTransform: "uppercase" }}
+            style={{ fontFamily: pixel, textTransform: 'uppercase' }}
           >
-            {t("wndr.cancel", locale)}
+            {t('wndr.cancel', locale)}
           </button>
         )}
       </div>
-      <p
-        className="mt-1 text-[13px] italic text-[#5C4528]"
-        style={{ fontFamily: serif }}
-      >
+      <p className="mt-1 text-[13px] italic text-[#5C4528]" style={{ fontFamily: serif }}>
         {description}
       </p>
       {/* Vector-space roster (Wed/Fri only) — the minds this beat asks you
@@ -283,17 +274,17 @@ function BeatPanel({
         value={text}
         onChange={(e) => setText(e.target.value)}
         rows={5}
-        placeholder={t("wndr.placeholder", locale)}
+        placeholder={t('wndr.placeholder', locale)}
         style={{
           marginTop: 10,
-          width: "100%",
-          padding: "10px 12px",
-          background: "#FBF6E8",
-          border: "2px solid var(--color-ink)",
+          width: '100%',
+          padding: '10px 12px',
+          background: '#FBF6E8',
+          border: '2px solid var(--color-ink)',
           fontFamily: serif,
           fontSize: 15,
-          color: "var(--color-ink)",
-          resize: "vertical",
+          color: 'var(--color-ink)',
+          resize: 'vertical',
           minHeight: 100,
           borderRadius: 0,
         }}
@@ -308,14 +299,14 @@ function BeatPanel({
         className="mt-3 border-[3px] border-ink px-3 py-2 text-[11px] tracking-[0.18em] text-[#1A1820]"
         style={{
           fontFamily: pixel,
-          textTransform: "uppercase",
-          background: text.trim() ? "#F8C75E" : "var(--color-line)",
-          boxShadow: text.trim() ? "3px 3px 0 0 #5D5777" : "none",
-          cursor: text.trim() ? "pointer" : "default",
+          textTransform: 'uppercase',
+          background: text.trim() ? '#F8C75E' : 'var(--color-line)',
+          boxShadow: text.trim() ? '3px 3px 0 0 #5D5777' : 'none',
+          cursor: text.trim() ? 'pointer' : 'default',
           opacity: text.trim() ? 1 : 0.5,
         }}
       >
-        ▶ {t("wndr.save_beat", locale, { beat })}
+        ▶ {t('wndr.save_beat', locale, { beat })}
       </button>
     </div>
   );
@@ -323,19 +314,13 @@ function BeatPanel({
 
 // ─── Vector-space rosters ──────────────────────────────────────────────
 
-function KindredRoster({
-  picks,
-  locale,
-}: {
-  picks: WanderingPicks | null;
-  locale: Locale;
-}) {
+function KindredRoster({ picks, locale }: { picks: WanderingPicks | null; locale: Locale }) {
   if (!picks) return null; // not hydrated yet
   if (!picks.kindred.length) return <NoVectorNudge locale={locale} />;
   return (
     <div>
       <p className="text-[13px] italic leading-[1.55] text-[#5C4528]" style={{ fontFamily: serif }}>
-        {t("wndr.kindred_intro", locale)}
+        {t('wndr.kindred_intro', locale)}
       </p>
       <ul className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
         {picks.kindred.map((pick) => (
@@ -348,19 +333,13 @@ function KindredRoster({
   );
 }
 
-function FarRoster({
-  picks,
-  locale,
-}: {
-  picks: WanderingPicks | null;
-  locale: Locale;
-}) {
+function FarRoster({ picks, locale }: { picks: WanderingPicks | null; locale: Locale }) {
   if (!picks) return null; // not hydrated yet
   if (!picks.far) return <NoVectorNudge locale={locale} />;
   return (
     <div>
       <p className="text-[13px] italic leading-[1.55] text-[#5C4528]" style={{ fontFamily: serif }}>
-        {t("wndr.far_intro", locale)}
+        {t('wndr.far_intro', locale)}
       </p>
       <div className="mt-2">
         <RosterCard pick={picks.far} tone="far" locale={locale} />
@@ -375,7 +354,7 @@ function RosterCard({
   locale,
 }: {
   pick: WanderingPick;
-  tone: "kindred" | "far";
+  tone: 'kindred' | 'far';
   locale: Locale;
 }) {
   const p = pick.philosopher;
@@ -386,29 +365,29 @@ function RosterCard({
   // data out of this client bundle. The chip/intro chrome IS localized.
   const axisName = pick.axis ? t(`dim.${pick.axis}.name`, locale) : null;
   const chip =
-    tone === "kindred"
+    tone === 'kindred'
       ? axisName
-        ? t("wndr.near_axis", locale, { dim: axisName })
-        : t("wndr.near_generic", locale)
+        ? t('wndr.near_axis', locale, { dim: axisName })
+        : t('wndr.near_generic', locale)
       : axisName
-        ? t("wndr.far_axis", locale, { dim: axisName })
-        : t("wndr.far_generic", locale);
+        ? t('wndr.far_axis', locale, { dim: axisName })
+        : t('wndr.far_generic', locale);
 
   return (
     <Link
       href={`/philosopher/${philosopherSlug(p.name)}`}
       className="pixel-press flex items-start gap-3 border-2 px-3 py-2.5 transition-all hover:translate-x-[-1px] hover:translate-y-[-1px]"
       style={{
-        borderColor: "var(--color-ink)",
-        background: "#FFFCF4",
+        borderColor: 'var(--color-ink)',
+        background: '#FFFCF4',
         boxShadow: `3px 3px 0 0 ${color.deep}`,
-        textDecoration: "none",
-        color: "inherit",
+        textDecoration: 'none',
+        color: 'inherit',
       }}
     >
       <div
         className="shrink-0 border-2 p-1"
-        style={{ borderColor: color.deep, background: "#FBFAF2" }}
+        style={{ borderColor: color.deep, background: '#FBFAF2' }}
         aria-hidden
       >
         <PhilosopherSprite name={p.name} archetypeKey={p.archetypeKey} size={40} />
@@ -419,29 +398,27 @@ function RosterCard({
           style={{
             fontFamily: pixel,
             background: color.deep,
-            color: "#FFFCF4",
-            textTransform: "uppercase",
+            color: '#FFFCF4',
+            textTransform: 'uppercase',
           }}
         >
           {chip}
         </span>
         <div
           className="mt-1 text-[14.5px] font-medium leading-tight text-ink"
-          style={{ fontFamily: "var(--font-prose)" }}
+          style={{ fontFamily: 'var(--font-prose)' }}
         >
           {p.name}
         </div>
-        <div className="mt-0.5 text-[10.5px] tracking-wide text-acc-deep">
-          {p.dates}
-        </div>
+        <div className="mt-0.5 text-[10.5px] tracking-wide text-acc-deep">{p.dates}</div>
         <p
           className="mt-1 text-[12px] italic leading-snug text-ink-soft"
           style={{
             fontFamily: serif,
-            display: "-webkit-box",
+            display: '-webkit-box',
             WebkitLineClamp: 3,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
           }}
         >
           {p.keyIdea}
@@ -455,17 +432,17 @@ function NoVectorNudge({ locale }: { locale: Locale }) {
   return (
     <div
       className="border-2 border-dashed px-3 py-2.5"
-      style={{ borderColor: "var(--color-acc)", background: "#FBF6E8" }}
+      style={{ borderColor: 'var(--color-acc)', background: '#FBF6E8' }}
     >
       <p className="text-[13px] italic leading-[1.5] text-[#5C4528]" style={{ fontFamily: serif }}>
-        {t("wndr.no_vector_nudge", locale)}
+        {t('wndr.no_vector_nudge', locale)}
       </p>
       <Link
         href="/quiz/journey"
         className="mt-2 inline-block text-[10px] tracking-[0.18em] text-acc-deep underline decoration-acc/40 underline-offset-2 hover:text-ink"
-        style={{ fontFamily: pixel, textTransform: "uppercase" }}
+        style={{ fontFamily: pixel, textTransform: 'uppercase' }}
       >
-        {t("wndr.no_vector_cta", locale)}
+        {t('wndr.no_vector_cta', locale)}
       </Link>
     </div>
   );

@@ -20,11 +20,11 @@
 // genuine DB error so the rare failure is observable, but the client
 // never awaits the result — the localStorage write already happened.
 
-import { NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
+import { NextResponse } from 'next/server';
+import { createClient } from '@/utils/supabase/server';
 
 type Body = {
-  research_consent?: "yes" | "no" | null;
+  research_consent?: 'yes' | 'no' | null;
 };
 
 export async function POST(req: Request) {
@@ -32,11 +32,11 @@ export async function POST(req: Request) {
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json({ error: "invalid json" }, { status: 400 });
+    return NextResponse.json({ error: 'invalid json' }, { status: 400 });
   }
 
   const choice = body.research_consent;
-  if (choice !== "yes" && choice !== "no" && choice !== null) {
+  if (choice !== 'yes' && choice !== 'no' && choice !== null) {
     return NextResponse.json(
       { error: "research_consent must be 'yes', 'no', or null" },
       { status: 400 },
@@ -55,13 +55,10 @@ export async function POST(req: Request) {
 
   if (choice === null) {
     // Reset → remove the row entirely. Next gate view asks again.
-    const { error } = await supabase
-      .from("research_consent")
-      .delete()
-      .eq("user_id", user.id);
+    const { error } = await supabase.from('research_consent').delete().eq('user_id', user.id);
     if (error) {
-      console.error("[consent] delete failed", error);
-      return NextResponse.json({ error: "could not reset" }, { status: 500 });
+      console.error('[consent] delete failed', error);
+      return NextResponse.json({ error: 'could not reset' }, { status: 500 });
     }
     return new NextResponse(null, { status: 204 });
   }
@@ -69,20 +66,18 @@ export async function POST(req: Request) {
   // Upsert. On insert, decided_at defaults to now(); on conflict we only
   // touch consent + updated_at, so decided_at keeps the original first
   // decision time. onConflict on the user_id PK.
-  const { error } = await supabase
-    .from("research_consent")
-    .upsert(
-      {
-        user_id: user.id,
-        consent: choice,
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: "user_id" },
-    );
+  const { error } = await supabase.from('research_consent').upsert(
+    {
+      user_id: user.id,
+      consent: choice,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: 'user_id' },
+  );
 
   if (error) {
-    console.error("[consent] upsert failed", error);
-    return NextResponse.json({ error: "could not save" }, { status: 500 });
+    console.error('[consent] upsert failed', error);
+    return NextResponse.json({ error: 'could not save' }, { status: 500 });
   }
 
   return new NextResponse(null, { status: 204 });

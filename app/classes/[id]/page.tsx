@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 };
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 
 type ClassRow = {
   id: string;
@@ -62,20 +62,20 @@ type SubmissionRow = {
   submitted_at: string;
 };
 
-export default async function ClassDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function ClassDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const locale = await getServerLocale();
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) redirect(`/login?next=/classes/${id}`);
 
   const { data: cls } = await supabase
     .from('classes')
-    .select('id, teacher_user_id, name, invite_code, description, term, school_name, is_archived, created_at')
+    .select(
+      'id, teacher_user_id, name, invite_code, description, term, school_name, is_archived, created_at',
+    )
     .eq('id', id)
     .maybeSingle<ClassRow>();
 
@@ -94,7 +94,7 @@ export default async function ClassDetailPage({
     .order('joined_at', { ascending: true })
     .returns<MemberRow[]>();
 
-  const studentCount = (roster ?? []).filter(r => r.role === 'student').length;
+  const studentCount = (roster ?? []).filter((r) => r.role === 'student').length;
 
   // Assignments — visible to both teacher (via own-class RLS) and
   // students (via membership RLS). Most-recent first; exclude archived.
@@ -110,21 +110,21 @@ export default async function ClassDetailPage({
   // submitted? Drives the per-card SUBMITTED/PENDING badge.
   let mySubmissionIds = new Set<string>();
   if (!isTeacher && assignments && assignments.length > 0) {
-    const ids = assignments.map(a => a.id);
+    const ids = assignments.map((a) => a.id);
     const { data: mine } = await supabase
       .from('class_assignment_submissions')
       .select('assignment_id, submitted_at')
       .in('assignment_id', ids)
       .eq('student_user_id', user.id)
       .returns<SubmissionRow[]>();
-    mySubmissionIds = new Set((mine ?? []).map(r => r.assignment_id));
+    mySubmissionIds = new Set((mine ?? []).map((r) => r.assignment_id));
   }
 
   // Teacher view: per-assignment submission counts for the roster
   // summary on each card ("3 / 12 SUBMITTED").
   let countsByAssignment = new Map<string, number>();
   if (isTeacher && assignments && assignments.length > 0) {
-    const ids = assignments.map(a => a.id);
+    const ids = assignments.map((a) => a.id);
     const { data: subs } = await supabase
       .from('class_assignment_submissions')
       .select('assignment_id')
@@ -141,57 +141,74 @@ export default async function ClassDetailPage({
     <main className="mx-auto max-w-[820px] px-6 pb-32 pt-10 sm:px-10">
       <div className="mb-6 flex items-center justify-between gap-4">
         <MullWordmark />
-        <Link href="/classes" style={{
-          fontFamily: pixel, fontSize: 11,
-          color: 'var(--color-ink-soft)', textDecoration: 'none',
-          letterSpacing: 0.4, textTransform: 'uppercase',
-        }}>
+        <Link
+          href="/classes"
+          style={{
+            fontFamily: pixel,
+            fontSize: 11,
+            color: 'var(--color-ink-soft)',
+            textDecoration: 'none',
+            letterSpacing: 0.4,
+            textTransform: 'uppercase',
+          }}
+        >
           ◂ {t('cls.nav_all_classes', locale)}
         </Link>
       </div>
 
-      <div style={{
-        fontFamily: pixel, fontSize: 12,
-        color: 'var(--color-acc-deep)', textTransform: 'uppercase',
-        letterSpacing: '0.18em', marginBottom: 14,
-      }}>
+      <div
+        style={{
+          fontFamily: pixel,
+          fontSize: 12,
+          color: 'var(--color-acc-deep)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.18em',
+          marginBottom: 14,
+        }}
+      >
         ▸ {isTeacher ? t('cls.role_teaching', locale) : t('cls.role_enrolled', locale)}
         {cls.is_archived && ` · ${t('cls.archived', locale)}`}
       </div>
 
-      <h1 style={{
-        fontFamily: pixel,
-        fontSize: 28,
-        margin: '0 0 14px',
-        color: 'var(--color-ink)',
-        letterSpacing: '0.06em',
-        textTransform: 'uppercase',
-        textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))',
-        lineHeight: 1.4,
-      }}>
+      <h1
+        style={{
+          fontFamily: pixel,
+          fontSize: 28,
+          margin: '0 0 14px',
+          color: 'var(--color-ink)',
+          letterSpacing: '0.06em',
+          textTransform: 'uppercase',
+          textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))',
+          lineHeight: 1.4,
+        }}
+      >
         {cls.name}
       </h1>
 
       {(cls.term || cls.school_name) && (
-        <p style={{
-          fontFamily: serif,
-          fontStyle: 'italic',
-          fontSize: 16,
-          color: 'var(--color-acc-deep)',
-          margin: '0 0 12px',
-        }}>
+        <p
+          style={{
+            fontFamily: serif,
+            fontStyle: 'italic',
+            fontSize: 16,
+            color: 'var(--color-acc-deep)',
+            margin: '0 0 12px',
+          }}
+        >
           {[cls.term, cls.school_name].filter(Boolean).join(' · ')}
         </p>
       )}
 
       {cls.description && (
-        <p style={{
-          fontFamily: serif,
-          fontSize: 16.5,
-          color: 'var(--color-ink)',
-          margin: '0 0 28px',
-          lineHeight: 1.6,
-        }}>
+        <p
+          style={{
+            fontFamily: serif,
+            fontSize: 16.5,
+            color: 'var(--color-ink)',
+            margin: '0 0 28px',
+            lineHeight: 1.6,
+          }}
+        >
           {cls.description}
         </p>
       )}
@@ -237,68 +254,89 @@ export default async function ClassDetailPage({
       {/* Roster section — both views. Teacher sees full list; student
           sees classmates count + their own row. */}
       <section style={{ marginTop: 36 }}>
-        <h2 style={{
-          fontFamily: pixel,
-          fontSize: 14,
-          color: 'var(--color-ink)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.18em',
-          marginBottom: 16,
-          textShadow: '2px 2px 0 var(--pixel-shadow, var(--color-acc))',
-        }}>
-          ▸ {t(studentCount === 1 ? 'cls.roster_heading_one' : 'cls.roster_heading_many', locale, { count: studentCount })}
+        <h2
+          style={{
+            fontFamily: pixel,
+            fontSize: 14,
+            color: 'var(--color-ink)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.18em',
+            marginBottom: 16,
+            textShadow: '2px 2px 0 var(--pixel-shadow, var(--color-acc))',
+          }}
+        >
+          ▸{' '}
+          {t(studentCount === 1 ? 'cls.roster_heading_one' : 'cls.roster_heading_many', locale, {
+            count: studentCount,
+          })}
         </h2>
         {studentCount === 0 ? (
-          <p style={{
-            padding: '20px 18px',
-            background: '#FFFCF4',
-            border: '3px dashed var(--color-acc-deep)',
-            borderRadius: 0,
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 15,
-            color: 'var(--color-acc-deep)',
-            margin: 0,
-            textAlign: 'center',
-          }}>
+          <p
+            style={{
+              padding: '20px 18px',
+              background: '#FFFCF4',
+              border: '3px dashed var(--color-acc-deep)',
+              borderRadius: 0,
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: 15,
+              color: 'var(--color-acc-deep)',
+              margin: 0,
+              textAlign: 'center',
+            }}
+          >
             {t('cls.roster_empty', locale)}
           </p>
         ) : (
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 8 }}>
-            {(roster ?? []).filter(r => r.role === 'student').map(r => (
-              <li key={r.user_id} style={{
-                padding: '10px 14px',
-                background: '#FFFCF4',
-                border: '2px solid var(--color-ink)',
-                borderRadius: 0,
-                fontFamily: serif,
-                fontSize: 15,
-                color: 'var(--color-ink)',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'baseline',
-                gap: 12,
-              }}>
-                <span>
-                  {r.pseudonym
-                    ? <em style={{ color: 'var(--color-acc-deep)' }}>{r.pseudonym}</em>
-                    : isTeacher
-                      ? <RosterUserCell userId={r.user_id} locale={locale} />
-                      : (r.user_id === user.id ? t('cls.roster_you', locale) : t('cls.roster_classmate', locale))}
-                </span>
-                <span style={{
-                  fontFamily: pixel,
-                  fontSize: 10,
-                  color: 'var(--color-acc-deep)',
-                  letterSpacing: 0.4,
-                  textTransform: 'uppercase',
-                }}>
-                  {t('cls.card_joined', locale, {
-                    date: new Date(r.joined_at).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', { month: 'short', day: 'numeric' }),
-                  })}
-                </span>
-              </li>
-            ))}
+            {(roster ?? [])
+              .filter((r) => r.role === 'student')
+              .map((r) => (
+                <li
+                  key={r.user_id}
+                  style={{
+                    padding: '10px 14px',
+                    background: '#FFFCF4',
+                    border: '2px solid var(--color-ink)',
+                    borderRadius: 0,
+                    fontFamily: serif,
+                    fontSize: 15,
+                    color: 'var(--color-ink)',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'baseline',
+                    gap: 12,
+                  }}
+                >
+                  <span>
+                    {r.pseudonym ? (
+                      <em style={{ color: 'var(--color-acc-deep)' }}>{r.pseudonym}</em>
+                    ) : isTeacher ? (
+                      <RosterUserCell userId={r.user_id} locale={locale} />
+                    ) : r.user_id === user.id ? (
+                      t('cls.roster_you', locale)
+                    ) : (
+                      t('cls.roster_classmate', locale)
+                    )}
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: pixel,
+                      fontSize: 10,
+                      color: 'var(--color-acc-deep)',
+                      letterSpacing: 0.4,
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    {t('cls.card_joined', locale, {
+                      date: new Date(r.joined_at).toLocaleDateString(
+                        locale === 'zh' ? 'zh-CN' : 'en-US',
+                        { month: 'short', day: 'numeric' },
+                      ),
+                    })}
+                  </span>
+                </li>
+              ))}
           </ul>
         )}
       </section>
@@ -307,23 +345,27 @@ export default async function ClassDetailPage({
           assignment" button; student sees pending / submitted /
           overdue badges per card. */}
       <section style={{ marginTop: 40 }}>
-        <div style={{
-          display: 'flex',
-          alignItems: 'baseline',
-          justifyContent: 'space-between',
-          gap: 12,
-          marginBottom: 16,
-          flexWrap: 'wrap',
-        }}>
-          <h2 style={{
-            fontFamily: pixel,
-            fontSize: 14,
-            color: 'var(--color-ink)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.18em',
-            margin: 0,
-            textShadow: '2px 2px 0 var(--pixel-shadow, #2F5D5C)',
-          }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'baseline',
+            justifyContent: 'space-between',
+            gap: 12,
+            marginBottom: 16,
+            flexWrap: 'wrap',
+          }}
+        >
+          <h2
+            style={{
+              fontFamily: pixel,
+              fontSize: 14,
+              color: 'var(--color-ink)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.18em',
+              margin: 0,
+              textShadow: '2px 2px 0 var(--pixel-shadow, #2F5D5C)',
+            }}
+          >
             ▸ {t('cls.assignments_heading', locale, { count: (assignments ?? []).length })}
           </h2>
           {isTeacher && (
@@ -351,31 +393,37 @@ export default async function ClassDetailPage({
           )}
         </div>
 
-        {(!assignments || assignments.length === 0) ? (
-          <p style={{
-            padding: '20px 18px',
-            background: '#FFFCF4',
-            border: '3px dashed #2F5D5C',
-            borderRadius: 0,
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 15,
-            color: 'var(--color-acc-deep)',
-            margin: 0,
-            textAlign: 'center',
-          }}>
+        {!assignments || assignments.length === 0 ? (
+          <p
+            style={{
+              padding: '20px 18px',
+              background: '#FFFCF4',
+              border: '3px dashed #2F5D5C',
+              borderRadius: 0,
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: 15,
+              color: 'var(--color-acc-deep)',
+              margin: 0,
+              textAlign: 'center',
+            }}
+          >
             {isTeacher
               ? t('cls.assignments_empty_teacher', locale)
               : t('cls.assignments_empty_student', locale)}
           </p>
         ) : (
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 12 }}>
-            {assignments.map(a => {
+            {assignments.map((a) => {
               const submittedByMe = mySubmissionIds.has(a.id);
               const submissionCount = countsByAssignment.get(a.id) ?? 0;
               const overdue =
                 !!a.due_at && new Date(a.due_at).getTime() < Date.now() && !submittedByMe;
-              const shadowColor = submittedByMe ? '#2F5D5C' : (overdue ? '#7A2E2E' : 'var(--color-acc)');
+              const shadowColor = submittedByMe
+                ? '#2F5D5C'
+                : overdue
+                  ? '#7A2E2E'
+                  : 'var(--color-acc)';
               return (
                 <li key={a.id}>
                   <Link
@@ -393,63 +441,85 @@ export default async function ClassDetailPage({
                       transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
                     }}
                   >
-                    <div style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      gap: 12,
-                      alignItems: 'baseline',
-                      flexWrap: 'wrap',
-                      marginBottom: 6,
-                    }}>
-                      <span style={{
-                        fontFamily: serif,
-                        fontSize: 17,
-                        fontWeight: 500,
-                        color: 'var(--color-ink)',
-                      }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        gap: 12,
+                        alignItems: 'baseline',
+                        flexWrap: 'wrap',
+                        marginBottom: 6,
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontFamily: serif,
+                          fontSize: 17,
+                          fontWeight: 500,
+                          color: 'var(--color-ink)',
+                        }}
+                      >
                         {a.title}
                       </span>
-                      <span style={{
-                        fontFamily: pixel,
-                        fontSize: 10,
-                        color: shadowColor,
-                        letterSpacing: 0.4,
-                        textTransform: 'uppercase',
-                      }}>
+                      <span
+                        style={{
+                          fontFamily: pixel,
+                          fontSize: 10,
+                          color: shadowColor,
+                          letterSpacing: 0.4,
+                          textTransform: 'uppercase',
+                        }}
+                      >
                         {isTeacher
-                          ? t('cls.badge_submitted_count', locale, { count: submissionCount, total: studentCount })
+                          ? t('cls.badge_submitted_count', locale, {
+                              count: submissionCount,
+                              total: studentCount,
+                            })
                           : submittedByMe
                             ? t('cls.badge_submitted', locale)
-                            : (overdue ? t('cls.badge_overdue', locale) : t('cls.badge_pending', locale))}
+                            : overdue
+                              ? t('cls.badge_overdue', locale)
+                              : t('cls.badge_pending', locale)}
                       </span>
                     </div>
-                    <div style={{
-                      fontFamily: pixel,
-                      fontSize: 10,
-                      color: 'var(--color-acc-deep)',
-                      letterSpacing: 0.4,
-                      textTransform: 'uppercase',
-                      marginBottom: 6,
-                    }}>
+                    <div
+                      style={{
+                        fontFamily: pixel,
+                        fontSize: 10,
+                        color: 'var(--color-acc-deep)',
+                        letterSpacing: 0.4,
+                        textTransform: 'uppercase',
+                        marginBottom: 6,
+                      }}
+                    >
                       {kindLabel(a.kind, locale)}
                       {a.due_at && (
-                        <> · {t('cls.due_label', locale, {
-                          date: new Date(a.due_at).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', { month: 'short', day: 'numeric' }),
-                        })}</>
+                        <>
+                          {' '}
+                          ·{' '}
+                          {t('cls.due_label', locale, {
+                            date: new Date(a.due_at).toLocaleDateString(
+                              locale === 'zh' ? 'zh-CN' : 'en-US',
+                              { month: 'short', day: 'numeric' },
+                            ),
+                          })}
+                        </>
                       )}
                     </div>
-                    <p style={{
-                      fontFamily: serif,
-                      fontStyle: 'italic',
-                      fontSize: 14.5,
-                      color: 'var(--color-ink-soft)',
-                      margin: 0,
-                      lineHeight: 1.5,
-                      display: '-webkit-box',
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical' as const,
-                      overflow: 'hidden',
-                    }}>
+                    <p
+                      style={{
+                        fontFamily: serif,
+                        fontStyle: 'italic',
+                        fontSize: 14.5,
+                        color: 'var(--color-ink-soft)',
+                        margin: 0,
+                        lineHeight: 1.5,
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical' as const,
+                        overflow: 'hidden',
+                      }}
+                    >
                       {a.prompt}
                     </p>
                   </Link>
@@ -473,9 +543,7 @@ export default async function ClassDetailPage({
           justifyContent: 'center',
         }}
       >
-        {!isTeacher && (
-          <ClassLeaveButton classId={cls.id} className={cls.name} locale={locale} />
-        )}
+        {!isTeacher && <ClassLeaveButton classId={cls.id} className={cls.name} locale={locale} />}
       </nav>
     </main>
   );
@@ -496,13 +564,20 @@ async function RosterUserCell({ userId, locale }: { userId: string; locale: Loca
     return (
       <>
         {profile.display_name || `@${profile.handle}`}
-        <span style={{ color: 'var(--color-acc-deep)', fontStyle: 'italic' }}> · @{profile.handle}</span>
+        <span style={{ color: 'var(--color-acc-deep)', fontStyle: 'italic' }}>
+          {' '}
+          · @{profile.handle}
+        </span>
       </>
     );
   }
   // No public profile — show short ID. Teacher gets visibility
   // without leaking PII.
-  return <em style={{ color: 'var(--color-acc-deep)' }}>{t('cls.student_short', locale, { id: userId.slice(0, 6) })}</em>;
+  return (
+    <em style={{ color: 'var(--color-acc-deep)' }}>
+      {t('cls.student_short', locale, { id: userId.slice(0, 6) })}
+    </em>
+  );
 }
 
 // Localize the assignment-kind enum (dilemma / exercise / diary_prompt)

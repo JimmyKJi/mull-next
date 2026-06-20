@@ -3,32 +3,24 @@
 // Server loads the session + turns + judge_json (if any) and hands
 // them to the client engine.
 
-import { notFound, redirect } from "next/navigation";
-import Link from "next/link";
-import type { Metadata } from "next";
-import { createClient } from "@/utils/supabase/server";
-import {
-  getArenaPhilosopher,
-  getArenaTopic,
-  localizeArenaPhilosopherName,
-} from "@/lib/arena/data";
-import { localizeArenaTopic } from "@/lib/arena/topics-i18n";
-import { getServerLocale } from "@/lib/locale-server";
-import { t } from "@/lib/translations";
-import MatchClient from "./match-client";
+import { notFound, redirect } from 'next/navigation';
+import Link from 'next/link';
+import type { Metadata } from 'next';
+import { createClient } from '@/utils/supabase/server';
+import { getArenaPhilosopher, getArenaTopic, localizeArenaPhilosopherName } from '@/lib/arena/data';
+import { localizeArenaTopic } from '@/lib/arena/topics-i18n';
+import { getServerLocale } from '@/lib/locale-server';
+import { t } from '@/lib/translations';
+import MatchClient from './match-client';
 
 export const metadata: Metadata = {
-  title: "Arena · Match · Mull",
+  title: 'Arena · Match · Mull',
   robots: { index: false, follow: false },
 };
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
-export default async function MatchPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function MatchPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const locale = await getServerLocale();
   const supabase = await createClient();
@@ -38,17 +30,17 @@ export default async function MatchPage({
   if (!user) redirect(`/login?next=/arena/pve/${id}`);
 
   const { data: session } = await supabase
-    .from("arena_sessions")
-    .select("*")
-    .eq("id", id)
+    .from('arena_sessions')
+    .select('*')
+    .eq('id', id)
     .maybeSingle();
   if (!session) notFound();
 
   const { data: turns } = await supabase
-    .from("arena_turns")
-    .select("turn_order, speaker, content")
-    .eq("session_id", id)
-    .order("turn_order", { ascending: true });
+    .from('arena_turns')
+    .select('turn_order, speaker, content')
+    .eq('session_id', id)
+    .order('turn_order', { ascending: true });
 
   const philosopher = getArenaPhilosopher(session.opponent);
   const topic = getArenaTopic(session.topic_slug);
@@ -65,13 +57,13 @@ export default async function MatchPage({
           style={{
             fontFamily: pixel,
             fontSize: 11,
-            color: "var(--color-ink-soft)",
-            textDecoration: "none",
+            color: 'var(--color-ink-soft)',
+            textDecoration: 'none',
             letterSpacing: 0.4,
-            textTransform: "uppercase",
+            textTransform: 'uppercase',
           }}
         >
-          {t("arena.back", locale)}
+          {t('arena.back', locale)}
         </Link>
       </div>
       <MatchClient
@@ -83,17 +75,15 @@ export default async function MatchPage({
         topicPrimer={lzTopic.primer}
         userElo={session.user_elo_at_start}
         locale={locale}
-        initialTurns={
-          (turns ?? []).map((t) => ({
-            turn_order: t.turn_order as number,
-            speaker: t.speaker as "user" | "opponent",
-            content: t.content as string,
-          }))
-        }
+        initialTurns={(turns ?? []).map((t) => ({
+          turn_order: t.turn_order as number,
+          speaker: t.speaker as 'user' | 'opponent',
+          content: t.content as string,
+        }))}
         initialJudge={session.judge_json}
         initialEloDelta={session.elo_delta}
-        initialStatus={session.status as "active" | "judged" | "abandoned"}
-        initialVerdict={session.verdict as "user" | "opponent" | "draw" | null}
+        initialStatus={session.status as 'active' | 'judged' | 'abandoned'}
+        initialVerdict={session.verdict as 'user' | 'opponent' | 'draw' | null}
       />
     </main>
   );

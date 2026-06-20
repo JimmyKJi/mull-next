@@ -17,7 +17,7 @@
 import { useEffect, useState } from 'react';
 import { t, type Locale } from '@/lib/translations';
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
@@ -57,7 +57,9 @@ export default function DilemmaReminderCard({ locale = 'en' as Locale }: { local
         if (!cancelled) setLoading(false);
       }
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   async function save(next: Prefs) {
@@ -96,7 +98,8 @@ export default function DilemmaReminderCard({ locale = 'en' as Locale }: { local
     const d = new Date();
     d.setHours(h, 0, 0, 0);
     const label = d.toLocaleTimeString(locale === 'en' ? 'en-US' : locale, {
-      hour: 'numeric', minute: '2-digit',
+      hour: 'numeric',
+      minute: '2-digit',
     });
     return { value: h, label };
   });
@@ -116,7 +119,7 @@ export default function DilemmaReminderCard({ locale = 'en' as Locale }: { local
         <input
           type="checkbox"
           checked={prefs.enabled}
-          onChange={e => save({ ...prefs, enabled: e.target.checked })}
+          onChange={(e) => save({ ...prefs, enabled: e.target.checked })}
           style={{ accentColor: 'var(--color-acc)', marginRight: 12, width: 20, height: 20 }}
         />
         <span style={{ fontFamily: sans, fontSize: 14.5, color: 'var(--color-ink)' }}>
@@ -128,7 +131,8 @@ export default function DilemmaReminderCard({ locale = 'en' as Locale }: { local
                 const d = new Date();
                 d.setHours(prefs.hour, 0, 0, 0);
                 const time = d.toLocaleTimeString(locale === 'en' ? 'en-US' : locale, {
-                  hour: 'numeric', minute: '2-digit',
+                  hour: 'numeric',
+                  minute: '2-digit',
                 });
                 return t('drc.toggle_label_on', locale, { time });
               })()
@@ -142,10 +146,12 @@ export default function DilemmaReminderCard({ locale = 'en' as Locale }: { local
             <span style={fieldLabel}>{t('reminder.field_hour', locale).toUpperCase()}</span>
             <select
               value={prefs.hour}
-              onChange={e => save({ ...prefs, hour: Number(e.target.value) })}
+              onChange={(e) => save({ ...prefs, hour: Number(e.target.value) })}
             >
-              {hourOptions.map(o => (
-                <option key={o.value} value={o.value}>{o.label}</option>
+              {hourOptions.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
               ))}
             </select>
           </label>
@@ -154,31 +160,43 @@ export default function DilemmaReminderCard({ locale = 'en' as Locale }: { local
             <input
               type="text"
               value={prefs.tz}
-              onChange={e => setPrefs({ ...prefs, tz: e.target.value })}
+              onChange={(e) => setPrefs({ ...prefs, tz: e.target.value })}
               onBlur={() => save(prefs)}
               placeholder={t('drc.tz_placeholder', locale)}
               style={{ flex: 1, minWidth: 200 }}
             />
           </label>
-          <p style={helpText}>
-            {t('reminder.help_text', locale)}
-          </p>
+          <p style={helpText}>{t('reminder.help_text', locale)}</p>
         </div>
       )}
 
       {error && (
-        <p style={{
-          marginTop: 14, fontFamily: sans, fontSize: 13, color: '#7A2E2E',
-          background: 'rgba(122, 46, 46, 0.08)', padding: '8px 12px',
-          border: '2px solid #7A2E2E', borderRadius: 0,
-        }}>{error}</p>
+        <p
+          style={{
+            marginTop: 14,
+            fontFamily: sans,
+            fontSize: 13,
+            color: '#7A2E2E',
+            background: 'rgba(122, 46, 46, 0.08)',
+            padding: '8px 12px',
+            border: '2px solid #7A2E2E',
+            borderRadius: 0,
+          }}
+        >
+          {error}
+        </p>
       )}
       {savedAt && !error && (
-        <p style={{
-          marginTop: 10, fontFamily: pixel, fontSize: 11,
-          color: '#2F5D5C', letterSpacing: 0.4,
-          opacity: saving ? 0.6 : 1,
-        }}>
+        <p
+          style={{
+            marginTop: 10,
+            fontFamily: pixel,
+            fontSize: 11,
+            color: '#2F5D5C',
+            letterSpacing: 0.4,
+            opacity: saving ? 0.6 : 1,
+          }}
+        >
           ▸ {(saving ? t('reminder.saving', locale) : t('reminder.saved', locale)).toUpperCase()}
         </p>
       )}
@@ -195,36 +213,59 @@ const cardStyle: React.CSSProperties = {
   borderRadius: 0,
 };
 const eyebrow: React.CSSProperties = {
-  fontFamily: pixel, fontSize: 12,
-  color: 'var(--color-acc-deep)', textTransform: 'uppercase',
-  letterSpacing: '0.18em', marginBottom: 10,
+  fontFamily: pixel,
+  fontSize: 12,
+  color: 'var(--color-acc-deep)',
+  textTransform: 'uppercase',
+  letterSpacing: '0.18em',
+  marginBottom: 10,
 };
 const heading: React.CSSProperties = {
-  fontFamily: serif, fontSize: 22, fontWeight: 500,
-  color: 'var(--color-ink)', margin: '0 0 6px',
+  fontFamily: serif,
+  fontSize: 22,
+  fontWeight: 500,
+  color: 'var(--color-ink)',
+  margin: '0 0 6px',
 };
 const blurb: React.CSSProperties = {
-  fontFamily: serif, fontStyle: 'italic',
-  fontSize: 15, color: 'var(--color-ink-soft)',
-  margin: '0 0 16px', lineHeight: 1.55,
+  fontFamily: serif,
+  fontStyle: 'italic',
+  fontSize: 15,
+  color: 'var(--color-ink-soft)',
+  margin: '0 0 16px',
+  lineHeight: 1.55,
 };
 const toggleRow: React.CSSProperties = {
-  display: 'flex', alignItems: 'center', cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  cursor: 'pointer',
   padding: '10px 0',
 };
 const fieldRow: React.CSSProperties = {
-  display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap',
+  display: 'flex',
+  alignItems: 'center',
+  gap: 12,
+  flexWrap: 'wrap',
 };
 const fieldLabel: React.CSSProperties = {
-  fontFamily: pixel, fontSize: 11, color: 'var(--color-acc-deep)',
+  fontFamily: pixel,
+  fontSize: 11,
+  color: 'var(--color-acc-deep)',
   letterSpacing: 0.4,
   minWidth: 120,
 };
 const helpText: React.CSSProperties = {
-  fontFamily: serif, fontStyle: 'italic',
-  fontSize: 13, color: 'var(--color-acc-deep)',
-  margin: 0, opacity: 0.85, lineHeight: 1.5,
+  fontFamily: serif,
+  fontStyle: 'italic',
+  fontSize: 13,
+  color: 'var(--color-acc-deep)',
+  margin: 0,
+  opacity: 0.85,
+  lineHeight: 1.5,
 };
 const loadingText: React.CSSProperties = {
-  fontFamily: sans, fontSize: 13, color: 'var(--color-acc-deep)', margin: 0,
+  fontFamily: sans,
+  fontSize: 13,
+  color: 'var(--color-acc-deep)',
+  margin: 0,
 };

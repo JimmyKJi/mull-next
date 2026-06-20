@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 // ScrollReveal — wrap any block of content; when it enters the
 // viewport, the `.reveal` class flips to `.revealed` and the chunky
@@ -22,7 +22,7 @@
 //   - On browsers without IntersectionObserver (none in practice for
 //     modern Mull users), the content reveals immediately on mount.
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 
 type Props = {
   children: React.ReactNode;
@@ -32,21 +32,16 @@ type Props = {
   className?: string;
   /** Render as a different element. Default 'div'. Use 'section'
    *  for major page sections. */
-  as?: "div" | "section";
+  as?: 'div' | 'section';
 };
 
-export function ScrollReveal({
-  children,
-  threshold = 0.15,
-  className = "",
-  as = "div",
-}: Props) {
+export function ScrollReveal({ children, threshold = 0.15, className = '', as = 'div' }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [revealed, setRevealed] = useState(false);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (typeof IntersectionObserver === "undefined") {
+    if (typeof window === 'undefined') return;
+    if (typeof IntersectionObserver === 'undefined') {
       // Old browser fallback: just reveal immediately.
       setRevealed(true);
       return;
@@ -64,7 +59,7 @@ export function ScrollReveal({
           }
         }
       },
-      { threshold, rootMargin: "0px 0px -10% 0px" },
+      { threshold, rootMargin: '0px 0px -10% 0px' },
     );
     observer.observe(node);
     return () => observer.disconnect();
@@ -74,7 +69,7 @@ export function ScrollReveal({
   return (
     <Tag
       ref={ref as React.RefObject<HTMLDivElement> & React.RefObject<HTMLElement>}
-      className={`reveal ${revealed ? "revealed" : ""} ${className}`.trim()}
+      className={`reveal ${revealed ? 'revealed' : ''} ${className}`.trim()}
     >
       {children}
     </Tag>

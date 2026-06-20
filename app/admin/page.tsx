@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
@@ -60,27 +60,60 @@ async function loadStats() {
   const todayKey = now.toISOString().slice(0, 10);
 
   const [
-    usersRes, quizTotal, quizDay, quizHour, archetypes,
-    dilemmaTotal, dilemmaToday, dilemmaDay,
-    feedbackTotal, feedbackRecent,
-    diaryTotal, exerciseTotal, debatesTotal,
-    errorsHour, errorsRecent,
+    usersRes,
+    quizTotal,
+    quizDay,
+    quizHour,
+    archetypes,
+    dilemmaTotal,
+    dilemmaToday,
+    dilemmaDay,
+    feedbackTotal,
+    feedbackRecent,
+    diaryTotal,
+    exerciseTotal,
+    debatesTotal,
+    errorsHour,
+    errorsRecent,
   ] = await Promise.all([
     admin.auth.admin.listUsers({ page: 1, perPage: 1000 }),
     admin.from('quiz_attempts').select('*', { count: 'exact', head: true }),
-    admin.from('quiz_attempts').select('*', { count: 'exact', head: true }).gte('taken_at', oneDayAgo),
-    admin.from('quiz_attempts').select('*', { count: 'exact', head: true }).gte('taken_at', oneHourAgo),
+    admin
+      .from('quiz_attempts')
+      .select('*', { count: 'exact', head: true })
+      .gte('taken_at', oneDayAgo),
+    admin
+      .from('quiz_attempts')
+      .select('*', { count: 'exact', head: true })
+      .gte('taken_at', oneHourAgo),
     admin.from('quiz_attempts').select('archetype').limit(2000),
     admin.from('dilemma_responses').select('*', { count: 'exact', head: true }),
-    admin.from('dilemma_responses').select('*', { count: 'exact', head: true }).eq('dilemma_date', todayKey),
-    admin.from('dilemma_responses').select('*', { count: 'exact', head: true }).gte('created_at', oneDayAgo),
+    admin
+      .from('dilemma_responses')
+      .select('*', { count: 'exact', head: true })
+      .eq('dilemma_date', todayKey),
+    admin
+      .from('dilemma_responses')
+      .select('*', { count: 'exact', head: true })
+      .gte('created_at', oneDayAgo),
     admin.from('feedback').select('*', { count: 'exact', head: true }),
-    admin.from('feedback').select('id, body, page_url, user_id, created_at').order('created_at', { ascending: false }).limit(10),
+    admin
+      .from('feedback')
+      .select('id, body, page_url, user_id, created_at')
+      .order('created_at', { ascending: false })
+      .limit(10),
     admin.from('diary_entries').select('*', { count: 'exact', head: true }),
     admin.from('exercise_reflections').select('*', { count: 'exact', head: true }),
     admin.from('debate_history').select('*', { count: 'exact', head: true }),
-    admin.from('error_log').select('*', { count: 'exact', head: true }).gte('created_at', oneHourAgo),
-    admin.from('error_log').select('id, source, message, url, created_at').order('created_at', { ascending: false }).limit(8),
+    admin
+      .from('error_log')
+      .select('*', { count: 'exact', head: true })
+      .gte('created_at', oneHourAgo),
+    admin
+      .from('error_log')
+      .select('id, source, message, url, created_at')
+      .order('created_at', { ascending: false })
+      .limit(8),
   ]);
 
   // Archetype distribution: tally the most-recent attempts.
@@ -97,8 +130,8 @@ async function loadStats() {
   // launch this is fine. Beyond ~1000 users we'd page.
   const users = usersRes.data?.users || [];
   const signupsTotal = users.length;
-  const signupsDay = users.filter(u => u.created_at && u.created_at >= oneDayAgo).length;
-  const signupsHour = users.filter(u => u.created_at && u.created_at >= oneHourAgo).length;
+  const signupsDay = users.filter((u) => u.created_at && u.created_at >= oneDayAgo).length;
+  const signupsHour = users.filter((u) => u.created_at && u.created_at >= oneHourAgo).length;
 
   return {
     signups: { total: signupsTotal, day: signupsDay, hour: signupsHour },
@@ -132,7 +165,9 @@ async function loadStats() {
 
 export default async function AdminPage() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) redirect('/login?next=/admin');
   if (!isAdminUserId(user.id)) redirect('/account');
 
@@ -142,103 +177,163 @@ export default async function AdminPage() {
     <main style={{ maxWidth: 920, margin: '0 auto', padding: '40px 24px 120px' }}>
       <AdminAutoRefresh seconds={60} />
 
-      <header style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'baseline',
-        marginBottom: 28,
-        gap: 12,
-        flexWrap: 'wrap',
-      }}>
+      <header
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'baseline',
+          marginBottom: 28,
+          gap: 12,
+          flexWrap: 'wrap',
+        }}
+      >
         <div>
-          <div style={{
-            fontFamily: pixel, fontSize: 11,
-            color: 'var(--color-acc-deep)', textTransform: 'uppercase',
-            letterSpacing: '0.18em', marginBottom: 8,
-          }}>
+          <div
+            style={{
+              fontFamily: pixel,
+              fontSize: 11,
+              color: 'var(--color-acc-deep)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.18em',
+              marginBottom: 8,
+            }}
+          >
             ▸ ADMIN · LIVE
           </div>
-          <h1 style={{
-            fontFamily: pixel, fontSize: 28,
-            margin: 0, color: 'var(--color-ink)',
-            letterSpacing: '0.06em',
-            textTransform: 'uppercase',
-            textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))',
-          }}>
+          <h1
+            style={{
+              fontFamily: pixel,
+              fontSize: 28,
+              margin: 0,
+              color: 'var(--color-ink)',
+              letterSpacing: '0.06em',
+              textTransform: 'uppercase',
+              textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))',
+            }}
+          >
             LAUNCH DASHBOARD
           </h1>
         </div>
-        <div style={{
-          fontFamily: pixel, fontSize: 11, color: 'var(--color-acc-deep)',
-          textAlign: 'right', lineHeight: 1.5,
-          letterSpacing: 0.4,
-          textTransform: 'uppercase',
-        }}>
-          ▸ REFRESHES EVERY 60S<br />
+        <div
+          style={{
+            fontFamily: pixel,
+            fontSize: 11,
+            color: 'var(--color-acc-deep)',
+            textAlign: 'right',
+            lineHeight: 1.5,
+            letterSpacing: 0.4,
+            textTransform: 'uppercase',
+          }}
+        >
+          ▸ REFRESHES EVERY 60S
+          <br />
           LAST FETCH {new Date(stats.fetchedAt).toLocaleTimeString('en-GB')}
         </div>
       </header>
 
       {/* Cross-links to the deeper admin surfaces. */}
       <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 22 }}>
-        <a href="/admin/research" style={adminNavLink}>▸ RESEARCH CONSOLE</a>
-        <a href="/admin/usage" style={adminNavLink}>▸ AI USAGE</a>
+        <a href="/admin/research" style={adminNavLink}>
+          ▸ RESEARCH CONSOLE
+        </a>
+        <a href="/admin/usage" style={adminNavLink}>
+          ▸ AI USAGE
+        </a>
       </div>
 
       {/* Service health — chunky pixel chips, square corners. Green
           when reachable, brick when down. */}
-      <div style={{
-        display: 'flex',
-        gap: 10,
-        flexWrap: 'wrap',
-        marginBottom: 22,
-      }}>
-        {health.map(h => (
-          <div key={h.name} style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-            padding: '6px 12px',
-            background: h.ok ? '#E5F0EE' : '#F5E0E0',
-            border: `2px solid ${h.ok ? '#2F5D5C' : '#7A2E2E'}`,
-            borderRadius: 0,
-            fontFamily: pixel,
-            fontSize: 11,
-            color: h.ok ? '#2F5D5C' : '#7A2E2E',
-            letterSpacing: 0.4,
-            textTransform: 'uppercase',
-          }}>
-            <span style={{
-              width: 8, height: 8,
-              background: h.ok ? '#3D8C7A' : '#7A2E2E',
-              display: 'inline-block',
-            }} />
+      <div
+        style={{
+          display: 'flex',
+          gap: 10,
+          flexWrap: 'wrap',
+          marginBottom: 22,
+        }}
+      >
+        {health.map((h) => (
+          <div
+            key={h.name}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              padding: '6px 12px',
+              background: h.ok ? '#E5F0EE' : '#F5E0E0',
+              border: `2px solid ${h.ok ? '#2F5D5C' : '#7A2E2E'}`,
+              borderRadius: 0,
+              fontFamily: pixel,
+              fontSize: 11,
+              color: h.ok ? '#2F5D5C' : '#7A2E2E',
+              letterSpacing: 0.4,
+              textTransform: 'uppercase',
+            }}
+          >
+            <span
+              style={{
+                width: 8,
+                height: 8,
+                background: h.ok ? '#3D8C7A' : '#7A2E2E',
+                display: 'inline-block',
+              }}
+            />
             <strong>{h.name}</strong>
-            <span style={{ opacity: 0.85 }}>· {h.latencyMs}MS{h.note ? ` · ${h.note.toUpperCase()}` : ''}</span>
+            <span style={{ opacity: 0.85 }}>
+              · {h.latencyMs}MS{h.note ? ` · ${h.note.toUpperCase()}` : ''}
+            </span>
           </div>
         ))}
       </div>
 
       {/* Top row: signups + quiz + dilemma — the launch-night vitals */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-        gap: 14,
-        marginBottom: 18,
-      }}>
-        <StatCard label="Signups" total={stats.signups.total} day={stats.signups.day} hour={stats.signups.hour} accent="#2F5D5C" />
-        <StatCard label="Quiz attempts" total={stats.quiz.total} day={stats.quiz.day} hour={stats.quiz.hour} accent="#B8862F" />
-        <StatCard label="Dilemma responses" total={stats.dilemma.total} day={stats.dilemma.day} hour={stats.dilemma.today} hourLabel="today" accent="#7A4A2E" />
-        <StatCard label="Feedback notes" total={stats.feedback.total} day={null} hour={null} accent="#5A3A6A" />
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gap: 14,
+          marginBottom: 18,
+        }}
+      >
+        <StatCard
+          label="Signups"
+          total={stats.signups.total}
+          day={stats.signups.day}
+          hour={stats.signups.hour}
+          accent="#2F5D5C"
+        />
+        <StatCard
+          label="Quiz attempts"
+          total={stats.quiz.total}
+          day={stats.quiz.day}
+          hour={stats.quiz.hour}
+          accent="#B8862F"
+        />
+        <StatCard
+          label="Dilemma responses"
+          total={stats.dilemma.total}
+          day={stats.dilemma.day}
+          hour={stats.dilemma.today}
+          hourLabel="today"
+          accent="#7A4A2E"
+        />
+        <StatCard
+          label="Feedback notes"
+          total={stats.feedback.total}
+          day={null}
+          hour={null}
+          accent="#5A3A6A"
+        />
       </div>
 
       {/* Engagement (secondary) */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-        gap: 12,
-        marginBottom: 32,
-      }}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+          gap: 12,
+          marginBottom: 32,
+        }}
+      >
         <MiniStat label="Diary entries" value={stats.other.diary} />
         <MiniStat label="Exercise reflections" value={stats.other.exercise} />
         <MiniStat label="Debate sessions" value={stats.other.debate} />
@@ -254,37 +349,56 @@ export default async function AdminPage() {
               const max = stats.archDistribution[0][1] || 1;
               const pct = Math.round((count / max) * 100);
               return (
-                <div key={key} style={{
-                  display: 'grid',
-                  gridTemplateColumns: '120px 1fr 50px',
-                  alignItems: 'center',
-                  gap: 14,
-                  marginBottom: 10,
-                }}>
-                  <span style={{
-                    fontFamily: serif, fontSize: 15,
-                    color: 'var(--color-ink)', textTransform: 'capitalize',
-                  }}>{key}</span>
-                  <div style={{
-                    height: 10,
-                    background: 'var(--color-cream)',
-                    border: '2px solid var(--color-ink)',
-                    borderRadius: 0,
-                    overflow: 'hidden',
-                  }}>
-                    <div style={{
-                      width: `${pct}%`,
-                      height: '100%',
-                      background: 'var(--color-acc)',
-                      transition: 'width 0.4s steps(8, end)',
-                    }} />
+                <div
+                  key={key}
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: '120px 1fr 50px',
+                    alignItems: 'center',
+                    gap: 14,
+                    marginBottom: 10,
+                  }}
+                >
+                  <span
+                    style={{
+                      fontFamily: serif,
+                      fontSize: 15,
+                      color: 'var(--color-ink)',
+                      textTransform: 'capitalize',
+                    }}
+                  >
+                    {key}
+                  </span>
+                  <div
+                    style={{
+                      height: 10,
+                      background: 'var(--color-cream)',
+                      border: '2px solid var(--color-ink)',
+                      borderRadius: 0,
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: `${pct}%`,
+                        height: '100%',
+                        background: 'var(--color-acc)',
+                        transition: 'width 0.4s steps(8, end)',
+                      }}
+                    />
                   </div>
-                  <span style={{
-                    fontFamily: pixel, fontSize: 12, color: 'var(--color-acc-deep)',
-                    textAlign: 'right',
-                    letterSpacing: 0.4,
-                    fontVariantNumeric: 'tabular-nums',
-                  }}>{count}</span>
+                  <span
+                    style={{
+                      fontFamily: pixel,
+                      fontSize: 12,
+                      color: 'var(--color-acc-deep)',
+                      textAlign: 'right',
+                      letterSpacing: 0.4,
+                      fontVariantNumeric: 'tabular-nums',
+                    }}
+                  >
+                    {count}
+                  </span>
                 </div>
               );
             })}
@@ -296,7 +410,8 @@ export default async function AdminPage() {
           Critical errors (>0 last hour) get a brick shadow, otherwise teal. */}
       <section style={cardStyle(stats.errors.hour > 0 ? '#7A2E2E' : '#2F5D5C')}>
         <h2 style={sectionTitle}>
-          ▸ ERRORS {stats.errors.hour > 0 && (
+          ▸ ERRORS{' '}
+          {stats.errors.hour > 0 && (
             <span style={{ color: '#7A2E2E', fontSize: 14, marginLeft: 10 }}>
               · {stats.errors.hour} IN THE LAST HOUR
             </span>
@@ -304,33 +419,52 @@ export default async function AdminPage() {
         </h2>
         <p style={sectionSub}>API and client errors — most recent 8.</p>
         {stats.errors.recent.length === 0 ? (
-          <p style={{
-            fontFamily: serif, fontStyle: 'italic',
-            color: '#2F5D5C', margin: '14px 0 0',
-          }}>
+          <p
+            style={{
+              fontFamily: serif,
+              fontStyle: 'italic',
+              color: '#2F5D5C',
+              margin: '14px 0 0',
+            }}
+          >
             No errors logged. Things are quiet.
           </p>
         ) : (
           <ul style={{ listStyle: 'none', padding: 0, margin: '14px 0 0' }}>
-            {stats.errors.recent.map(e => (
-              <li key={e.id} style={{
-                padding: '12px 0',
-                borderBottom: '2px dashed var(--color-line)',
-              }}>
-                <div style={{
-                  fontFamily: pixel, fontSize: 10, color: '#7A2E2E',
-                  marginBottom: 6, letterSpacing: 0.4,
-                  textTransform: 'uppercase',
-                }}>
+            {stats.errors.recent.map((e) => (
+              <li
+                key={e.id}
+                style={{
+                  padding: '12px 0',
+                  borderBottom: '2px dashed var(--color-line)',
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: pixel,
+                    fontSize: 10,
+                    color: '#7A2E2E',
+                    marginBottom: 6,
+                    letterSpacing: 0.4,
+                    textTransform: 'uppercase',
+                  }}
+                >
                   {new Date(e.created_at).toLocaleString('en-GB')} · {e.source}
                   {e.url && ` · ${e.url}`}
                 </div>
-                <p style={{
-                  fontFamily: 'ui-monospace, Menlo, monospace',
-                  fontSize: 13, color: 'var(--color-ink)',
-                  margin: 0, lineHeight: 1.5, whiteSpace: 'pre-wrap',
-                  wordBreak: 'break-word',
-                }}>{e.message}</p>
+                <p
+                  style={{
+                    fontFamily: 'ui-monospace, Menlo, monospace',
+                    fontSize: 13,
+                    color: 'var(--color-ink)',
+                    margin: 0,
+                    lineHeight: 1.5,
+                    whiteSpace: 'pre-wrap',
+                    wordBreak: 'break-word',
+                  }}
+                >
+                  {e.message}
+                </p>
               </li>
             ))}
           </ul>
@@ -342,31 +476,52 @@ export default async function AdminPage() {
         <h2 style={sectionTitle}>▸ LATEST FEEDBACK</h2>
         <p style={sectionSub}>Most recent 10 notes — the unfiltered launch reactions.</p>
         {stats.feedback.recent.length === 0 ? (
-          <p style={{
-            fontFamily: serif, fontStyle: 'italic',
-            color: 'var(--color-acc-deep)', margin: '14px 0 0',
-          }}>
+          <p
+            style={{
+              fontFamily: serif,
+              fontStyle: 'italic',
+              color: 'var(--color-acc-deep)',
+              margin: '14px 0 0',
+            }}
+          >
             No feedback yet. Friends will leave thoughts via the floating button.
           </p>
         ) : (
           <ul style={{ listStyle: 'none', padding: 0, margin: '14px 0 0' }}>
-            {stats.feedback.recent.map(f => (
-              <li key={f.id} style={{
-                padding: '14px 0',
-                borderBottom: '2px dashed var(--color-line)',
-              }}>
-                <div style={{
-                  fontFamily: pixel, fontSize: 10, color: 'var(--color-acc-deep)',
-                  marginBottom: 6, letterSpacing: 0.4,
-                  textTransform: 'uppercase',
-                }}>
-                  {new Date(f.created_at).toLocaleString('en-GB')} · {f.user_id ? 'signed in' : 'anonymous'}
+            {stats.feedback.recent.map((f) => (
+              <li
+                key={f.id}
+                style={{
+                  padding: '14px 0',
+                  borderBottom: '2px dashed var(--color-line)',
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: pixel,
+                    fontSize: 10,
+                    color: 'var(--color-acc-deep)',
+                    marginBottom: 6,
+                    letterSpacing: 0.4,
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  {new Date(f.created_at).toLocaleString('en-GB')} ·{' '}
+                  {f.user_id ? 'signed in' : 'anonymous'}
                   {f.page_url && ` · ${f.page_url}`}
                 </div>
-                <p style={{
-                  fontFamily: serif, fontSize: 15, color: 'var(--color-ink)',
-                  margin: 0, lineHeight: 1.55, whiteSpace: 'pre-wrap',
-                }}>{f.body}</p>
+                <p
+                  style={{
+                    fontFamily: serif,
+                    fontSize: 15,
+                    color: 'var(--color-ink)',
+                    margin: 0,
+                    lineHeight: 1.55,
+                    whiteSpace: 'pre-wrap',
+                  }}
+                >
+                  {f.body}
+                </p>
               </li>
             ))}
           </ul>
@@ -380,7 +535,12 @@ export default async function AdminPage() {
 // Big VT323-ish pixel digit on top, tiny pixel-display label below,
 // secondary deltas in serif.
 function StatCard({
-  label, total, day, hour, hourLabel = 'last hour', accent,
+  label,
+  total,
+  day,
+  hour,
+  hourLabel = 'last hour',
+  accent,
 }: {
   label: string;
   total: number;
@@ -390,32 +550,56 @@ function StatCard({
   accent: string;
 }) {
   return (
-    <div style={{
-      padding: '18px 20px',
-      background: '#FFFCF4',
-      border: '4px solid var(--color-ink)',
-      boxShadow: `4px 4px 0 0 ${accent}`,
-      borderRadius: 0,
-    }}>
-      <div style={{
-        fontFamily: pixel, fontSize: 11,
-        color: accent, textTransform: 'uppercase',
-        letterSpacing: '0.18em', marginBottom: 12,
-      }}>▸ {label.toUpperCase()}</div>
-      <div style={{
-        fontFamily: pixel, fontSize: 36,
-        color: 'var(--color-ink)', lineHeight: 1, marginBottom: 10,
-        letterSpacing: 0.4,
-        fontVariantNumeric: 'tabular-nums',
-      }}>{total.toLocaleString()}</div>
+    <div
+      style={{
+        padding: '18px 20px',
+        background: '#FFFCF4',
+        border: '4px solid var(--color-ink)',
+        boxShadow: `4px 4px 0 0 ${accent}`,
+        borderRadius: 0,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: pixel,
+          fontSize: 11,
+          color: accent,
+          textTransform: 'uppercase',
+          letterSpacing: '0.18em',
+          marginBottom: 12,
+        }}
+      >
+        ▸ {label.toUpperCase()}
+      </div>
+      <div
+        style={{
+          fontFamily: pixel,
+          fontSize: 36,
+          color: 'var(--color-ink)',
+          lineHeight: 1,
+          marginBottom: 10,
+          letterSpacing: 0.4,
+          fontVariantNumeric: 'tabular-nums',
+        }}
+      >
+        {total.toLocaleString()}
+      </div>
       {(day !== null || hour !== null) && (
-        <div style={{
-          fontFamily: serif, fontStyle: 'italic',
-          fontSize: 13, color: 'var(--color-ink-soft)',
-        }}>
+        <div
+          style={{
+            fontFamily: serif,
+            fontStyle: 'italic',
+            fontSize: 13,
+            color: 'var(--color-ink-soft)',
+          }}
+        >
           {day !== null && <>+{day} last 24h</>}
           {day !== null && hour !== null && ' · '}
-          {hour !== null && <>+{hour} {hourLabel}</>}
+          {hour !== null && (
+            <>
+              +{hour} {hourLabel}
+            </>
+          )}
         </div>
       )}
     </div>
@@ -427,25 +611,39 @@ function StatCard({
 // to the StatCard above.
 function MiniStat({ label, value }: { label: string; value: number }) {
   return (
-    <div style={{
-      padding: '12px 14px',
-      background: 'var(--color-cream)',
-      border: '3px solid var(--color-ink)',
-      borderRadius: 0,
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'baseline',
-    }}>
-      <span style={{
-        fontFamily: pixel, fontSize: 11,
-        color: 'var(--color-acc-deep)', letterSpacing: 0.4,
-        textTransform: 'uppercase',
-      }}>{label.toUpperCase()}</span>
-      <span style={{
-        fontFamily: pixel, fontSize: 22,
-        color: 'var(--color-ink)', letterSpacing: 0.4,
-        fontVariantNumeric: 'tabular-nums',
-      }}>{value.toLocaleString()}</span>
+    <div
+      style={{
+        padding: '12px 14px',
+        background: 'var(--color-cream)',
+        border: '3px solid var(--color-ink)',
+        borderRadius: 0,
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'baseline',
+      }}
+    >
+      <span
+        style={{
+          fontFamily: pixel,
+          fontSize: 11,
+          color: 'var(--color-acc-deep)',
+          letterSpacing: 0.4,
+          textTransform: 'uppercase',
+        }}
+      >
+        {label.toUpperCase()}
+      </span>
+      <span
+        style={{
+          fontFamily: pixel,
+          fontSize: 22,
+          color: 'var(--color-ink)',
+          letterSpacing: 0.4,
+          fontVariantNumeric: 'tabular-nums',
+        }}
+      >
+        {value.toLocaleString()}
+      </span>
     </div>
   );
 }
@@ -479,13 +677,18 @@ const adminNavLink: React.CSSProperties = {
 };
 
 const sectionTitle: React.CSSProperties = {
-  fontFamily: pixel, fontSize: 16,
-  color: 'var(--color-ink)', margin: '0 0 6px',
+  fontFamily: pixel,
+  fontSize: 16,
+  color: 'var(--color-ink)',
+  margin: '0 0 6px',
   letterSpacing: '0.18em',
   textTransform: 'uppercase',
 };
 
 const sectionSub: React.CSSProperties = {
-  fontFamily: serif, fontStyle: 'italic',
-  fontSize: 14, color: 'var(--color-ink-soft)', margin: 0,
+  fontFamily: serif,
+  fontStyle: 'italic',
+  fontSize: 14,
+  color: 'var(--color-ink-soft)',
+  margin: 0,
 };

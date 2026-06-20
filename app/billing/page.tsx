@@ -18,13 +18,14 @@ import { getUserPlan } from '@/lib/subscription';
 import PlanPicker from './plan-picker';
 import type { Metadata } from 'next';
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
 export const metadata: Metadata = {
   title: 'Mull+',
-  description: 'Subscribe to Mull+ — yearly retrospectives, unlimited dilemma analysis, and the rest of the deeper features.',
+  description:
+    'Subscribe to Mull+ — yearly retrospectives, unlimited dilemma analysis, and the rest of the deeper features.',
   alternates: { canonical: 'https://mull.world/billing' },
 };
 
@@ -36,7 +37,9 @@ export default async function BillingPage() {
   // banner; the EDU detection only fires once they're signed in
   // (since we need their email to check).
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   let isEdu = false;
   let alreadyMullPlus = false;
   if (user?.email) {
@@ -47,47 +50,55 @@ export default async function BillingPage() {
 
   return (
     <main style={{ maxWidth: 760, margin: '0 auto', padding: '60px 24px 120px' }}>
-      <header style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'baseline',
-        marginBottom: 36,
-        flexWrap: 'wrap',
-        gap: 16,
-      }}>
+      <header
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'baseline',
+          marginBottom: 36,
+          flexWrap: 'wrap',
+          gap: 16,
+        }}
+      >
         <MullWordmark />
       </header>
 
-      <div style={{
-        fontFamily: pixel,
-        fontSize: 12,
-        color: 'var(--color-acc-deep)',
-        textTransform: 'uppercase',
-        letterSpacing: '0.18em',
-        marginBottom: 14,
-      }}>
+      <div
+        style={{
+          fontFamily: pixel,
+          fontSize: 12,
+          color: 'var(--color-acc-deep)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.18em',
+          marginBottom: 14,
+        }}
+      >
         ▸ {t('billing.eyebrow', locale).toUpperCase()}
       </div>
-      <h1 style={{
-        fontFamily: pixel,
-        fontSize: 'clamp(22px, 6.4vw, 36px)',
-        margin: '0 0 14px',
-        color: 'var(--color-ink)',
-        letterSpacing: '0.06em',
-        textTransform: 'uppercase',
-        textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))',
-        lineHeight: 1.4,
-      }}>
+      <h1
+        style={{
+          fontFamily: pixel,
+          fontSize: 'clamp(22px, 6.4vw, 36px)',
+          margin: '0 0 14px',
+          color: 'var(--color-ink)',
+          letterSpacing: '0.06em',
+          textTransform: 'uppercase',
+          textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))',
+          lineHeight: 1.4,
+        }}
+      >
         {t('billing.title', locale).toUpperCase()}
       </h1>
-      <p style={{
-        fontFamily: serif,
-        fontStyle: 'italic',
-        fontSize: 18,
-        color: 'var(--color-ink-soft)',
-        margin: '0 0 36px',
-        lineHeight: 1.55,
-      }}>
+      <p
+        style={{
+          fontFamily: serif,
+          fontStyle: 'italic',
+          fontSize: 18,
+          color: 'var(--color-ink-soft)',
+          margin: '0 0 36px',
+          lineHeight: 1.55,
+        }}
+      >
         {t('billing.subtitle', locale)}
       </p>
 
@@ -95,36 +106,41 @@ export default async function BillingPage() {
           academic email. They already have Mull+ comp'd — the
           pricing below is informational for them. */}
       {isEdu && (
-        <div style={{
-          padding: '16px 20px',
-          background: '#E5F0EE',
-          border: '4px solid var(--color-ink)',
-          boxShadow: '5px 5px 0 0 #2F5D5C',
-          borderRadius: 0,
-          marginBottom: 28,
-        }}>
-          <div style={{
-            fontFamily: pixel,
-            fontSize: 11,
-            color: '#2F5D5C',
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
-            marginBottom: 8,
-          }}>
+        <div
+          style={{
+            padding: '16px 20px',
+            background: '#E5F0EE',
+            border: '4px solid var(--color-ink)',
+            boxShadow: '5px 5px 0 0 #2F5D5C',
+            borderRadius: 0,
+            marginBottom: 28,
+          }}
+        >
+          <div
+            style={{
+              fontFamily: pixel,
+              fontSize: 11,
+              color: '#2F5D5C',
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              marginBottom: 8,
+            }}
+          >
             ▸ EDU TIER · ACTIVE
           </div>
-          <p style={{
-            fontFamily: serif,
-            fontSize: 15.5,
-            color: '#173533',
-            margin: 0,
-            lineHeight: 1.55,
-          }}>
-            Your academic email gets Mull+ for free — yearly retrospectives,
-            unlimited dilemma analysis, the dilemma archive, and every other
-            Mull+ feature unlocked. No subscription needed. Thanks for
-            teaching, studying, or otherwise being on the academic side of
-            the internet. ✦
+          <p
+            style={{
+              fontFamily: serif,
+              fontSize: 15.5,
+              color: '#173533',
+              margin: 0,
+              lineHeight: 1.55,
+            }}
+          >
+            Your academic email gets Mull+ for free — yearly retrospectives, unlimited dilemma
+            analysis, the dilemma archive, and every other Mull+ feature unlocked. No subscription
+            needed. Thanks for teaching, studying, or otherwise being on the academic side of the
+            internet. ✦
           </p>
         </div>
       )}
@@ -133,48 +149,53 @@ export default async function BillingPage() {
           pricing page — confirms their access, avoids a confusing
           "should I subscribe again?" moment. */}
       {!isEdu && alreadyMullPlus && (
-        <div style={{
-          padding: '14px 18px',
-          background: 'var(--color-acc-soft)',
-          border: '3px solid var(--color-ink)',
-          boxShadow: '3px 3px 0 0 var(--color-acc)',
-          borderRadius: 0,
-          marginBottom: 28,
-          fontFamily: serif,
-          fontSize: 15,
-          color: 'var(--color-ink)',
-          lineHeight: 1.55,
-        }}>
-          You&rsquo;re already on Mull+. Thanks. Pricing below is shown for
-          reference; if you want to change your plan, contact us via the
-          Feedback button.
+        <div
+          style={{
+            padding: '14px 18px',
+            background: 'var(--color-acc-soft)',
+            border: '3px solid var(--color-ink)',
+            boxShadow: '3px 3px 0 0 var(--color-acc)',
+            borderRadius: 0,
+            marginBottom: 28,
+            fontFamily: serif,
+            fontSize: 15,
+            color: 'var(--color-ink)',
+            lineHeight: 1.55,
+          }}
+        >
+          You&rsquo;re already on Mull+. Thanks. Pricing below is shown for reference; if you want
+          to change your plan, contact us via the Feedback button.
         </div>
       )}
 
       {/* Dry-run notice only renders when STRIPE_SECRET_KEY is unset.
           Live deploys see no notice, just the pricing grid. */}
       {isDryRun() && (
-        <div style={{
-          padding: '14px 18px',
-          background: 'var(--color-acc-soft)',
-          border: '3px solid var(--color-ink)',
-          boxShadow: '3px 3px 0 0 var(--color-acc)',
-          borderRadius: 0,
-          fontFamily: serif,
-          fontSize: 14.5,
-          color: 'var(--color-ink)',
-          marginBottom: 36,
-          lineHeight: 1.55,
-        }}>
+        <div
+          style={{
+            padding: '14px 18px',
+            background: 'var(--color-acc-soft)',
+            border: '3px solid var(--color-ink)',
+            boxShadow: '3px 3px 0 0 var(--color-acc)',
+            borderRadius: 0,
+            fontFamily: serif,
+            fontSize: 14.5,
+            color: 'var(--color-ink)',
+            marginBottom: 36,
+            lineHeight: 1.55,
+          }}
+        >
           {t('billing.dryrun_notice', locale)}
         </div>
       )}
 
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-        gap: 14,
-      }}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gap: 14,
+        }}
+      >
         <PlanCard
           plan="plus_monthly"
           accent="#2F5D5C"
@@ -205,14 +226,16 @@ export default async function BillingPage() {
         <PlanPicker locale={locale} />
       </div>
 
-      <p style={{
-        marginTop: 56,
-        fontFamily: sans,
-        fontSize: 12.5,
-        color: 'var(--color-acc-deep)',
-        opacity: 0.8,
-        lineHeight: 1.6,
-      }}>
+      <p
+        style={{
+          marginTop: 56,
+          fontFamily: sans,
+          fontSize: 12.5,
+          color: 'var(--color-acc-deep)',
+          opacity: 0.8,
+          lineHeight: 1.6,
+        }}
+      >
         {t('billing.cancel_anytime', locale)}
       </p>
     </main>
@@ -222,7 +245,15 @@ export default async function BillingPage() {
 // One billing-plan tile. Pixel chrome with the plan accent colour as
 // the hard drop shadow. Primary tile (yearly) gets the amber fill so
 // the recommended plan reads at-a-glance.
-function PlanCard({ plan, accent, headline, label, description, badge, primary }: {
+function PlanCard({
+  plan,
+  accent,
+  headline,
+  label,
+  description,
+  badge,
+  primary,
+}: {
   plan: string;
   accent: string;
   headline: string;
@@ -232,54 +263,65 @@ function PlanCard({ plan, accent, headline, label, description, badge, primary }
   primary?: boolean;
 }) {
   return (
-    <div data-plan={plan} style={{
-      padding: '22px 22px 18px',
-      background: primary ? 'var(--color-acc-soft)' : '#FFFCF4',
-      border: '4px solid var(--color-ink)',
-      boxShadow: `5px 5px 0 0 ${accent}`,
-      borderRadius: 0,
-    }}>
+    <div
+      data-plan={plan}
+      style={{
+        padding: '22px 22px 18px',
+        background: primary ? 'var(--color-acc-soft)' : '#FFFCF4',
+        border: '4px solid var(--color-ink)',
+        boxShadow: `5px 5px 0 0 ${accent}`,
+        borderRadius: 0,
+      }}
+    >
       {badge && (
-        <div style={{
-          fontFamily: pixel,
-          fontSize: 10,
-          color: accent,
-          textTransform: 'uppercase',
-          letterSpacing: '0.18em',
-          marginBottom: 10,
-          padding: '3px 8px',
-          background: '#FFFCF4',
-          border: `2px solid ${accent}`,
-          display: 'inline-block',
-        }}>
+        <div
+          style={{
+            fontFamily: pixel,
+            fontSize: 10,
+            color: accent,
+            textTransform: 'uppercase',
+            letterSpacing: '0.18em',
+            marginBottom: 10,
+            padding: '3px 8px',
+            background: '#FFFCF4',
+            border: `2px solid ${accent}`,
+            display: 'inline-block',
+          }}
+        >
           ▸ {badge.toUpperCase()}
         </div>
       )}
-      <div style={{
-        fontFamily: pixel,
-        fontSize: 28,
-        color: 'var(--color-ink)',
-        margin: '0 0 6px',
-        letterSpacing: 0.4,
-      }}>
+      <div
+        style={{
+          fontFamily: pixel,
+          fontSize: 28,
+          color: 'var(--color-ink)',
+          margin: '0 0 6px',
+          letterSpacing: 0.4,
+        }}
+      >
         {headline}
       </div>
-      <div style={{
-        fontFamily: serif,
-        fontSize: 16,
-        fontWeight: 500,
-        color: 'var(--color-ink)',
-        marginBottom: 10,
-      }}>
+      <div
+        style={{
+          fontFamily: serif,
+          fontSize: 16,
+          fontWeight: 500,
+          color: 'var(--color-ink)',
+          marginBottom: 10,
+        }}
+      >
         {label}
       </div>
-      <p style={{
-        margin: 0,
-        fontFamily: serif,
-        fontSize: 14,
-        color: 'var(--color-ink-soft)',
-        lineHeight: 1.55,
-      }}>
+      <p
+        style={{
+          margin: 0,
+          fontFamily: serif,
+          fontSize: 14,
+          color: 'var(--color-ink-soft)',
+          lineHeight: 1.55,
+        }}
+      >
         {description}
       </p>
     </div>

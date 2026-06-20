@@ -46,7 +46,7 @@ function localHourIn(tz: string, when: Date = new Date()): number | null {
       hour12: false,
     });
     const parts = fmt.formatToParts(when);
-    const hourPart = parts.find(p => p.type === 'hour');
+    const hourPart = parts.find((p) => p.type === 'hour');
     if (!hourPart) return null;
     const h = parseInt(hourPart.value, 10);
     // "24" can appear from some implementations — normalize to 0.
@@ -85,26 +85,34 @@ export async function GET(req: Request) {
   }
 
   const now = new Date();
-  const candidates = (prefs ?? []).filter(p => {
+  const candidates = (prefs ?? []).filter((p) => {
     const localHour = localHourIn(p.reminder_tz, now);
     return localHour !== null && localHour === p.reminder_local_hour;
   });
 
   if (candidates.length === 0) {
-    return NextResponse.json({ ok: true, dryRun: true, candidateCount: 0, message: 'No users due this hour.' });
+    return NextResponse.json({
+      ok: true,
+      dryRun: true,
+      candidateCount: 0,
+      message: 'No users due this hour.',
+    });
   }
 
   // Resolve user emails for the matched user_ids.
   // listUsers can paginate — for now we pull a single page big enough to
   // cover normal volumes. Scale beyond ~1000 active reminder users will
   // require batching by user_id, which we'll do then.
-  const { data: { users }, error: listErr } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 });
+  const {
+    data: { users },
+    error: listErr,
+  } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 });
   if (listErr) {
     console.error('[cron/dilemma-reminders] listUsers failed', listErr);
     return NextResponse.json({ error: 'Could not list users.' }, { status: 500 });
   }
 
-  const emailById = new Map(users.map(u => [u.id, u.email]));
+  const emailById = new Map(users.map((u) => [u.id, u.email]));
   const sent: string[] = [];
   const failed: Array<{ email: string; reason: string }> = [];
 
@@ -137,11 +145,14 @@ export async function GET(req: Request) {
     candidateCount: candidates.length,
     sentCount: sent.length,
     failedCount: failed.length,
-    failed: failed.map(f => ({ email: maskEmail(f.email), reason: f.reason })),
+    failed: failed.map((f) => ({ email: maskEmail(f.email), reason: f.reason })),
   });
 }
 
-function composeBody({ email, dilemmaPrompt }: { email: string; dilemmaPrompt: string }): { html: string; text: string } {
+function composeBody({ email, dilemmaPrompt }: { email: string; dilemmaPrompt: string }): {
+  html: string;
+  text: string;
+} {
   const url = 'https://mull.world/dilemma';
   const text = [
     `Today's dilemma:`,

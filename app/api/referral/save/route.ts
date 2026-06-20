@@ -30,7 +30,9 @@ function codeFromUserId(uid: string): string {
 
 export async function POST(req: Request) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Not signed in.' }, { status: 401 });
 
   // 1. Ensure user has their own referral code. Race-safe: ON
@@ -82,13 +84,11 @@ export async function POST(req: Request) {
         .select('code')
         .eq('user_id', referrerId)
         .maybeSingle();
-      const { error: refInsertErr } = await supabase
-        .from('referrals')
-        .insert({
-          user_id: user.id,
-          referrer_user_id: referrerId,
-          referrer_code: refRow?.code ?? null,
-        });
+      const { error: refInsertErr } = await supabase.from('referrals').insert({
+        user_id: user.id,
+        referrer_user_id: referrerId,
+        referrer_code: refRow?.code ?? null,
+      });
       if (!refInsertErr) referralAttributed = true;
     }
   }

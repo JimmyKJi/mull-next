@@ -24,10 +24,7 @@ export const runtime = 'nodejs';
 const COOKIE_NAME = 'mull_ref';
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
 
-export async function GET(
-  _req: Request,
-  { params }: { params: Promise<{ code: string }> },
-) {
+export async function GET(_req: Request, { params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;
 
   // Build a fresh anon client — we don't need cookies on this route

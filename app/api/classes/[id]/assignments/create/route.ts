@@ -22,10 +22,7 @@ type CreateBody = {
   due_at?: unknown;
 };
 
-export async function POST(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id: classId } = await params;
   if (!classId) return NextResponse.json({ error: 'Missing class id.' }, { status: 400 });
 
@@ -48,7 +45,8 @@ export async function POST(
   if (!prompt || prompt.length > 4000) {
     return NextResponse.json({ error: 'Prompt required (1–4000 chars).' }, { status: 400 });
   }
-  const instructions = typeof body.instructions === 'string' ? body.instructions.trim() || null : null;
+  const instructions =
+    typeof body.instructions === 'string' ? body.instructions.trim() || null : null;
   const sourceRef = typeof body.source_ref === 'string' ? body.source_ref.trim() || null : null;
 
   // due_at: accept ISO string or null. Validate it parses.
@@ -59,7 +57,9 @@ export async function POST(
   }
 
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Sign in.' }, { status: 401 });
 
   const { data, error } = await supabase

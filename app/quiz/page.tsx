@@ -3,35 +3,31 @@
 // client engine. The engine is the only client component on this
 // surface; everything else stays static / server-rendered.
 
-import type { Metadata, Viewport } from "next";
-import { getServerLocale } from "@/lib/locale-server";
-import { createClient } from "@/utils/supabase/server";
-import { QUICK_QUESTIONS } from "@/lib/quiz-questions";
-import { DETAILED_QUESTIONS } from "@/lib/quiz-questions-detailed";
-import { QuizEngine } from "./quiz-engine";
-import { ResearchConsentGate } from "@/components/research-consent-gate";
+import type { Metadata, Viewport } from 'next';
+import { getServerLocale } from '@/lib/locale-server';
+import { createClient } from '@/utils/supabase/server';
+import { QUICK_QUESTIONS } from '@/lib/quiz-questions';
+import { DETAILED_QUESTIONS } from '@/lib/quiz-questions-detailed';
+import { QuizEngine } from './quiz-engine';
+import { ResearchConsentGate } from '@/components/research-consent-gate';
 
 export const metadata: Metadata = {
-  title: "Quiz · Mull",
-  description: "Find your place on the map of how you think.",
+  title: 'Quiz · Mull',
+  description: 'Find your place on the map of how you think.',
   robots: { index: false, follow: false },
 };
 
 export const viewport: Viewport = {
-  width: "device-width",
+  width: 'device-width',
   initialScale: 1,
 };
 
 type SearchParams = Promise<{ mode?: string }>;
 
-export default async function QuizPage({
-  searchParams,
-}: {
-  searchParams: SearchParams;
-}) {
+export default async function QuizPage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams;
-  const mode = params.mode === "detailed" ? "detailed" : "quick";
-  const questions = mode === "detailed" ? DETAILED_QUESTIONS : QUICK_QUESTIONS;
+  const mode = params.mode === 'detailed' ? 'detailed' : 'quick';
+  const questions = mode === 'detailed' ? DETAILED_QUESTIONS : QUICK_QUESTIONS;
   const locale = await getServerLocale();
 
   // Auth state drives the gate's optional post-opt-in demographics step:

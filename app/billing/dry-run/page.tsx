@@ -11,7 +11,7 @@ import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import MullWordmark from '@/components/mull-wordmark';
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
 export default async function DryRunCheckoutPage({
@@ -21,7 +21,8 @@ export default async function DryRunCheckoutPage({
 }) {
   const { plan } = await searchParams;
   const locale = await getServerLocale();
-  const valid = plan && (plan === 'plus_monthly' || plan === 'plus_yearly' || plan === 'founding_lifetime');
+  const valid =
+    plan && (plan === 'plus_monthly' || plan === 'plus_yearly' || plan === 'founding_lifetime');
   const price = valid ? PRICES[plan as Exclude<Plan, 'free'>] : null;
 
   return (
@@ -30,43 +31,52 @@ export default async function DryRunCheckoutPage({
         <MullWordmark />
       </div>
 
-      <div style={{
-        padding: '32px 28px',
-        background: '#FFFCF4',
-        border: '4px solid var(--color-ink)',
-        boxShadow: '6px 6px 0 0 var(--color-acc)',
-        borderRadius: 0,
-      }}>
-        <div style={{
-          fontFamily: pixel,
-          fontSize: 12,
-          color: 'var(--color-acc-deep)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.18em',
-          marginBottom: 16,
-        }}>
+      <div
+        style={{
+          padding: '32px 28px',
+          background: '#FFFCF4',
+          border: '4px solid var(--color-ink)',
+          boxShadow: '6px 6px 0 0 var(--color-acc)',
+          borderRadius: 0,
+        }}
+      >
+        <div
+          style={{
+            fontFamily: pixel,
+            fontSize: 12,
+            color: 'var(--color-acc-deep)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.18em',
+            marginBottom: 16,
+          }}
+        >
           ▸ {t('billing.dryrun_title', locale).toUpperCase()}
         </div>
 
         {price ? (
           <>
-            <h1 style={{
-              fontFamily: serif,
-              fontSize: 26,
-              fontWeight: 500,
-              margin: '0 0 10px',
-            }}>
+            <h1
+              style={{
+                fontFamily: serif,
+                fontSize: 26,
+                fontWeight: 500,
+                margin: '0 0 10px',
+              }}
+            >
               {price.label}
             </h1>
-            <p style={{
-              fontFamily: pixel,
-              fontSize: 14,
-              color: 'var(--color-ink-soft)',
-              margin: '0 0 26px',
-              letterSpacing: 0.4,
-              textTransform: 'uppercase',
-            }}>
-              ${(price.amountCents / 100).toFixed(price.amountCents % 100 === 0 ? 0 : 2)} · {(price.interval === 'lifetime' ? 'one-time' : 'per ' + price.interval).toUpperCase()}
+            <p
+              style={{
+                fontFamily: pixel,
+                fontSize: 14,
+                color: 'var(--color-ink-soft)',
+                margin: '0 0 26px',
+                letterSpacing: 0.4,
+                textTransform: 'uppercase',
+              }}
+            >
+              ${(price.amountCents / 100).toFixed(price.amountCents % 100 === 0 ? 0 : 2)} ·{' '}
+              {(price.interval === 'lifetime' ? 'one-time' : 'per ' + price.interval).toUpperCase()}
             </p>
           </>
         ) : (
@@ -75,32 +85,38 @@ export default async function DryRunCheckoutPage({
           </p>
         )}
 
-        <p style={{
-          fontFamily: serif,
-          fontStyle: 'italic',
-          fontSize: 15,
-          color: 'var(--color-ink-soft)',
-          margin: '0 0 28px',
-          lineHeight: 1.6,
-        }}>
+        <p
+          style={{
+            fontFamily: serif,
+            fontStyle: 'italic',
+            fontSize: 15,
+            color: 'var(--color-ink-soft)',
+            margin: '0 0 28px',
+            lineHeight: 1.6,
+          }}
+        >
           {t('billing.dryrun_body', locale)}
         </p>
 
-        <Link href="/billing" className="pixel-press" style={{
-          display: 'inline-block',
-          padding: '12px 22px',
-          background: 'var(--color-ink)',
-          color: 'var(--color-cream)',
-          textDecoration: 'none',
-          borderRadius: 0,
-          border: '4px solid var(--color-ink)',
-          boxShadow: '4px 4px 0 0 var(--color-acc)',
-          fontFamily: pixel,
-          fontSize: 12,
-          letterSpacing: '0.08em',
-          textTransform: 'uppercase',
-          transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
-        }}>
+        <Link
+          href="/billing"
+          className="pixel-press"
+          style={{
+            display: 'inline-block',
+            padding: '12px 22px',
+            background: 'var(--color-ink)',
+            color: 'var(--color-cream)',
+            textDecoration: 'none',
+            borderRadius: 0,
+            border: '4px solid var(--color-ink)',
+            boxShadow: '4px 4px 0 0 var(--color-acc)',
+            fontFamily: pixel,
+            fontSize: 12,
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+          }}
+        >
           ◂ {t('billing.back_to_plans', locale).toUpperCase()}
         </Link>
       </div>

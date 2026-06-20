@@ -33,7 +33,9 @@ export default function ClassLeaveButton({
     setError(null);
     try {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
         setError(t('cls.not_signed_in', locale));
         setBusy(false);
@@ -83,7 +85,10 @@ export default function ClassLeaveButton({
         {busy ? t('cls.leaving', locale) : t('cls.leave_class', locale)}
       </button>
       {error && (
-        <p className="pixel-alert pixel-alert--error" style={{ marginTop: 10, display: 'inline-block' }}>
+        <p
+          className="pixel-alert pixel-alert--error"
+          style={{ marginTop: 10, display: 'inline-block' }}
+        >
           {error}
         </p>
       )}

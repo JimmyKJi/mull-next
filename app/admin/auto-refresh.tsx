@@ -16,13 +16,19 @@ export default function AdminAutoRefresh({ seconds = 60 }: { seconds?: number })
 
     const start = () => {
       if (timer) return;
-      timer = setInterval(() => {
-        if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return;
-        router.refresh();
-      }, Math.max(15, seconds) * 1000);
+      timer = setInterval(
+        () => {
+          if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return;
+          router.refresh();
+        },
+        Math.max(15, seconds) * 1000,
+      );
     };
     const stop = () => {
-      if (timer) { clearInterval(timer); timer = null; }
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
     };
 
     start();

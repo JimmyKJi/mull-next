@@ -157,10 +157,7 @@ export function touchAxis(
   for (const k of touched) {
     const i = DIM_KEYS.indexOf(k);
     if (i < 0) continue;
-    const score =
-      mode === 'shared'
-        ? userVec[i] * otherVec[i]
-        : Math.abs(userVec[i] - otherVec[i]);
+    const score = mode === 'shared' ? userVec[i] * otherVec[i] : Math.abs(userVec[i] - otherVec[i]);
     if (score > bestScore) {
       bestScore = score;
       best = k;

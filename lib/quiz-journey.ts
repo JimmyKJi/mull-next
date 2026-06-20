@@ -50,9 +50,9 @@
 // SCORING + /result handoff unchanged. Chamber count unchanged.
 // All 16 dimensions still covered by the choices.
 
-import { cos, v, zeros } from "./vectors";
-import { ARCHETYPE_TARGETS, expandArchetypeVector } from "./archetype-targets";
-import { DIM_KEYS, type DimKey } from "./dimensions";
+import { cos, v, zeros } from './vectors';
+import { ARCHETYPE_TARGETS, expandArchetypeVector } from './archetype-targets';
+import { DIM_KEYS, type DimKey } from './dimensions';
 
 export type JourneyChoice = {
   text: string;
@@ -62,7 +62,7 @@ export type JourneyChoice = {
 
 export type JourneyScene =
   | {
-      kind: "frame";
+      kind: 'frame';
       id: string;
       art: SceneArtKey;
       eyebrow?: string;
@@ -70,7 +70,7 @@ export type JourneyScene =
       advance: string;
     }
   | {
-      kind: "chamber";
+      kind: 'chamber';
       id: string;
       art: SceneArtKey;
       eyebrow: string;
@@ -101,7 +101,7 @@ export type JourneyScene =
        *  (the walk into the final chamber) — the archetype-specific
        *  recognition + flavor beat + inheritance + ask are spliced in
        *  by the engine using the picker output. */
-      kind: "reveal";
+      kind: 'reveal';
       id: string;
       art: SceneArtKey;
       eyebrow: string;
@@ -111,20 +111,20 @@ export type JourneyScene =
     };
 
 export type SceneArtKey =
-  | "envelope-seal"
-  | "framed-photograph"
-  | "stacked-letters"
-  | "two-chairs"
-  | "ticket-and-photo"
-  | "candle-deathbed";
+  | 'envelope-seal'
+  | 'framed-photograph'
+  | 'stacked-letters'
+  | 'two-chairs'
+  | 'ticket-and-photo'
+  | 'candle-deathbed';
 
 export const JOURNEY_SCENES: JourneyScene[] = [
   // ─── Arrival ──────────────────────────────────────────────────
   {
-    kind: "frame",
-    id: "arrival",
-    art: "envelope-seal",
-    eyebrow: "I · The Invitation",
+    kind: 'frame',
+    id: 'arrival',
+    art: 'envelope-seal',
+    eyebrow: 'I · The Invitation',
     body: `The solicitor's letter is on your kitchen counter when you come home from work. You don't remember leaving the door unlocked.
 
 Heavy paper, the kind law firms still use when they want to feel old. Two sheets inside.
@@ -146,7 +146,7 @@ You think about it for ninety minutes. You think about how a stranger you have n
 At ten, you order the cab.
 
 The driver won't take you past the gate.`,
-    advance: "Walk to the door",
+    advance: 'Walk to the door',
   },
 
   // ─── Chamber 1 — the photograph ───────────────────────────────
@@ -155,10 +155,10 @@ The driver won't take you past the gate.`,
   // clue that the official story of Wren's life — and death — isn't
   // tight.
   {
-    kind: "chamber",
-    id: "ch1",
-    art: "framed-photograph",
-    eyebrow: "II · The Foyer",
+    kind: 'chamber',
+    id: 'ch1',
+    art: 'framed-photograph',
+    eyebrow: 'II · The Foyer',
     body: `The door opens before you can knock. The woman who opens it doesn't introduce herself. She's older than you were expecting. Her eyes are red around the edges in a way that suggests she has been crying earlier today but is past it now. She steps back and gestures you in.
 
 The foyer smells of beeswax and old wood. A single candle burns in a brass holder on a small table. The hallway beyond is dark.
@@ -230,10 +230,10 @@ She turns. "Follow."`,
   // a man four weeks from his own death leave a forgiveness on the
   // table?
   {
-    kind: "chamber",
-    id: "ch2",
-    art: "stacked-letters",
-    eyebrow: "III · The Writing Room",
+    kind: 'chamber',
+    id: 'ch2',
+    art: 'stacked-letters',
+    eyebrow: 'III · The Writing Room',
     body: `She leads you down a long hallway. The floorboards creak under your weight; not under hers. You pass two doors — one open onto a sitting room you don't enter, one closed and silent. Then a smaller corridor, then a writing room with one window facing the dark.
 
 There is a desk by the window. On the desk, a wooden box, its lid open. Inside, letters — many of them, stacked. The handwriting on the top letter is a child's wide print. Underneath, the next is a careful adolescent's. Underneath that, an adult's hand. The same person, writing across thirty years.
@@ -305,10 +305,10 @@ She refolds the letter. "Wren never went. He wrote no reply. He died four weeks 
   // life's argument has just been validated does not, ordinarily,
   // leave the book unwritten.
   {
-    kind: "chamber",
-    id: "ch3",
-    art: "two-chairs",
-    eyebrow: "IV · The Library",
+    kind: 'chamber',
+    id: 'ch3',
+    art: 'two-chairs',
+    eyebrow: 'IV · The Library',
     body: `She leads you through a smaller door — you have to duck — and into a library. This one is larger. It smells of paper and rain, somehow, though you've heard no rain.
 
 Two chairs face each other across a low table. Between them: two stacks of letters, both thick, both tied with string.
@@ -386,10 +386,10 @@ She lifts a newer sheet from beside the rival's stack — paper still pale.
   // The biggest of the four anomalies and the one that should make
   // the inheritor begin to suspect what the reveal will confirm.
   {
-    kind: "chamber",
-    id: "ch4",
-    art: "ticket-and-photo",
-    eyebrow: "V · The Box on the Table",
+    kind: 'chamber',
+    id: 'ch4',
+    art: 'ticket-and-photo',
+    eyebrow: 'V · The Box on the Table',
     body: `She leads you up a narrow staircase. Your footsteps sound louder than hers, which makes no sense — she's heavier than you are. At the top, a small room with one table.
 
 On the table: a small wooden box, the lid lifted. You step closer.
@@ -478,10 +478,10 @@ She tilts the new one toward the candle. The date is eight days ago. Last Wednes
   // archetype-specific recognition + inheritance + ask are spliced
   // in.
   {
-    kind: "reveal",
-    id: "reveal",
-    art: "candle-deathbed",
-    eyebrow: "VI · The Last Chamber",
+    kind: 'reveal',
+    id: 'reveal',
+    art: 'candle-deathbed',
+    eyebrow: 'VI · The Last Chamber',
     coldOpen: `You take the key. The metal is colder than you expected. The servant doesn't follow you up.
 
 The door at the end of the upstairs hall is the only one that wasn't closed when you walked the corridor on the way to chamber four. You hadn't noticed at the time. You notice now.
@@ -513,7 +513,7 @@ He looks at you steadily.`,
 ];
 
 export function chamberCount(): number {
-  return JOURNEY_SCENES.filter((s) => s.kind === "chamber").length;
+  return JOURNEY_SCENES.filter((s) => s.kind === 'chamber').length;
 }
 
 // ─── Reveal endings ───────────────────────────────────────────────
@@ -560,7 +560,7 @@ export const JOURNEY_REVEALS: Record<string, RevealEnding> = {
   // owes another (Chamber 3 payoff). Ask: read it, find what's
   // wrong, fix it, publish under both names.
   cartographer: {
-    archetypeKey: "cartographer",
+    archetypeKey: 'cartographer',
     recognition: `"You answered like someone who would rather be slow than wrong," he says. "In every chamber. You would not move on a question until you had named what the question actually was. Elena saw it most clearly in the library — you did not take a side on the disagreement, you re-stated it. That is a particular kind of mind. There have been four mappers, in the seven who made it this far across decades. You are the fifth."`,
     flavorDetails: {
       TV: `"And you map knowing the territory is partly grief," he adds. "That the cleanest framework will always leave some real thing out. You came anyway. That is the only kind of cartography worth doing."`,
@@ -579,7 +579,7 @@ He looks at the manuscript.
 
 "It is two hundred pages. The conclusion is unfinished. The middle is correct, I believe. The end may be wrong."`,
     ask: `"Read it. Read it the way you mapped the chambers. Find what is wrong. If anything is wrong. Fix it. Then publish — under your name and mine, or under your name alone if you have rebuilt the argument far enough that mine is no longer in it. The rival is still alive. She will help you. I have written to her, in a sealed envelope on the desk, telling her you will come. Take the envelope. Take the manuscript. Make the book exist."`,
-    advance: "Take the manuscript",
+    advance: 'Take the manuscript',
   },
 
   // ─── Keel — what keeps the boat upright in any storm ──────────
@@ -587,7 +587,7 @@ He looks at the manuscript.
   // Tied loosely to Chamber 2 (letters / tending across years).
   // Ask: keep writing them until they go.
   keel: {
-    archetypeKey: "keel",
+    archetypeKey: 'keel',
     recognition: `"You answered with weight in you," he says. "The kind that lets a boat keep pointing forward when the wind argues with it. Elena watched you in the chamber of the daughter — you did not choose what was easiest, you chose what was workable, and you did not pretend the cost wasn't there. That is the Keel's reflex. There have been three of you, across the seven. The fourth of you lived a life I have used as a measure of my own. You will live one like it. I would not have asked otherwise."`,
     flavorDetails: {
       TR: `"And you brought reasons," he adds. "Most keels work by feel. They steady the boat without being able to say why. You can. That makes you slower in calm waters and stronger in long ones."`,
@@ -604,7 +604,7 @@ You do. Inside: a thin notebook. You lift it out. The pages are filled with name
 
 "Seven correspondents," Wren says. "All elderly. All without family who write to them anymore. I have written to each of them weekly for between four and twenty-two years. None of them know about each other. None of them know I am dying. They are between eighty-two and ninety-six. They have, between them, perhaps two more years."`,
     ask: `"Take over the writing. Start with Margaret — she is the oldest, and the one most likely to notice if a week goes by without a letter. The notebook tells you what to know. You will not need to pretend to be me; tell each of them, in your own first letter, that you are writing on my behalf because I cannot. They will not stop writing back. They never have. When each of them dies, you will know — the letters will stop. Keep writing the rest until they too go. Then it is finished. Two years. Maybe three."`,
-    advance: "Take the notebook",
+    advance: 'Take the notebook',
   },
 
   // ─── Threshold — at the edge of what language can hold ────────
@@ -612,7 +612,7 @@ You do. Inside: a thin notebook. You lift it out. The pages are filled with name
   // (Chamber 1 payoff — Elena's "death" never recorded). Tell
   // them she is alive. In person, in silence if needed.
   threshold: {
-    archetypeKey: "threshold",
+    archetypeKey: 'threshold',
     recognition: `"You answered without filling the silences," he says. "More than once. Elena said that even when you spoke, you spoke as if the words were a placeholder for the thing — not the thing itself. That is a Threshold's reflex. I have been there too. So has Elena. So have three of the seven who came across the decades. The work I am giving you will only be done well by someone who can sit at the edge of what cannot be said without flinching, and you can."`,
     flavorDetails: {
       TV: `"And you came knowing what I would say before I said it," he adds. "Without making it your business to know. That is the harder version. The third of you knew that way."`,
@@ -629,7 +629,7 @@ You do. Inside: a thin notebook. You lift it out. The pages are filled with name
 
 "We will not write to her. We will not call. Wren is the name on the death notice now, not Elena, but the truth of it" — he looks at his wife — "is that the lie is older. The sister deserves to learn the truth from another person, in a room, with someone who can sit through the long silence that will follow it. We are not the right people. We have spent the lie. You have not."`,
     ask: `"Go to the sister this week. Do not write ahead. Knock at the door. Tell her plainly that Elena is alive and would like to see her, and is sorry for the years. Then sit with the sister. Do not explain. Do not soften it. Do not narrate her own grief back to her. Sit. When she is ready — she will be ready, even if it takes hours — bring Elena to her. The reunion is not yours to manage. The opening is. You are the only one of the seven who could have done it."`,
-    advance: "Go find the sister",
+    advance: 'Go find the sister',
   },
 
   // ─── Pilgrim — walking on, alone, with the question still open
@@ -637,7 +637,7 @@ You do. Inside: a thin notebook. You lift it out. The pages are filled with name
   // go where Wren was going, deliver the news that he is not
   // coming, then keep going past what Wren left undone.
   pilgrim: {
-    archetypeKey: "pilgrim",
+    archetypeKey: 'pilgrim',
     recognition: `"You came alone," he says. "Of course you did. Even the ones who arrive in company arrive alone, but you did not pretend otherwise. In every chamber you were the one deciding, and you did not ask Elena's opinion, and you did not look at her after answering to check whether she approved. That is the Pilgrim's reflex. There have been two of you. Both of them walked the rest of their lives the way they walked tonight."`,
     flavorDetails: {
       TV: `"And you walk knowing the road does not lead anywhere certain," he adds. "You aren't moving toward a city. You are moving because not moving is worse. That is what makes pilgrims actually pilgrims."`,
@@ -654,7 +654,7 @@ You do. Inside: a thin notebook. You lift it out. The pages are filled with name
     ask: `"Take the ticket. Take the photograph — there is an address on the back. Make the crossing. When you arrive, tell the person waiting at that house that I am not coming, and that I would have, and that I am sorry. Do not stay long. The crossing is yours, not theirs, and you have your own road to walk after.
 
 "And after that — find the next thing I left undone, somewhere in this house or in the papers Elena will give you. Finish it the way you would walk: light, without ceremony, and on to the next."`,
-    advance: "Lace up and go",
+    advance: 'Lace up and go',
   },
 
   // ─── Touchstone — what's true is what survives the test ───────
@@ -663,7 +663,7 @@ You do. Inside: a thin notebook. You lift it out. The pages are filled with name
   // tie obliquely to the library (Chamber 3 — drafts the rival
   // never saw).
   touchstone: {
-    archetypeKey: "touchstone",
+    archetypeKey: 'touchstone',
     recognition: `"You came testing," he says, faintly amused. "Elena noticed it in the third chamber — you didn't just answer, you turned the question over first to see whether it was the question. You asked yourself whether my choice was even the right shape of a choice. That is a Touchstone's reflex. There have been three of you. The third of you saved us from a mistake the second made. The work I am giving you is in that line."`,
     flavorDetails: {
       VA: `"And you did not sour," he adds. "Most testers do. They get good at finding what's wrong and lose the taste for what's right. You haven't. You would still pick up a thing you'd just tested and call it good, if it was."`,
@@ -676,14 +676,14 @@ You do. Inside: a thin notebook. You lift it out. The pages are filled with name
     flavorDetailDefault: `"And you tested without becoming a cynic," he adds. "Which is more than most can do."`,
     inheritance: `He gestures at a low chest at the foot of the bed. "Inside that chest are forty-one drafts. Essays I wrote and never published, on the limits of what one person owes another. None of them are the manuscript in the library — the manuscript is the argument I finished and could not bring myself to ship. These are the arguments I started and could not finish. Some are wrong. Some are wrong in interesting ways. Some, possibly two or three, are right. I do not know which."`,
     ask: `"Test them. Read each one. Test the argument the way you would test any claim — what does it predict, what does it rule out, what does it survive. The ones that survive your test: publish, in any form you can. The ones that don't: burn. Do not be sentimental about my drafts. I was not. The rival's address is in the manuscript, downstairs. She will help you with the borderline cases. She will be honest. She always has been."`,
-    advance: "Open the chest",
+    advance: 'Open the chest',
   },
 
   // ─── Hearth — where what binds us across generations is kept warm
   // Inheritance: the daughter's letters + the unsent reply. Ask:
   // visit the daughter in person, deliver the letters, stay.
   hearth: {
-    archetypeKey: "hearth",
+    archetypeKey: 'hearth',
     recognition: `"You answered with others in your head," he says softly. "Not abstractly. Concretely. In the chamber of the letters, when you faced the daughter, you did not reach for a clean principle. You reached for the daughter herself. You wanted to know what she needed. There have been four of you across the seven. The third of you was a Hearth, and they were why the next two of us — Elena and I — chose the work at all. You will do better than I did at this particular task."`,
     flavorDetails: {
       TR: `"And you can say why," he adds. "Not everyone whose heart is in the village can articulate what holds it together. You can. That helps when someone arrives asking to dismantle it."`,
@@ -698,7 +698,7 @@ You do. Inside: a thin notebook. You lift it out. The pages are filled with name
 
 "My daughter wrote to me for thirty years. Three months ago she wrote and forgave me. I did not write back. I read the letter sitting in the chair you sat in, in the chamber of the writing room, and I had a reply written in my head before I had finished the second sentence. I did not put it on paper. I do not know why. I think I was afraid that she would think I had only written back because I knew I was dying. I think I was right to be afraid of that, and wrong to let it stop me."`,
     ask: `"Visit her. In person. This weekend, if you can. Bring the letters. Bring this one too" — he taps an envelope on the table — "which is the reply I should have written and finally did, last week, the only honest thing I have written in three years. Read it to her, if she will let you. Stay for dinner. Stay through the weekend. Tell her about Elena. Tell her about the chambers. Tell her that the forgiveness she sent six months ago was received, late, by a stranger who came on her father's behalf. She is going to be furious for a while. Sit through that too."`,
-    advance: "Take the letters",
+    advance: 'Take the letters',
   },
 
   // ─── Forge — what is is not what must be ──────────────────────
@@ -706,7 +706,7 @@ You do. Inside: a thin notebook. You lift it out. The pages are filled with name
   // together. Ask: publish them as a pair. Make a public stir. Don't
   // be precious about Wren's reluctance.
   forge: {
-    archetypeKey: "forge",
+    archetypeKey: 'forge',
     recognition: `"You came to make something," he says. The voice is stronger than the sentence before it suggested. "Elena saw it in the third chamber. You wouldn't yield, but you wouldn't refuse to listen either. You wanted to *change the disagreement*. To make it move. That is a Forger's reflex. The fourth of you came in 1987 and started a press that is still printing. The work I am giving you is a thing I should have made and did not."`,
     flavorDetails: {
       UI: `"And what you would make, you would make for all," he adds. "Not a corner for the people who already do well. The fourth of you wrote: *if the work does not reach the worst-off, then I have not made anything yet*. You answered that way too."`,
@@ -721,7 +721,7 @@ You do. Inside: a thin notebook. You lift it out. The pages are filled with name
 
 "Two things. The manuscript — the same one downstairs; this is the cleaner copy, marked up. And the rival's concession letter from six months ago, in which she names the argument as mine and authorizes me to publish it under both names or under my own. I have ten years of similar private notes from her, in a folder on the desk, that taken together make a complete public record of her capitulation."`,
     ask: `"Publish all of it. Together. Not quietly. Make a noise. The manuscript IS the argument; the letters are why everyone in the field who matters will have to read the manuscript. Use my name. Use the rival's name with her permission — I have written to ask, and she will say yes; she has already told Elena so. Do not be precious about my reluctance. I lacked the nerve. You have it. The work is more important than my discomfort, and I am about to be past discomfort either way."`,
-    advance: "Take the work",
+    advance: 'Take the work',
   },
 
   // ─── Hammer — break what no longer serves ─────────────────────
@@ -730,7 +730,7 @@ You do. Inside: a thin notebook. You lift it out. The pages are filled with name
   // publicly, correct the registry, make Elena visible again to
   // the world. Force the consequences.
   hammer: {
-    archetypeKey: "hammer",
+    archetypeKey: 'hammer',
     recognition: `"You came with a no in you," he says. "Elena saw it in the fourth chamber — you would not take the ticket for the ordinary reasons. You were not refusing pleasure, you were refusing the version of yourself that would have used the ticket to escape something you were supposed to face. The third of you was a Hammer. I am not, and I have lived a coward's life as a result. You are not, and you have not, and you won't."`,
     flavorDetails: {
       TV: `"And you know what the refusal costs," he adds. "You do not refuse from a high horse. You refuse from somewhere closer to grief. That is the only Hammer worth being."`,
@@ -747,14 +747,14 @@ You do. Inside: a thin notebook. You lift it out. The pages are filled with name
 
 "My death notice this morning was the lever for this. Elena cannot be 'discovered alive' without my fraud also being discovered. While I was alive I would not have permitted the consequences. Now they no longer matter. The rest of you with names in this story do still matter, and you must judge whether they are worth what I am about to ask. I think they are. I am asking you to think so too."`,
     ask: `"Take the archive. Go to the local solicitor in town — Hargreaves; the address is in the case. Correct the registry. Let the consequences fall. The estate may be clawed back; let it be. The pension I drew under false widower status — there were small benefits — repay them from the cash in the writing-room safe. Do not soften any of it. Tell Elena's sister yourself, the same week, in person. Make it impossible for the daughter to hear it from a paper. Do the breaking cleanly. The kind of refusal that is also love. That is what I should have had thirty-one years ago and did not."`,
-    advance: "Take the archive",
+    advance: 'Take the archive',
   },
 
   // ─── Garden — the good things this life offers, taken seriously
   // Inheritance: the new ticket, the coastal house, the season.
   // Ask: take the life Wren refused. Eat the figs. Send word back.
   garden: {
-    archetypeKey: "garden",
+    archetypeKey: 'garden',
     recognition: `"You came with appetite intact," he says, with what might almost be a smile. "In the fourth chamber — most who reach me refuse the ticket out of duty or principle. You did, mostly, but you knew what you were giving up. You named the joy of the smaller love before you refused it. You did not pretend not to want it. That is a Garden's clarity. The third of you were a Garden, and they were the warmest of the seven. You answered the way they would have."`,
     flavorDetails: {
       TE: `"And you trust what you can taste," he adds. "You do not argue with the strawberry. You eat it and notice it is sweeter than last year. The third of us would have liked you immediately."`,
@@ -767,7 +767,7 @@ You do. Inside: a thin notebook. You lift it out. The pages are filled with name
     flavorDetailDefault: `"And you would actually use the inheritance," he adds. "Which is the only one I have to give that requires using."`,
     inheritance: `He gestures at the wooden box from upstairs, now on the foot of the bed. "Inside is the new ticket. Last Wednesday's. Coastal house above the small village in the photograph. The house has been waiting for me for twenty years. A small fig tree in the courtyard that I have not eaten from in twelve. A person there I once loved who is still expecting me. I cannot make the crossing. The doctors are clear about that. I would not survive the ferry."`,
     ask: `"Make the crossing in my place. Not to deliver bad news — Elena will send a separate letter ahead so the person there knows I am not coming and why. Make the crossing for yourself. Eat from the tree. Stay the season. The house is leased through the autumn and the lease is yours. Sit on the porch in the late afternoon. Drink the small dark wine from the bottom shelf in the cellar. Send Elena one postcard a month so we know you are eating well. Be the version of this life I never gave myself, and let the trip back be no sooner than September. The world will not collapse without you for three months. It did not collapse without me for the whole twenty years."`,
-    advance: "Take the ticket",
+    advance: 'Take the ticket',
   },
 
   // ─── Lighthouse — the eternal pattern beneath the changing surface
@@ -775,7 +775,7 @@ You do. Inside: a thin notebook. You lift it out. The pages are filled with name
   // edit it for publication as a single volume — the argument is
   // the correspondence, not just the manuscript.
   lighthouse: {
-    archetypeKey: "lighthouse",
+    archetypeKey: 'lighthouse',
     recognition: `"You came for the pattern," he says. "Elena could tell in the first chamber — when the photograph was offered, you did not reach for the immediate. You reached for what the moment was an instance of. The fifth of you was a Lighthouse. They built nothing visible in their lifetime and they kept things lit for centuries after. So will you, if you choose. The work I am leaving you is the only one in this room that depends on time you may not have but should pretend to."`,
     flavorDetails: {
       MR: `"And you sense the pattern beneath what words can hold," he adds. "You would rather sit with a mystery a long time than name it badly. Your light is steady because it is not running on the burn of having to prove it."`,
@@ -788,7 +788,7 @@ You do. Inside: a thin notebook. You lift it out. The pages are filled with name
     flavorDetailDefault: `"And you would maintain a light for a hundred years if it served," he adds. "Which is what I am about to ask of you in miniature."`,
     inheritance: `He looks at the bookshelves opposite the bed. "Three shelves. The middle three. Thirty years of letters between me and the rival. Some are arguments, some are gossip about other philosophers, some are the small daily texture of two minds in a long disagreement — what we ate the night we wrote, what we were reading, the weather. The manuscript is the argument we had at the surface. The letters are the argument that produced the manuscript, and the parts of it neither of us was clever enough to fit into a book."`,
     ask: `"Edit the letters into a single volume. Mine and hers, in order, with light annotation. Do not over-introduce them. Do not write a long preface explaining what you are about to show. Let the correspondence speak. The rival will help — she has been waiting for this; she told Elena last spring she had given up on me doing it myself. The volume will not sell. It will be read by perhaps two hundred people over the next century, and a small number of those will use it to do their own better work. That is the entire point. You are not building a monument. You are keeping a lamp lit for boats that may take fifty years to arrive."`,
-    advance: "Take the first letter",
+    advance: 'Take the first letter',
   },
 };
 
@@ -810,7 +810,7 @@ export function pickEnding(vector: number[]): {
     return { key: target.key, prototype, sim: cos(vector, prototype) };
   }).sort((a, b) => b.sim - a.sim);
 
-  const top = scored[0] ?? { key: "cartographer", prototype: zeros(), sim: 0 };
+  const top = scored[0] ?? { key: 'cartographer', prototype: zeros(), sim: 0 };
 
   // Flavor dimension: the user's strongest dim that is NOT in the
   // archetype's top-4 defining cluster. Mirrors computeFlavor in
@@ -826,9 +826,7 @@ export function pickEnding(vector: number[]): {
     .filter((x) => !archTopKeys.includes(x.k))
     .sort((a, b) => b.v - a.v);
   const flavor: DimKey | null =
-    userTopOutside.length && userTopOutside[0].v > 0
-      ? userTopOutside[0].k
-      : null;
+    userTopOutside.length && userTopOutside[0].v > 0 ? userTopOutside[0].k : null;
 
   return { archetypeKey: top.key, flavor };
 }

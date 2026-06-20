@@ -108,10 +108,10 @@ export default function WelcomeBackBanner() {
           100% { transform: translateY(0); opacity: 1; }
         }
       `}</style>
-      <span>
-        ▸ {t('uic.welcome_back_text', locale, { gap: relativeGap(daysAgo, locale) })}
+      <span>▸ {t('uic.welcome_back_text', locale, { gap: relativeGap(daysAgo, locale) })}</span>
+      <span aria-hidden style={{ opacity: 0.6 }}>
+        ✕
       </span>
-      <span aria-hidden style={{ opacity: 0.6 }}>✕</span>
     </button>
   );
 }

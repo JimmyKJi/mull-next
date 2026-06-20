@@ -48,8 +48,44 @@ function genAliases(name) {
   const cleaned = trimmed.replace(/\s*\([^)]*\)/g, '').trim();
   const ofMatch = cleaned.match(/^(.+?)\s+of\s+(.+)$/i);
   if (ofMatch) aliases.add(ofMatch[1].trim());
-  const PARTICLES = new Set(['of','the','de','la','le','von','van','der','den','di','da','ibn','ben','al','el','bin']);
-  const HONORIFICS = new Set(['sri','saint','st','st.','dom','sister','brother','rabbi','sheikh','imam','swami','lama','rev','reverend','sor','madame','sir','dame']);
+  const PARTICLES = new Set([
+    'of',
+    'the',
+    'de',
+    'la',
+    'le',
+    'von',
+    'van',
+    'der',
+    'den',
+    'di',
+    'da',
+    'ibn',
+    'ben',
+    'al',
+    'el',
+    'bin',
+  ]);
+  const HONORIFICS = new Set([
+    'sri',
+    'saint',
+    'st',
+    'st.',
+    'dom',
+    'sister',
+    'brother',
+    'rabbi',
+    'sheikh',
+    'imam',
+    'swami',
+    'lama',
+    'rev',
+    'reverend',
+    'sor',
+    'madame',
+    'sir',
+    'dame',
+  ]);
   const words = cleaned.replace(/[,.]/g, '').split(/\s+/).filter(Boolean);
   if (words.length > 1) {
     let firstIdx = 0;
@@ -61,8 +97,8 @@ function genAliases(name) {
     if (lastIdx > firstIdx) aliases.add(words[lastIdx]);
   }
   return [...aliases]
-    .map(s => s.trim())
-    .filter(s => s && s.toLowerCase() !== trimmed.toLowerCase());
+    .map((s) => s.trim())
+    .filter((s) => s && s.toLowerCase() !== trimmed.toLowerCase());
 }
 
 // ─── Manual overrides ─────────────────────────────────────────────────
@@ -77,22 +113,22 @@ function genAliases(name) {
 
 const MANUAL_OVERRIDES = {
   // Initialism surnames — preserve the dotted form + use the surname.
-  'W.E.B. Du Bois':       ['Du Bois', 'W.E.B.'],
-  'G.E.M. Anscombe':      ['Anscombe', 'G.E.M.'],
-  'D.T. Suzuki':          ['D.T. Suzuki', 'Suzuki'], // Suzuki collides with Shunryu Suzuki; full form disambiguates.
+  'W.E.B. Du Bois': ['Du Bois', 'W.E.B.'],
+  'G.E.M. Anscombe': ['Anscombe', 'G.E.M.'],
+  'D.T. Suzuki': ['D.T. Suzuki', 'Suzuki'], // Suzuki collides with Shunryu Suzuki; full form disambiguates.
 
   // Composite / honorific names — the honorific alone is not a useful alias.
-  'Thich Nhat Hanh':      ['Nhat Hanh', 'Hanh'],
-  'Cheikh Anta Diop':     ['Diop', 'Anta Diop'],
+  'Thich Nhat Hanh': ['Nhat Hanh', 'Hanh'],
+  'Cheikh Anta Diop': ['Diop', 'Anta Diop'],
 
   // Composite title — the unit is the canonical reference.
-  'Baal Shem Tov':        ['Baal Shem Tov', 'Besht'], // Besht is the standard initialism in Jewish thought.
+  'Baal Shem Tov': ['Baal Shem Tov', 'Besht'], // Besht is the standard initialism in Jewish thought.
 
   // Variants / alternate spellings.
-  'Hui Neng':             ['Huineng', 'Hui Neng'],
+  'Hui Neng': ['Huineng', 'Hui Neng'],
 
   // Title with ordinal — "14th" is meaningless as alias; birth name fills in.
-  'Dalai Lama (14th)':    ['Dalai Lama', 'Tenzin Gyatso'],
+  'Dalai Lama (14th)': ['Dalai Lama', 'Tenzin Gyatso'],
 };
 
 // ─── Load + parse philosophers ────────────────────────────────────────
@@ -104,19 +140,23 @@ const declMatch = src.match(/export const PHILOSOPHERS[\s\S]*?=\s*\[/);
 if (!declMatch) throw new Error('Could not find PHILOSOPHERS array declaration.');
 const openIdx = declMatch.index + declMatch[0].length - 1;
 
-let depth = 0, closeIdx = -1;
+let depth = 0,
+  closeIdx = -1;
 for (let i = openIdx; i < src.length; i++) {
   if (src[i] === '[') depth++;
   else if (src[i] === ']') {
     depth--;
-    if (depth === 0) { closeIdx = i; break; }
+    if (depth === 0) {
+      closeIdx = i;
+      break;
+    }
   }
 }
 if (closeIdx < 0) throw new Error('Could not find closing bracket of PHILOSOPHERS array.');
 
 const arrayText = src.slice(openIdx, closeIdx + 1);
 const jsonish = arrayText
-  .replace(/\/\/[^\n]*/g, '')     // line comments
+  .replace(/\/\/[^\n]*/g, '') // line comments
   .replace(/,(\s*[\]}])/g, '$1'); // trailing commas
 const entries = JSON.parse(jsonish);
 
@@ -178,36 +218,59 @@ const auditDir = join(REPO, 'scripts');
 const auditJsonPath = join(REPO, 'scripts/alias-backfill-audit.json');
 const auditMdPath = join(REPO, 'scripts/alias-backfill-audit.md');
 
-await writeFile(auditJsonPath, JSON.stringify({
-  mode: MODE,
-  ranAt: new Date().toISOString(),
-  stats: { mononymCount, autoCount, overrideCount, preservedCount, totalChanges: changes.length },
-  changes,
-}, null, 2));
+await writeFile(
+  auditJsonPath,
+  JSON.stringify(
+    {
+      mode: MODE,
+      ranAt: new Date().toISOString(),
+      stats: {
+        mononymCount,
+        autoCount,
+        overrideCount,
+        preservedCount,
+        totalChanges: changes.length,
+      },
+      changes,
+    },
+    null,
+    2,
+  ),
+);
 
 const md = [];
 md.push('# Alias backfill audit');
 md.push('');
 md.push(`Mode: **${MODE}**.  Generated: ${new Date().toISOString()}.`);
 md.push('');
-md.push(`Loaded ${entries.length} entries. ${changes.length} would change (${autoCount} algorithmic, ${overrideCount} hand-overridden).`);
-md.push(`${mononymCount} entries are intentional mononyms (no alias needed). ${preservedCount} already had aliases and were left alone.`);
+md.push(
+  `Loaded ${entries.length} entries. ${changes.length} would change (${autoCount} algorithmic, ${overrideCount} hand-overridden).`,
+);
+md.push(
+  `${mononymCount} entries are intentional mononyms (no alias needed). ${preservedCount} already had aliases and were left alone.`,
+);
 md.push('');
 md.push('## Manual overrides');
 md.push('');
 md.push('| Name | Before | After | Why |');
 md.push('|---|---|---|---|');
-for (const c of changes.filter(c => c.source === 'manual_override')) {
-  const why = {
-    'W.E.B. Du Bois':    'algorithm strips dots → "WEB", and treats "Du" as particle, leaving "Bois" alone; the canonical search term is "Du Bois"',
-    'G.E.M. Anscombe':   '"GEM" loses dots; "Anscombe" alone is the standard cite',
-    'D.T. Suzuki':       'collides with Shunryu Suzuki, so keep the full "D.T. Suzuki" form alongside the surname',
-    'Thich Nhat Hanh':   '"Thich" is a Vietnamese Buddhist honorific, not a name; "Hanh" / "Nhat Hanh" are the real handles',
-    'Cheikh Anta Diop':  '"Cheikh" is Senegalese honorific akin to Sheikh',
-    'Baal Shem Tov':     '"Baal" and "Tov" are meaningless atoms; the unit is the name. Besht is the standard initialism in Jewish thought',
-    'Hui Neng':          'alt spelling "Huineng" is widely used in English-language scholarship',
-    'Dalai Lama (14th)': '"14th" is not a useful alias; the birth name Tenzin Gyatso is the searchable form',
-  }[c.name] || '';
+for (const c of changes.filter((c) => c.source === 'manual_override')) {
+  const why =
+    {
+      'W.E.B. Du Bois':
+        'algorithm strips dots → "WEB", and treats "Du" as particle, leaving "Bois" alone; the canonical search term is "Du Bois"',
+      'G.E.M. Anscombe': '"GEM" loses dots; "Anscombe" alone is the standard cite',
+      'D.T. Suzuki':
+        'collides with Shunryu Suzuki, so keep the full "D.T. Suzuki" form alongside the surname',
+      'Thich Nhat Hanh':
+        '"Thich" is a Vietnamese Buddhist honorific, not a name; "Hanh" / "Nhat Hanh" are the real handles',
+      'Cheikh Anta Diop': '"Cheikh" is Senegalese honorific akin to Sheikh',
+      'Baal Shem Tov':
+        '"Baal" and "Tov" are meaningless atoms; the unit is the name. Besht is the standard initialism in Jewish thought',
+      'Hui Neng': 'alt spelling "Huineng" is widely used in English-language scholarship',
+      'Dalai Lama (14th)':
+        '"14th" is not a useful alias; the birth name Tenzin Gyatso is the searchable form',
+    }[c.name] || '';
   md.push(`| ${c.name} | ${JSON.stringify(c.before)} | ${JSON.stringify(c.after)} | ${why} |`);
 }
 md.push('');
@@ -215,18 +278,18 @@ md.push('## Algorithmic backfills');
 md.push('');
 md.push('| Name | Dates | After |');
 md.push('|---|---|---|');
-for (const c of changes.filter(c => c.source === 'algorithm')) {
+for (const c of changes.filter((c) => c.source === 'algorithm')) {
   md.push(`| ${c.name} | ${c.dates} | ${JSON.stringify(c.after)} |`);
 }
 md.push('');
 md.push('## Intentional mononyms (no change)');
 md.push('');
-md.push(`${mononymCount} entries kept empty aliases because the canonical name is the only searchable handle.`);
+md.push(
+  `${mononymCount} entries kept empty aliases because the canonical name is the only searchable handle.`,
+);
 md.push('');
-const mononymNames = entries
-  .filter(e => (!e.aliases || e.aliases.length === 0))
-  .map(e => e.name);
-md.push(mononymNames.map(n => `\`${n}\``).join(', '));
+const mononymNames = entries.filter((e) => !e.aliases || e.aliases.length === 0).map((e) => e.name);
+md.push(mononymNames.map((n) => `\`${n}\``).join(', '));
 md.push('');
 await writeFile(auditMdPath, md.join('\n'));
 
@@ -259,14 +322,13 @@ for (const c of changes) {
   // array. The array literal is matched as `\[` followed by any chars
   // (including newlines) followed by `\]`. Lazy so we don't span entries.
   const escapedName = c.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const re = new RegExp(
-    `("name":\\s*"${escapedName}"[\\s\\S]*?"aliases":\\s*)\\[[\\s\\S]*?\\]`,
-  );
+  const re = new RegExp(`("name":\\s*"${escapedName}"[\\s\\S]*?"aliases":\\s*)\\[[\\s\\S]*?\\]`);
   // Render the new alias array. Empty → `[]` inline; non-empty → JSON
   // multi-line shape to match the rest of the file.
-  const newLiteral = c.after.length === 0
-    ? '[]'
-    : '[\n      ' + c.after.map(a => JSON.stringify(a)).join(',\n      ') + '\n    ]';
+  const newLiteral =
+    c.after.length === 0
+      ? '[]'
+      : '[\n      ' + c.after.map((a) => JSON.stringify(a)).join(',\n      ') + '\n    ]';
   const replaced = libSrc.replace(re, `$1${newLiteral}`);
   if (replaced === libSrc) {
     libNotFound++;
@@ -292,5 +354,7 @@ console.log(`  ${libChanged} entries updated; ${libNotFound} not matched.`);
 //
 // So the mull.html side of this is a no-op. Document in the audit so a
 // future reader doesn't wonder why mull.html wasn't touched.
-console.log(`public/mull.html: no aliases field in its PHILOSOPHERS table; nothing to update there.`);
+console.log(
+  `public/mull.html: no aliases field in its PHILOSOPHERS table; nothing to update there.`,
+);
 console.log(`(Aliases are server-side only; client-side search uses name matching.)`);

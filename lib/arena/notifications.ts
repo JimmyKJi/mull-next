@@ -15,10 +15,10 @@
 // the prototype we don't have a "disable notifications" setting yet;
 // recipients can simply not reply. We can add an opt-out table later.
 
-import { createClient as createServiceClient } from "@supabase/supabase-js";
-import { sendEmail } from "@/lib/email";
+import { createClient as createServiceClient } from '@supabase/supabase-js';
+import { sendEmail } from '@/lib/email';
 
-const SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://mull.world";
+const SITE = process.env.NEXT_PUBLIC_SITE_URL || 'https://mull.world';
 
 /** Service-role client — needed to read auth.users email field
  *  which is not exposed via RLS to the requester. */
@@ -63,7 +63,7 @@ Continue the match: ${ctx.matchUrl}
     <h2 style="font-family: Georgia, serif; font-size:20px; color:#221E18; margin:0 0 12px;">Your challenge was accepted</h2>
     <p style="font-family: Georgia, serif; font-size:16px; line-height:1.5; color:#221E18; margin:0 0 14px;"><strong>${escapeHtml(ctx.opponentLabel)}</strong> took your Arena challenge on <em>${escapeHtml(ctx.topicTitle)}</em>. Their opening response is in.</p>
     <p style="font-family: Georgia, serif; font-size:16px; line-height:1.5; color:#221E18; margin:0 0 20px;">It's your turn now.</p>
-    ${ctaButton("Continue the match", ctx.matchUrl)}
+    ${ctaButton('Continue the match', ctx.matchUrl)}
   `);
   return { subject, text, html };
 }
@@ -82,7 +82,7 @@ Continue: ${ctx.matchUrl}
   const html = baseHtml(`
     <h2 style="font-family: Georgia, serif; font-size:20px; color:#221E18; margin:0 0 12px;">Your turn</h2>
     <p style="font-family: Georgia, serif; font-size:16px; line-height:1.5; color:#221E18; margin:0 0 20px;"><strong>${escapeHtml(ctx.opponentLabel)}</strong> just played in your match on <em>${escapeHtml(ctx.topicTitle)}</em>.</p>
-    ${ctaButton("Continue the match", ctx.matchUrl)}
+    ${ctaButton('Continue the match', ctx.matchUrl)}
   `);
   return { subject, text, html };
 }
@@ -104,7 +104,7 @@ See the breakdown: ${ctx.matchUrl}
     <h2 style="font-family: Georgia, serif; font-size:20px; color:#221E18; margin:0 0 12px;">The verdict is in</h2>
     <p style="font-family: Georgia, serif; font-size:16px; line-height:1.5; color:#221E18; margin:0 0 14px;">Your match vs <strong>${escapeHtml(ctx.opponentLabel)}</strong> on <em>${escapeHtml(ctx.topicTitle)}</em> has been judged.</p>
     <p style="font-family: 'Courier New', monospace; font-size:14px; color:#221E18; background:#F8EDC8; border:2px solid #221E18; padding:10px 14px; margin:0 0 20px;">${escapeHtml(ctx.verdictLine)}</p>
-    ${ctaButton("See the full breakdown", ctx.matchUrl)}
+    ${ctaButton('See the full breakdown', ctx.matchUrl)}
   `);
   return { subject, text, html };
 }
@@ -129,7 +129,7 @@ export async function notifyChallengeAccepted(args: {
     subject: t.subject,
     text: t.text,
     html: t.html,
-    logTag: "arena/accepted",
+    logTag: 'arena/accepted',
   });
 }
 
@@ -151,7 +151,7 @@ export async function notifyYourTurn(args: {
     subject: t.subject,
     text: t.text,
     html: t.html,
-    logTag: "arena/turn",
+    logTag: 'arena/turn',
   });
 }
 
@@ -176,7 +176,7 @@ export async function notifyVerdict(args: {
     subject: t.subject,
     text: t.text,
     html: t.html,
-    logTag: "arena/verdict",
+    logTag: 'arena/verdict',
   });
 }
 
@@ -200,9 +200,9 @@ function ctaButton(label: string, href: string): string {
 
 function escapeHtml(s: string): string {
   return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }

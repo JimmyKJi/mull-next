@@ -47,15 +47,17 @@ const REPO = join(__dirname, '..');
 
 // ─── Tunables ─────────────────────────────────────────────────────────
 
-const TOP_K = 5;                       // how many nearest kin to display per entry
-const ISOLATION_THRESHOLD = 0.92;      // top-1 sim below this is "isolated"
-const MARGIN_THRESHOLD = 0.020;        // archetype margin below this is "ambiguous"
-const REPORT_MAX_ISOLATED = 30;        // cap report size
+const TOP_K = 5; // how many nearest kin to display per entry
+const ISOLATION_THRESHOLD = 0.92; // top-1 sim below this is "isolated"
+const MARGIN_THRESHOLD = 0.02; // archetype margin below this is "ambiguous"
+const REPORT_MAX_ISOLATED = 30; // cap report size
 
 // ─── Helpers ──────────────────────────────────────────────────────────
 
 function cos(a, b) {
-  let dot = 0, na = 0, nb = 0;
+  let dot = 0,
+    na = 0,
+    nb = 0;
   for (let i = 0; i < a.length; i++) {
     dot += a[i] * b[i];
     na += a[i] * a[i];
@@ -71,18 +73,22 @@ async function loadPhilosophers() {
   const declMatch = src.match(/export const PHILOSOPHERS[\s\S]*?=\s*\[/);
   if (!declMatch) throw new Error('Could not find PHILOSOPHERS declaration.');
   const openIdx = declMatch.index + declMatch[0].length - 1;
-  let depth = 0, closeIdx = -1;
+  let depth = 0,
+    closeIdx = -1;
   for (let i = openIdx; i < src.length; i++) {
     if (src[i] === '[') depth++;
     else if (src[i] === ']') {
       depth--;
-      if (depth === 0) { closeIdx = i; break; }
+      if (depth === 0) {
+        closeIdx = i;
+        break;
+      }
     }
   }
   const arrayText = src.slice(openIdx, closeIdx + 1);
   const jsonish = arrayText
-    .replace(/\/\/[^\n]*/g, '')        // strip line comments (Wave 1/2 markers)
-    .replace(/,(\s*[\]}])/g, '$1');    // strip trailing commas
+    .replace(/\/\/[^\n]*/g, '') // strip line comments (Wave 1/2 markers)
+    .replace(/,(\s*[\]}])/g, '$1'); // strip trailing commas
   const entries = JSON.parse(jsonish);
   return entries;
 }
@@ -115,10 +121,27 @@ async function loadDecisions() {
   }
 }
 
-const DIM_KEYS = ['TV','VA','WP','TR','TE','RT','MR','SR','CE','SS','PO','TD','AT','ES','UI','SI'];
+const DIM_KEYS = [
+  'TV',
+  'VA',
+  'WP',
+  'TR',
+  'TE',
+  'RT',
+  'MR',
+  'SR',
+  'CE',
+  'SS',
+  'PO',
+  'TD',
+  'AT',
+  'ES',
+  'UI',
+  'SI',
+];
 
 function expandSignature(sigObj) {
-  return DIM_KEYS.map(k => (k in sigObj ? sigObj[k] : 5));
+  return DIM_KEYS.map((k) => (k in sigObj ? sigObj[k] : 5));
 }
 
 // ─── Main analysis ───────────────────────────────────────────────────
@@ -127,10 +150,12 @@ async function main() {
   const philosophers = await loadPhilosophers();
   const archetypes = await loadArchetypes();
   const decisions = await loadDecisions();
-  console.log(`Loaded ${philosophers.length} philosophers, ${archetypes.length} archetypes, ${Object.keys(decisions).length} reviewed-surprise decisions.`);
+  console.log(
+    `Loaded ${philosophers.length} philosophers, ${archetypes.length} archetypes, ${Object.keys(decisions).length} reviewed-surprise decisions.`,
+  );
 
   // Expand each archetype's partial dim signature into a full 16-D vector.
-  const archVecs = archetypes.map(a => ({
+  const archVecs = archetypes.map((a) => ({
     key: a.key,
     name: a.name,
     vec: expandSignature(a.p),
@@ -147,14 +172,14 @@ async function main() {
       sims.push({ idx: j, sim: cos(p.vector, philosophers[j].vector) });
     }
     sims.sort((a, b) => b.sim - a.sim);
-    const top = sims.slice(0, TOP_K).map(s => ({
+    const top = sims.slice(0, TOP_K).map((s) => ({
       name: philosophers[s.idx].name,
       archetype: philosophers[s.idx].archetypeName,
       sim: s.sim,
     }));
 
     // Archetype margin.
-    const archSims = archVecs.map(a => ({ name: a.name, key: a.key, sim: cos(p.vector, a.vec) }));
+    const archSims = archVecs.map((a) => ({ name: a.name, key: a.key, sim: cos(p.vector, a.vec) }));
     archSims.sort((a, b) => b.sim - a.sim);
     const margin = archSims[0].sim - archSims[1].sim;
 
@@ -173,17 +198,18 @@ async function main() {
 
   // ─── Aggregate stats ────────────────────────────────────────────
   const sortedByIsolation = results.slice().sort((a, b) => a.top1Sim - b.top1Sim);
-  const sortedByMargin    = results.slice().sort((a, b) => a.archetypeMargin - b.archetypeMargin);
+  const sortedByMargin = results.slice().sort((a, b) => a.archetypeMargin - b.archetypeMargin);
 
-  const top1Sims = results.map(r => r.top1Sim);
+  const top1Sims = results.map((r) => r.top1Sim);
   const meanTop1 = top1Sims.reduce((s, v) => s + v, 0) / top1Sims.length;
   const medianTop1 = top1Sims.slice().sort((a, b) => a - b)[Math.floor(top1Sims.length / 2)];
-  const isolated = results.filter(r => r.top1Sim < ISOLATION_THRESHOLD);
-  const ambiguous = results.filter(r => r.archetypeMargin < MARGIN_THRESHOLD);
+  const isolated = results.filter((r) => r.top1Sim < ISOLATION_THRESHOLD);
+  const ambiguous = results.filter((r) => r.archetypeMargin < MARGIN_THRESHOLD);
 
   // Archetype distribution.
   const archetypeCounts = {};
-  for (const r of results) archetypeCounts[r.classifiedAs] = (archetypeCounts[r.classifiedAs] ?? 0) + 1;
+  for (const r of results)
+    archetypeCounts[r.classifiedAs] = (archetypeCounts[r.classifiedAs] ?? 0) + 1;
 
   // ─── Print summary ──────────────────────────────────────────────
   console.log(`\nIsolation (top-1 sim) distribution:`);
@@ -205,9 +231,15 @@ async function main() {
   md.push('');
   md.push(`Generated: ${new Date().toISOString()}.  Corpus size: ${philosophers.length}.`);
   md.push('');
-  md.push(`Top-1 nearest-kin similarity — mean ${meanTop1.toFixed(3)}, median ${medianTop1.toFixed(3)}.`);
-  md.push(`Entries below the isolation threshold (${ISOLATION_THRESHOLD}): **${isolated.length}**.`);
-  md.push(`Entries below the archetype-margin threshold (${MARGIN_THRESHOLD}): **${ambiguous.length}**.`);
+  md.push(
+    `Top-1 nearest-kin similarity — mean ${meanTop1.toFixed(3)}, median ${medianTop1.toFixed(3)}.`,
+  );
+  md.push(
+    `Entries below the isolation threshold (${ISOLATION_THRESHOLD}): **${isolated.length}**.`,
+  );
+  md.push(
+    `Entries below the archetype-margin threshold (${MARGIN_THRESHOLD}): **${ambiguous.length}**.`,
+  );
   md.push('');
   md.push('## Archetype distribution');
   md.push('');
@@ -219,24 +251,34 @@ async function main() {
   md.push('');
   md.push('## Most isolated entries');
   md.push('');
-  md.push('These have a low top-1 nearest-kin similarity. Isolation is sometimes legitimate (Buddha is genuinely far from anyone) and sometimes a calibration bug (a Wave 2 vector that needs nudging). Review each by inspecting the top-5 kin — if they make sense, the entry is fine; if they look totally unrelated, the vector probably needs work.');
+  md.push(
+    'These have a low top-1 nearest-kin similarity. Isolation is sometimes legitimate (Buddha is genuinely far from anyone) and sometimes a calibration bug (a Wave 2 vector that needs nudging). Review each by inspecting the top-5 kin — if they make sense, the entry is fine; if they look totally unrelated, the vector probably needs work.',
+  );
   md.push('');
-  md.push('The **Status** column reflects `scripts/calibration-decisions.json` — entries that have been human-reviewed get a verdict (✓ accepted = model feature; ⚠ review = vector probably needs work, deferred; ✦ nudge = decided change not yet applied). Entries with no status are unreviewed.');
+  md.push(
+    'The **Status** column reflects `scripts/calibration-decisions.json` — entries that have been human-reviewed get a verdict (✓ accepted = model feature; ⚠ review = vector probably needs work, deferred; ✦ nudge = decided change not yet applied). Entries with no status are unreviewed.',
+  );
   md.push('');
   md.push('| Name | Dates | Top-1 sim | Classified | Status | Top 5 nearest kin |');
   md.push('|---|---|---|---|---|---|');
   for (const r of sortedByIsolation.slice(0, REPORT_MAX_ISOLATED)) {
-    const kinList = r.topKin.map(k => `${k.name} (${(k.sim * 100).toFixed(0)}%)`).join('; ');
+    const kinList = r.topKin.map((k) => `${k.name} (${(k.sim * 100).toFixed(0)}%)`).join('; ');
     const decision = decisions[r.name];
     let status = '';
     if (decision) {
-      const badge = decision.verdict === 'accepted' ? '✓ accepted'
-                  : decision.verdict === 'review' ? '⚠ review'
-                  : decision.verdict?.startsWith('nudge') ? `✦ ${decision.verdict}`
-                  : decision.verdict ?? '';
+      const badge =
+        decision.verdict === 'accepted'
+          ? '✓ accepted'
+          : decision.verdict === 'review'
+            ? '⚠ review'
+            : decision.verdict?.startsWith('nudge')
+              ? `✦ ${decision.verdict}`
+              : (decision.verdict ?? '');
       status = badge;
     }
-    md.push(`| ${r.name} | ${r.dates} | ${r.top1Sim.toFixed(3)} | ${r.classifiedAs} | ${status} | ${kinList} |`);
+    md.push(
+      `| ${r.name} | ${r.dates} | ${r.top1Sim.toFixed(3)} | ${r.classifiedAs} | ${status} | ${kinList} |`,
+    );
   }
   md.push('');
 
@@ -245,8 +287,8 @@ async function main() {
   // why a surprise was accepted or deferred).
   const reviewedNames = sortedByIsolation
     .slice(0, REPORT_MAX_ISOLATED)
-    .map(r => r.name)
-    .filter(n => decisions[n]);
+    .map((r) => r.name)
+    .filter((n) => decisions[n]);
   if (reviewedNames.length > 0) {
     md.push('### Decision notes');
     md.push('');
@@ -260,12 +302,16 @@ async function main() {
   }
   md.push('## Most archetype-ambiguous entries');
   md.push('');
-  md.push('These sit nearly equidistant between two archetypes. A small margin is honest for paradoxical thinkers (Spinoza, Pascal, Wittgenstein) and a red flag for everyone else — if a thinker should clearly be one archetype, the vector may need to lean more in that direction.');
+  md.push(
+    'These sit nearly equidistant between two archetypes. A small margin is honest for paradoxical thinkers (Spinoza, Pascal, Wittgenstein) and a red flag for everyone else — if a thinker should clearly be one archetype, the vector may need to lean more in that direction.',
+  );
   md.push('');
   md.push('| Name | Classified | Runner-up | Margin |');
   md.push('|---|---|---|---|');
   for (const r of sortedByMargin.slice(0, REPORT_MAX_ISOLATED)) {
-    md.push(`| ${r.name} | ${r.classifiedAs} | ${r.runnerUpArchetype} | ${r.archetypeMargin.toFixed(4)} |`);
+    md.push(
+      `| ${r.name} | ${r.classifiedAs} | ${r.runnerUpArchetype} | ${r.archetypeMargin.toFixed(4)} |`,
+    );
   }
   md.push('');
 
@@ -274,7 +320,7 @@ async function main() {
   console.log(`\nFull report: ${reportPath}`);
 }
 
-main().catch(err => {
+main().catch((err) => {
   console.error('Error:', err);
   process.exit(1);
 });

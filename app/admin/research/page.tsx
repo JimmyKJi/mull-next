@@ -192,13 +192,8 @@ async function loadResearch() {
       .from('research_quiz_responses')
       .select('mode, answers, archetype, vector, locale')
       .limit(20000),
-    admin
-      .from('research_quiz_responses')
-      .select('*', { count: 'exact', head: true }),
-    admin
-      .from('research_demographics')
-      .select(DEMOGRAPHIC_FIELDS.join(', '))
-      .limit(20000),
+    admin.from('research_quiz_responses').select('*', { count: 'exact', head: true }),
+    admin.from('research_demographics').select(DEMOGRAPHIC_FIELDS.join(', ')).limit(20000),
   ]);
 
   // ── Consent overview ──────────────────────────────────────────────
@@ -326,10 +321,10 @@ export default async function ResearchAdminPage() {
             lineHeight: 1.55,
           }}
         >
-          The consented research corpus — per-question answer distributions,
-          dimension means, and the opt-in dataset behind any paper. Per-question
-          and dimension figures are drawn only from users who opted in; the
-          overall archetype distribution is aggregate across all attempts.
+          The consented research corpus — per-question answer distributions, dimension means, and
+          the opt-in dataset behind any paper. Per-question and dimension figures are drawn only
+          from users who opted in; the overall archetype distribution is aggregate across all
+          attempts.
         </p>
         <div style={{ marginTop: 16, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
           <ExportLink href="/api/admin/research/export?format=json" label="▼ EXPORT JSON" />
@@ -342,8 +337,8 @@ export default async function ResearchAdminPage() {
       <section style={cardStyle('#2F5D5C')}>
         <h2 style={sectionTitle}>▸ RESEARCH CONSENT</h2>
         <p style={sectionSub}>
-          Opt-in is explicit and reversible. Undecided = signed-in users who
-          haven&rsquo;t answered the consent gate yet.
+          Opt-in is explicit and reversible. Undecided = signed-in users who haven&rsquo;t answered
+          the consent gate yet.
         </p>
         <div
           style={{
@@ -364,8 +359,8 @@ export default async function ResearchAdminPage() {
       <section style={cardStyle('var(--color-acc)')}>
         <h2 style={sectionTitle}>▸ RESEARCH CORPUS</h2>
         <p style={sectionSub}>
-          Consented quiz completions captured with their full per-question
-          trail. This is the dataset the distributions below are computed from.
+          Consented quiz completions captured with their full per-question trail. This is the
+          dataset the distributions below are computed from.
         </p>
         <div
           style={{
@@ -390,9 +385,9 @@ export default async function ResearchAdminPage() {
               fontSize: 14,
             }}
           >
-            No consented responses captured yet. Once opted-in users complete the
-            quiz, their per-question answers appear here. (Capture began with the
-            20260601_research migration — it&rsquo;s forward-looking from opt-in.)
+            No consented responses captured yet. Once opted-in users complete the quiz, their
+            per-question answers appear here. (Capture began with the 20260601_research migration —
+            it&rsquo;s forward-looking from opt-in.)
           </p>
         )}
       </section>
@@ -404,12 +399,11 @@ export default async function ResearchAdminPage() {
       <section style={cardStyle('#3A5A6A')}>
         <h2 style={sectionTitle}>▸ BY LANGUAGE REGION</h2>
         <p style={sectionSub}>
-          The consented corpus split by UI language at capture time.{' '}
-          <strong>Western</strong> = {REGION_LOCALES.western.join(' · ')}.{' '}
-          <strong>Eastern</strong> = {REGION_LOCALES.eastern.join(' · ')}.{' '}
-          <strong>Unknown</strong> = captured before language tracking (not
-          backfilled). A coarse cut on interface language — not a claim about
-          who anyone is.
+          The consented corpus split by UI language at capture time. <strong>Western</strong> ={' '}
+          {REGION_LOCALES.western.join(' · ')}. <strong>Eastern</strong> ={' '}
+          {REGION_LOCALES.eastern.join(' · ')}. <strong>Unknown</strong> = captured before language
+          tracking (not backfilled). A coarse cut on interface language — not a claim about who
+          anyone is.
         </p>
         <div
           style={{
@@ -433,8 +427,8 @@ export default async function ResearchAdminPage() {
         <section style={cardStyle('#7A4A2E')}>
           <h2 style={sectionTitle}>▸ OVERALL ARCHETYPE DISTRIBUTION</h2>
           <p style={sectionSub}>
-            How every quiz taker lands across the ten archetypes (all attempts,
-            aggregate). {d.attemptsTotal.toLocaleString()} total.
+            How every quiz taker lands across the ten archetypes (all attempts, aggregate).{' '}
+            {d.attemptsTotal.toLocaleString()} total.
           </p>
           <div style={{ marginTop: 18 }}>
             {d.overallArch.map(([key, count]) => {
@@ -461,9 +455,8 @@ export default async function ResearchAdminPage() {
       <section style={cardStyle('#5A3A6A')}>
         <h2 style={sectionTitle}>▸ DIMENSION MEANS</h2>
         <p style={sectionSub}>
-          Average position on each of the 16 dimensions across{' '}
-          {d.dimN.toLocaleString()} consented vectors. Signed — teal leans
-          positive, brick leans negative.
+          Average position on each of the 16 dimensions across {d.dimN.toLocaleString()} consented
+          vectors. Signed — teal leans positive, brick leans negative.
         </p>
         {d.dimN === 0 ? (
           <p
@@ -567,8 +560,7 @@ export default async function ResearchAdminPage() {
           marginTop: 28,
         }}
       >
-        ▸ FETCHED {new Date(d.fetchedAt).toLocaleString('en-GB')} · AGGREGATES
-        ONLY · NO USER IDS
+        ▸ FETCHED {new Date(d.fetchedAt).toLocaleString('en-GB')} · AGGREGATES ONLY · NO USER IDS
       </p>
     </main>
   );
@@ -818,10 +810,7 @@ function regionAccent(region: LocaleRegion): string {
 // split, and the region's top archetypes.
 function RegionCard({ region }: { region: RegionAgg }) {
   const accent = regionAccent(region.region);
-  const locales =
-    region.region === 'unknown'
-      ? null
-      : REGION_LOCALES[region.region];
+  const locales = region.region === 'unknown' ? null : REGION_LOCALES[region.region];
   const top = region.arch.slice(0, 3);
   return (
     <div
@@ -866,7 +855,9 @@ function RegionCard({ region }: { region: RegionAgg }) {
       >
         {region.total.toLocaleString()}
       </div>
-      <div style={{ fontFamily: serif, fontSize: 13, color: 'var(--color-ink-soft)', marginTop: 6 }}>
+      <div
+        style={{ fontFamily: serif, fontSize: 13, color: 'var(--color-ink-soft)', marginTop: 6 }}
+      >
         {region.quick.toLocaleString()} quick · {region.detailed.toLocaleString()} detailed
       </div>
       {top.length > 0 ? (
@@ -899,7 +890,9 @@ function RegionCard({ region }: { region: RegionAgg }) {
                 }}
               >
                 <span>{k}</span>
-                <span style={{ color: 'var(--color-acc-deep)', fontVariantNumeric: 'tabular-nums' }}>
+                <span
+                  style={{ color: 'var(--color-acc-deep)', fontVariantNumeric: 'tabular-nums' }}
+                >
                   {c} · {pct}%
                 </span>
               </div>
@@ -1004,10 +997,9 @@ function RegionDimCompare({ regions }: { regions: RegionAgg[] }) {
     <section style={cardStyle('#7A2E5A')}>
       <h2 style={sectionTitle}>▸ DIMENSION MEANS · WESTERN vs EASTERN</h2>
       <p style={sectionSub}>
-        Average position on each dimension, Western (W, {wN.toLocaleString()}{' '}
-        vectors) beside Eastern (E, {eN.toLocaleString()} vectors). Shared
-        scale; teal leans positive, brick negative. A dash means no vectors in
-        that region yet.
+        Average position on each dimension, Western (W, {wN.toLocaleString()} vectors) beside
+        Eastern (E, {eN.toLocaleString()} vectors). Shared scale; teal leans positive, brick
+        negative. A dash means no vectors in that region yet.
       </p>
       {wN === 0 && eN === 0 ? (
         <p
@@ -1019,8 +1011,8 @@ function RegionDimCompare({ regions }: { regions: RegionAgg[] }) {
             fontSize: 14,
           }}
         >
-          No consented vectors in either region yet. Once opted-in users quiz
-          with a Western- or Eastern-language UI, the comparison fills in here.
+          No consented vectors in either region yet. Once opted-in users quiz with a Western- or
+          Eastern-language UI, the comparison fills in here.
         </p>
       ) : (
         <div style={{ marginTop: 18 }}>
@@ -1077,12 +1069,11 @@ function DemographicsBreakdown({ data }: { data: DemographicsAgg }) {
     <section style={cardStyle('#5A3A6A')}>
       <h2 style={sectionTitle}>▸ DEMOGRAPHICS</h2>
       <p style={sectionSub}>
-        Optional self-reports from opted-in users.{' '}
-        {data.total.toLocaleString()} shared at least one field
-        {data.coverage > 0 ? ` (${data.coverage}% of opted-in users)` : ''}. Bars
-        show shares among those who answered each field.{' '}
-        <strong>Not shared</strong> = left blank; <strong>Prefer not to say</strong>{' '}
-        is an explicit decline, counted as an answer.
+        Optional self-reports from opted-in users. {data.total.toLocaleString()} shared at least one
+        field
+        {data.coverage > 0 ? ` (${data.coverage}% of opted-in users)` : ''}. Bars show shares among
+        those who answered each field. <strong>Not shared</strong> = left blank;{' '}
+        <strong>Prefer not to say</strong> is an explicit decline, counted as an answer.
       </p>
       {data.total === 0 ? (
         <p
@@ -1094,8 +1085,8 @@ function DemographicsBreakdown({ data }: { data: DemographicsAgg }) {
             fontSize: 14,
           }}
         >
-          No demographics shared yet. Once opted-in users fill in the optional
-          “general info” step, the breakdown appears here.
+          No demographics shared yet. Once opted-in users fill in the optional “general info” step,
+          the breakdown appears here.
         </p>
       ) : (
         <div style={{ marginTop: 14 }}>
@@ -1138,10 +1129,7 @@ function DemoFieldBlock({ field }: { field: DemoFieldAgg }) {
         </div>
       ) : (
         field.dist.map((entry) => {
-          const pct =
-            field.answered > 0
-              ? Math.round((entry.count / field.answered) * 100)
-              : 0;
+          const pct = field.answered > 0 ? Math.round((entry.count / field.answered) * 100) : 0;
           return (
             <DistRow
               key={entry.code}
@@ -1157,15 +1145,7 @@ function DemoFieldBlock({ field }: { field: DemoFieldAgg }) {
   );
 }
 
-function ExportLink({
-  href,
-  label,
-  muted,
-}: {
-  href: string;
-  label: string;
-  muted?: boolean;
-}) {
+function ExportLink({ href, label, muted }: { href: string; label: string; muted?: boolean }) {
   return (
     <a
       href={href}

@@ -17,7 +17,7 @@ import Link from 'next/link';
 import EmptyStateSprite from '@/components/empty-state-sprite';
 import { t, type Locale } from '@/lib/translations';
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 
 const SOURCE_LABEL_KEY: Record<'dilemma' | 'diary' | 'exercise', string> = {
@@ -86,7 +86,9 @@ export default function CurationPanel({ locale = 'en' as Locale }: { locale?: Lo
     }
   }
 
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, [filter, days]);
+  useEffect(() => {
+    load(); /* eslint-disable-next-line */
+  }, [filter, days]);
 
   async function pickIntoSlot(slot: 1 | 2 | 3, c: Candidate) {
     const draftKey = `${c.source_type}:${c.source_id}`;
@@ -136,40 +138,55 @@ export default function CurationPanel({ locale = 'en' as Locale }: { locale?: Lo
   return (
     <div className="pixel-form">
       {/* Slot row */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-        gap: 12,
-        marginBottom: 28,
-      }}>
-        {[1, 2, 3].map(slot => {
-          const pick = picks.find(p => p.slot === slot);
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+          gap: 12,
+          marginBottom: 28,
+        }}
+      >
+        {[1, 2, 3].map((slot) => {
+          const pick = picks.find((p) => p.slot === slot);
           return (
-            <div key={slot} style={{
-              padding: '14px 16px',
-              background: pick ? '#FBF6E8' : '#FFFCF4',
-              border: '1px solid',
-              borderColor: pick ? '#E2D8B6' : '#EBE3CA',
-              borderLeft: `3px solid ${pick ? 'var(--color-acc)' : 'var(--color-line)'}`,
-              borderRadius: 8,
-              minHeight: 110,
-              display: 'flex', flexDirection: 'column',
-            }}>
-              <div style={{
-                display: 'flex', justifyContent: 'space-between',
-                fontFamily: sans, fontSize: 11, fontWeight: 600,
-                color: pick ? 'var(--color-acc)' : 'var(--color-acc-deep)',
-                textTransform: 'uppercase', letterSpacing: '0.16em',
-                marginBottom: 8,
-              }}>
+            <div
+              key={slot}
+              style={{
+                padding: '14px 16px',
+                background: pick ? '#FBF6E8' : '#FFFCF4',
+                border: '1px solid',
+                borderColor: pick ? '#E2D8B6' : '#EBE3CA',
+                borderLeft: `3px solid ${pick ? 'var(--color-acc)' : 'var(--color-line)'}`,
+                borderRadius: 8,
+                minHeight: 110,
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  fontFamily: sans,
+                  fontSize: 11,
+                  fontWeight: 600,
+                  color: pick ? 'var(--color-acc)' : 'var(--color-acc-deep)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.16em',
+                  marginBottom: 8,
+                }}
+              >
                 <span>{t('crt.slot', locale, { n: slot })}</span>
                 {pick && (
                   <button
                     onClick={() => clearSlot(slot)}
                     disabled={busy === 'clear:' + slot}
                     style={{
-                      background: 'none', border: 'none', cursor: 'pointer',
-                      color: 'var(--color-acc-deep)', fontSize: 14,
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      color: 'var(--color-acc-deep)',
+                      fontSize: 14,
                     }}
                     title={t('crt.clear_slot', locale)}
                   >
@@ -179,36 +196,58 @@ export default function CurationPanel({ locale = 'en' as Locale }: { locale?: Lo
               </div>
               {pick ? (
                 <>
-                  <div style={{
-                    fontFamily: sans, fontSize: 11,
-                    color: 'var(--color-acc-deep)', marginBottom: 4,
-                  }}>
-                    {t(SOURCE_LABEL_KEY[pick.source_type], locale)} · {pick.author_handle ? `@${pick.author_handle}` : t('crt.no_profile', locale)}
+                  <div
+                    style={{
+                      fontFamily: sans,
+                      fontSize: 11,
+                      color: 'var(--color-acc-deep)',
+                      marginBottom: 4,
+                    }}
+                  >
+                    {t(SOURCE_LABEL_KEY[pick.source_type], locale)} ·{' '}
+                    {pick.author_handle ? `@${pick.author_handle}` : t('crt.no_profile', locale)}
                   </div>
-                  <div style={{
-                    fontFamily: serif, fontSize: 14, color: 'var(--color-ink)',
-                    lineHeight: 1.4, flex: 1,
-                    overflow: 'hidden', display: '-webkit-box',
-                    WebkitLineClamp: 4, WebkitBoxOrient: 'vertical' as const,
-                  }}>
+                  <div
+                    style={{
+                      fontFamily: serif,
+                      fontSize: 14,
+                      color: 'var(--color-ink)',
+                      lineHeight: 1.4,
+                      flex: 1,
+                      overflow: 'hidden',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 4,
+                      WebkitBoxOrient: 'vertical' as const,
+                    }}
+                  >
                     {pick.entry_text}
                   </div>
                   {pick.curator_note && (
-                    <div style={{
-                      marginTop: 8, padding: '6px 8px',
-                      background: '#F5EFDC', borderRadius: 4,
-                      fontFamily: serif, fontStyle: 'italic',
-                      fontSize: 12, color: 'var(--color-ink-soft)',
-                    }}>
+                    <div
+                      style={{
+                        marginTop: 8,
+                        padding: '6px 8px',
+                        background: '#F5EFDC',
+                        borderRadius: 4,
+                        fontFamily: serif,
+                        fontStyle: 'italic',
+                        fontSize: 12,
+                        color: 'var(--color-ink-soft)',
+                      }}
+                    >
                       {pick.curator_note}
                     </div>
                   )}
                 </>
               ) : (
-                <div style={{
-                  fontFamily: serif, fontStyle: 'italic',
-                  fontSize: 14, color: 'var(--color-acc-deep)',
-                }}>
+                <div
+                  style={{
+                    fontFamily: serif,
+                    fontStyle: 'italic',
+                    fontSize: 14,
+                    color: 'var(--color-acc-deep)',
+                  }}
+                >
                   {t('crt.slot_empty', locale)}
                 </div>
               )}
@@ -218,15 +257,28 @@ export default function CurationPanel({ locale = 'en' as Locale }: { locale?: Lo
       </div>
 
       {/* Filter row */}
-      <div style={{
-        display: 'flex', gap: 12, alignItems: 'center',
-        flexWrap: 'wrap', marginBottom: 18,
-      }}>
-        <span style={{
-          fontFamily: sans, fontSize: 12, color: 'var(--color-acc-deep)',
-          textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 600,
-        }}>{t('crt.filter_label', locale)}</span>
-        {(['all', 'dilemma', 'diary', 'exercise'] as FilterValue[]).map(v => (
+      <div
+        style={{
+          display: 'flex',
+          gap: 12,
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          marginBottom: 18,
+        }}
+      >
+        <span
+          style={{
+            fontFamily: sans,
+            fontSize: 12,
+            color: 'var(--color-acc-deep)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.14em',
+            fontWeight: 600,
+          }}
+        >
+          {t('crt.filter_label', locale)}
+        </span>
+        {(['all', 'dilemma', 'diary', 'exercise'] as FilterValue[]).map((v) => (
           <button
             key={v}
             onClick={() => setFilter(v)}
@@ -237,21 +289,34 @@ export default function CurationPanel({ locale = 'en' as Locale }: { locale?: Lo
               borderColor: filter === v ? 'var(--color-ink)' : 'var(--color-line)',
               background: filter === v ? 'var(--color-ink)' : 'transparent',
               color: filter === v ? 'var(--color-cream)' : 'var(--color-ink-soft)',
-              fontFamily: sans, fontSize: 12.5, cursor: 'pointer',
+              fontFamily: sans,
+              fontSize: 12.5,
+              cursor: 'pointer',
             }}
           >
             {v === 'all' ? t('crt.filter_all', locale) : t(SOURCE_LABEL_KEY[v], locale)}
           </button>
         ))}
-        <span style={{ marginLeft: 'auto', fontFamily: sans, fontSize: 12, color: 'var(--color-ink-soft)' }}>
+        <span
+          style={{
+            marginLeft: 'auto',
+            fontFamily: sans,
+            fontSize: 12,
+            color: 'var(--color-ink-soft)',
+          }}
+        >
           {t('crt.from_last', locale)}
           <select
             value={days}
-            onChange={e => setDays(Number(e.target.value))}
+            onChange={(e) => setDays(Number(e.target.value))}
             style={{
-              marginLeft: 6, padding: '3px 8px',
-              fontFamily: sans, fontSize: 12.5,
-              border: '1px solid var(--color-line)', borderRadius: 4, background: '#FFFCF4',
+              marginLeft: 6,
+              padding: '3px 8px',
+              fontFamily: sans,
+              fontSize: 12.5,
+              border: '1px solid var(--color-line)',
+              borderRadius: 4,
+              background: '#FFFCF4',
             }}
           >
             <option value={7}>{t('crt.days', locale, { n: 7 })}</option>
@@ -269,99 +334,156 @@ export default function CurationPanel({ locale = 'en' as Locale }: { locale?: Lo
         </p>
       )}
       {error && (
-        <p style={{
-          fontFamily: sans, fontSize: 13, color: '#7A2E2E',
-          background: 'rgba(122,46,46,0.08)',
-          padding: '8px 12px', borderRadius: 6,
-        }}>{error}</p>
+        <p
+          style={{
+            fontFamily: sans,
+            fontSize: 13,
+            color: '#7A2E2E',
+            background: 'rgba(122,46,46,0.08)',
+            padding: '8px 12px',
+            borderRadius: 6,
+          }}
+        >
+          {error}
+        </p>
       )}
 
       {/* Candidates feed */}
       {!loading && candidates.length === 0 && (
-        <div style={{
-          padding: '20px 18px',
-          background: '#FFFCF4',
-          border: '3px dashed var(--color-acc-deep)',
-          borderRadius: 0,
-        }}>
-          <EmptyStateSprite
-            variant="explorer"
-            caption={t('crt.feed_empty', locale)}
-          />
+        <div
+          style={{
+            padding: '20px 18px',
+            background: '#FFFCF4',
+            border: '3px dashed var(--color-acc-deep)',
+            borderRadius: 0,
+          }}
+        >
+          <EmptyStateSprite variant="explorer" caption={t('crt.feed_empty', locale)} />
         </div>
       )}
       <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 12 }}>
-        {candidates.map(c => {
+        {candidates.map((c) => {
           const draftKey = `${c.source_type}:${c.source_id}`;
           return (
-            <li key={draftKey} style={{
-              padding: '14px 18px',
-              background: '#FFFCF4',
-              border: '3px solid var(--color-ink)',
-              boxShadow: '3px 3px 0 0 var(--color-acc)',
-              borderRadius: 0,
-            }}>
-              <div style={{
-                display: 'flex', justifyContent: 'space-between',
-                gap: 12, marginBottom: 6, flexWrap: 'wrap',
-              }}>
-                <span style={{
-                  fontFamily: sans, fontSize: 11, fontWeight: 600,
-                  color: 'var(--color-acc-deep)', textTransform: 'uppercase',
-                  letterSpacing: '0.14em',
-                }}>
+            <li
+              key={draftKey}
+              style={{
+                padding: '14px 18px',
+                background: '#FFFCF4',
+                border: '3px solid var(--color-ink)',
+                boxShadow: '3px 3px 0 0 var(--color-acc)',
+                borderRadius: 0,
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  gap: 12,
+                  marginBottom: 6,
+                  flexWrap: 'wrap',
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: sans,
+                    fontSize: 11,
+                    fontWeight: 600,
+                    color: 'var(--color-acc-deep)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.14em',
+                  }}
+                >
                   {t(SOURCE_LABEL_KEY[c.source_type], locale)}
                   {c.author_handle && (
-                    <> · <Link href={`/u/${c.author_handle}`} style={{ color: 'var(--color-acc-deep)' }}>@{c.author_handle}</Link></>
+                    <>
+                      {' '}
+                      ·{' '}
+                      <Link
+                        href={`/u/${c.author_handle}`}
+                        style={{ color: 'var(--color-acc-deep)' }}
+                      >
+                        @{c.author_handle}
+                      </Link>
+                    </>
                   )}
-                  {c.word_count != null && <> · {t('crt.word_count', locale, { n: c.word_count })}</>}
+                  {c.word_count != null && (
+                    <> · {t('crt.word_count', locale, { n: c.word_count })}</>
+                  )}
                 </span>
                 <span style={{ fontFamily: sans, fontSize: 11, color: 'var(--color-acc-deep)' }}>
                   {new Date(c.entry_created_at).toLocaleDateString('en-US', {
-                    month: 'short', day: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
                   })}
                 </span>
               </div>
               {c.entry_label && (
-                <div style={{
-                  fontFamily: serif, fontStyle: 'italic',
-                  fontSize: 14, color: 'var(--color-ink-soft)',
-                  marginBottom: 6, lineHeight: 1.4,
-                }}>
+                <div
+                  style={{
+                    fontFamily: serif,
+                    fontStyle: 'italic',
+                    fontSize: 14,
+                    color: 'var(--color-ink-soft)',
+                    marginBottom: 6,
+                    lineHeight: 1.4,
+                  }}
+                >
                   {c.entry_label}
                 </div>
               )}
-              <p style={{
-                fontFamily: serif, fontSize: 15.5, color: 'var(--color-ink)',
-                margin: '0 0 12px', lineHeight: 1.55, whiteSpace: 'pre-wrap',
-                maxHeight: 200, overflow: 'hidden',
-              }}>
+              <p
+                style={{
+                  fontFamily: serif,
+                  fontSize: 15.5,
+                  color: 'var(--color-ink)',
+                  margin: '0 0 12px',
+                  lineHeight: 1.55,
+                  whiteSpace: 'pre-wrap',
+                  maxHeight: 200,
+                  overflow: 'hidden',
+                }}
+              >
                 {c.entry_text}
               </p>
-              <div style={{
-                display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap',
-              }}>
+              <div
+                style={{
+                  display: 'flex',
+                  gap: 8,
+                  alignItems: 'center',
+                  flexWrap: 'wrap',
+                }}
+              >
                 <input
                   type="text"
                   placeholder={t('crt.note_placeholder', locale)}
                   value={noteDrafts[draftKey] || ''}
-                  onChange={e => setNoteDrafts({ ...noteDrafts, [draftKey]: e.target.value })}
+                  onChange={(e) => setNoteDrafts({ ...noteDrafts, [draftKey]: e.target.value })}
                   style={{
-                    flex: 1, minWidth: 200,
-                    padding: '6px 10px', fontFamily: sans, fontSize: 13,
-                    border: '1px solid var(--color-line)', borderRadius: 4, background: 'var(--color-cream)',
+                    flex: 1,
+                    minWidth: 200,
+                    padding: '6px 10px',
+                    fontFamily: sans,
+                    fontSize: 13,
+                    border: '1px solid var(--color-line)',
+                    borderRadius: 4,
+                    background: 'var(--color-cream)',
                   }}
                 />
-                {[1, 2, 3].map(slot => (
+                {[1, 2, 3].map((slot) => (
                   <button
                     key={slot}
-                    onClick={() => pickIntoSlot(slot as 1|2|3, c)}
+                    onClick={() => pickIntoSlot(slot as 1 | 2 | 3, c)}
                     disabled={!!busy}
                     style={{
                       padding: '6px 12px',
-                      fontFamily: sans, fontSize: 12.5, fontWeight: 500,
-                      background: 'var(--color-ink)', color: 'var(--color-cream)',
-                      border: 'none', borderRadius: 4,
+                      fontFamily: sans,
+                      fontSize: 12.5,
+                      fontWeight: 500,
+                      background: 'var(--color-ink)',
+                      color: 'var(--color-cream)',
+                      border: 'none',
+                      borderRadius: 4,
                       cursor: busy ? 'wait' : 'pointer',
                       opacity: busy === draftKey + ':' + slot ? 0.6 : 1,
                     }}

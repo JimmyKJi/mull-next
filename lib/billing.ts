@@ -97,7 +97,10 @@ export function isEduEmail(email: string | null | undefined): boolean {
   if (!email) return false;
   const at = email.indexOf('@');
   if (at < 0) return false;
-  const domain = email.slice(at + 1).toLowerCase().trim();
+  const domain = email
+    .slice(at + 1)
+    .toLowerCase()
+    .trim();
   if (!domain) return false;
   if (EDU_REGEX.test(domain)) return true;
   if (EXTRA_EDU_DOMAINS.has(domain)) return true;

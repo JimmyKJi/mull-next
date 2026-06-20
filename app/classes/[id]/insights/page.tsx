@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 };
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 
 type Cls = {
   id: string;
@@ -42,15 +42,13 @@ type Attempt = {
   taken_at: string;
 };
 
-export default async function ClassInsightsPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function ClassInsightsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id: classId } = await params;
   const locale = await getServerLocale();
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) redirect(`/login?next=/classes/${classId}/insights`);
 
   const { data: cls } = await supabase
@@ -76,7 +74,7 @@ export default async function ClassInsightsPage({
     .eq('role', 'student')
     .returns<{ user_id: string }[]>();
 
-  const studentIds = (roster ?? []).map(r => r.user_id);
+  const studentIds = (roster ?? []).map((r) => r.user_id);
   const totalStudents = studentIds.length;
 
   // Pull all quiz attempts for the class roster. Per the new RLS
@@ -111,16 +109,26 @@ export default async function ClassInsightsPage({
     const k = a.archetype || 'Unknown';
     archCounts.set(k, (archCounts.get(k) ?? 0) + 1);
   }
-  const archDistribution = Array.from(archCounts.entries())
-    .sort((a, b) => b[1] - a[1]);
+  const archDistribution = Array.from(archCounts.entries()).sort((a, b) => b[1] - a[1]);
 
   // ── Section 2: class-wide dimensional average ─────────────────────
   // Element-wise mean of each student's latest vector, plus a min/max
   // spread to show class disagreement on each dimension.
-  const dimStats: { idx: number; key: string; name: string; mean: number; min: number; max: number; n: number }[] = [];
+  const dimStats: {
+    idx: number;
+    key: string;
+    name: string;
+    mean: number;
+    min: number;
+    max: number;
+    n: number;
+  }[] = [];
   if (latestByStudent.size > 0) {
     for (let i = 0; i < 16; i++) {
-      let sum = 0, min = Infinity, max = -Infinity, n = 0;
+      let sum = 0,
+        min = Infinity,
+        max = -Infinity,
+        n = 0;
       for (const a of latestByStudent.values()) {
         if (!Array.isArray(a.vector) || a.vector.length !== 16) continue;
         const v = a.vector[i] ?? 0;
@@ -161,9 +169,7 @@ export default async function ClassInsightsPage({
     }
     shiftStudentCount++;
   }
-  const avgShifts = shiftStudentCount > 0
-    ? shiftSums.map(s => s / shiftStudentCount)
-    : null;
+  const avgShifts = shiftStudentCount > 0 ? shiftSums.map((s) => s / shiftStudentCount) : null;
 
   // Top 5 absolute shifts (largest |delta|) so we surface the
   // dimensions where the class moved the most regardless of direction.
@@ -183,66 +189,98 @@ export default async function ClassInsightsPage({
     <main className="mx-auto max-w-[820px] px-6 pb-32 pt-10 sm:px-10">
       <div className="mb-6 flex items-center justify-between gap-4">
         <MullWordmark />
-        <Link href={`/classes/${cls.id}`} style={{
-          fontFamily: pixel, fontSize: 11,
-          color: 'var(--color-ink-soft)', textDecoration: 'none',
-          letterSpacing: 0.4, textTransform: 'uppercase',
-        }}>
+        <Link
+          href={`/classes/${cls.id}`}
+          style={{
+            fontFamily: pixel,
+            fontSize: 11,
+            color: 'var(--color-ink-soft)',
+            textDecoration: 'none',
+            letterSpacing: 0.4,
+            textTransform: 'uppercase',
+          }}
+        >
           ◂ {cls.name.toUpperCase()}
         </Link>
       </div>
 
-      <div style={{
-        fontFamily: pixel, fontSize: 12,
-        color: 'var(--color-acc-deep)', textTransform: 'uppercase',
-        letterSpacing: '0.18em', marginBottom: 14,
-      }}>
+      <div
+        style={{
+          fontFamily: pixel,
+          fontSize: 12,
+          color: 'var(--color-acc-deep)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.18em',
+          marginBottom: 14,
+        }}
+      >
         ▸ {t('cls.insights_eyebrow', locale)} · {cls.name.toUpperCase()}
       </div>
 
-      <h1 style={{
-        fontFamily: pixel,
-        fontSize: 26,
-        margin: '0 0 14px',
-        color: 'var(--color-ink)',
-        letterSpacing: '0.06em',
-        textTransform: 'uppercase',
-        textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))',
-        lineHeight: 1.4,
-      }}>
+      <h1
+        style={{
+          fontFamily: pixel,
+          fontSize: 26,
+          margin: '0 0 14px',
+          color: 'var(--color-ink)',
+          letterSpacing: '0.06em',
+          textTransform: 'uppercase',
+          textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))',
+          lineHeight: 1.4,
+        }}
+      >
         {t('cls.insights_title', locale)}
       </h1>
 
-      <p style={{
-        fontFamily: serif,
-        fontStyle: 'italic',
-        fontSize: 16.5,
-        color: 'var(--color-ink-soft)',
-        margin: '0 0 26px',
-        lineHeight: 1.55,
-      }}>
+      <p
+        style={{
+          fontFamily: serif,
+          fontStyle: 'italic',
+          fontSize: 16.5,
+          color: 'var(--color-ink-soft)',
+          margin: '0 0 26px',
+          lineHeight: 1.55,
+        }}
+      >
         {t('cls.insights_intro', locale)}
         {studentsWithoutQuiz > 0 && (
           <>
             {' '}
             <span style={{ color: '#7A2E2E' }}>
-              {t('cls.insights_no_quiz_warn', locale, { count: studentsWithoutQuiz, total: totalStudents })}
+              {t('cls.insights_no_quiz_warn', locale, {
+                count: studentsWithoutQuiz,
+                total: totalStudents,
+              })}
             </span>
           </>
         )}
       </p>
 
       {/* Stat row */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
-        gap: 12,
-        marginBottom: 36,
-      }}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+          gap: 12,
+          marginBottom: 36,
+        }}
+      >
         <StatTile label={t('cls.stat_students', locale)} value={totalStudents} accent="#221E18" />
-        <StatTile label={t('cls.stat_took_quiz', locale)} value={studentsWithQuiz} accent="#2F5D5C" />
-        <StatTile label={t('cls.stat_attempts_total', locale)} value={allAttempts.length} accent="#B8862F" />
-        <StatTile label={t('cls.stat_with_prepost', locale)} value={shiftStudentCount} accent="#7A4A2E" />
+        <StatTile
+          label={t('cls.stat_took_quiz', locale)}
+          value={studentsWithQuiz}
+          accent="#2F5D5C"
+        />
+        <StatTile
+          label={t('cls.stat_attempts_total', locale)}
+          value={allAttempts.length}
+          accent="#B8862F"
+        />
+        <StatTile
+          label={t('cls.stat_with_prepost', locale)}
+          value={shiftStudentCount}
+          accent="#7A4A2E"
+        />
       </div>
 
       {studentsWithQuiz === 0 ? (
@@ -251,33 +289,33 @@ export default async function ClassInsightsPage({
         <>
           {/* Section 1: archetype distribution */}
           <Section title={`▸ ${t('cls.insights_arch_title', locale)}`}>
-            <p style={subtitleStyle}>
-              {t('cls.insights_arch_subtitle', locale)}
-            </p>
+            <p style={subtitleStyle}>{t('cls.insights_arch_subtitle', locale)}</p>
             <ul style={listStyle}>
               {archDistribution.map(([archetype, count]) => {
                 const max = archDistribution[0][1] || 1;
                 const pct = Math.round((count / max) * 100);
                 return (
                   <li key={archetype} style={rowStyle}>
-                    <span style={{
-                      flex: '0 0 160px',
-                      fontFamily: serif,
-                      fontSize: 15,
-                      color: 'var(--color-ink)',
-                    }}>
+                    <span
+                      style={{
+                        flex: '0 0 160px',
+                        fontFamily: serif,
+                        fontSize: 15,
+                        color: 'var(--color-ink)',
+                      }}
+                    >
                       {archetype.replace(/^The /, '')}
                     </span>
                     <div style={barTrackStyle}>
-                      <div style={{
-                        height: '100%',
-                        width: `${pct}%`,
-                        background: 'var(--color-acc)',
-                      }} />
+                      <div
+                        style={{
+                          height: '100%',
+                          width: `${pct}%`,
+                          background: 'var(--color-acc)',
+                        }}
+                      />
                     </div>
-                    <span style={countStyle}>
-                      {count}
-                    </span>
+                    <span style={countStyle}>{count}</span>
                   </li>
                 );
               })}
@@ -286,47 +324,49 @@ export default async function ClassInsightsPage({
 
           {/* Section 2: dimensional average */}
           <Section title={`▸ ${t('cls.insights_map_title', locale)}`}>
-            <p style={subtitleStyle}>
-              {t('cls.insights_map_subtitle', locale)}
-            </p>
+            <p style={subtitleStyle}>{t('cls.insights_map_subtitle', locale)}</p>
             <ul style={listStyle}>
-              {dimStatsSorted.map(d => {
+              {dimStatsSorted.map((d) => {
                 const meanPct = Math.max(0, Math.min(100, (d.mean / 10) * 100));
                 const minPct = Math.max(0, Math.min(100, (d.min / 10) * 100));
                 const maxPct = Math.max(0, Math.min(100, (d.max / 10) * 100));
                 return (
                   <li key={d.key} style={rowStyle}>
-                    <span style={{
-                      flex: '0 0 160px',
-                      fontFamily: serif,
-                      fontSize: 14,
-                      color: 'var(--color-ink)',
-                    }}>
+                    <span
+                      style={{
+                        flex: '0 0 160px',
+                        fontFamily: serif,
+                        fontSize: 14,
+                        color: 'var(--color-ink)',
+                      }}
+                    >
                       {d.name}
                     </span>
                     <div style={{ ...barTrackStyle, position: 'relative' }}>
                       {/* Spread band — min to max */}
-                      <div style={{
-                        position: 'absolute',
-                        left: `${minPct}%`,
-                        width: `${Math.max(2, maxPct - minPct)}%`,
-                        top: 1,
-                        bottom: 1,
-                        background: 'rgba(184, 134, 47, 0.25)',
-                      }} />
+                      <div
+                        style={{
+                          position: 'absolute',
+                          left: `${minPct}%`,
+                          width: `${Math.max(2, maxPct - minPct)}%`,
+                          top: 1,
+                          bottom: 1,
+                          background: 'rgba(184, 134, 47, 0.25)',
+                        }}
+                      />
                       {/* Mean marker */}
-                      <div style={{
-                        position: 'absolute',
-                        left: `calc(${meanPct}% - 2px)`,
-                        width: 4,
-                        top: -2,
-                        bottom: -2,
-                        background: 'var(--color-ink)',
-                      }} />
+                      <div
+                        style={{
+                          position: 'absolute',
+                          left: `calc(${meanPct}% - 2px)`,
+                          width: 4,
+                          top: -2,
+                          bottom: -2,
+                          background: 'var(--color-ink)',
+                        }}
+                      />
                     </div>
-                    <span style={countStyle}>
-                      {d.mean.toFixed(1)}
-                    </span>
+                    <span style={countStyle}>{d.mean.toFixed(1)}</span>
                   </li>
                 );
               })}
@@ -337,30 +377,41 @@ export default async function ClassInsightsPage({
           {shiftStudentCount > 0 && avgShifts ? (
             <Section title={`▸ ${t('cls.insights_shift_title', locale)}`}>
               <p style={subtitleStyle}>
-                {t(shiftStudentCount === 1 ? 'cls.insights_shift_subtitle_one' : 'cls.insights_shift_subtitle_many', locale, { count: shiftStudentCount })}
+                {t(
+                  shiftStudentCount === 1
+                    ? 'cls.insights_shift_subtitle_one'
+                    : 'cls.insights_shift_subtitle_many',
+                  locale,
+                  { count: shiftStudentCount },
+                )}
               </p>
               <ul style={listStyle}>
-                {topShifts.map(s => (
+                {topShifts.map((s) => (
                   <li key={s.key} style={rowStyle}>
-                    <span style={{
-                      flex: '0 0 160px',
-                      fontFamily: serif,
-                      fontSize: 15,
-                      color: 'var(--color-ink)',
-                    }}>
+                    <span
+                      style={{
+                        flex: '0 0 160px',
+                        fontFamily: serif,
+                        fontSize: 15,
+                        color: 'var(--color-ink)',
+                      }}
+                    >
                       {s.name}
                     </span>
-                    <span style={{
-                      fontFamily: pixel,
-                      fontSize: 12,
-                      color: s.delta > 0 ? '#2F5D5C' : '#7A2E2E',
-                      letterSpacing: 0.4,
-                      padding: '4px 10px',
-                      background: s.delta > 0 ? '#E5F0EE' : '#F5E0E0',
-                      border: `2px solid ${s.delta > 0 ? '#2F5D5C' : '#7A2E2E'}`,
-                      fontVariantNumeric: 'tabular-nums',
-                    }}>
-                      {s.delta > 0 ? '+' : ''}{s.delta.toFixed(2)}
+                    <span
+                      style={{
+                        fontFamily: pixel,
+                        fontSize: 12,
+                        color: s.delta > 0 ? '#2F5D5C' : '#7A2E2E',
+                        letterSpacing: 0.4,
+                        padding: '4px 10px',
+                        background: s.delta > 0 ? '#E5F0EE' : '#F5E0E0',
+                        border: `2px solid ${s.delta > 0 ? '#2F5D5C' : '#7A2E2E'}`,
+                        fontVariantNumeric: 'tabular-nums',
+                      }}
+                    >
+                      {s.delta > 0 ? '+' : ''}
+                      {s.delta.toFixed(2)}
                     </span>
                   </li>
                 ))}
@@ -368,9 +419,7 @@ export default async function ClassInsightsPage({
             </Section>
           ) : (
             <Section title={`▸ ${t('cls.insights_shift_na_title', locale)}`}>
-              <p style={subtitleStyle}>
-                {t('cls.insights_shift_na_subtitle', locale)}
-              </p>
+              <p style={subtitleStyle}>{t('cls.insights_shift_na_subtitle', locale)}</p>
             </Section>
           )}
         </>
@@ -382,15 +431,17 @@ export default async function ClassInsightsPage({
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section style={{ marginBottom: 36 }}>
-      <h2 style={{
-        fontFamily: pixel,
-        fontSize: 14,
-        color: 'var(--color-ink)',
-        textTransform: 'uppercase',
-        letterSpacing: '0.18em',
-        marginBottom: 12,
-        textShadow: '2px 2px 0 var(--pixel-shadow, var(--color-acc))',
-      }}>
+      <h2
+        style={{
+          fontFamily: pixel,
+          fontSize: 14,
+          color: 'var(--color-ink)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.18em',
+          marginBottom: 12,
+          textShadow: '2px 2px 0 var(--pixel-shadow, var(--color-acc))',
+        }}
+      >
         {title}
       </h2>
       {children}
@@ -400,31 +451,37 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 function StatTile({ label, value, accent }: { label: string; value: number; accent: string }) {
   return (
-    <div style={{
-      padding: '14px 16px',
-      background: '#FFFCF4',
-      border: '3px solid var(--color-ink)',
-      boxShadow: `3px 3px 0 0 ${accent}`,
-      borderRadius: 0,
-    }}>
-      <div style={{
-        fontFamily: pixel,
-        fontSize: 24,
-        color: 'var(--color-ink)',
-        lineHeight: 1,
-        letterSpacing: 0.4,
-        fontVariantNumeric: 'tabular-nums',
-      }}>
+    <div
+      style={{
+        padding: '14px 16px',
+        background: '#FFFCF4',
+        border: '3px solid var(--color-ink)',
+        boxShadow: `3px 3px 0 0 ${accent}`,
+        borderRadius: 0,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: pixel,
+          fontSize: 24,
+          color: 'var(--color-ink)',
+          lineHeight: 1,
+          letterSpacing: 0.4,
+          fontVariantNumeric: 'tabular-nums',
+        }}
+      >
         {value}
       </div>
-      <div style={{
-        fontFamily: pixel,
-        fontSize: 9,
-        color: accent,
-        textTransform: 'uppercase',
-        letterSpacing: '0.18em',
-        marginTop: 6,
-      }}>
+      <div
+        style={{
+          fontFamily: pixel,
+          fontSize: 9,
+          color: accent,
+          textTransform: 'uppercase',
+          letterSpacing: '0.18em',
+          marginTop: 6,
+        }}
+      >
         {label.toUpperCase()}
       </div>
     </div>
@@ -433,21 +490,25 @@ function StatTile({ label, value, accent }: { label: string; value: number; acce
 
 function EmptyClass({ classId, locale }: { classId: string; locale: Locale }) {
   return (
-    <div style={{
-      padding: '24px 22px',
-      background: '#FFFCF4',
-      border: '3px dashed var(--color-acc-deep)',
-      borderRadius: 0,
-      textAlign: 'center',
-    }}>
-      <p style={{
-        fontFamily: serif,
-        fontStyle: 'italic',
-        fontSize: 16,
-        color: 'var(--color-acc-deep)',
-        margin: '0 0 14px',
-        lineHeight: 1.55,
-      }}>
+    <div
+      style={{
+        padding: '24px 22px',
+        background: '#FFFCF4',
+        border: '3px dashed var(--color-acc-deep)',
+        borderRadius: 0,
+        textAlign: 'center',
+      }}
+    >
+      <p
+        style={{
+          fontFamily: serif,
+          fontStyle: 'italic',
+          fontSize: 16,
+          color: 'var(--color-acc-deep)',
+          margin: '0 0 14px',
+          lineHeight: 1.55,
+        }}
+      >
         {t('cls.insights_empty', locale)}
       </p>
       <Link

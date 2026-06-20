@@ -7,7 +7,13 @@ import { t, type Locale } from '@/lib/translations';
 
 const sans = "'Inter', system-ui, sans-serif";
 
-export default function DiaryEntryActions({ entryId, locale = 'en' }: { entryId: string; locale?: Locale }) {
+export default function DiaryEntryActions({
+  entryId,
+  locale = 'en',
+}: {
+  entryId: string;
+  locale?: Locale;
+}) {
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -20,7 +26,7 @@ export default function DiaryEntryActions({ entryId, locale = 'en' }: { entryId:
       const res = await fetch('/api/diary/delete', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: entryId })
+        body: JSON.stringify({ id: entryId }),
       });
       const json = await res.json();
       if (!res.ok) {
@@ -38,35 +44,43 @@ export default function DiaryEntryActions({ entryId, locale = 'en' }: { entryId:
   }
 
   return (
-    <div style={{
-      marginTop: 40,
-      paddingTop: 24,
-      borderTop: '1px solid #EBE3CA',
-      display: 'flex',
-      gap: 12,
-      flexWrap: 'wrap',
-    }}>
-      <Link href="/diary" style={{
-        padding: '10px 20px',
-        background: 'var(--color-ink)',
-        color: 'var(--color-cream)',
-        borderRadius: 6,
-        textDecoration: 'none',
-        fontFamily: sans,
-        fontSize: 14,
-        fontWeight: 500,
-      }}>
+    <div
+      style={{
+        marginTop: 40,
+        paddingTop: 24,
+        borderTop: '1px solid #EBE3CA',
+        display: 'flex',
+        gap: 12,
+        flexWrap: 'wrap',
+      }}
+    >
+      <Link
+        href="/diary"
+        style={{
+          padding: '10px 20px',
+          background: 'var(--color-ink)',
+          color: 'var(--color-cream)',
+          borderRadius: 6,
+          textDecoration: 'none',
+          fontFamily: sans,
+          fontSize: 14,
+          fontWeight: 500,
+        }}
+      >
         {t('nav.all_entries', locale)}
       </Link>
-      <Link href="/account" style={{
-        padding: '10px 20px',
-        border: '1px solid var(--color-ink)',
-        color: 'var(--color-ink)',
-        borderRadius: 6,
-        textDecoration: 'none',
-        fontFamily: sans,
-        fontSize: 14,
-      }}>
+      <Link
+        href="/account"
+        style={{
+          padding: '10px 20px',
+          border: '1px solid var(--color-ink)',
+          color: 'var(--color-ink)',
+          borderRadius: 6,
+          textDecoration: 'none',
+          fontFamily: sans,
+          fontSize: 14,
+        }}
+      >
         {t('diary.see_trajectory', locale)}
       </Link>
       <button
@@ -88,13 +102,15 @@ export default function DiaryEntryActions({ entryId, locale = 'en' }: { entryId:
         {deleting ? t('diary.deleting', locale) : t('diary.delete_entry', locale)}
       </button>
       {error && (
-        <div style={{
-          width: '100%',
-          fontFamily: sans,
-          fontSize: 13,
-          color: '#7A2E2E',
-          marginTop: 8,
-        }}>
+        <div
+          style={{
+            width: '100%',
+            fontFamily: sans,
+            fontSize: 13,
+            color: '#7A2E2E',
+            marginTop: 8,
+          }}
+        >
           {error}
         </div>
       )}

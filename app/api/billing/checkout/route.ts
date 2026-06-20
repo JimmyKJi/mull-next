@@ -32,7 +32,9 @@ export async function POST(req: Request) {
     }
 
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Sign in to subscribe.' }, { status: 401 });
 
     const price = PRICES[plan as Exclude<Plan, 'free'>];
@@ -52,9 +54,12 @@ export async function POST(req: Request) {
       // Should be unreachable since isDryRun() == !STRIPE_SECRET_KEY,
       // but defensive: if the SDK init fails for some other reason we
       // surface a structured error instead of crashing.
-      return NextResponse.json({
-        error: 'Billing temporarily unavailable.',
-      }, { status: 503 });
+      return NextResponse.json(
+        {
+          error: 'Billing temporarily unavailable.',
+        },
+        { status: 503 },
+      );
     }
 
     // Reuse a Stripe customer per Mull user. The subscriptions table
@@ -83,20 +88,20 @@ export async function POST(req: Request) {
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: isLifetime ? 'payment' : 'subscription',
-      line_items: [{
-        price_data: {
-          currency: price.currency,
-          product_data: {
-            name: price.label,
-            description: price.description,
+      line_items: [
+        {
+          price_data: {
+            currency: price.currency,
+            product_data: {
+              name: price.label,
+              description: price.description,
+            },
+            unit_amount: price.amountCents,
+            ...(isLifetime ? {} : { recurring: { interval: price.interval as 'month' | 'year' } }),
           },
-          unit_amount: price.amountCents,
-          ...(isLifetime
-            ? {}
-            : { recurring: { interval: price.interval as 'month' | 'year' } }),
+          quantity: 1,
         },
-        quantity: 1,
-      }],
+      ],
       success_url: `${siteUrl()}/billing/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl()}/billing`,
       metadata: {
@@ -106,20 +111,25 @@ export async function POST(req: Request) {
       // Save the plan on the subscription metadata too so the webhook
       // handler can recover plan info from a subscription event even
       // when the original checkout-session metadata isn't accessible.
-      ...(isLifetime ? {} : {
-        subscription_data: {
-          metadata: {
-            mull_user_id: user.id,
-            plan,
-          },
-        },
-      }),
+      ...(isLifetime
+        ? {}
+        : {
+            subscription_data: {
+              metadata: {
+                mull_user_id: user.id,
+                plan,
+              },
+            },
+          }),
     });
 
     if (!session.url) {
-      return NextResponse.json({
-        error: 'Stripe did not return a checkout URL.',
-      }, { status: 502 });
+      return NextResponse.json(
+        {
+          error: 'Stripe did not return a checkout URL.',
+        },
+        { status: 502 },
+      );
     }
     return NextResponse.json({ checkoutUrl: session.url, price });
   } catch (e) {

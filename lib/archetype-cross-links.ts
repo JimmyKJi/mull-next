@@ -6,7 +6,8 @@
 
 import { TOPICS, type Topic } from './topics';
 
-let _topicsByArchetype: Map<string, { slug: string; title: string; summary: string }[]> | null = null;
+let _topicsByArchetype: Map<string, { slug: string; title: string; summary: string }[]> | null =
+  null;
 function buildTopicIndex(): Map<string, { slug: string; title: string; summary: string }[]> {
   if (_topicsByArchetype) return _topicsByArchetype;
   const m = new Map<string, { slug: string; title: string; summary: string }[]>();
@@ -25,6 +26,8 @@ function buildTopicIndex(): Map<string, { slug: string; title: string; summary: 
  *  Used by /archetype/[slug] to render a "Topics that cluster here"
  *  section — internal-link gold + helps users see which philosophical
  *  questions tend to occupy this orientation. */
-export function topicsForArchetype(archetypeKey: string): { slug: string; title: string; summary: string }[] {
+export function topicsForArchetype(
+  archetypeKey: string,
+): { slug: string; title: string; summary: string }[] {
   return buildTopicIndex().get(archetypeKey) ?? [];
 }

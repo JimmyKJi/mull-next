@@ -1,12 +1,12 @@
-import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Lora, Pixelify_Sans, Press_Start_2P, VT323 } from "next/font/google";
-import "./globals.css";
-import { SiteNav } from "@/components/site-nav";
-import { getServerLocale } from "@/lib/locale-server";
-import CapabilityToast from "@/components/capability-toast";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import FeedbackButton from "@/components/feedback-button";
+import type { Metadata, Viewport } from 'next';
+import { Cormorant_Garamond, Lora, Pixelify_Sans, Press_Start_2P, VT323 } from 'next/font/google';
+import './globals.css';
+import { SiteNav } from '@/components/site-nav';
+import { getServerLocale } from '@/lib/locale-server';
+import CapabilityToast from '@/components/capability-toast';
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import FeedbackButton from '@/components/feedback-button';
 
 // v3 pixel-game typography stack. Three faces with very different
 // roles — see DESIGN-DIRECTION.md "Visual language tokens".
@@ -23,25 +23,25 @@ import FeedbackButton from "@/components/feedback-button";
 //                 "library book inside the game" beat.
 
 const pressStart2P = Press_Start_2P({
-  subsets: ["latin"],
-  weight: ["400"],
-  variable: "--font-pixel-display",
-  display: "swap",
+  subsets: ['latin'],
+  weight: ['400'],
+  variable: '--font-pixel-display',
+  display: 'swap',
 });
 
 const vt323 = VT323({
-  subsets: ["latin"],
-  weight: ["400"],
-  variable: "--font-pixel-body",
-  display: "swap",
+  subsets: ['latin'],
+  weight: ['400'],
+  variable: '--font-pixel-body',
+  display: 'swap',
 });
 
 const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
-  variable: "--font-cormorant",
-  display: "swap",
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  style: ['normal', 'italic'],
+  variable: '--font-cormorant',
+  display: 'swap',
 });
 
 // Lora — substantial body serif. Kept available but no longer the
@@ -49,11 +49,11 @@ const cormorant = Cormorant_Garamond({
 // Pages that have specifically opted into Lora keep working; new
 // surfaces use Pixelify Sans for the "pixel-game world" unity.
 const lora = Lora({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
-  variable: "--font-lora",
-  display: "swap",
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  style: ['normal', 'italic'],
+  variable: '--font-lora',
+  display: 'swap',
 });
 
 // Pixelify Sans — the bridge font. Modern sans-serif with subtle
@@ -70,10 +70,10 @@ const lora = Lora({
 // game" beat that those long-read pages were designed around.
 // Everything else picks Pixelify Sans.
 const pixelifySans = Pixelify_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-pixel-sans",
-  display: "swap",
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-pixel-sans',
+  display: 'swap',
 });
 
 // Critical for mobile — without this iOS Safari renders at desktop
@@ -86,28 +86,28 @@ const pixelifySans = Pixelify_Sans({
 // no effect. Pair this with the `themeColor` so iOS gives the
 // standalone PWA a matching status-bar background when installed.
 export const viewport: Viewport = {
-  width: "device-width",
+  width: 'device-width',
   initialScale: 1,
-  viewportFit: "cover",
-  themeColor: "var(--color-cream)",
+  viewportFit: 'cover',
+  themeColor: 'var(--color-cream)',
   // Don't lock max-scale; users zooming for accessibility is fine.
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://mull.world"),
+  metadataBase: new URL('https://mull.world'),
   title: {
-    default: "Mull",
-    template: "%s — Mull",
+    default: 'Mull',
+    template: '%s — Mull',
   },
-  description: "Find your place on the map of how you think.",
-  manifest: "/manifest.webmanifest",
+  description: 'Find your place on the map of how you think.',
+  manifest: '/manifest.webmanifest',
   // appleWebApp tells iOS Safari "this site is a standalone app
   // when installed" — strips the URL bar, gives it the home-screen
   // title we choose, and uses the touch icon for the home grid.
   appleWebApp: {
     capable: true,
-    title: "Mull",
-    statusBarStyle: "default",
+    title: 'Mull',
+    statusBarStyle: 'default',
   },
   // Next.js's appleWebApp.capable: true emits the title + status-bar
   // tags but no longer emits the `*-capable` meta (deprecated in
@@ -116,29 +116,36 @@ export const metadata: Metadata = {
   // generic forms explicitly so the install experience is identical
   // across the install matrix.
   other: {
-    "apple-mobile-web-app-capable": "yes",
-    "mobile-web-app-capable": "yes",
+    'apple-mobile-web-app-capable': 'yes',
+    'mobile-web-app-capable': 'yes',
   },
   icons: {
     icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon-512.png", sizes: "512x512", type: "image/png" },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon-512.png', sizes: '512x512', type: 'image/png' },
     ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180' }],
   },
   openGraph: {
-    title: "Mull",
-    description: "Find your place on the map of how you think.",
-    siteName: "Mull",
-    type: "website",
-    url: "https://mull.world",
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Mull — find your place on the map of how you think." }],
+    title: 'Mull',
+    description: 'Find your place on the map of how you think.',
+    siteName: 'Mull',
+    type: 'website',
+    url: 'https://mull.world',
+    images: [
+      {
+        url: '/og.png',
+        width: 1200,
+        height: 630,
+        alt: 'Mull — find your place on the map of how you think.',
+      },
+    ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Mull",
-    description: "Find your place on the map of how you think.",
-    images: ["/og.png"],
+    card: 'summary_large_image',
+    title: 'Mull',
+    description: 'Find your place on the map of how you think.',
+    images: ['/og.png'],
   },
 };
 
@@ -154,11 +161,11 @@ export default async function RootLayout({
   const locale = await getServerLocale();
   return (
     <html
-      lang={locale === "zh" ? "zh-Hans" : locale}
+      lang={locale === 'zh' ? 'zh-Hans' : locale}
       className={`${cormorant.variable} ${lora.variable} ${pixelifySans.variable} ${pressStart2P.variable} ${vt323.variable}`}
       style={
         {
-          colorScheme: "light",
+          colorScheme: 'light',
           // Font tokens. See STYLE-GUIDE.md §3.
           //   --font-display  = chunky pixel labels (Press Start 2P)
           //   --font-body     = pixel monospace (VT323)
@@ -170,34 +177,31 @@ export default async function RootLayout({
           //                     philosopher / about / methodology /
           //                     topic / vs pages where the "library
           //                     book inside the game" beat lives
-          ["--font-display" as string]:
-            "var(--font-pixel-display), 'Courier New', monospace",
-          ["--font-body" as string]:
-            "var(--font-pixel-body), 'Courier New', monospace",
-          ["--font-prose" as string]:
-            "var(--font-pixel-sans), system-ui, sans-serif",
-          ["--font-editorial" as string]:
-            "var(--font-cormorant), Georgia, serif",
+          ['--font-display' as string]: "var(--font-pixel-display), 'Courier New', monospace",
+          ['--font-body' as string]: "var(--font-pixel-body), 'Courier New', monospace",
+          ['--font-prose' as string]: 'var(--font-pixel-sans), system-ui, sans-serif',
+          ['--font-editorial' as string]: 'var(--font-cormorant), Georgia, serif',
         } as React.CSSProperties
       }
     >
       <body
         style={{
-          background: "var(--color-cream)",
-          color: "var(--color-ink)",
+          background: 'var(--color-cream)',
+          color: 'var(--color-ink)',
           margin: 0,
           padding: 0,
-          minHeight: "100vh",
-          fontFamily:
-            "ui-sans-serif, -apple-system, 'Inter', 'Helvetica Neue', Arial, sans-serif",
-          WebkitFontSmoothing: "antialiased",
+          minHeight: '100vh',
+          fontFamily: "ui-sans-serif, -apple-system, 'Inter', 'Helvetica Neue', Arial, sans-serif",
+          WebkitFontSmoothing: 'antialiased',
         }}
       >
         {/* Skip-to-content keyboard shortcut. Renders off-screen
             until it gets focus, then slides in. Lets keyboard users
             jump past the sticky nav (which has 6+ tabbable links)
             and land directly in the page body. */}
-        <a href="#main-content" className="skip-link">▸ SKIP TO CONTENT</a>
+        <a href="#main-content" className="skip-link">
+          ▸ SKIP TO CONTENT
+        </a>
         {/* SiteNav is the v2 sticky top bar — wordmark, page links,
             Cmd-K command palette, Account button. Visible on every
             route. Replaces the old GlobalTopBar / TopBarMount pair

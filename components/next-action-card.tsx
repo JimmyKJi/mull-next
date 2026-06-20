@@ -17,20 +17,25 @@
 import Link from 'next/link';
 import { t, type Locale } from '@/lib/translations';
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
 type Props = {
   quizCount: number;
   respondedToday: boolean;
   streak: number;
-  hasShareable: boolean;       // user has at least one quiz attempt to share
+  hasShareable: boolean; // user has at least one quiz attempt to share
   topArchetypeKey?: string;
   locale?: Locale;
 };
 
 export default function NextActionCard({
-  quizCount, respondedToday, streak, hasShareable, topArchetypeKey, locale = 'en',
+  quizCount,
+  respondedToday,
+  streak,
+  hasShareable,
+  topArchetypeKey,
+  locale = 'en',
 }: Props) {
   // No quiz yet → caller already shows the FirstStepCard grid; render
   // nothing here so the two don't fight for attention.
@@ -83,48 +88,56 @@ export default function NextActionCard({
   }
 
   return (
-    <section style={{
-      padding: '20px 24px',
-      background: '#FFFCF4',
-      border: '4px solid var(--color-ink)',
-      boxShadow: `5px 5px 0 0 ${accent}`,
-      borderRadius: 0,
-      marginBottom: 28,
-      display: 'flex',
-      gap: 18,
-      alignItems: 'center',
-      flexWrap: 'wrap',
-    }}>
+    <section
+      style={{
+        padding: '20px 24px',
+        background: '#FFFCF4',
+        border: '4px solid var(--color-ink)',
+        boxShadow: `5px 5px 0 0 ${accent}`,
+        borderRadius: 0,
+        marginBottom: 28,
+        display: 'flex',
+        gap: 18,
+        alignItems: 'center',
+        flexWrap: 'wrap',
+      }}
+    >
       <div style={{ flex: '1 1 320px', minWidth: 0 }}>
-        <div style={{
-          fontFamily: pixel,
-          fontSize: 11,
-          color: accent,
-          textTransform: 'uppercase',
-          letterSpacing: '0.18em',
-          marginBottom: 8,
-        }}>
+        <div
+          style={{
+            fontFamily: pixel,
+            fontSize: 11,
+            color: accent,
+            textTransform: 'uppercase',
+            letterSpacing: '0.18em',
+            marginBottom: 8,
+          }}
+        >
           ▸ {eyebrow}
         </div>
-        <h2 style={{
-          fontFamily: serif,
-          fontSize: 22,
-          fontWeight: 500,
-          color: 'var(--color-ink)',
-          margin: '0 0 4px',
-          letterSpacing: '-0.3px',
-          lineHeight: 1.25,
-        }}>
+        <h2
+          style={{
+            fontFamily: serif,
+            fontSize: 22,
+            fontWeight: 500,
+            color: 'var(--color-ink)',
+            margin: '0 0 4px',
+            letterSpacing: '-0.3px',
+            lineHeight: 1.25,
+          }}
+        >
           {title}
         </h2>
-        <p style={{
-          fontFamily: serif,
-          fontStyle: 'italic',
-          fontSize: 15,
-          color: 'var(--color-ink-soft)',
-          margin: 0,
-          lineHeight: 1.5,
-        }}>
+        <p
+          style={{
+            fontFamily: serif,
+            fontStyle: 'italic',
+            fontSize: 15,
+            color: 'var(--color-ink-soft)',
+            margin: 0,
+            lineHeight: 1.5,
+          }}
+        >
           {body}
         </p>
       </div>

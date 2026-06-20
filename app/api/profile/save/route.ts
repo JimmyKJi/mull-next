@@ -20,9 +20,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Handle is required.' }, { status: 400 });
     }
     if (!HANDLE_RE.test(handle)) {
-      return NextResponse.json({
-        error: 'Handle must be 3-32 chars: lowercase letters, numbers, underscore, or dash.'
-      }, { status: 400 });
+      return NextResponse.json(
+        {
+          error: 'Handle must be 3-32 chars: lowercase letters, numbers, underscore, or dash.',
+        },
+        { status: 400 },
+      );
     }
     if (displayName.length > 80) {
       return NextResponse.json({ error: 'Display name too long (max 80 chars).' }, { status: 400 });
@@ -32,24 +35,29 @@ export async function POST(req: Request) {
     }
 
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Not signed in.' }, { status: 401 });
 
     // Upsert by user_id (one profile per user)
     const { error: upsertError, data: saved } = await supabase
       .from('public_profiles')
-      .upsert({
-        user_id: user.id,
-        handle,
-        display_name: displayName || null,
-        bio: bio || null,
-        show_archetype: showArchetype,
-        show_dimensions: showDimensions,
-        show_map: showMap,
-        show_streak: showStreak,
-        is_searchable: isSearchable,
-        updated_at: new Date().toISOString(),
-      }, { onConflict: 'user_id' })
+      .upsert(
+        {
+          user_id: user.id,
+          handle,
+          display_name: displayName || null,
+          bio: bio || null,
+          show_archetype: showArchetype,
+          show_dimensions: showDimensions,
+          show_map: showMap,
+          show_streak: showStreak,
+          is_searchable: isSearchable,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: 'user_id' },
+      )
       .select('handle')
       .single();
 
@@ -72,13 +80,12 @@ export async function POST(req: Request) {
 export async function DELETE() {
   try {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Not signed in.' }, { status: 401 });
 
-    const { error } = await supabase
-      .from('public_profiles')
-      .delete()
-      .eq('user_id', user.id);
+    const { error } = await supabase.from('public_profiles').delete().eq('user_id', user.id);
 
     if (error) {
       console.error('[profile] delete failed', error);

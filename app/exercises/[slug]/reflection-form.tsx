@@ -18,7 +18,7 @@ import { DIM_KEYS, DIM_NAMES } from '@/lib/dimensions';
 import DiagnosisCard from '@/components/diagnosis-card';
 import type { Kinship } from '@/lib/kinship';
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 
 // Server returns these alongside the vector_delta + analysis. The
@@ -43,7 +43,7 @@ function deltaToShifts(delta: number[] | null): ShiftItem[] {
   if (!Array.isArray(delta)) return [];
   return delta
     .map((d, i) => ({ key: DIM_KEYS[i], name: DIM_NAMES[DIM_KEYS[i]], delta: +d.toFixed(2) }))
-    .filter(s => Math.abs(s.delta) >= 0.3)
+    .filter((s) => Math.abs(s.delta) >= 0.3)
     .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta))
     .slice(0, 4);
 }
@@ -96,46 +96,56 @@ export default function ReflectionForm({
   // Not signed in → soft prompt, no form.
   if (!isAuthed) {
     return (
-      <div style={{
-        marginTop: 36,
-        padding: '22px 26px',
-        background: '#FFFCF4',
-        border: '1px dashed var(--color-line)',
-        borderRadius: 10,
-        textAlign: 'center',
-      }}>
-        <p style={{
-          fontFamily: serif,
-          fontStyle: 'italic',
-          fontSize: 17,
-          color: 'var(--color-ink-soft)',
-          margin: '0 0 16px',
-          lineHeight: 1.55,
-        }}>
+      <div
+        style={{
+          marginTop: 36,
+          padding: '22px 26px',
+          background: '#FFFCF4',
+          border: '1px dashed var(--color-line)',
+          borderRadius: 10,
+          textAlign: 'center',
+        }}
+      >
+        <p
+          style={{
+            fontFamily: serif,
+            fontStyle: 'italic',
+            fontSize: 17,
+            color: 'var(--color-ink-soft)',
+            margin: '0 0 16px',
+            lineHeight: 1.55,
+          }}
+        >
           {t('reflect.signin_prompt', locale)}
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Link href="/signup" style={{
-            padding: '10px 20px',
-            background: 'var(--color-ink)',
-            color: 'var(--color-cream)',
-            borderRadius: 6,
-            textDecoration: 'none',
-            fontFamily: sans,
-            fontSize: 14,
-            fontWeight: 500,
-          }}>
+          <Link
+            href="/signup"
+            style={{
+              padding: '10px 20px',
+              background: 'var(--color-ink)',
+              color: 'var(--color-cream)',
+              borderRadius: 6,
+              textDecoration: 'none',
+              fontFamily: sans,
+              fontSize: 14,
+              fontWeight: 500,
+            }}
+          >
             {t('dilemma.create_account', locale)}
           </Link>
-          <Link href="/login" style={{
-            padding: '10px 20px',
-            border: '1px solid var(--color-ink)',
-            color: 'var(--color-ink)',
-            borderRadius: 6,
-            textDecoration: 'none',
-            fontFamily: sans,
-            fontSize: 14,
-          }}>
+          <Link
+            href="/login"
+            style={{
+              padding: '10px 20px',
+              border: '1px solid var(--color-ink)',
+              color: 'var(--color-ink)',
+              borderRadius: 6,
+              textDecoration: 'none',
+              fontFamily: sans,
+              fontSize: 14,
+            }}
+          >
             {t('dilemma.sign_in', locale)}
           </Link>
         </div>
@@ -147,62 +157,74 @@ export default function ReflectionForm({
   if (result) {
     const shifts = deltaToShifts(result.vector_delta);
     return (
-      <div style={{
-        marginTop: 36,
-        padding: '28px 32px',
-        background: '#FFFCF4',
-        border: '4px solid var(--color-ink)',
-        boxShadow: '5px 5px 0 0 #2F5D5C',
-        borderRadius: 0,
-      }}>
-        <div style={{
-          fontFamily: 'var(--font-pixel-display)',
-          fontSize: 12,
-          color: '#2F5D5C',
-          textTransform: 'uppercase',
-          letterSpacing: '0.18em',
-          marginBottom: 14,
-        }}>
+      <div
+        style={{
+          marginTop: 36,
+          padding: '28px 32px',
+          background: '#FFFCF4',
+          border: '4px solid var(--color-ink)',
+          boxShadow: '5px 5px 0 0 #2F5D5C',
+          borderRadius: 0,
+        }}
+      >
+        <div
+          style={{
+            fontFamily: 'var(--font-pixel-display)',
+            fontSize: 12,
+            color: '#2F5D5C',
+            textTransform: 'uppercase',
+            letterSpacing: '0.18em',
+            marginBottom: 14,
+          }}
+        >
           ✓ {t('reflect.saved', locale).toUpperCase()}
         </div>
         {result.analysis ? (
-          <div style={{
-            padding: '14px 16px',
-            background: 'var(--color-acc-soft)',
-            border: '3px solid var(--color-ink)',
-            boxShadow: '3px 3px 0 0 var(--color-acc)',
-            borderRadius: 0,
-            marginBottom: 16,
-          }}>
-            <div style={{
-              fontFamily: 'var(--font-pixel-display)',
-              fontSize: 10,
-              color: 'var(--color-acc-deep)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.18em',
-              marginBottom: 8,
-            }}>
+          <div
+            style={{
+              padding: '14px 16px',
+              background: 'var(--color-acc-soft)',
+              border: '3px solid var(--color-ink)',
+              boxShadow: '3px 3px 0 0 var(--color-acc)',
+              borderRadius: 0,
+              marginBottom: 16,
+            }}
+          >
+            <div
+              style={{
+                fontFamily: 'var(--font-pixel-display)',
+                fontSize: 10,
+                color: 'var(--color-acc-deep)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.18em',
+                marginBottom: 8,
+              }}
+            >
               {t('dilemma.what_revealed', locale).toUpperCase()}
             </div>
-            <p style={{
-              fontFamily: serif,
-              fontStyle: 'italic',
-              fontSize: 16,
-              color: 'var(--color-ink)',
-              margin: 0,
-              lineHeight: 1.55,
-            }}>
+            <p
+              style={{
+                fontFamily: serif,
+                fontStyle: 'italic',
+                fontSize: 16,
+                color: 'var(--color-ink)',
+                margin: 0,
+                lineHeight: 1.55,
+              }}
+            >
               {result.analysis}
             </p>
           </div>
         ) : !result.analyzed ? (
-          <p style={{
-            fontFamily: sans,
-            fontSize: 13,
-            color: 'var(--color-acc-deep)',
-            marginBottom: 16,
-            fontStyle: 'italic',
-          }}>
+          <p
+            style={{
+              fontFamily: sans,
+              fontSize: 13,
+              color: 'var(--color-acc-deep)',
+              marginBottom: 16,
+              fontStyle: 'italic',
+            }}
+          >
             {t('reflect.unanalyzed', locale)}
           </p>
         ) : null}
@@ -219,26 +241,32 @@ export default function ReflectionForm({
 
         {shifts.length > 0 && (
           <div style={{ marginBottom: 16 }}>
-            <div style={{
-              fontFamily: sans,
-              fontSize: 10,
-              fontWeight: 600,
-              color: 'var(--color-acc-deep)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.16em',
-              marginBottom: 8,
-            }}>
+            <div
+              style={{
+                fontFamily: sans,
+                fontSize: 10,
+                fontWeight: 600,
+                color: 'var(--color-acc-deep)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.16em',
+                marginBottom: 8,
+              }}
+            >
               {t('dilemma.shift_added', locale)}
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14 }}>
-              {shifts.map(s => (
-                <span key={s.key} style={{
-                  fontFamily: sans,
-                  fontSize: 14,
-                  color: s.delta > 0 ? '#2F5D5C' : '#7A2E2E',
-                }}>
+              {shifts.map((s) => (
+                <span
+                  key={s.key}
+                  style={{
+                    fontFamily: sans,
+                    fontSize: 14,
+                    color: s.delta > 0 ? '#2F5D5C' : '#7A2E2E',
+                  }}
+                >
                   <strong style={{ fontVariantNumeric: 'tabular-nums' }}>
-                    {s.delta > 0 ? '+' : ''}{s.delta.toFixed(1)}
+                    {s.delta > 0 ? '+' : ''}
+                    {s.delta.toFixed(1)}
                   </strong>{' '}
                   <span style={{ color: 'var(--color-ink-soft)' }}>{s.name}</span>
                 </span>
@@ -247,16 +275,21 @@ export default function ReflectionForm({
           </div>
         )}
 
-        <div style={{
-          paddingTop: 18,
-          borderTop: '1px solid #EBE3CA',
-          display: 'flex',
-          gap: 12,
-          flexWrap: 'wrap',
-        }}>
+        <div
+          style={{
+            paddingTop: 18,
+            borderTop: '1px solid #EBE3CA',
+            display: 'flex',
+            gap: 12,
+            flexWrap: 'wrap',
+          }}
+        >
           <button
             type="button"
-            onClick={() => { setResult(null); setContent(''); }}
+            onClick={() => {
+              setResult(null);
+              setContent('');
+            }}
             style={{
               padding: '10px 20px',
               background: 'var(--color-ink)',
@@ -271,15 +304,18 @@ export default function ReflectionForm({
           >
             {t('reflect.write_another', locale)}
           </button>
-          <Link href="/account" style={{
-            padding: '10px 20px',
-            border: '1px solid var(--color-ink)',
-            borderRadius: 6,
-            color: 'var(--color-ink)',
-            textDecoration: 'none',
-            fontFamily: sans,
-            fontSize: 14,
-          }}>
+          <Link
+            href="/account"
+            style={{
+              padding: '10px 20px',
+              border: '1px solid var(--color-ink)',
+              borderRadius: 6,
+              color: 'var(--color-ink)',
+              textDecoration: 'none',
+              fontFamily: sans,
+              fontSize: 14,
+            }}
+          >
             {t('dilemma.see_trajectory', locale)}
           </Link>
         </div>
@@ -289,20 +325,26 @@ export default function ReflectionForm({
 
   // Signed in & writing → form.
   return (
-    <form onSubmit={onSubmit} className="pixel-form" style={{ marginTop: 36, display: 'flex', flexDirection: 'column', gap: 14 }}>
-      <div style={{
-        fontFamily: sans,
-        fontSize: 11,
-        fontWeight: 600,
-        color: 'var(--color-acc-deep)',
-        textTransform: 'uppercase',
-        letterSpacing: '0.18em',
-      }}>
+    <form
+      onSubmit={onSubmit}
+      className="pixel-form"
+      style={{ marginTop: 36, display: 'flex', flexDirection: 'column', gap: 14 }}
+    >
+      <div
+        style={{
+          fontFamily: sans,
+          fontSize: 11,
+          fontWeight: 600,
+          color: 'var(--color-acc-deep)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.18em',
+        }}
+      >
         {t('reflect.compose_eyebrow', locale)}
       </div>
       <textarea
         value={content}
-        onChange={e => setContent(e.target.value)}
+        onChange={(e) => setContent(e.target.value)}
         placeholder={t('reflect.placeholder', locale)}
         rows={9}
         maxLength={8000}
@@ -320,19 +362,23 @@ export default function ReflectionForm({
           minHeight: 200,
         }}
       />
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        gap: 12,
-        flexWrap: 'wrap',
-      }}>
-        <span style={{
-          fontFamily: sans,
-          fontSize: 12,
-          color: tooShort ? '#7A2E2E' : 'var(--color-acc-deep)',
-          letterSpacing: 0.3,
-        }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: 12,
+          flexWrap: 'wrap',
+        }}
+      >
+        <span
+          style={{
+            fontFamily: sans,
+            fontSize: 12,
+            color: tooShort ? '#7A2E2E' : 'var(--color-acc-deep)',
+            letterSpacing: 0.3,
+          }}
+        >
           {charCount}/8000
           {tooShort ? ' · ' + t('diary.too_short_hint', locale) : ''}
         </span>
@@ -357,36 +403,40 @@ export default function ReflectionForm({
         </button>
       </div>
       {error && (
-        <div style={{
-          fontFamily: sans,
-          fontSize: 13,
-          color: '#7A2E2E',
-          background: 'rgba(122, 46, 46, 0.08)',
-          border: '1px solid rgba(122, 46, 46, 0.2)',
-          padding: '10px 14px',
-          borderRadius: 6,
-        }}>
+        <div
+          style={{
+            fontFamily: sans,
+            fontSize: 13,
+            color: '#7A2E2E',
+            background: 'rgba(122, 46, 46, 0.08)',
+            border: '1px solid rgba(122, 46, 46, 0.2)',
+            padding: '10px 14px',
+            borderRadius: 6,
+          }}
+        >
           {error}
         </div>
       )}
-      <label style={{
-        display: 'flex',
-        alignItems: 'flex-start',
-        gap: 10,
-        padding: '10px 14px',
-        background: makePublic ? 'var(--color-acc-soft)' : '#FFFCF4',
-        border: '2px solid var(--color-ink)',
-        borderRadius: 0,
-        cursor: 'pointer',
-        fontFamily: sans,
-        fontSize: 13,
-        color: 'var(--color-ink-soft)',
-        lineHeight: 1.5,
-      }}>
+      <label
+        style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          gap: 10,
+          padding: '10px 14px',
+          background: makePublic ? 'var(--color-acc-soft)' : '#FFFCF4',
+          border: '2px solid var(--color-ink)',
+          borderRadius: 0,
+          cursor: 'pointer',
+          fontFamily: sans,
+          fontSize: 13,
+          color: 'var(--color-ink-soft)',
+          lineHeight: 1.5,
+        }}
+      >
         <input
           type="checkbox"
           checked={makePublic}
-          onChange={e => setMakePublic(e.target.checked)}
+          onChange={(e) => setMakePublic(e.target.checked)}
           style={{ marginTop: 2, accentColor: 'var(--color-acc)', flexShrink: 0 }}
         />
         <span>{t('reflect.public_toggle', locale)}</span>

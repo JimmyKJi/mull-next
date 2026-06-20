@@ -25,11 +25,32 @@ export const runtime = 'nodejs';
 export const maxDuration = 60;
 
 type QuizAttempt = { archetype: string; alignment_pct: number; vector: number[]; taken_at: string };
-type Dilemma = { dilemma_date: string; question_text: string; response_text: string; vector_delta: number[] | null; analysis: string | null; created_at: string };
-type DiaryEntry = { title: string | null; content: string; vector_delta: number[] | null; analysis: string | null; created_at: string };
-type ExerciseReflection = { exercise_slug: string; content: string; vector_delta: number[] | null; analysis: string | null; created_at: string };
+type Dilemma = {
+  dilemma_date: string;
+  question_text: string;
+  response_text: string;
+  vector_delta: number[] | null;
+  analysis: string | null;
+  created_at: string;
+};
+type DiaryEntry = {
+  title: string | null;
+  content: string;
+  vector_delta: number[] | null;
+  analysis: string | null;
+  created_at: string;
+};
+type ExerciseReflection = {
+  exercise_slug: string;
+  content: string;
+  vector_delta: number[] | null;
+  analysis: string | null;
+  created_at: string;
+};
 
-function vecAdd(a: number[], b: number[]) { return a.map((v, i) => v + (b[i] || 0)); }
+function vecAdd(a: number[], b: number[]) {
+  return a.map((v, i) => v + (b[i] || 0));
+}
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
@@ -40,7 +61,9 @@ export async function GET(req: Request) {
   }
 
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Not signed in.' }, { status: 401 });
 
   // ── Gating (Mull+ only) ────────────────────────────────────────────
@@ -50,10 +73,7 @@ export async function GET(req: Request) {
   // access for academic emails (see lib/subscription.getUserPlan).
   const { isMullPlus } = await getUserPlan(supabase, user.id, user.email);
   if (!isMullPlus) {
-    return NextResponse.json(
-      { error: 'Mull+ only.', upgradeUrl: '/billing' },
-      { status: 402 },
-    );
+    return NextResponse.json({ error: 'Mull+ only.', upgradeUrl: '/billing' }, { status: 402 });
   }
 
   // Gate AI spend: a Sonnet essay (up to 2400 tokens). Mull+ already bounds
@@ -107,19 +127,53 @@ export async function GET(req: Request) {
   const diaryRows = diaries.data ?? [];
   const reflectionRows = reflections.data ?? [];
 
-  if (attemptRows.length === 0 && dilemmaRows.length === 0 && diaryRows.length === 0 && reflectionRows.length === 0) {
-    return NextResponse.json({
-      error: `No data for ${year}. The retrospective needs at least one quiz, dilemma, or diary entry in the year to look back on.`,
-    }, { status: 404 });
+  if (
+    attemptRows.length === 0 &&
+    dilemmaRows.length === 0 &&
+    diaryRows.length === 0 &&
+    reflectionRows.length === 0
+  ) {
+    return NextResponse.json(
+      {
+        error: `No data for ${year}. The retrospective needs at least one quiz, dilemma, or diary entry in the year to look back on.`,
+      },
+      { status: 404 },
+    );
   }
 
   // Compute the trajectory: walk events in time order, accumulating shifts.
-  type Event = { kind: 'quiz' | 'dilemma' | 'diary' | 'exercise'; ts: number; vec?: number[]; delta?: number[]; preview: string };
+  type Event = {
+    kind: 'quiz' | 'dilemma' | 'diary' | 'exercise';
+    ts: number;
+    vec?: number[];
+    delta?: number[];
+    preview: string;
+  };
   const events: Event[] = [
-    ...attemptRows.map(a => ({ kind: 'quiz' as const, ts: new Date(a.taken_at).getTime(), vec: a.vector, preview: `${a.archetype} (${a.alignment_pct}% aligned)` })),
-    ...dilemmaRows.map(d => ({ kind: 'dilemma' as const, ts: new Date(d.created_at).getTime(), delta: d.vector_delta || undefined, preview: d.response_text.slice(0, 240) })),
-    ...diaryRows.map(d => ({ kind: 'diary' as const, ts: new Date(d.created_at).getTime(), delta: d.vector_delta || undefined, preview: (d.title ? d.title + ' — ' : '') + d.content.slice(0, 240) })),
-    ...reflectionRows.map(r => ({ kind: 'exercise' as const, ts: new Date(r.created_at).getTime(), delta: r.vector_delta || undefined, preview: `[${r.exercise_slug}] ${r.content.slice(0, 240)}` })),
+    ...attemptRows.map((a) => ({
+      kind: 'quiz' as const,
+      ts: new Date(a.taken_at).getTime(),
+      vec: a.vector,
+      preview: `${a.archetype} (${a.alignment_pct}% aligned)`,
+    })),
+    ...dilemmaRows.map((d) => ({
+      kind: 'dilemma' as const,
+      ts: new Date(d.created_at).getTime(),
+      delta: d.vector_delta || undefined,
+      preview: d.response_text.slice(0, 240),
+    })),
+    ...diaryRows.map((d) => ({
+      kind: 'diary' as const,
+      ts: new Date(d.created_at).getTime(),
+      delta: d.vector_delta || undefined,
+      preview: (d.title ? d.title + ' — ' : '') + d.content.slice(0, 240),
+    })),
+    ...reflectionRows.map((r) => ({
+      kind: 'exercise' as const,
+      ts: new Date(r.created_at).getTime(),
+      delta: r.vector_delta || undefined,
+      preview: `[${r.exercise_slug}] ${r.content.slice(0, 240)}`,
+    })),
   ].sort((a, b) => a.ts - b.ts);
 
   let position = new Array(16).fill(0);
@@ -135,13 +189,18 @@ export async function GET(req: Request) {
   const netShift = endPos.map((v, i) => +(v - startPos[i]).toFixed(2));
   const topShifts = netShift
     .map((d, i) => ({ key: DIM_KEYS[i], name: DIM_NAMES[DIM_KEYS[i]], delta: d }))
-    .filter(s => Math.abs(s.delta) >= 0.4)
+    .filter((s) => Math.abs(s.delta) >= 0.4)
     .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta))
     .slice(0, 5);
 
   const periodSummary = {
     year,
-    counts: { quizzes: attemptRows.length, dilemmas: dilemmaRows.length, diaries: diaryRows.length, reflections: reflectionRows.length },
+    counts: {
+      quizzes: attemptRows.length,
+      dilemmas: dilemmaRows.length,
+      diaries: diaryRows.length,
+      reflections: reflectionRows.length,
+    },
     topShifts,
     firstArchetype: attemptRows[0]?.archetype ?? null,
     lastArchetype: attemptRows[attemptRows.length - 1]?.archetype ?? null,
@@ -177,7 +236,15 @@ export async function GET(req: Request) {
     if (!res.ok) {
       const errText = await res.text();
       console.error('[retrospective] anthropic non-ok', res.status, errText);
-      return NextResponse.json({ year, periodSummary, essay: null, error: 'Could not generate essay — try again in a moment.' }, { status: 502 });
+      return NextResponse.json(
+        {
+          year,
+          periodSummary,
+          essay: null,
+          error: 'Could not generate essay — try again in a moment.',
+        },
+        { status: 502 },
+      );
     }
     const json = await res.json();
     const block = (json.content || []).find((b: { type: string }) => b.type === 'text');
@@ -185,18 +252,38 @@ export async function GET(req: Request) {
     return NextResponse.json({ year, periodSummary, essay });
   } catch (e) {
     console.error('[retrospective] anthropic call failed', e);
-    return NextResponse.json({
-      year,
-      periodSummary,
-      essay: null,
-      error: 'Could not generate essay — try again in a moment.',
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        year,
+        periodSummary,
+        essay: null,
+        error: 'Could not generate essay — try again in a moment.',
+      },
+      { status: 500 },
+    );
   }
 }
 
-function composePrompt(year: number, summary: object, dilemmas: Dilemma[], diaries: DiaryEntry[]): string {
-  const dilemmaSummaries = dilemmas.slice(0, 30).map(d => `- ${d.dilemma_date}: Q: ${d.question_text.slice(0, 150)}\n  A: ${d.response_text.slice(0, 350)}`).join('\n');
-  const diarySummaries = diaries.slice(0, 30).map(d => `- ${d.created_at.slice(0, 10)}: ${(d.title ? d.title + ' — ' : '') + d.content.slice(0, 350)}`).join('\n');
+function composePrompt(
+  year: number,
+  summary: object,
+  dilemmas: Dilemma[],
+  diaries: DiaryEntry[],
+): string {
+  const dilemmaSummaries = dilemmas
+    .slice(0, 30)
+    .map(
+      (d) =>
+        `- ${d.dilemma_date}: Q: ${d.question_text.slice(0, 150)}\n  A: ${d.response_text.slice(0, 350)}`,
+    )
+    .join('\n');
+  const diarySummaries = diaries
+    .slice(0, 30)
+    .map(
+      (d) =>
+        `- ${d.created_at.slice(0, 10)}: ${(d.title ? d.title + ' — ' : '') + d.content.slice(0, 350)}`,
+    )
+    .join('\n');
   const summaryJson = JSON.stringify(summary, null, 2);
 
   return [

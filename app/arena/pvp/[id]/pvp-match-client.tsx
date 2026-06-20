@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 // PvP match client. Adapted from the PvE client but:
 //   - Different "whose turn" logic (based on iAmChallenger + last
@@ -11,22 +11,22 @@
 //     in an active match
 //   - Either party can call the verdict once both have played ≥2 turns
 
-import { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import type { JudgeOutput } from "@/lib/arena/judge";
-import { SupportMullPrompt } from "@/components/support-mull-prompt";
-import { t, type Locale } from "@/lib/translations";
+import { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import type { JudgeOutput } from '@/lib/arena/judge';
+import { SupportMullPrompt } from '@/components/support-mull-prompt';
+import { t, type Locale } from '@/lib/translations';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 
-type Turn = { turn_order: number; speaker: "user" | "opponent"; content: string };
+type Turn = { turn_order: number; speaker: 'user' | 'opponent'; content: string };
 
 type Props = {
   sessionId: string;
   locale: Locale;
-  status: "pending_opponent" | "active" | "judged" | "abandoned";
+  status: 'pending_opponent' | 'active' | 'judged' | 'abandoned';
   topicTitle: string;
   topicPrompt: string;
   topicPrimer: string;
@@ -48,49 +48,45 @@ export default function PvpMatchClient(props: Props) {
   const [judge, setJudge] = useState<JudgeOutput | null>(props.initialJudge);
   const [eloDelta, setEloDelta] = useState<number | null>(props.initialEloDelta);
   const [userEloAfter, setUserEloAfter] = useState<number | null>(null);
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [accepting, setAccepting] = useState(false);
   const [judging, setJudging] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const locale = props.locale;
-  const mySpeaker: "user" | "opponent" = props.iAmChallenger ? "user" : "opponent";
-  const otherLabel = props.iAmChallenger
-    ? props.opponentLabel
-    : props.challengerLabel;
+  const mySpeaker: 'user' | 'opponent' = props.iAmChallenger ? 'user' : 'opponent';
+  const otherLabel = props.iAmChallenger ? props.opponentLabel : props.challengerLabel;
 
   const lastTurn = turns[turns.length - 1];
   const myTurn =
-    status === "active" &&
-    (lastTurn ? lastTurn.speaker !== mySpeaker : props.iAmChallenger);
+    status === 'active' && (lastTurn ? lastTurn.speaker !== mySpeaker : props.iAmChallenger);
 
-  const userCount = turns.filter((t) => t.speaker === "user").length;
-  const oppCount = turns.filter((t) => t.speaker === "opponent").length;
-  const canCallVerdict =
-    status === "active" && userCount >= 2 && oppCount >= 2;
+  const userCount = turns.filter((t) => t.speaker === 'user').length;
+  const oppCount = turns.filter((t) => t.speaker === 'opponent').length;
+  const canCallVerdict = status === 'active' && userCount >= 2 && oppCount >= 2;
 
   async function accept() {
     if (accepting) return;
     setAccepting(true);
     setError(null);
     try {
-      const res = await fetch("/api/arena/pvp/accept", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/arena/pvp/accept', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ session_id: props.sessionId }),
       });
       const json = await res.json();
       if (!res.ok) {
-        setError(json?.error ?? t("arena.err_accept", locale));
+        setError(json?.error ?? t('arena.err_accept', locale));
         setAccepting(false);
         return;
       }
-      setStatus("active");
+      setStatus('active');
       setAccepting(false);
       router.refresh(); // re-load server-side fields like opponent_user_id
     } catch {
-      setError(t("arena.err_network", locale));
+      setError(t('arena.err_network', locale));
       setAccepting(false);
     }
   }
@@ -100,9 +96,9 @@ export default function PvpMatchClient(props: Props) {
     setSubmitting(true);
     setError(null);
     try {
-      const res = await fetch("/api/arena/turn", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/arena/turn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           session_id: props.sessionId,
           content: input.trim(),
@@ -110,7 +106,7 @@ export default function PvpMatchClient(props: Props) {
       });
       const json = await res.json();
       if (!res.ok) {
-        setError(json?.error ?? t("arena.err_submit", locale));
+        setError(json?.error ?? t('arena.err_submit', locale));
         setSubmitting(false);
         return;
       }
@@ -122,10 +118,10 @@ export default function PvpMatchClient(props: Props) {
           content: json.my_turn.content,
         },
       ]);
-      setInput("");
+      setInput('');
       setSubmitting(false);
     } catch {
-      setError(t("arena.err_network", locale));
+      setError(t('arena.err_network', locale));
       setSubmitting(false);
     }
   }
@@ -135,25 +131,25 @@ export default function PvpMatchClient(props: Props) {
     setJudging(true);
     setError(null);
     try {
-      const res = await fetch("/api/arena/judge", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/arena/judge', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ session_id: props.sessionId }),
       });
       const json = await res.json();
       if (!res.ok) {
-        setError(json?.error ?? t("arena.err_judge", locale));
+        setError(json?.error ?? t('arena.err_judge', locale));
         setJudging(false);
         return;
       }
       setJudge(json.judge_output);
       setEloDelta(json.elo_delta);
       setUserEloAfter(json.user_elo_after);
-      setStatus("judged");
+      setStatus('judged');
       setJudging(false);
-      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     } catch {
-      setError(t("arena.err_network", locale));
+      setError(t('arena.err_network', locale));
       setJudging(false);
     }
   }
@@ -166,19 +162,19 @@ export default function PvpMatchClient(props: Props) {
           style={{
             fontFamily: pixel,
             fontSize: 10,
-            color: "var(--color-acc-deep)",
-            letterSpacing: "0.22em",
-            textTransform: "uppercase",
+            color: 'var(--color-acc-deep)',
+            letterSpacing: '0.22em',
+            textTransform: 'uppercase',
             marginBottom: 8,
           }}
         >
-          {status === "pending_opponent"
-            ? t("arena.pvp_match_header_open", locale, {
+          {status === 'pending_opponent'
+            ? t('arena.pvp_match_header_open', locale, {
                 a: props.challengerLabel.toUpperCase(),
                 ae: props.challengerElo,
-                b: t("arena.pvp_open_slot", locale),
+                b: t('arena.pvp_open_slot', locale),
               })
-            : t("arena.pvp_match_header", locale, {
+            : t('arena.pvp_match_header', locale, {
                 a: props.challengerLabel.toUpperCase(),
                 ae: props.challengerElo,
                 b: props.opponentLabel.toUpperCase(),
@@ -190,9 +186,9 @@ export default function PvpMatchClient(props: Props) {
             fontFamily: serif,
             fontSize: 22,
             fontWeight: 500,
-            color: "var(--color-ink)",
+            color: 'var(--color-ink)',
             lineHeight: 1.3,
-            margin: "0 0 8px",
+            margin: '0 0 8px',
           }}
         >
           {props.topicTitle}
@@ -200,9 +196,9 @@ export default function PvpMatchClient(props: Props) {
         <p
           style={{
             fontFamily: serif,
-            fontStyle: "italic",
+            fontStyle: 'italic',
             fontSize: 15,
-            color: "var(--color-ink-soft)",
+            color: 'var(--color-ink-soft)',
             margin: 0,
             lineHeight: 1.5,
           }}
@@ -225,13 +221,13 @@ export default function PvpMatchClient(props: Props) {
       </section>
 
       {/* State: pending opponent, viewer isn't challenger → can accept */}
-      {status === "pending_opponent" && !props.iAmChallenger && (
+      {status === 'pending_opponent' && !props.iAmChallenger && (
         <div
           style={{
-            padding: "16px 20px",
-            background: "#F8C75E",
-            border: "3px solid var(--color-ink)",
-            boxShadow: "4px 4px 0 0 #2F5D5C",
+            padding: '16px 20px',
+            background: '#F8C75E',
+            border: '3px solid var(--color-ink)',
+            boxShadow: '4px 4px 0 0 #2F5D5C',
             marginBottom: 16,
           }}
         >
@@ -239,114 +235,106 @@ export default function PvpMatchClient(props: Props) {
             style={{
               fontFamily: serif,
               fontSize: 16,
-              color: "#1A1820",
-              margin: "0 0 12px",
+              color: '#1A1820',
+              margin: '0 0 12px',
               lineHeight: 1.55,
             }}
           >
-            {t("arena.pvp_accept_prompt", locale, { name: props.challengerLabel })}
+            {t('arena.pvp_accept_prompt', locale, { name: props.challengerLabel })}
           </p>
-          <button
-            type="button"
-            onClick={accept}
-            disabled={accepting}
-            style={btnPrimary}
-          >
-            {accepting ? t("arena.pvp_accepting", locale) : t("arena.pvp_accept_cta", locale)}
+          <button type="button" onClick={accept} disabled={accepting} style={btnPrimary}>
+            {accepting ? t('arena.pvp_accepting', locale) : t('arena.pvp_accept_cta', locale)}
           </button>
         </div>
       )}
 
       {/* State: pending opponent, viewer IS challenger → waiting */}
-      {status === "pending_opponent" && props.iAmChallenger && (
+      {status === 'pending_opponent' && props.iAmChallenger && (
         <div
           style={{
-            padding: "16px 20px",
-            background: "#1F1814",
-            border: "3px solid var(--color-acc)",
+            padding: '16px 20px',
+            background: '#1F1814',
+            border: '3px solid var(--color-acc)',
             marginBottom: 16,
           }}
         >
           <p
             style={{
               fontFamily: serif,
-              fontStyle: "italic",
+              fontStyle: 'italic',
               fontSize: 16,
-              color: "var(--color-acc-soft)",
+              color: 'var(--color-acc-soft)',
               margin: 0,
               lineHeight: 1.55,
             }}
           >
-            {t("arena.pvp_waiting_accept", locale)}
+            {t('arena.pvp_waiting_accept', locale)}
           </p>
         </div>
       )}
 
       {/* State: active, my turn → composer */}
-      {status === "active" && myTurn && !judge && (
+      {status === 'active' && myTurn && !judge && (
         <>
           <div
             style={{
               fontFamily: pixel,
               fontSize: 10,
-              color: "#7A2E2E",
+              color: '#7A2E2E',
               letterSpacing: 0.4,
-              textTransform: "uppercase",
+              textTransform: 'uppercase',
               marginBottom: 8,
             }}
           >
-            {t("arena.match_your_turn", locale)}
+            {t('arena.match_your_turn', locale)}
           </div>
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={t("arena.pvp_turn_placeholder", locale, { name: otherLabel })}
+            placeholder={t('arena.pvp_turn_placeholder', locale, { name: otherLabel })}
             maxLength={2000}
             rows={6}
             style={{
-              width: "100%",
+              width: '100%',
               padding: 14,
               fontFamily: serif,
               fontSize: 16,
               lineHeight: 1.55,
-              border: "3px solid var(--color-ink)",
-              background: "#FFFCF4",
-              color: "var(--color-ink)",
-              resize: "vertical",
+              border: '3px solid var(--color-ink)',
+              background: '#FFFCF4',
+              color: 'var(--color-ink)',
+              resize: 'vertical',
               minHeight: 140,
             }}
             disabled={submitting}
           />
           <div
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
               gap: 10,
               marginTop: 10,
-              flexWrap: "wrap",
+              flexWrap: 'wrap',
             }}
           >
             <span
               style={{
                 fontFamily: pixel,
                 fontSize: 10,
-                color: "var(--color-acc-deep)",
+                color: 'var(--color-acc-deep)',
                 letterSpacing: 0.4,
-                textTransform: "uppercase",
+                textTransform: 'uppercase',
               }}
             >
               {input.length} / 2000
             </span>
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
               {canCallVerdict && (
-                <button
-                  type="button"
-                  onClick={callJudge}
-                  disabled={judging}
-                  style={btnGhost}
-                >
-                  {judging ? t("arena.match_judging", locale) : t("arena.match_call_verdict", locale)}
+                <button type="button" onClick={callJudge} disabled={judging} style={btnGhost}>
+                  {judging
+                    ? t('arena.match_judging', locale)
+                    : t('arena.match_call_verdict', locale)}
                 </button>
               )}
               <button
@@ -355,7 +343,7 @@ export default function PvpMatchClient(props: Props) {
                 disabled={input.trim().length < 20 || submitting}
                 style={input.trim().length >= 20 ? btnPrimary : btnDisabled}
               >
-                {submitting ? t("arena.pvp_submitting", locale) : t("arena.match_submit", locale)}
+                {submitting ? t('arena.pvp_submitting', locale) : t('arena.match_submit', locale)}
               </button>
             </div>
           </div>
@@ -363,35 +351,30 @@ export default function PvpMatchClient(props: Props) {
       )}
 
       {/* State: active, waiting on other player */}
-      {status === "active" && !myTurn && !judge && (
+      {status === 'active' && !myTurn && !judge && (
         <div
           style={{
-            padding: "16px 20px",
-            background: "#1F1814",
-            border: "3px solid var(--color-acc)",
+            padding: '16px 20px',
+            background: '#1F1814',
+            border: '3px solid var(--color-acc)',
             marginBottom: 16,
           }}
         >
           <p
             style={{
               fontFamily: serif,
-              fontStyle: "italic",
+              fontStyle: 'italic',
               fontSize: 16,
-              color: "var(--color-acc-soft)",
-              margin: "0 0 12px",
+              color: 'var(--color-acc-soft)',
+              margin: '0 0 12px',
               lineHeight: 1.55,
             }}
           >
-            {t("arena.pvp_waiting_turn", locale, { name: otherLabel })}
+            {t('arena.pvp_waiting_turn', locale, { name: otherLabel })}
           </p>
           {canCallVerdict && (
-            <button
-              type="button"
-              onClick={callJudge}
-              disabled={judging}
-              style={btnPrimary}
-            >
-              {judging ? t("arena.match_judging", locale) : t("arena.pvp_call_verdict_now", locale)}
+            <button type="button" onClick={callJudge} disabled={judging} style={btnPrimary}>
+              {judging ? t('arena.match_judging', locale) : t('arena.pvp_call_verdict_now', locale)}
             </button>
           )}
         </div>
@@ -401,12 +384,12 @@ export default function PvpMatchClient(props: Props) {
         <p
           style={{
             marginTop: 12,
-            padding: "10px 14px",
-            background: "#F5E0E0",
-            border: "2px solid #7A2E2E",
+            padding: '10px 14px',
+            background: '#F5E0E0',
+            border: '2px solid #7A2E2E',
             fontFamily: serif,
             fontSize: 14,
-            color: "#4D1818",
+            color: '#4D1818',
           }}
         >
           {error}
@@ -447,28 +430,26 @@ function TurnBubble({
         style={{
           fontFamily: pixel,
           fontSize: 10,
-          color: mine ? "#2F5D5C" : "var(--color-acc-deep)",
+          color: mine ? '#2F5D5C' : 'var(--color-acc-deep)',
           letterSpacing: 0.4,
-          textTransform: "uppercase",
+          textTransform: 'uppercase',
           marginBottom: 4,
-          textAlign: mine ? "right" : "left",
+          textAlign: mine ? 'right' : 'left',
         }}
       >
-        {mine ? t("arena.you", locale) : otherLabel}
+        {mine ? t('arena.you', locale) : otherLabel}
       </div>
       <div
         style={{
-          padding: "14px 18px",
-          background: mine ? "#E5F0EE" : "#FFFCF4",
-          border: "3px solid var(--color-ink)",
-          boxShadow: mine
-            ? "3px 3px 0 0 #2F5D5C"
-            : "3px 3px 0 0 var(--color-acc)",
+          padding: '14px 18px',
+          background: mine ? '#E5F0EE' : '#FFFCF4',
+          border: '3px solid var(--color-ink)',
+          boxShadow: mine ? '3px 3px 0 0 #2F5D5C' : '3px 3px 0 0 var(--color-acc)',
           fontFamily: serif,
           fontSize: 16,
-          color: "var(--color-ink)",
+          color: 'var(--color-ink)',
           lineHeight: 1.6,
-          whiteSpace: "pre-wrap",
+          whiteSpace: 'pre-wrap',
         }}
       >
         {content}
@@ -497,9 +478,8 @@ function VerdictPanel({
   // The judge verdict is from the challenger's perspective ("user wins"
   // means challenger wins). Map that to whether the calling viewer won.
   const iWon =
-    (judge.verdict === "user" && iAmChallenger) ||
-    (judge.verdict === "opponent" && !iAmChallenger);
-  const isDraw = judge.verdict === "draw";
+    (judge.verdict === 'user' && iAmChallenger) || (judge.verdict === 'opponent' && !iAmChallenger);
+  const isDraw = judge.verdict === 'draw';
 
   const userTotal =
     judge.user_scores.validity +
@@ -514,16 +494,12 @@ function VerdictPanel({
     judge.opponent_scores.elegance +
     judge.opponent_scores.engagement;
 
-  const verdictColor = iWon
-    ? "#2F5D5C"
-    : isDraw
-      ? "var(--color-acc-deep)"
-      : "#7A2E2E";
+  const verdictColor = iWon ? '#2F5D5C' : isDraw ? 'var(--color-acc-deep)' : '#7A2E2E';
   const verdictLabel = iWon
-    ? t("arena.match_you_won", locale)
+    ? t('arena.match_you_won', locale)
     : isDraw
-      ? t("arena.match_draw", locale)
-      : t("arena.match_opp_won", locale, { name: opponentLabel.toUpperCase() });
+      ? t('arena.match_draw', locale)
+      : t('arena.match_opp_won', locale, { name: opponentLabel.toUpperCase() });
 
   // Display "my score" vs "their score" — for the OPPONENT viewer,
   // the judge's "user_scores" is the CHALLENGER's, so we flip labels.
@@ -534,34 +510,34 @@ function VerdictPanel({
     <div style={{ marginTop: 28 }}>
       <div
         style={{
-          padding: "20px 24px",
-          background: "#FFFCF4",
+          padding: '20px 24px',
+          background: '#FFFCF4',
           border: `5px solid ${verdictColor}`,
           boxShadow: `6px 6px 0 0 ${verdictColor}`,
           marginBottom: 18,
-          textAlign: "center",
+          textAlign: 'center',
         }}
       >
         <div
           style={{
             fontFamily: pixel,
             fontSize: 11,
-            color: "var(--color-acc-deep)",
+            color: 'var(--color-acc-deep)',
             letterSpacing: 0.4,
-            textTransform: "uppercase",
+            textTransform: 'uppercase',
             marginBottom: 6,
           }}
         >
-          {t("spar.verdict", locale)}
+          {t('spar.verdict', locale)}
         </div>
         <div
           style={{
             fontFamily: pixel,
             fontSize: 22,
             color: verdictColor,
-            letterSpacing: "0.06em",
+            letterSpacing: '0.06em',
             marginBottom: 8,
-            textShadow: "2px 2px 0 rgba(0,0,0,0.08)",
+            textShadow: '2px 2px 0 rgba(0,0,0,0.08)',
           }}
         >
           {verdictLabel}
@@ -570,25 +546,29 @@ function VerdictPanel({
           style={{
             fontFamily: serif,
             fontSize: 15,
-            color: "var(--color-ink)",
+            color: 'var(--color-ink)',
             marginBottom: 12,
           }}
         >
-          {t("arena.match_scoreline", locale, { my: myScore, opp: opponentLabel, their: theirScore })}
+          {t('arena.match_scoreline', locale, {
+            my: myScore,
+            opp: opponentLabel,
+            their: theirScore,
+          })}
         </div>
         {userEloAfter !== null && (
           <div
             style={{
               fontFamily: pixel,
               fontSize: 14,
-              color: eloDelta >= 0 ? "#2F5D5C" : "#7A2E2E",
+              color: eloDelta >= 0 ? '#2F5D5C' : '#7A2E2E',
               letterSpacing: 0.5,
             }}
           >
-            {t("arena.pvp_elo_line", locale, {
+            {t('arena.pvp_elo_line', locale, {
               before: userEloAfter - eloDelta,
               after: userEloAfter,
-              delta: `${eloDelta >= 0 ? "+" : ""}${eloDelta}`,
+              delta: `${eloDelta >= 0 ? '+' : ''}${eloDelta}`,
             })}
           </div>
         )}
@@ -596,9 +576,9 @@ function VerdictPanel({
 
       <div
         style={{
-          padding: "16px 20px",
-          background: "#1F1814",
-          border: "3px solid var(--color-acc)",
+          padding: '16px 20px',
+          background: '#1F1814',
+          border: '3px solid var(--color-acc)',
           marginBottom: 18,
         }}
       >
@@ -606,19 +586,19 @@ function VerdictPanel({
           style={{
             fontFamily: pixel,
             fontSize: 10,
-            color: "var(--color-acc)",
+            color: 'var(--color-acc)',
             letterSpacing: 0.4,
-            textTransform: "uppercase",
+            textTransform: 'uppercase',
             marginBottom: 8,
           }}
         >
-          {t("arena.match_reasoning", locale)}
+          {t('arena.match_reasoning', locale)}
         </div>
         <p
           style={{
             fontFamily: serif,
             fontSize: 16,
-            color: "var(--color-acc-soft)",
+            color: 'var(--color-acc-soft)',
             margin: 0,
             lineHeight: 1.65,
           }}
@@ -627,30 +607,30 @@ function VerdictPanel({
         </p>
       </div>
 
-      <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
         <Link
           href="/arena/pvp"
           style={{
-            display: "inline-block",
-            padding: "12px 18px",
-            background: "#F8C75E",
-            color: "#1A1820",
-            border: "3px solid var(--color-ink)",
-            boxShadow: "3px 3px 0 0 #2F5D5C",
+            display: 'inline-block',
+            padding: '12px 18px',
+            background: '#F8C75E',
+            color: '#1A1820',
+            border: '3px solid var(--color-ink)',
+            boxShadow: '3px 3px 0 0 #2F5D5C',
             fontFamily: pixel,
             fontSize: 12,
-            letterSpacing: "0.18em",
-            textTransform: "uppercase",
-            textDecoration: "none",
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+            textDecoration: 'none',
           }}
         >
-          {t("arena.pvp_next_match", locale)}
+          {t('arena.pvp_next_match', locale)}
         </Link>
       </div>
 
       <SupportMullPrompt
-        lead={t("arena.support_lead", locale)}
-        detail={t("arena.support_detail", locale)}
+        lead={t('arena.support_lead', locale)}
+        detail={t('arena.support_detail', locale)}
       />
     </div>
   );
@@ -659,41 +639,41 @@ function VerdictPanel({
 // ─── Shared style snippets ───────────────────────────────────────
 
 const headerWrap: React.CSSProperties = {
-  padding: "16px 18px",
-  background: "#FFFCF4",
-  border: "4px solid var(--color-ink)",
-  boxShadow: "5px 5px 0 0 var(--color-acc)",
+  padding: '16px 18px',
+  background: '#FFFCF4',
+  border: '4px solid var(--color-ink)',
+  boxShadow: '5px 5px 0 0 var(--color-acc)',
   marginBottom: 18,
 };
 
 const btnPrimary: React.CSSProperties = {
-  padding: "12px 18px",
-  background: "#F8C75E",
-  color: "#1A1820",
-  border: "3px solid var(--color-ink)",
-  boxShadow: "3px 3px 0 0 #2F5D5C",
+  padding: '12px 18px',
+  background: '#F8C75E',
+  color: '#1A1820',
+  border: '3px solid var(--color-ink)',
+  boxShadow: '3px 3px 0 0 #2F5D5C',
   fontFamily: pixel,
   fontSize: 12,
-  letterSpacing: "0.18em",
-  textTransform: "uppercase",
-  cursor: "pointer",
+  letterSpacing: '0.18em',
+  textTransform: 'uppercase',
+  cursor: 'pointer',
 };
 
 const btnDisabled: React.CSSProperties = {
   ...btnPrimary,
-  background: "var(--color-line)",
-  cursor: "not-allowed",
-  boxShadow: "none",
+  background: 'var(--color-line)',
+  cursor: 'not-allowed',
+  boxShadow: 'none',
 };
 
 const btnGhost: React.CSSProperties = {
-  padding: "12px 18px",
-  background: "transparent",
-  color: "var(--color-ink-soft)",
-  border: "2px solid var(--color-acc-deep)",
+  padding: '12px 18px',
+  background: 'transparent',
+  color: 'var(--color-ink-soft)',
+  border: '2px solid var(--color-acc-deep)',
   fontFamily: pixel,
   fontSize: 11,
-  letterSpacing: "0.18em",
-  textTransform: "uppercase",
-  cursor: "pointer",
+  letterSpacing: '0.18em',
+  textTransform: 'uppercase',
+  cursor: 'pointer',
 };

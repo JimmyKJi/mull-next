@@ -90,10 +90,10 @@ export async function getUserPlan(
 // Convenience: caller doesn't have a userId yet, just wants to know if the
 // current request is from a Mull+ user. Returns false if not signed in.
 // Picks up the email automatically so EDU tier detection works.
-export async function isMullPlusFromAuth(
-  supabase: SupabaseClient,
-): Promise<boolean> {
-  const { data: { user } } = await supabase.auth.getUser();
+export async function isMullPlusFromAuth(supabase: SupabaseClient): Promise<boolean> {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return false;
   const { isMullPlus } = await getUserPlan(supabase, user.id, user.email);
   return isMullPlus;

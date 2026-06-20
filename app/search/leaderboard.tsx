@@ -18,7 +18,7 @@ import { ARCHETYPES } from '@/lib/archetypes';
 import { t, type Locale } from '@/lib/translations';
 import EmptyStateSprite from '@/components/empty-state-sprite';
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 
 type LeaderRow = {
@@ -40,25 +40,32 @@ type LeaderRow = {
 // "The Cartographer"; the slugs are lowercase like "cartographer".
 function archetypeNameToSlug(name: string | null): string | null {
   if (!name) return null;
-  const cleaned = name.replace(/^The\s+/i, '').trim().toLowerCase();
+  const cleaned = name
+    .replace(/^The\s+/i, '')
+    .trim()
+    .toLowerCase();
   // Match against known archetype keys.
-  return ARCHETYPES.find(a => a.key === cleaned)?.key ?? null;
+  return ARCHETYPES.find((a) => a.key === cleaned)?.key ?? null;
 }
 
 export default async function Leaderboard({ locale = 'en' as Locale }: { locale?: Locale }) {
   const supabase = await createClient();
-  const { data, error } = await supabase
-    .rpc('get_activity_leaderboard', { limit_n: 25 });
+  const { data, error } = await supabase.rpc('get_activity_leaderboard', { limit_n: 25 });
 
   if (error) {
     console.error('[leaderboard] RPC failed:', error);
     return (
       <section style={sectionStyle}>
         <h2 style={headingStyle}>{t('leaderboard.title', locale)}</h2>
-        <p style={{
-          fontFamily: sans, fontSize: 14, color: 'var(--color-acc-deep)',
-          fontStyle: 'italic', margin: 0,
-        }}>
+        <p
+          style={{
+            fontFamily: sans,
+            fontSize: 14,
+            color: 'var(--color-acc-deep)',
+            fontStyle: 'italic',
+            margin: 0,
+          }}
+        >
           {t('leaderboard.unavailable', locale)}
         </p>
       </section>
@@ -69,44 +76,64 @@ export default async function Leaderboard({ locale = 'en' as Locale }: { locale?
 
   return (
     <section style={sectionStyle}>
-      <div style={{
-        display: 'flex', justifyContent: 'space-between',
-        alignItems: 'baseline', marginBottom: 8, flexWrap: 'wrap', gap: 8,
-      }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'baseline',
+          marginBottom: 8,
+          flexWrap: 'wrap',
+          gap: 8,
+        }}
+      >
         <h2 style={headingStyle}>{t('leaderboard.title', locale)}</h2>
-        <span style={{
-          fontFamily: sans, fontSize: 11, fontWeight: 600,
-          color: 'var(--color-acc-deep)', textTransform: 'uppercase',
-          letterSpacing: '0.16em',
-        }}>
+        <span
+          style={{
+            fontFamily: sans,
+            fontSize: 11,
+            fontWeight: 600,
+            color: 'var(--color-acc-deep)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.16em',
+          }}
+        >
           {t('leaderboard.eyebrow_activity', locale)}
         </span>
       </div>
-      <p style={{
-        fontFamily: serif, fontStyle: 'italic',
-        fontSize: 16, color: 'var(--color-ink-soft)',
-        margin: '0 0 18px', lineHeight: 1.55,
-      }}>
+      <p
+        style={{
+          fontFamily: serif,
+          fontStyle: 'italic',
+          fontSize: 16,
+          color: 'var(--color-ink-soft)',
+          margin: '0 0 18px',
+          lineHeight: 1.55,
+        }}
+      >
         {t('leaderboard.subtitle', locale)}
       </p>
 
       {rows.length === 0 ? (
-        <div style={{
-          padding: '20px 18px',
-          background: '#FFFCF4',
-          border: '3px dashed var(--color-acc)',
-          borderRadius: 0,
-        }}>
-          <EmptyStateSprite
-            variant="compass"
-            caption={t('leaderboard.empty', locale)}
-          />
+        <div
+          style={{
+            padding: '20px 18px',
+            background: '#FFFCF4',
+            border: '3px dashed var(--color-acc)',
+            borderRadius: 0,
+          }}
+        >
+          <EmptyStateSprite variant="compass" caption={t('leaderboard.empty', locale)} />
         </div>
       ) : (
-        <ol style={{
-          listStyle: 'none', padding: 0, margin: 0,
-          display: 'grid', gap: 8,
-        }}>
+        <ol
+          style={{
+            listStyle: 'none',
+            padding: 0,
+            margin: 0,
+            display: 'grid',
+            gap: 8,
+          }}
+        >
           {rows.map((row, i) => {
             const rank = i + 1;
             const archSlug = archetypeNameToSlug(row.archetype);
@@ -126,11 +153,12 @@ export default async function Leaderboard({ locale = 'en' as Locale }: { locale?
                     padding: '12px 16px',
                     background: rank <= 3 ? 'var(--color-acc-soft)' : '#FFFCF4',
                     border: '3px solid var(--color-ink)',
-                    boxShadow: rank === 1
-                      ? '3px 3px 0 0 var(--color-acc)'
-                      : rank <= 3
-                        ? '3px 3px 0 0 var(--color-acc-deep)'
-                        : '3px 3px 0 0 var(--color-line)',
+                    boxShadow:
+                      rank === 1
+                        ? '3px 3px 0 0 var(--color-acc)'
+                        : rank <= 3
+                          ? '3px 3px 0 0 var(--color-acc-deep)'
+                          : '3px 3px 0 0 var(--color-line)',
                     borderRadius: 0,
                     textDecoration: 'none',
                     color: 'inherit',
@@ -138,15 +166,22 @@ export default async function Leaderboard({ locale = 'en' as Locale }: { locale?
                   }}
                 >
                   {/* Rank number */}
-                  <span style={{
-                    fontFamily: serif,
-                    fontSize: 20,
-                    fontWeight: 500,
-                    color: rank === 1 ? 'var(--color-acc)' : rank <= 3 ? 'var(--color-acc-deep)' : '#A39880',
-                    fontVariantNumeric: 'tabular-nums',
-                    minWidth: 28,
-                    textAlign: 'right',
-                  }}>
+                  <span
+                    style={{
+                      fontFamily: serif,
+                      fontSize: 20,
+                      fontWeight: 500,
+                      color:
+                        rank === 1
+                          ? 'var(--color-acc)'
+                          : rank <= 3
+                            ? 'var(--color-acc-deep)'
+                            : '#A39880',
+                      fontVariantNumeric: 'tabular-nums',
+                      minWidth: 28,
+                      textAlign: 'right',
+                    }}
+                  >
                     {rank}
                   </span>
 
@@ -154,7 +189,8 @@ export default async function Leaderboard({ locale = 'en' as Locale }: { locale?
                   <span
                     aria-hidden
                     style={{
-                      width: 36, height: 36,
+                      width: 36,
+                      height: 36,
                       display: 'inline-block',
                       flexShrink: 0,
                       // If show_archetype is off OR they haven't taken the
@@ -167,24 +203,35 @@ export default async function Leaderboard({ locale = 'en' as Locale }: { locale?
 
                   {/* Name + handle + meta */}
                   <span style={{ minWidth: 0, overflow: 'hidden' }}>
-                    <span style={{
-                      display: 'block',
-                      fontFamily: serif, fontSize: 17, fontWeight: 500,
-                      color: 'var(--color-ink)', lineHeight: 1.25,
-                      overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                    }}>
+                    <span
+                      style={{
+                        display: 'block',
+                        fontFamily: serif,
+                        fontSize: 17,
+                        fontWeight: 500,
+                        color: 'var(--color-ink)',
+                        lineHeight: 1.25,
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
                       {showName}
                     </span>
-                    <span style={{
-                      display: 'block',
-                      fontFamily: sans, fontSize: 12,
-                      color: 'var(--color-acc-deep)', letterSpacing: 0.2,
-                      overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                    }}>
+                    <span
+                      style={{
+                        display: 'block',
+                        fontFamily: sans,
+                        fontSize: 12,
+                        color: 'var(--color-acc-deep)',
+                        letterSpacing: 0.2,
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
                       @{row.handle}
-                      {row.show_archetype && row.archetype && (
-                        <> · {row.archetype}</>
-                      )}
+                      {row.show_archetype && row.archetype && <> · {row.archetype}</>}
                       {row.show_streak && row.streak > 0 && (
                         <> · {t('leaderboard.streak', locale, { n: row.streak })}</>
                       )}
@@ -192,23 +239,34 @@ export default async function Leaderboard({ locale = 'en' as Locale }: { locale?
                   </span>
 
                   {/* Counts */}
-                  <span style={{
-                    display: 'flex', flexDirection: 'column',
-                    alignItems: 'flex-end',
-                    fontFamily: sans, lineHeight: 1.2,
-                  }}>
-                    <span style={{
-                      fontSize: 18, fontWeight: 600,
-                      color: 'var(--color-ink)',
-                      fontVariantNumeric: 'tabular-nums',
-                    }}>
+                  <span
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'flex-end',
+                      fontFamily: sans,
+                      lineHeight: 1.2,
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: 18,
+                        fontWeight: 600,
+                        color: 'var(--color-ink)',
+                        fontVariantNumeric: 'tabular-nums',
+                      }}
+                    >
                       {row.total_count}
                     </span>
-                    <span style={{
-                      fontSize: 10, color: 'var(--color-acc-deep)',
-                      textTransform: 'uppercase', letterSpacing: '0.14em',
-                      marginTop: 2,
-                    }}>
+                    <span
+                      style={{
+                        fontSize: 10,
+                        color: 'var(--color-acc-deep)',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.14em',
+                        marginTop: 2,
+                      }}
+                    >
                       {t('leaderboard.entries', locale)}
                     </span>
                   </span>
@@ -219,11 +277,16 @@ export default async function Leaderboard({ locale = 'en' as Locale }: { locale?
         </ol>
       )}
 
-      <p style={{
-        marginTop: 14,
-        fontFamily: sans, fontSize: 12,
-        color: 'var(--color-acc-deep)', opacity: 0.75, lineHeight: 1.55,
-      }}>
+      <p
+        style={{
+          marginTop: 14,
+          fontFamily: sans,
+          fontSize: 12,
+          color: 'var(--color-acc-deep)',
+          opacity: 0.75,
+          lineHeight: 1.55,
+        }}
+      >
         {t('leaderboard.privacy_note', locale)}
       </p>
     </section>

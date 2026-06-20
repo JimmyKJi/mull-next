@@ -15,7 +15,7 @@
 import { useEffect, useState } from 'react';
 import { t, type Locale, isLocale } from '@/lib/translations';
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
 export default function GlobalError({
@@ -52,55 +52,67 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <main style={{
-      maxWidth: 480,
-      margin: '0 auto',
-      padding: '80px 24px',
-    }}>
-      <div style={{
-        background: '#FFFCF4',
-        border: '4px solid var(--color-ink)',
-        boxShadow: '6px 6px 0 0 #7A2E2E',
-        borderRadius: 0,
-        padding: '32px 30px',
-        textAlign: 'center',
-      }}>
-        <div style={{
-          fontFamily: pixel,
-          fontSize: 12,
-          color: '#7A2E2E',
-          textTransform: 'uppercase',
-          letterSpacing: '0.18em',
-          marginBottom: 16,
-        }}>
+    <main
+      style={{
+        maxWidth: 480,
+        margin: '0 auto',
+        padding: '80px 24px',
+      }}
+    >
+      <div
+        style={{
+          background: '#FFFCF4',
+          border: '4px solid var(--color-ink)',
+          boxShadow: '6px 6px 0 0 #7A2E2E',
+          borderRadius: 0,
+          padding: '32px 30px',
+          textAlign: 'center',
+        }}
+      >
+        <div
+          style={{
+            fontFamily: pixel,
+            fontSize: 12,
+            color: '#7A2E2E',
+            textTransform: 'uppercase',
+            letterSpacing: '0.18em',
+            marginBottom: 16,
+          }}
+        >
           ▸ {t('errp.eyebrow', locale)}
         </div>
-        <h1 style={{
-          fontFamily: serif,
-          fontSize: 32,
-          fontWeight: 500,
-          margin: '0 0 16px',
-          letterSpacing: '-0.5px',
-          lineHeight: 1.15,
-        }}>
+        <h1
+          style={{
+            fontFamily: serif,
+            fontSize: 32,
+            fontWeight: 500,
+            margin: '0 0 16px',
+            letterSpacing: '-0.5px',
+            lineHeight: 1.15,
+          }}
+        >
           {t('errp.title', locale)}
         </h1>
-        <p style={{
-          fontFamily: serif,
-          fontStyle: 'italic',
-          fontSize: 17,
-          color: 'var(--color-ink-soft)',
-          margin: '0 0 28px',
-          lineHeight: 1.55,
-        }}>
+        <p
+          style={{
+            fontFamily: serif,
+            fontStyle: 'italic',
+            fontSize: 17,
+            color: 'var(--color-ink-soft)',
+            margin: '0 0 28px',
+            lineHeight: 1.55,
+          }}
+        >
           {t('errp.body', locale)}
         </p>
-        <div style={{
-          display: 'flex',
-          gap: 12,
-          justifyContent: 'center',
-          flexWrap: 'wrap',
-        }}>
+        <div
+          style={{
+            display: 'flex',
+            gap: 12,
+            justifyContent: 'center',
+            flexWrap: 'wrap',
+          }}
+        >
           <button
             type="button"
             onClick={() => reset()}
@@ -144,15 +156,17 @@ export default function GlobalError({
           </a>
         </div>
         {error.digest && (
-          <p style={{
-            fontFamily: pixel,
-            fontSize: 10,
-            color: 'var(--color-acc-deep)',
-            marginTop: 32,
-            letterSpacing: 0.4,
-            opacity: 0.85,
-            textTransform: 'uppercase',
-          }}>
+          <p
+            style={{
+              fontFamily: pixel,
+              fontSize: 10,
+              color: 'var(--color-acc-deep)',
+              marginTop: 32,
+              letterSpacing: 0.4,
+              opacity: 0.85,
+              textTransform: 'uppercase',
+            }}
+          >
             REF: {error.digest}
           </p>
         )}

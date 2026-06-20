@@ -38,17 +38,23 @@ const REPO_ROOT = join(__dirname, '..');
 // ─── helpers ────────────────────────────────────────────────────────
 
 const C = {
-  red:    (s) => `\x1b[31m${s}\x1b[0m`,
-  green:  (s) => `\x1b[32m${s}\x1b[0m`,
+  red: (s) => `\x1b[31m${s}\x1b[0m`,
+  green: (s) => `\x1b[32m${s}\x1b[0m`,
   yellow: (s) => `\x1b[33m${s}\x1b[0m`,
-  dim:    (s) => `\x1b[2m${s}\x1b[0m`,
-  bold:   (s) => `\x1b[1m${s}\x1b[0m`,
+  dim: (s) => `\x1b[2m${s}\x1b[0m`,
+  bold: (s) => `\x1b[1m${s}\x1b[0m`,
 };
 
 const findings = [];
-function fail(msg)  { findings.push({ level: 'fail', msg }); }
-function warn(msg)  { findings.push({ level: 'warn', msg }); }
-function note(msg)  { findings.push({ level: 'note', msg }); }
+function fail(msg) {
+  findings.push({ level: 'fail', msg });
+}
+function warn(msg) {
+  findings.push({ level: 'warn', msg });
+}
+function note(msg) {
+  findings.push({ level: 'note', msg });
+}
 
 // ─── 1. parse the registry ──────────────────────────────────────────
 //
@@ -70,7 +76,7 @@ async function loadRegistry() {
   // String-body sub-pattern matches quote-then-content-then-quote with
   // escape handling, for all three TS quote styles.
   const STR = `(?:'((?:[^'\\\\]|\\\\.)*)'|"((?:[^"\\\\]|\\\\.)*)"|\`((?:[^\`\\\\]|\\\\.)*)\`)`;
-  const pick = (...groups) => groups.find(g => g !== undefined) ?? '';
+  const pick = (...groups) => groups.find((g) => g !== undefined) ?? '';
 
   // 1. Locate the array. The declaration looks like:
   //      export const USER_SCOPED_TABLES: readonly UserScopedTable[] = [
@@ -89,7 +95,10 @@ async function loadRegistry() {
     if (c === '[') depth++;
     else if (c === ']') {
       depth--;
-      if (depth === 0) { closeIdx = i; break; }
+      if (depth === 0) {
+        closeIdx = i;
+        break;
+      }
     }
   }
   if (closeIdx < 0) {
@@ -119,11 +128,11 @@ async function loadRegistry() {
 
   // 3. Parse each block. Each field's regex is scoped to a single block
   //    so it can't accidentally pick up a sibling's value.
-  const nameRe       = new RegExp(`name:\\s*${STR}`);
-  const strategyRe   = new RegExp(`deleteStrategy:\\s*${STR}`);
-  const inExportRe   = /inExport:\s*(true|false)/;
-  const singletonRe  = /singleton:\s*(true|false)/;
-  const noteRe       = new RegExp(`note:\\s*${STR}`);
+  const nameRe = new RegExp(`name:\\s*${STR}`);
+  const strategyRe = new RegExp(`deleteStrategy:\\s*${STR}`);
+  const inExportRe = /inExport:\s*(true|false)/;
+  const singletonRe = /singleton:\s*(true|false)/;
+  const noteRe = new RegExp(`note:\\s*${STR}`);
 
   const entries = [];
   for (const block of blocks) {
@@ -134,16 +143,18 @@ async function loadRegistry() {
     const nt = block.match(noteRe);
     if (!nm || !st || !ie) continue; // not a registry entry; skip
     entries.push({
-      name:           pick(nm[1], nm[2], nm[3]),
+      name: pick(nm[1], nm[2], nm[3]),
       deleteStrategy: pick(st[1], st[2], st[3]),
-      inExport:       ie[1] === 'true',
-      singleton:      sg ? sg[1] === 'true' : false,
-      note:           nt ? pick(nt[1], nt[2], nt[3]) : '',
+      inExport: ie[1] === 'true',
+      singleton: sg ? sg[1] === 'true' : false,
+      note: nt ? pick(nt[1], nt[2], nt[3]) : '',
     });
   }
 
   if (entries.length === 0) {
-    fail('No entries parsed from lib/user-scoped-tables.ts. Either the file is empty or the parser regex needs updating.');
+    fail(
+      'No entries parsed from lib/user-scoped-tables.ts. Either the file is empty or the parser regex needs updating.',
+    );
   }
   return entries;
 }
@@ -171,7 +182,7 @@ async function findUserScopedTablesInMigrations() {
   const dir = join(REPO_ROOT, 'supabase', 'migrations');
   let files;
   try {
-    files = (await readdir(dir)).filter(f => f.endsWith('.sql'));
+    files = (await readdir(dir)).filter((f) => f.endsWith('.sql'));
   } catch {
     warn('No supabase/migrations directory found. Skipping schema-vs-registry check.');
     return new Set();
@@ -207,7 +218,7 @@ async function main() {
   console.log(C.bold('Mull · user-scoped tables invariant check\n'));
 
   const registry = await loadRegistry();
-  const registryNames = new Set(registry.map(e => e.name));
+  const registryNames = new Set(registry.map((e) => e.name));
 
   console.log(C.dim(`Registry has ${registry.length} entries.`));
 
@@ -224,8 +235,12 @@ async function main() {
     acc[e.deleteStrategy] = (acc[e.deleteStrategy] ?? 0) + 1;
     return acc;
   }, {});
-  console.log(C.dim(`  wipe: ${counts.wipe ?? 0}, fk_set_null: ${counts.fk_set_null ?? 0}, fk_cascade: ${counts.fk_cascade ?? 0}`));
-  console.log(C.dim(`  inExport: ${registry.filter(e => e.inExport).length}/${registry.length}`));
+  console.log(
+    C.dim(
+      `  wipe: ${counts.wipe ?? 0}, fk_set_null: ${counts.fk_set_null ?? 0}, fk_cascade: ${counts.fk_cascade ?? 0}`,
+    ),
+  );
+  console.log(C.dim(`  inExport: ${registry.filter((e) => e.inExport).length}/${registry.length}`));
 
   // 2. route refs vs registry
   console.log('\n' + C.bold('Checking account routes import from registry…'));
@@ -246,12 +261,16 @@ async function main() {
   // If a route has ANY hardcoded .from('…') it suggests the refactor wasn't
   // applied — it should iterate over the registry, not name tables inline.
   if (deleteRefs.size > 0) {
-    warn(`delete/route.ts contains ${deleteRefs.size} hardcoded .from('…') references. The route should iterate over TABLES_TO_WIPE instead. Refs: ${[...deleteRefs].join(', ')}`);
+    warn(
+      `delete/route.ts contains ${deleteRefs.size} hardcoded .from('…') references. The route should iterate over TABLES_TO_WIPE instead. Refs: ${[...deleteRefs].join(', ')}`,
+    );
   } else {
     console.log(C.green('  delete/route.ts: clean — no hardcoded table names.'));
   }
   if (exportRefs.size > 0) {
-    warn(`export/route.ts contains ${exportRefs.size} hardcoded .from('…') references. The route should iterate over TABLES_TO_EXPORT. Refs: ${[...exportRefs].join(', ')}`);
+    warn(
+      `export/route.ts contains ${exportRefs.size} hardcoded .from('…') references. The route should iterate over TABLES_TO_EXPORT. Refs: ${[...exportRefs].join(', ')}`,
+    );
   } else {
     console.log(C.green('  export/route.ts: clean — no hardcoded table names.'));
   }
@@ -272,7 +291,9 @@ async function main() {
   // created via the Supabase dashboard. We don't fail on that, just note it.
   for (const e of registry) {
     if (!schemaTables.has(e.name)) {
-      note(`Registry has "${e.name}" but no CREATE TABLE found in supabase/migrations/. (OK if the table predates the migrations folder, e.g. quiz_attempts.)`);
+      note(
+        `Registry has "${e.name}" but no CREATE TABLE found in supabase/migrations/. (OK if the table predates the migrations folder, e.g. quiz_attempts.)`,
+      );
     }
   }
 
@@ -283,9 +304,9 @@ async function main() {
     process.exit(0);
   }
 
-  const fails = findings.filter(f => f.level === 'fail');
-  const warns = findings.filter(f => f.level === 'warn');
-  const notes = findings.filter(f => f.level === 'note');
+  const fails = findings.filter((f) => f.level === 'fail');
+  const warns = findings.filter((f) => f.level === 'warn');
+  const notes = findings.filter((f) => f.level === 'note');
 
   for (const f of fails) console.log('  ' + C.red('✗ ' + f.msg));
   for (const w of warns) console.log('  ' + C.yellow('! ' + w.msg));
@@ -301,7 +322,7 @@ async function main() {
   }
 }
 
-main().catch(err => {
+main().catch((err) => {
   console.error(C.red('Unexpected error:'), err);
   process.exit(2);
 });

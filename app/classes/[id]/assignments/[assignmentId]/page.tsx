@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 };
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 
 type Assignment = {
   id: string;
@@ -66,7 +66,9 @@ export default async function AssignmentDetailPage({
   const { id: classId, assignmentId } = await params;
   const locale = await getServerLocale();
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) redirect(`/login?next=/classes/${classId}/assignments/${assignmentId}`);
 
   const [aRes, clsRes] = await Promise.all([
@@ -120,75 +122,103 @@ export default async function AssignmentDetailPage({
     <main className="mx-auto max-w-[760px] px-6 pb-32 pt-10 sm:px-10">
       <div className="mb-6 flex items-center justify-between gap-4">
         <MullWordmark />
-        <Link href={`/classes/${cls.id}`} style={{
-          fontFamily: pixel, fontSize: 11,
-          color: 'var(--color-ink-soft)', textDecoration: 'none',
-          letterSpacing: 0.4, textTransform: 'uppercase',
-        }}>
+        <Link
+          href={`/classes/${cls.id}`}
+          style={{
+            fontFamily: pixel,
+            fontSize: 11,
+            color: 'var(--color-ink-soft)',
+            textDecoration: 'none',
+            letterSpacing: 0.4,
+            textTransform: 'uppercase',
+          }}
+        >
           ◂ {cls.name.toUpperCase()}
         </Link>
       </div>
 
-      <div style={{
-        fontFamily: pixel, fontSize: 12,
-        color: 'var(--color-acc-deep)', textTransform: 'uppercase',
-        letterSpacing: '0.18em', marginBottom: 14,
-      }}>
+      <div
+        style={{
+          fontFamily: pixel,
+          fontSize: 12,
+          color: 'var(--color-acc-deep)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.18em',
+          marginBottom: 14,
+        }}
+      >
         ▸ {kindLabel(assignment.kind, locale).toUpperCase()}
         {assignment.due_at && (
           <span style={{ color: overdue ? '#7A2E2E' : 'var(--color-acc-deep)', marginLeft: 8 }}>
-            · {t('cls.due_label', locale, {
-              date: new Date(assignment.due_at).toLocaleString(locale === 'zh' ? 'zh-CN' : 'en-US', { dateStyle: 'medium', timeStyle: 'short' }),
+            ·{' '}
+            {t('cls.due_label', locale, {
+              date: new Date(assignment.due_at).toLocaleString(
+                locale === 'zh' ? 'zh-CN' : 'en-US',
+                { dateStyle: 'medium', timeStyle: 'short' },
+              ),
             })}
           </span>
         )}
       </div>
 
-      <h1 style={{
-        fontFamily: serif,
-        fontSize: 30,
-        fontWeight: 500,
-        margin: '0 0 18px',
-        letterSpacing: '-0.3px',
-        lineHeight: 1.2,
-      }}>
+      <h1
+        style={{
+          fontFamily: serif,
+          fontSize: 30,
+          fontWeight: 500,
+          margin: '0 0 18px',
+          letterSpacing: '-0.3px',
+          lineHeight: 1.2,
+        }}
+      >
         {assignment.title}
       </h1>
 
-      <div style={{
-        padding: '20px 24px',
-        background: '#FFFCF4',
-        border: '4px solid var(--color-ink)',
-        boxShadow: '5px 5px 0 0 var(--color-acc)',
-        borderRadius: 0,
-        marginBottom: 24,
-      }}>
-        <p style={{
-          fontFamily: serif,
-          fontStyle: 'italic',
-          fontSize: 17,
-          color: 'var(--color-ink)',
-          margin: 0,
-          lineHeight: 1.6,
-          whiteSpace: 'pre-wrap',
-        }}>
+      <div
+        style={{
+          padding: '20px 24px',
+          background: '#FFFCF4',
+          border: '4px solid var(--color-ink)',
+          boxShadow: '5px 5px 0 0 var(--color-acc)',
+          borderRadius: 0,
+          marginBottom: 24,
+        }}
+      >
+        <p
+          style={{
+            fontFamily: serif,
+            fontStyle: 'italic',
+            fontSize: 17,
+            color: 'var(--color-ink)',
+            margin: 0,
+            lineHeight: 1.6,
+            whiteSpace: 'pre-wrap',
+          }}
+        >
           {assignment.prompt}
         </p>
         {assignment.instructions && (
-          <div style={{
-            marginTop: 16,
-            paddingTop: 14,
-            borderTop: '2px dashed var(--color-line)',
-            fontFamily: 'Inter, sans-serif',
-            fontSize: 14,
-            color: 'var(--color-ink-soft)',
-            lineHeight: 1.55,
-          }}>
-            <div style={{
-              fontFamily: pixel, fontSize: 10,
-              color: 'var(--color-acc-deep)', letterSpacing: 0.4,
-              textTransform: 'uppercase', marginBottom: 6,
-            }}>
+          <div
+            style={{
+              marginTop: 16,
+              paddingTop: 14,
+              borderTop: '2px dashed var(--color-line)',
+              fontFamily: 'Inter, sans-serif',
+              fontSize: 14,
+              color: 'var(--color-ink-soft)',
+              lineHeight: 1.55,
+            }}
+          >
+            <div
+              style={{
+                fontFamily: pixel,
+                fontSize: 10,
+                color: 'var(--color-acc-deep)',
+                letterSpacing: 0.4,
+                textTransform: 'uppercase',
+                marginBottom: 6,
+              }}
+            >
               {t('cls.instructions_label', locale)}
             </div>
             {assignment.instructions}
@@ -209,11 +239,7 @@ export default async function AssignmentDetailPage({
 
       {/* Teacher view: submissions list + who hasn't submitted. */}
       {isTeacher && (
-        <TeacherSubmissionsView
-          submissions={submissions ?? []}
-          roster={roster}
-          locale={locale}
-        />
+        <TeacherSubmissionsView submissions={submissions ?? []} roster={roster} locale={locale} />
       )}
     </main>
   );
@@ -230,110 +256,134 @@ async function TeacherSubmissionsView({
 }) {
   const supabase = await createClient();
   // Resolve each submitter's display name.
-  const submitterIds = submissions.map(s => s.student_user_id);
-  const { data: profiles } = submitterIds.length > 0
-    ? await supabase
-        .from('public_profiles')
-        .select('user_id, handle, display_name')
-        .in('user_id', submitterIds)
-        .returns<{ user_id: string; handle: string; display_name: string | null }[]>()
-    : { data: [] as { user_id: string; handle: string; display_name: string | null }[] };
+  const submitterIds = submissions.map((s) => s.student_user_id);
+  const { data: profiles } =
+    submitterIds.length > 0
+      ? await supabase
+          .from('public_profiles')
+          .select('user_id, handle, display_name')
+          .in('user_id', submitterIds)
+          .returns<{ user_id: string; handle: string; display_name: string | null }[]>()
+      : { data: [] as { user_id: string; handle: string; display_name: string | null }[] };
 
-  const profileByUser = new Map(
-    (profiles ?? []).map(p => [p.user_id, p]),
-  );
+  const profileByUser = new Map((profiles ?? []).map((p) => [p.user_id, p]));
 
-  const submittedIds = new Set(submissions.map(s => s.student_user_id));
-  const unsubmitted = roster.filter(r => !submittedIds.has(r.user_id));
+  const submittedIds = new Set(submissions.map((s) => s.student_user_id));
+  const unsubmitted = roster.filter((r) => !submittedIds.has(r.user_id));
 
   return (
     <>
       <section style={{ marginTop: 8, marginBottom: 32 }}>
-        <h2 style={{
-          fontFamily: pixel,
-          fontSize: 14,
-          color: 'var(--color-ink)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.18em',
-          marginBottom: 16,
-          textShadow: '2px 2px 0 var(--pixel-shadow, #2F5D5C)',
-        }}>
-          ▸ {t('cls.submissions_heading', locale, { count: submissions.length, total: roster.length })}
+        <h2
+          style={{
+            fontFamily: pixel,
+            fontSize: 14,
+            color: 'var(--color-ink)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.18em',
+            marginBottom: 16,
+            textShadow: '2px 2px 0 var(--pixel-shadow, #2F5D5C)',
+          }}
+        >
+          ▸{' '}
+          {t('cls.submissions_heading', locale, {
+            count: submissions.length,
+            total: roster.length,
+          })}
         </h2>
 
         {submissions.length === 0 ? (
-          <p style={{
-            padding: '20px 18px',
-            background: '#FFFCF4',
-            border: '3px dashed var(--color-acc-deep)',
-            borderRadius: 0,
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 15,
-            color: 'var(--color-acc-deep)',
-            margin: 0,
-            textAlign: 'center',
-          }}>
+          <p
+            style={{
+              padding: '20px 18px',
+              background: '#FFFCF4',
+              border: '3px dashed var(--color-acc-deep)',
+              borderRadius: 0,
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: 15,
+              color: 'var(--color-acc-deep)',
+              margin: 0,
+              textAlign: 'center',
+            }}
+          >
             {t('cls.submissions_empty', locale)}
           </p>
         ) : (
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 12 }}>
-            {submissions.map(s => {
+            {submissions.map((s) => {
               const profile = profileByUser.get(s.student_user_id);
-              const rosterRow = roster.find(r => r.user_id === s.student_user_id);
+              const rosterRow = roster.find((r) => r.user_id === s.student_user_id);
               const studentLabel = rosterRow?.pseudonym
                 ? rosterRow.pseudonym
-                : (profile?.display_name || (profile ? `@${profile.handle}` : t('cls.student_short', locale, { id: s.student_user_id.slice(0, 6) })));
+                : profile?.display_name ||
+                  (profile
+                    ? `@${profile.handle}`
+                    : t('cls.student_short', locale, { id: s.student_user_id.slice(0, 6) }));
               // Heuristic AI-pattern score — computed on-the-fly,
               // no DB column, no API call. Surfaced as a signal,
               // not a verdict. See lib/ai-authenticity.ts header.
               const auth = scoreAuthenticity(s.response_text);
               return (
-                <li key={s.id} style={{
-                  padding: '14px 16px',
-                  background: '#FFFCF4',
-                  border: '3px solid var(--color-ink)',
-                  boxShadow: `3px 3px 0 0 ${s.reviewed_at ? '#2F5D5C' : 'var(--color-acc)'}`,
-                  borderRadius: 0,
-                }}>
-                  <div style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'baseline',
-                    gap: 12,
-                    flexWrap: 'wrap',
-                    marginBottom: 8,
-                  }}>
-                    <span style={{
-                      fontFamily: serif,
-                      fontSize: 17,
-                      fontWeight: 500,
-                      color: 'var(--color-ink)',
-                    }}>
+                <li
+                  key={s.id}
+                  style={{
+                    padding: '14px 16px',
+                    background: '#FFFCF4',
+                    border: '3px solid var(--color-ink)',
+                    boxShadow: `3px 3px 0 0 ${s.reviewed_at ? '#2F5D5C' : 'var(--color-acc)'}`,
+                    borderRadius: 0,
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'baseline',
+                      gap: 12,
+                      flexWrap: 'wrap',
+                      marginBottom: 8,
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: serif,
+                        fontSize: 17,
+                        fontWeight: 500,
+                        color: 'var(--color-ink)',
+                      }}
+                    >
                       {studentLabel}
                     </span>
-                    <span style={{
-                      fontFamily: pixel,
-                      fontSize: 10,
-                      color: 'var(--color-acc-deep)',
-                      letterSpacing: 0.4,
-                      textTransform: 'uppercase',
-                    }}>
+                    <span
+                      style={{
+                        fontFamily: pixel,
+                        fontSize: 10,
+                        color: 'var(--color-acc-deep)',
+                        letterSpacing: 0.4,
+                        textTransform: 'uppercase',
+                      }}
+                    >
                       {t('cls.submitted_at', locale, {
-                        date: new Date(s.submitted_at).toLocaleString(locale === 'zh' ? 'zh-CN' : 'en-US', { dateStyle: 'medium', timeStyle: 'short' }),
+                        date: new Date(s.submitted_at).toLocaleString(
+                          locale === 'zh' ? 'zh-CN' : 'en-US',
+                          { dateStyle: 'medium', timeStyle: 'short' },
+                        ),
                       })}
                       {s.reviewed_at && <> · {t('cls.reviewed', locale)}</>}
                     </span>
                   </div>
                   <AuthBadge auth={auth} locale={locale} />
-                  <p style={{
-                    fontFamily: serif,
-                    fontSize: 15.5,
-                    color: 'var(--color-ink)',
-                    margin: 0,
-                    lineHeight: 1.6,
-                    whiteSpace: 'pre-wrap',
-                  }}>
+                  <p
+                    style={{
+                      fontFamily: serif,
+                      fontSize: 15.5,
+                      color: 'var(--color-ink)',
+                      margin: 0,
+                      lineHeight: 1.6,
+                      whiteSpace: 'pre-wrap',
+                    }}
+                  >
                     {s.response_text}
                   </p>
                 </li>
@@ -344,33 +394,49 @@ async function TeacherSubmissionsView({
 
         {unsubmitted.length > 0 && (
           <details style={{ marginTop: 20 }}>
-            <summary style={{
-              cursor: 'pointer',
-              fontFamily: pixel,
-              fontSize: 11,
-              color: '#7A2E2E',
-              letterSpacing: 0.4,
-              textTransform: 'uppercase',
-            }}>
-              ▸ {t(unsubmitted.length === 1 ? 'cls.unsubmitted_summary_one' : 'cls.unsubmitted_summary_many', locale, { count: unsubmitted.length })}
+            <summary
+              style={{
+                cursor: 'pointer',
+                fontFamily: pixel,
+                fontSize: 11,
+                color: '#7A2E2E',
+                letterSpacing: 0.4,
+                textTransform: 'uppercase',
+              }}
+            >
+              ▸{' '}
+              {t(
+                unsubmitted.length === 1
+                  ? 'cls.unsubmitted_summary_one'
+                  : 'cls.unsubmitted_summary_many',
+                locale,
+                { count: unsubmitted.length },
+              )}
             </summary>
-            <ul style={{
-              listStyle: 'none',
-              padding: 0,
-              margin: '12px 0 0',
-              display: 'grid',
-              gap: 6,
-            }}>
-              {unsubmitted.map(r => (
-                <li key={r.user_id} style={{
-                  padding: '6px 10px',
-                  background: '#F5E0E0',
-                  border: '2px solid #7A2E2E',
-                  fontFamily: serif,
-                  fontSize: 14,
-                  color: '#4D1818',
-                }}>
-                  {r.pseudonym || <em>{t('cls.student_short', locale, { id: r.user_id.slice(0, 6) })}</em>}
+            <ul
+              style={{
+                listStyle: 'none',
+                padding: 0,
+                margin: '12px 0 0',
+                display: 'grid',
+                gap: 6,
+              }}
+            >
+              {unsubmitted.map((r) => (
+                <li
+                  key={r.user_id}
+                  style={{
+                    padding: '6px 10px',
+                    background: '#F5E0E0',
+                    border: '2px solid #7A2E2E',
+                    fontFamily: serif,
+                    fontSize: 14,
+                    color: '#4D1818',
+                  }}
+                >
+                  {r.pseudonym || (
+                    <em>{t('cls.student_short', locale, { id: r.user_id.slice(0, 6) })}</em>
+                  )}
                 </li>
               ))}
             </ul>
@@ -390,61 +456,78 @@ async function TeacherSubmissionsView({
 
 function AuthBadge({ auth, locale }: { auth: AuthResult; locale: Locale }) {
   const palette = {
-    high:   { fg: '#7A2E2E', bg: '#F5E0E0', border: '#7A2E2E', icon: '!' },
-    medium: { fg: 'var(--color-acc-deep)', bg: 'var(--color-acc-soft)', border: 'var(--color-acc)', icon: '·' },
-    low:    { fg: '#2F5D5C', bg: '#E5F0EE', border: '#2F5D5C', icon: '✓' },
+    high: { fg: '#7A2E2E', bg: '#F5E0E0', border: '#7A2E2E', icon: '!' },
+    medium: {
+      fg: 'var(--color-acc-deep)',
+      bg: 'var(--color-acc-soft)',
+      border: 'var(--color-acc)',
+      icon: '·',
+    },
+    low: { fg: '#2F5D5C', bg: '#E5F0EE', border: '#2F5D5C', icon: '✓' },
   }[auth.bucket];
   return (
     <details style={{ marginBottom: 10 }}>
-      <summary style={{
-        cursor: 'pointer',
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 8,
-        padding: '4px 10px',
-        background: palette.bg,
-        border: `2px solid ${palette.border}`,
-        fontFamily: pixel,
-        fontSize: 10,
-        color: palette.fg,
-        letterSpacing: 0.4,
-        textTransform: 'uppercase',
-      }}>
-        <span aria-hidden style={{ fontWeight: 700 }}>{palette.icon}</span>
-        <span>{t('cls.ai_scan_label', locale)} · {authSummary(auth)}</span>
+      <summary
+        style={{
+          cursor: 'pointer',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 8,
+          padding: '4px 10px',
+          background: palette.bg,
+          border: `2px solid ${palette.border}`,
+          fontFamily: pixel,
+          fontSize: 10,
+          color: palette.fg,
+          letterSpacing: 0.4,
+          textTransform: 'uppercase',
+        }}
+      >
+        <span aria-hidden style={{ fontWeight: 700 }}>
+          {palette.icon}
+        </span>
+        <span>
+          {t('cls.ai_scan_label', locale)} · {authSummary(auth)}
+        </span>
       </summary>
-      <div style={{
-        marginTop: 8,
-        padding: '10px 12px',
-        background: '#FFFCF4',
-        border: '2px solid var(--color-line)',
-        fontFamily: serif,
-        fontSize: 13,
-        color: 'var(--color-ink-soft)',
-        lineHeight: 1.5,
-      }}>
+      <div
+        style={{
+          marginTop: 8,
+          padding: '10px 12px',
+          background: '#FFFCF4',
+          border: '2px solid var(--color-line)',
+          fontFamily: serif,
+          fontSize: 13,
+          color: 'var(--color-ink-soft)',
+          lineHeight: 1.5,
+        }}
+      >
         <p style={{ margin: '0 0 8px', fontStyle: 'italic' }}>
           {t('cls.ai_scan_disclaimer', locale)}
         </p>
         {auth.flags.length === 0 ? (
           <p style={{ margin: 0 }}>{t('cls.ai_scan_no_flags', locale)}</p>
         ) : (
-          <ul style={{
-            margin: 0,
-            paddingLeft: 16,
-            display: 'grid',
-            gap: 6,
-          }}>
-            {auth.flags.map(f => (
+          <ul
+            style={{
+              margin: 0,
+              paddingLeft: 16,
+              display: 'grid',
+              gap: 6,
+            }}
+          >
+            {auth.flags.map((f) => (
               <li key={f.kind} style={{ margin: 0 }}>
                 <strong style={{ fontWeight: 600 }}>{f.label}</strong>
                 {f.evidence.length > 0 && (
-                  <div style={{
-                    marginTop: 4,
-                    fontSize: 12,
-                    color: 'var(--color-acc-deep)',
-                    fontStyle: 'italic',
-                  }}>
+                  <div
+                    style={{
+                      marginTop: 4,
+                      fontSize: 12,
+                      color: 'var(--color-acc-deep)',
+                      fontStyle: 'italic',
+                    }}
+                  >
                     {f.evidence.slice(0, 2).map((e, i) => (
                       <div key={i}>{e}</div>
                     ))}

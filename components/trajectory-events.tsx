@@ -13,7 +13,7 @@
 import { topShifts } from '@/lib/dimensions';
 import { t, type Locale } from '@/lib/translations';
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
 // Unified event the UI iterates over. Mirrors the type in
@@ -26,7 +26,7 @@ export type EventEntry =
       archetype: string;
       flavor: string | null;
       alignment_pct: number;
-      vector: number[];           // absolute position
+      vector: number[]; // absolute position
       taken_at: string;
     }
   | {
@@ -112,12 +112,8 @@ export default function TrajectoryEvents({
 
   return (
     <section id="shifts" style={{ marginBottom: 48, scrollMarginTop: 96 }}>
-      <h2 style={sectionH2}>
-        ▸ {t('account.recent_shifts', locale).toUpperCase()}
-      </h2>
-      <p style={sectionSubtitle}>
-        {t('account.recent_shifts_subtitle', locale)}
-      </p>
+      <h2 style={sectionH2}>▸ {t('account.recent_shifts', locale).toUpperCase()}</h2>
+      <p style={sectionSubtitle}>{t('account.recent_shifts_subtitle', locale)}</p>
       <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
         {trajectory.map(({ event, delta }) => (
           <EventCard
@@ -135,7 +131,11 @@ export default function TrajectoryEvents({
 }
 
 function EventCard({
-  event, delta, locale, fmt, fmtRel,
+  event,
+  delta,
+  locale,
+  fmt,
+  fmtRel,
 }: {
   event: EventEntry;
   delta: number[];
@@ -149,61 +149,73 @@ function EventCard({
   const labelText = eventLabel(event, locale);
 
   return (
-    <li style={{
-      padding: '18px 20px',
-      marginBottom: 14,
-      background: '#FFFCF4',
-      border: '4px solid var(--color-ink)',
-      boxShadow: `4px 4px 0 0 ${accent}`,
-      borderRadius: 0,
-    }}>
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'baseline',
-        flexWrap: 'wrap',
-        gap: 8,
-        marginBottom: 8,
-      }}>
-        <span style={{
-          fontFamily: pixel,
-          fontSize: 11,
-          textTransform: 'uppercase',
-          letterSpacing: '0.18em',
-          color: accent,
-        }}>
+    <li
+      style={{
+        padding: '18px 20px',
+        marginBottom: 14,
+        background: '#FFFCF4',
+        border: '4px solid var(--color-ink)',
+        boxShadow: `4px 4px 0 0 ${accent}`,
+        borderRadius: 0,
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'baseline',
+          flexWrap: 'wrap',
+          gap: 8,
+          marginBottom: 8,
+        }}
+      >
+        <span
+          style={{
+            fontFamily: pixel,
+            fontSize: 11,
+            textTransform: 'uppercase',
+            letterSpacing: '0.18em',
+            color: accent,
+          }}
+        >
           {labelText.toUpperCase()} · {fmtRel(ts).toUpperCase()}
         </span>
-        <span style={{
-          fontFamily: pixel,
-          fontSize: 10,
-          color: 'var(--color-acc-deep)',
-          opacity: 0.85,
-          letterSpacing: 0.4,
-          textTransform: 'uppercase',
-        }}>
+        <span
+          style={{
+            fontFamily: pixel,
+            fontSize: 10,
+            color: 'var(--color-acc-deep)',
+            opacity: 0.85,
+            letterSpacing: 0.4,
+            textTransform: 'uppercase',
+          }}
+        >
           {fmt(ts)}
         </span>
       </div>
 
       {event.kind === 'quiz' && (
-        <div style={{
-          fontFamily: serif,
-          fontSize: 22,
-          fontWeight: 500,
-          color: 'var(--color-ink)',
-          marginBottom: shifts.length ? 10 : 0,
-          letterSpacing: '-0.01em',
-        }}>
+        <div
+          style={{
+            fontFamily: serif,
+            fontSize: 22,
+            fontWeight: 500,
+            color: 'var(--color-ink)',
+            marginBottom: shifts.length ? 10 : 0,
+            letterSpacing: '-0.01em',
+          }}
+        >
           {event.flavor ? `${event.flavor} ` : ''}
           {event.archetype.replace(/^The /, '')}
-          <span style={{
-            fontFamily: pixel,
-            fontSize: 12,
-            color: 'var(--color-acc-deep)',
-            marginLeft: 12,
-            letterSpacing: 0.4,
-          }}>
+          <span
+            style={{
+              fontFamily: pixel,
+              fontSize: 12,
+              color: 'var(--color-acc-deep)',
+              marginLeft: 12,
+              letterSpacing: 0.4,
+            }}
+          >
             {event.alignment_pct}%
           </span>
         </div>
@@ -211,23 +223,27 @@ function EventCard({
 
       {event.kind === 'dilemma' && (
         <>
-          <p style={{
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 17,
-            color: 'var(--color-ink-soft)',
-            margin: '0 0 8px',
-          }}>
+          <p
+            style={{
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: 17,
+              color: 'var(--color-ink-soft)',
+              margin: '0 0 8px',
+            }}
+          >
             &ldquo;{event.question_text}&rdquo;
           </p>
           {event.analysis && (
-            <p style={{
-              fontFamily: serif,
-              fontSize: 15,
-              color: 'var(--color-ink)',
-              margin: '0 0 10px',
-              lineHeight: 1.55,
-            }}>
+            <p
+              style={{
+                fontFamily: serif,
+                fontSize: 15,
+                color: 'var(--color-ink)',
+                margin: '0 0 10px',
+                lineHeight: 1.55,
+              }}
+            >
               {event.analysis}
             </p>
           )}
@@ -237,74 +253,89 @@ function EventCard({
       {event.kind === 'diary' && (
         <>
           {event.title && (
-            <div style={{
-              fontFamily: serif,
-              fontSize: 19,
-              fontWeight: 500,
-              color: 'var(--color-ink)',
-              marginBottom: 6,
-            }}>
+            <div
+              style={{
+                fontFamily: serif,
+                fontSize: 19,
+                fontWeight: 500,
+                color: 'var(--color-ink)',
+                marginBottom: 6,
+              }}
+            >
               {event.title}
             </div>
           )}
-          <p style={{
-            fontFamily: serif,
-            fontSize: 15.5,
-            color: 'var(--color-ink-soft)',
-            margin: '0 0 8px',
-            lineHeight: 1.55,
-          }}>
+          <p
+            style={{
+              fontFamily: serif,
+              fontSize: 15.5,
+              color: 'var(--color-ink-soft)',
+              margin: '0 0 8px',
+              lineHeight: 1.55,
+            }}
+          >
             {event.content.length > 240 ? event.content.slice(0, 240) + '…' : event.content}
           </p>
           {event.analysis && (
-            <p style={{
-              fontFamily: serif,
-              fontStyle: 'italic',
-              fontSize: 14,
-              color: 'var(--color-acc-deep)',
-              margin: '0 0 10px',
-              lineHeight: 1.5,
-            }}>
+            <p
+              style={{
+                fontFamily: serif,
+                fontStyle: 'italic',
+                fontSize: 14,
+                color: 'var(--color-acc-deep)',
+                margin: '0 0 10px',
+                lineHeight: 1.5,
+              }}
+            >
               {event.analysis}
             </p>
           )}
-          <a href={`/diary/${event.id}`} style={{
-            fontFamily: pixel,
-            fontSize: 11,
-            color: '#2F5D5C',
-            textDecoration: 'none',
-            letterSpacing: 0.4,
-            textTransform: 'uppercase',
-            borderBottom: '2px solid #2F5D5C',
-            paddingBottom: 1,
-          }}>
+          <a
+            href={`/diary/${event.id}`}
+            style={{
+              fontFamily: pixel,
+              fontSize: 11,
+              color: '#2F5D5C',
+              textDecoration: 'none',
+              letterSpacing: 0.4,
+              textTransform: 'uppercase',
+              borderBottom: '2px solid #2F5D5C',
+              paddingBottom: 1,
+            }}
+          >
             ▸ {t('account.read_full_entry', locale).toUpperCase()}
           </a>
         </>
       )}
 
       {shifts.length > 0 ? (
-        <div style={{
-          display: 'flex',
-          gap: 12,
-          flexWrap: 'wrap',
-          marginTop: 12,
-          paddingTop: 12,
-          borderTop: '2px dashed var(--color-line)',
-        }}>
-          {shifts.map(s => (
-            <span key={s.key} style={{
-              fontFamily: pixel,
-              fontSize: 11,
-              color: s.delta > 0 ? '#2F5D5C' : '#7A2E2E',
-              letterSpacing: 0.4,
-              textTransform: 'uppercase',
-              padding: '4px 10px',
-              background: s.delta > 0 ? '#E5F0EE' : '#F5E0E0',
-              border: `2px solid ${s.delta > 0 ? '#2F5D5C' : '#7A2E2E'}`,
-            }}>
+        <div
+          style={{
+            display: 'flex',
+            gap: 12,
+            flexWrap: 'wrap',
+            marginTop: 12,
+            paddingTop: 12,
+            borderTop: '2px dashed var(--color-line)',
+          }}
+        >
+          {shifts.map((s) => (
+            <span
+              key={s.key}
+              style={{
+                fontFamily: pixel,
+                fontSize: 11,
+                color: s.delta > 0 ? '#2F5D5C' : '#7A2E2E',
+                letterSpacing: 0.4,
+                textTransform: 'uppercase',
+                padding: '4px 10px',
+                background: s.delta > 0 ? '#E5F0EE' : '#F5E0E0',
+                border: `2px solid ${s.delta > 0 ? '#2F5D5C' : '#7A2E2E'}`,
+              }}
+            >
               <strong style={{ fontVariantNumeric: 'tabular-nums' }}>
-                {s.delta > 0 ? '+' : ''}{s.delta.toFixed(1)}
+                {s.delta > 0 ? '+' : ''}
+                {s.delta.toFixed(1)}
               </strong>{' '}
               {s.name}
             </span>
@@ -312,14 +343,16 @@ function EventCard({
         </div>
       ) : (
         event.kind === 'quiz' && (
-          <div style={{
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 13,
-            color: 'var(--color-acc-deep)',
-            opacity: 0.85,
-            marginTop: 10,
-          }}>
+          <div
+            style={{
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: 13,
+              color: 'var(--color-acc-deep)',
+              opacity: 0.85,
+              marginTop: 10,
+            }}
+          >
             {t('account.first_event', locale)}
           </div>
         )

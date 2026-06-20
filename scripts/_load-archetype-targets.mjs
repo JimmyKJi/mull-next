@@ -26,12 +26,16 @@ export async function loadArchetypeTargets() {
     throw new Error('Could not find ARCHETYPE_TARGETS declaration in lib/archetype-targets.ts.');
   }
   const openIdx = declMatch.index + declMatch[0].length - 1;
-  let depth = 0, closeIdx = -1;
+  let depth = 0,
+    closeIdx = -1;
   for (let i = openIdx; i < src.length; i++) {
     if (src[i] === '[') depth++;
     else if (src[i] === ']') {
       depth--;
-      if (depth === 0) { closeIdx = i; break; }
+      if (depth === 0) {
+        closeIdx = i;
+        break;
+      }
     }
   }
   if (closeIdx < 0) {

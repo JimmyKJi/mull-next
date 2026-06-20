@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 // SiteNav — sticky pixel top bar with GROUPED umbrella dropdowns.
 //
@@ -18,15 +18,15 @@
 // the bar renders in the right language on the server with no hydration
 // flash.
 
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { ARCHETYPES } from "@/lib/archetypes";
-import { PHILOSOPHERS } from "@/lib/philosophers";
-import { t, type Locale } from "@/lib/translations";
-import FocusTrap from "./focus-trap";
-import { MullMark } from "./mull-mark";
-import LanguageSwitcher from "./language-switcher";
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { ARCHETYPES } from '@/lib/archetypes';
+import { PHILOSOPHERS } from '@/lib/philosophers';
+import { t, type Locale } from '@/lib/translations';
+import FocusTrap from './focus-trap';
+import { MullMark } from './mull-mark';
+import LanguageSwitcher from './language-switcher';
 
 // Umbrella groups. `key` is a translation key (nav.group.*); each item's
 // `key` is a nav.* translation key. Order follows the funnel: assess →
@@ -37,55 +37,55 @@ type NavGroup = { key: string; items: NavItem[] };
 
 const NAV_GROUPS: NavGroup[] = [
   {
-    key: "nav.group.quiz",
+    key: 'nav.group.quiz',
     items: [
-      { href: "/quiz/journey", key: "nav.quiz_journey" },
-      { href: "/quiz?mode=quick", key: "nav.quiz_classic" },
-      { href: "/quiz?mode=detailed", key: "nav.quiz_detailed" },
-      { href: "/result", key: "nav.result" },
+      { href: '/quiz/journey', key: 'nav.quiz_journey' },
+      { href: '/quiz?mode=quick', key: 'nav.quiz_classic' },
+      { href: '/quiz?mode=detailed', key: 'nav.quiz_detailed' },
+      { href: '/result', key: 'nav.result' },
     ],
   },
   {
-    key: "nav.group.daily",
+    key: 'nav.group.daily',
     items: [
-      { href: "/spar", key: "nav.spar" },
-      { href: "/dilemma", key: "nav.dilemma" },
-      { href: "/diary", key: "nav.diary" },
-      { href: "/crucible", key: "nav.crucible" },
-      { href: "/wandering", key: "nav.wandering" },
-      { href: "/year", key: "nav.year" },
+      { href: '/spar', key: 'nav.spar' },
+      { href: '/dilemma', key: 'nav.dilemma' },
+      { href: '/diary', key: 'nav.diary' },
+      { href: '/crucible', key: 'nav.crucible' },
+      { href: '/wandering', key: 'nav.wandering' },
+      { href: '/year', key: 'nav.year' },
     ],
   },
   {
-    key: "nav.group.practice",
+    key: 'nav.group.practice',
     items: [
-      { href: "/exercises", key: "nav.exercises" },
-      { href: "/arena", key: "nav.arena" },
-      { href: "/pilgrimage", key: "nav.pilgrimage" },
-      { href: "/argument-diary", key: "nav.argument_diary" },
-      { href: "/debate", key: "nav.debate" },
+      { href: '/exercises', key: 'nav.exercises' },
+      { href: '/arena', key: 'nav.arena' },
+      { href: '/pilgrimage', key: 'nav.pilgrimage' },
+      { href: '/argument-diary', key: 'nav.argument_diary' },
+      { href: '/debate', key: 'nav.debate' },
     ],
   },
   {
-    key: "nav.group.explore",
+    key: 'nav.group.explore',
     items: [
-      { href: "/map", key: "nav.map" },
-      { href: "/atlas", key: "nav.atlas" },
-      { href: "/archetype", key: "nav.archetypes" },
-      { href: "/philosopher", key: "nav.philosophers" },
-      { href: "/topic", key: "nav.topics" },
-      { href: "/vs", key: "nav.matchups" },
-      { href: "/compare", key: "nav.compare" },
-      { href: "/anthology", key: "nav.anthology" },
+      { href: '/map', key: 'nav.map' },
+      { href: '/atlas', key: 'nav.atlas' },
+      { href: '/archetype', key: 'nav.archetypes' },
+      { href: '/philosopher', key: 'nav.philosophers' },
+      { href: '/topic', key: 'nav.topics' },
+      { href: '/vs', key: 'nav.matchups' },
+      { href: '/compare', key: 'nav.compare' },
+      { href: '/anthology', key: 'nav.anthology' },
     ],
   },
   {
-    key: "nav.group.about",
+    key: 'nav.group.about',
     items: [
-      { href: "/about", key: "nav.about" },
-      { href: "/methodology", key: "nav.methodology" },
-      { href: "/classes", key: "nav.classes" },
-      { href: "/install", key: "nav.install" },
+      { href: '/about', key: 'nav.about' },
+      { href: '/methodology', key: 'nav.methodology' },
+      { href: '/classes', key: 'nav.classes' },
+      { href: '/install', key: 'nav.install' },
     ],
   },
 ];
@@ -96,15 +96,15 @@ const NAV_GROUPS: NavGroup[] = [
 // the comparable HIDDEN_PREFIXES in components/feedback-button.tsx.
 const CHROMELESS_PREFIXES = ['/badge', '/share', '/wrapped', '/embed'];
 
-export function SiteNav({ locale = "en" }: { locale?: Locale }) {
-  const pathname = usePathname() ?? "/";
+export function SiteNav({ locale = 'en' }: { locale?: Locale }) {
+  const pathname = usePathname() ?? '/';
   const [open, setOpen] = useState(false); // command palette
   const [openGroup, setOpenGroup] = useState<string | null>(null); // desktop dropdown
   const [mobileOpen, setMobileOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const chromeless = CHROMELESS_PREFIXES.some(
-    (p) => pathname === p || pathname.startsWith(p + "/"),
+    (p) => pathname === p || pathname.startsWith(p + '/'),
   );
 
   // Cmd-K / Ctrl-K toggles the palette; Escape closes whatever is open.
@@ -114,19 +114,18 @@ export function SiteNav({ locale = "en" }: { locale?: Locale }) {
   // two hooks, which violated the rules of hooks).
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      const isPaletteShortcut =
-        (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k";
+      const isPaletteShortcut = (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k';
       if (isPaletteShortcut) {
         e.preventDefault();
         setOpen((v) => !v);
-      } else if (e.key === "Escape") {
+      } else if (e.key === 'Escape') {
         setOpen(false);
         setOpenGroup(null);
         setMobileOpen(false);
       }
     }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
   }, []);
 
   // Close any open menu when the route changes (a link was followed).
@@ -138,13 +137,13 @@ export function SiteNav({ locale = "en" }: { locale?: Locale }) {
   if (chromeless) return null;
 
   const isMac =
-    typeof navigator !== "undefined" &&
+    typeof navigator !== 'undefined' &&
     /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform || navigator.userAgent);
 
   function isItemActive(href: string) {
-    const base = href.split("?")[0];
-    if (base === "/") return pathname === "/";
-    return pathname === base || pathname.startsWith(base + "/");
+    const base = href.split('?')[0];
+    if (base === '/') return pathname === '/';
+    return pathname === base || pathname.startsWith(base + '/');
   }
   function isGroupActive(g: NavGroup) {
     return g.items.some((it) => isItemActive(it.href));
@@ -181,7 +180,7 @@ export function SiteNav({ locale = "en" }: { locale?: Locale }) {
             </span>
             <span
               className="text-[14px] tracking-[0.12em] text-ink"
-              style={{ fontFamily: "var(--font-pixel-display)" }}
+              style={{ fontFamily: 'var(--font-pixel-display)' }}
             >
               MULL
             </span>
@@ -207,23 +206,21 @@ export function SiteNav({ locale = "en" }: { locale?: Locale }) {
                     onClick={() => setOpenGroup(expanded ? null : g.key)}
                     onFocus={() => openNow(g.key)}
                     className={
-                      "flex items-center gap-1.5 px-2.5 py-1.5 text-[14px] font-medium leading-none transition-colors " +
-                      (active || expanded
-                        ? "text-ink"
-                        : "text-ink-soft hover:text-ink")
+                      'flex items-center gap-1.5 px-2.5 py-1.5 text-[14px] font-medium leading-none transition-colors ' +
+                      (active || expanded ? 'text-ink' : 'text-ink-soft hover:text-ink')
                     }
                   >
                     <span
                       className={
                         active
-                          ? "underline decoration-[3px] decoration-acc underline-offset-[6px]"
-                          : ""
+                          ? 'underline decoration-[3px] decoration-acc underline-offset-[6px]'
+                          : ''
                       }
                     >
                       {t(g.key, locale)}
                     </span>
                     <span aria-hidden className="text-[8px] leading-none opacity-70">
-                      {expanded ? "▲" : "▼"}
+                      {expanded ? '▲' : '▼'}
                     </span>
                   </button>
 
@@ -243,10 +240,10 @@ export function SiteNav({ locale = "en" }: { locale?: Locale }) {
                                 href={it.href}
                                 onClick={() => setOpenGroup(null)}
                                 className={
-                                  "block whitespace-nowrap px-3 py-2 text-[14px] leading-none transition-none " +
+                                  'block whitespace-nowrap px-3 py-2 text-[14px] leading-none transition-none ' +
                                   (itActive
-                                    ? "bg-acc text-[#1A1612]"
-                                    : "text-ink hover:bg-acc-soft")
+                                    ? 'bg-acc text-[#1A1612]'
+                                    : 'text-ink hover:bg-acc-soft')
                                 }
                               >
                                 {t(it.key, locale)}
@@ -275,16 +272,16 @@ export function SiteNav({ locale = "en" }: { locale?: Locale }) {
               type="button"
               onClick={() => setOpen(true)}
               className="hidden items-center gap-2 border-2 border-ink bg-[#FFFCF4] px-3 py-1.5 text-[13px] font-medium leading-none text-ink hover:bg-acc-soft sm:inline-flex"
-              aria-label={t("nav.search_short", locale)}
+              aria-label={t('nav.search_short', locale)}
             >
-              <span>{t("nav.search_short", locale)}</span>
-              <kbd className="pixel-kbd">{isMac ? "⌘K" : "^K"}</kbd>
+              <span>{t('nav.search_short', locale)}</span>
+              <kbd className="pixel-kbd">{isMac ? '⌘K' : '^K'}</kbd>
             </button>
             <Link
               href="/account"
               className="hidden border-2 border-ink bg-ink px-3.5 py-1.5 text-[13px] font-medium leading-none text-cream hover:border-acc-deep hover:bg-acc-deep sm:inline-block"
             >
-              {t("nav.account_btn", locale)}
+              {t('nav.account_btn', locale)}
             </Link>
             {/* Mobile menu toggle */}
             <button
@@ -292,12 +289,12 @@ export function SiteNav({ locale = "en" }: { locale?: Locale }) {
               onClick={() => setMobileOpen((v) => !v)}
               aria-haspopup="true"
               aria-expanded={mobileOpen}
-              aria-label={t("nav.menu", locale)}
+              aria-label={t('nav.menu', locale)}
               className="inline-flex items-center gap-1.5 border-2 border-ink bg-[#FFFCF4] px-3 py-3.5 text-[12px] font-medium leading-none text-ink hover:bg-acc-soft md:hidden"
-              style={{ fontFamily: "var(--font-pixel-display)" }}
+              style={{ fontFamily: 'var(--font-pixel-display)' }}
             >
-              <span aria-hidden>{mobileOpen ? "✕" : "☰"}</span>
-              <span>{t("nav.menu", locale)}</span>
+              <span aria-hidden>{mobileOpen ? '✕' : '☰'}</span>
+              <span>{t('nav.menu', locale)}</span>
             </button>
           </div>
         </div>
@@ -326,11 +323,11 @@ export function SiteNav({ locale = "en" }: { locale?: Locale }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        aria-label={t("palette.open", locale)}
+        aria-label={t('palette.open', locale)}
         className="pixel-press fixed right-[18px] z-[60] flex h-12 w-12 items-center justify-center border-4 border-ink bg-ink text-cream shadow-[3px_3px_0_0_var(--color-acc)] sm:hidden"
         style={{
           bottom: 'calc(18px + env(safe-area-inset-bottom, 0px))',
-          fontFamily: "var(--font-pixel-display)",
+          fontFamily: 'var(--font-pixel-display)',
           fontSize: 14,
           letterSpacing: 0,
           transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
@@ -367,7 +364,7 @@ function MobileMenu({
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label={t("nav.menu", locale)}
+      aria-label={t('nav.menu', locale)}
     >
       <FocusTrap onEscape={onClose}>
         <div
@@ -378,7 +375,7 @@ function MobileMenu({
             <div key={g.key} className="mb-4">
               <div
                 className="mb-1.5 px-1 text-[11px] uppercase tracking-[0.2em] text-acc-deep"
-                style={{ fontFamily: "var(--font-pixel-display)" }}
+                style={{ fontFamily: 'var(--font-pixel-display)' }}
               >
                 {t(g.key, locale)}
               </div>
@@ -391,10 +388,10 @@ function MobileMenu({
                         href={it.href}
                         onClick={onClose}
                         className={
-                          "block border-2 px-3 py-3 text-[14px] leading-none " +
+                          'block border-2 px-3 py-3 text-[14px] leading-none ' +
                           (active
-                            ? "border-ink bg-acc text-[#1A1612]"
-                            : "border-[#EBE3CA] bg-[#FFFCF4] text-ink hover:bg-acc-soft")
+                            ? 'border-ink bg-acc text-[#1A1612]'
+                            : 'border-[#EBE3CA] bg-[#FFFCF4] text-ink hover:bg-acc-soft')
                         }
                       >
                         {t(it.key, locale)}
@@ -411,9 +408,9 @@ function MobileMenu({
           <div className="mb-4">
             <div
               className="mb-1.5 px-1 text-[11px] uppercase tracking-[0.2em] text-acc-deep"
-              style={{ fontFamily: "var(--font-pixel-display)" }}
+              style={{ fontFamily: 'var(--font-pixel-display)' }}
             >
-              {t("a11y.language", locale)}
+              {t('a11y.language', locale)}
             </div>
             <LanguageSwitcher initial={locale} />
           </div>
@@ -425,14 +422,14 @@ function MobileMenu({
               onClick={onOpenSearch}
               className="flex-1 border-2 border-ink bg-[#FFFCF4] px-3 py-3 text-[14px] font-medium leading-none text-ink hover:bg-acc-soft"
             >
-              {t("nav.search_short", locale)}
+              {t('nav.search_short', locale)}
             </button>
             <Link
               href="/account"
               onClick={onClose}
               className="flex-1 border-2 border-ink bg-ink px-3 py-3 text-center text-[14px] font-medium leading-none text-cream hover:border-acc-deep hover:bg-acc-deep"
             >
-              {t("nav.account_btn", locale)}
+              {t('nav.account_btn', locale)}
             </Link>
           </div>
         </div>
@@ -452,7 +449,7 @@ function MobileMenu({
 // ────────────────────────────────────────────────────────────────
 
 type PaletteItem = {
-  group: "Pages" | "Archetypes" | "Philosophers";
+  group: 'Pages' | 'Archetypes' | 'Philosophers';
   label: string;
   hint?: string;
   href: string;
@@ -464,52 +461,162 @@ type PaletteItem = {
 function buildPageItems(locale: Locale): PaletteItem[] {
   return [
     // ── Tier 1 — signature surfaces ──
-    { group: "Pages", label: t("palette.home", locale), href: "/" },
-    { group: "Pages", label: t("nav.quiz_journey", locale), href: "/quiz/journey", hint: t("palette.h_inheritor", locale) },
-    { group: "Pages", label: t("nav.quiz_classic", locale), href: "/quiz?mode=quick", hint: t("palette.h_classic", locale) },
-    { group: "Pages", label: t("nav.quiz_detailed", locale), href: "/quiz?mode=detailed", hint: t("palette.h_detailed", locale) },
-    { group: "Pages", label: t("nav.arena", locale), href: "/arena", hint: t("palette.h_arena", locale) },
-    { group: "Pages", label: t("palette.arena_pve", locale), href: "/arena/pve", hint: t("palette.h_arena_pve", locale) },
-    { group: "Pages", label: t("palette.arena_pvp", locale), href: "/arena/pvp", hint: t("palette.h_arena_pvp", locale) },
-    { group: "Pages", label: t("palette.arena_leaderboard", locale), href: "/arena/leaderboard" },
-    { group: "Pages", label: t("palette.arena_history", locale), href: "/arena/history" },
-    { group: "Pages", label: t("nav.spar", locale), href: "/spar", hint: t("palette.h_spar", locale) },
-    { group: "Pages", label: t("nav.pilgrimage", locale), href: "/pilgrimage", hint: t("palette.h_pilgrimage", locale) },
-    { group: "Pages", label: t("nav.crucible", locale), href: "/crucible", hint: t("palette.h_crucible", locale) },
-    { group: "Pages", label: t("nav.wandering", locale), href: "/wandering", hint: t("palette.h_wandering", locale) },
-    { group: "Pages", label: t("nav.anthology", locale), href: "/anthology", hint: t("palette.h_anthology", locale) },
-    { group: "Pages", label: t("nav.argument_diary", locale), href: "/argument-diary", hint: t("palette.h_argument_diary", locale) },
-    { group: "Pages", label: t("nav.year", locale), href: "/year", hint: t("palette.h_year", locale) },
-    { group: "Pages", label: t("nav.atlas", locale), href: "/atlas", hint: t("palette.h_atlas", locale) },
+    { group: 'Pages', label: t('palette.home', locale), href: '/' },
+    {
+      group: 'Pages',
+      label: t('nav.quiz_journey', locale),
+      href: '/quiz/journey',
+      hint: t('palette.h_inheritor', locale),
+    },
+    {
+      group: 'Pages',
+      label: t('nav.quiz_classic', locale),
+      href: '/quiz?mode=quick',
+      hint: t('palette.h_classic', locale),
+    },
+    {
+      group: 'Pages',
+      label: t('nav.quiz_detailed', locale),
+      href: '/quiz?mode=detailed',
+      hint: t('palette.h_detailed', locale),
+    },
+    {
+      group: 'Pages',
+      label: t('nav.arena', locale),
+      href: '/arena',
+      hint: t('palette.h_arena', locale),
+    },
+    {
+      group: 'Pages',
+      label: t('palette.arena_pve', locale),
+      href: '/arena/pve',
+      hint: t('palette.h_arena_pve', locale),
+    },
+    {
+      group: 'Pages',
+      label: t('palette.arena_pvp', locale),
+      href: '/arena/pvp',
+      hint: t('palette.h_arena_pvp', locale),
+    },
+    { group: 'Pages', label: t('palette.arena_leaderboard', locale), href: '/arena/leaderboard' },
+    { group: 'Pages', label: t('palette.arena_history', locale), href: '/arena/history' },
+    {
+      group: 'Pages',
+      label: t('nav.spar', locale),
+      href: '/spar',
+      hint: t('palette.h_spar', locale),
+    },
+    {
+      group: 'Pages',
+      label: t('nav.pilgrimage', locale),
+      href: '/pilgrimage',
+      hint: t('palette.h_pilgrimage', locale),
+    },
+    {
+      group: 'Pages',
+      label: t('nav.crucible', locale),
+      href: '/crucible',
+      hint: t('palette.h_crucible', locale),
+    },
+    {
+      group: 'Pages',
+      label: t('nav.wandering', locale),
+      href: '/wandering',
+      hint: t('palette.h_wandering', locale),
+    },
+    {
+      group: 'Pages',
+      label: t('nav.anthology', locale),
+      href: '/anthology',
+      hint: t('palette.h_anthology', locale),
+    },
+    {
+      group: 'Pages',
+      label: t('nav.argument_diary', locale),
+      href: '/argument-diary',
+      hint: t('palette.h_argument_diary', locale),
+    },
+    {
+      group: 'Pages',
+      label: t('nav.year', locale),
+      href: '/year',
+      hint: t('palette.h_year', locale),
+    },
+    {
+      group: 'Pages',
+      label: t('nav.atlas', locale),
+      href: '/atlas',
+      hint: t('palette.h_atlas', locale),
+    },
     // ── Tier 2 — explore ──
-    { group: "Pages", label: t("nav.archetypes", locale), href: "/archetype" },
-    { group: "Pages", label: t("nav.map", locale), href: "/map", hint: t("palette.h_map", locale) },
-    { group: "Pages", label: t("palette.browse_phil", locale), href: "/philosopher", hint: t("palette.h_browse_phil", locale, { count: PHILOSOPHERS.length }) },
-    { group: "Pages", label: t("nav.dilemma", locale), href: "/dilemma" },
-    { group: "Pages", label: t("palette.dilemma_archive", locale), href: "/dilemma/archive" },
-    { group: "Pages", label: t("nav.topics", locale), href: "/topic", hint: t("palette.h_topics", locale) },
-    { group: "Pages", label: t("nav.matchups", locale), href: "/vs", hint: t("palette.h_matchups", locale) },
+    { group: 'Pages', label: t('nav.archetypes', locale), href: '/archetype' },
+    { group: 'Pages', label: t('nav.map', locale), href: '/map', hint: t('palette.h_map', locale) },
+    {
+      group: 'Pages',
+      label: t('palette.browse_phil', locale),
+      href: '/philosopher',
+      hint: t('palette.h_browse_phil', locale, { count: PHILOSOPHERS.length }),
+    },
+    { group: 'Pages', label: t('nav.dilemma', locale), href: '/dilemma' },
+    { group: 'Pages', label: t('palette.dilemma_archive', locale), href: '/dilemma/archive' },
+    {
+      group: 'Pages',
+      label: t('nav.topics', locale),
+      href: '/topic',
+      hint: t('palette.h_topics', locale),
+    },
+    {
+      group: 'Pages',
+      label: t('nav.matchups', locale),
+      href: '/vs',
+      hint: t('palette.h_matchups', locale),
+    },
     // ── Tier 3 — deepen ──
-    { group: "Pages", label: t("nav.diary", locale), href: "/diary" },
-    { group: "Pages", label: t("nav.compare", locale), href: "/compare", hint: t("palette.h_compare", locale) },
-    { group: "Pages", label: t("nav.exercises", locale), href: "/exercises" },
-    { group: "Pages", label: t("nav.debate", locale), href: "/debate", hint: t("palette.h_debate", locale) },
-    { group: "Pages", label: t("nav.search", locale), href: "/search" },
+    { group: 'Pages', label: t('nav.diary', locale), href: '/diary' },
+    {
+      group: 'Pages',
+      label: t('nav.compare', locale),
+      href: '/compare',
+      hint: t('palette.h_compare', locale),
+    },
+    { group: 'Pages', label: t('nav.exercises', locale), href: '/exercises' },
+    {
+      group: 'Pages',
+      label: t('nav.debate', locale),
+      href: '/debate',
+      hint: t('palette.h_debate', locale),
+    },
+    { group: 'Pages', label: t('nav.search', locale), href: '/search' },
     // ── Tier 4 — also ──
-    { group: "Pages", label: t("palette.wrapped", locale), href: "/wrapped", hint: t("palette.h_wrapped", locale) },
-    { group: "Pages", label: t("nav.classes", locale), href: "/classes", hint: t("palette.h_classes", locale) },
-    { group: "Pages", label: t("home.add_home", locale), href: "/install", hint: t("palette.h_install", locale) },
-    { group: "Pages", label: t("nav.about", locale), href: "/about" },
-    { group: "Pages", label: t("nav.methodology", locale), href: "/methodology" },
-    { group: "Pages", label: t("nav.account_btn", locale), href: "/account" },
-    { group: "Pages", label: t("nav.signin", locale), href: "/login" },
-    { group: "Pages", label: t("nav.signup", locale), href: "/signup" },
+    {
+      group: 'Pages',
+      label: t('palette.wrapped', locale),
+      href: '/wrapped',
+      hint: t('palette.h_wrapped', locale),
+    },
+    {
+      group: 'Pages',
+      label: t('nav.classes', locale),
+      href: '/classes',
+      hint: t('palette.h_classes', locale),
+    },
+    {
+      group: 'Pages',
+      label: t('home.add_home', locale),
+      href: '/install',
+      hint: t('palette.h_install', locale),
+    },
+    { group: 'Pages', label: t('nav.about', locale), href: '/about' },
+    { group: 'Pages', label: t('nav.methodology', locale), href: '/methodology' },
+    { group: 'Pages', label: t('nav.account_btn', locale), href: '/account' },
+    { group: 'Pages', label: t('nav.signin', locale), href: '/login' },
+    { group: 'Pages', label: t('nav.signup', locale), href: '/signup' },
   ];
 }
 
 function buildArchetypeItems(locale: Locale): PaletteItem[] {
   return ARCHETYPES.map((a) => ({
-    group: "Archetypes" as const,
+    group: 'Archetypes' as const,
     label: t(`arch.${a.key}.name`, locale),
     hint: t(`arch.${a.key}.spirit`, locale),
     href: `/archetype/${a.key}`,
@@ -517,24 +624,27 @@ function buildArchetypeItems(locale: Locale): PaletteItem[] {
 }
 
 // Group discriminator → translation key (rendered header in ItemList).
-const PALETTE_GROUP_KEY: Record<PaletteItem["group"], string> = {
-  Pages: "palette.group_pages",
-  Archetypes: "palette.group_archetypes",
-  Philosophers: "palette.group_philosophers",
+const PALETTE_GROUP_KEY: Record<PaletteItem['group'], string> = {
+  Pages: 'palette.group_pages',
+  Archetypes: 'palette.group_archetypes',
+  Philosophers: 'palette.group_philosophers',
 };
 
 // Build philosopher items lazily — module load cost is negligible
 // but searching all 560 substring is fine.
 const PHILOSOPHER_ITEMS: PaletteItem[] = PHILOSOPHERS.map((p) => ({
-  group: "Philosophers" as const,
+  group: 'Philosophers' as const,
   label: p.name,
   hint: p.dates,
-  href: `/philosopher/${p.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`,
+  href: `/philosopher/${p.name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')}`,
 }));
 
 function CommandPalette({ locale, onClose }: { locale: Locale; onClose: () => void }) {
   const router = useRouter();
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
   const [activeIdx, setActiveIdx] = useState(0);
 
   const items = useMemo<PaletteItem[]>(() => {
@@ -545,9 +655,7 @@ function CommandPalette({ locale, onClose }: { locale: Locale; onClose: () => vo
     const filteredFixed = fixedTop.filter(
       (i) => matchesQuery(i.label) || (i.hint ? matchesQuery(i.hint) : false),
     );
-    const filteredPhils = PHILOSOPHER_ITEMS.filter((i) =>
-      matchesQuery(i.label),
-    ).slice(0, 30);
+    const filteredPhils = PHILOSOPHER_ITEMS.filter((i) => matchesQuery(i.label)).slice(0, 30);
     return [...filteredFixed, ...filteredPhils];
   }, [query, locale]);
 
@@ -562,13 +670,13 @@ function CommandPalette({ locale, onClose }: { locale: Locale; onClose: () => vo
   }
 
   function onKey(e: React.KeyboardEvent) {
-    if (e.key === "ArrowDown") {
+    if (e.key === 'ArrowDown') {
       e.preventDefault();
       setActiveIdx((i) => Math.min(i + 1, items.length - 1));
-    } else if (e.key === "ArrowUp") {
+    } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       setActiveIdx((i) => Math.max(0, i - 1));
-    } else if (e.key === "Enter") {
+    } else if (e.key === 'Enter') {
       e.preventDefault();
       const item = items[activeIdx];
       if (item) navigate(item);
@@ -581,65 +689,65 @@ function CommandPalette({ locale, onClose }: { locale: Locale; onClose: () => vo
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label={t("palette.aria", locale)}
+      aria-label={t('palette.aria', locale)}
     >
       <FocusTrap onEscape={onClose}>
-      {/* Pixel dialog box: 4-px ink border, hard amber shadow */}
-      <div
-        className="w-full max-w-[640px] overflow-hidden border-4 border-ink bg-[#FFFCF4] shadow-[8px_8px_0_0_var(--color-acc-deep)]"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Title bar */}
-        <div className="flex items-center justify-between border-b-4 border-ink bg-ink px-4 py-2">
-          <span
-            className="text-[12px] tracking-[0.16em] text-acc-soft"
-            style={{ fontFamily: "var(--font-pixel-display)" }}
-          >
-            {t("palette.title", locale)}
-          </span>
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-[14px] text-acc-soft hover:text-acc"
-            style={{ fontFamily: "var(--font-pixel-display)" }}
-            aria-label={t("nav.close", locale)}
-          >
-            X
-          </button>
+        {/* Pixel dialog box: 4-px ink border, hard amber shadow */}
+        <div
+          className="w-full max-w-[640px] overflow-hidden border-4 border-ink bg-[#FFFCF4] shadow-[8px_8px_0_0_var(--color-acc-deep)]"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Title bar */}
+          <div className="flex items-center justify-between border-b-4 border-ink bg-ink px-4 py-2">
+            <span
+              className="text-[12px] tracking-[0.16em] text-acc-soft"
+              style={{ fontFamily: 'var(--font-pixel-display)' }}
+            >
+              {t('palette.title', locale)}
+            </span>
+            <button
+              type="button"
+              onClick={onClose}
+              className="text-[14px] text-acc-soft hover:text-acc"
+              style={{ fontFamily: 'var(--font-pixel-display)' }}
+              aria-label={t('nav.close', locale)}
+            >
+              X
+            </button>
+          </div>
+          <input
+            autoFocus
+            type="text"
+            placeholder={t('palette.placeholder', locale)}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={onKey}
+            className="w-full border-b-2 border-ink bg-acc-soft px-5 py-3 text-[15px] leading-tight text-ink placeholder:text-acc-deep/70 focus:outline-none"
+          />
+          <div className="max-h-[60vh] overflow-y-auto bg-[#FFFCF4] p-2">
+            {items.length === 0 ? (
+              <div className="px-3 py-8 text-center text-[14px] text-acc-deep">
+                {t('palette.empty', locale)}
+              </div>
+            ) : (
+              <ItemList
+                items={items}
+                activeIdx={activeIdx}
+                onHover={setActiveIdx}
+                onSelect={navigate}
+                locale={locale}
+              />
+            )}
+          </div>
+          <div className="flex items-center justify-between border-t-2 border-ink bg-ink px-4 py-1.5 text-[12px] leading-none text-acc-soft">
+            <span>{t('palette.footer_hint', locale)}</span>
+            <span>
+              {locale === 'en'
+                ? `${items.length} match${items.length === 1 ? '' : 'es'}`
+                : t('palette.matches', locale, { count: items.length })}
+            </span>
+          </div>
         </div>
-        <input
-          autoFocus
-          type="text"
-          placeholder={t("palette.placeholder", locale)}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={onKey}
-          className="w-full border-b-2 border-ink bg-acc-soft px-5 py-3 text-[15px] leading-tight text-ink placeholder:text-acc-deep/70 focus:outline-none"
-        />
-        <div className="max-h-[60vh] overflow-y-auto bg-[#FFFCF4] p-2">
-          {items.length === 0 ? (
-            <div className="px-3 py-8 text-center text-[14px] text-acc-deep">
-              {t("palette.empty", locale)}
-            </div>
-          ) : (
-            <ItemList
-              items={items}
-              activeIdx={activeIdx}
-              onHover={setActiveIdx}
-              onSelect={navigate}
-              locale={locale}
-            />
-          )}
-        </div>
-        <div className="flex items-center justify-between border-t-2 border-ink bg-ink px-4 py-1.5 text-[12px] leading-none text-acc-soft">
-          <span>{t("palette.footer_hint", locale)}</span>
-          <span>
-            {locale === "en"
-              ? `${items.length} match${items.length === 1 ? "" : "es"}`
-              : t("palette.matches", locale, { count: items.length })}
-          </span>
-        </div>
-      </div>
       </FocusTrap>
     </div>
   );
@@ -668,9 +776,9 @@ function ItemList({
         <div
           key={`g-${item.group}`}
           className="mt-2 px-3 pb-1 text-[11px] uppercase tracking-[0.22em] text-acc-deep"
-          style={{ fontFamily: "var(--font-pixel-display)" }}
+          style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
-          {t(PALETTE_GROUP_KEY[item.group as PaletteItem["group"]], locale)}
+          {t(PALETTE_GROUP_KEY[item.group as PaletteItem['group']], locale)}
         </div>,
       );
       lastGroup = item.group;
@@ -683,15 +791,18 @@ function ItemList({
         onMouseEnter={() => onHover(idx)}
         onClick={() => onSelect(item)}
         className={
-          "flex w-full items-baseline justify-between gap-3 px-3 py-2 text-left text-[14px] leading-none transition-none " +
-          (isActive
-            ? "bg-acc text-[#1A1612]"
-            : "text-ink hover:bg-acc-soft")
+          'flex w-full items-baseline justify-between gap-3 px-3 py-2 text-left text-[14px] leading-none transition-none ' +
+          (isActive ? 'bg-acc text-[#1A1612]' : 'text-ink hover:bg-acc-soft')
         }
       >
-        <span className="font-medium">{isActive ? "▶ " : "  "}{item.label}</span>
+        <span className="font-medium">
+          {isActive ? '▶ ' : '  '}
+          {item.label}
+        </span>
         {item.hint ? (
-          <span className={`ml-auto truncate text-[12px] ${isActive ? "text-[#3A2F18]" : "text-acc-deep"}`}>
+          <span
+            className={`ml-auto truncate text-[12px] ${isActive ? 'text-[#3A2F18]' : 'text-acc-deep'}`}
+          >
             {item.hint}
           </span>
         ) : null}

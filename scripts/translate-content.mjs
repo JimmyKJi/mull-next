@@ -60,10 +60,7 @@ import { ARENA_TOPICS_I18N } from '../lib/arena/topics-i18n';
 // FLAVOR_LENSES[key] (a Record<DimKey,string>); the overlay getter in
 // lib/pilgrimage-i18n.ts reads it back from the same place.
 const PILGRIMAGE_MERGED = Object.fromEntries(
-  Object.entries(PILGRIMAGE_ARCS).map(([k, arc]) => [
-    k,
-    { ...arc, lens: FLAVOR_LENSES[k] || {} },
-  ]),
+  Object.entries(PILGRIMAGE_ARCS).map(([k, arc]) => [k, { ...arc, lens: FLAVOR_LENSES[k] || {} }]),
 );
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -94,7 +91,10 @@ function normalizeNode(node, loc) {
   for (const [k, v] of Object.entries(node)) {
     if (typeof v === 'string') {
       const n = normalizeQuotes(v, loc);
-      if (n !== v) { node[k] = n; changed++; }
+      if (n !== v) {
+        node[k] = n;
+        changed++;
+      }
     } else if (Array.isArray(v)) {
       for (const el of v) if (el && typeof el === 'object') changed += normalizeNode(el, loc);
     } else if (v && typeof v === 'object') {
@@ -114,7 +114,10 @@ function deepNormalizeLocale(existing, loc) {
     if (sub == null) continue;
     if (typeof sub === 'string') {
       const n = normalizeQuotes(sub, loc);
-      if (n !== sub) { entry[loc] = n; changed++; }
+      if (n !== sub) {
+        entry[loc] = n;
+        changed++;
+      }
     } else if (typeof sub === 'object') {
       changed += normalizeNode(sub, loc);
     }
@@ -161,8 +164,7 @@ const DOMAINS = {
     keyField: 'key',
     overlayFile: 'lib/archetypes-i18n.ts',
     constName: 'ARCHETYPES_I18N',
-    recordType:
-      'Record<string, Partial<Record<Locale, ArchetypeI18nFields>>>',
+    recordType: 'Record<string, Partial<Record<Locale, ArchetypeI18nFields>>>',
     fields: [
       'spirit',
       'detailedAbout',
@@ -442,8 +444,7 @@ function extract(domain) {
         const arr = entry[f.stringArray];
         if (!Array.isArray(arr)) continue;
         arr.forEach((v, i) => {
-          if (typeof v === 'string' && v.trim())
-            out[`${k}${SEP}${f.stringArray}${SEP}${i}`] = v;
+          if (typeof v === 'string' && v.trim()) out[`${k}${SEP}${f.stringArray}${SEP}${i}`] = v;
         });
       } else if (f.stringRecord) {
         // Record<string|number, string> field (e.g. journey
@@ -454,8 +455,7 @@ function extract(domain) {
         const rec = entry[f.stringRecord];
         if (!rec || typeof rec !== 'object') continue;
         for (const [sk, v] of Object.entries(rec)) {
-          if (typeof v === 'string' && v.trim())
-            out[`${k}${SEP}${f.stringRecord}${SEP}${sk}`] = v;
+          if (typeof v === 'string' && v.trim()) out[`${k}${SEP}${f.stringRecord}${SEP}${sk}`] = v;
         }
       } else {
         const arr = entry[f.array];
@@ -503,7 +503,7 @@ function applyTranslations(map, translations, loc, domain) {
   );
   if (domain?.flatValue) {
     for (const [flatKey, val] of Object.entries(translations)) {
-      (map[flatKey] ||= {});
+      map[flatKey] ||= {};
       map[flatKey][loc] = val;
     }
     return map;
@@ -511,8 +511,8 @@ function applyTranslations(map, translations, loc, domain) {
   for (const [flatKey, val] of Object.entries(translations)) {
     const parts = flatKey.split(SEP);
     const entryKey = parts[0];
-    (map[entryKey] ||= {});
-    (map[entryKey][loc] ||= {});
+    map[entryKey] ||= {};
+    map[entryKey][loc] ||= {};
     const node = map[entryKey][loc];
     if (parts.length === 2) {
       node[parts[1]] = val;
@@ -523,21 +523,21 @@ function applyTranslations(map, translations, loc, domain) {
       if (field3Shape(domain, fieldName) === 'stringRecord') {
         // Object value keyed by an arbitrary subkey (choice index as a
         // string, or a DimKey). Store the subkey verbatim.
-        (node[fieldName] ||= {});
+        node[fieldName] ||= {};
         node[fieldName][parts[2]] = val;
       } else {
         // string[] element. A batch boundary can deliver indices out of
         // order, so fill any lower holes with '' first; never clobber an
         // already-translated element.
         const idx = +parts[2];
-        (node[fieldName] ||= []);
+        node[fieldName] ||= [];
         for (let j = 0; j < idx; j++) node[fieldName][j] ??= '';
         node[fieldName][idx] = val;
       }
     } else {
       const [, arrName, idxStr, sf] = parts;
       const idx = +idxStr;
-      (node[arrName] ||= []);
+      node[arrName] ||= [];
       for (let j = 0; j <= idx; j++) node[arrName][j] ||= {}; // fill holes with {}
       node[arrName][idx][sf] = val;
     }
@@ -554,19 +554,41 @@ function decodeJsonStringBody(s) {
     const c = s[i];
     if (c === '\\') {
       const n = s[i + 1];
-      if (n === 'n') { r += '\n'; i++; }
-      else if (n === 't') { r += '\t'; i++; }
-      else if (n === 'r') { r += '\r'; i++; }
-      else if (n === '"') { r += '"'; i++; }
-      else if (n === '\\') { r += '\\'; i++; }
-      else if (n === '/') { r += '/'; i++; }
-      else if (n === 'b') { r += '\b'; i++; }
-      else if (n === 'f') { r += '\f'; i++; }
-      else if (n === 'u') {
+      if (n === 'n') {
+        r += '\n';
+        i++;
+      } else if (n === 't') {
+        r += '\t';
+        i++;
+      } else if (n === 'r') {
+        r += '\r';
+        i++;
+      } else if (n === '"') {
+        r += '"';
+        i++;
+      } else if (n === '\\') {
+        r += '\\';
+        i++;
+      } else if (n === '/') {
+        r += '/';
+        i++;
+      } else if (n === 'b') {
+        r += '\b';
+        i++;
+      } else if (n === 'f') {
+        r += '\f';
+        i++;
+      } else if (n === 'u') {
         const hex = s.slice(i + 2, i + 6);
-        if (/^[0-9a-fA-F]{4}$/.test(hex)) { r += String.fromCharCode(parseInt(hex, 16)); i += 5; }
-        else { r += c; }
-      } else { r += c; }
+        if (/^[0-9a-fA-F]{4}$/.test(hex)) {
+          r += String.fromCharCode(parseInt(hex, 16));
+          i += 5;
+        } else {
+          r += c;
+        }
+      } else {
+        r += c;
+      }
     } else {
       r += c;
     }
@@ -598,11 +620,11 @@ function recoverByAnchors(slice, keys) {
     if (colon < 0) continue;
     const open = slice.indexOf('"', colon);
     if (open < 0) continue;
-    const regionEnd = next ? next.start : (closeBrace >= 0 ? closeBrace : slice.length);
+    const regionEnd = next ? next.start : closeBrace >= 0 ? closeBrace : slice.length;
     if (regionEnd <= open) continue;
     let seg = slice.slice(open + 1, regionEnd);
-    seg = seg.replace(/\s*,?\s*$/, '');          // trailing comma/whitespace before next key
-    const lastQuote = seg.lastIndexOf('"');       // the value's true closing quote
+    seg = seg.replace(/\s*,?\s*$/, ''); // trailing comma/whitespace before next key
+    const lastQuote = seg.lastIndexOf('"'); // the value's true closing quote
     if (lastQuote >= 0) seg = seg.slice(0, lastQuote);
     out[a.key] = decodeJsonStringBody(seg);
   }
@@ -703,7 +725,11 @@ Rules:
   });
   if (!res.ok) throw new Error(`API ${res.status}: ${await res.text()}`);
   const data = await res.json();
-  const text = (data.content || []).filter((b) => b.type === 'text').map((b) => b.text).join('').trim();
+  const text = (data.content || [])
+    .filter((b) => b.type === 'text')
+    .map((b) => b.text)
+    .join('')
+    .trim();
   let cleaned = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '');
   const s = cleaned.indexOf('{');
   const e = cleaned.lastIndexOf('}');
@@ -717,7 +743,9 @@ Rules:
     const recovered = recoverByAnchors(slice, Object.keys(batch));
     const n = Object.keys(recovered).length;
     if (n) {
-      console.warn(`      JSON parse failed; recovered ${n}/${Object.keys(batch).length} by anchors`);
+      console.warn(
+        `      JSON parse failed; recovered ${n}/${Object.keys(batch).length} by anchors`,
+      );
       return recovered;
     }
     throw new Error('JSON parse failed and unrecoverable: ' + err.message);
@@ -739,7 +767,8 @@ function persist(domain, map) {
   const end = `// ─── END gen-translate ${domain.constName} ───`;
   const bi = src.indexOf(begin);
   const ei = src.indexOf(end);
-  if (bi < 0 || ei < 0) throw new Error(`Sentinels for ${domain.constName} not found in ${domain.overlayFile}`);
+  if (bi < 0 || ei < 0)
+    throw new Error(`Sentinels for ${domain.constName} not found in ${domain.overlayFile}`);
   const json = JSON.stringify(map, null, 2);
   const block = `${begin}\nexport const ${domain.constName}: ${domain.recordType} = ${json};\n${end}`;
   const next = src.slice(0, bi) + block + src.slice(ei + end.length);
@@ -747,15 +776,22 @@ function persist(domain, map) {
 }
 
 async function run() {
-  console.log(`Locale: ${locale} (${LOCALE_DESC[locale]})  ·  domains: ${domainNames.join(', ')}  ·  ${repair ? 'repair' : force ? 'force' : 'fill'}`);
+  console.log(
+    `Locale: ${locale} (${LOCALE_DESC[locale]})  ·  domains: ${domainNames.join(', ')}  ·  ${repair ? 'repair' : force ? 'force' : 'fill'}`,
+  );
   for (const name of domainNames) {
     const domain = DOMAINS[name];
-    if (!domain) { console.warn(`  ✗ unknown domain "${name}" — skipping`); continue; }
+    if (!domain) {
+      console.warn(`  ✗ unknown domain "${name}" — skipping`);
+      continue;
+    }
     if (renormalize) {
       const map = JSON.parse(JSON.stringify(domain.existing || {}));
       const changed = deepNormalizeLocale(map, locale);
       if (changed && !dryRun) persist(domain, map);
-      console.log(`  ${name}: ${dryRun ? 'would normalize' : 'normalized'} ${changed} value(s) for ${locale}`);
+      console.log(
+        `  ${name}: ${dryRun ? 'would normalize' : 'normalized'} ${changed} value(s) for ${locale}`,
+      );
       continue;
     }
     const all = extract(domain);
@@ -775,15 +811,21 @@ async function run() {
     const total = Object.keys(all).length;
     const todo = Object.keys(pending).length;
     if (!todo) {
-      console.log(`  ${name}: ${repair ? 'no truncated values found' : 'nothing to translate'} (${total} strings)`);
+      console.log(
+        `  ${name}: ${repair ? 'no truncated values found' : 'nothing to translate'} (${total} strings)`,
+      );
       continue;
     }
-    console.log(`  ${name}: ${repair ? 're-translating' : 'translating'} ${todo}/${total} strings into ${locale}…`);
+    console.log(
+      `  ${name}: ${repair ? 're-translating' : 'translating'} ${todo}/${total} strings into ${locale}…`,
+    );
     if (dryRun) {
       for (const k of Object.keys(pending)) {
         if (repair) {
           const cur = getExisting(domain.existing, k, locale, domain);
-          console.log(`      • ${k}\n          en: ${String(all[k]).slice(0, 80).replace(/\n/g, '⏎')}\n          zh: ${String(cur).slice(0, 80).replace(/\n/g, '⏎')}`);
+          console.log(
+            `      • ${k}\n          en: ${String(all[k]).slice(0, 80).replace(/\n/g, '⏎')}\n          zh: ${String(cur).slice(0, 80).replace(/\n/g, '⏎')}`,
+          );
         } else {
           console.log(`      • ${k}`);
         }
@@ -795,7 +837,9 @@ async function run() {
     const batches = chunk(pending, batchSize);
     const runCount = Math.min(batches.length, maxBatches);
     if (runCount < batches.length)
-      console.log(`    (processing ${runCount} of ${batches.length} batches this run; re-run to continue)`);
+      console.log(
+        `    (processing ${runCount} of ${batches.length} batches this run; re-run to continue)`,
+      );
     for (let i = 0; i < runCount; i++) {
       process.stdout.write(`    batch ${i + 1}/${batches.length}…`);
       let attempt = 0;
@@ -808,7 +852,10 @@ async function run() {
           break;
         } catch (err) {
           const detail = err.cause?.code || err.cause?.message || '';
-          if (++attempt >= 3) { process.stdout.write(` ✗ ${err.message}${detail ? ' ['+detail+']' : ''}\n`); break; }
+          if (++attempt >= 3) {
+            process.stdout.write(` ✗ ${err.message}${detail ? ' [' + detail + ']' : ''}\n`);
+            break;
+          }
           process.stdout.write(` retry ${attempt}…`);
           await new Promise((r) => setTimeout(r, 2000));
         }
@@ -819,4 +866,7 @@ async function run() {
   console.log('✓ Done.');
 }
 
-run().catch((e) => { console.error(e); process.exit(1); });
+run().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

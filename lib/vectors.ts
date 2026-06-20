@@ -6,7 +6,7 @@
 // vector is constructed, prefer `v({TR:3, SS:2})` — it's the same
 // shorthand mull.html uses, and it gives compile-time key safety.
 
-import { DIM_KEYS, type DimKey } from "./dimensions";
+import { DIM_KEYS, type DimKey } from './dimensions';
 
 /** Build a 16-D vector from a partial `{ DIM: weight }` object.
  *  Missing dimensions default to 0. Same shape as mull.html's `v()`. */
@@ -92,22 +92,22 @@ export function displayPct(sim: number | null | undefined): number {
  *  picking the user's strongest dimension that ISN'T already part
  *  of the matched archetype's defining cluster. See `computeFlavor`. */
 export const ADJ: Record<DimKey, string> = {
-  TV: "Tragic",
-  VA: "Vital",
-  WP: "Striving",
-  TR: "Rational",
-  TE: "Empirical",
-  RT: "Reverent",
-  MR: "Mystical",
-  SR: "Skeptical",
-  CE: "Communal",
-  SS: "Sovereign",
-  PO: "Practical",
-  TD: "Theoretical",
-  AT: "Ascetic",
-  ES: "Embodied",
-  UI: "Universal",
-  SI: "Egoless",
+  TV: 'Tragic',
+  VA: 'Vital',
+  WP: 'Striving',
+  TR: 'Rational',
+  TE: 'Empirical',
+  RT: 'Reverent',
+  MR: 'Mystical',
+  SR: 'Skeptical',
+  CE: 'Communal',
+  SS: 'Sovereign',
+  PO: 'Practical',
+  TD: 'Theoretical',
+  AT: 'Ascetic',
+  ES: 'Embodied',
+  UI: 'Universal',
+  SI: 'Egoless',
 };
 
 /** Compute the flavor word for a result.
@@ -135,6 +135,6 @@ export function computeFlavor(userVec: number[], archP: number[]): string {
     .filter((x) => !archTop.includes(x.k))
     .sort((a, b) => b.v - a.v);
 
-  if (!userTop.length || userTop[0].v <= 0) return "";
-  return ADJ[userTop[0].k] ?? "";
+  if (!userTop.length || userTop[0].v <= 0) return '';
+  return ADJ[userTop[0].k] ?? '';
 }

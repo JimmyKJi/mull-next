@@ -35,12 +35,12 @@ const fs = require('fs');
 const TOKEN = {
   '221E18': 'ink',
   '4A4338': 'ink-soft',
-  'D6CDB6': 'line',
-  'FAF6EC': 'cream',
-  'F1EAD8': 'cream-2',
-  'B8862F': 'acc',
+  D6CDB6: 'line',
+  FAF6EC: 'cream',
+  F1EAD8: 'cream-2',
+  B8862F: 'acc',
   '8C6520': 'acc-deep',
-  'F8EDC8': 'acc-soft',
+  F8EDC8: 'acc-soft',
   '0C141E': 'night',
   '131F2E': 'night-2',
   '1D2D44': 'night-3',
@@ -109,7 +109,9 @@ for (const file of files) {
   console.log(`  class  -> token util : ${nClass}  ${JSON.stringify(classHits)}`);
   console.log(`  inline -> var(...)   : ${nInline}  ${JSON.stringify(inlineHits)}`);
   if (Object.keys(leftAttr).length) {
-    console.log(`  LEFT (attr-form SVG/WebGL, token but not migrated): ${JSON.stringify(leftAttr)}`);
+    console.log(
+      `  LEFT (attr-form SVG/WebGL, token but not migrated): ${JSON.stringify(leftAttr)}`,
+    );
   }
 
   if (!dry) {

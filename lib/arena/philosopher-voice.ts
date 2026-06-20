@@ -10,18 +10,18 @@
 // topic) is marked as cacheable so subsequent turns in the same
 // debate hit the cache. ~90% off cached input tokens.
 
-import { getArenaPhilosopher, getArenaTopic, type ArenaPhilosopher } from "./data";
-import { LOCALE_FOR_PROMPT, type Locale } from "../translations";
+import { getArenaPhilosopher, getArenaTopic, type ArenaPhilosopher } from './data';
+import { LOCALE_FOR_PROMPT, type Locale } from '../translations';
 
 type AnthropicMessage = {
-  role: "user" | "assistant";
-  content: string | Array<{ type: "text"; text: string; cache_control?: { type: "ephemeral" } }>;
+  role: 'user' | 'assistant';
+  content: string | Array<{ type: 'text'; text: string; cache_control?: { type: 'ephemeral' } }>;
 };
 
 type AnthropicSystemBlock = {
-  type: "text";
+  type: 'text';
   text: string;
-  cache_control?: { type: "ephemeral" };
+  cache_control?: { type: 'ephemeral' };
 };
 
 type AnthropicResponse = {
@@ -29,10 +29,10 @@ type AnthropicResponse = {
   error?: { message?: string; type?: string };
 };
 
-const HAIKU_MODEL = "claude-haiku-4-5";
+const HAIKU_MODEL = 'claude-haiku-4-5';
 
 export type VoiceTurn = {
-  speaker: "user" | "opponent";
+  speaker: 'user' | 'opponent';
   content: string;
 };
 
@@ -51,7 +51,7 @@ export async function generatePhilosopherTurn(args: {
 }): Promise<string | null> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
-    console.error("[arena] missing ANTHROPIC_API_KEY");
+    console.error('[arena] missing ANTHROPIC_API_KEY');
     return null;
   }
 
@@ -59,9 +59,9 @@ export async function generatePhilosopherTurn(args: {
 
   const systemBlocks: AnthropicSystemBlock[] = [
     {
-      type: "text",
-      text: buildSystem(args.philosopher, args.topicPrompt, maxChars, args.locale ?? "en"),
-      cache_control: { type: "ephemeral" }, // cache the voice + topic
+      type: 'text',
+      text: buildSystem(args.philosopher, args.topicPrompt, maxChars, args.locale ?? 'en'),
+      cache_control: { type: 'ephemeral' }, // cache the voice + topic
     },
   ];
 
@@ -69,30 +69,27 @@ export async function generatePhilosopherTurn(args: {
   // opponent turns → assistant role (so Haiku continues "as" the
   // opponent naturally).
   const messages: AnthropicMessage[] = args.transcript.map((t) => ({
-    role: t.speaker === "user" ? "user" : "assistant",
+    role: t.speaker === 'user' ? 'user' : 'assistant',
     content: t.content,
   }));
 
   // If the last message is from the opponent (assistant), add a
   // nudge from the user side asking for next response. Should never
   // happen in normal flow but guards against malformed input.
-  if (
-    messages.length === 0 ||
-    messages[messages.length - 1].role !== "user"
-  ) {
+  if (messages.length === 0 || messages[messages.length - 1].role !== 'user') {
     messages.push({
-      role: "user",
-      content: "(Your turn. Respond now.)",
+      role: 'user',
+      content: '(Your turn. Respond now.)',
     });
   }
 
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
-      "anthropic-beta": "prompt-caching-2024-07-31",
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-beta': 'prompt-caching-2024-07-31',
     },
     body: JSON.stringify({
       model: HAIKU_MODEL,
@@ -104,15 +101,15 @@ export async function generatePhilosopherTurn(args: {
 
   if (!res.ok) {
     const errText = await res.text();
-    console.error("[arena] Haiku error", res.status, errText);
+    console.error('[arena] Haiku error', res.status, errText);
     return null;
   }
   const data: AnthropicResponse = await res.json();
   if (data.error) {
-    console.error("[arena] Haiku returned error", data.error);
+    console.error('[arena] Haiku returned error', data.error);
     return null;
   }
-  const text = data.content?.find((c) => c.type === "text")?.text;
+  const text = data.content?.find((c) => c.type === 'text')?.text;
   if (!text || !text.trim()) return null;
   return text.trim();
 }
@@ -124,9 +121,9 @@ function buildSystem(
   locale: Locale,
 ): string {
   const languageDirective =
-    locale !== "en" && LOCALE_FOR_PROMPT[locale]
+    locale !== 'en' && LOCALE_FOR_PROMPT[locale]
       ? `\n- Write your entire response in ${LOCALE_FOR_PROMPT[locale]}. Stay fully in ${p.name}'s voice while writing in that language — do not include any English.`
-      : "";
+      : '';
   return `${p.voice}
 
 You are in a structured debate. The topic is:

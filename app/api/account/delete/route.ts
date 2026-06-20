@@ -27,13 +27,18 @@ export async function POST(req: Request) {
     const body = await req.json().catch(() => ({}));
     const confirm: string = (body?.confirm ?? '').toString();
     if (confirm !== CONFIRMATION) {
-      return NextResponse.json({
-        error: `To confirm, send {"confirm": "${CONFIRMATION}"} in the request body.`,
-      }, { status: 400 });
+      return NextResponse.json(
+        {
+          error: `To confirm, send {"confirm": "${CONFIRMATION}"} in the request body.`,
+        },
+        { status: 400 },
+      );
     }
 
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Not signed in.' }, { status: 401 });
 
     // Wipe user-scoped rows. We swallow individual errors and report at the
@@ -57,22 +62,30 @@ export async function POST(req: Request) {
       admin = createAdminClient();
     } catch (e) {
       console.error('[account/delete] admin client unavailable', e);
-      return NextResponse.json({
-        error: 'Account deletion is misconfigured server-side. Email jimmy.kaian.ji@gmail.com — your data has been wiped but the auth record could not be removed.',
-        partial: true,
-        wiped: [...TABLES_TO_WIPE],
-        tableErrors,
-      }, { status: 500 });
+      return NextResponse.json(
+        {
+          error:
+            'Account deletion is misconfigured server-side. Email jimmy.kaian.ji@gmail.com — your data has been wiped but the auth record could not be removed.',
+          partial: true,
+          wiped: [...TABLES_TO_WIPE],
+          tableErrors,
+        },
+        { status: 500 },
+      );
     }
 
     const { error: authDeleteError } = await admin.auth.admin.deleteUser(user.id);
     if (authDeleteError) {
       console.error('[account/delete] auth.users delete failed', authDeleteError);
-      return NextResponse.json({
-        error: 'Your data was wiped but we could not remove your sign-in record. Email jimmy.kaian.ji@gmail.com to finish.',
-        partial: true,
-        tableErrors,
-      }, { status: 500 });
+      return NextResponse.json(
+        {
+          error:
+            'Your data was wiped but we could not remove your sign-in record. Email jimmy.kaian.ji@gmail.com to finish.',
+          partial: true,
+          tableErrors,
+        },
+        { status: 500 },
+      );
     }
 
     return NextResponse.json({ deleted: true, tableErrors });

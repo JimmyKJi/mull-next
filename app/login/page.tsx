@@ -71,7 +71,10 @@ export default function LoginPage() {
           </p>
 
           <form onSubmit={handleSubmit} className="mt-7 flex flex-col gap-5">
-            <label className="flex flex-col gap-1.5 text-[12px] tracking-[0.18em] text-acc-deep" style={{ fontFamily: 'var(--font-pixel-display)' }}>
+            <label
+              className="flex flex-col gap-1.5 text-[12px] tracking-[0.18em] text-acc-deep"
+              style={{ fontFamily: 'var(--font-pixel-display)' }}
+            >
               {t('auth.email', locale).toUpperCase()}
               <input
                 type="email"
@@ -84,7 +87,10 @@ export default function LoginPage() {
               />
             </label>
 
-            <label className="flex flex-col gap-1.5 text-[12px] tracking-[0.18em] text-acc-deep" style={{ fontFamily: 'var(--font-pixel-display)' }}>
+            <label
+              className="flex flex-col gap-1.5 text-[12px] tracking-[0.18em] text-acc-deep"
+              style={{ fontFamily: 'var(--font-pixel-display)' }}
+            >
               {t('auth.password', locale).toUpperCase()}
               <input
                 type="password"
@@ -109,7 +115,8 @@ export default function LoginPage() {
               className="pixel-button pixel-button--amber justify-center disabled:cursor-wait disabled:opacity-70"
             >
               <span>
-                ▶ {loading
+                ▶{' '}
+                {loading
                   ? t('auth.signing_in', locale).toUpperCase()
                   : t('auth.signin', locale).toUpperCase()}
               </span>
@@ -117,9 +124,7 @@ export default function LoginPage() {
           </form>
         </div>
 
-        <div
-          className="border-t-2 border-ink bg-acc-soft px-6 py-3 text-center text-[13px] text-ink-soft sm:px-8"
-        >
+        <div className="border-t-2 border-ink bg-acc-soft px-6 py-3 text-center text-[13px] text-ink-soft sm:px-8">
           {t('auth.no_account', locale)}{' '}
           <Link
             href="/signup"

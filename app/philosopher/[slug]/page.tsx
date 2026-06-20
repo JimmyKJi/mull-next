@@ -47,8 +47,7 @@ export async function generateMetadata({
   const locale = await getServerLocale();
   const p = localizePhilosopher(rawP, slug, locale);
 
-  const desc =
-    p.keyIdea.length > 155 ? p.keyIdea.slice(0, 152).trimEnd() + '…' : p.keyIdea;
+  const desc = p.keyIdea.length > 155 ? p.keyIdea.slice(0, 152).trimEnd() + '…' : p.keyIdea;
   const ogImage = `https://mull.world/philosopher/${slug}/opengraph-image`;
 
   return {
@@ -141,10 +140,13 @@ export default async function PhilosopherDetailPage({
   // pulled from real page content so we don't ship snippet bait that
   // doesn't match the body.
   const nearestName = nearest[0]?.name;
-  const dimNamesForFaq = dims.slice(0, 3).map(d => {
-    const key = Object.keys(DIM_NAMES)[d.idx] as keyof typeof DIM_NAMES;
-    return DIM_NAMES[key];
-  }).join(', ');
+  const dimNamesForFaq = dims
+    .slice(0, 3)
+    .map((d) => {
+      const key = Object.keys(DIM_NAMES)[d.idx] as keyof typeof DIM_NAMES;
+      return DIM_NAMES[key];
+    })
+    .join(', ');
   const faqEntries: { q: string; a: string }[] = [
     {
       q: `Who was ${rawP.name}?`,
@@ -162,7 +164,10 @@ export default async function PhilosopherDetailPage({
   if (nearestName) {
     faqEntries.push({
       q: `Which philosophers are similar to ${rawP.name}?`,
-      a: `By Mull's dimensional analysis, ${rawP.name} sits closest to ${nearest.slice(0, 3).map(n => n.name).join(', ')}.`,
+      a: `By Mull's dimensional analysis, ${rawP.name} sits closest to ${nearest
+        .slice(0, 3)
+        .map((n) => n.name)
+        .join(', ')}.`,
     });
   }
   const faqSchema = {
@@ -308,7 +313,10 @@ export default async function PhilosopherDetailPage({
           ) : null}
 
           {/* Defining dimensions */}
-          <PixelWindow title={t('phil.section_dimensions', locale).toUpperCase()} badge="▶ FINGERPRINT">
+          <PixelWindow
+            title={t('phil.section_dimensions', locale).toUpperCase()}
+            badge="▶ FINGERPRINT"
+          >
             <p
               className="mb-4 text-[14px] leading-[1.6] text-ink-soft"
               style={{ fontFamily: 'var(--font-editorial)' }}
@@ -355,10 +363,7 @@ export default async function PhilosopherDetailPage({
                       </span>
                     </div>
                     {/* Pixel meter */}
-                    <div
-                      className="mt-2 h-2 w-full"
-                      style={{ background: '#EBE3CA' }}
-                    >
+                    <div className="mt-2 h-2 w-full" style={{ background: '#EBE3CA' }}>
                       <div
                         className="h-full"
                         style={{ background: color.primary, width: `${pct}%` }}
@@ -443,7 +448,7 @@ export default async function PhilosopherDetailPage({
                 {t('phil.topics_helper', locale, { name: p.name })}
               </p>
               <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                {relatedTopics.map(rt => (
+                {relatedTopics.map((rt) => (
                   <li key={rt.slug}>
                     <Link
                       href={`/topic/${rt.slug}`}
@@ -483,7 +488,7 @@ export default async function PhilosopherDetailPage({
                 {t('phil.matchups_helper', locale)}
               </p>
               <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                {matchups.map(m => (
+                {matchups.map((m) => (
                   <li key={m.href}>
                     <Link
                       href={m.href}
@@ -498,7 +503,17 @@ export default async function PhilosopherDetailPage({
                         className="text-[15px] font-medium text-ink"
                         style={{ fontFamily: 'var(--font-editorial)' }}
                       >
-                        {p.name} <span style={{ color: 'var(--color-acc-deep)', fontFamily: 'var(--font-pixel-display)', fontSize: 10 }}>VS</span> {displayName(m.partner)}
+                        {p.name}{' '}
+                        <span
+                          style={{
+                            color: 'var(--color-acc-deep)',
+                            fontFamily: 'var(--font-pixel-display)',
+                            fontSize: 10,
+                          }}
+                        >
+                          VS
+                        </span>{' '}
+                        {displayName(m.partner)}
                       </div>
                     </Link>
                   </li>
@@ -509,7 +524,10 @@ export default async function PhilosopherDetailPage({
 
           {/* Suggested exercises */}
           {suggestedExercises.length > 0 ? (
-            <PixelWindow title={t('phil.section_exercises', locale).toUpperCase()} badge="▶ PRACTICE">
+            <PixelWindow
+              title={t('phil.section_exercises', locale).toUpperCase()}
+              badge="▶ PRACTICE"
+            >
               <p
                 className="mb-4 text-[14px] leading-[1.6] text-ink-soft"
                 style={{ fontFamily: 'var(--font-editorial)' }}
@@ -556,7 +574,7 @@ export default async function PhilosopherDetailPage({
         <div className="mt-8 flex justify-center">
           <a
             href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-              `${p.name} on Mull — ${p.keyIdea.length > 120 ? p.keyIdea.slice(0, 117).trimEnd() + '…' : p.keyIdea}`
+              `${p.name} on Mull — ${p.keyIdea.length > 120 ? p.keyIdea.slice(0, 117).trimEnd() + '…' : p.keyIdea}`,
             )}&url=${encodeURIComponent(`https://mull.world/philosopher/${slug}`)}`}
             target="_blank"
             rel="noopener noreferrer"

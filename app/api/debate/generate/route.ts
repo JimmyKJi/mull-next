@@ -9,16 +9,20 @@ type ClaudeResponse = {
 };
 
 type DebateExchange = {
-  speaker: string;        // 'A' or 'B'
+  speaker: string; // 'A' or 'B'
   text: string;
 };
 
 type DebateOutput = {
   exchanges: DebateExchange[];
-  setup: string;          // a one-line scene-setting summary
+  setup: string; // a one-line scene-setting summary
 };
 
-function buildSystemPrompt(a: { name: string; keyIdea: string }, b: { name: string; keyIdea: string }, topic: string): string {
+function buildSystemPrompt(
+  a: { name: string; keyIdea: string },
+  b: { name: string; keyIdea: string },
+  topic: string,
+): string {
   return `You simulate a real conversation between two philosophers — not a panel where each delivers a prepared statement, but an actual exchange where each is listening and responding to the specific moves the other just made.
 
 THINKER A: ${a.name}
@@ -66,21 +70,21 @@ async function callClaude(
   promptA: { name: string; keyIdea: string },
   promptB: { name: string; keyIdea: string },
   topic: string,
-  apiKey: string
+  apiKey: string,
 ): Promise<DebateOutput | null> {
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01'
+      'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
       model: 'claude-sonnet-4-6',
       max_tokens: 4000,
       system: buildSystemPrompt(promptA, promptB, topic),
-      messages: [{ role: 'user', content: `Generate the JSON exchange now. Output JSON only.` }]
-    })
+      messages: [{ role: 'user', content: `Generate the JSON exchange now. Output JSON only.` }],
+    }),
   });
 
   if (!res.ok) {
@@ -94,8 +98,8 @@ async function callClaude(
     return null;
   }
   const text = (data.content ?? [])
-    .filter(b => b.type === 'text')
-    .map(b => b.text || '')
+    .filter((b) => b.type === 'text')
+    .map((b) => b.text || '')
     .join('')
     .trim();
 
@@ -127,15 +131,20 @@ async function callClaude(
     return null;
   }
   const exchanges = (parsed.exchanges as Array<{ speaker?: unknown; text?: unknown }>)
-    .filter(x => (x.speaker === 'A' || x.speaker === 'B') && typeof x.text === 'string' && (x.text as string).trim().length > 0)
-    .map(x => ({ speaker: x.speaker as 'A' | 'B', text: (x.text as string).trim() }));
+    .filter(
+      (x) =>
+        (x.speaker === 'A' || x.speaker === 'B') &&
+        typeof x.text === 'string' &&
+        (x.text as string).trim().length > 0,
+    )
+    .map((x) => ({ speaker: x.speaker as 'A' | 'B', text: (x.text as string).trim() }));
   if (exchanges.length < 2) {
     console.error('[debate] not enough valid exchanges:', exchanges.length);
     return null;
   }
   return {
     setup: typeof parsed.setup === 'string' ? parsed.setup : '',
-    exchanges
+    exchanges,
   };
 }
 
@@ -154,9 +163,18 @@ function recoverPartialJson(s: string): { setup?: string; exchanges?: unknown[] 
   for (let i = arrStart; i < s.length; i++) {
     const ch = s[i];
     cur += ch;
-    if (escaped) { escaped = false; continue; }
-    if (ch === '\\') { escaped = true; continue; }
-    if (ch === '"') { inString = !inString; continue; }
+    if (escaped) {
+      escaped = false;
+      continue;
+    }
+    if (ch === '\\') {
+      escaped = true;
+      continue;
+    }
+    if (ch === '"') {
+      inString = !inString;
+      continue;
+    }
     if (inString) continue;
     if (ch === '{') depth++;
     else if (ch === '}') {
@@ -172,7 +190,7 @@ function recoverPartialJson(s: string): { setup?: string; exchanges?: unknown[] 
   const setupMatch = s.match(/"setup"\s*:\s*"((?:[^"\\]|\\.)*)"/);
   const setup = setupMatch ? JSON.parse('"' + setupMatch[1] + '"') : '';
   try {
-    const exchanges = completed.map(c => JSON.parse(c));
+    const exchanges = completed.map((c) => JSON.parse(c));
     return { setup, exchanges };
   } catch {
     return null;
@@ -190,11 +208,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Pick two different philosophers.' }, { status: 400 });
     }
     if (!topic || topic.length < 4 || topic.length > 240) {
-      return NextResponse.json({ error: 'Topic should be a short phrase (4–240 chars).' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Topic should be a short phrase (4–240 chars).' },
+        { status: 400 },
+      );
     }
 
-    const a = PHILOSOPHERS.find(p => p.name === aName);
-    const b = PHILOSOPHERS.find(p => p.name === bName);
+    const a = PHILOSOPHERS.find((p) => p.name === aName);
+    const b = PHILOSOPHERS.find((p) => p.name === bName);
     if (!a || !b) {
       return NextResponse.json({ error: 'Unknown philosopher.' }, { status: 400 });
     }
@@ -202,8 +223,8 @@ export async function POST(req: Request) {
     const apiKey = process.env.ANTHROPIC_API_KEY;
     if (!apiKey) {
       return NextResponse.json(
-        { error: 'Debate generation requires the Anthropic API key, which isn\'t configured yet.' },
-        { status: 503 }
+        { error: "Debate generation requires the Anthropic API key, which isn't configured yet." },
+        { status: 503 },
       );
     }
 
@@ -213,7 +234,9 @@ export async function POST(req: Request) {
     // anonymous visitors, 6/day once signed in. aiGate also enforces the
     // site-wide daily/monthly spend kill-switch (503 when the cap is hit).
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     const gate = await aiGate(req, {
       bucket: 'debate_generate',
       userId: user?.id ?? null,
@@ -229,7 +252,7 @@ export async function POST(req: Request) {
       { name: a.name, keyIdea: a.keyIdea },
       { name: b.name, keyIdea: b.keyIdea },
       topic,
-      apiKey
+      apiKey,
     );
     if (!result) {
       console.warn('[debate] first attempt failed, retrying once');
@@ -237,14 +260,18 @@ export async function POST(req: Request) {
         { name: a.name, keyIdea: a.keyIdea },
         { name: b.name, keyIdea: b.keyIdea },
         topic,
-        apiKey
+        apiKey,
       );
     }
 
     if (!result) {
-      return NextResponse.json({
-        error: 'The model returned a malformed response twice. Try a slightly different topic, or try again in a moment.'
-      }, { status: 502 });
+      return NextResponse.json(
+        {
+          error:
+            'The model returned a malformed response twice. Try a slightly different topic, or try again in a moment.',
+        },
+        { status: 502 },
+      );
     }
 
     // Save to debate_history if the user is signed in (best-effort, non-blocking
@@ -276,7 +303,7 @@ export async function POST(req: Request) {
       b: { name: b.name, dates: b.dates, archetypeKey: b.archetypeKey },
       topic,
       setup: result.setup,
-      exchanges: result.exchanges
+      exchanges: result.exchanges,
     });
   } catch (e) {
     console.error('[debate] unexpected error', e);

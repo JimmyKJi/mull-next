@@ -46,7 +46,8 @@ function extractTopics() {
   // uses a backticked template literal. Summary is a normal string.
   const entries = [];
   // Walk topic objects by their slug field.
-  const slugRe = /slug:\s*'([^']+)',\s*title:\s*'([^']*(?:\\'[^']*)*)',\s*summary:\s*'((?:[^'\\]|\\.)*)',\s*essay:\s*`((?:[^`\\]|\\.)*)`/g;
+  const slugRe =
+    /slug:\s*'([^']+)',\s*title:\s*'([^']*(?:\\'[^']*)*)',\s*summary:\s*'((?:[^'\\]|\\.)*)',\s*essay:\s*`((?:[^`\\]|\\.)*)`/g;
   let m;
   while ((m = slugRe.exec(src))) {
     entries.push({
@@ -84,13 +85,23 @@ function extractExercises() {
     // greedily collect all consecutive single- or double-quoted
     // string literals joined by `+` until the next field begins.
     const grabStringField = (key) => {
-      const re = new RegExp(`${key}:\\s*((?:(?:'[^']*'|"[^"]*"|\`(?:[^\`\\\\]|\\\\.)*\`)\\s*\\+?\\s*)+)`, 'm');
+      const re = new RegExp(
+        `${key}:\\s*((?:(?:'[^']*'|"[^"]*"|\`(?:[^\`\\\\]|\\\\.)*\`)\\s*\\+?\\s*)+)`,
+        'm',
+      );
       const fm = block.match(re);
       if (!fm) return '';
       const concat = fm[1];
       // Pull out each quoted-string segment.
-      return Array.from(concat.matchAll(/(?:'((?:[^'\\]|\\.)*)'|"((?:[^"\\]|\\.)*)"|`((?:[^`\\]|\\.)*)`)/g))
-        .map(s => (s[1] ?? s[2] ?? s[3] ?? '').replace(/\\'/g, "'").replace(/\\"/g, '"').replace(/\\`/g, '`'))
+      return Array.from(
+        concat.matchAll(/(?:'((?:[^'\\]|\\.)*)'|"((?:[^"\\]|\\.)*)"|`((?:[^`\\]|\\.)*)`)/g),
+      )
+        .map((s) =>
+          (s[1] ?? s[2] ?? s[3] ?? '')
+            .replace(/\\'/g, "'")
+            .replace(/\\"/g, '"')
+            .replace(/\\`/g, '`'),
+        )
         .join('');
     };
 
@@ -99,8 +110,9 @@ function extractExercises() {
     const stepsMatch = block.match(/steps:\s*\[([\s\S]*?)\],/);
     if (stepsMatch) {
       const stepsBlock = stepsMatch[1];
-      const items = Array.from(stepsBlock.matchAll(/(?:'((?:[^'\\]|\\.)*)'|"((?:[^"\\]|\\.)*)")/g))
-        .map(s => (s[1] ?? s[2] ?? '').replace(/\\'/g, "'").replace(/\\"/g, '"'));
+      const items = Array.from(
+        stepsBlock.matchAll(/(?:'((?:[^'\\]|\\.)*)'|"((?:[^"\\]|\\.)*)")/g),
+      ).map((s) => (s[1] ?? s[2] ?? '').replace(/\\'/g, "'").replace(/\\"/g, '"'));
       steps = items.join('\n');
     }
 
@@ -144,21 +156,30 @@ const RULES = [
   {
     id: 'gpt-warmth',
     severity: 'error',
-    description: 'Performative warmth — STYLE-GUIDE §9 explicitly forbids "Welcome back!"-style copy.',
-    test: text => /\b(welcome back|hi there|hey there!|hope you're (doing )?well|hope this finds you well|so glad you're here|let's dive in|you've got this|amazing job|incredible work)\b/i.test(text),
+    description:
+      'Performative warmth — STYLE-GUIDE §9 explicitly forbids "Welcome back!"-style copy.',
+    test: (text) =>
+      /\b(welcome back|hi there|hey there!|hope you're (doing )?well|hope this finds you well|so glad you're here|let's dive in|you've got this|amazing job|incredible work)\b/i.test(
+        text,
+      ),
   },
   {
     id: 'ai-marketing',
     severity: 'error',
-    description: 'AI marketing-speak. "Powered by AI", "AI-powered", "leverage", "synergize" — STYLE-GUIDE §9 names cost honestly, not vaguely.',
-    test: text => /\b(powered by ai|ai-powered|ai-driven|cutting-edge|game-changing|revolutionize|disrupt|leverage|synergize|unleash|unlock your potential|next-generation|state-of-the-art|paradigm shift|deep dive)\b/i.test(text),
+    description:
+      'AI marketing-speak. "Powered by AI", "AI-powered", "leverage", "synergize" — STYLE-GUIDE §9 names cost honestly, not vaguely.',
+    test: (text) =>
+      /\b(powered by ai|ai-powered|ai-driven|cutting-edge|game-changing|revolutionize|disrupt|leverage|synergize|unleash|unlock your potential|next-generation|state-of-the-art|paradigm shift|deep dive)\b/i.test(
+        text,
+      ),
   },
   {
     id: 'latin-untranslated',
     severity: 'error',
-    description: 'Latin or specialised jargon used without translation. STYLE-GUIDE §9 bans "qua" and similar.',
+    description:
+      'Latin or specialised jargon used without translation. STYLE-GUIDE §9 bans "qua" and similar.',
     // Look for academic Latin words NOT immediately followed by a translation in parens/em-dash.
-    test: text => {
+    test: (text) => {
       // "qua" is the canonical offender. Others: "ipso facto", "ad hominem"
       // (acceptable when defined), "a fortiori".
       const offenders = [
@@ -168,68 +189,82 @@ const RULES = [
         /\bmutatis mutandis\b(?!\s*[—(])/i,
         /\bsui generis\b(?!\s*[—(])/i,
       ];
-      return offenders.some(re => re.test(text));
+      return offenders.some((re) => re.test(text));
     },
   },
   {
     id: 'therapy-speak',
     severity: 'error',
     description: 'Warm-bath therapeutic register. STYLE-GUIDE §9: Mull is not therapy.',
-    test: text => /\b(you are (so |such )?(brave|amazing|incredible|wonderful|beautiful)|self-care|trigger warning|safe space|healing journey|own your truth|honour your feelings)\b/i.test(text),
+    test: (text) =>
+      /\b(you are (so |such )?(brave|amazing|incredible|wonderful|beautiful)|self-care|trigger warning|safe space|healing journey|own your truth|honour your feelings)\b/i.test(
+        text,
+      ),
   },
   // ── warnings (often a problem, sometimes legit) ──────────────────
   {
     id: 'long-sentence',
     severity: 'warn',
     description: 'Sentence over 40 words. STYLE-GUIDE §9: sentences short to medium.',
-    test: text => {
+    test: (text) => {
       // Split on sentence-ending punctuation. Conservative — we miss some
       // edge cases (Dr., U.S., quoted dialogue) but that's fine for a guidance check.
       // Split on sentence-ending punctuation, optionally followed by a
       // closing quote (so `happy."` ends a sentence the way `happy.` does).
       const sentences = text.split(/(?<=[.!?]['"]?)\s+/);
-      return sentences.some(s => s.split(/\s+/).filter(Boolean).length > 40);
+      return sentences.some((s) => s.split(/\s+/).filter(Boolean).length > 40);
     },
-    findInstance: text => {
+    findInstance: (text) => {
       // Split on sentence-ending punctuation, optionally followed by a
       // closing quote (so `happy."` ends a sentence the way `happy.` does).
       const sentences = text.split(/(?<=[.!?]['"]?)\s+/);
-      const longest = sentences.reduce((max, s) => {
-        const len = s.split(/\s+/).filter(Boolean).length;
-        return len > max.len ? { text: s, len } : max;
-      }, { text: '', len: 0 });
+      const longest = sentences.reduce(
+        (max, s) => {
+          const len = s.split(/\s+/).filter(Boolean).length;
+          return len > max.len ? { text: s, len } : max;
+        },
+        { text: '', len: 0 },
+      );
       return longest.len > 40 ? `${longest.len} words: "${longest.text.slice(0, 100)}..."` : null;
     },
   },
   {
     id: 'em-dash-flurry',
     severity: 'warn',
-    description: 'More than 4 em-dashes in one paragraph. STYLE-GUIDE §9: em-dashes used sparingly.',
-    test: text => {
+    description:
+      'More than 4 em-dashes in one paragraph. STYLE-GUIDE §9: em-dashes used sparingly.',
+    test: (text) => {
       const paragraphs = text.split(/\n\n+/);
-      return paragraphs.some(p => (p.match(/—/g) || []).length > 4);
+      return paragraphs.some((p) => (p.match(/—/g) || []).length > 4);
     },
   },
   {
     id: 'semicolon-flurry',
     severity: 'warn',
-    description: 'More than 3 semicolons in one paragraph. STYLE-GUIDE §9: semicolons used sparingly.',
-    test: text => {
+    description:
+      'More than 3 semicolons in one paragraph. STYLE-GUIDE §9: semicolons used sparingly.',
+    test: (text) => {
       const paragraphs = text.split(/\n\n+/);
-      return paragraphs.some(p => (p.match(/;/g) || []).length > 3);
+      return paragraphs.some((p) => (p.match(/;/g) || []).length > 3);
     },
   },
   {
     id: 'apologetic',
     severity: 'warn',
-    description: 'Apologetic phrasing. STYLE-GUIDE §9: Mull doesn\'t apologise for itself.',
-    test: text => /\b(we apologi[sz]e|we're sorry|sorry for|please be patient|please bear with us|we hope you'll|hopefully this|we'll try to)\b/i.test(text),
+    description: "Apologetic phrasing. STYLE-GUIDE §9: Mull doesn't apologise for itself.",
+    test: (text) =>
+      /\b(we apologi[sz]e|we're sorry|sorry for|please be patient|please bear with us|we hope you'll|hopefully this|we'll try to)\b/i.test(
+        text,
+      ),
   },
   {
     id: 'cliche',
     severity: 'warn',
     description: 'Tired cliché. Specific to common essay-prose offenders.',
-    test: text => /\b(at the end of the day|when all is said and done|that being said|with that said|needless to say|it goes without saying|in this day and age|food for thought|the bottom line is|the long and short of it)\b/i.test(text),
+    test: (text) =>
+      /\b(at the end of the day|when all is said and done|that being said|with that said|needless to say|it goes without saying|in this day and age|food for thought|the bottom line is|the long and short of it)\b/i.test(
+        text,
+      ),
   },
 ];
 
@@ -257,14 +292,13 @@ function lintEntry(entry) {
 
 // ─── Main ───────────────────────────────────────────────────────────
 
-const entries = [
-  ...extractTopics(),
-  ...extractExercises(),
-  ...extractPhilosopherBios(),
-];
+const entries = [...extractTopics(), ...extractExercises(), ...extractPhilosopherBios()];
 
 console.log(`\nLoaded ${entries.length} entries:`);
-const byKind = entries.reduce((acc, e) => { acc[e.kind] = (acc[e.kind] || 0) + 1; return acc; }, {});
+const byKind = entries.reduce((acc, e) => {
+  acc[e.kind] = (acc[e.kind] || 0) + 1;
+  return acc;
+}, {});
 for (const [k, n] of Object.entries(byKind)) console.log(`  ${k.padEnd(10)} ${n}`);
 
 const allFindings = [];
@@ -274,8 +308,8 @@ for (const entry of entries) {
   for (const f of findings) allFindings.push({ ...f, entry });
 }
 
-const errors = allFindings.filter(f => f.severity === 'error');
-const warnings = allFindings.filter(f => f.severity === 'warn');
+const errors = allFindings.filter((f) => f.severity === 'error');
+const warnings = allFindings.filter((f) => f.severity === 'warn');
 
 console.log(`\nFindings: ${errors.length} error(s), ${warnings.length} warning(s).\n`);
 

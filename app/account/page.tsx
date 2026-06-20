@@ -79,7 +79,7 @@ type EventEntry =
       archetype: string;
       flavor: string | null;
       alignment_pct: number;
-      vector: number[];           // absolute position
+      vector: number[]; // absolute position
       taken_at: string;
     }
   | {
@@ -123,7 +123,7 @@ function vecAdd(a: number[], b: number[]): number[] {
 // each step. Return an array of { event, positionAfter, deltaApplied }.
 function computeTrajectory(events: EventEntry[]) {
   let position: number[] = new Array(16).fill(0);
-  return events.map(ev => {
+  return events.map((ev) => {
     const before = position.slice();
     let after: number[];
     let delta: number[];
@@ -139,7 +139,7 @@ function computeTrajectory(events: EventEntry[]) {
   });
 }
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
@@ -230,7 +230,9 @@ function pixelActionLink(bg: string, color: string, shadow: string): React.CSSPr
 export default async function AccountPage() {
   const supabase = await createClient();
   const locale = await getServerLocale();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
   // Fetch all four event types in parallel.
@@ -269,7 +271,7 @@ export default async function AccountPage() {
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })
       .limit(60)
-      .returns<ExerciseReflectionRow[]>()
+      .returns<ExerciseReflectionRow[]>(),
   ]);
 
   const attempts = attemptsRes.data ?? [];
@@ -280,8 +282,8 @@ export default async function AccountPage() {
   // Build unified event list, oldest → newest
   const events: EventEntry[] = [
     ...attempts
-      .filter(a => Array.isArray(a.vector) && a.vector.length === 16)
-      .map<EventEntry>(a => ({
+      .filter((a) => Array.isArray(a.vector) && a.vector.length === 16)
+      .map<EventEntry>((a) => ({
         kind: 'quiz',
         id: a.id,
         timestamp: new Date(a.taken_at).getTime(),
@@ -292,8 +294,8 @@ export default async function AccountPage() {
         taken_at: a.taken_at,
       })),
     ...dilemmas
-      .filter(d => Array.isArray(d.vector_delta) && d.vector_delta.length === 16)
-      .map<EventEntry>(d => ({
+      .filter((d) => Array.isArray(d.vector_delta) && d.vector_delta.length === 16)
+      .map<EventEntry>((d) => ({
         kind: 'dilemma',
         id: d.id,
         timestamp: new Date(d.created_at).getTime(),
@@ -304,8 +306,8 @@ export default async function AccountPage() {
         created_at: d.created_at,
       })),
     ...diaries
-      .filter(d => Array.isArray(d.vector_delta) && d.vector_delta.length === 16)
-      .map<EventEntry>(d => ({
+      .filter((d) => Array.isArray(d.vector_delta) && d.vector_delta.length === 16)
+      .map<EventEntry>((d) => ({
         kind: 'diary',
         id: d.id,
         timestamp: new Date(d.created_at).getTime(),
@@ -317,8 +319,8 @@ export default async function AccountPage() {
         created_at: d.created_at,
       })),
     ...reflections
-      .filter(r => Array.isArray(r.vector_delta) && r.vector_delta.length === 16)
-      .map<EventEntry>(r => ({
+      .filter((r) => Array.isArray(r.vector_delta) && r.vector_delta.length === 16)
+      .map<EventEntry>((r) => ({
         kind: 'exercise',
         id: r.id,
         timestamp: new Date(r.created_at).getTime(),
@@ -328,7 +330,7 @@ export default async function AccountPage() {
         analysis: r.analysis,
         word_count: r.word_count,
         created_at: r.created_at,
-      }))
+      })),
   ].sort((a, b) => a.timestamp - b.timestamp);
 
   const trajectory = computeTrajectory(events);
@@ -336,13 +338,16 @@ export default async function AccountPage() {
   const latestQuiz = attempts[0] ?? null;
 
   // Trail: last 10 positions, oldest → newest
-  const trailVectors = trajectory.slice(-10).map(t => t.after);
+  const trailVectors = trajectory.slice(-10).map((t) => t.after);
 
   // Reverse trajectory for display (newest first)
   const trajectoryNewestFirst = trajectory.slice().reverse();
 
   const fmt = (s: string) =>
-    new Date(s).toLocaleString(locale === 'en' ? 'en-GB' : locale, { dateStyle: 'medium', timeStyle: 'short' });
+    new Date(s).toLocaleString(locale === 'en' ? 'en-GB' : locale, {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    });
   const fmtRel = (s: string) => {
     const diff = Date.now() - new Date(s).getTime();
     const days = Math.floor(diff / 86400000);
@@ -365,16 +370,17 @@ export default async function AccountPage() {
   const encodedVec = latestPos
     ? encodeURIComponent(Buffer.from(JSON.stringify(latestPos)).toString('base64'))
     : null;
-  const encodedHist = trailVectors.length > 1
-    ? encodeURIComponent(Buffer.from(JSON.stringify(trailVectors)).toString('base64'))
-    : null;
+  const encodedHist =
+    trailVectors.length > 1
+      ? encodeURIComponent(Buffer.from(JSON.stringify(trailVectors)).toString('base64'))
+      : null;
   const iframeSrc = encodedVec
     ? `/embed/map?v=${encodedVec}${encodedHist ? `&h=${encodedHist}` : ''}`
     : null;
 
   // Has the user already responded to today's dilemma?
   const todayKey = getDailyDilemma().dateKey;
-  const respondedToday = dilemmas.some(d => d.dilemma_date === todayKey);
+  const respondedToday = dilemmas.some((d) => d.dilemma_date === todayKey);
 
   // Streak: number of consecutive days ending today (or yesterday if not done today)
   // on which the user submitted a dilemma response.
@@ -406,7 +412,7 @@ export default async function AccountPage() {
     }
     return streak;
   }
-  const streak = computeStreak(dilemmas.map(d => d.dilemma_date));
+  const streak = computeStreak(dilemmas.map((d) => d.dilemma_date));
   const dilemmaCount = dilemmas.length;
   const quizCount = attempts.length;
   const diaryCount = diaries.length;
@@ -423,7 +429,10 @@ export default async function AccountPage() {
   // cookie + lazily insert the code if missing.
   const [referralCodeRes, referralCountRes] = await Promise.all([
     supabase.from('referral_codes').select('code').eq('user_id', user.id).maybeSingle(),
-    supabase.from('referrals').select('user_id', { count: 'exact', head: true }).eq('referrer_user_id', user.id),
+    supabase
+      .from('referrals')
+      .select('user_id', { count: 'exact', head: true })
+      .eq('referrer_user_id', user.id),
   ]);
   const referralCode: string | null = (referralCodeRes.data?.code as string | undefined) ?? null;
   const referralCount: number = referralCountRes.count ?? 0;
@@ -464,8 +473,7 @@ export default async function AccountPage() {
           className="flex items-center gap-3 text-[10px] tracking-[0.24em] text-acc-deep"
           style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
-          <span aria-hidden className="inline-block h-2 w-2 bg-acc" />
-          ▶ YOUR ACCOUNT
+          <span aria-hidden className="inline-block h-2 w-2 bg-acc" />▶ YOUR ACCOUNT
         </div>
         <h1
           className="mt-5 pr-2 text-[28px] leading-[1.05] tracking-[0.04em] text-ink sm:text-[40px]"
@@ -485,8 +493,7 @@ export default async function AccountPage() {
           style={{ boxShadow: '3px 3px 0 0 var(--color-acc-deep)' }}
         >
           <div>
-            {t('account.signed_in_as', locale)}{' '}
-            <strong className="text-ink">{user.email}</strong>
+            {t('account.signed_in_as', locale)} <strong className="text-ink">{user.email}</strong>
           </div>
           <div className="mt-3 flex flex-wrap gap-2">
             <Link href="/account/profile" className="pixel-press" style={accountSubChip}>
@@ -518,34 +525,53 @@ export default async function AccountPage() {
           ending) and January (when last year just finished) so it's
           discoverable in the seasonal window. Outside that window it
           stays accessible via /wrapped/YYYY directly. */}
-      {(quizCount > 0 || dilemmaCount > 0 || diaryCount > 0) && (() => {
-        const now = new Date();
-        const month = now.getMonth(); // 0-indexed
-        const wrappedMonth = month === 11 || month === 0; // Dec or Jan
-        const wrappedYear = month === 0 ? now.getFullYear() - 1 : now.getFullYear();
-        return (
-          <nav
-            aria-label={t('a11y.jump_to_section', locale)}
-            className="mb-9 flex flex-wrap gap-2"
-          >
-            <a href="#latest-result" className="pixel-press" style={accountJumpChip}>▸ RESULT</a>
-            {iframeSrc && <a href="#trajectory" className="pixel-press" style={accountJumpChip}>▸ MAP</a>}
-            {trajectoryNewestFirst.length > 0 && <a href="#shifts" className="pixel-press" style={accountJumpChip}>▸ SHIFTS</a>}
-            <a href="#progression" className="pixel-press" style={accountJumpChip}>▸ BADGES</a>
-            <a href="#invite" className="pixel-press" style={accountJumpChip}>▸ INVITE</a>
-            {wrappedMonth && (
-              <Link href={`/wrapped/${wrappedYear}`} className="pixel-press" style={{
-                ...accountJumpChip,
-                background: 'var(--color-acc)',
-                color: '#1A1612',
-                boxShadow: '3px 3px 0 0 var(--color-ink)',
-              }}>
-                ▸ {wrappedYear} WRAPPED
-              </Link>
-            )}
-          </nav>
-        );
-      })()}
+      {(quizCount > 0 || dilemmaCount > 0 || diaryCount > 0) &&
+        (() => {
+          const now = new Date();
+          const month = now.getMonth(); // 0-indexed
+          const wrappedMonth = month === 11 || month === 0; // Dec or Jan
+          const wrappedYear = month === 0 ? now.getFullYear() - 1 : now.getFullYear();
+          return (
+            <nav
+              aria-label={t('a11y.jump_to_section', locale)}
+              className="mb-9 flex flex-wrap gap-2"
+            >
+              <a href="#latest-result" className="pixel-press" style={accountJumpChip}>
+                ▸ RESULT
+              </a>
+              {iframeSrc && (
+                <a href="#trajectory" className="pixel-press" style={accountJumpChip}>
+                  ▸ MAP
+                </a>
+              )}
+              {trajectoryNewestFirst.length > 0 && (
+                <a href="#shifts" className="pixel-press" style={accountJumpChip}>
+                  ▸ SHIFTS
+                </a>
+              )}
+              <a href="#progression" className="pixel-press" style={accountJumpChip}>
+                ▸ BADGES
+              </a>
+              <a href="#invite" className="pixel-press" style={accountJumpChip}>
+                ▸ INVITE
+              </a>
+              {wrappedMonth && (
+                <Link
+                  href={`/wrapped/${wrappedYear}`}
+                  className="pixel-press"
+                  style={{
+                    ...accountJumpChip,
+                    background: 'var(--color-acc)',
+                    color: '#1A1612',
+                    boxShadow: '3px 3px 0 0 var(--color-ink)',
+                  }}
+                >
+                  ▸ {wrappedYear} WRAPPED
+                </Link>
+              )}
+            </nav>
+          );
+        })()}
 
       {/* First-time empty state — shown only before the user has any data
           to display in the stats / trajectory sections below. Three doors
@@ -553,40 +579,48 @@ export default async function AccountPage() {
           Pixel-restyled: chunky pixel eyebrow + grid of pixel-window doors. */}
       {quizCount === 0 && dilemmaCount === 0 && diaryCount === 0 && (
         <section style={{ marginBottom: 44 }}>
-          <div style={{
-            fontFamily: 'var(--font-pixel-display)',
-            fontSize: 11,
-            color: 'var(--color-acc-deep)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.18em',
-            marginBottom: 14,
-          }}>
+          <div
+            style={{
+              fontFamily: 'var(--font-pixel-display)',
+              fontSize: 11,
+              color: 'var(--color-acc-deep)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.18em',
+              marginBottom: 14,
+            }}
+          >
             {t('first.eyebrow', locale).toUpperCase()}
           </div>
-          <h2 style={{
-            fontFamily: serif,
-            fontSize: 30,
-            fontWeight: 500,
-            margin: '0 0 8px',
-            letterSpacing: '-0.3px',
-          }}>
+          <h2
+            style={{
+              fontFamily: serif,
+              fontSize: 30,
+              fontWeight: 500,
+              margin: '0 0 8px',
+              letterSpacing: '-0.3px',
+            }}
+          >
             {t('first.title', locale)}
           </h2>
-          <p style={{
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 17,
-            color: 'var(--color-ink-soft)',
-            margin: '0 0 24px',
-            lineHeight: 1.55,
-          }}>
+          <p
+            style={{
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: 17,
+              color: 'var(--color-ink-soft)',
+              margin: '0 0 24px',
+              lineHeight: 1.55,
+            }}
+          >
             {t('first.subtitle', locale)}
           </p>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-            gap: 16,
-          }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+              gap: 16,
+            }}
+          >
             <FirstStepCard
               accent="#B8862F"
               title={t('first.q_title', locale)}
@@ -629,123 +663,166 @@ export default async function AccountPage() {
         respondedToday={respondedToday}
         streak={streak}
         hasShareable={!!latestQuiz}
-        topArchetypeKey={latestQuiz?.archetype
-          ? latestQuiz.archetype
-              .replace(/^The\s+/i, '')
-              .toLowerCase()
-              .replace(/[^a-z0-9]+/g, '-')
-              .replace(/^-+|-+$/g, '')
-          : undefined}
+        topArchetypeKey={
+          latestQuiz?.archetype
+            ? latestQuiz.archetype
+                .replace(/^The\s+/i, '')
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '')
+            : undefined
+        }
         locale={locale}
       />
 
       {(quizCount > 0 || dilemmaCount > 0) && (
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-          gap: 14,
-          marginBottom: 44,
-        }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+            gap: 14,
+            marginBottom: 44,
+          }}
+        >
           <div style={statCardStyle}>
             <div style={statValueStyle}>{quizCount}</div>
-            <div style={statLabelStyle}>{t(quizCount === 1 ? 'account.stat_quiz_attempt' : 'account.stat_quiz_attempts', locale)}</div>
+            <div style={statLabelStyle}>
+              {t(
+                quizCount === 1 ? 'account.stat_quiz_attempt' : 'account.stat_quiz_attempts',
+                locale,
+              )}
+            </div>
           </div>
           <div style={statCardStyle}>
             <div style={statValueStyle}>{dilemmaCount}</div>
-            <div style={statLabelStyle}>{t(dilemmaCount === 1 ? 'account.stat_dilemma_answered' : 'account.stat_dilemmas_answered', locale)}</div>
+            <div style={statLabelStyle}>
+              {t(
+                dilemmaCount === 1
+                  ? 'account.stat_dilemma_answered'
+                  : 'account.stat_dilemmas_answered',
+                locale,
+              )}
+            </div>
           </div>
           <div style={statCardStyle}>
             <div style={statValueStyle}>{diaryCount}</div>
-            <div style={statLabelStyle}>{t(diaryCount === 1 ? 'account.stat_diary_entry' : 'account.stat_diary_entries', locale)}</div>
+            <div style={statLabelStyle}>
+              {t(
+                diaryCount === 1 ? 'account.stat_diary_entry' : 'account.stat_diary_entries',
+                locale,
+              )}
+            </div>
           </div>
-          {streak > 0 && (() => {
-            // Milestone tiers determine whether the streak card pulses
-            // (the .pixel-milestone class) and what tier label rides
-            // along with the eyebrow. Quiet at streak 1–2; "ON FIRE"
-            // from 3+, "DEDICATED" from 7+, "MASTERED" from 30+. Each
-            // tier label persists past its threshold so a 50-day
-            // streak still says "MASTERED" and pulses.
-            const milestone =
-              streak >= 30 ? 'MASTERED' :
-              streak >= 7 ? 'DEDICATED' :
-              streak >= 3 ? 'ON FIRE' :
-              null;
-            const isMilestone = milestone !== null;
-            return (
-              <div
-                className={isMilestone ? 'pixel-milestone' : undefined}
-                style={{
-                  padding: '16px 20px',
-                  background: 'var(--color-ink)',
-                  border: '4px solid var(--color-ink)',
-                  boxShadow: '4px 4px 0 0 var(--color-acc)',
-                  borderRadius: 0,
-                  color: 'var(--color-cream)',
-                }}
-              >
-                <div style={{
-                  fontFamily: 'var(--font-pixel-display)',
-                  fontSize: 28,
-                  color: 'var(--color-acc-soft)',
-                  lineHeight: 1,
-                  letterSpacing: 0.4,
-                }}>{
-                  // Cap displayed streak at "30+" so a 200-day streak
-                  // doesn't dominate the stat row visually. The real
-                  // number still drives milestones + badges; this is
-                  // purely a layout-bound display cap.
-                  streak >= 30 ? '30+' : streak
-                }<span style={{ fontSize: 13, opacity: 0.7, marginLeft: 6 }}>{t(streak === 1 ? 'account.stat_day' : 'account.stat_days', locale).toUpperCase()}</span></div>
-                <div style={{
-                  fontFamily: 'var(--font-pixel-display)',
-                  fontSize: 10,
-                  color: '#F1C76A',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.18em',
-                  marginTop: 8,
-                }}>
-                  {t('account.stat_current_streak', locale).toUpperCase()}
-                  {milestone && ` · ${milestone}`}
-                  {streak >= 30 && ` · ${streak} DAYS`}
+          {streak > 0 &&
+            (() => {
+              // Milestone tiers determine whether the streak card pulses
+              // (the .pixel-milestone class) and what tier label rides
+              // along with the eyebrow. Quiet at streak 1–2; "ON FIRE"
+              // from 3+, "DEDICATED" from 7+, "MASTERED" from 30+. Each
+              // tier label persists past its threshold so a 50-day
+              // streak still says "MASTERED" and pulses.
+              const milestone =
+                streak >= 30
+                  ? 'MASTERED'
+                  : streak >= 7
+                    ? 'DEDICATED'
+                    : streak >= 3
+                      ? 'ON FIRE'
+                      : null;
+              const isMilestone = milestone !== null;
+              return (
+                <div
+                  className={isMilestone ? 'pixel-milestone' : undefined}
+                  style={{
+                    padding: '16px 20px',
+                    background: 'var(--color-ink)',
+                    border: '4px solid var(--color-ink)',
+                    boxShadow: '4px 4px 0 0 var(--color-acc)',
+                    borderRadius: 0,
+                    color: 'var(--color-cream)',
+                  }}
+                >
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-pixel-display)',
+                      fontSize: 28,
+                      color: 'var(--color-acc-soft)',
+                      lineHeight: 1,
+                      letterSpacing: 0.4,
+                    }}
+                  >
+                    {
+                      // Cap displayed streak at "30+" so a 200-day streak
+                      // doesn't dominate the stat row visually. The real
+                      // number still drives milestones + badges; this is
+                      // purely a layout-bound display cap.
+                      streak >= 30 ? '30+' : streak
+                    }
+                    <span style={{ fontSize: 13, opacity: 0.7, marginLeft: 6 }}>
+                      {t(
+                        streak === 1 ? 'account.stat_day' : 'account.stat_days',
+                        locale,
+                      ).toUpperCase()}
+                    </span>
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-pixel-display)',
+                      fontSize: 10,
+                      color: '#F1C76A',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.18em',
+                      marginTop: 8,
+                    }}
+                  >
+                    {t('account.stat_current_streak', locale).toUpperCase()}
+                    {milestone && ` · ${milestone}`}
+                    {streak >= 30 && ` · ${streak} DAYS`}
+                  </div>
                 </div>
-              </div>
-            );
-          })()}
+              );
+            })()}
         </div>
       )}
 
       <section id="latest-result" style={{ marginBottom: 48, scrollMarginTop: 96 }}>
-        <h2 style={{
-          fontFamily: pixel,
-          fontSize: 16,
-          color: 'var(--color-ink)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.18em',
-          marginBottom: 18,
-          textShadow: '2px 2px 0 var(--pixel-shadow, var(--color-acc))',
-        }}>
+        <h2
+          style={{
+            fontFamily: pixel,
+            fontSize: 16,
+            color: 'var(--color-ink)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.18em',
+            marginBottom: 18,
+            textShadow: '2px 2px 0 var(--pixel-shadow, var(--color-acc))',
+          }}
+        >
           ▸ {t('account.latest_result', locale).toUpperCase()}
         </h2>
 
         {latestQuiz ? (
-          <div style={{
-            border: '4px solid var(--color-ink)',
-            boxShadow: '5px 5px 0 0 var(--color-acc)',
-            borderRadius: 0,
-            padding: '28px 32px',
-            background: '#FFFCF4'
-          }}>
+          <div
+            style={{
+              border: '4px solid var(--color-ink)',
+              boxShadow: '5px 5px 0 0 var(--color-acc)',
+              borderRadius: 0,
+              padding: '28px 32px',
+              background: '#FFFCF4',
+            }}
+          >
             {/* Figure + name row. Figure links to the long-form archetype
                 essay; on phones it sits above the name (flex-wrap) so the
                 name remains readable instead of squeezing next to a 120px
                 tile in 320px of width. Pixel-tile around the figure now. */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 20,
-              marginBottom: 16,
-              flexWrap: 'wrap',
-            }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 20,
+                marginBottom: 16,
+                flexWrap: 'wrap',
+              }}
+            >
               {(() => {
                 const archSlug = latestQuiz.archetype
                   .replace(/^The\s+/i, '')
@@ -755,20 +832,22 @@ export default async function AccountPage() {
                 const figure = FIGURES[archSlug] || '';
                 if (!figure) return null;
                 return (
-                  <Link href={`/archetype/${archSlug}`} style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: 100,
-                    height: 100,
-                    flexShrink: 0,
-                    background: 'var(--color-acc-soft)',
-                    borderRadius: 0,
-                    border: '4px solid var(--color-ink)',
-                    boxShadow: '4px 4px 0 0 var(--color-acc-deep)',
-                    padding: 10,
-                    textDecoration: 'none',
-                  }}
+                  <Link
+                    href={`/archetype/${archSlug}`}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 100,
+                      height: 100,
+                      flexShrink: 0,
+                      background: 'var(--color-acc-soft)',
+                      borderRadius: 0,
+                      border: '4px solid var(--color-ink)',
+                      boxShadow: '4px 4px 0 0 var(--color-acc-deep)',
+                      padding: 10,
+                      textDecoration: 'none',
+                    }}
                     className="pixel-crisp"
                   >
                     <span
@@ -780,31 +859,44 @@ export default async function AccountPage() {
                 );
               })()}
               <div style={{ minWidth: 0, flex: '1 1 280px' }}>
-                <div style={{
-                  fontFamily: serif,
-                  fontSize: 36,
-                  fontWeight: 500,
-                  letterSpacing: '-0.5px',
-                  lineHeight: 1.1,
-                  marginBottom: 10,
-                }}>
+                <div
+                  style={{
+                    fontFamily: serif,
+                    fontSize: 36,
+                    fontWeight: 500,
+                    letterSpacing: '-0.5px',
+                    lineHeight: 1.1,
+                    marginBottom: 10,
+                  }}
+                >
                   {latestQuiz.flavor ? `${latestQuiz.flavor} ` : ''}
                   {latestQuiz.archetype.replace(/^The /, '')}
                 </div>
-                <div style={{
-                  fontFamily: pixel,
-                  fontSize: 11,
-                  color: 'var(--color-acc-deep)',
-                  letterSpacing: 0.4,
-                  textTransform: 'uppercase',
-                }}>
-                  {latestQuiz.alignment_pct}{t('account.percent_alignment', locale)} · {fmt(latestQuiz.taken_at)}
+                <div
+                  style={{
+                    fontFamily: pixel,
+                    fontSize: 11,
+                    color: 'var(--color-acc-deep)',
+                    letterSpacing: 0.4,
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  {latestQuiz.alignment_pct}
+                  {t('account.percent_alignment', locale)} · {fmt(latestQuiz.taken_at)}
                 </div>
               </div>
             </div>
             <div style={{ marginBottom: 24 }} />
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-              <Link href="/" className="pixel-press" style={pixelActionLink('var(--color-ink)', 'var(--color-cream)', 'var(--color-acc)')}>
+              <Link
+                href="/"
+                className="pixel-press"
+                style={pixelActionLink(
+                  'var(--color-ink)',
+                  'var(--color-cream)',
+                  'var(--color-acc)',
+                )}
+              >
                 {t('account.take_it_again', locale).toUpperCase()}
               </Link>
               <Link
@@ -816,9 +908,16 @@ export default async function AccountPage() {
                     : pixelActionLink('var(--color-acc)', '#1A1612', 'var(--color-ink)')
                 }
               >
-                {(respondedToday ? t('account.todays_dilemma_answered', locale) : t('account.todays_dilemma_arrow', locale)).toUpperCase()}
+                {(respondedToday
+                  ? t('account.todays_dilemma_answered', locale)
+                  : t('account.todays_dilemma_arrow', locale)
+                ).toUpperCase()}
               </Link>
-              <Link href="/diary" className="pixel-press" style={pixelActionLink('#FFFCF4', '#2F5D5C', '#2F5D5C')}>
+              <Link
+                href="/diary"
+                className="pixel-press"
+                style={pixelActionLink('#FFFCF4', '#2F5D5C', '#2F5D5C')}
+              >
                 {t('account.write_diary', locale).toUpperCase()}
               </Link>
             </div>
@@ -832,23 +931,31 @@ export default async function AccountPage() {
             />
           </div>
         ) : (
-          <div style={{
-            border: '3px dashed var(--color-acc-deep)',
-            borderRadius: 0,
-            padding: '36px 28px',
-            textAlign: 'center',
-            color: 'var(--color-ink-soft)',
-            background: '#FFFCF4'
-          }}>
-            <p style={{
-              margin: '0 0 18px',
-              fontFamily: serif,
-              fontStyle: 'italic',
-              fontSize: 20
-            }}>
+          <div
+            style={{
+              border: '3px dashed var(--color-acc-deep)',
+              borderRadius: 0,
+              padding: '36px 28px',
+              textAlign: 'center',
+              color: 'var(--color-ink-soft)',
+              background: '#FFFCF4',
+            }}
+          >
+            <p
+              style={{
+                margin: '0 0 18px',
+                fontFamily: serif,
+                fontStyle: 'italic',
+                fontSize: 20,
+              }}
+            >
               {t('account.no_quiz_yet', locale)}
             </p>
-            <Link href="/" className="pixel-press" style={pixelActionLink('var(--color-acc)', '#1A1612', 'var(--color-ink)')}>
+            <Link
+              href="/"
+              className="pixel-press"
+              style={pixelActionLink('var(--color-acc)', '#1A1612', 'var(--color-ink)')}
+            >
               {t('account.take_quiz_arrow', locale).toUpperCase()}
             </Link>
           </div>
@@ -857,15 +964,17 @@ export default async function AccountPage() {
 
       {iframeSrc && (
         <section id="trajectory" style={{ marginBottom: 48, scrollMarginTop: 96 }}>
-          <h2 style={{
-            fontFamily: pixel,
-            fontSize: 16,
-            color: 'var(--color-ink)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.18em',
-            marginBottom: 18,
-            textShadow: '2px 2px 0 var(--pixel-shadow, #2F5D5C)',
-          }}>
+          <h2
+            style={{
+              fontFamily: pixel,
+              fontSize: 16,
+              color: 'var(--color-ink)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.18em',
+              marginBottom: 18,
+              textShadow: '2px 2px 0 var(--pixel-shadow, #2F5D5C)',
+            }}
+          >
             ▸ {t('account.your_trajectory', locale).toUpperCase()}
           </h2>
           {/* Iframe wrapped in a 540px-tall pixel-shimmer placeholder
@@ -873,15 +982,17 @@ export default async function AccountPage() {
               The iframe sits on top with its own background; if it
               fails to load, the shimmer keeps animating instead of
               leaving a blank ink rectangle. */}
-          <div style={{
-            border: '4px solid var(--color-ink)',
-            boxShadow: '5px 5px 0 0 #2F5D5C',
-            borderRadius: 0,
-            overflow: 'hidden',
-            background: '#FFFCF4',
-            position: 'relative',
-            height: 540,
-          }}>
+          <div
+            style={{
+              border: '4px solid var(--color-ink)',
+              boxShadow: '5px 5px 0 0 #2F5D5C',
+              borderRadius: 0,
+              overflow: 'hidden',
+              background: '#FFFCF4',
+              position: 'relative',
+              height: 540,
+            }}
+          >
             <div
               aria-hidden
               className="pixel-shimmer"
@@ -906,31 +1017,38 @@ export default async function AccountPage() {
               loading="lazy"
             />
           </div>
-          <p style={{
-            fontFamily: pixel,
-            fontSize: 11,
-            color: 'var(--color-acc-deep)',
-            marginTop: 14,
-            letterSpacing: 0.4,
-            textTransform: 'uppercase',
-          }}>
+          <p
+            style={{
+              fontFamily: pixel,
+              fontSize: 11,
+              color: 'var(--color-acc-deep)',
+              marginTop: 14,
+              letterSpacing: 0.4,
+              textTransform: 'uppercase',
+            }}
+          >
             {(trailVectors.length > 1
               ? t('account.trajectory_caption_with_trail', locale, { n: trailVectors.length })
-              : t('account.trajectory_caption_no_trail', locale)).toUpperCase()}
+              : t('account.trajectory_caption_no_trail', locale)
+            ).toUpperCase()}
           </p>
-          <div style={{
-            marginTop: 18,
-            padding: '14px 16px',
-            background: 'var(--color-acc-soft)',
-            border: '3px solid var(--color-ink)',
-            boxShadow: '3px 3px 0 0 var(--color-acc)',
-            borderRadius: 0,
-            fontFamily: serif,
-            fontSize: 14,
-            color: 'var(--color-ink)',
-            lineHeight: 1.55,
-          }}>
-            <strong style={{ color: 'var(--color-ink)' }}>{t('account.trajectory_explainer_title', locale)}</strong>{' '}
+          <div
+            style={{
+              marginTop: 18,
+              padding: '14px 16px',
+              background: 'var(--color-acc-soft)',
+              border: '3px solid var(--color-ink)',
+              boxShadow: '3px 3px 0 0 var(--color-acc)',
+              borderRadius: 0,
+              fontFamily: serif,
+              fontSize: 14,
+              color: 'var(--color-ink)',
+              lineHeight: 1.55,
+            }}
+          >
+            <strong style={{ color: 'var(--color-ink)' }}>
+              {t('account.trajectory_explainer_title', locale)}
+            </strong>{' '}
             {t('account.trajectory_explainer_body', locale)}
           </div>
         </section>
@@ -952,10 +1070,7 @@ export default async function AccountPage() {
         >
           ▶ {t('account.year_activity', locale)}
         </h2>
-        <ActivityHeatmap
-          timestamps={events.map((e) => e.timestamp)}
-          locale={locale}
-        />
+        <ActivityHeatmap timestamps={events.map((e) => e.timestamp)} locale={locale} />
       </section>
 
       {/* Trajectory chart — visualizes the dimension that's moved
@@ -1047,48 +1162,68 @@ export default async function AccountPage() {
 // hard accent shadow. Primary card swaps to amber fill so the
 // "take the quiz" path reads as the recommended starting point.
 function FirstStepCard({
-  accent, title, body, cta, href, primary = false,
+  accent,
+  title,
+  body,
+  cta,
+  href,
+  primary = false,
 }: {
-  accent: string; title: string; body: string; cta: string; href: string; primary?: boolean;
+  accent: string;
+  title: string;
+  body: string;
+  cta: string;
+  href: string;
+  primary?: boolean;
 }) {
   return (
-    <Link href={href} className="pixel-press" style={{
-      display: 'block',
-      padding: '20px 22px',
-      background: primary ? 'var(--color-acc-soft)' : '#FFFCF4',
-      border: '4px solid var(--color-ink)',
-      boxShadow: `5px 5px 0 0 ${accent}`,
-      borderRadius: 0,
-      textDecoration: 'none',
-      color: 'var(--color-ink)',
-      transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
-    }}>
-      <div style={{
-        fontFamily: serif,
-        fontSize: 21,
-        fontWeight: 500,
-        marginBottom: 8,
-        letterSpacing: '-0.2px',
+    <Link
+      href={href}
+      className="pixel-press"
+      style={{
+        display: 'block',
+        padding: '20px 22px',
+        background: primary ? 'var(--color-acc-soft)' : '#FFFCF4',
+        border: '4px solid var(--color-ink)',
+        boxShadow: `5px 5px 0 0 ${accent}`,
+        borderRadius: 0,
+        textDecoration: 'none',
         color: 'var(--color-ink)',
-      }}>
+        transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+      }}
+    >
+      <div
+        style={{
+          fontFamily: serif,
+          fontSize: 21,
+          fontWeight: 500,
+          marginBottom: 8,
+          letterSpacing: '-0.2px',
+          color: 'var(--color-ink)',
+        }}
+      >
         {title}
       </div>
-      <p style={{
-        fontFamily: sans,
-        fontSize: 13.5,
-        color: 'var(--color-ink-soft)',
-        margin: '0 0 14px',
-        lineHeight: 1.55,
-      }}>
+      <p
+        style={{
+          fontFamily: sans,
+          fontSize: 13.5,
+          color: 'var(--color-ink-soft)',
+          margin: '0 0 14px',
+          lineHeight: 1.55,
+        }}
+      >
         {body}
       </p>
-      <span style={{
-        fontFamily: pixel,
-        fontSize: 11,
-        color: accent,
-        letterSpacing: 0.4,
-        textTransform: 'uppercase',
-      }}>
+      <span
+        style={{
+          fontFamily: pixel,
+          fontSize: 11,
+          color: accent,
+          letterSpacing: 0.4,
+          textTransform: 'uppercase',
+        }}
+      >
         ▸ {cta.toUpperCase()}
       </span>
     </Link>

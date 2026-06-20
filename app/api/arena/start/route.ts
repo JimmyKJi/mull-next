@@ -7,10 +7,10 @@
 // Enforces the daily debate cap (3/day per user) to keep AI cost
 // bounded under the £500/mo ceiling.
 
-import { NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
-import { getArenaPhilosopher, getArenaTopic, canFace, MAX_ELO_GAP } from "@/lib/arena/data";
-import { generatePhilosopherTurn } from "@/lib/arena/philosopher-voice";
+import { NextResponse } from 'next/server';
+import { createClient } from '@/utils/supabase/server';
+import { getArenaPhilosopher, getArenaTopic, canFace, MAX_ELO_GAP } from '@/lib/arena/data';
+import { generatePhilosopherTurn } from '@/lib/arena/philosopher-voice';
 
 const DAILY_CAP = 3;
 
@@ -20,52 +20,46 @@ export async function POST(req: Request) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    return NextResponse.json({ error: "Sign in required." }, { status: 401 });
+    return NextResponse.json({ error: 'Sign in required.' }, { status: 401 });
   }
 
   const body = await req.json().catch(() => null);
-  if (!body || typeof body !== "object") {
-    return NextResponse.json({ error: "Bad request." }, { status: 400 });
+  if (!body || typeof body !== 'object') {
+    return NextResponse.json({ error: 'Bad request.' }, { status: 400 });
   }
 
   const kind = body.kind as string | undefined;
   const opponent = body.opponent as string | undefined;
   const topicSlug = body.topic_slug as string | undefined;
 
-  if (!kind || !["calibration", "pve"].includes(kind)) {
-    return NextResponse.json({ error: "Invalid kind." }, { status: 400 });
+  if (!kind || !['calibration', 'pve'].includes(kind)) {
+    return NextResponse.json({ error: 'Invalid kind.' }, { status: 400 });
   }
   if (!opponent || !topicSlug) {
-    return NextResponse.json(
-      { error: "Missing opponent or topic_slug." },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: 'Missing opponent or topic_slug.' }, { status: 400 });
   }
 
   const philosopher = getArenaPhilosopher(opponent);
   const topic = getArenaTopic(topicSlug);
   if (!philosopher || !topic) {
-    return NextResponse.json({ error: "Unknown opponent/topic." }, { status: 400 });
+    return NextResponse.json({ error: 'Unknown opponent/topic.' }, { status: 400 });
   }
 
   // Load (or create) the user's arena rating + enforce daily cap.
   let { data: rating } = await supabase
-    .from("arena_user_ratings")
-    .select("*")
-    .eq("user_id", user.id)
+    .from('arena_user_ratings')
+    .select('*')
+    .eq('user_id', user.id)
     .maybeSingle();
 
   if (!rating) {
     const { data: inserted, error: insertErr } = await supabase
-      .from("arena_user_ratings")
+      .from('arena_user_ratings')
       .insert({ user_id: user.id })
-      .select("*")
+      .select('*')
       .single();
     if (insertErr || !inserted) {
-      return NextResponse.json(
-        { error: "Could not initialize rating." },
-        { status: 500 },
-      );
+      return NextResponse.json({ error: 'Could not initialize rating.' }, { status: 500 });
     }
     rating = inserted;
   }
@@ -73,13 +67,12 @@ export async function POST(req: Request) {
   // Daily cap reset.
   const today = new Date().toISOString().slice(0, 10);
   const resetDate = rating.daily_debates_reset_at as string | null;
-  const dailyCount =
-    resetDate === today ? (rating.daily_debates_count as number) : 0;
-  if (kind === "pve" && dailyCount >= DAILY_CAP) {
+  const dailyCount = resetDate === today ? (rating.daily_debates_count as number) : 0;
+  if (kind === 'pve' && dailyCount >= DAILY_CAP) {
     return NextResponse.json(
       {
         error: `Daily limit reached (${DAILY_CAP}/day). The cap keeps the Arena affordable to run. Come back tomorrow.`,
-        code: "daily_cap_reached",
+        code: 'daily_cap_reached',
       },
       { status: 429 },
     );
@@ -89,11 +82,11 @@ export async function POST(req: Request) {
   // voices (Nietzsche, Hegel) behind a real climb so newer users
   // don't lose 60 Elo to a thinker they're not ready for, and the
   // judge isn't comparing apples to oranges.
-  if (kind === "pve" && !canFace(rating.pve_elo, philosopher.baseElo)) {
+  if (kind === 'pve' && !canFace(rating.pve_elo, philosopher.baseElo)) {
     return NextResponse.json(
       {
         error: `${philosopher.name} (Elo ${philosopher.baseElo}) is too far above your current rating of ${rating.pve_elo}. Climb closer first — you can face opponents up to ${MAX_ELO_GAP} Elo above you.`,
-        code: "elo_gap_too_large",
+        code: 'elo_gap_too_large',
       },
       { status: 403 },
     );
@@ -101,7 +94,7 @@ export async function POST(req: Request) {
 
   // Create session.
   const { data: session, error: sessionErr } = await supabase
-    .from("arena_sessions")
+    .from('arena_sessions')
     .insert({
       user_id: user.id,
       kind,
@@ -110,24 +103,21 @@ export async function POST(req: Request) {
       opponent_elo_at_start: philosopher.baseElo,
       user_elo_at_start: rating.pve_elo,
     })
-    .select("id")
+    .select('id')
     .single();
   if (sessionErr || !session) {
-    return NextResponse.json(
-      { error: "Could not start session." },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: 'Could not start session.' }, { status: 500 });
   }
 
   // Update daily counter (only for pve; calibration counted separately).
-  if (kind === "pve") {
+  if (kind === 'pve') {
     await supabase
-      .from("arena_user_ratings")
+      .from('arena_user_ratings')
       .update({
         daily_debates_count: dailyCount + 1,
         daily_debates_reset_at: today,
       })
-      .eq("user_id", user.id);
+      .eq('user_id', user.id);
   }
 
   // Generate opening turn — the philosopher opens.
@@ -136,7 +126,7 @@ export async function POST(req: Request) {
     topicPrompt: topic.prompt,
     transcript: [
       {
-        speaker: "user",
+        speaker: 'user',
         content: `(Open the debate with your position on the topic. You speak first.)`,
       },
     ],
@@ -144,21 +134,18 @@ export async function POST(req: Request) {
 
   if (!opening) {
     // Mark abandoned so the cap isn't burned on a broken session.
-    await supabase
-      .from("arena_sessions")
-      .update({ status: "abandoned" })
-      .eq("id", session.id);
+    await supabase.from('arena_sessions').update({ status: 'abandoned' }).eq('id', session.id);
     return NextResponse.json(
-      { error: "Could not generate opening turn. Try again." },
+      { error: 'Could not generate opening turn. Try again.' },
       { status: 502 },
     );
   }
 
   // Insert the opening turn (turn 1, opponent speaker).
-  await supabase.from("arena_turns").insert({
+  await supabase.from('arena_turns').insert({
     session_id: session.id,
     turn_order: 1,
-    speaker: "opponent",
+    speaker: 'opponent',
     content: opening,
   });
 

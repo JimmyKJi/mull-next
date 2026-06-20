@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 // DemographicsForm — the optional "general info" picker (age, gender,
 // cultural background, education, religion). Rendered in two places:
@@ -15,8 +15,8 @@
 // style-neutral — it draws labels + selects + buttons and lets the host
 // (modal card / PixelWindow) provide the surrounding chrome.
 
-import { useState } from "react";
-import { t, type Locale } from "@/lib/translations";
+import { useState } from 'react';
+import { t, type Locale } from '@/lib/translations';
 import {
   DEMOGRAPHIC_FIELDS,
   DEMOGRAPHIC_OPTIONS,
@@ -24,51 +24,51 @@ import {
   optionLabelKey,
   type DemographicField,
   type DemographicValues,
-} from "@/lib/demographics";
+} from '@/lib/demographics';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "var(--font-editorial), Georgia, serif";
+const serif = 'var(--font-editorial), Georgia, serif';
 
-type Status = "idle" | "saving" | "saved" | "error";
+type Status = 'idle' | 'saving' | 'saved' | 'error';
 
 export default function DemographicsForm({
   locale,
   initial,
-  variant = "page",
+  variant = 'page',
   onDone,
 }: {
   locale: Locale;
   initial?: DemographicValues;
-  variant?: "gate" | "page";
+  variant?: 'gate' | 'page';
   onDone?: () => void;
 }) {
   const [values, setValues] = useState<Record<DemographicField, string>>(() => {
     const seed = {} as Record<DemographicField, string>;
-    for (const f of DEMOGRAPHIC_FIELDS) seed[f] = initial?.[f] ?? "";
+    for (const f of DEMOGRAPHIC_FIELDS) seed[f] = initial?.[f] ?? '';
     return seed;
   });
-  const [status, setStatus] = useState<Status>("idle");
+  const [status, setStatus] = useState<Status>('idle');
 
   function set(field: DemographicField, value: string) {
     setValues((v) => ({ ...v, [field]: value }));
-    setStatus("idle");
+    setStatus('idle');
   }
 
   async function save(): Promise<void> {
-    setStatus("saving");
+    setStatus('saving');
     const payload: Record<string, string | null> = {};
     for (const f of DEMOGRAPHIC_FIELDS) {
-      payload[f] = values[f] === "" ? null : values[f];
+      payload[f] = values[f] === '' ? null : values[f];
     }
     try {
-      const res = await fetch("/api/demographics", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/demographics', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      setStatus(res.ok || res.status === 204 ? "saved" : "error");
+      setStatus(res.ok || res.status === 204 ? 'saved' : 'error');
     } catch {
-      setStatus("error");
+      setStatus('error');
     }
   }
 
@@ -79,29 +79,29 @@ export default function DemographicsForm({
   }
 
   const statusText =
-    status === "saving"
-      ? t("demo.saving", locale)
-      : status === "saved"
-        ? t("demo.saved", locale)
-        : status === "error"
-          ? t("demo.save_error", locale)
-          : "";
+    status === 'saving'
+      ? t('demo.saving', locale)
+      : status === 'saved'
+        ? t('demo.saved', locale)
+        : status === 'error'
+          ? t('demo.save_error', locale)
+          : '';
   const statusColor =
-    status === "saved" ? "#2F5D5C" : status === "error" ? "#9B2C2C" : "var(--color-acc-deep)";
+    status === 'saved' ? '#2F5D5C' : status === 'error' ? '#9B2C2C' : 'var(--color-acc-deep)';
 
   return (
     <div>
-      <div style={{ display: "grid", gap: 14 }}>
+      <div style={{ display: 'grid', gap: 14 }}>
         {DEMOGRAPHIC_FIELDS.map((field) => (
-          <label key={field} style={{ display: "block" }}>
+          <label key={field} style={{ display: 'block' }}>
             <span
               style={{
-                display: "block",
+                display: 'block',
                 fontFamily: pixel,
                 fontSize: 10,
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
-                color: "var(--color-acc-deep)",
+                letterSpacing: '0.18em',
+                textTransform: 'uppercase',
+                color: 'var(--color-acc-deep)',
                 marginBottom: 6,
               }}
             >
@@ -111,18 +111,18 @@ export default function DemographicsForm({
               value={values[field]}
               onChange={(e) => set(field, e.target.value)}
               style={{
-                width: "100%",
+                width: '100%',
                 fontFamily: serif,
                 fontSize: 15,
-                padding: "9px 12px",
-                background: "#FFFCF4",
-                border: "2px solid var(--color-ink)",
+                padding: '9px 12px',
+                background: '#FFFCF4',
+                border: '2px solid var(--color-ink)',
                 borderRadius: 0,
-                color: "var(--color-ink)",
-                cursor: "pointer",
+                color: 'var(--color-ink)',
+                cursor: 'pointer',
               }}
             >
-              <option value="">{t("demo.select_placeholder", locale)}</option>
+              <option value="">{t('demo.select_placeholder', locale)}</option>
               {DEMOGRAPHIC_OPTIONS[field].map((code) => (
                 <option key={code} value={code}>
                   {t(optionLabelKey(code), locale)}
@@ -136,45 +136,33 @@ export default function DemographicsForm({
       <div
         style={{
           marginTop: 20,
-          display: "flex",
-          alignItems: "center",
+          display: 'flex',
+          alignItems: 'center',
           gap: 12,
-          flexWrap: "wrap",
+          flexWrap: 'wrap',
         }}
       >
-        {variant === "gate" ? (
+        {variant === 'gate' ? (
           <>
             <button
               type="button"
               onClick={saveAndContinue}
-              disabled={status === "saving"}
+              disabled={status === 'saving'}
               style={primaryBtn}
             >
-              {t("demo.save_continue", locale)}
+              {t('demo.save_continue', locale)}
             </button>
-            <button
-              type="button"
-              onClick={() => onDone?.()}
-              style={ghostBtn}
-            >
-              {t("demo.skip", locale)}
+            <button type="button" onClick={() => onDone?.()} style={ghostBtn}>
+              {t('demo.skip', locale)}
             </button>
           </>
         ) : (
-          <button
-            type="button"
-            onClick={save}
-            disabled={status === "saving"}
-            style={primaryBtn}
-          >
-            {t("btn.save", locale)}
+          <button type="button" onClick={save} disabled={status === 'saving'} style={primaryBtn}>
+            {t('btn.save', locale)}
           </button>
         )}
         {statusText && (
-          <span
-            aria-live="polite"
-            style={{ fontFamily: serif, fontSize: 14, color: statusColor }}
-          >
+          <span aria-live="polite" style={{ fontFamily: serif, fontSize: 14, color: statusColor }}>
             {statusText}
           </span>
         )}
@@ -184,26 +172,26 @@ export default function DemographicsForm({
 }
 
 const primaryBtn: React.CSSProperties = {
-  padding: "12px 18px",
-  background: "#F8C75E",
-  color: "#1A1820",
-  border: "3px solid var(--color-ink)",
-  boxShadow: "4px 4px 0 0 #2F5D5C",
+  padding: '12px 18px',
+  background: '#F8C75E',
+  color: '#1A1820',
+  border: '3px solid var(--color-ink)',
+  boxShadow: '4px 4px 0 0 #2F5D5C',
   fontFamily: pixel,
   fontSize: 11,
-  letterSpacing: "0.16em",
-  textTransform: "uppercase",
-  cursor: "pointer",
+  letterSpacing: '0.16em',
+  textTransform: 'uppercase',
+  cursor: 'pointer',
 };
 
 const ghostBtn: React.CSSProperties = {
-  padding: "12px 14px",
-  background: "transparent",
-  color: "var(--color-ink-soft)",
-  border: "2px solid var(--color-acc-deep)",
+  padding: '12px 14px',
+  background: 'transparent',
+  color: 'var(--color-ink-soft)',
+  border: '2px solid var(--color-acc-deep)',
   fontFamily: pixel,
   fontSize: 11,
-  letterSpacing: "0.16em",
-  textTransform: "uppercase",
-  cursor: "pointer",
+  letterSpacing: '0.16em',
+  textTransform: 'uppercase',
+  cursor: 'pointer',
 };

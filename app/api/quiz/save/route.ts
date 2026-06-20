@@ -27,12 +27,12 @@
 // users never get a research row written — the table holds consented
 // data only. See app/admin/research/page.tsx for where this is consumed.
 
-import { NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
-import { captureResearchResponse, syncConsent } from "@/lib/research-capture";
-import { getServerLocale } from "@/lib/locale-server";
+import { NextResponse } from 'next/server';
+import { createClient } from '@/utils/supabase/server';
+import { captureResearchResponse, syncConsent } from '@/lib/research-capture';
+import { getServerLocale } from '@/lib/locale-server';
 
-export const runtime = "nodejs";
+export const runtime = 'nodejs';
 
 type Payload = {
   vector?: unknown;
@@ -50,33 +50,30 @@ export async function POST(req: Request) {
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json({ error: "Invalid JSON." }, { status: 400 });
+    return NextResponse.json({ error: 'Invalid JSON.' }, { status: 400 });
   }
 
   if (!Array.isArray(body.vector) || body.vector.length !== 16) {
-    return NextResponse.json({ error: "Invalid vector shape." }, { status: 400 });
+    return NextResponse.json({ error: 'Invalid vector shape.' }, { status: 400 });
   }
   const vector = body.vector.map((v) => {
     const n = Number(v);
     return Number.isFinite(n) ? n : 0;
   });
 
-  const archetype = typeof body.archetype === "string" ? body.archetype.trim() : "";
+  const archetype = typeof body.archetype === 'string' ? body.archetype.trim() : '';
   if (!archetype) {
-    return NextResponse.json({ error: "Missing archetype." }, { status: 400 });
+    return NextResponse.json({ error: 'Missing archetype.' }, { status: 400 });
   }
 
-  const flavor =
-    typeof body.flavor === "string" && body.flavor.trim()
-      ? body.flavor.trim()
-      : null;
+  const flavor = typeof body.flavor === 'string' && body.flavor.trim() ? body.flavor.trim() : null;
 
   const pctRaw = Number(body.alignment_pct);
   const alignment_pct = Number.isFinite(pctRaw)
     ? Math.max(0, Math.min(100, Math.round(pctRaw)))
     : 0;
 
-  const mode = body.mode === "detailed" ? "detailed" : "quick";
+  const mode = body.mode === 'detailed' ? 'detailed' : 'quick';
 
   const supabase = await createClient();
   const {
@@ -85,7 +82,7 @@ export async function POST(req: Request) {
   if (!user) {
     // Client should stash to localStorage and let
     // PendingAttemptClaimer handle it after signup.
-    return NextResponse.json({ error: "Not signed in." }, { status: 401 });
+    return NextResponse.json({ error: 'Not signed in.' }, { status: 401 });
   }
 
   // Keep the server-side consent record in step with the client's
@@ -99,22 +96,22 @@ export async function POST(req: Request) {
   // and back.
   const fiveMinAgo = new Date(Date.now() - 5 * 60_000).toISOString();
   const { data: recent } = await supabase
-    .from("quiz_attempts")
-    .select("id, taken_at")
-    .eq("user_id", user.id)
-    .gte("taken_at", fiveMinAgo)
+    .from('quiz_attempts')
+    .select('id, taken_at')
+    .eq('user_id', user.id)
+    .gte('taken_at', fiveMinAgo)
     .limit(1)
     .maybeSingle();
   if (recent) {
     return NextResponse.json({
       ok: true,
-      skipped: "recent attempt exists",
+      skipped: 'recent attempt exists',
       existingId: recent.id,
     });
   }
 
   const { data: inserted, error } = await supabase
-    .from("quiz_attempts")
+    .from('quiz_attempts')
     .insert({
       user_id: user.id,
       vector,
@@ -122,12 +119,12 @@ export async function POST(req: Request) {
       flavor,
       alignment_pct,
     })
-    .select("id, taken_at")
+    .select('id, taken_at')
     .single();
 
   if (error) {
-    console.error("[quiz/save] insert failed", error);
-    return NextResponse.json({ error: "Could not save attempt." }, { status: 500 });
+    console.error('[quiz/save] insert failed', error);
+    return NextResponse.json({ error: 'Could not save attempt.' }, { status: 500 });
   }
 
   // Consent-gated research capture. Best-effort: a failure here is logged

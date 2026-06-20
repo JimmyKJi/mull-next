@@ -27,7 +27,9 @@ export const runtime = 'nodejs';
 
 async function requireAdmin() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return { error: NextResponse.json({ error: 'Not signed in.' }, { status: 401 }) };
   if (!isAdminUserId(user.id)) {
     return { error: NextResponse.json({ error: 'Not authorized.' }, { status: 403 }) };
@@ -43,9 +45,10 @@ export async function GET(req: Request) {
   const week = url.searchParams.get('week') || weekKey();
   const days = Math.max(1, Math.min(60, parseInt(url.searchParams.get('days') || '14', 10) || 14));
   const filterParam = url.searchParams.get('filter');
-  const filter = (filterParam === 'dilemma' || filterParam === 'diary' || filterParam === 'exercise')
-    ? filterParam
-    : null;
+  const filter =
+    filterParam === 'dilemma' || filterParam === 'diary' || filterParam === 'exercise'
+      ? filterParam
+      : null;
 
   // Use the request-scoped client (RLS allows reading public entries).
   const supabase = await createClient();
@@ -85,8 +88,11 @@ export async function POST(req: Request) {
     source_id?: string;
     curator_note?: string;
   };
-  try { body = await req.json(); }
-  catch { return NextResponse.json({ error: 'Invalid JSON.' }, { status: 400 }); }
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON.' }, { status: 400 });
+  }
 
   const week = body.week || weekKey();
   const slot = Number(body.slot);
@@ -98,7 +104,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'slot must be 1, 2, or 3.' }, { status: 400 });
   }
   if (!sourceType || !['dilemma', 'diary', 'exercise'].includes(sourceType)) {
-    return NextResponse.json({ error: 'source_type must be dilemma | diary | exercise.' }, { status: 400 });
+    return NextResponse.json(
+      { error: 'source_type must be dilemma | diary | exercise.' },
+      { status: 400 },
+    );
   }
   if (!sourceId || !/^[0-9a-f-]{36}$/i.test(sourceId)) {
     return NextResponse.json({ error: 'source_id must be a uuid.' }, { status: 400 });
@@ -108,9 +117,8 @@ export async function POST(req: Request) {
   // denies all non-service writes by design).
   const admin = createAdminClient();
 
-  const { error } = await admin
-    .from('editor_picks')
-    .upsert({
+  const { error } = await admin.from('editor_picks').upsert(
+    {
       week_start: week,
       slot,
       source_type: sourceType,
@@ -118,9 +126,11 @@ export async function POST(req: Request) {
       curator_note: note,
       picked_by: gate.user.id,
       updated_at: new Date().toISOString(),
-    }, {
+    },
+    {
       onConflict: 'week_start,slot',
-    });
+    },
+  );
 
   if (error) {
     console.error('[admin/curate POST] upsert failed', error);

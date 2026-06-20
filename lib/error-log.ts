@@ -13,7 +13,7 @@
 import { createAdminClient } from '@/utils/supabase/admin';
 
 type LogArgs = {
-  source: string;          // 'api:/dilemma/submit', 'client:/account', etc.
+  source: string; // 'api:/dilemma/submit', 'client:/account', etc.
   error: unknown;
   req?: Request;
   userId?: string | null;
@@ -23,13 +23,16 @@ type LogArgs = {
 export async function logError(args: LogArgs): Promise<void> {
   try {
     const message = args.error instanceof Error ? args.error.message : String(args.error);
-    const stack = args.error instanceof Error ? args.error.stack ?? null : null;
+    const stack = args.error instanceof Error ? (args.error.stack ?? null) : null;
     const userAgent = args.req?.headers.get('user-agent')?.slice(0, 500) ?? null;
     const url = args.url ?? args.req?.url ?? null;
 
     let admin;
-    try { admin = createAdminClient(); }
-    catch { return; } // No service-role key — silently skip.
+    try {
+      admin = createAdminClient();
+    } catch {
+      return;
+    } // No service-role key — silently skip.
 
     await admin.from('error_log').insert({
       source: args.source.slice(0, 200),

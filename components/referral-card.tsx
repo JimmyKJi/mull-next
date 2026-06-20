@@ -19,7 +19,7 @@
 import { useEffect, useState } from 'react';
 import { t, type Locale, isLocale } from '@/lib/translations';
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
 type Props = {
@@ -54,7 +54,9 @@ export default function ReferralCard({ initialCode = null, initialCount = 0 }: P
         /* swallow — referral system is best-effort */
       }
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   if (!code) {
@@ -63,9 +65,10 @@ export default function ReferralCard({ initialCode = null, initialCount = 0 }: P
     return null;
   }
 
-  const url = typeof window !== 'undefined'
-    ? `${window.location.origin}/r/${code}`
-    : `https://mull.world/r/${code}`;
+  const url =
+    typeof window !== 'undefined'
+      ? `${window.location.origin}/r/${code}`
+      : `https://mull.world/r/${code}`;
 
   async function copy() {
     try {
@@ -78,38 +81,57 @@ export default function ReferralCard({ initialCode = null, initialCount = 0 }: P
   }
 
   return (
-    <section style={{
-      marginTop: 28,
-      padding: '20px 24px',
-      background: '#FFFCF4',
-      border: '4px solid var(--color-ink)',
-      boxShadow: '5px 5px 0 0 var(--color-acc)',
-      borderRadius: 0,
-    }}>
-      <div style={{
-        fontFamily: pixel, fontSize: 12,
-        color: 'var(--color-acc-deep)', textTransform: 'uppercase',
-        letterSpacing: '0.18em', marginBottom: 10,
-      }}>
+    <section
+      style={{
+        marginTop: 28,
+        padding: '20px 24px',
+        background: '#FFFCF4',
+        border: '4px solid var(--color-ink)',
+        boxShadow: '5px 5px 0 0 var(--color-acc)',
+        borderRadius: 0,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: pixel,
+          fontSize: 12,
+          color: 'var(--color-acc-deep)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.18em',
+          marginBottom: 10,
+        }}
+      >
         ▸ {t('crd.referral_eyebrow', locale)}
       </div>
-      <p style={{
-        fontFamily: serif, fontStyle: 'italic',
-        fontSize: 15.5, color: 'var(--color-ink-soft)',
-        margin: '0 0 16px', lineHeight: 1.55,
-      }}>
+      <p
+        style={{
+          fontFamily: serif,
+          fontStyle: 'italic',
+          fontSize: 15.5,
+          color: 'var(--color-ink-soft)',
+          margin: '0 0 16px',
+          lineHeight: 1.55,
+        }}
+      >
         {t('crd.referral_lead', locale)}
         {count > 0 && (
-          <> {t(count === 1 ? 'crd.referral_count_one' : 'crd.referral_count_many', locale, { n: count })}</>
+          <>
+            {' '}
+            {t(count === 1 ? 'crd.referral_count_one' : 'crd.referral_count_many', locale, {
+              n: count,
+            })}
+          </>
         )}
       </p>
 
-      <div style={{
-        display: 'flex',
-        gap: 10,
-        alignItems: 'stretch',
-        flexWrap: 'wrap',
-      }}>
+      <div
+        style={{
+          display: 'flex',
+          gap: 10,
+          alignItems: 'stretch',
+          flexWrap: 'wrap',
+        }}
+      >
         <input
           readOnly
           value={url}
@@ -149,11 +171,17 @@ export default function ReferralCard({ initialCode = null, initialCount = 0 }: P
           {copied ? `✓ ${t('crd.copied_label', locale)}` : t('crd.copy_link', locale)}
         </button>
       </div>
-      <p style={{
-        fontFamily: serif, fontStyle: 'italic', fontSize: 13,
-        color: 'var(--color-acc-deep)',
-        margin: '12px 0 0', opacity: 0.85, lineHeight: 1.5,
-      }}>
+      <p
+        style={{
+          fontFamily: serif,
+          fontStyle: 'italic',
+          fontSize: 13,
+          color: 'var(--color-acc-deep)',
+          margin: '12px 0 0',
+          opacity: 0.85,
+          lineHeight: 1.5,
+        }}
+      >
         {t('crd.referral_note', locale)}
       </p>
     </section>

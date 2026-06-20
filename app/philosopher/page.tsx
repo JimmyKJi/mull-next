@@ -4,7 +4,12 @@
 
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { PHILOSOPHERS, philosopherSlug, getPhilosopherBySlug, type PhilosopherEntry } from '@/lib/philosophers';
+import {
+  PHILOSOPHERS,
+  philosopherSlug,
+  getPhilosopherBySlug,
+  type PhilosopherEntry,
+} from '@/lib/philosophers';
 import { localizePhilosopher } from '@/lib/philosophers-i18n';
 import { ARCHETYPES } from '@/lib/archetypes';
 import { getArchetypeColor } from '@/lib/archetype-colors';
@@ -20,8 +25,7 @@ import { nearestPhilosophersToVector } from '@/lib/recommendations';
 
 export const metadata: Metadata = {
   title: `All philosophers — ${PHILOSOPHERS.length} thinkers, 10 archetypes`,
-  description:
-    `Browse all ${PHILOSOPHERS.length} philosophers in Mull's constellation — from Heraclitus to bell hooks, grouped by archetype. Each profile shows their key idea, their position on Mull's 16 dimensions, and their nearest kin.`,
+  description: `Browse all ${PHILOSOPHERS.length} philosophers in Mull's constellation — from Heraclitus to bell hooks, grouped by archetype. Each profile shows their key idea, their position on Mull's 16 dimensions, and their nearest kin.`,
   openGraph: {
     title: 'All philosophers — Mull',
     description: `${PHILOSOPHERS.length} thinkers across 10 archetypes. The full map of the long conversation.`,
@@ -39,7 +43,7 @@ function pickFeaturedProfile(): PhilosopherEntry | null {
   if (slugs.length === 0) return null;
   const now = new Date();
   const dayOfYear = Math.floor(
-    (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86_400_000
+    (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86_400_000,
   );
   const slug = slugs[dayOfYear % slugs.length];
   return getPhilosopherBySlug(slug) ?? null;
@@ -59,7 +63,9 @@ export default async function PhilosopherIndexPage() {
   // already reads cookies via getServerLocale, so the auth read here adds
   // no caching penalty.
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   const orientation = await getUserOrientation(supabase, user?.id ?? null);
   const nearestToYou = orientation.vector
     ? nearestPhilosophersToVector(orientation.vector, 6).map((r) => r.item)
@@ -68,7 +74,7 @@ export default async function PhilosopherIndexPage() {
   const featured = pickFeaturedProfile();
   const bioSlugs = philosophersWithBios();
   const featuredList = bioSlugs
-    .map(s => getPhilosopherBySlug(s))
+    .map((s) => getPhilosopherBySlug(s))
     .filter((x): x is PhilosopherEntry => !!x);
 
   const byArchetype = new Map<string, PhilosopherEntry[]>();
@@ -104,11 +110,14 @@ export default async function PhilosopherIndexPage() {
         <section className="mb-8">
           <div
             className="mb-2 text-[10px] tracking-[0.18em] text-acc-deep"
-            style={{ fontFamily: "var(--font-pixel-display)", textTransform: 'uppercase' }}
+            style={{ fontFamily: 'var(--font-pixel-display)', textTransform: 'uppercase' }}
           >
             ◆ {t('philindex.nearest_you', locale)}
           </div>
-          <p className="mb-3 text-[13px] italic text-ink-soft" style={{ fontFamily: 'var(--font-editorial)' }}>
+          <p
+            className="mb-3 text-[13px] italic text-ink-soft"
+            style={{ fontFamily: 'var(--font-editorial)' }}
+          >
             {t('philindex.nearest_you_helper', locale, { n: PHILOSOPHERS.length })}
           </p>
           <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3">
@@ -171,7 +180,7 @@ export default async function PhilosopherIndexPage() {
         <section className="mb-8">
           <div
             className="mb-2 text-[10px] tracking-[0.18em] text-acc-deep"
-            style={{ fontFamily: "var(--font-pixel-display)", textTransform: 'uppercase' }}
+            style={{ fontFamily: 'var(--font-pixel-display)', textTransform: 'uppercase' }}
           >
             ◇ Featured profile today
           </div>
@@ -237,15 +246,19 @@ export default async function PhilosopherIndexPage() {
         <section className="mb-8">
           <div
             className="mb-2 text-[10px] tracking-[0.18em] text-acc-deep"
-            style={{ fontFamily: "var(--font-pixel-display)", textTransform: 'uppercase' }}
+            style={{ fontFamily: 'var(--font-pixel-display)', textTransform: 'uppercase' }}
           >
             ★ Long-form profiles · {featuredList.length}
           </div>
-          <p className="mb-3 text-[13px] italic text-ink-soft" style={{ fontFamily: 'var(--font-editorial)' }}>
-            These have hand-written extended profiles — 200-400 words of editorial prose, not just a one-liner.
+          <p
+            className="mb-3 text-[13px] italic text-ink-soft"
+            style={{ fontFamily: 'var(--font-editorial)' }}
+          >
+            These have hand-written extended profiles — 200-400 words of editorial prose, not just a
+            one-liner.
           </p>
           <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-            {featuredList.map(fp => (
+            {featuredList.map((fp) => (
               <li key={fp.name}>
                 <Link
                   href={`/philosopher/${philosopherSlug(fp.name)}`}
@@ -256,7 +269,10 @@ export default async function PhilosopherIndexPage() {
                     boxShadow: '2px 2px 0 0 var(--color-acc)',
                   }}
                 >
-                  <div className="text-[13.5px] font-medium text-ink" style={{ fontFamily: 'var(--font-editorial)' }}>
+                  <div
+                    className="text-[13.5px] font-medium text-ink"
+                    style={{ fontFamily: 'var(--font-editorial)' }}
+                  >
                     {loc(fp).name}
                   </div>
                   <div className="mt-0.5 text-[10.5px] tracking-wide text-acc-deep">
@@ -276,7 +292,7 @@ export default async function PhilosopherIndexPage() {
         <Link
           href="/map"
           className="border-2 border-ink bg-[#F8C75E] px-3 py-1.5 text-[12px] tracking-[0.18em] text-[#1A1820] hover:bg-acc"
-          style={{ fontFamily: "var(--font-pixel-display)", textTransform: "uppercase" }}
+          style={{ fontFamily: 'var(--font-pixel-display)', textTransform: 'uppercase' }}
         >
           ▶ EXPLORE THE MAP VISUALLY
         </Link>

@@ -38,17 +38,19 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 
 // Render **bold** spans inside a translated string.
 function emph(text: string): React.ReactNode[] {
-  return text.split(/(\*\*[^*]+\*\*)/g).map((seg, i) =>
-    seg.startsWith('**') && seg.endsWith('**') ? (
-      <strong key={i}>{seg.slice(2, -2)}</strong>
-    ) : (
-      seg
-    ),
-  );
+  return text
+    .split(/(\*\*[^*]+\*\*)/g)
+    .map((seg, i) =>
+      seg.startsWith('**') && seg.endsWith('**') ? (
+        <strong key={i}>{seg.slice(2, -2)}</strong>
+      ) : (
+        seg
+      ),
+    );
 }
 
 export default async function InstallPage() {
@@ -59,7 +61,15 @@ export default async function InstallPage() {
         eyebrow={t('inst.eyebrow', locale)}
         title={t('inst.title', locale)}
         subtitle={
-          <p style={{ fontFamily: serif, fontStyle: 'italic', fontSize: 16, color: 'var(--color-ink-soft)', lineHeight: 1.55 }}>
+          <p
+            style={{
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: 16,
+              color: 'var(--color-ink-soft)',
+              lineHeight: 1.55,
+            }}
+          >
             {emph(t('inst.subtitle', locale))}
           </p>
         }

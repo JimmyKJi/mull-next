@@ -34,10 +34,7 @@ export default async function ArchetypeIndexPage() {
         eyebrow={`▶ ${t('hdr.ten_archetypes', locale)}`}
         title={t('home.arch_eyebrow', locale)}
         subtitle={
-          <p
-            className="text-[16px] italic"
-            style={{ fontFamily: 'var(--font-prose)' }}
-          >
+          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-prose)' }}>
             {t('arch_index.subtitle', locale)}
           </p>
         }
@@ -111,9 +108,7 @@ export default async function ArchetypeIndexPage() {
                     className="flex-1 border-t-2 px-3 py-3 text-center"
                     style={{ borderColor: color.deep }}
                   >
-                    <h2 className="text-[18px] font-medium leading-tight text-ink">
-                      {name}
-                    </h2>
+                    <h2 className="text-[18px] font-medium leading-tight text-ink">{name}</h2>
                     <p
                       className="mt-1 text-[13px] italic leading-[1.4] text-acc-deep"
                       style={{ fontFamily: 'var(--font-prose)' }}

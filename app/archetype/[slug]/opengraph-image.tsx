@@ -18,21 +18,13 @@ export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 export const alt = 'Mull · Archetype';
 
-export default async function ArchetypeOGImage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function ArchetypeOGImage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const a = getArchetypeByKey(slug);
-  const name = a
-    ? a.key.charAt(0).toUpperCase() + a.key.slice(1)
-    : 'Mull';
+  const name = a ? a.key.charAt(0).toUpperCase() + a.key.slice(1) : 'Mull';
   const spirit = a?.spirit ?? 'Find your place on the map of how you think.';
   const quoteText = a?.quotes?.[0]?.text ?? '';
-  const shortQuote = quoteText.length > 130
-    ? quoteText.slice(0, 127).trimEnd() + '…'
-    : quoteText;
+  const shortQuote = quoteText.length > 130 ? quoteText.slice(0, 127).trimEnd() + '…' : quoteText;
   const quoteAttribution = a?.quotes?.[0]?.attribution ?? '';
   const figureSvg = a ? FIGURES[a.key] : null;
   const figureDataUri = figureSvg ? svgToDataUri(figureSvg) : null;
@@ -47,50 +39,86 @@ export default async function ArchetypeOGImage({
   const ACC_DEEP = 'var(--color-acc-deep)';
 
   return new ImageResponse(
-    (
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        background: CREAM,
+        padding: '50px 64px 44px',
+        color: INK,
+        position: 'relative',
+        fontFamily: 'Inter, sans-serif',
+      }}
+    >
+      {/* Gold accent rule top — visual anchor */}
       <div
         style={{
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          background: CREAM,
-          padding: '50px 64px 44px',
-          color: INK,
-          position: 'relative',
-          fontFamily: 'Inter, sans-serif',
-        }}
-      >
-        {/* Gold accent rule top — visual anchor */}
-        <div style={{
           display: 'flex',
           position: 'absolute',
-          top: 0, left: 0, right: 0,
+          top: 0,
+          left: 0,
+          right: 0,
           height: 6,
           background: ACC,
-        }} />
+        }}
+      />
 
-        {/* Decorative corner ornament — three small dots like a constellation */}
-        <div style={{
+      {/* Decorative corner ornament — three small dots like a constellation */}
+      <div
+        style={{
           display: 'flex',
           position: 'absolute',
-          top: 30, right: 38,
+          top: 30,
+          right: 38,
           flexDirection: 'row',
           gap: 5,
-        }}>
-          <div style={{ display: 'flex', width: 4, height: 4, borderRadius: '50%', background: ACC, opacity: 0.55 }} />
-          <div style={{ display: 'flex', width: 4, height: 4, borderRadius: '50%', background: ACC, opacity: 0.35 }} />
-          <div style={{ display: 'flex', width: 4, height: 4, borderRadius: '50%', background: ACC, opacity: 0.2 }} />
-        </div>
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            width: 4,
+            height: 4,
+            borderRadius: '50%',
+            background: ACC,
+            opacity: 0.55,
+          }}
+        />
+        <div
+          style={{
+            display: 'flex',
+            width: 4,
+            height: 4,
+            borderRadius: '50%',
+            background: ACC,
+            opacity: 0.35,
+          }}
+        />
+        <div
+          style={{
+            display: 'flex',
+            width: 4,
+            height: 4,
+            borderRadius: '50%',
+            background: ACC,
+            opacity: 0.2,
+          }}
+        />
+      </div>
 
-        {/* TOP ROW: Mull. wordmark + ARCHETYPE label */}
-        <div style={{
+      {/* TOP ROW: Mull. wordmark + ARCHETYPE label */}
+      <div
+        style={{
           display: 'flex',
           alignItems: 'flex-end',
           justifyContent: 'space-between',
           marginBottom: 12,
-        }}>
-          <div style={{
+        }}
+      >
+        <div
+          style={{
             display: 'flex',
             alignItems: 'baseline',
             fontFamily: 'Cormorant',
@@ -99,11 +127,13 @@ export default async function ArchetypeOGImage({
             color: INK,
             letterSpacing: -0.5,
             lineHeight: 1,
-          }}>
-            <div style={{ display: 'flex' }}>Mull</div>
-            <div style={{ display: 'flex', color: ACC }}>.</div>
-          </div>
-          <div style={{
+          }}
+        >
+          <div style={{ display: 'flex' }}>Mull</div>
+          <div style={{ display: 'flex', color: ACC }}>.</div>
+        </div>
+        <div
+          style={{
             display: 'flex',
             fontFamily: 'Inter',
             fontSize: 14,
@@ -111,23 +141,27 @@ export default async function ArchetypeOGImage({
             color: ACC_DEEP,
             letterSpacing: 5,
             paddingBottom: 6,
-          }}>
-            ARCHETYPE
-          </div>
+          }}
+        >
+          ARCHETYPE
         </div>
+      </div>
 
-        {/* MAIN — two columns: figure left, hero text right */}
-        <div style={{
+      {/* MAIN — two columns: figure left, hero text right */}
+      <div
+        style={{
           display: 'flex',
           flexDirection: 'row',
           flex: 1,
           alignItems: 'center',
           gap: 36,
           marginTop: 8,
-        }}>
-          {/* Figure column */}
-          {figureDataUri ? (
-            <div style={{
+        }}
+      >
+        {/* Figure column */}
+        {figureDataUri ? (
+          <div
+            style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -138,25 +172,24 @@ export default async function ArchetypeOGImage({
               borderRadius: '50%',
               border: `2px solid ${ACC}`,
               padding: 28,
-            }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={figureDataUri}
-                alt=""
-                width={250}
-                height={250}
-              />
-            </div>
-          ) : null}
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={figureDataUri} alt="" width={250} height={250} />
+          </div>
+        ) : null}
 
-          {/* Hero text column */}
-          <div style={{
+        {/* Hero text column */}
+        <div
+          style={{
             display: 'flex',
             flexDirection: 'column',
             flex: 1,
             minWidth: 0,
-          }}>
-            <div style={{
+          }}
+        >
+          <div
+            style={{
               display: 'flex',
               fontFamily: 'Cormorant',
               fontStyle: 'italic',
@@ -164,10 +197,12 @@ export default async function ArchetypeOGImage({
               fontSize: 52,
               fontWeight: 500,
               lineHeight: 0.95,
-            }}>
-              The
-            </div>
-            <div style={{
+            }}
+          >
+            The
+          </div>
+          <div
+            style={{
               display: 'flex',
               fontFamily: 'Cormorant',
               fontSize: 132,
@@ -176,10 +211,12 @@ export default async function ArchetypeOGImage({
               letterSpacing: -3,
               color: INK,
               marginTop: 2,
-            }}>
-              {name}
-            </div>
-            <div style={{
+            }}
+          >
+            {name}
+          </div>
+          <div
+            style={{
               display: 'flex',
               fontFamily: 'Cormorant',
               fontStyle: 'italic',
@@ -188,14 +225,16 @@ export default async function ArchetypeOGImage({
               marginTop: 18,
               lineHeight: 1.3,
               maxWidth: 580,
-            }}>
-              {spirit}
-            </div>
+            }}
+          >
+            {spirit}
           </div>
         </div>
+      </div>
 
-        {/* BOTTOM — quote epigraph + signature, divided by hairline */}
-        <div style={{
+      {/* BOTTOM — quote epigraph + signature, divided by hairline */}
+      <div
+        style={{
           display: 'flex',
           alignItems: 'flex-end',
           justifyContent: 'space-between',
@@ -203,48 +242,58 @@ export default async function ArchetypeOGImage({
           paddingTop: 18,
           marginTop: 8,
           borderTop: `1px solid ${CREAM_2}`,
-        }}>
-          {shortQuote ? (
-            <div style={{
+        }}
+      >
+        {shortQuote ? (
+          <div
+            style={{
               display: 'flex',
               flexDirection: 'column',
               maxWidth: 820,
-            }}>
-              <div style={{
+            }}
+          >
+            <div
+              style={{
                 display: 'flex',
                 fontFamily: 'Cormorant',
                 fontStyle: 'italic',
                 fontSize: 21,
                 color: INK,
                 lineHeight: 1.4,
-              }}>
-                {`“${shortQuote}”`}
-              </div>
-              {quoteAttribution ? (
-                <div style={{
+              }}
+            >
+              {`“${shortQuote}”`}
+            </div>
+            {quoteAttribution ? (
+              <div
+                style={{
                   display: 'flex',
                   fontFamily: 'Inter',
                   fontSize: 13,
                   color: ACC_DEEP,
                   marginTop: 5,
                   letterSpacing: 1,
-                }}>
-                  — {quoteAttribution}
-                </div>
-              ) : null}
-            </div>
-          ) : (
-            <div style={{
+                }}
+              >
+                — {quoteAttribution}
+              </div>
+            ) : null}
+          </div>
+        ) : (
+          <div
+            style={{
               display: 'flex',
               fontFamily: 'Cormorant',
               fontStyle: 'italic',
               fontSize: 22,
               color: ACC_DEEP,
-            }}>
-              Find your place on the map of how you think.
-            </div>
-          )}
-          <div style={{
+            }}
+          >
+            Find your place on the map of how you think.
+          </div>
+        )}
+        <div
+          style={{
             display: 'flex',
             fontFamily: 'Inter',
             fontSize: 12,
@@ -253,12 +302,12 @@ export default async function ArchetypeOGImage({
             fontWeight: 600,
             paddingBottom: 4,
             flexShrink: 0,
-          }}>
-            MULL.WORLD
-          </div>
+          }}
+        >
+          MULL.WORLD
         </div>
       </div>
-    ),
-    { ...size, fonts }
+    </div>,
+    { ...size, fonts },
   );
 }

@@ -12,14 +12,14 @@
 //
 // All server-renderable (no client JS), pure SVG and CSS animations.
 
-import { ARCHETYPES } from "@/lib/archetypes";
-import { ARCHETYPE_COLORS } from "@/lib/archetype-colors";
-import { PHILOSOPHER_POSITIONS } from "@/lib/projection";
-import { ArchetypeSprite } from "./archetype-sprite";
+import { ARCHETYPES } from '@/lib/archetypes';
+import { ARCHETYPE_COLORS } from '@/lib/archetype-colors';
+import { PHILOSOPHER_POSITIONS } from '@/lib/projection';
+import { ArchetypeSprite } from './archetype-sprite';
 
 // Pick three archetype figures to "feature" on the right side.
 // Hand-chosen to be visually varied (not three blue figures stacked).
-const FEATURED = ["cartographer", "hammer", "garden"] as const;
+const FEATURED = ['cartographer', 'hammer', 'garden'] as const;
 
 export function HeroSprites() {
   return (
@@ -30,11 +30,9 @@ export function HeroSprites() {
         <div className="pixel-panel pixel-panel--ink mx-auto w-full max-w-[340px]">
           <div
             className="flex items-center justify-between border-b-4 border-ink bg-ink px-3 py-1.5"
-            style={{ fontFamily: "var(--font-pixel-display)" }}
+            style={{ fontFamily: 'var(--font-pixel-display)' }}
           >
-            <span className="text-[9px] tracking-[0.18em] text-acc-soft">
-              ▶ MAP_PREVIEW
-            </span>
+            <span className="text-[9px] tracking-[0.18em] text-acc-soft">▶ MAP_PREVIEW</span>
             <span className="text-[9px] tracking-[0.16em] text-acc">
               {PHILOSOPHER_POSITIONS.length} pts
             </span>
@@ -49,18 +47,13 @@ export function HeroSprites() {
         const color = ARCHETYPE_COLORS[key];
         const arch = ARCHETYPES.find((a) => a.key === key);
         const positions: React.CSSProperties[] = [
-          { left: "0%", top: "200px" },
-          { left: "32%", top: "260px" },
-          { left: "64%", top: "210px" },
+          { left: '0%', top: '200px' },
+          { left: '32%', top: '260px' },
+          { left: '64%', top: '210px' },
         ];
-        const floatDelays = ["0s", "-0.8s", "-1.4s"];
+        const floatDelays = ['0s', '-0.8s', '-1.4s'];
         return (
-          <div
-            key={key}
-            className="absolute"
-            style={positions[i]}
-            aria-hidden
-          >
+          <div key={key} className="absolute" style={positions[i]} aria-hidden>
             <div
               className="relative h-[100px] w-[100px]"
               style={{
@@ -80,9 +73,9 @@ export function HeroSprites() {
               <div
                 className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap border-2 border-ink bg-[#FFFCF4] px-1.5 py-0.5 text-[9px] tracking-[0.12em] text-ink"
                 style={{
-                  top: "100%",
+                  top: '100%',
                   marginTop: 4,
-                  fontFamily: "var(--font-pixel-display)",
+                  fontFamily: 'var(--font-pixel-display)',
                   boxShadow: `2px 2px 0 0 ${color.deep}`,
                 }}
               >
@@ -110,18 +103,33 @@ function MapPreview() {
         viewBox={`0 0 ${W} ${H}`}
         xmlns="http://www.w3.org/2000/svg"
         shapeRendering="crispEdges"
-        style={{ display: "block", imageRendering: "pixelated" }}
+        style={{ display: 'block', imageRendering: 'pixelated' }}
         className="w-full"
       >
         {/* Faint gridlines to suggest the X/Y axes */}
-        <line x1={W / 2} y1={inset} x2={W / 2} y2={H - inset} stroke="#3A3528" strokeWidth={1} strokeDasharray="2 4" />
-        <line x1={inset} y1={H / 2} x2={W - inset} y2={H / 2} stroke="#3A3528" strokeWidth={1} strokeDasharray="2 4" />
+        <line
+          x1={W / 2}
+          y1={inset}
+          x2={W / 2}
+          y2={H - inset}
+          stroke="#3A3528"
+          strokeWidth={1}
+          strokeDasharray="2 4"
+        />
+        <line
+          x1={inset}
+          y1={H / 2}
+          x2={W - inset}
+          y2={H / 2}
+          stroke="#3A3528"
+          strokeWidth={1}
+          strokeDasharray="2 4"
+        />
 
         {/* Each philosopher = one 2x2 pixel rect, archetype-colored.
             Coords map [-1,1] × [-1,1] → SVG pixel space. */}
         {PHILOSOPHER_POSITIONS.map((p) => {
-          const color =
-            ARCHETYPE_COLORS[p.archetypeKey]?.primary ?? "#B8862F";
+          const color = ARCHETYPE_COLORS[p.archetypeKey]?.primary ?? '#B8862F';
           const px = inset + ((p.x + 1) / 2) * (W - inset * 2);
           const py = inset + ((1 - p.y) / 2) * (H - inset * 2);
           return (
@@ -139,7 +147,7 @@ function MapPreview() {
       {/* Small labels at the four corners — what the axes mean */}
       <div
         className="mt-1 flex justify-between text-[8px] tracking-[0.16em] text-acc-deep"
-        style={{ fontFamily: "var(--font-pixel-display)" }}
+        style={{ fontFamily: 'var(--font-pixel-display)' }}
       >
         <span>EMBODIED</span>
         <span>ABSTRACT</span>

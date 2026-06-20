@@ -20,7 +20,7 @@ const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
 function mintCode(): string {
   const buf = crypto.getRandomValues(new Uint8Array(6));
-  return Array.from(buf, b => CODE_ALPHABET[b % CODE_ALPHABET.length]).join('');
+  return Array.from(buf, (b) => CODE_ALPHABET[b % CODE_ALPHABET.length]).join('');
 }
 
 type CreateBody = {
@@ -44,11 +44,13 @@ export async function POST(req: Request) {
   }
 
   const description = typeof body.description === 'string' ? body.description.trim() || null : null;
-  const term        = typeof body.term === 'string'        ? body.term.trim() || null        : null;
-  const schoolName  = typeof body.school_name === 'string' ? body.school_name.trim() || null : null;
+  const term = typeof body.term === 'string' ? body.term.trim() || null : null;
+  const schoolName = typeof body.school_name === 'string' ? body.school_name.trim() || null : null;
 
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Sign in to create a class.' }, { status: 401 });
 
   // Retry on UNIQUE collision (extremely rare at 2.2e9 keyspace).

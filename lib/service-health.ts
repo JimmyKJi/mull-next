@@ -21,18 +21,11 @@ export type HealthCheck = {
 };
 
 async function withTimeout<T>(p: Promise<T>, ms: number, fallback: T): Promise<T> {
-  return Promise.race([
-    p,
-    new Promise<T>(resolve => setTimeout(() => resolve(fallback), ms)),
-  ]);
+  return Promise.race([p, new Promise<T>((resolve) => setTimeout(() => resolve(fallback), ms))]);
 }
 
 export async function runHealthChecks(): Promise<HealthCheck[]> {
-  return Promise.all([
-    checkSupabase(),
-    checkAnthropic(),
-    checkResend(),
-  ]);
+  return Promise.all([checkSupabase(), checkAnthropic(), checkResend()]);
 }
 
 async function checkSupabase(): Promise<HealthCheck> {
@@ -49,7 +42,12 @@ async function checkSupabase(): Promise<HealthCheck> {
     if (result.error) return { name: 'Supabase', ok: false, latencyMs, note: result.error.message };
     return { name: 'Supabase', ok: true, latencyMs };
   } catch (e) {
-    return { name: 'Supabase', ok: false, latencyMs: Date.now() - start, note: (e as Error).message };
+    return {
+      name: 'Supabase',
+      ok: false,
+      latencyMs: Date.now() - start,
+      note: (e as Error).message,
+    };
   }
 }
 
@@ -68,7 +66,12 @@ async function checkAnthropic(): Promise<HealthCheck> {
     if (!res) return { name: 'Anthropic', ok: false, latencyMs, note: 'timeout' };
     return { name: 'Anthropic', ok: true, latencyMs, note: `HTTP ${res.status}` };
   } catch (e) {
-    return { name: 'Anthropic', ok: false, latencyMs: Date.now() - start, note: (e as Error).message };
+    return {
+      name: 'Anthropic',
+      ok: false,
+      latencyMs: Date.now() - start,
+      note: (e as Error).message,
+    };
   }
 }
 
@@ -81,7 +84,7 @@ async function checkResend(): Promise<HealthCheck> {
   try {
     const res = await withTimeout(
       fetch('https://api.resend.com/domains', {
-        headers: { 'Authorization': `Bearer ${apiKey}` },
+        headers: { Authorization: `Bearer ${apiKey}` },
         cache: 'no-store',
       }),
       3000,

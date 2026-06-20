@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   // intentionally not setting noindex here — daily prompt is public-facing
 };
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 
 type ExistingResponse = {
@@ -47,7 +47,9 @@ type RecentResponse = {
 export default async function DilemmaPage() {
   const supabase = await createClient();
   const locale = await getServerLocale();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   // Personalized daily dilemma: the question is chosen for the user's current
   // archetype (from their latest quiz attempt) and aimed at that archetype's
@@ -69,7 +71,9 @@ export default async function DilemmaPage() {
   if (user) {
     const { data } = await supabase
       .from('dilemma_responses')
-      .select('id, question_text, response_text, vector_delta, analysis, diagnosis, kinship, is_novel, created_at')
+      .select(
+        'id, question_text, response_text, vector_delta, analysis, diagnosis, kinship, is_novel, created_at',
+      )
       .eq('user_id', user.id)
       .eq('dilemma_date', today.dateKey)
       .maybeSingle<ExistingResponse>();
@@ -96,7 +100,7 @@ export default async function DilemmaPage() {
       .order('dilemma_date', { ascending: false })
       .limit(400);
     if (dateRows) {
-      const dateSet = new Set(dateRows.map(r => r.dilemma_date as string));
+      const dateSet = new Set(dateRows.map((r) => r.dilemma_date as string));
       const cursor = new Date(today.dateKey);
       // Grace policy: one missed day is forgiven so a single forgotten
       // morning doesn't reset hard-won progress. Two missed days break.
@@ -124,10 +128,7 @@ export default async function DilemmaPage() {
   return (
     <main className="mx-auto max-w-[820px] px-6 pb-32 pt-10 sm:px-10">
       <div className="mb-6 flex items-center justify-end gap-3">
-        <Link
-          href="/account"
-          className="text-[13px] text-ink-soft hover:text-ink hover:underline"
-        >
+        <Link href="/account" className="text-[13px] text-ink-soft hover:text-ink hover:underline">
           {t('nav.account_arrow', locale)}
         </Link>
       </div>
@@ -141,10 +142,13 @@ export default async function DilemmaPage() {
         <span>▶ {t('dilemma.eyebrow', locale).toUpperCase()}</span>
         <span className="opacity-60">·</span>
         <span className="text-ink">
-          {new Date(today.dateKey).toLocaleDateString(
-            locale === 'en' ? 'en-GB' : locale,
-            { weekday: 'long', day: 'numeric', month: 'long' },
-          ).toUpperCase()}
+          {new Date(today.dateKey)
+            .toLocaleDateString(locale === 'en' ? 'en-GB' : locale, {
+              weekday: 'long',
+              day: 'numeric',
+              month: 'long',
+            })
+            .toUpperCase()}
         </span>
         {streak > 1 ? (
           <>
@@ -173,7 +177,8 @@ export default async function DilemmaPage() {
           className="border-b-4 border-ink bg-ink px-4 py-2 text-[10px] tracking-[0.22em] text-acc-soft"
           style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
-          ▶ {(archetypeName
+          ▶{' '}
+          {(archetypeName
             ? t('dilemma.for_archetype', locale, { name: archetypeName })
             : t('dilemma.todays_question', locale)
           ).toUpperCase()}
@@ -203,23 +208,26 @@ export default async function DilemmaPage() {
 
       <div className="mt-8" />
 
-
       {!user ? (
-        <div style={{
-          padding: '28px 32px',
-          background: '#FFFCF4',
-          border: '4px solid var(--color-ink)',
-          boxShadow: '5px 5px 0 0 var(--color-acc)',
-          borderRadius: 0,
-          textAlign: 'center',
-        }}>
-          <p style={{
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 18,
-            color: 'var(--color-ink-soft)',
-            margin: '0 0 20px',
-          }}>
+        <div
+          style={{
+            padding: '28px 32px',
+            background: '#FFFCF4',
+            border: '4px solid var(--color-ink)',
+            boxShadow: '5px 5px 0 0 var(--color-acc)',
+            borderRadius: 0,
+            textAlign: 'center',
+          }}
+        >
+          <p
+            style={{
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: 18,
+              color: 'var(--color-ink-soft)',
+              margin: '0 0 20px',
+            }}
+          >
             {t('dilemma.account_required_msg', locale)}
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -268,60 +276,72 @@ export default async function DilemmaPage() {
           </div>
         </div>
       ) : existing ? (
-        <div style={{
-          padding: '28px 32px',
-          background: '#FFFCF4',
-          border: '4px solid var(--color-ink)',
-          boxShadow: '5px 5px 0 0 #2F5D5C',
-          borderRadius: 0,
-        }}>
-          <div style={{
-            fontFamily: 'var(--font-pixel-display)',
-            fontSize: 12,
-            color: '#2F5D5C',
-            textTransform: 'uppercase',
-            letterSpacing: '0.18em',
-            marginBottom: 14,
-          }}>
+        <div
+          style={{
+            padding: '28px 32px',
+            background: '#FFFCF4',
+            border: '4px solid var(--color-ink)',
+            boxShadow: '5px 5px 0 0 #2F5D5C',
+            borderRadius: 0,
+          }}
+        >
+          <div
+            style={{
+              fontFamily: 'var(--font-pixel-display)',
+              fontSize: 12,
+              color: '#2F5D5C',
+              textTransform: 'uppercase',
+              letterSpacing: '0.18em',
+              marginBottom: 14,
+            }}
+          >
             ✓ {t('dilemma.you_answered_today', locale).toUpperCase()}
           </div>
-          <p style={{
-            fontFamily: serif,
-            fontSize: 17,
-            color: 'var(--color-ink)',
-            lineHeight: 1.6,
-            margin: '0 0 18px',
-            whiteSpace: 'pre-wrap',
-          }}>
+          <p
+            style={{
+              fontFamily: serif,
+              fontSize: 17,
+              color: 'var(--color-ink)',
+              lineHeight: 1.6,
+              margin: '0 0 18px',
+              whiteSpace: 'pre-wrap',
+            }}
+          >
             {existing.response_text}
           </p>
           {existing.analysis && (
-            <div style={{
-              padding: '14px 16px',
-              background: 'var(--color-acc-soft)',
-              border: '3px solid var(--color-ink)',
-              boxShadow: '3px 3px 0 0 var(--color-acc)',
-              borderRadius: 0,
-              marginBottom: 16,
-            }}>
-              <div style={{
-                fontFamily: 'var(--font-pixel-display)',
-                fontSize: 10,
-                color: 'var(--color-acc-deep)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.18em',
-                marginBottom: 8,
-              }}>
+            <div
+              style={{
+                padding: '14px 16px',
+                background: 'var(--color-acc-soft)',
+                border: '3px solid var(--color-ink)',
+                boxShadow: '3px 3px 0 0 var(--color-acc)',
+                borderRadius: 0,
+                marginBottom: 16,
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: 'var(--font-pixel-display)',
+                  fontSize: 10,
+                  color: 'var(--color-acc-deep)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.18em',
+                  marginBottom: 8,
+                }}
+              >
                 {t('dilemma.what_revealed', locale).toUpperCase()}
               </div>
-              <p style={{
-                fontFamily: serif,
-                fontStyle: 'italic',
-                fontSize: 16,
-                color: 'var(--color-ink)',
-                margin: 0,
-                lineHeight: 1.5,
-              }}>
+              <p
+                style={{
+                  fontFamily: serif,
+                  fontStyle: 'italic',
+                  fontSize: 16,
+                  color: 'var(--color-ink)',
+                  margin: 0,
+                  lineHeight: 1.5,
+                }}
+              >
                 {existing.analysis}
               </p>
             </div>
@@ -335,26 +355,32 @@ export default async function DilemmaPage() {
           />
           {shifts.length > 0 && (
             <div>
-              <div style={{
-                fontFamily: sans,
-                fontSize: 10,
-                fontWeight: 600,
-                color: 'var(--color-acc-deep)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.16em',
-                marginBottom: 8,
-              }}>
+              <div
+                style={{
+                  fontFamily: sans,
+                  fontSize: 10,
+                  fontWeight: 600,
+                  color: 'var(--color-acc-deep)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.16em',
+                  marginBottom: 8,
+                }}
+              >
                 {t('dilemma.shift_added', locale)}
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14 }}>
-                {shifts.map(s => (
-                  <span key={s.key} style={{
-                    fontFamily: sans,
-                    fontSize: 14,
-                    color: s.delta > 0 ? '#2F5D5C' : '#7A2E2E',
-                  }}>
+                {shifts.map((s) => (
+                  <span
+                    key={s.key}
+                    style={{
+                      fontFamily: sans,
+                      fontSize: 14,
+                      color: s.delta > 0 ? '#2F5D5C' : '#7A2E2E',
+                    }}
+                  >
                     <strong style={{ fontVariantNumeric: 'tabular-nums' }}>
-                      {s.delta > 0 ? '+' : ''}{s.delta.toFixed(1)}
+                      {s.delta > 0 ? '+' : ''}
+                      {s.delta.toFixed(1)}
                     </strong>{' '}
                     <span style={{ color: 'var(--color-ink-soft)' }}>{s.name}</span>
                   </span>
@@ -362,15 +388,17 @@ export default async function DilemmaPage() {
               </div>
             </div>
           )}
-          <div style={{
-            marginTop: 22,
-            paddingTop: 18,
-            borderTop: '2px dashed var(--color-line)',
-            display: 'flex',
-            gap: 12,
-            flexWrap: 'wrap',
-            alignItems: 'center',
-          }}>
+          <div
+            style={{
+              marginTop: 22,
+              paddingTop: 18,
+              borderTop: '2px dashed var(--color-line)',
+              display: 'flex',
+              gap: 12,
+              flexWrap: 'wrap',
+              alignItems: 'center',
+            }}
+          >
             <Link
               href="/account#shifts"
               className="pixel-press"
@@ -392,12 +420,14 @@ export default async function DilemmaPage() {
             >
               ▸ {t('dilemma.see_trajectory', locale).toUpperCase()}
             </Link>
-            <span style={{
-              fontFamily: sans,
-              fontSize: 12,
-              color: 'var(--color-acc-deep)',
-              alignSelf: 'center',
-            }}>
+            <span
+              style={{
+                fontFamily: sans,
+                fontSize: 12,
+                color: 'var(--color-acc-deep)',
+                alignSelf: 'center',
+              }}
+            >
               {t('dilemma.next_arrives', locale)}
             </span>
           </div>
@@ -412,28 +442,32 @@ export default async function DilemmaPage() {
 
       {user && existing && recent.length > 0 && (
         <section style={{ marginTop: 48 }}>
-          <div style={{
-            fontFamily: sans,
-            fontSize: 11,
-            fontWeight: 600,
-            color: 'var(--color-acc-deep)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.18em',
-            marginBottom: 6,
-          }}>
+          <div
+            style={{
+              fontFamily: sans,
+              fontSize: 11,
+              fontWeight: 600,
+              color: 'var(--color-acc-deep)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.18em',
+              marginBottom: 6,
+            }}
+          >
             {t('dilemma.recent_eyebrow', locale)}
           </div>
-          <p style={{
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 15,
-            color: 'var(--color-ink-soft)',
-            margin: '0 0 18px',
-          }}>
+          <p
+            style={{
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: 15,
+              color: 'var(--color-ink-soft)',
+              margin: '0 0 18px',
+            }}
+          >
             {t('dilemma.recent_helper', locale)}
           </p>
           <div style={{ display: 'grid', gap: 14 }}>
-            {recent.map(r => (
+            {recent.map((r) => (
               <details
                 key={r.id}
                 style={{
@@ -444,50 +478,63 @@ export default async function DilemmaPage() {
                   padding: '14px 18px',
                 }}
               >
-                <summary style={{
-                  cursor: 'pointer',
-                  listStyle: 'none',
-                  fontFamily: serif,
-                  fontSize: 16,
-                  color: 'var(--color-ink)',
-                  lineHeight: 1.4,
-                }}>
-                  <span style={{
-                    display: 'block',
-                    fontFamily: 'var(--font-pixel-display)',
-                    fontSize: 10,
-                    color: 'var(--color-acc-deep)',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.18em',
-                    marginBottom: 8,
-                  }}>
-                    ▸ {new Date(r.dilemma_date).toLocaleDateString(locale === 'en' ? 'en-GB' : locale, {
-                      weekday: 'short', day: 'numeric', month: 'short'
-                    }).toUpperCase()}
+                <summary
+                  style={{
+                    cursor: 'pointer',
+                    listStyle: 'none',
+                    fontFamily: serif,
+                    fontSize: 16,
+                    color: 'var(--color-ink)',
+                    lineHeight: 1.4,
+                  }}
+                >
+                  <span
+                    style={{
+                      display: 'block',
+                      fontFamily: 'var(--font-pixel-display)',
+                      fontSize: 10,
+                      color: 'var(--color-acc-deep)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.18em',
+                      marginBottom: 8,
+                    }}
+                  >
+                    ▸{' '}
+                    {new Date(r.dilemma_date)
+                      .toLocaleDateString(locale === 'en' ? 'en-GB' : locale, {
+                        weekday: 'short',
+                        day: 'numeric',
+                        month: 'short',
+                      })
+                      .toUpperCase()}
                   </span>
                   {r.question_text}
                 </summary>
-                <p style={{
-                  fontFamily: serif,
-                  fontSize: 15.5,
-                  color: 'var(--color-ink)',
-                  lineHeight: 1.6,
-                  margin: '12px 0 0',
-                  whiteSpace: 'pre-wrap',
-                }}>
+                <p
+                  style={{
+                    fontFamily: serif,
+                    fontSize: 15.5,
+                    color: 'var(--color-ink)',
+                    lineHeight: 1.6,
+                    margin: '12px 0 0',
+                    whiteSpace: 'pre-wrap',
+                  }}
+                >
                   {r.response_text}
                 </p>
                 {r.analysis && (
-                  <p style={{
-                    fontFamily: serif,
-                    fontStyle: 'italic',
-                    fontSize: 14.5,
-                    color: 'var(--color-ink-soft)',
-                    lineHeight: 1.55,
-                    margin: '10px 0 0',
-                    paddingLeft: 12,
-                    borderLeft: '2px solid var(--color-line)',
-                  }}>
+                  <p
+                    style={{
+                      fontFamily: serif,
+                      fontStyle: 'italic',
+                      fontSize: 14.5,
+                      color: 'var(--color-ink-soft)',
+                      lineHeight: 1.55,
+                      margin: '10px 0 0',
+                      paddingLeft: 12,
+                      borderLeft: '2px solid var(--color-line)',
+                    }}
+                  >
                     {r.analysis}
                   </p>
                 )}
@@ -501,15 +548,17 @@ export default async function DilemmaPage() {
           Spar → Crucible → Argument Diary. */}
       <PathwayNext pathway={pathwayForDilemma(locale)} locale={locale} />
 
-      <p style={{
-        fontFamily: sans,
-        fontSize: 12,
-        color: 'var(--color-acc-deep)',
-        marginTop: 32,
-        opacity: 0.75,
-        textAlign: 'center',
-        letterSpacing: 0.3,
-      }}>
+      <p
+        style={{
+          fontFamily: sans,
+          fontSize: 12,
+          color: 'var(--color-acc-deep)',
+          marginTop: 32,
+          opacity: 0.75,
+          textAlign: 'center',
+          letterSpacing: 0.3,
+        }}
+      >
         {t('dilemma.footer_note', locale)}
       </p>
     </main>

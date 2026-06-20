@@ -13,13 +13,10 @@
 // frozen. Pure CSS, no JS cost. Respects prefers-reduced-motion
 // via the @media rule in globals.css.
 
-import Link from "next/link";
-import {
-  PHILOSOPHER_POSITIONS,
-  projectTo2D,
-} from "@/lib/projection";
-import { ARCHETYPE_COLORS, DEFAULT_ARCHETYPE_COLOR } from "@/lib/archetype-colors";
-import { t, type Locale } from "@/lib/translations";
+import Link from 'next/link';
+import { PHILOSOPHER_POSITIONS, projectTo2D } from '@/lib/projection';
+import { ARCHETYPE_COLORS, DEFAULT_ARCHETYPE_COLOR } from '@/lib/archetype-colors';
+import { t, type Locale } from '@/lib/translations';
 
 type Props = {
   /** If provided, renders the "you are here" overlay at the user's
@@ -28,7 +25,7 @@ type Props = {
   /** Visual variant. "decorative" softens the points to ambient
    *  background presence (used on /home); "interactive" makes points
    *  bigger + more clickable (used on /result). */
-  variant?: "decorative" | "interactive";
+  variant?: 'decorative' | 'interactive';
   /** Whether points should be navigable links to /philosopher/[slug]. */
   clickable?: boolean;
   /** Width/height override — defaults to the SVG viewBox aspect (16:9). */
@@ -55,30 +52,27 @@ function toSvg(x: number, y: number): [number, number] {
 
 export function Constellation({
   userVector,
-  variant = "decorative",
+  variant = 'decorative',
   clickable = true,
   className,
-  locale = "en",
+  locale = 'en',
 }: Props) {
-  const isInteractive = variant === "interactive";
+  const isInteractive = variant === 'interactive';
 
   // Resolve user position + neighborhood for the highlight ring.
-  const userPos =
-    userVector && userVector.length === 16
-      ? toSvg(...projectTo2D(userVector))
-      : null;
+  const userPos = userVector && userVector.length === 16 ? toSvg(...projectTo2D(userVector)) : null;
 
   const NEIGHBORHOOD_RADIUS = 130; // SVG units; "nearby" highlight zone
 
   return (
-    <div className={"relative w-full " + (className ?? "")}>
+    <div className={'relative w-full ' + (className ?? '')}>
       <svg
         viewBox={`0 0 ${W} ${H}`}
         xmlns="http://www.w3.org/2000/svg"
         role="img"
-        aria-label={t("cnst.aria_2d", locale, { count: PHILOSOPHER_POSITIONS.length })}
+        aria-label={t('cnst.aria_2d', locale, { count: PHILOSOPHER_POSITIONS.length })}
         className="block w-full"
-        style={{ overflow: "visible" }}
+        style={{ overflow: 'visible' }}
       >
         {/* Quadrant axis labels — quiet, only on interactive variant */}
         {isInteractive ? <AxisLabels locale={locale} /> : null}
@@ -88,24 +82,15 @@ export function Constellation({
         <g className="mull-constellation-drift">
           {PHILOSOPHER_POSITIONS.map((p) => {
             const [px, py] = toSvg(p.x, p.y);
-            const color =
-              ARCHETYPE_COLORS[p.archetypeKey] ?? DEFAULT_ARCHETYPE_COLOR;
+            const color = ARCHETYPE_COLORS[p.archetypeKey] ?? DEFAULT_ARCHETYPE_COLOR;
 
             // Highlight if the user's vector is within the
             // neighborhood radius.
-            const dist = userPos
-              ? Math.hypot(px - userPos[0], py - userPos[1])
-              : Infinity;
+            const dist = userPos ? Math.hypot(px - userPos[0], py - userPos[1]) : Infinity;
             const near = dist < NEIGHBORHOOD_RADIUS;
 
             const r = isInteractive ? 4.5 : 3.5;
-            const opacity = userPos
-              ? near
-                ? 1
-                : 0.25
-              : isInteractive
-                ? 0.85
-                : 0.55;
+            const opacity = userPos ? (near ? 1 : 0.25) : isInteractive ? 0.85 : 0.55;
 
             const point = (
               <circle
@@ -114,15 +99,11 @@ export function Constellation({
                 r={r}
                 fill={color.primary}
                 opacity={opacity}
-                className={
-                  clickable
-                    ? "transition-all duration-200 hover:opacity-100"
-                    : ""
-                }
+                className={clickable ? 'transition-all duration-200 hover:opacity-100' : ''}
               >
                 <title>
                   {p.name}
-                  {p.dates ? ` · ${p.dates}` : ""}
+                  {p.dates ? ` · ${p.dates}` : ''}
                 </title>
               </circle>
             );
@@ -130,11 +111,7 @@ export function Constellation({
             if (!clickable) return <g key={p.slug}>{point}</g>;
 
             return (
-              <Link
-                key={p.slug}
-                href={`/philosopher/${p.slug}`}
-                style={{ cursor: "pointer" }}
-              >
+              <Link key={p.slug} href={`/philosopher/${p.slug}`} style={{ cursor: 'pointer' }}>
                 {point}
               </Link>
             );
@@ -149,7 +126,7 @@ export function Constellation({
               cx={userPos[0]}
               cy={userPos[1]}
               r={32}
-              style={{ fill: "var(--color-acc-deep)" }}
+              style={{ fill: 'var(--color-acc-deep)' }}
               opacity={0.12}
               className="mull-constellation-pulse"
             />
@@ -159,18 +136,13 @@ export function Constellation({
               cy={userPos[1]}
               r={14}
               fill="none"
-              style={{ stroke: "var(--color-acc-deep)" }}
+              style={{ stroke: 'var(--color-acc-deep)' }}
               strokeWidth={1.5}
               opacity={0.5}
             />
             {/* Center dot */}
-            <circle
-              cx={userPos[0]}
-              cy={userPos[1]}
-              r={6}
-              style={{ fill: "var(--color-ink)" }}
-            >
-              <title>{t("cnst.you_sit_here", locale)}</title>
+            <circle cx={userPos[0]} cy={userPos[1]} r={6} style={{ fill: 'var(--color-ink)' }}>
+              <title>{t('cnst.you_sit_here', locale)}</title>
             </circle>
           </g>
         ) : null}
@@ -212,7 +184,7 @@ export function Constellation({
 // Quiet axis labels for the interactive variant. Edges only, deeply
 // tinted so they don't compete with the points.
 function AxisLabels({ locale }: { locale: Locale }) {
-  const c = "var(--color-acc-deep)";
+  const c = 'var(--color-acc-deep)';
   const o = 0.45;
   const fz = 11;
   return (
@@ -221,16 +193,24 @@ function AxisLabels({ locale }: { locale: Locale }) {
       fontSize={fz}
       fontWeight={500}
       letterSpacing="0.18em"
-      style={{ textTransform: "uppercase", fill: c }}
+      style={{ textTransform: 'uppercase', fill: c }}
       opacity={o}
     >
       {/* X axis ends — sit ~24 from the edge so they don't crowd */}
-      <text x={50} y={H / 2 - 8} textAnchor="start">{t("cnst.embodied", locale)}</text>
-      <text x={W - 50} y={H / 2 - 8} textAnchor="end">{t("cnst.abstract", locale)}</text>
+      <text x={50} y={H / 2 - 8} textAnchor="start">
+        {t('cnst.embodied', locale)}
+      </text>
+      <text x={W - 50} y={H / 2 - 8} textAnchor="end">
+        {t('cnst.abstract', locale)}
+      </text>
 
       {/* Y axis ends */}
-      <text x={W / 2} y={28} textAnchor="middle">{t("cnst.sovereign_self", locale)}</text>
-      <text x={W / 2} y={H - 16} textAnchor="middle">{t("cnst.communal", locale)}</text>
+      <text x={W / 2} y={28} textAnchor="middle">
+        {t('cnst.sovereign_self', locale)}
+      </text>
+      <text x={W / 2} y={H - 16} textAnchor="middle">
+        {t('cnst.communal', locale)}
+      </text>
 
       {/* Subtle center cross — pure decoration */}
       <line

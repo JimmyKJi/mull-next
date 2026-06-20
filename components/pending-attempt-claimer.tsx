@@ -72,7 +72,9 @@ export default function PendingAttemptClaimer() {
           return;
         }
       } catch {
-        try { localStorage.removeItem(KEY); } catch {}
+        try {
+          localStorage.removeItem(KEY);
+        } catch {}
         return;
       }
       if (!stash) return;
@@ -86,7 +88,9 @@ export default function PendingAttemptClaimer() {
         if (res.ok) {
           // Whether the server claimed or skipped (dedupe), the stash
           // has done its job — drop it so we don't keep retrying.
-          try { localStorage.removeItem(KEY); } catch {}
+          try {
+            localStorage.removeItem(KEY);
+          } catch {}
           // Pop the toast so the user sees the import landed.
           setToast({ archetype: stash.archetype, flavor: stash.flavor });
           // Refresh so the trajectory rerenders with the new attempt.
@@ -139,27 +143,33 @@ export default function PendingAttemptClaimer() {
           100% { transform: translateX(0); opacity: 1; }
         }
       `}</style>
-      <div style={{
-        fontFamily: "var(--font-pixel-display, 'Courier New', monospace)",
-        fontSize: 10,
-        color: 'var(--color-acc)',
-        letterSpacing: '0.18em',
-        marginBottom: 6,
-        textTransform: 'uppercase',
-      }}>
+      <div
+        style={{
+          fontFamily: "var(--font-pixel-display, 'Courier New', monospace)",
+          fontSize: 10,
+          color: 'var(--color-acc)',
+          letterSpacing: '0.18em',
+          marginBottom: 6,
+          textTransform: 'uppercase',
+        }}
+      >
         ▸ {t('uic.claim_imported_eyebrow', locale)}
       </div>
-      <div style={{
-        fontFamily: "var(--font-prose)",
-        fontSize: 16,
-        lineHeight: 1.35,
-      }}>
+      <div
+        style={{
+          fontFamily: 'var(--font-prose)',
+          fontSize: 16,
+          lineHeight: 1.35,
+        }}
+      >
         {t('uic.claim_imported_body', locale, { label: `**${label}**` })
           .split(/(\*\*[^*]+\*\*)/g)
           .map((seg, i) =>
-            seg.startsWith('**') && seg.endsWith('**')
-              ? <strong key={i}>{seg.slice(2, -2)}</strong>
-              : seg,
+            seg.startsWith('**') && seg.endsWith('**') ? (
+              <strong key={i}>{seg.slice(2, -2)}</strong>
+            ) : (
+              seg
+            ),
           )}
       </div>
     </div>

@@ -15,7 +15,7 @@ import { BADGES, partitionBadges } from '@/lib/badges';
 import type { UserStats } from '@/lib/profile-progression';
 import { t, type Locale } from '@/lib/translations';
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
@@ -30,19 +30,23 @@ export default function ProgressionPanel({
 
   // Group milestones by track so they render in clusters.
   const byTrack: Record<MilestoneTrack, typeof MILESTONES> = {
-    reflection: [], practice: [], diary: [], constellation: [], consistency: [],
+    reflection: [],
+    practice: [],
+    diary: [],
+    constellation: [],
+    consistency: [],
   };
   for (const m of MILESTONES) byTrack[m.track].push(m);
 
   // For each milestone compute progress + earned status.
-  const compute = (m: typeof MILESTONES[number]) => {
+  const compute = (m: (typeof MILESTONES)[number]) => {
     const current = m.metric(stats);
     const ratio = Math.min(1, current / m.target);
     return { current, ratio, done: current >= m.target };
   };
 
   // Earned-milestone count for the headline.
-  const earnedMilestones = MILESTONES.filter(m => m.metric(stats) >= m.target).length;
+  const earnedMilestones = MILESTONES.filter((m) => m.metric(stats) >= m.target).length;
 
   // Choose 3 unearned badges closest to being earned (heuristic: the ones
   // whose underlying numbers are closest to the threshold). For now,
@@ -52,19 +56,29 @@ export default function ProgressionPanel({
   return (
     <section style={{ marginTop: 48, marginBottom: 48 }}>
       <header style={{ marginBottom: 22 }}>
-        <h2 style={{
-          fontFamily: pixel, fontSize: 22,
-          margin: 0, color: 'var(--color-ink)', letterSpacing: '0.06em',
-          textTransform: 'uppercase',
-          textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))',
-        }}>
+        <h2
+          style={{
+            fontFamily: pixel,
+            fontSize: 22,
+            margin: 0,
+            color: 'var(--color-ink)',
+            letterSpacing: '0.06em',
+            textTransform: 'uppercase',
+            textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))',
+          }}
+        >
           ▸ {t('progression.title', locale).toUpperCase()}
         </h2>
-        <p style={{
-          fontFamily: serif, fontStyle: 'italic',
-          fontSize: 15, color: 'var(--color-ink-soft)',
-          margin: '12px 0 0', lineHeight: 1.55,
-        }}>
+        <p
+          style={{
+            fontFamily: serif,
+            fontStyle: 'italic',
+            fontSize: 15,
+            color: 'var(--color-ink-soft)',
+            margin: '12px 0 0',
+            lineHeight: 1.55,
+          }}
+        >
           {t('progression.subtitle', locale, {
             earned: earnedMilestones,
             total: MILESTONES.length,
@@ -121,92 +135,142 @@ export default function ProgressionPanel({
       <div>
         <h3 style={subhead}>▸ {t('progression.milestones', locale).toUpperCase()}</h3>
         <div style={{ display: 'grid', gap: 24 }}>
-          {(Object.keys(byTrack) as MilestoneTrack[]).map(track => {
+          {(Object.keys(byTrack) as MilestoneTrack[]).map((track) => {
             const meta = MILESTONE_TRACK_META[track];
             const items = byTrack[track];
             return (
               <div key={track}>
-                <div style={{
-                  display: 'flex', alignItems: 'baseline',
-                  justifyContent: 'space-between', gap: 8,
-                  marginBottom: 8,
-                }}>
-                  <h4 style={{
-                    fontFamily: serif, fontSize: 17, fontWeight: 500,
-                    color: 'var(--color-ink)', margin: 0,
-                  }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'baseline',
+                    justifyContent: 'space-between',
+                    gap: 8,
+                    marginBottom: 8,
+                  }}
+                >
+                  <h4
+                    style={{
+                      fontFamily: serif,
+                      fontSize: 17,
+                      fontWeight: 500,
+                      color: 'var(--color-ink)',
+                      margin: 0,
+                    }}
+                  >
                     {meta.label}
                   </h4>
-                  <span style={{
-                    fontFamily: pixel, fontSize: 11,
-                    color: meta.accent, textTransform: 'uppercase',
-                    letterSpacing: 0.4,
-                    fontVariantNumeric: 'tabular-nums',
-                  }}>
-                    {items.filter(m => compute(m).done).length} / {items.length}
+                  <span
+                    style={{
+                      fontFamily: pixel,
+                      fontSize: 11,
+                      color: meta.accent,
+                      textTransform: 'uppercase',
+                      letterSpacing: 0.4,
+                      fontVariantNumeric: 'tabular-nums',
+                    }}
+                  >
+                    {items.filter((m) => compute(m).done).length} / {items.length}
                   </span>
                 </div>
-                <p style={{
-                  fontFamily: sans, fontSize: 13, color: 'var(--color-acc-deep)',
-                  margin: '0 0 12px', opacity: 0.85, lineHeight: 1.5,
-                }}>
+                <p
+                  style={{
+                    fontFamily: sans,
+                    fontSize: 13,
+                    color: 'var(--color-acc-deep)',
+                    margin: '0 0 12px',
+                    opacity: 0.85,
+                    lineHeight: 1.5,
+                  }}
+                >
                   {meta.blurb}
                 </p>
-                <ul style={{
-                  listStyle: 'none', padding: 0, margin: 0,
-                  display: 'grid', gap: 10,
-                }}>
-                  {items.map(m => {
+                <ul
+                  style={{
+                    listStyle: 'none',
+                    padding: 0,
+                    margin: 0,
+                    display: 'grid',
+                    gap: 10,
+                  }}
+                >
+                  {items.map((m) => {
                     const { current, ratio, done } = compute(m);
                     return (
-                      <li key={m.key} style={{
-                        padding: '12px 14px',
-                        background: done ? 'var(--color-acc-soft)' : '#FFFCF4',
-                        border: '3px solid var(--color-ink)',
-                        boxShadow: done
-                          ? `3px 3px 0 0 ${meta.accent}`
-                          : '3px 3px 0 0 var(--color-line)',
-                        borderRadius: 0,
-                      }}>
-                        <div style={{
-                          display: 'flex', justifyContent: 'space-between',
-                          alignItems: 'baseline', gap: 12,
-                          marginBottom: 6, flexWrap: 'wrap',
-                        }}>
-                          <span style={{
-                            fontFamily: serif, fontSize: 15.5,
-                            color: 'var(--color-ink)', fontWeight: 500,
-                          }}>
-                            {done ? '✓ ' : ''}{m.name}
+                      <li
+                        key={m.key}
+                        style={{
+                          padding: '12px 14px',
+                          background: done ? 'var(--color-acc-soft)' : '#FFFCF4',
+                          border: '3px solid var(--color-ink)',
+                          boxShadow: done
+                            ? `3px 3px 0 0 ${meta.accent}`
+                            : '3px 3px 0 0 var(--color-line)',
+                          borderRadius: 0,
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'baseline',
+                            gap: 12,
+                            marginBottom: 6,
+                            flexWrap: 'wrap',
+                          }}
+                        >
+                          <span
+                            style={{
+                              fontFamily: serif,
+                              fontSize: 15.5,
+                              color: 'var(--color-ink)',
+                              fontWeight: 500,
+                            }}
+                          >
+                            {done ? '✓ ' : ''}
+                            {m.name}
                           </span>
-                          <span style={{
-                            fontFamily: pixel, fontSize: 11,
-                            color: done ? meta.accent : 'var(--color-acc-deep)',
-                            fontVariantNumeric: 'tabular-nums',
-                            letterSpacing: 0.4,
-                          }}>
+                          <span
+                            style={{
+                              fontFamily: pixel,
+                              fontSize: 11,
+                              color: done ? meta.accent : 'var(--color-acc-deep)',
+                              fontVariantNumeric: 'tabular-nums',
+                              letterSpacing: 0.4,
+                            }}
+                          >
                             {current} / {m.target}
                           </span>
                         </div>
-                        <p style={{
-                          fontFamily: sans, fontSize: 13,
-                          color: 'var(--color-ink-soft)', lineHeight: 1.5,
-                          margin: '0 0 10px',
-                        }}>
+                        <p
+                          style={{
+                            fontFamily: sans,
+                            fontSize: 13,
+                            color: 'var(--color-ink-soft)',
+                            lineHeight: 1.5,
+                            margin: '0 0 10px',
+                          }}
+                        >
                           {m.description}
                         </p>
                         {/* Pixel progress bar — segmented look via stepped width */}
-                        <div style={{
-                          height: 8, background: 'var(--color-cream)',
-                          border: '2px solid var(--color-ink)',
-                          borderRadius: 0, overflow: 'hidden',
-                        }}>
-                          <div style={{
-                            height: '100%',
-                            width: `${ratio * 100}%`,
-                            background: meta.accent,
-                            transition: 'width 0.4s steps(8, end)',
-                          }} />
+                        <div
+                          style={{
+                            height: 8,
+                            background: 'var(--color-cream)',
+                            border: '2px solid var(--color-ink)',
+                            borderRadius: 0,
+                            overflow: 'hidden',
+                          }}
+                        >
+                          <div
+                            style={{
+                              height: '100%',
+                              width: `${ratio * 100}%`,
+                              background: meta.accent,
+                              transition: 'width 0.4s steps(8, end)',
+                            }}
+                          />
                         </div>
                       </li>
                     );
@@ -222,16 +286,23 @@ export default function ProgressionPanel({
 }
 
 const subhead: React.CSSProperties = {
-  fontFamily: pixel, fontSize: 12,
-  color: 'var(--color-acc-deep)', textTransform: 'uppercase',
-  letterSpacing: 0.4, margin: '0 0 14px',
+  fontFamily: pixel,
+  fontSize: 12,
+  color: 'var(--color-acc-deep)',
+  textTransform: 'uppercase',
+  letterSpacing: 0.4,
+  margin: '0 0 14px',
 };
 
 const emptyState: React.CSSProperties = {
-  fontFamily: serif, fontStyle: 'italic',
-  fontSize: 14, color: 'var(--color-acc-deep)',
-  padding: '12px 16px', background: '#FFFCF4',
-  border: '2px dashed var(--color-acc-deep)', borderRadius: 0,
+  fontFamily: serif,
+  fontStyle: 'italic',
+  fontSize: 14,
+  color: 'var(--color-acc-deep)',
+  padding: '12px 16px',
+  background: '#FFFCF4',
+  border: '2px dashed var(--color-acc-deep)',
+  borderRadius: 0,
   margin: 0,
 };
 
@@ -246,13 +317,7 @@ const emptyState: React.CSSProperties = {
 // Tooltip is absolutely positioned and clipped to a higher z-index
 // so it doesn't get blocked by adjacent tiles.
 
-function BadgeTile({
-  badge,
-  earned,
-}: {
-  badge: typeof BADGES[number];
-  earned: boolean;
-}) {
+function BadgeTile({ badge, earned }: { badge: (typeof BADGES)[number]; earned: boolean }) {
   return (
     <li
       className="badge-tile"

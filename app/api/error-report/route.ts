@@ -23,8 +23,11 @@ export async function POST(req: Request) {
   if (!limit.ok) return NextResponse.json({ ok: false, throttled: true });
 
   let body: { source?: unknown; message?: unknown; stack?: unknown; url?: unknown };
-  try { body = await req.json(); }
-  catch { return NextResponse.json({ ok: false, error: 'Invalid JSON.' }, { status: 400 }); }
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ ok: false, error: 'Invalid JSON.' }, { status: 400 });
+  }
 
   const source = typeof body.source === 'string' ? body.source.slice(0, 200) : 'client:unknown';
   const message = typeof body.message === 'string' ? body.message : '';
@@ -36,7 +39,9 @@ export async function POST(req: Request) {
   // Pull user-id if signed in, just for triage. RLS-scoped read,
   // not stored as PII anywhere visible.
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   const fakeError = new Error(message);
   if (stack) fakeError.stack = stack;

@@ -47,7 +47,7 @@ export default function JoinForm({ initialCode, locale }: { initialCode: string;
         <input
           type="text"
           value={code}
-          onChange={e => setCode(e.target.value.toUpperCase())}
+          onChange={(e) => setCode(e.target.value.toUpperCase())}
           placeholder="ABC123"
           maxLength={12}
           required
@@ -63,7 +63,9 @@ export default function JoinForm({ initialCode, locale }: { initialCode: string;
       </label>
 
       {error && (
-        <p className="pixel-alert pixel-alert--error" role="alert">{error}</p>
+        <p className="pixel-alert pixel-alert--error" role="alert">
+          {error}
+        </p>
       )}
 
       <button type="submit" disabled={submitting || !code.trim()}>

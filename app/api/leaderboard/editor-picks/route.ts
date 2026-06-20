@@ -14,8 +14,7 @@ export async function GET(req: Request) {
   const week = url.searchParams.get('week') || weekKey();
 
   const supabase = await createClient();
-  const { data, error } = await supabase
-    .rpc('get_editor_picks_for_week', { in_week_start: week });
+  const { data, error } = await supabase.rpc('get_editor_picks_for_week', { in_week_start: week });
 
   if (error) {
     console.error('[leaderboard/editor-picks GET] failed', error);

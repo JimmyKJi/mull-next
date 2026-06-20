@@ -19,7 +19,9 @@ export const runtime = 'nodejs';
 
 export async function POST() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Not signed in.' }, { status: 401 });
   if (!user.email) return NextResponse.json({ ok: true, skipped: 'no email' });
 
@@ -50,9 +52,7 @@ export async function POST() {
   // Mark as sent. If this insert fails (rare), we'd send again next
   // load — annoying but not catastrophic. We tolerate the small
   // double-send risk in exchange for dead-simple flow.
-  const { error: insertErr } = await supabase
-    .from('welcome_emails')
-    .insert({ user_id: user.id });
+  const { error: insertErr } = await supabase.from('welcome_emails').insert({ user_id: user.id });
   if (insertErr && insertErr.code !== '23505') {
     // 23505 = unique_violation, a race with another tab's request — fine.
     console.error('[welcome] mark-sent failed', insertErr);

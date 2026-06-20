@@ -11,890 +11,1693 @@ export type Dilemma = {
 };
 
 export const DILEMMAS: Dilemma[] = [
-  { prompt: "What did you avoid today, and what would have happened if you hadn't?",
-    hint: "A specific moment is more useful than a general pattern." },
-  { prompt: "When did you most feel like yourself this week?",
-    hint: "What was happening, who was there, what did you notice?" },
-  { prompt: "Name something you believed strongly six months ago that you don't believe now. What changed?",
-    hint: "Try to recover both the old reasons and the new ones." },
-  { prompt: "What would you say to someone who came to you with the question that's been sitting with you?",
-    hint: "The question you'd want answered, asked back at you." },
-  { prompt: "The last time you felt envy — what was it actually about?",
-    hint: "Envy is a clue about what you want and won't admit to." },
-  { prompt: "Describe a small good thing in your life that almost no one else would notice.",
-    hint: "Something you'd miss if it were gone, even though it's invisible to others." },
-  { prompt: "What did you do recently that surprised you about yourself?",
-    hint: "Surprise upward or downward — both count." },
-  { prompt: "Think of someone you disagreed with this week. Write the strongest version of their position.",
-    hint: "Steelman it. Be more generous than feels natural." },
-  { prompt: "What conversation would you have if you could be guaranteed of being heard?",
-    hint: "With whom, about what, in what tone?" },
-  { prompt: "Name a way of thinking you've inherited from your parents that you're not sure you've earned.",
-    hint: "Inherited isn't necessarily wrong — but it's worth knowing." },
-  { prompt: "When were you last bored, properly bored, with nothing to fall back on? What surfaced?",
-    hint: "If you can't remember, that's worth writing about too." },
-  { prompt: "Describe a moment recently when you knew the right thing to do but did the easier thing.",
-    hint: "Don't make it dramatic. The small ones tell more." },
-  { prompt: "What do you protect that you'd be embarrassed to admit you protect?",
-    hint: "An attachment, a story, a routine, an image of yourself." },
-  { prompt: "What have you been pretending not to know?",
-    hint: "About yourself, a relationship, a situation. Pick one." },
-  { prompt: "If your closest friend secretly read your private journal, what would they learn that you haven't told them?",
-    hint: "The thing you keep just to yourself for reasons you might not be sure of." },
-  { prompt: "Name a fear you've grown out of. How did you grow out of it?",
-    hint: "Was it experience, argument, exhaustion, time?" },
-  { prompt: "What's been on your mind that you haven't found words for yet?",
-    hint: "Write the rough shape. Words don't have to be right." },
-  { prompt: "Think of a recent kindness, given or received. Why did it land the way it did?",
-    hint: "What was happening before and after — that's where the meaning sits." },
-  { prompt: "What would you give up easily if asked? What would be hard?",
-    hint: "Two answers. The gap between them is the interesting thing." },
-  { prompt: "When did you last change someone's mind, or have yours changed? What did it actually take?",
-    hint: "Most mind-changes are slow. Try to see the actual mechanism." },
-  { prompt: "Describe a habit of attention you've developed without realizing it.",
-    hint: "Where do your eyes go, your thoughts return, your worries cluster?" },
-  { prompt: "What are you currently working harder than necessary to convince yourself of?",
-    hint: "Effort is often a tell." },
-  { prompt: "Think of someone you admire who you've never met. What's the specific thing they do that you'd want to do too?",
-    hint: "Specific, not vague. A move, a posture, a way." },
-  { prompt: "Where in your life are you imitating someone? Where are you not?",
-    hint: "Imitation isn't bad — but knowing it lets you choose." },
-  { prompt: "Think of something you've outgrown without noticing. What is it?",
-    hint: "An interest, a conviction, a fear. The kind that fades rather than ends." },
-  { prompt: "If you had to be honest with yourself about the next year, what would you most want?",
-    hint: "Not what you should want. What you actually want." },
-  { prompt: "What's something you say often that you're not sure you actually believe?",
-    hint: "A line, a phrase, a moral position you repeat." },
-  { prompt: "Describe a failure that taught you something you couldn't have learned otherwise.",
-    hint: "What specifically did the failure show that argument couldn't?" },
-  { prompt: "When did you last help someone without expecting anything in return — and what made it possible?",
-    hint: "The internal conditions matter more than the act." },
-  { prompt: "What's the question you'd want to be asked, but no one ever asks?",
-    hint: "Then answer it." },
+  {
+    prompt: "What did you avoid today, and what would have happened if you hadn't?",
+    hint: 'A specific moment is more useful than a general pattern.',
+  },
+  {
+    prompt: 'When did you most feel like yourself this week?',
+    hint: 'What was happening, who was there, what did you notice?',
+  },
+  {
+    prompt:
+      "Name something you believed strongly six months ago that you don't believe now. What changed?",
+    hint: 'Try to recover both the old reasons and the new ones.',
+  },
+  {
+    prompt:
+      "What would you say to someone who came to you with the question that's been sitting with you?",
+    hint: "The question you'd want answered, asked back at you.",
+  },
+  {
+    prompt: 'The last time you felt envy — what was it actually about?',
+    hint: "Envy is a clue about what you want and won't admit to.",
+  },
+  {
+    prompt: 'Describe a small good thing in your life that almost no one else would notice.',
+    hint: "Something you'd miss if it were gone, even though it's invisible to others.",
+  },
+  {
+    prompt: 'What did you do recently that surprised you about yourself?',
+    hint: 'Surprise upward or downward — both count.',
+  },
+  {
+    prompt:
+      'Think of someone you disagreed with this week. Write the strongest version of their position.',
+    hint: 'Steelman it. Be more generous than feels natural.',
+  },
+  {
+    prompt: 'What conversation would you have if you could be guaranteed of being heard?',
+    hint: 'With whom, about what, in what tone?',
+  },
+  {
+    prompt:
+      "Name a way of thinking you've inherited from your parents that you're not sure you've earned.",
+    hint: "Inherited isn't necessarily wrong — but it's worth knowing.",
+  },
+  {
+    prompt:
+      'When were you last bored, properly bored, with nothing to fall back on? What surfaced?',
+    hint: "If you can't remember, that's worth writing about too.",
+  },
+  {
+    prompt:
+      'Describe a moment recently when you knew the right thing to do but did the easier thing.',
+    hint: "Don't make it dramatic. The small ones tell more.",
+  },
+  {
+    prompt: "What do you protect that you'd be embarrassed to admit you protect?",
+    hint: 'An attachment, a story, a routine, an image of yourself.',
+  },
+  {
+    prompt: 'What have you been pretending not to know?',
+    hint: 'About yourself, a relationship, a situation. Pick one.',
+  },
+  {
+    prompt:
+      "If your closest friend secretly read your private journal, what would they learn that you haven't told them?",
+    hint: 'The thing you keep just to yourself for reasons you might not be sure of.',
+  },
+  {
+    prompt: "Name a fear you've grown out of. How did you grow out of it?",
+    hint: 'Was it experience, argument, exhaustion, time?',
+  },
+  {
+    prompt: "What's been on your mind that you haven't found words for yet?",
+    hint: "Write the rough shape. Words don't have to be right.",
+  },
+  {
+    prompt: 'Think of a recent kindness, given or received. Why did it land the way it did?',
+    hint: "What was happening before and after — that's where the meaning sits.",
+  },
+  {
+    prompt: 'What would you give up easily if asked? What would be hard?',
+    hint: 'Two answers. The gap between them is the interesting thing.',
+  },
+  {
+    prompt:
+      "When did you last change someone's mind, or have yours changed? What did it actually take?",
+    hint: 'Most mind-changes are slow. Try to see the actual mechanism.',
+  },
+  {
+    prompt: "Describe a habit of attention you've developed without realizing it.",
+    hint: 'Where do your eyes go, your thoughts return, your worries cluster?',
+  },
+  {
+    prompt: 'What are you currently working harder than necessary to convince yourself of?',
+    hint: 'Effort is often a tell.',
+  },
+  {
+    prompt:
+      "Think of someone you admire who you've never met. What's the specific thing they do that you'd want to do too?",
+    hint: 'Specific, not vague. A move, a posture, a way.',
+  },
+  {
+    prompt: 'Where in your life are you imitating someone? Where are you not?',
+    hint: "Imitation isn't bad — but knowing it lets you choose.",
+  },
+  {
+    prompt: "Think of something you've outgrown without noticing. What is it?",
+    hint: 'An interest, a conviction, a fear. The kind that fades rather than ends.',
+  },
+  {
+    prompt: 'If you had to be honest with yourself about the next year, what would you most want?',
+    hint: 'Not what you should want. What you actually want.',
+  },
+  {
+    prompt: "What's something you say often that you're not sure you actually believe?",
+    hint: 'A line, a phrase, a moral position you repeat.',
+  },
+  {
+    prompt: "Describe a failure that taught you something you couldn't have learned otherwise.",
+    hint: "What specifically did the failure show that argument couldn't?",
+  },
+  {
+    prompt:
+      'When did you last help someone without expecting anything in return — and what made it possible?',
+    hint: 'The internal conditions matter more than the act.',
+  },
+  {
+    prompt: "What's the question you'd want to be asked, but no one ever asks?",
+    hint: 'Then answer it.',
+  },
 
   // ─── Expansion batch — added to break the 30-day repeat cycle ──────────
   // Self-knowledge
-  { prompt: "What do you do when no one is watching that you'd be embarrassed for them to see?",
-    hint: "Not the worst version — the version that's just yours." },
-  { prompt: "Describe a habit you have that you can't quite justify but won't give up.",
-    hint: "What does keeping it cost? What would giving it up cost?" },
-  { prompt: "When did you last notice yourself performing for an audience that wasn't actually there?",
-    hint: "Whose imagined judgment were you adjusting to?" },
-  { prompt: "What's a compliment you receive often that doesn't quite land?",
-    hint: "Why does the praise miss what you'd actually want recognized?" },
-  { prompt: "Name a part of yourself you'd be sad to outgrow.",
-    hint: "Even if outgrowing it would be 'progress.'" },
+  {
+    prompt: "What do you do when no one is watching that you'd be embarrassed for them to see?",
+    hint: "Not the worst version — the version that's just yours.",
+  },
+  {
+    prompt: "Describe a habit you have that you can't quite justify but won't give up.",
+    hint: 'What does keeping it cost? What would giving it up cost?',
+  },
+  {
+    prompt:
+      "When did you last notice yourself performing for an audience that wasn't actually there?",
+    hint: 'Whose imagined judgment were you adjusting to?',
+  },
+  {
+    prompt: "What's a compliment you receive often that doesn't quite land?",
+    hint: "Why does the praise miss what you'd actually want recognized?",
+  },
+  {
+    prompt: "Name a part of yourself you'd be sad to outgrow.",
+    hint: "Even if outgrowing it would be 'progress.'",
+  },
 
   // Relationships
-  { prompt: "Who in your life makes you better company than you usually are?",
-    hint: "And what specifically do they do that pulls it out of you?" },
-  { prompt: "What's something you've never told someone you love — not because it's a secret, but because the moment never came?",
-    hint: "Why hasn't the moment come?" },
-  { prompt: "When did you last receive an apology that mattered? What made it work?",
-    hint: "Was it the words, the timing, or something else?" },
-  { prompt: "Think of the last argument you had. What was the argument actually about?",
-    hint: "Not the surface topic — the deeper claim each side was making." },
-  { prompt: "Who taught you something important that they probably don't know they taught you?",
-    hint: "Could you tell them now?" },
+  {
+    prompt: 'Who in your life makes you better company than you usually are?',
+    hint: 'And what specifically do they do that pulls it out of you?',
+  },
+  {
+    prompt:
+      "What's something you've never told someone you love — not because it's a secret, but because the moment never came?",
+    hint: "Why hasn't the moment come?",
+  },
+  {
+    prompt: 'When did you last receive an apology that mattered? What made it work?',
+    hint: 'Was it the words, the timing, or something else?',
+  },
+  {
+    prompt: 'Think of the last argument you had. What was the argument actually about?',
+    hint: 'Not the surface topic — the deeper claim each side was making.',
+  },
+  {
+    prompt: "Who taught you something important that they probably don't know they taught you?",
+    hint: 'Could you tell them now?',
+  },
 
   // Work and vocation
-  { prompt: "If your work disappeared tomorrow, what would you miss about doing it?",
-    hint: "Separate what you'd miss from what you're paid for." },
-  { prompt: "What kind of problem makes you lose track of time?",
-    hint: "Be specific about the texture of it." },
-  { prompt: "Name something you're good at that you don't enjoy. What does that mean?",
-    hint: "Skill and meaning are not the same thing — what is the gap telling you?" },
-  { prompt: "When did you last feel proud of work you did privately, with no one to show it to?",
-    hint: "What did the privacy add or remove?" },
-  { prompt: "What's the hardest part of your work that no one else would think is hard?",
-    hint: "Sometimes the load is invisible from the outside." },
+  {
+    prompt: 'If your work disappeared tomorrow, what would you miss about doing it?',
+    hint: "Separate what you'd miss from what you're paid for.",
+  },
+  {
+    prompt: 'What kind of problem makes you lose track of time?',
+    hint: 'Be specific about the texture of it.',
+  },
+  {
+    prompt: "Name something you're good at that you don't enjoy. What does that mean?",
+    hint: 'Skill and meaning are not the same thing — what is the gap telling you?',
+  },
+  {
+    prompt: 'When did you last feel proud of work you did privately, with no one to show it to?',
+    hint: 'What did the privacy add or remove?',
+  },
+  {
+    prompt: "What's the hardest part of your work that no one else would think is hard?",
+    hint: 'Sometimes the load is invisible from the outside.',
+  },
 
   // Time and mortality
-  { prompt: "If you knew you had ten more years of full health, what would you spend the first one doing?",
-    hint: "Notice what changes when the timeline is finite but not short." },
-  { prompt: "What did you do this week that future-you will be grateful for?",
-    hint: "And what will future-you wish you'd skipped?" },
-  { prompt: "Describe something you've been postponing for over a year. Why?",
-    hint: "Postponement is information." },
-  { prompt: "What's a memory from your childhood you keep returning to? What do you think it's holding for you?",
-    hint: "Not nostalgia — the shape of why it stays." },
-  { prompt: "If you died tomorrow, what would the people closest to you not know about you that you'd want them to?",
-    hint: "Could you tell them this week?" },
+  {
+    prompt:
+      'If you knew you had ten more years of full health, what would you spend the first one doing?',
+    hint: 'Notice what changes when the timeline is finite but not short.',
+  },
+  {
+    prompt: 'What did you do this week that future-you will be grateful for?',
+    hint: "And what will future-you wish you'd skipped?",
+  },
+  {
+    prompt: "Describe something you've been postponing for over a year. Why?",
+    hint: 'Postponement is information.',
+  },
+  {
+    prompt:
+      "What's a memory from your childhood you keep returning to? What do you think it's holding for you?",
+    hint: 'Not nostalgia — the shape of why it stays.',
+  },
+  {
+    prompt:
+      "If you died tomorrow, what would the people closest to you not know about you that you'd want them to?",
+    hint: 'Could you tell them this week?',
+  },
 
   // Belief and certainty
-  { prompt: "Name something most people around you believe that you secretly suspect is wrong.",
-    hint: "What would it cost to say it out loud?" },
-  { prompt: "What's a position you hold mostly because of where you grew up?",
-    hint: "Try to imagine the version of you that grew up elsewhere." },
-  { prompt: "What's a question you used to think had a clear answer, and now don't?",
-    hint: "What changed — your view, or the question?" },
-  { prompt: "When did you last update a belief because of evidence rather than mood?",
-    hint: "And how could you tell the difference?" },
-  { prompt: "If you had to bet against one of your strongly-held beliefs, which would survive the bet?",
-    hint: "The question is about confidence, not preference." },
+  {
+    prompt: 'Name something most people around you believe that you secretly suspect is wrong.',
+    hint: 'What would it cost to say it out loud?',
+  },
+  {
+    prompt: "What's a position you hold mostly because of where you grew up?",
+    hint: 'Try to imagine the version of you that grew up elsewhere.',
+  },
+  {
+    prompt: "What's a question you used to think had a clear answer, and now don't?",
+    hint: 'What changed — your view, or the question?',
+  },
+  {
+    prompt: 'When did you last update a belief because of evidence rather than mood?',
+    hint: 'And how could you tell the difference?',
+  },
+  {
+    prompt:
+      'If you had to bet against one of your strongly-held beliefs, which would survive the bet?',
+    hint: 'The question is about confidence, not preference.',
+  },
 
   // Pleasure and suffering
-  { prompt: "What pleasure do you take more seriously than you let on?",
-    hint: "The one you'd be slightly defensive about if asked." },
-  { prompt: "Describe a difficulty in your life right now that you wouldn't actually trade away.",
-    hint: "What does it teach, do, or hold for you?" },
-  { prompt: "When did you last feel a clean joy — uncomplicated, no shadow?",
-    hint: "What were the conditions? Could they be reproduced?" },
-  { prompt: "What pain are you currently outsourcing to someone else?",
-    hint: "Most pain doesn't disappear — it relocates." },
-  { prompt: "If your suffering were entirely useless, would it be more bearable or less?",
-    hint: "Be honest about the role meaning plays." },
+  {
+    prompt: 'What pleasure do you take more seriously than you let on?',
+    hint: "The one you'd be slightly defensive about if asked.",
+  },
+  {
+    prompt: "Describe a difficulty in your life right now that you wouldn't actually trade away.",
+    hint: 'What does it teach, do, or hold for you?',
+  },
+  {
+    prompt: 'When did you last feel a clean joy — uncomplicated, no shadow?',
+    hint: 'What were the conditions? Could they be reproduced?',
+  },
+  {
+    prompt: 'What pain are you currently outsourcing to someone else?',
+    hint: "Most pain doesn't disappear — it relocates.",
+  },
+  {
+    prompt: 'If your suffering were entirely useless, would it be more bearable or less?',
+    hint: 'Be honest about the role meaning plays.',
+  },
 
   // Power and autonomy
-  { prompt: "When did you last say yes when you wanted to say no? What stopped the no?",
-    hint: "Was it kindness, fear, habit, or something else?" },
-  { prompt: "Where in your life are you waiting for permission you don't actually need?",
-    hint: "Permission from whom? For what?" },
-  { prompt: "What's a small power you have over other people that you'd be reluctant to admit?",
-    hint: "Power isn't always institutional." },
-  { prompt: "Name a constraint in your life that you'd actually choose to keep, given the option.",
-    hint: "Some limits are gifts; others are inheritances. Which is this?" },
-  { prompt: "If you could change one rule you live by, what would it be — and why haven't you?",
-    hint: "What is the rule protecting?" },
+  {
+    prompt: 'When did you last say yes when you wanted to say no? What stopped the no?',
+    hint: 'Was it kindness, fear, habit, or something else?',
+  },
+  {
+    prompt: "Where in your life are you waiting for permission you don't actually need?",
+    hint: 'Permission from whom? For what?',
+  },
+  {
+    prompt: "What's a small power you have over other people that you'd be reluctant to admit?",
+    hint: "Power isn't always institutional.",
+  },
+  {
+    prompt: "Name a constraint in your life that you'd actually choose to keep, given the option.",
+    hint: 'Some limits are gifts; others are inheritances. Which is this?',
+  },
+  {
+    prompt: "If you could change one rule you live by, what would it be — and why haven't you?",
+    hint: 'What is the rule protecting?',
+  },
 
   // Justice and fairness
-  { prompt: "When did you last witness something unfair and stay silent?",
-    hint: "What did silence cost? What did speaking up have cost?" },
-  { prompt: "What advantage do you have that you don't fully see?",
-    hint: "Often the question requires asking someone who lacks it." },
-  { prompt: "Describe a situation where the right thing to do conflicts with the legal thing.",
-    hint: "Not hypothetical — has this happened to you?" },
-  { prompt: "If you could redistribute one thing in society and only one, what would it be?",
-    hint: "Money, attention, time, dignity, opportunity, something else?" },
-  { prompt: "When have you been treated more generously than you deserved? What did it teach you?",
-    hint: "About fairness, about generosity, about yourself." },
+  {
+    prompt: 'When did you last witness something unfair and stay silent?',
+    hint: 'What did silence cost? What did speaking up have cost?',
+  },
+  {
+    prompt: "What advantage do you have that you don't fully see?",
+    hint: 'Often the question requires asking someone who lacks it.',
+  },
+  {
+    prompt: 'Describe a situation where the right thing to do conflicts with the legal thing.',
+    hint: 'Not hypothetical — has this happened to you?',
+  },
+  {
+    prompt: 'If you could redistribute one thing in society and only one, what would it be?',
+    hint: 'Money, attention, time, dignity, opportunity, something else?',
+  },
+  {
+    prompt: 'When have you been treated more generously than you deserved? What did it teach you?',
+    hint: 'About fairness, about generosity, about yourself.',
+  },
 
   // Beauty and aesthetics
-  { prompt: "What's something most people find beautiful that you don't, and vice versa?",
-    hint: "Try to articulate why your taste runs as it does." },
-  { prompt: "Describe an everyday object in your life that quietly pleases you.",
-    hint: "Why does it work? What would replacing it cost?" },
-  { prompt: "When did beauty last interrupt your day?",
-    hint: "Beauty as event, not as decoration." },
-  { prompt: "If you had to fill a room with five things that capture your taste, what would they be?",
-    hint: "And what would the room say to a stranger?" },
-  { prompt: "What does ugliness teach you that beauty can't?",
-    hint: "Not all ugliness is just absence-of-beauty." },
+  {
+    prompt: "What's something most people find beautiful that you don't, and vice versa?",
+    hint: 'Try to articulate why your taste runs as it does.',
+  },
+  {
+    prompt: 'Describe an everyday object in your life that quietly pleases you.',
+    hint: 'Why does it work? What would replacing it cost?',
+  },
+  {
+    prompt: 'When did beauty last interrupt your day?',
+    hint: 'Beauty as event, not as decoration.',
+  },
+  {
+    prompt:
+      'If you had to fill a room with five things that capture your taste, what would they be?',
+    hint: 'And what would the room say to a stranger?',
+  },
+  {
+    prompt: "What does ugliness teach you that beauty can't?",
+    hint: 'Not all ugliness is just absence-of-beauty.',
+  },
 
   // Knowledge and learning
-  { prompt: "What's the most useful thing you learned this year, and how did you learn it?",
-    hint: "The learning method is half the lesson." },
-  { prompt: "Name a topic you'd like to be deeply knowledgeable in but haven't pursued. Why not?",
-    hint: "What's actually in the way?" },
-  { prompt: "What's a question you've been carrying for years without asking aloud?",
-    hint: "Asking is its own answer sometimes." },
-  { prompt: "When were you last wrong about something publicly? How did it land?",
-    hint: "Public wrongness is a different practice from private wrongness." },
-  { prompt: "If you could spend an hour with someone alive, learning what they know, who would you pick — and what would you ask first?",
-    hint: "The first question is the one that matters." },
+  {
+    prompt: "What's the most useful thing you learned this year, and how did you learn it?",
+    hint: 'The learning method is half the lesson.',
+  },
+  {
+    prompt: "Name a topic you'd like to be deeply knowledgeable in but haven't pursued. Why not?",
+    hint: "What's actually in the way?",
+  },
+  {
+    prompt: "What's a question you've been carrying for years without asking aloud?",
+    hint: 'Asking is its own answer sometimes.',
+  },
+  {
+    prompt: 'When were you last wrong about something publicly? How did it land?',
+    hint: 'Public wrongness is a different practice from private wrongness.',
+  },
+  {
+    prompt:
+      'If you could spend an hour with someone alive, learning what they know, who would you pick — and what would you ask first?',
+    hint: 'The first question is the one that matters.',
+  },
 
   // Money, status, and ambition
-  { prompt: "What would be enough money for you, and how do you know?",
-    hint: "Be specific. 'A lot' is not an answer." },
-  { prompt: "Whose opinion do you adjust your life to without admitting it?",
-    hint: "Could be a person, a class, a tribe." },
-  { prompt: "Describe a status game you used to play and don't anymore.",
-    hint: "What freed you from it?" },
-  { prompt: "If recognition for your work were guaranteed, what would change about how you do it?",
-    hint: "What would stay the same? Those are the parts that matter to you." },
-  { prompt: "What's something you'd do tomorrow if you couldn't fail and no one would know?",
-    hint: "Two constraints removed at once. What's left?" },
+  {
+    prompt: 'What would be enough money for you, and how do you know?',
+    hint: "Be specific. 'A lot' is not an answer.",
+  },
+  {
+    prompt: 'Whose opinion do you adjust your life to without admitting it?',
+    hint: 'Could be a person, a class, a tribe.',
+  },
+  {
+    prompt: "Describe a status game you used to play and don't anymore.",
+    hint: 'What freed you from it?',
+  },
+  {
+    prompt: 'If recognition for your work were guaranteed, what would change about how you do it?',
+    hint: 'What would stay the same? Those are the parts that matter to you.',
+  },
+  {
+    prompt: "What's something you'd do tomorrow if you couldn't fail and no one would know?",
+    hint: "Two constraints removed at once. What's left?",
+  },
 
   // Loneliness and connection
-  { prompt: "When did you last feel deeply known by another person?",
-    hint: "What did they see? What did seeing it require?" },
-  { prompt: "Describe a kind of loneliness that's been with you for a long time.",
-    hint: "Not all loneliness is the same — what is the texture of yours?" },
-  { prompt: "Who in your life are you slightly afraid of disappointing?",
-    hint: "And what does that fear protect or distort?" },
-  { prompt: "What's a relationship you let drift that you wish you hadn't? What stopped you from holding it?",
-    hint: "What would reconnecting cost now?" },
-  { prompt: "If you could send a message to a stranger somewhere who needs to hear it, what would it say?",
-    hint: "And does that message also belong to you?" },
+  {
+    prompt: 'When did you last feel deeply known by another person?',
+    hint: 'What did they see? What did seeing it require?',
+  },
+  {
+    prompt: "Describe a kind of loneliness that's been with you for a long time.",
+    hint: 'Not all loneliness is the same — what is the texture of yours?',
+  },
+  {
+    prompt: 'Who in your life are you slightly afraid of disappointing?',
+    hint: 'And what does that fear protect or distort?',
+  },
+  {
+    prompt:
+      "What's a relationship you let drift that you wish you hadn't? What stopped you from holding it?",
+    hint: 'What would reconnecting cost now?',
+  },
+  {
+    prompt:
+      'If you could send a message to a stranger somewhere who needs to hear it, what would it say?',
+    hint: 'And does that message also belong to you?',
+  },
 
   // ─── Second expansion (deepening existing themes + adding new ones) ───
   // Self-knowledge — round two
-  { prompt: "What's a small lie you tell yourself daily that keeps you moving?",
-    hint: "Useful fictions deserve to be named, not necessarily abandoned." },
-  { prompt: "If a stranger watched you for a week, what would they conclude about your priorities?",
-    hint: "Compare that to what you'd say your priorities are." },
-  { prompt: "What's something about you that's hard to explain to someone who didn't grow up the way you did?",
-    hint: "The unspoken assumptions are the ones worth surfacing." },
-  { prompt: "When did you last surprise yourself by how patient — or how impatient — you were?",
-    hint: "Patience is a window into what you actually value." },
-  { prompt: "What kind of attention are you most starved for right now?",
-    hint: "Be specific: from whom, in what form, for what?" },
+  {
+    prompt: "What's a small lie you tell yourself daily that keeps you moving?",
+    hint: 'Useful fictions deserve to be named, not necessarily abandoned.',
+  },
+  {
+    prompt: 'If a stranger watched you for a week, what would they conclude about your priorities?',
+    hint: "Compare that to what you'd say your priorities are.",
+  },
+  {
+    prompt:
+      "What's something about you that's hard to explain to someone who didn't grow up the way you did?",
+    hint: 'The unspoken assumptions are the ones worth surfacing.',
+  },
+  {
+    prompt: 'When did you last surprise yourself by how patient — or how impatient — you were?',
+    hint: 'Patience is a window into what you actually value.',
+  },
+  {
+    prompt: 'What kind of attention are you most starved for right now?',
+    hint: 'Be specific: from whom, in what form, for what?',
+  },
 
   // Relationships — round two
-  { prompt: "Whose forgiveness would change your life if you could believe in it?",
-    hint: "And what is preventing the belief?" },
-  { prompt: "Describe a friendship that's outlasted the reason it began.",
-    hint: "What is the new reason it persists?" },
-  { prompt: "What do you do for the people you love that you'd be embarrassed to be thanked for?",
-    hint: "The quiet labor of love often hides from gratitude." },
-  { prompt: "When did you last fail someone who depended on you? What made the failure possible?",
-    hint: "Not to flagellate — to understand." },
-  { prompt: "If your closest relationships rated you the way you rate yourself, what would they get wrong?",
-    hint: "And what does the gap reveal about both?" },
+  {
+    prompt: 'Whose forgiveness would change your life if you could believe in it?',
+    hint: 'And what is preventing the belief?',
+  },
+  {
+    prompt: "Describe a friendship that's outlasted the reason it began.",
+    hint: 'What is the new reason it persists?',
+  },
+  {
+    prompt: "What do you do for the people you love that you'd be embarrassed to be thanked for?",
+    hint: 'The quiet labor of love often hides from gratitude.',
+  },
+  {
+    prompt: 'When did you last fail someone who depended on you? What made the failure possible?',
+    hint: 'Not to flagellate — to understand.',
+  },
+  {
+    prompt:
+      'If your closest relationships rated you the way you rate yourself, what would they get wrong?',
+    hint: 'And what does the gap reveal about both?',
+  },
 
   // Work and vocation — round two
-  { prompt: "What part of your work would you do for free if you could afford it?",
-    hint: "And what part would you only do for pay?" },
-  { prompt: "When did you last feel competent in a way that didn't help anyone but yourself?",
-    hint: "Competence as private pleasure, not transaction." },
-  { prompt: "What's the fantasy job you've never told anyone about? Why haven't you?",
-    hint: "Even if it's unrealistic, the shape of the wish matters." },
-  { prompt: "Describe a workplace ritual you cherish or dread. What does it actually do?",
-    hint: "Rituals smuggle meaning past the part of us that hates meetings." },
-  { prompt: "If you were being honest, who is your work mostly for?",
-    hint: "An audience, a memory, a debt, a future self?" },
+  {
+    prompt: 'What part of your work would you do for free if you could afford it?',
+    hint: 'And what part would you only do for pay?',
+  },
+  {
+    prompt: "When did you last feel competent in a way that didn't help anyone but yourself?",
+    hint: 'Competence as private pleasure, not transaction.',
+  },
+  {
+    prompt: "What's the fantasy job you've never told anyone about? Why haven't you?",
+    hint: "Even if it's unrealistic, the shape of the wish matters.",
+  },
+  {
+    prompt: 'Describe a workplace ritual you cherish or dread. What does it actually do?',
+    hint: 'Rituals smuggle meaning past the part of us that hates meetings.',
+  },
+  {
+    prompt: 'If you were being honest, who is your work mostly for?',
+    hint: 'An audience, a memory, a debt, a future self?',
+  },
 
   // Time and mortality — round two
-  { prompt: "What's a quiet passage of time recently that felt sacred?",
-    hint: "Sacred is a strong word. Use it carefully." },
-  { prompt: "If you had to write your own eulogy honestly, what would you want most to be true?",
-    hint: "Strip away applause. What's left?" },
-  { prompt: "What ritual marks the end of your day, even if you didn't mean to invent one?",
-    hint: "How we close the day is how we close other things too." },
-  { prompt: "Name something you do because of how short life is. Name something you do as if it weren't.",
-    hint: "Both can coexist — but examining the gap matters." },
-  { prompt: "What kind of old person do you want to become?",
-    hint: "Not what you'd tell others — what you'd tell your future self." },
+  {
+    prompt: "What's a quiet passage of time recently that felt sacred?",
+    hint: 'Sacred is a strong word. Use it carefully.',
+  },
+  {
+    prompt: 'If you had to write your own eulogy honestly, what would you want most to be true?',
+    hint: "Strip away applause. What's left?",
+  },
+  {
+    prompt: "What ritual marks the end of your day, even if you didn't mean to invent one?",
+    hint: 'How we close the day is how we close other things too.',
+  },
+  {
+    prompt:
+      "Name something you do because of how short life is. Name something you do as if it weren't.",
+    hint: 'Both can coexist — but examining the gap matters.',
+  },
+  {
+    prompt: 'What kind of old person do you want to become?',
+    hint: "Not what you'd tell others — what you'd tell your future self.",
+  },
 
   // Belief and certainty — round two
-  { prompt: "What's a belief you hold so deeply you can't articulate it?",
-    hint: "Try anyway. The articulation is the practice." },
-  { prompt: "Name a position you adopted from someone you respected before you understood it. Do you understand it now?",
-    hint: "Borrowed convictions cost less and usually weigh less too." },
-  { prompt: "When did you last say 'I don't know' and mean it without flinching?",
-    hint: "The flinch is the interesting thing." },
-  { prompt: "What's a question you avoid because the answer might require change?",
-    hint: "Avoidance is information about cost." },
-  { prompt: "If a wiser version of you sat across from you, what would they gently push back on?",
-    hint: "The gentleness is part of the test." },
+  {
+    prompt: "What's a belief you hold so deeply you can't articulate it?",
+    hint: 'Try anyway. The articulation is the practice.',
+  },
+  {
+    prompt:
+      'Name a position you adopted from someone you respected before you understood it. Do you understand it now?',
+    hint: 'Borrowed convictions cost less and usually weigh less too.',
+  },
+  {
+    prompt: "When did you last say 'I don't know' and mean it without flinching?",
+    hint: 'The flinch is the interesting thing.',
+  },
+  {
+    prompt: "What's a question you avoid because the answer might require change?",
+    hint: 'Avoidance is information about cost.',
+  },
+  {
+    prompt: 'If a wiser version of you sat across from you, what would they gently push back on?',
+    hint: 'The gentleness is part of the test.',
+  },
 
   // Pleasure and suffering — round two
-  { prompt: "What's a pleasure you've given up that you don't quite miss but used to?",
-    hint: "What changed — your appetite or your self-image?" },
-  { prompt: "Describe a small suffering you've made part of your identity.",
-    hint: "We sometimes carry pain because letting go of it would also let go of who we became around it." },
-  { prompt: "What pleasures have you outgrown that you wish you hadn't?",
-    hint: "Appetites can shrink without our permission." },
-  { prompt: "When did you last laugh at something that surprised you about yourself?",
-    hint: "Self-amusement is a form of self-knowledge." },
-  { prompt: "What's a kind of comfort you reach for too quickly?",
-    hint: "Not to renounce it — to know it." },
+  {
+    prompt: "What's a pleasure you've given up that you don't quite miss but used to?",
+    hint: 'What changed — your appetite or your self-image?',
+  },
+  {
+    prompt: "Describe a small suffering you've made part of your identity.",
+    hint: 'We sometimes carry pain because letting go of it would also let go of who we became around it.',
+  },
+  {
+    prompt: "What pleasures have you outgrown that you wish you hadn't?",
+    hint: 'Appetites can shrink without our permission.',
+  },
+  {
+    prompt: 'When did you last laugh at something that surprised you about yourself?',
+    hint: 'Self-amusement is a form of self-knowledge.',
+  },
+  {
+    prompt: "What's a kind of comfort you reach for too quickly?",
+    hint: 'Not to renounce it — to know it.',
+  },
 
   // Power and autonomy — round two
-  { prompt: "Where in your life do you have more agency than you act on?",
-    hint: "Unused agency tends to cost more than missing agency." },
-  { prompt: "What rule did you internalize as a child that you'd refuse to teach to a child of your own?",
-    hint: "Inheritance becomes choice when you can name it." },
-  { prompt: "When did you last walk away from a situation when staying would've been easier?",
-    hint: "Walking is its own kind of strength." },
-  { prompt: "Whose voice in your head are you still negotiating with?",
-    hint: "Not always literally — sometimes the voice of an institution, a class, a dead generation." },
-  { prompt: "What would it take for you to feel free in the way you most want to be free?",
-    hint: "Imagine the conditions concretely. Then ask which are within reach." },
+  {
+    prompt: 'Where in your life do you have more agency than you act on?',
+    hint: 'Unused agency tends to cost more than missing agency.',
+  },
+  {
+    prompt:
+      "What rule did you internalize as a child that you'd refuse to teach to a child of your own?",
+    hint: 'Inheritance becomes choice when you can name it.',
+  },
+  {
+    prompt: "When did you last walk away from a situation when staying would've been easier?",
+    hint: 'Walking is its own kind of strength.',
+  },
+  {
+    prompt: 'Whose voice in your head are you still negotiating with?',
+    hint: 'Not always literally — sometimes the voice of an institution, a class, a dead generation.',
+  },
+  {
+    prompt: 'What would it take for you to feel free in the way you most want to be free?',
+    hint: 'Imagine the conditions concretely. Then ask which are within reach.',
+  },
 
   // Justice and fairness — round two
-  { prompt: "Name a privilege you have that you only noticed recently. What revealed it?",
-    hint: "Discovery is rarely flattering, and that's part of the point." },
-  { prompt: "When did you last feel cheated, and what did the feeling actually reveal about you?",
-    hint: "Grievance is sometimes a map of attachment." },
-  { prompt: "If you could redesign one rule in your own household, workplace, or community, what would it be?",
-    hint: "Pick something specific. Universal abstractions are easier than local ones." },
-  { prompt: "Describe a time you benefited from a system you don't think is just.",
-    hint: "The contradiction is the point." },
-  { prompt: "What does fairness require of you that you're currently not giving?",
-    hint: "Be specific. Be honest." },
+  {
+    prompt: 'Name a privilege you have that you only noticed recently. What revealed it?',
+    hint: "Discovery is rarely flattering, and that's part of the point.",
+  },
+  {
+    prompt: 'When did you last feel cheated, and what did the feeling actually reveal about you?',
+    hint: 'Grievance is sometimes a map of attachment.',
+  },
+  {
+    prompt:
+      'If you could redesign one rule in your own household, workplace, or community, what would it be?',
+    hint: 'Pick something specific. Universal abstractions are easier than local ones.',
+  },
+  {
+    prompt: "Describe a time you benefited from a system you don't think is just.",
+    hint: 'The contradiction is the point.',
+  },
+  {
+    prompt: "What does fairness require of you that you're currently not giving?",
+    hint: 'Be specific. Be honest.',
+  },
 
   // Beauty and aesthetics — round two
-  { prompt: "What's a piece of art that changed how you see the world, even slightly?",
-    hint: "Art that changes you doesn't have to be famous." },
-  { prompt: "Describe something you find beautiful that most people would find ordinary.",
-    hint: "Unshared aesthetic perception is closer to a worldview than a preference." },
-  { prompt: "What's a beauty you used to dismiss and now value?",
-    hint: "Maturation of taste is a kind of moral change." },
-  { prompt: "If your home were stripped of everything except five objects, which would you save and why?",
-    hint: "Use, beauty, memory, association — name which is doing the work." },
-  { prompt: "What would your life look like if you took beauty as seriously as you take productivity?",
-    hint: "Imagine the day, not just the principle." },
+  {
+    prompt: "What's a piece of art that changed how you see the world, even slightly?",
+    hint: "Art that changes you doesn't have to be famous.",
+  },
+  {
+    prompt: 'Describe something you find beautiful that most people would find ordinary.',
+    hint: 'Unshared aesthetic perception is closer to a worldview than a preference.',
+  },
+  {
+    prompt: "What's a beauty you used to dismiss and now value?",
+    hint: 'Maturation of taste is a kind of moral change.',
+  },
+  {
+    prompt:
+      'If your home were stripped of everything except five objects, which would you save and why?',
+    hint: 'Use, beauty, memory, association — name which is doing the work.',
+  },
+  {
+    prompt:
+      'What would your life look like if you took beauty as seriously as you take productivity?',
+    hint: 'Imagine the day, not just the principle.',
+  },
 
   // Knowledge and learning — round two
-  { prompt: "What's something you know intellectually but don't yet know in your body?",
-    hint: "Knowing twice over is the harder discipline." },
-  { prompt: "When were you last persuaded by a single conversation? What made it possible?",
-    hint: "Persuasion in real time is rarer than we admit." },
-  { prompt: "What's a book you've never finished but talk about as if you have?",
-    hint: "And what have you actually absorbed from it?" },
-  { prompt: "Name something you understood early in life that took others years to learn.",
-    hint: "Where did the early knowledge come from?" },
-  { prompt: "What would you study if no one were grading you?",
-    hint: "Strip away credentials. What remains?" },
+  {
+    prompt: "What's something you know intellectually but don't yet know in your body?",
+    hint: 'Knowing twice over is the harder discipline.',
+  },
+  {
+    prompt: 'When were you last persuaded by a single conversation? What made it possible?',
+    hint: 'Persuasion in real time is rarer than we admit.',
+  },
+  {
+    prompt: "What's a book you've never finished but talk about as if you have?",
+    hint: 'And what have you actually absorbed from it?',
+  },
+  {
+    prompt: 'Name something you understood early in life that took others years to learn.',
+    hint: 'Where did the early knowledge come from?',
+  },
+  {
+    prompt: 'What would you study if no one were grading you?',
+    hint: 'Strip away credentials. What remains?',
+  },
 
   // Money, status, and ambition — round two
-  { prompt: "What's a luxury you'd defend even though you couldn't fully justify it?",
-    hint: "Some indulgences are confessions." },
-  { prompt: "Describe an ambition you're slightly ashamed to admit you still have.",
-    hint: "Shame about ambition usually means it's unfinished." },
-  { prompt: "When did you last feel rich in something that wasn't money?",
-    hint: "Time, attention, friends, freedom, weather — what?" },
-  { prompt: "If your income doubled tomorrow, what would actually change about your daily life?",
-    hint: "And what would notably not change?" },
-  { prompt: "What's the smallest amount of recognition that would feel like enough?",
-    hint: "Be more specific than 'some.'" },
+  {
+    prompt: "What's a luxury you'd defend even though you couldn't fully justify it?",
+    hint: 'Some indulgences are confessions.',
+  },
+  {
+    prompt: "Describe an ambition you're slightly ashamed to admit you still have.",
+    hint: "Shame about ambition usually means it's unfinished.",
+  },
+  {
+    prompt: "When did you last feel rich in something that wasn't money?",
+    hint: 'Time, attention, friends, freedom, weather — what?',
+  },
+  {
+    prompt: 'If your income doubled tomorrow, what would actually change about your daily life?',
+    hint: 'And what would notably not change?',
+  },
+  {
+    prompt: "What's the smallest amount of recognition that would feel like enough?",
+    hint: "Be more specific than 'some.'",
+  },
 
   // Loneliness and connection — round two
-  { prompt: "When did you last initiate contact with someone you'd been quietly missing?",
-    hint: "And if not — what's the cost of the silence?" },
-  { prompt: "What do you do when you're lonely that helps, and what do you do that doesn't?",
-    hint: "Most of us have both. Naming them is half the work." },
-  { prompt: "Describe a moment of connection with a stranger that stayed with you.",
-    hint: "Brief connections sometimes outweigh long ones." },
-  { prompt: "Who in your life sees you most clearly when you're at your worst?",
-    hint: "And what is that capacity made of?" },
-  { prompt: "What do you wish more people knew about you without you having to explain it?",
-    hint: "And could anyone reach it without your help?" },
+  {
+    prompt: "When did you last initiate contact with someone you'd been quietly missing?",
+    hint: "And if not — what's the cost of the silence?",
+  },
+  {
+    prompt: "What do you do when you're lonely that helps, and what do you do that doesn't?",
+    hint: 'Most of us have both. Naming them is half the work.',
+  },
+  {
+    prompt: 'Describe a moment of connection with a stranger that stayed with you.',
+    hint: 'Brief connections sometimes outweigh long ones.',
+  },
+  {
+    prompt: "Who in your life sees you most clearly when you're at your worst?",
+    hint: 'And what is that capacity made of?',
+  },
+  {
+    prompt: 'What do you wish more people knew about you without you having to explain it?',
+    hint: 'And could anyone reach it without your help?',
+  },
 
   // ─── New themes ───
   // Solitude and silence
-  { prompt: "What does silence sound like for you, and when did you last sit in it?",
-    hint: "Silence isn't absence; it has a texture." },
-  { prompt: "Describe a kind of solitude you actively seek out. What does it give you?",
-    hint: "Be specific about the form — walks, mornings, long drives, baths, anything." },
-  { prompt: "When did you last spend time with yourself the way you'd spend time with a friend?",
-    hint: "What did you offer yourself that you usually withhold?" },
-  { prompt: "What thoughts only arrive when no one else is around?",
-    hint: "Try to name one that's been waiting." },
-  { prompt: "If you could spend a week alone with no obligations, what would you want from the week?",
-    hint: "Strip out other people's expectations. What remains?" },
-  { prompt: "What's the difference between solitude and loneliness for you?",
-    hint: "The difference is usually felt before it's reasoned." },
-  { prompt: "Describe a habit of solitude you've developed without intending to.",
-    hint: "Routines of being alone are training, whether we mean them or not." },
-  { prompt: "When silence has been uncomfortable, what was the discomfort actually about?",
-    hint: "Often it's not the silence — it's what surfaces in it." },
-  { prompt: "What do you withhold from your own company that you'd give to a guest?",
-    hint: "Hospitality to oneself is a strange and useful practice." },
-  { prompt: "If solitude were a teacher, what would your most recent lesson have been?",
-    hint: "Even unwanted solitude teaches." },
+  {
+    prompt: 'What does silence sound like for you, and when did you last sit in it?',
+    hint: "Silence isn't absence; it has a texture.",
+  },
+  {
+    prompt: 'Describe a kind of solitude you actively seek out. What does it give you?',
+    hint: 'Be specific about the form — walks, mornings, long drives, baths, anything.',
+  },
+  {
+    prompt: "When did you last spend time with yourself the way you'd spend time with a friend?",
+    hint: 'What did you offer yourself that you usually withhold?',
+  },
+  {
+    prompt: 'What thoughts only arrive when no one else is around?',
+    hint: "Try to name one that's been waiting.",
+  },
+  {
+    prompt:
+      'If you could spend a week alone with no obligations, what would you want from the week?',
+    hint: "Strip out other people's expectations. What remains?",
+  },
+  {
+    prompt: "What's the difference between solitude and loneliness for you?",
+    hint: "The difference is usually felt before it's reasoned.",
+  },
+  {
+    prompt: "Describe a habit of solitude you've developed without intending to.",
+    hint: 'Routines of being alone are training, whether we mean them or not.',
+  },
+  {
+    prompt: 'When silence has been uncomfortable, what was the discomfort actually about?',
+    hint: "Often it's not the silence — it's what surfaces in it.",
+  },
+  {
+    prompt: "What do you withhold from your own company that you'd give to a guest?",
+    hint: 'Hospitality to oneself is a strange and useful practice.',
+  },
+  {
+    prompt: 'If solitude were a teacher, what would your most recent lesson have been?',
+    hint: 'Even unwanted solitude teaches.',
+  },
 
   // Anger and grievance
-  { prompt: "What are you angry about that you've been too tired to feel directly?",
-    hint: "Anger is information; exhaustion sometimes hides it from us." },
-  { prompt: "Describe an old grievance you carry. What would releasing it actually require?",
-    hint: "Release is rarely just decision — it's also reorganization." },
-  { prompt: "When did you last express anger well? What made it possible?",
-    hint: "Anger 'well' is rarer than anger at all." },
-  { prompt: "Whose anger toward you has changed something in you?",
-    hint: "Even unfair anger sometimes carries useful information." },
-  { prompt: "What do you do with anger you can't act on?",
-    hint: "Containment is a discipline, not just a delay." },
-  { prompt: "If you could permanently un-feel one grievance, would you choose to?",
-    hint: "Some grievances are organizing principles. Removing them changes the architecture." },
-  { prompt: "Describe an anger you've outgrown. What replaced it?",
-    hint: "Sometimes nothing replaces it, and that's worth noticing." },
-  { prompt: "When was your anger right, and you wish you'd trusted it?",
-    hint: "Where did you doubt it from?" },
+  {
+    prompt: "What are you angry about that you've been too tired to feel directly?",
+    hint: 'Anger is information; exhaustion sometimes hides it from us.',
+  },
+  {
+    prompt: 'Describe an old grievance you carry. What would releasing it actually require?',
+    hint: "Release is rarely just decision — it's also reorganization.",
+  },
+  {
+    prompt: 'When did you last express anger well? What made it possible?',
+    hint: "Anger 'well' is rarer than anger at all.",
+  },
+  {
+    prompt: 'Whose anger toward you has changed something in you?',
+    hint: 'Even unfair anger sometimes carries useful information.',
+  },
+  {
+    prompt: "What do you do with anger you can't act on?",
+    hint: 'Containment is a discipline, not just a delay.',
+  },
+  {
+    prompt: 'If you could permanently un-feel one grievance, would you choose to?',
+    hint: 'Some grievances are organizing principles. Removing them changes the architecture.',
+  },
+  {
+    prompt: "Describe an anger you've outgrown. What replaced it?",
+    hint: "Sometimes nothing replaces it, and that's worth noticing.",
+  },
+  {
+    prompt: "When was your anger right, and you wish you'd trusted it?",
+    hint: 'Where did you doubt it from?',
+  },
 
   // Hope and despair
-  { prompt: "What's a small hope you keep alive without much evidence?",
-    hint: "Hope without evidence is half of what hope is." },
-  { prompt: "Describe a moment of despair you came back from. What helped?",
-    hint: "The mechanism of return is more useful than the resolution." },
-  { prompt: "When did you last let yourself want something risky to want?",
-    hint: "Wanting opens you to disappointment, which is part of why we shrink it." },
-  { prompt: "Whose hope have you carried for them when they couldn't?",
-    hint: "And who has done the same for you?" },
-  { prompt: "What kind of future are you secretly planning for that you don't talk about?",
-    hint: "Plans hide in our calendars before they reach our speech." },
-  { prompt: "When did you last give up on something it was right to give up on?",
-    hint: "Surrender can be a discipline." },
-  { prompt: "What helps you keep going when things feel unredeemable?",
-    hint: "Be specific. Generic answers won't help future-you." },
-  { prompt: "Describe a hope you've quietly downgraded over the years.",
-    hint: "What did the downgrade cost? What did it free?" },
+  {
+    prompt: "What's a small hope you keep alive without much evidence?",
+    hint: 'Hope without evidence is half of what hope is.',
+  },
+  {
+    prompt: 'Describe a moment of despair you came back from. What helped?',
+    hint: 'The mechanism of return is more useful than the resolution.',
+  },
+  {
+    prompt: 'When did you last let yourself want something risky to want?',
+    hint: 'Wanting opens you to disappointment, which is part of why we shrink it.',
+  },
+  {
+    prompt: "Whose hope have you carried for them when they couldn't?",
+    hint: 'And who has done the same for you?',
+  },
+  {
+    prompt: "What kind of future are you secretly planning for that you don't talk about?",
+    hint: 'Plans hide in our calendars before they reach our speech.',
+  },
+  {
+    prompt: 'When did you last give up on something it was right to give up on?',
+    hint: 'Surrender can be a discipline.',
+  },
+  {
+    prompt: 'What helps you keep going when things feel unredeemable?',
+    hint: "Be specific. Generic answers won't help future-you.",
+  },
+  {
+    prompt: "Describe a hope you've quietly downgraded over the years.",
+    hint: 'What did the downgrade cost? What did it free?',
+  },
 
   // Childhood and inheritance
-  { prompt: "What's a sentence from your childhood you still hear in your head?",
-    hint: "Whose voice is it, and what's it doing there?" },
-  { prompt: "Describe a place from your childhood you can still walk through in your imagination.",
-    hint: "What stays vivid? What's blurred?" },
-  { prompt: "What did your family treat as normal that you've since realized wasn't?",
-    hint: "Normal-from-the-inside is its own category." },
-  { prompt: "What did your parents do well that you don't give them enough credit for?",
-    hint: "Try not to balance it — just name the credit." },
-  { prompt: "What did you learn in childhood that you're still unlearning?",
-    hint: "Some lessons take decades to undo." },
-  { prompt: "Describe a moment from childhood that, looking back, was a turning point you didn't notice.",
-    hint: "What if you'd turned the other way?" },
-  { prompt: "If you could speak to your eight-year-old self, what would you not need to say?",
-    hint: "Trust the parts that don't need rescuing." },
-  { prompt: "What kind of child were you that you still are?",
-    hint: "And what child have you stopped being?" },
+  {
+    prompt: "What's a sentence from your childhood you still hear in your head?",
+    hint: "Whose voice is it, and what's it doing there?",
+  },
+  {
+    prompt: 'Describe a place from your childhood you can still walk through in your imagination.',
+    hint: "What stays vivid? What's blurred?",
+  },
+  {
+    prompt: "What did your family treat as normal that you've since realized wasn't?",
+    hint: 'Normal-from-the-inside is its own category.',
+  },
+  {
+    prompt: "What did your parents do well that you don't give them enough credit for?",
+    hint: 'Try not to balance it — just name the credit.',
+  },
+  {
+    prompt: "What did you learn in childhood that you're still unlearning?",
+    hint: 'Some lessons take decades to undo.',
+  },
+  {
+    prompt:
+      "Describe a moment from childhood that, looking back, was a turning point you didn't notice.",
+    hint: "What if you'd turned the other way?",
+  },
+  {
+    prompt: 'If you could speak to your eight-year-old self, what would you not need to say?',
+    hint: "Trust the parts that don't need rescuing.",
+  },
+  {
+    prompt: 'What kind of child were you that you still are?',
+    hint: 'And what child have you stopped being?',
+  },
 
   // The body
-  { prompt: "When did you last listen to your body before your schedule?",
-    hint: "And what did the body have to say?" },
-  { prompt: "Describe something your body does well that you take for granted.",
-    hint: "Gratitude rotates the relationship." },
-  { prompt: "What relationship do you have with rest right now?",
-    hint: "Avoidance, dependence, fear, longing, ease — be specific." },
-  { prompt: "When did your body warn you about something before your mind caught up?",
-    hint: "And did you listen?" },
-  { prompt: "What does your body remember that you'd rather forget?",
-    hint: "Body memory is a different archive." },
-  { prompt: "Describe an everyday physical pleasure you'd defend against people who'd call it small.",
-    hint: "Small pleasures are how the day is built." },
-  { prompt: "How does aging show up for you, and how do you receive it?",
-    hint: "Aging is a relationship, not just a process." },
-  { prompt: "What would change if you trusted your body's verdicts as much as your mind's?",
-    hint: "Imagine one decision that would go differently." },
+  {
+    prompt: 'When did you last listen to your body before your schedule?',
+    hint: 'And what did the body have to say?',
+  },
+  {
+    prompt: 'Describe something your body does well that you take for granted.',
+    hint: 'Gratitude rotates the relationship.',
+  },
+  {
+    prompt: 'What relationship do you have with rest right now?',
+    hint: 'Avoidance, dependence, fear, longing, ease — be specific.',
+  },
+  {
+    prompt: 'When did your body warn you about something before your mind caught up?',
+    hint: 'And did you listen?',
+  },
+  {
+    prompt: "What does your body remember that you'd rather forget?",
+    hint: 'Body memory is a different archive.',
+  },
+  {
+    prompt:
+      "Describe an everyday physical pleasure you'd defend against people who'd call it small.",
+    hint: 'Small pleasures are how the day is built.',
+  },
+  {
+    prompt: 'How does aging show up for you, and how do you receive it?',
+    hint: 'Aging is a relationship, not just a process.',
+  },
+  {
+    prompt: "What would change if you trusted your body's verdicts as much as your mind's?",
+    hint: 'Imagine one decision that would go differently.',
+  },
 
   // Place and home
-  { prompt: "Where do you feel most at home — and is it where you live?",
-    hint: "If not, what does home mean for you that the place doesn't provide?" },
-  { prompt: "Describe a place you visit only in memory now.",
-    hint: "What does it offer that the present can't?" },
-  { prompt: "What does the building or street you live in shape about your daily mood?",
-    hint: "Architecture is a quiet collaborator." },
-  { prompt: "If you had to leave your current city in a week, what would you most miss?",
-    hint: "And what wouldn't you?" },
-  { prompt: "What's a place you've been once that's stayed with you disproportionately?",
-    hint: "Why did it land?" },
-  { prompt: "Where would you go to think clearly about a decision?",
-    hint: "And what does the place do that other places don't?" },
-  { prompt: "What does your home say about who you'd like to be that no one else would notice?",
-    hint: "The aspirational details are often the quietest." },
-  { prompt: "Describe an everyday walk you take that's become a kind of meditation.",
-    hint: "The path you've stopped seeing because you see it constantly." },
+  {
+    prompt: 'Where do you feel most at home — and is it where you live?',
+    hint: "If not, what does home mean for you that the place doesn't provide?",
+  },
+  {
+    prompt: 'Describe a place you visit only in memory now.',
+    hint: "What does it offer that the present can't?",
+  },
+  {
+    prompt: 'What does the building or street you live in shape about your daily mood?',
+    hint: 'Architecture is a quiet collaborator.',
+  },
+  {
+    prompt: 'If you had to leave your current city in a week, what would you most miss?',
+    hint: "And what wouldn't you?",
+  },
+  {
+    prompt: "What's a place you've been once that's stayed with you disproportionately?",
+    hint: 'Why did it land?',
+  },
+  {
+    prompt: 'Where would you go to think clearly about a decision?',
+    hint: "And what does the place do that other places don't?",
+  },
+  {
+    prompt: "What does your home say about who you'd like to be that no one else would notice?",
+    hint: 'The aspirational details are often the quietest.',
+  },
+  {
+    prompt: "Describe an everyday walk you take that's become a kind of meditation.",
+    hint: "The path you've stopped seeing because you see it constantly.",
+  },
 
   // Risk and safety
-  { prompt: "What's a risk you're glad you took, even though it didn't work out?",
-    hint: "The taking was the lesson." },
-  { prompt: "Describe a kind of safety you cling to that may be costing you more than it gives.",
-    hint: "Safety has costs too — they're just less visible." },
-  { prompt: "What would you do this year if you weren't afraid of looking foolish?",
-    hint: "Foolishness is a powerful aesthetic objection." },
-  { prompt: "When did you last play it safe and regret it?",
-    hint: "What was the regret made of?" },
-  { prompt: "What kind of risk does your life currently lack?",
-    hint: "Some absences are louder than presences." },
-  { prompt: "Describe a small daring you've rehearsed but never enacted.",
-    hint: "What's keeping it in the rehearsal phase?" },
-  { prompt: "If your life were a story, what risk would the next chapter require?",
-    hint: "And what would refusing the chapter cost?" },
+  {
+    prompt: "What's a risk you're glad you took, even though it didn't work out?",
+    hint: 'The taking was the lesson.',
+  },
+  {
+    prompt: 'Describe a kind of safety you cling to that may be costing you more than it gives.',
+    hint: "Safety has costs too — they're just less visible.",
+  },
+  {
+    prompt: "What would you do this year if you weren't afraid of looking foolish?",
+    hint: 'Foolishness is a powerful aesthetic objection.',
+  },
+  { prompt: 'When did you last play it safe and regret it?', hint: 'What was the regret made of?' },
+  {
+    prompt: 'What kind of risk does your life currently lack?',
+    hint: 'Some absences are louder than presences.',
+  },
+  {
+    prompt: "Describe a small daring you've rehearsed but never enacted.",
+    hint: "What's keeping it in the rehearsal phase?",
+  },
+  {
+    prompt: 'If your life were a story, what risk would the next chapter require?',
+    hint: 'And what would refusing the chapter cost?',
+  },
 
   // Ritual and routine
-  { prompt: "What's a routine in your life you'd defend against efficiency advice?",
-    hint: "Some routines aren't optimizing for anything legible." },
-  { prompt: "Describe a ritual you've invented for yourself.",
-    hint: "Inherited rituals are easier; invented ones reveal more." },
-  { prompt: "What do you do every morning that sets the tone you want — or doesn't?",
-    hint: "Mornings are where the day is rehearsed." },
-  { prompt: "When did you last break a routine and learn something from breaking it?",
-    hint: "Routines hide their costs until interrupted." },
-  { prompt: "What ritual would you adopt if you knew it would matter in twenty years?",
-    hint: "Now: why aren't you adopting it?" },
-  { prompt: "Describe how you mark transitions in your day or week. Are the marks intentional?",
-    hint: "Transitions are where energy leaks." },
-  { prompt: "What would your ideal Sunday look like if no one needed you?",
-    hint: "And what does the answer reveal about what you currently lack?" },
+  {
+    prompt: "What's a routine in your life you'd defend against efficiency advice?",
+    hint: "Some routines aren't optimizing for anything legible.",
+  },
+  {
+    prompt: "Describe a ritual you've invented for yourself.",
+    hint: 'Inherited rituals are easier; invented ones reveal more.',
+  },
+  {
+    prompt: "What do you do every morning that sets the tone you want — or doesn't?",
+    hint: 'Mornings are where the day is rehearsed.',
+  },
+  {
+    prompt: 'When did you last break a routine and learn something from breaking it?',
+    hint: 'Routines hide their costs until interrupted.',
+  },
+  {
+    prompt: 'What ritual would you adopt if you knew it would matter in twenty years?',
+    hint: "Now: why aren't you adopting it?",
+  },
+  {
+    prompt: 'Describe how you mark transitions in your day or week. Are the marks intentional?',
+    hint: 'Transitions are where energy leaks.',
+  },
+  {
+    prompt: 'What would your ideal Sunday look like if no one needed you?',
+    hint: 'And what does the answer reveal about what you currently lack?',
+  },
 
   // The stranger
-  { prompt: "Describe a recent encounter with a stranger that changed your day, however slightly.",
-    hint: "Strangers are constant teachers, mostly unnoticed." },
-  { prompt: "What kind of stranger do you find it easiest to be kind to? What kind hardest?",
-    hint: "The pattern is a confession." },
-  { prompt: "When did you last help a stranger and get nothing in return — and what did you get from getting nothing?",
-    hint: "Asymmetric giving is its own discipline." },
-  { prompt: "What do you wish strangers would assume about you that they don't?",
-    hint: "And what would it take to be that legible?" },
-  { prompt: "Describe a stranger you've thought about more than once. Why do they linger?",
-    hint: "Brief presence sometimes echoes longer than long presence." },
-  { prompt: "What's a small kindness from a stranger you've never repaid?",
-    hint: "Could you pay it forward this week?" },
-  { prompt: "How do you behave around strangers when no one you know is watching?",
-    hint: "The default behavior is the truest." },
+  {
+    prompt: 'Describe a recent encounter with a stranger that changed your day, however slightly.',
+    hint: 'Strangers are constant teachers, mostly unnoticed.',
+  },
+  {
+    prompt: 'What kind of stranger do you find it easiest to be kind to? What kind hardest?',
+    hint: 'The pattern is a confession.',
+  },
+  {
+    prompt:
+      'When did you last help a stranger and get nothing in return — and what did you get from getting nothing?',
+    hint: 'Asymmetric giving is its own discipline.',
+  },
+  {
+    prompt: "What do you wish strangers would assume about you that they don't?",
+    hint: 'And what would it take to be that legible?',
+  },
+  {
+    prompt: "Describe a stranger you've thought about more than once. Why do they linger?",
+    hint: 'Brief presence sometimes echoes longer than long presence.',
+  },
+  {
+    prompt: "What's a small kindness from a stranger you've never repaid?",
+    hint: 'Could you pay it forward this week?',
+  },
+  {
+    prompt: 'How do you behave around strangers when no one you know is watching?',
+    hint: 'The default behavior is the truest.',
+  },
 
   // Failure and defeat
-  { prompt: "Describe a failure you keep returning to. What's it asking of you?",
-    hint: "Some failures aren't done with us yet." },
-  { prompt: "What's a defeat you've made meaning out of? Do you trust the meaning?",
-    hint: "Meaning-making is also self-protection." },
-  { prompt: "When did you last fail with witnesses? How did the witnesses change the experience?",
-    hint: "Public and private failure are different categories." },
-  { prompt: "What would you attempt if failure were not embarrassing?",
-    hint: "Embarrassment is often the real cost we're avoiding." },
-  { prompt: "Describe a failure that turned out to have been the right outcome.",
-    hint: "Some doors close for you, not against you." },
-  { prompt: "What's the failure you'd most fear, and what does fearing it reveal?",
-    hint: "Fear maps value." },
-  { prompt: "When did you last fail well — meaning fail in a way that didn't compound?",
-    hint: "Failing well is a learnable skill." },
+  {
+    prompt: "Describe a failure you keep returning to. What's it asking of you?",
+    hint: "Some failures aren't done with us yet.",
+  },
+  {
+    prompt: "What's a defeat you've made meaning out of? Do you trust the meaning?",
+    hint: 'Meaning-making is also self-protection.',
+  },
+  {
+    prompt: 'When did you last fail with witnesses? How did the witnesses change the experience?',
+    hint: 'Public and private failure are different categories.',
+  },
+  {
+    prompt: 'What would you attempt if failure were not embarrassing?',
+    hint: "Embarrassment is often the real cost we're avoiding.",
+  },
+  {
+    prompt: 'Describe a failure that turned out to have been the right outcome.',
+    hint: 'Some doors close for you, not against you.',
+  },
+  {
+    prompt: "What's the failure you'd most fear, and what does fearing it reveal?",
+    hint: 'Fear maps value.',
+  },
+  {
+    prompt: "When did you last fail well — meaning fail in a way that didn't compound?",
+    hint: 'Failing well is a learnable skill.',
+  },
 
   // Authority and obedience
-  { prompt: "Whose authority do you accept without much questioning? Why?",
-    hint: "Some deference is wise; some is automatic." },
-  { prompt: "When did you last refuse an instruction that turned out to be right to refuse?",
-    hint: "The refusal was the wisdom." },
-  { prompt: "What rule do you obey publicly but doubt privately?",
-    hint: "Public-private gaps in obedience are revealing." },
-  { prompt: "Describe a moment when authority helped you — not constrained you.",
-    hint: "Authority well-used is largely invisible." },
-  { prompt: "Who has authority over your time without realizing it?",
-    hint: "Implicit obligations weigh as much as explicit ones." },
-  { prompt: "What kind of authority do you accept in others that you reject for yourself?",
-    hint: "Asymmetric standards are usually telling us something." },
-  { prompt: "If you could revoke one form of authority over your life, what would it be?",
-    hint: "And what would the revocation actually require?" },
+  {
+    prompt: 'Whose authority do you accept without much questioning? Why?',
+    hint: 'Some deference is wise; some is automatic.',
+  },
+  {
+    prompt: 'When did you last refuse an instruction that turned out to be right to refuse?',
+    hint: 'The refusal was the wisdom.',
+  },
+  {
+    prompt: 'What rule do you obey publicly but doubt privately?',
+    hint: 'Public-private gaps in obedience are revealing.',
+  },
+  {
+    prompt: 'Describe a moment when authority helped you — not constrained you.',
+    hint: 'Authority well-used is largely invisible.',
+  },
+  {
+    prompt: 'Who has authority over your time without realizing it?',
+    hint: 'Implicit obligations weigh as much as explicit ones.',
+  },
+  {
+    prompt: 'What kind of authority do you accept in others that you reject for yourself?',
+    hint: 'Asymmetric standards are usually telling us something.',
+  },
+  {
+    prompt: 'If you could revoke one form of authority over your life, what would it be?',
+    hint: 'And what would the revocation actually require?',
+  },
 
   // Friendship
-  { prompt: "What does a good friend of yours do that you'd want to do better yourself?",
-    hint: "Friends are quiet curricula." },
-  { prompt: "Describe a friendship that's lasted by changing shape several times.",
-    hint: "Resilient friendships flex." },
-  { prompt: "When were you last a worse friend than you wanted to be? What made it possible?",
-    hint: "The conditions matter more than the moment." },
-  { prompt: "Whose friendship would you most regret losing? What would you do this year to keep it?",
-    hint: "Don't wait for the loss to clarify the value." },
-  { prompt: "What's a kind of friend you've never been but would like to be?",
-    hint: "Aspiration as friendship is a practice." },
-  { prompt: "Describe how you choose your friends now versus how you used to.",
-    hint: "The criteria mature, sometimes without our noticing." },
-  { prompt: "What does friendship require of you that family doesn't?",
-    hint: "Voluntary bonds have different burdens." },
-  { prompt: "If you could give your closest friends one quality you have, which would you give?",
-    hint: "And which of theirs would you take?" },
+  {
+    prompt: "What does a good friend of yours do that you'd want to do better yourself?",
+    hint: 'Friends are quiet curricula.',
+  },
+  {
+    prompt: "Describe a friendship that's lasted by changing shape several times.",
+    hint: 'Resilient friendships flex.',
+  },
+  {
+    prompt: 'When were you last a worse friend than you wanted to be? What made it possible?',
+    hint: 'The conditions matter more than the moment.',
+  },
+  {
+    prompt:
+      'Whose friendship would you most regret losing? What would you do this year to keep it?',
+    hint: "Don't wait for the loss to clarify the value.",
+  },
+  {
+    prompt: "What's a kind of friend you've never been but would like to be?",
+    hint: 'Aspiration as friendship is a practice.',
+  },
+  {
+    prompt: 'Describe how you choose your friends now versus how you used to.',
+    hint: 'The criteria mature, sometimes without our noticing.',
+  },
+  {
+    prompt: "What does friendship require of you that family doesn't?",
+    hint: 'Voluntary bonds have different burdens.',
+  },
+  {
+    prompt: 'If you could give your closest friends one quality you have, which would you give?',
+    hint: 'And which of theirs would you take?',
+  },
 
   // Love
-  { prompt: "What kind of love do you give that you wish you also received?",
-    hint: "Asymmetry in giving and receiving is information." },
-  { prompt: "Describe a love that's quieter than you make it sound.",
-    hint: "Some loves don't survive the language we put around them." },
-  { prompt: "When did you last love someone better than you usually do? What conditions made it possible?",
-    hint: "Conditions, not character — what was different?" },
-  { prompt: "What does it mean to love someone who is not easy to love?",
-    hint: "Try to answer concretely, not abstractly." },
-  { prompt: "Whose love changed what you thought you deserved?",
-    hint: "Both kinds of change count — toward more, or toward less." },
-  { prompt: "What's a love you grew out of without bitterness? How did you do it well?",
-    hint: "Graceful exits are rare and worth understanding." },
-  { prompt: "Describe what love looks like from inside your closest current relationship.",
-    hint: "From the inside, not as you'd narrate it externally." },
-  { prompt: "What would loving yourself well look like for you, specifically?",
-    hint: "Concrete acts, not generalities." },
+  {
+    prompt: 'What kind of love do you give that you wish you also received?',
+    hint: 'Asymmetry in giving and receiving is information.',
+  },
+  {
+    prompt: "Describe a love that's quieter than you make it sound.",
+    hint: "Some loves don't survive the language we put around them.",
+  },
+  {
+    prompt:
+      'When did you last love someone better than you usually do? What conditions made it possible?',
+    hint: 'Conditions, not character — what was different?',
+  },
+  {
+    prompt: 'What does it mean to love someone who is not easy to love?',
+    hint: 'Try to answer concretely, not abstractly.',
+  },
+  {
+    prompt: 'Whose love changed what you thought you deserved?',
+    hint: 'Both kinds of change count — toward more, or toward less.',
+  },
+  {
+    prompt: "What's a love you grew out of without bitterness? How did you do it well?",
+    hint: 'Graceful exits are rare and worth understanding.',
+  },
+  {
+    prompt: 'Describe what love looks like from inside your closest current relationship.',
+    hint: "From the inside, not as you'd narrate it externally.",
+  },
+  {
+    prompt: 'What would loving yourself well look like for you, specifically?',
+    hint: 'Concrete acts, not generalities.',
+  },
 
   // Death (specific)
-  { prompt: "What conversation about death have you been postponing?",
-    hint: "With whom? About what?" },
-  { prompt: "If you knew you had a year, who would you reach out to in the first month?",
-    hint: "And why aren't you reaching out now?" },
-  { prompt: "What would you want said at your funeral that you wouldn't dare say about yourself?",
-    hint: "And what would the gap reveal?" },
-  { prompt: "Describe how the death of someone you knew changed how you live.",
-    hint: "Even small mortalities reorder priorities." },
-  { prompt: "What practical thing have you not yet done that would matter if you died this year?",
-    hint: "Wills, letters, conversations, reconciliations — name one." },
-  { prompt: "How do you imagine your own death? And how does that imagination shape your day?",
-    hint: "We rehearse mortality whether or not we admit it." },
-  { prompt: "What kind of death frightens you most, and what does that fear protect?",
-    hint: "Specific fears are doors to specific values." },
+  {
+    prompt: 'What conversation about death have you been postponing?',
+    hint: 'With whom? About what?',
+  },
+  {
+    prompt: 'If you knew you had a year, who would you reach out to in the first month?',
+    hint: "And why aren't you reaching out now?",
+  },
+  {
+    prompt: "What would you want said at your funeral that you wouldn't dare say about yourself?",
+    hint: 'And what would the gap reveal?',
+  },
+  {
+    prompt: 'Describe how the death of someone you knew changed how you live.',
+    hint: 'Even small mortalities reorder priorities.',
+  },
+  {
+    prompt: 'What practical thing have you not yet done that would matter if you died this year?',
+    hint: 'Wills, letters, conversations, reconciliations — name one.',
+  },
+  {
+    prompt: 'How do you imagine your own death? And how does that imagination shape your day?',
+    hint: 'We rehearse mortality whether or not we admit it.',
+  },
+  {
+    prompt: 'What kind of death frightens you most, and what does that fear protect?',
+    hint: 'Specific fears are doors to specific values.',
+  },
 
   // Forgiveness
-  { prompt: "Whom have you not forgiven, and what would forgiveness cost you?",
-    hint: "Sometimes the cost is the obstacle, not the merit." },
-  { prompt: "When did you last forgive yourself for something? What made it possible?",
-    hint: "Self-forgiveness is its own technical skill." },
-  { prompt: "What does forgiveness mean to you when the other person hasn't asked for it?",
-    hint: "Forgiveness can be private architecture." },
-  { prompt: "Describe a forgiveness you've offered too quickly. What did the speed cost?",
-    hint: "Premature forgiveness sometimes cheats both sides." },
-  { prompt: "What's something you'd want forgiven that you've never asked forgiveness for?",
-    hint: "Asking is the harder act, usually." },
-  { prompt: "When was forgiveness the right answer, and when was it the wrong one?",
-    hint: "Sometimes accountability is the deeper kindness." },
+  {
+    prompt: 'Whom have you not forgiven, and what would forgiveness cost you?',
+    hint: 'Sometimes the cost is the obstacle, not the merit.',
+  },
+  {
+    prompt: 'When did you last forgive yourself for something? What made it possible?',
+    hint: 'Self-forgiveness is its own technical skill.',
+  },
+  {
+    prompt: "What does forgiveness mean to you when the other person hasn't asked for it?",
+    hint: 'Forgiveness can be private architecture.',
+  },
+  {
+    prompt: "Describe a forgiveness you've offered too quickly. What did the speed cost?",
+    hint: 'Premature forgiveness sometimes cheats both sides.',
+  },
+  {
+    prompt: "What's something you'd want forgiven that you've never asked forgiveness for?",
+    hint: 'Asking is the harder act, usually.',
+  },
+  {
+    prompt: 'When was forgiveness the right answer, and when was it the wrong one?',
+    hint: 'Sometimes accountability is the deeper kindness.',
+  },
 
   // Memory and forgetting
-  { prompt: "What memory have you been guarding without knowing why?",
-    hint: "Try to name what it's holding for you." },
-  { prompt: "Describe something you've forgotten that you wish you hadn't.",
-    hint: "Forgetting is also a kind of editing." },
-  { prompt: "What's a memory that improved with time, in your telling of it?",
-    hint: "Most stories are negotiations between event and meaning." },
-  { prompt: "When did you last remember something painful and feel softened by the remembering?",
-    hint: "Time moves us, even without our consent." },
-  { prompt: "What would you choose to remember of this week if memory were finite?",
-    hint: "Selection clarifies the meaningful." },
-  { prompt: "Describe a sensory memory — a smell, a sound, a texture — that returns unbidden.",
-    hint: "Senses bypass narrative; that's part of why they last." },
-  { prompt: "What story do you tell about your past that may not be quite true anymore?",
-    hint: "Stories are useful even when they're inaccurate." },
+  {
+    prompt: 'What memory have you been guarding without knowing why?',
+    hint: "Try to name what it's holding for you.",
+  },
+  {
+    prompt: "Describe something you've forgotten that you wish you hadn't.",
+    hint: 'Forgetting is also a kind of editing.',
+  },
+  {
+    prompt: "What's a memory that improved with time, in your telling of it?",
+    hint: 'Most stories are negotiations between event and meaning.',
+  },
+  {
+    prompt: 'When did you last remember something painful and feel softened by the remembering?',
+    hint: 'Time moves us, even without our consent.',
+  },
+  {
+    prompt: 'What would you choose to remember of this week if memory were finite?',
+    hint: 'Selection clarifies the meaningful.',
+  },
+  {
+    prompt: 'Describe a sensory memory — a smell, a sound, a texture — that returns unbidden.',
+    hint: "Senses bypass narrative; that's part of why they last.",
+  },
+  {
+    prompt: 'What story do you tell about your past that may not be quite true anymore?',
+    hint: "Stories are useful even when they're inaccurate.",
+  },
 
   // Truth-telling and lying
-  { prompt: "What's a truth you've been postponing telling someone? What would the telling change?",
-    hint: "Postponed truths weigh more than spoken ones." },
-  { prompt: "Describe a useful lie you tell socially. Could you stop without losing what it gives you?",
-    hint: "Some social lies are infrastructure." },
-  { prompt: "When were you last told a hard truth and grateful for it later?",
-    hint: "Gratitude for truth often arrives delayed." },
-  { prompt: "What truth about yourself do you tell strangers more easily than friends?",
-    hint: "Distance changes what's sayable." },
-  { prompt: "Whose honesty do you trust most? What does that person do that earns the trust?",
-    hint: "Trustworthy honesty is a craft." },
-  { prompt: "What would it cost to tell the most honest version of your year so far?",
-    hint: "Cost is the measure of repression." },
+  {
+    prompt: "What's a truth you've been postponing telling someone? What would the telling change?",
+    hint: 'Postponed truths weigh more than spoken ones.',
+  },
+  {
+    prompt:
+      'Describe a useful lie you tell socially. Could you stop without losing what it gives you?',
+    hint: 'Some social lies are infrastructure.',
+  },
+  {
+    prompt: 'When were you last told a hard truth and grateful for it later?',
+    hint: 'Gratitude for truth often arrives delayed.',
+  },
+  {
+    prompt: 'What truth about yourself do you tell strangers more easily than friends?',
+    hint: "Distance changes what's sayable.",
+  },
+  {
+    prompt: 'Whose honesty do you trust most? What does that person do that earns the trust?',
+    hint: 'Trustworthy honesty is a craft.',
+  },
+  {
+    prompt: 'What would it cost to tell the most honest version of your year so far?',
+    hint: 'Cost is the measure of repression.',
+  },
 
   // The mundane / the everyday
-  { prompt: "What do you do every day that you don't think of as practice but is?",
-    hint: "We're trained by what we repeat." },
-  { prompt: "Describe a chore you secretly enjoy. What does the enjoyment teach?",
-    hint: "Pleasure in repetition is its own data." },
-  { prompt: "What's the most mundane part of your day, and what does it offer you?",
-    hint: "Even unremarkable hours have texture." },
-  { prompt: "When did you last notice something beautiful in something boring?",
-    hint: "Boredom is a perception, not a property." },
-  { prompt: "What would your life look like if you decided to take the small things more seriously?",
-    hint: "Imagine the day, not just the principle." },
-  { prompt: "Describe an everyday object you'd be sad to lose. What makes it more than functional?",
-    hint: "Objects carry stories we don't always tell." },
-  { prompt: "What domestic task feels most like meditation to you?",
-    hint: "And what does the comparison reveal?" },
+  {
+    prompt: "What do you do every day that you don't think of as practice but is?",
+    hint: "We're trained by what we repeat.",
+  },
+  {
+    prompt: 'Describe a chore you secretly enjoy. What does the enjoyment teach?',
+    hint: 'Pleasure in repetition is its own data.',
+  },
+  {
+    prompt: "What's the most mundane part of your day, and what does it offer you?",
+    hint: 'Even unremarkable hours have texture.',
+  },
+  {
+    prompt: 'When did you last notice something beautiful in something boring?',
+    hint: 'Boredom is a perception, not a property.',
+  },
+  {
+    prompt:
+      'What would your life look like if you decided to take the small things more seriously?',
+    hint: 'Imagine the day, not just the principle.',
+  },
+  {
+    prompt: "Describe an everyday object you'd be sad to lose. What makes it more than functional?",
+    hint: "Objects carry stories we don't always tell.",
+  },
+  {
+    prompt: 'What domestic task feels most like meditation to you?',
+    hint: 'And what does the comparison reveal?',
+  },
 
   // Animals and nature
-  { prompt: "Describe an encounter with an animal that altered something in you, however briefly.",
-    hint: "Animals teach without curriculum." },
-  { prompt: "What does the natural world ask of you that you haven't given?",
-    hint: "Be specific about what 'giving' would look like." },
-  { prompt: "When were you last still enough to notice something growing?",
-    hint: "Growth happens at its own pace; ours rarely matches." },
-  { prompt: "What's a place in nature you return to in your mind?",
-    hint: "Why this place? Why now?" },
-  { prompt: "Describe a season you find difficult, and what the difficulty teaches.",
-    hint: "Seasons we resist are often seasons that have something to give." },
-  { prompt: "What would you do differently if you experienced yourself as part of an ecosystem rather than apart from it?",
-    hint: "Belonging changes obligation." },
-  { prompt: "What's a small natural thing — a bird, a tree, a weather pattern — that has surprised you recently?",
-    hint: "Surprise is attention." },
+  {
+    prompt: 'Describe an encounter with an animal that altered something in you, however briefly.',
+    hint: 'Animals teach without curriculum.',
+  },
+  {
+    prompt: "What does the natural world ask of you that you haven't given?",
+    hint: "Be specific about what 'giving' would look like.",
+  },
+  {
+    prompt: 'When were you last still enough to notice something growing?',
+    hint: 'Growth happens at its own pace; ours rarely matches.',
+  },
+  {
+    prompt: "What's a place in nature you return to in your mind?",
+    hint: 'Why this place? Why now?',
+  },
+  {
+    prompt: 'Describe a season you find difficult, and what the difficulty teaches.',
+    hint: 'Seasons we resist are often seasons that have something to give.',
+  },
+  {
+    prompt:
+      'What would you do differently if you experienced yourself as part of an ecosystem rather than apart from it?',
+    hint: 'Belonging changes obligation.',
+  },
+  {
+    prompt:
+      "What's a small natural thing — a bird, a tree, a weather pattern — that has surprised you recently?",
+    hint: 'Surprise is attention.',
+  },
 
   // Technology and attention
-  { prompt: "Where does your attention go when you don't direct it?",
-    hint: "Defaults are training. Notice yours." },
-  { prompt: "Describe a habit you have with your phone that you wouldn't choose if you started over.",
-    hint: "Habit accretes faster than intention." },
-  { prompt: "What's an app or tool that's quietly changed who you are?",
-    hint: "Tools shape us back." },
-  { prompt: "When did you last go a day without a screen? What happened?",
-    hint: "Even one day is data." },
-  { prompt: "What's something you've stopped doing because a screen offered an easier substitute?",
-    hint: "Substitutions are losses we don't always grieve." },
-  { prompt: "Describe a way you'd like to spend an hour that you haven't spent it in months.",
-    hint: "Naming the absence is the first step." },
-  { prompt: "If you tracked your attention the way some people track calories, what would change?",
-    hint: "Imagine the data, then imagine the response." },
+  {
+    prompt: "Where does your attention go when you don't direct it?",
+    hint: 'Defaults are training. Notice yours.',
+  },
+  {
+    prompt:
+      "Describe a habit you have with your phone that you wouldn't choose if you started over.",
+    hint: 'Habit accretes faster than intention.',
+  },
+  {
+    prompt: "What's an app or tool that's quietly changed who you are?",
+    hint: 'Tools shape us back.',
+  },
+  {
+    prompt: 'When did you last go a day without a screen? What happened?',
+    hint: 'Even one day is data.',
+  },
+  {
+    prompt: "What's something you've stopped doing because a screen offered an easier substitute?",
+    hint: "Substitutions are losses we don't always grieve.",
+  },
+  {
+    prompt: "Describe a way you'd like to spend an hour that you haven't spent it in months.",
+    hint: 'Naming the absence is the first step.',
+  },
+  {
+    prompt: 'If you tracked your attention the way some people track calories, what would change?',
+    hint: 'Imagine the data, then imagine the response.',
+  },
 
   // Politics (personal stake)
-  { prompt: "What's a political conviction you hold that costs you something socially? How much?",
-    hint: "Beliefs without cost are easy to overestimate." },
-  { prompt: "Describe an issue you've changed your mind on. What changed it — argument, experience, or something else?",
-    hint: "The mechanism of change is more useful than the position." },
-  { prompt: "Who in your life disagrees with you politically and you still respect? Why?",
-    hint: "Specifics matter more than generalities here." },
-  { prompt: "What does your daily life have to do with the larger politics you care about?",
-    hint: "Coherence between belief and behavior is rare and worth examining." },
-  { prompt: "If you could fix one civic problem in your immediate community, which would you choose?",
-    hint: "Local is harder than universal, and more honest." },
-  { prompt: "What political belief of yours might your future self find embarrassing?",
-    hint: "Most generations get something wrong." },
+  {
+    prompt: "What's a political conviction you hold that costs you something socially? How much?",
+    hint: 'Beliefs without cost are easy to overestimate.',
+  },
+  {
+    prompt:
+      "Describe an issue you've changed your mind on. What changed it — argument, experience, or something else?",
+    hint: 'The mechanism of change is more useful than the position.',
+  },
+  {
+    prompt: 'Who in your life disagrees with you politically and you still respect? Why?',
+    hint: 'Specifics matter more than generalities here.',
+  },
+  {
+    prompt: 'What does your daily life have to do with the larger politics you care about?',
+    hint: 'Coherence between belief and behavior is rare and worth examining.',
+  },
+  {
+    prompt:
+      'If you could fix one civic problem in your immediate community, which would you choose?',
+    hint: 'Local is harder than universal, and more honest.',
+  },
+  {
+    prompt: 'What political belief of yours might your future self find embarrassing?',
+    hint: 'Most generations get something wrong.',
+  },
 
   // Sex and intimacy
-  { prompt: "What does intimacy mean to you that the word usually doesn't capture?",
-    hint: "The word is too small. Try to make it bigger." },
-  { prompt: "Describe a non-sexual intimacy that has mattered to you recently.",
-    hint: "Intimacy is broader than romance." },
-  { prompt: "When were you last vulnerable with someone in a way you don't usually allow?",
-    hint: "Conditions of vulnerability — what made it possible?" },
-  { prompt: "What's something about your inner life that no one currently knows?",
-    hint: "Could you tell someone? Would you want to?" },
-  { prompt: "What kind of closeness have you been craving but not naming?",
-    hint: "Naming is a beginning." },
-  { prompt: "Describe a way you've grown in how you give or receive intimacy.",
-    hint: "Growth in intimacy is among the harder kinds." },
+  {
+    prompt: "What does intimacy mean to you that the word usually doesn't capture?",
+    hint: 'The word is too small. Try to make it bigger.',
+  },
+  {
+    prompt: 'Describe a non-sexual intimacy that has mattered to you recently.',
+    hint: 'Intimacy is broader than romance.',
+  },
+  {
+    prompt: "When were you last vulnerable with someone in a way you don't usually allow?",
+    hint: 'Conditions of vulnerability — what made it possible?',
+  },
+  {
+    prompt: "What's something about your inner life that no one currently knows?",
+    hint: 'Could you tell someone? Would you want to?',
+  },
+  {
+    prompt: 'What kind of closeness have you been craving but not naming?',
+    hint: 'Naming is a beginning.',
+  },
+  {
+    prompt: "Describe a way you've grown in how you give or receive intimacy.",
+    hint: 'Growth in intimacy is among the harder kinds.',
+  },
 
   // Spirituality / the unseen
-  { prompt: "What do you believe in that you can't justify? And does the believing change your behavior?",
-    hint: "Beliefs that don't change behavior are mostly decoration." },
-  { prompt: "Describe a moment when something larger than yourself felt close.",
-    hint: "Don't worry about naming the something — describe the feeling." },
-  { prompt: "What practice would make you more spiritually serious if you took it on?",
-    hint: "And what's stopping you?" },
-  { prompt: "When did you last pray, in any sense — formal or improvised?",
-    hint: "What did the act do?" },
-  { prompt: "What kind of mystery do you make space for in your life?",
-    hint: "Or do you?" },
-  { prompt: "Describe what 'sacred' means to you in concrete terms.",
-    hint: "Concrete: a moment, an object, a relationship — not a category." },
+  {
+    prompt:
+      "What do you believe in that you can't justify? And does the believing change your behavior?",
+    hint: "Beliefs that don't change behavior are mostly decoration.",
+  },
+  {
+    prompt: 'Describe a moment when something larger than yourself felt close.',
+    hint: "Don't worry about naming the something — describe the feeling.",
+  },
+  {
+    prompt: 'What practice would make you more spiritually serious if you took it on?',
+    hint: "And what's stopping you?",
+  },
+  {
+    prompt: 'When did you last pray, in any sense — formal or improvised?',
+    hint: 'What did the act do?',
+  },
+  { prompt: 'What kind of mystery do you make space for in your life?', hint: 'Or do you?' },
+  {
+    prompt: "Describe what 'sacred' means to you in concrete terms.",
+    hint: 'Concrete: a moment, an object, a relationship — not a category.',
+  },
 
   // Aging and change
-  { prompt: "What's something you do now that your younger self would be surprised by?",
-    hint: "Surprise is data about distance traveled." },
-  { prompt: "Describe a change in yourself over the last five years that no one else has named.",
-    hint: "Internal changes are often the most consequential." },
-  { prompt: "What would your 80-year-old self most thank you for doing this year?",
-    hint: "And what would they wish you'd skipped?" },
-  { prompt: "When did you last feel younger than your age? Older?",
-    hint: "We move along this axis daily." },
-  { prompt: "What kind of older person do you want to be that you'll have to start becoming now?",
-    hint: "Some qualities require advance work." },
-  { prompt: "Describe a habit of mind that's deepened with time. What did the deepening cost?",
-    hint: "Maturation is not always free." },
+  {
+    prompt: "What's something you do now that your younger self would be surprised by?",
+    hint: 'Surprise is data about distance traveled.',
+  },
+  {
+    prompt: 'Describe a change in yourself over the last five years that no one else has named.',
+    hint: 'Internal changes are often the most consequential.',
+  },
+  {
+    prompt: 'What would your 80-year-old self most thank you for doing this year?',
+    hint: "And what would they wish you'd skipped?",
+  },
+  {
+    prompt: 'When did you last feel younger than your age? Older?',
+    hint: 'We move along this axis daily.',
+  },
+  {
+    prompt: "What kind of older person do you want to be that you'll have to start becoming now?",
+    hint: 'Some qualities require advance work.',
+  },
+  {
+    prompt: "Describe a habit of mind that's deepened with time. What did the deepening cost?",
+    hint: 'Maturation is not always free.',
+  },
 
   // Travel and rootedness
-  { prompt: "Where would you go for one week if no one had to come with you?",
-    hint: "Solo travel is its own diagnostic." },
-  { prompt: "What does staying put offer you that travel can't?",
-    hint: "Rootedness has its own gifts." },
-  { prompt: "Describe a trip that changed something in you. What specifically did it change?",
-    hint: "The mechanism — not just the memory." },
-  { prompt: "What kind of place would you most want to live in next? Why?",
-    hint: "And what's keeping you from moving toward it?" },
-  { prompt: "When were you last a stranger somewhere? What did the strangeness teach?",
-    hint: "Disorientation is a kind of clarity." },
-  { prompt: "What's a place you'd never travel to — and what does the refusal reveal?",
-    hint: "Refusals are also positions." },
+  {
+    prompt: 'Where would you go for one week if no one had to come with you?',
+    hint: 'Solo travel is its own diagnostic.',
+  },
+  {
+    prompt: "What does staying put offer you that travel can't?",
+    hint: 'Rootedness has its own gifts.',
+  },
+  {
+    prompt: 'Describe a trip that changed something in you. What specifically did it change?',
+    hint: 'The mechanism — not just the memory.',
+  },
+  {
+    prompt: 'What kind of place would you most want to live in next? Why?',
+    hint: "And what's keeping you from moving toward it?",
+  },
+  {
+    prompt: 'When were you last a stranger somewhere? What did the strangeness teach?',
+    hint: 'Disorientation is a kind of clarity.',
+  },
+  {
+    prompt: "What's a place you'd never travel to — and what does the refusal reveal?",
+    hint: 'Refusals are also positions.',
+  },
 
   // Reading and influence
-  { prompt: "What book has been the longest-running argument in your head?",
-    hint: "Some books we keep arguing with for years." },
-  { prompt: "Whose writing changed how you think? Can you say specifically how?",
-    hint: "Influence usually leaves fingerprints." },
-  { prompt: "What's a piece of writing you've read multiple times? What does it offer that one read missed?",
-    hint: "Re-reading is a different relationship." },
-  { prompt: "Describe a book you couldn't finish that you keep meaning to. What's the resistance?",
-    hint: "Resistance is information." },
-  { prompt: "What would you want someone to read to understand who you are now?",
-    hint: "And what does the answer say about you?" },
-  { prompt: "If you could put one book in everyone's hands, which would it be — and why this one?",
-    hint: "Consider the conditions under which it would actually be read." },
+  {
+    prompt: 'What book has been the longest-running argument in your head?',
+    hint: 'Some books we keep arguing with for years.',
+  },
+  {
+    prompt: 'Whose writing changed how you think? Can you say specifically how?',
+    hint: 'Influence usually leaves fingerprints.',
+  },
+  {
+    prompt:
+      "What's a piece of writing you've read multiple times? What does it offer that one read missed?",
+    hint: 'Re-reading is a different relationship.',
+  },
+  {
+    prompt: "Describe a book you couldn't finish that you keep meaning to. What's the resistance?",
+    hint: 'Resistance is information.',
+  },
+  {
+    prompt: 'What would you want someone to read to understand who you are now?',
+    hint: 'And what does the answer say about you?',
+  },
+  {
+    prompt: "If you could put one book in everyone's hands, which would it be — and why this one?",
+    hint: 'Consider the conditions under which it would actually be read.',
+  },
 
   // Conversation as practice
-  { prompt: "Who do you have your best conversations with, and what makes them best?",
-    hint: "Conditions of good conversation are reproducible." },
-  { prompt: "Describe a conversation you wish you could have. With whom, about what?",
-    hint: "And what's stopping you from initiating it?" },
-  { prompt: "What's a question you'd love to be asked in conversation?",
-    hint: "Then offer the question to others — they may want it too." },
-  { prompt: "When did you last listen well? What made it possible?",
-    hint: "Listening well is also a craft." },
-  { prompt: "What's a conversation you've replayed in your head more than once? Why?",
-    hint: "Replays usually mean unfinished business." },
-  { prompt: "Describe a conversational habit of yours that you'd like to change.",
-    hint: "Concrete habits, not vague self-improvement." },
+  {
+    prompt: 'Who do you have your best conversations with, and what makes them best?',
+    hint: 'Conditions of good conversation are reproducible.',
+  },
+  {
+    prompt: 'Describe a conversation you wish you could have. With whom, about what?',
+    hint: "And what's stopping you from initiating it?",
+  },
+  {
+    prompt: "What's a question you'd love to be asked in conversation?",
+    hint: 'Then offer the question to others — they may want it too.',
+  },
+  {
+    prompt: 'When did you last listen well? What made it possible?',
+    hint: 'Listening well is also a craft.',
+  },
+  {
+    prompt: "What's a conversation you've replayed in your head more than once? Why?",
+    hint: 'Replays usually mean unfinished business.',
+  },
+  {
+    prompt: "Describe a conversational habit of yours that you'd like to change.",
+    hint: 'Concrete habits, not vague self-improvement.',
+  },
 
   // Playfulness
-  { prompt: "When did you last play, in any meaningful sense of the word?",
-    hint: "Play that wasn't masquerading as productivity." },
-  { prompt: "What's a kind of fun you've outgrown that you slightly regret outgrowing?",
-    hint: "Outgrowing isn't always growth." },
-  { prompt: "Describe a quality you envy in children that you'd like to recover.",
-    hint: "Envy of children is a useful kind of envy." },
-  { prompt: "What hobby or play have you been meaning to take up? What's stopping you?",
-    hint: "The obstacles are often smaller than they look." },
-  { prompt: "When did you last laugh until you couldn't breathe?",
-    hint: "And what conditions produced it?" },
-  { prompt: "What does playfulness look like in your work — if it does?",
-    hint: "Playful work is often the most serious." },
+  {
+    prompt: 'When did you last play, in any meaningful sense of the word?',
+    hint: "Play that wasn't masquerading as productivity.",
+  },
+  {
+    prompt: "What's a kind of fun you've outgrown that you slightly regret outgrowing?",
+    hint: "Outgrowing isn't always growth.",
+  },
+  {
+    prompt: "Describe a quality you envy in children that you'd like to recover.",
+    hint: 'Envy of children is a useful kind of envy.',
+  },
+  {
+    prompt: "What hobby or play have you been meaning to take up? What's stopping you?",
+    hint: 'The obstacles are often smaller than they look.',
+  },
+  {
+    prompt: "When did you last laugh until you couldn't breathe?",
+    hint: 'And what conditions produced it?',
+  },
+  {
+    prompt: 'What does playfulness look like in your work — if it does?',
+    hint: 'Playful work is often the most serious.',
+  },
 
   // Crisis and change
-  { prompt: "What was the last real change in your life, and what set it in motion?",
-    hint: "Change is rarely sudden, even when it seems so." },
-  { prompt: "Describe a crisis you handled better than you expected to. What did you learn?",
-    hint: "Capacity is often invisible until tested." },
-  { prompt: "When were you last forced to revise a plan, and the revision turned out to be better?",
-    hint: "Plans are useful; planning is the practice." },
-  { prompt: "What's a transition you're in the middle of right now, even quietly?",
-    hint: "Most transitions don't announce themselves." },
-  { prompt: "If you had to name one shift you're trying to make in yourself, what would it be?",
-    hint: "Naming is half the work; the other half is patience." },
+  {
+    prompt: 'What was the last real change in your life, and what set it in motion?',
+    hint: 'Change is rarely sudden, even when it seems so.',
+  },
+  {
+    prompt: 'Describe a crisis you handled better than you expected to. What did you learn?',
+    hint: 'Capacity is often invisible until tested.',
+  },
+  {
+    prompt: 'When were you last forced to revise a plan, and the revision turned out to be better?',
+    hint: 'Plans are useful; planning is the practice.',
+  },
+  {
+    prompt: "What's a transition you're in the middle of right now, even quietly?",
+    hint: "Most transitions don't announce themselves.",
+  },
+  {
+    prompt: "If you had to name one shift you're trying to make in yourself, what would it be?",
+    hint: 'Naming is half the work; the other half is patience.',
+  },
 
   // Generosity
-  { prompt: "When did you last give something — time, attention, money, help — that you couldn't quite afford?",
-    hint: "Generosity that costs nothing is barely generosity." },
-  { prompt: "What's something you've received generously that you've never returned?",
-    hint: "Could you, this year?" },
-  { prompt: "Describe someone whose generosity has shaped you. How specifically?",
-    hint: "The specifics are the lesson." },
-  { prompt: "When have you been stingy in a way you regret?",
-    hint: "Stinginess is rarely about scarcity; usually about fear or pride." },
-  { prompt: "What kind of generosity is hardest for you?",
-    hint: "Time, money, attention, credit, forgiveness — they're not interchangeable." },
+  {
+    prompt:
+      "When did you last give something — time, attention, money, help — that you couldn't quite afford?",
+    hint: 'Generosity that costs nothing is barely generosity.',
+  },
+  {
+    prompt: "What's something you've received generously that you've never returned?",
+    hint: 'Could you, this year?',
+  },
+  {
+    prompt: 'Describe someone whose generosity has shaped you. How specifically?',
+    hint: 'The specifics are the lesson.',
+  },
+  {
+    prompt: 'When have you been stingy in a way you regret?',
+    hint: 'Stinginess is rarely about scarcity; usually about fear or pride.',
+  },
+  {
+    prompt: 'What kind of generosity is hardest for you?',
+    hint: "Time, money, attention, credit, forgiveness — they're not interchangeable.",
+  },
 
   // Quiet mastery
-  { prompt: "What's a small skill you've quietly developed that no one else notices?",
-    hint: "Unwitnessed mastery is its own pleasure." },
-  { prompt: "Describe a craft or art you'd love to take more seriously. What's the threshold you haven't crossed?",
-    hint: "Thresholds are usually internal, not technical." },
-  { prompt: "When did you last spend an hour on something only because you wanted to be better at it?",
-    hint: "And how did the hour feel?" },
-  { prompt: "What's a domain you'd want to be excellent in by 50, if you're not already?",
-    hint: "Excellence requires advance commitment." },
-  { prompt: "Whose mastery do you most admire? What about the mastery, not the master, draws you?",
-    hint: "Admiration is a clue about what you want to become." },
+  {
+    prompt: "What's a small skill you've quietly developed that no one else notices?",
+    hint: 'Unwitnessed mastery is its own pleasure.',
+  },
+  {
+    prompt:
+      "Describe a craft or art you'd love to take more seriously. What's the threshold you haven't crossed?",
+    hint: 'Thresholds are usually internal, not technical.',
+  },
+  {
+    prompt:
+      'When did you last spend an hour on something only because you wanted to be better at it?',
+    hint: 'And how did the hour feel?',
+  },
+  {
+    prompt: "What's a domain you'd want to be excellent in by 50, if you're not already?",
+    hint: 'Excellence requires advance commitment.',
+  },
+  {
+    prompt: 'Whose mastery do you most admire? What about the mastery, not the master, draws you?',
+    hint: 'Admiration is a clue about what you want to become.',
+  },
 
   // Doubt and uncertainty
-  { prompt: "What are you most uncertain about right now, and what would resolution look like?",
-    hint: "Sometimes the question is whether resolution is the goal." },
-  { prompt: "Describe a doubt you keep returning to. Why this doubt, why this often?",
-    hint: "Recurring doubts are usually pointing at unfinished thinking." },
-  { prompt: "When did you last sit with not knowing instead of rushing to conclude?",
-    hint: "Conclusion is sometimes premature." },
-  { prompt: "What's a question you've decided you don't need to answer?",
-    hint: "Some questions can be lived with rather than solved." },
-  { prompt: "If you could be certain about one thing in your life, which would you choose?",
-    hint: "And what does choosing this reveal?" },
+  {
+    prompt: 'What are you most uncertain about right now, and what would resolution look like?',
+    hint: 'Sometimes the question is whether resolution is the goal.',
+  },
+  {
+    prompt: 'Describe a doubt you keep returning to. Why this doubt, why this often?',
+    hint: 'Recurring doubts are usually pointing at unfinished thinking.',
+  },
+  {
+    prompt: 'When did you last sit with not knowing instead of rushing to conclude?',
+    hint: 'Conclusion is sometimes premature.',
+  },
+  {
+    prompt: "What's a question you've decided you don't need to answer?",
+    hint: 'Some questions can be lived with rather than solved.',
+  },
+  {
+    prompt: 'If you could be certain about one thing in your life, which would you choose?',
+    hint: 'And what does choosing this reveal?',
+  },
 
   // Ambition revisited
-  { prompt: "What ambition have you grown out of that you don't miss?",
-    hint: "Outgrowing ambition can be liberation, not loss." },
-  { prompt: "Describe a goal you've been chasing whose appeal has quietly faded.",
-    hint: "Could you let it go without losing face?" },
-  { prompt: "What's an ambition you've never told anyone about?",
-    hint: "And what does keeping it secret protect?" },
-  { prompt: "If you could start over with one ambition you abandoned, would you?",
-    hint: "Honest answer, not aspirational." },
-  { prompt: "What does success look like to you this year? And next?",
-    hint: "Concrete pictures, not abstractions." },
+  {
+    prompt: "What ambition have you grown out of that you don't miss?",
+    hint: 'Outgrowing ambition can be liberation, not loss.',
+  },
+  {
+    prompt: "Describe a goal you've been chasing whose appeal has quietly faded.",
+    hint: 'Could you let it go without losing face?',
+  },
+  {
+    prompt: "What's an ambition you've never told anyone about?",
+    hint: 'And what does keeping it secret protect?',
+  },
+  {
+    prompt: 'If you could start over with one ambition you abandoned, would you?',
+    hint: 'Honest answer, not aspirational.',
+  },
+  {
+    prompt: 'What does success look like to you this year? And next?',
+    hint: 'Concrete pictures, not abstractions.',
+  },
 
   // Self-trust
-  { prompt: "When did you last trust yourself against advice and turn out to be right?",
-    hint: "Self-trust is built case by case." },
-  { prompt: "Describe an instinct of yours you've learned to trust. How did the trust accrue?",
-    hint: "Trust accumulates from small accuracies." },
-  { prompt: "What would change if you trusted your taste as much as you trust your reasoning?",
-    hint: "Taste is information that resists articulation." },
-  { prompt: "When did your gut warn you about something you ignored? What happened?",
-    hint: "Gut signals are often retrospective wisdom." },
-  { prompt: "Whose voice do you defer to over your own — and is the deferral still warranted?",
-    hint: "Some deferrals were once protective and have become stale." },
+  {
+    prompt: 'When did you last trust yourself against advice and turn out to be right?',
+    hint: 'Self-trust is built case by case.',
+  },
+  {
+    prompt: "Describe an instinct of yours you've learned to trust. How did the trust accrue?",
+    hint: 'Trust accumulates from small accuracies.',
+  },
+  {
+    prompt: 'What would change if you trusted your taste as much as you trust your reasoning?',
+    hint: 'Taste is information that resists articulation.',
+  },
+  {
+    prompt: 'When did your gut warn you about something you ignored? What happened?',
+    hint: 'Gut signals are often retrospective wisdom.',
+  },
+  {
+    prompt: 'Whose voice do you defer to over your own — and is the deferral still warranted?',
+    hint: 'Some deferrals were once protective and have become stale.',
+  },
 
   // Closing prompts — meta
-  { prompt: "What's something you've learned about yourself from doing these dilemmas?",
-    hint: "Looking back is its own kind of forward motion." },
-  { prompt: "If your responses to these prompts were read by your future self, what would they want to underline?",
-    hint: "Pretend the underlining matters. It does." },
-  { prompt: "What kind of question would you wish for here that hasn't been asked yet?",
-    hint: "Ask yourself the missing question." }
+  {
+    prompt: "What's something you've learned about yourself from doing these dilemmas?",
+    hint: 'Looking back is its own kind of forward motion.',
+  },
+  {
+    prompt:
+      'If your responses to these prompts were read by your future self, what would they want to underline?',
+    hint: 'Pretend the underlining matters. It does.',
+  },
+  {
+    prompt: "What kind of question would you wish for here that hasn't been asked yet?",
+    hint: 'Ask yourself the missing question.',
+  },
 ];
 
 // Get today's dilemma deterministically from the date.
 // Same day, same dilemma, for every user (anywhere in the world based on UTC).
-export function getDailyDilemma(date: Date = new Date()): { dilemma: Dilemma; index: number; dateKey: string } {
+export function getDailyDilemma(date: Date = new Date()): {
+  dilemma: Dilemma;
+  index: number;
+  dateKey: string;
+} {
   const yyyy = date.getUTCFullYear();
   const mm = String(date.getUTCMonth() + 1).padStart(2, '0');
   const dd = String(date.getUTCDate()).padStart(2, '0');

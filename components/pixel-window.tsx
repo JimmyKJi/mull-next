@@ -12,9 +12,9 @@
 // Server-component-safe (no client JS). Variants opt into per-page
 // archetype color theming via inline CSS vars.
 
-import type { ReactNode } from "react";
+import type { ReactNode } from 'react';
 
-type WindowVariant = "cream" | "ink" | "amber";
+type WindowVariant = 'cream' | 'ink' | 'amber';
 
 type WindowProps = {
   children: ReactNode;
@@ -41,7 +41,7 @@ export function PixelWindow({
   children,
   title,
   badge,
-  variant = "cream",
+  variant = 'cream',
   accent,
   className,
   bodyClassName,
@@ -55,38 +55,38 @@ export function PixelWindow({
         bg: accent.soft,
         titleBg: accent.deep,
         titleText: accent.soft,
-        bodyText: "var(--color-ink)",
+        bodyText: 'var(--color-ink)',
       }
-    : variant === "ink"
+    : variant === 'ink'
       ? {
-          border: "var(--color-ink)",
-          shadow: "var(--color-acc-deep)",
-          bg: "#1A1612",
-          titleBg: "var(--color-ink)",
-          titleText: "var(--color-acc-soft)",
-          bodyText: "var(--color-acc-soft)",
+          border: 'var(--color-ink)',
+          shadow: 'var(--color-acc-deep)',
+          bg: '#1A1612',
+          titleBg: 'var(--color-ink)',
+          titleText: 'var(--color-acc-soft)',
+          bodyText: 'var(--color-acc-soft)',
         }
-      : variant === "amber"
+      : variant === 'amber'
         ? {
-            border: "var(--color-acc-deep)",
-            shadow: "var(--color-acc-deep)",
-            bg: "var(--color-acc-soft)",
-            titleBg: "var(--color-acc-deep)",
-            titleText: "var(--color-acc-soft)",
-            bodyText: "var(--color-ink)",
+            border: 'var(--color-acc-deep)',
+            shadow: 'var(--color-acc-deep)',
+            bg: 'var(--color-acc-soft)',
+            titleBg: 'var(--color-acc-deep)',
+            titleText: 'var(--color-acc-soft)',
+            bodyText: 'var(--color-ink)',
           }
         : {
-            border: "var(--color-ink)",
-            shadow: "var(--color-ink)",
-            bg: "#FFFCF4",
-            titleBg: "var(--color-ink)",
-            titleText: "var(--color-acc-soft)",
-            bodyText: "var(--color-ink)",
+            border: 'var(--color-ink)',
+            shadow: 'var(--color-ink)',
+            bg: '#FFFCF4',
+            titleBg: 'var(--color-ink)',
+            titleText: 'var(--color-acc-soft)',
+            bodyText: 'var(--color-ink)',
           };
 
   return (
     <div
-      className={"border-4 " + (className ?? "")}
+      className={'border-4 ' + (className ?? '')}
       style={{
         borderColor: tokens.border,
         background: tokens.bg,
@@ -101,14 +101,14 @@ export function PixelWindow({
             borderColor: tokens.border,
             background: tokens.titleBg,
             color: tokens.titleText,
-            fontFamily: "var(--font-pixel-display)",
+            fontFamily: 'var(--font-pixel-display)',
           }}
         >
           <span>{title}</span>
           {badge ? <span className="shrink-0 text-acc">{badge}</span> : null}
         </div>
       ) : null}
-      <div className={(flush ? "" : "px-5 py-5 sm:px-7 sm:py-6 ") + (bodyClassName ?? "")}>
+      <div className={(flush ? '' : 'px-5 py-5 sm:px-7 sm:py-6 ') + (bodyClassName ?? '')}>
         {children}
       </div>
     </div>
@@ -135,14 +135,14 @@ type HeaderProps = {
 };
 
 export function PixelPageHeader({ eyebrow, title, subtitle, accent }: HeaderProps) {
-  const accentColor = accent?.deep ?? "var(--color-acc-deep)";
-  const shadowColor = accent?.primary ?? "var(--color-acc)";
+  const accentColor = accent?.deep ?? 'var(--color-acc-deep)';
+  const shadowColor = accent?.primary ?? 'var(--color-acc)';
   return (
     <header className="mb-10 sm:mb-14">
       {eyebrow ? (
         <div
           className="flex items-center gap-3 text-[10px] tracking-[0.24em]"
-          style={{ color: accentColor, fontFamily: "var(--font-pixel-display)" }}
+          style={{ color: accentColor, fontFamily: 'var(--font-pixel-display)' }}
         >
           <span aria-hidden className="inline-block h-2 w-2" style={{ background: shadowColor }} />
           {eyebrow}
@@ -156,9 +156,12 @@ export function PixelPageHeader({ eyebrow, title, subtitle, accent }: HeaderProp
           chunkier 32px / 44px the design intends. */}
       <h1
         className="mull-pixel-title mt-5 pr-2 leading-[1.45] tracking-[0.04em] text-ink sm:text-[32px] md:text-[44px]"
-        style={{ fontFamily: "var(--font-pixel-display)" }}
+        style={{ fontFamily: 'var(--font-pixel-display)' }}
       >
-        <span className="mull-pixel-title-shadow" style={{ ['--mull-shadow-color' as string]: shadowColor } as React.CSSProperties}>
+        <span
+          className="mull-pixel-title-shadow"
+          style={{ ['--mull-shadow-color' as string]: shadowColor } as React.CSSProperties}
+        >
           {title}
         </span>
       </h1>

@@ -18,12 +18,13 @@ import { rankByDimensionFocus } from '@/lib/recommendations';
 import type { Metadata } from 'next';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 
 export const metadata: Metadata = {
   title: 'Philosophical exercises',
-  description: '36 guided practices drawn from the Stoic, Socratic, Buddhist, and analytic traditions. Short. Practical. Done in under 30 minutes.',
+  description:
+    '36 guided practices drawn from the Stoic, Socratic, Buddhist, and analytic traditions. Short. Practical. Done in under 30 minutes.',
   alternates: { canonical: 'https://mull.world/exercises' },
 };
 
@@ -31,16 +32,25 @@ export const metadata: Metadata = {
  *  subset that reads well as the day's starter. */
 function pickFeaturedExercise() {
   const featured = [
-    'premortem', 'negative-visualization', 'view-from-above', 'memento-mori',
-    'morning-intention', 'three-line-evening', 'fallacy-hunt', 'steelmanning',
-    'sixty-second-case', 'charitable-interpretation', 'breath-count', 'examen',
+    'premortem',
+    'negative-visualization',
+    'view-from-above',
+    'memento-mori',
+    'morning-intention',
+    'three-line-evening',
+    'fallacy-hunt',
+    'steelmanning',
+    'sixty-second-case',
+    'charitable-interpretation',
+    'breath-count',
+    'examen',
   ];
   const now = new Date();
   const dayOfYear = Math.floor(
-    (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86_400_000
+    (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86_400_000,
   );
   const slug = featured[dayOfYear % featured.length];
-  return EXERCISES.find(e => e.slug === slug) ?? EXERCISES[0];
+  return EXERCISES.find((e) => e.slug === slug) ?? EXERCISES[0];
 }
 
 /** Bucket duration string into a visual category for the time chip. */
@@ -64,7 +74,9 @@ export default async function ExercisesPage() {
   // This page already reads cookies via getServerLocale, so the auth read
   // adds no caching penalty.
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   const orientation = await getUserOrientation(supabase, user?.id ?? null);
   const focusRanked = rankByDimensionFocus(
     orientation.vector,
@@ -91,15 +103,18 @@ export default async function ExercisesPage() {
 
       {/* ─── Featured exercise ─────────────────────────────────── */}
       <section style={{ marginBottom: 36 }}>
-        <div style={{
-          fontFamily: pixel,
-          fontSize: 10,
-          color: 'var(--color-acc-deep)',
-          letterSpacing: 0.6,
-          textTransform: 'uppercase',
-          marginBottom: 8,
-        }}>
-          ◇ {featuredPersonalized
+        <div
+          style={{
+            fontFamily: pixel,
+            fontSize: 10,
+            color: 'var(--color-acc-deep)',
+            letterSpacing: 0.6,
+            textTransform: 'uppercase',
+            marginBottom: 8,
+          }}
+        >
+          ◇{' '}
+          {featuredPersonalized
             ? t('exercises.featured_for_you', locale)
             : t('exercises.try_today', locale)}
         </div>
@@ -118,74 +133,96 @@ export default async function ExercisesPage() {
             transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
           }}
         >
-          <div style={{
-            display: 'flex',
-            alignItems: 'baseline',
-            justifyContent: 'space-between',
-            gap: 12,
-            marginBottom: 10,
-            flexWrap: 'wrap',
-          }}>
-            <h2 style={{
-              fontFamily: serif,
-              fontSize: 28,
-              fontWeight: 500,
-              margin: 0,
-              letterSpacing: '-0.4px',
-              color: 'var(--color-ink)',
-              lineHeight: 1.15,
-            }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'baseline',
+              justifyContent: 'space-between',
+              gap: 12,
+              marginBottom: 10,
+              flexWrap: 'wrap',
+            }}
+          >
+            <h2
+              style={{
+                fontFamily: serif,
+                fontSize: 28,
+                fontWeight: 500,
+                margin: 0,
+                letterSpacing: '-0.4px',
+                color: 'var(--color-ink)',
+                lineHeight: 1.15,
+              }}
+            >
               {featuredLocal.name}
             </h2>
-            <span style={{
-              fontFamily: pixel,
-              fontSize: 10,
-              color: featuredBucket.color,
-              letterSpacing: 0.5,
-              border: `2px solid ${featuredBucket.color}`,
-              padding: '3px 8px',
-            }}>
+            <span
+              style={{
+                fontFamily: pixel,
+                fontSize: 10,
+                color: featuredBucket.color,
+                letterSpacing: 0.5,
+                border: `2px solid ${featuredBucket.color}`,
+                padding: '3px 8px',
+              }}
+            >
               {featuredBucket.label} · {featuredLocal.duration}
             </span>
           </div>
-          <p style={{
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 17,
-            color: 'var(--color-ink-soft)',
-            margin: '0 0 10px',
-            lineHeight: 1.5,
-          }}>
+          <p
+            style={{
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: 17,
+              color: 'var(--color-ink-soft)',
+              margin: '0 0 10px',
+              lineHeight: 1.5,
+            }}
+          >
             {featuredLocal.summary}
           </p>
           {featuredPersonalized && (
-            <p style={{
-              fontFamily: serif,
-              fontStyle: 'italic',
-              fontSize: 14.5,
-              color: '#6B7F4F',
-              margin: '0 0 12px',
-              lineHeight: 1.5,
-            }}>
+            <p
+              style={{
+                fontFamily: serif,
+                fontStyle: 'italic',
+                fontSize: 14.5,
+                color: '#6B7F4F',
+                margin: '0 0 12px',
+                lineHeight: 1.5,
+              }}
+            >
               {t('exercises.featured_for_you_note', locale)}
             </p>
           )}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-            <span style={{
-              fontFamily: sans,
-              fontSize: 12,
-              color: 'var(--color-acc-deep)',
-              opacity: 0.85,
-            }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              gap: 10,
+              flexWrap: 'wrap',
+            }}
+          >
+            <span
+              style={{
+                fontFamily: sans,
+                fontSize: 12,
+                color: 'var(--color-acc-deep)',
+                opacity: 0.85,
+              }}
+            >
               {featuredLocal.tradition}
             </span>
-            <span style={{
-              fontFamily: pixel,
-              fontSize: 10,
-              color: 'var(--color-acc-deep)',
-              letterSpacing: 0.6,
-              textTransform: 'uppercase',
-            }}>
+            <span
+              style={{
+                fontFamily: pixel,
+                fontSize: 10,
+                color: 'var(--color-acc-deep)',
+                letterSpacing: 0.6,
+                textTransform: 'uppercase',
+              }}
+            >
               BEGIN ▶
             </span>
           </div>
@@ -193,17 +230,19 @@ export default async function ExercisesPage() {
       </section>
 
       {/* ─── Quick jump nav ────────────────────────────────────── */}
-      <nav style={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: 6,
-        marginBottom: 28,
-        paddingBottom: 16,
-        borderBottom: '2px dashed #C2A062',
-      }}>
-        {(['contemplative', 'logic', 'argument'] as ExerciseCategory[]).map(cat => {
+      <nav
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 6,
+          marginBottom: 28,
+          paddingBottom: 16,
+          borderBottom: '2px dashed #C2A062',
+        }}
+      >
+        {(['contemplative', 'logic', 'argument'] as ExerciseCategory[]).map((cat) => {
           const meta = CATEGORY_META[cat];
-          const count = EXERCISES.filter(e => e.category === cat).length;
+          const count = EXERCISES.filter((e) => e.category === cat).length;
           return (
             <a
               key={cat}
@@ -227,100 +266,122 @@ export default async function ExercisesPage() {
       </nav>
 
       {/* ─── Category sections ─────────────────────────────────── */}
-      {(['contemplative', 'logic', 'argument'] as ExerciseCategory[]).map(cat => {
+      {(['contemplative', 'logic', 'argument'] as ExerciseCategory[]).map((cat) => {
         const meta = CATEGORY_META[cat];
-        const items = EXERCISES.filter(e => e.category === cat).map(e => localizeExercise(e, locale));
+        const items = EXERCISES.filter((e) => e.category === cat).map((e) =>
+          localizeExercise(e, locale),
+        );
         if (items.length === 0) return null;
         return (
           <section key={cat} id={cat} style={{ marginBottom: 44, scrollMarginTop: 24 }}>
-            <h2 style={{
-              fontFamily: serif,
-              fontSize: 25,
-              fontWeight: 500,
-              margin: '0 0 6px',
-              letterSpacing: '-0.3px',
-              color: 'var(--color-ink)',
-            }}>
+            <h2
+              style={{
+                fontFamily: serif,
+                fontSize: 25,
+                fontWeight: 500,
+                margin: '0 0 6px',
+                letterSpacing: '-0.3px',
+                color: 'var(--color-ink)',
+              }}
+            >
               {t(`excat.${cat}.label`, locale)}
             </h2>
-            <p style={{
-              fontFamily: serif,
-              fontStyle: 'italic',
-              fontSize: 14.5,
-              color: 'var(--color-ink-soft)',
-              margin: '0 0 18px',
-              lineHeight: 1.55,
-            }}>
+            <p
+              style={{
+                fontFamily: serif,
+                fontStyle: 'italic',
+                fontSize: 14.5,
+                color: 'var(--color-ink-soft)',
+                margin: '0 0 18px',
+                lineHeight: 1.55,
+              }}
+            >
               {t(`excat.${cat}.blurb`, locale)}
             </p>
-            <ul style={{
-              listStyle: 'none',
-              padding: 0,
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-              gap: 10,
-            }}>
-              {items.map(ex => {
+            <ul
+              style={{
+                listStyle: 'none',
+                padding: 0,
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                gap: 10,
+              }}
+            >
+              {items.map((ex) => {
                 const bucket = durationBucket(ex.duration);
                 return (
                   <li key={ex.slug}>
-                    <Link href={`/exercises/${ex.slug}`} className="pixel-press" style={{
-                      display: 'block',
-                      padding: '16px 18px',
-                      background: '#FFFCF4',
-                      border: '3px solid var(--color-ink)',
-                      boxShadow: `3px 3px 0 0 ${meta.accent}`,
-                      borderRadius: 0,
-                      textDecoration: 'none',
-                      color: 'inherit',
-                      height: '100%',
-                      transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
-                    }}>
-                      <div style={{
-                        display: 'flex',
-                        alignItems: 'baseline',
-                        justifyContent: 'space-between',
-                        gap: 10,
-                        marginBottom: 6,
-                        flexWrap: 'wrap',
-                      }}>
-                        <span style={{
-                          fontFamily: serif,
-                          fontSize: 19,
-                          fontWeight: 500,
-                          color: 'var(--color-ink)',
-                          lineHeight: 1.2,
-                        }}>
+                    <Link
+                      href={`/exercises/${ex.slug}`}
+                      className="pixel-press"
+                      style={{
+                        display: 'block',
+                        padding: '16px 18px',
+                        background: '#FFFCF4',
+                        border: '3px solid var(--color-ink)',
+                        boxShadow: `3px 3px 0 0 ${meta.accent}`,
+                        borderRadius: 0,
+                        textDecoration: 'none',
+                        color: 'inherit',
+                        height: '100%',
+                        transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'baseline',
+                          justifyContent: 'space-between',
+                          gap: 10,
+                          marginBottom: 6,
+                          flexWrap: 'wrap',
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontFamily: serif,
+                            fontSize: 19,
+                            fontWeight: 500,
+                            color: 'var(--color-ink)',
+                            lineHeight: 1.2,
+                          }}
+                        >
                           {ex.name}
                         </span>
-                        <span style={{
-                          fontFamily: pixel,
-                          fontSize: 9,
-                          color: bucket.color,
-                          letterSpacing: 0.4,
-                          border: `1.5px solid ${bucket.color}`,
-                          padding: '2px 6px',
-                          whiteSpace: 'nowrap',
-                        }}>
+                        <span
+                          style={{
+                            fontFamily: pixel,
+                            fontSize: 9,
+                            color: bucket.color,
+                            letterSpacing: 0.4,
+                            border: `1.5px solid ${bucket.color}`,
+                            padding: '2px 6px',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
                           {ex.duration}
                         </span>
                       </div>
-                      <p style={{
-                        margin: '0 0 8px',
-                        fontFamily: serif,
-                        fontStyle: 'italic',
-                        fontSize: 14,
-                        color: 'var(--color-ink-soft)',
-                        lineHeight: 1.5,
-                      }}>
+                      <p
+                        style={{
+                          margin: '0 0 8px',
+                          fontFamily: serif,
+                          fontStyle: 'italic',
+                          fontSize: 14,
+                          color: 'var(--color-ink-soft)',
+                          lineHeight: 1.5,
+                        }}
+                      >
                         {ex.summary}
                       </p>
-                      <span style={{
-                        fontFamily: sans,
-                        fontSize: 11,
-                        color: 'var(--color-acc-deep)',
-                        opacity: 0.85,
-                      }}>
+                      <span
+                        style={{
+                          fontFamily: sans,
+                          fontSize: 11,
+                          color: 'var(--color-acc-deep)',
+                          opacity: 0.85,
+                        }}
+                      >
                         {ex.tradition}
                       </span>
                     </Link>
@@ -332,19 +393,35 @@ export default async function ExercisesPage() {
         );
       })}
 
-      <p style={{
-        marginTop: 48,
-        fontFamily: sans,
-        fontSize: 12.5,
-        color: 'var(--color-acc-deep)',
-        opacity: 0.75,
-        lineHeight: 1.6,
-      }}>
-        {t('exercises.footer', locale, { email: 'jimmy.kaian.ji@gmail.com' }).split('jimmy.kaian.ji@gmail.com').map((part, i, arr) => (
-          <span key={i}>{part}{i < arr.length - 1 && (
-            <a href="mailto:jimmy.kaian.ji@gmail.com" style={{ color: 'var(--color-acc-deep)', textDecoration: 'underline', textUnderlineOffset: 3 }}>jimmy.kaian.ji@gmail.com</a>
-          )}</span>
-        ))}
+      <p
+        style={{
+          marginTop: 48,
+          fontFamily: sans,
+          fontSize: 12.5,
+          color: 'var(--color-acc-deep)',
+          opacity: 0.75,
+          lineHeight: 1.6,
+        }}
+      >
+        {t('exercises.footer', locale, { email: 'jimmy.kaian.ji@gmail.com' })
+          .split('jimmy.kaian.ji@gmail.com')
+          .map((part, i, arr) => (
+            <span key={i}>
+              {part}
+              {i < arr.length - 1 && (
+                <a
+                  href="mailto:jimmy.kaian.ji@gmail.com"
+                  style={{
+                    color: 'var(--color-acc-deep)',
+                    textDecoration: 'underline',
+                    textUnderlineOffset: 3,
+                  }}
+                >
+                  jimmy.kaian.ji@gmail.com
+                </a>
+              )}
+            </span>
+          ))}
       </p>
     </main>
   );

@@ -19,7 +19,7 @@ import { usePathname } from 'next/navigation';
 import FocusTrap from './focus-trap';
 import { t, type Locale, isLocale } from '@/lib/translations';
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
@@ -31,7 +31,7 @@ const HIDDEN_PREFIXES = ['/quiz', '/result', '/badge', '/share', '/wrapped', '/e
 
 export default function FeedbackButton() {
   const pathname = usePathname() || '/';
-  const hide = HIDDEN_PREFIXES.some(p => pathname === p || pathname.startsWith(p + '/'));
+  const hide = HIDDEN_PREFIXES.some((p) => pathname === p || pathname.startsWith(p + '/'));
 
   const [open, setOpen] = useState(false);
   const [text, setText] = useState('');
@@ -65,7 +65,10 @@ export default function FeedbackButton() {
       if (!res.ok) throw new Error(json?.error || t('crd.feedback_err_send', locale));
       setSent(true);
       setText('');
-      setTimeout(() => { setOpen(false); setSent(false); }, 1800);
+      setTimeout(() => {
+        setOpen(false);
+        setSent(false);
+      }, 1800);
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -97,7 +100,9 @@ export default function FeedbackButton() {
           }}
         >
           <span className="mull-feedback-fab-full">▸ {t('crd.feedback_fab', locale)}</span>
-          <span className="mull-feedback-fab-mini" aria-hidden>?</span>
+          <span className="mull-feedback-fab-mini" aria-hidden>
+            ?
+          </span>
           <style>{`
             /* Desktop: full pill in the bottom-right.
                iOS safe-area: env() resolves to 0 on devices without
@@ -139,116 +144,134 @@ export default function FeedbackButton() {
       )}
 
       {open && (
-        <FocusTrap onEscape={() => { setOpen(false); setSent(false); setError(null); }}>
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label={t('crd.feedback_form_aria', locale)}
-          className="pixel-form"
-          style={{
-            position: 'fixed',
-            // Stack the safe-area inset onto the base 18px so the
-            // open dialog also clears the iPhone home-indicator.
-            bottom: 'calc(18px + env(safe-area-inset-bottom, 0px))',
-            right: 18,
-            zIndex: 60,
-            width: 320,
-            maxWidth: 'calc(100vw - 36px)',
-            background: '#FFFCF4',
-            border: '4px solid var(--color-ink)',
-            boxShadow: '5px 5px 0 0 var(--color-acc)',
-            borderRadius: 0,
-            padding: '16px 18px',
-            fontFamily: sans,
+        <FocusTrap
+          onEscape={() => {
+            setOpen(false);
+            setSent(false);
+            setError(null);
           }}
         >
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: 12,
-          }}>
-            <strong style={{
-              fontFamily: pixel,
-              fontSize: 11,
-              color: 'var(--color-acc-deep)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.18em',
-            }}>
-              ▸ {t('crd.feedback_dialog_title', locale)}
-            </strong>
-            <button
-              type="button"
-              onClick={() => { setOpen(false); setSent(false); setError(null); }}
-              aria-label={t('crd.feedback_close_aria', locale)}
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={t('crd.feedback_form_aria', locale)}
+            className="pixel-form"
+            style={{
+              position: 'fixed',
+              // Stack the safe-area inset onto the base 18px so the
+              // open dialog also clears the iPhone home-indicator.
+              bottom: 'calc(18px + env(safe-area-inset-bottom, 0px))',
+              right: 18,
+              zIndex: 60,
+              width: 320,
+              maxWidth: 'calc(100vw - 36px)',
+              background: '#FFFCF4',
+              border: '4px solid var(--color-ink)',
+              boxShadow: '5px 5px 0 0 var(--color-acc)',
+              borderRadius: 0,
+              padding: '16px 18px',
+              fontFamily: sans,
+            }}
+          >
+            <div
               style={{
-                background: 'none', border: 'none', cursor: 'pointer',
-                fontFamily: pixel,
-                fontSize: 14, color: 'var(--color-acc-deep)',
-                padding: '0 4px', lineHeight: 1,
-              }}
-            >
-              X
-            </button>
-          </div>
-          {sent ? (
-            <p style={{
-              margin: 0,
-              fontFamily: serif,
-              fontStyle: 'italic',
-              fontSize: 15,
-              color: '#2F5D5C',
-              lineHeight: 1.5,
-              padding: '8px 0',
-            }}>
-              {t('crd.feedback_sent', locale)}
-            </p>
-          ) : (
-            <>
-              {/* The pixel-form wrapper above auto-applies chunky cream
-                  input chrome via globals.css — no inline border / fonts
-                  needed here beyond width + min-height. */}
-              <textarea
-                placeholder={t('crd.feedback_placeholder', locale)}
-                value={text}
-                onChange={e => setText(e.target.value)}
-                rows={4}
-                maxLength={4000}
-                style={{
-                  width: '100%',
-                  minHeight: 90,
-                  resize: 'vertical',
-                  boxSizing: 'border-box',
-                }}
-              />
-              <div style={{
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                marginTop: 10,
-                fontFamily: pixel,
-                fontSize: 10,
-                color: 'var(--color-acc-deep)',
-                letterSpacing: 0.4,
-                textTransform: 'uppercase',
-              }}>
-                <span>{t('crd.feedback_counter', locale, { n: text.length })}</span>
-                <button
-                  type="submit"
-                  onClick={submit}
-                  disabled={!text.trim() || busy}
+                marginBottom: 12,
+              }}
+            >
+              <strong
+                style={{
+                  fontFamily: pixel,
+                  fontSize: 11,
+                  color: 'var(--color-acc-deep)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.18em',
+                }}
+              >
+                ▸ {t('crd.feedback_dialog_title', locale)}
+              </strong>
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  setSent(false);
+                  setError(null);
+                }}
+                aria-label={t('crd.feedback_close_aria', locale)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontFamily: pixel,
+                  fontSize: 14,
+                  color: 'var(--color-acc-deep)',
+                  padding: '0 4px',
+                  lineHeight: 1,
+                }}
+              >
+                X
+              </button>
+            </div>
+            {sent ? (
+              <p
+                style={{
+                  margin: 0,
+                  fontFamily: serif,
+                  fontStyle: 'italic',
+                  fontSize: 15,
+                  color: '#2F5D5C',
+                  lineHeight: 1.5,
+                  padding: '8px 0',
+                }}
+              >
+                {t('crd.feedback_sent', locale)}
+              </p>
+            ) : (
+              <>
+                {/* The pixel-form wrapper above auto-applies chunky cream
+                  input chrome via globals.css — no inline border / fonts
+                  needed here beyond width + min-height. */}
+                <textarea
+                  placeholder={t('crd.feedback_placeholder', locale)}
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                  rows={4}
+                  maxLength={4000}
+                  style={{
+                    width: '100%',
+                    minHeight: 90,
+                    resize: 'vertical',
+                    boxSizing: 'border-box',
+                  }}
+                />
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginTop: 10,
+                    fontFamily: pixel,
+                    fontSize: 10,
+                    color: 'var(--color-acc-deep)',
+                    letterSpacing: 0.4,
+                    textTransform: 'uppercase',
+                  }}
                 >
-                  {busy ? t('crd.feedback_sending', locale) : t('crd.feedback_send_btn', locale)}
-                </button>
-              </div>
-              {error && (
-                <p className="pixel-alert pixel-alert--error" style={{ marginTop: 12 }}>
-                  {error}
-                </p>
-              )}
-            </>
-          )}
-        </div>
+                  <span>{t('crd.feedback_counter', locale, { n: text.length })}</span>
+                  <button type="submit" onClick={submit} disabled={!text.trim() || busy}>
+                    {busy ? t('crd.feedback_sending', locale) : t('crd.feedback_send_btn', locale)}
+                  </button>
+                </div>
+                {error && (
+                  <p className="pixel-alert pixel-alert--error" style={{ marginTop: 12 }}>
+                    {error}
+                  </p>
+                )}
+              </>
+            )}
+          </div>
         </FocusTrap>
       )}
     </>

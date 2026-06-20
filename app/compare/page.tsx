@@ -21,7 +21,7 @@ import { ARCHETYPES } from '@/lib/archetypes';
 import { FIGURES } from '@/lib/figures';
 import { topDivergences, topConvergences } from '@/lib/dim-narration';
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 
 export const metadata: Metadata = {
@@ -89,7 +89,8 @@ async function fetchUser(handle: string) {
   });
   const position = reconstructPosition(sorted);
 
-  const arch = (archRows as Array<{ archetype: string; flavor: string | null }> | null)?.[0] ?? null;
+  const arch =
+    (archRows as Array<{ archetype: string; flavor: string | null }> | null)?.[0] ?? null;
 
   return { profile, position, archetype: arch };
 }
@@ -109,58 +110,62 @@ export default async function ComparePage({
     return <ComparePicker initialYou={youHandle} initialThem={themHandle} locale={locale} />;
   }
 
-  const [you, them] = await Promise.all([
-    fetchUser(youHandle),
-    fetchUser(themHandle),
-  ]);
+  const [you, them] = await Promise.all([fetchUser(youHandle), fetchUser(themHandle)]);
 
   if (!you || !them) {
     // Identify which handle(s) failed so the error message can be
     // specific. Bad spelling ≫ private profile ≫ deleted account, in
     // descending order of likelihood.
-    const missing = [
-      !you ? `@${youHandle}` : null,
-      !them ? `@${themHandle}` : null,
-    ].filter(Boolean).join(' or ');
+    const missing = [!you ? `@${youHandle}` : null, !them ? `@${themHandle}` : null]
+      .filter(Boolean)
+      .join(' or ');
 
     return (
       <main style={{ maxWidth: 640, margin: '80px auto', padding: '0 24px 120px' }}>
-        <div style={{
-          padding: '32px 30px',
-          background: '#FFFCF4',
-          border: '4px solid var(--color-ink)',
-          boxShadow: '6px 6px 0 0 #7A2E2E',
-          borderRadius: 0,
-          textAlign: 'center',
-        }}>
-          <div style={{
-            fontFamily: 'var(--font-pixel-display)',
-            fontSize: 12,
-            color: '#7A2E2E',
-            textTransform: 'uppercase',
-            letterSpacing: '0.18em',
-            marginBottom: 16,
-          }}>
+        <div
+          style={{
+            padding: '32px 30px',
+            background: '#FFFCF4',
+            border: '4px solid var(--color-ink)',
+            boxShadow: '6px 6px 0 0 #7A2E2E',
+            borderRadius: 0,
+            textAlign: 'center',
+          }}
+        >
+          <div
+            style={{
+              fontFamily: 'var(--font-pixel-display)',
+              fontSize: 12,
+              color: '#7A2E2E',
+              textTransform: 'uppercase',
+              letterSpacing: '0.18em',
+              marginBottom: 16,
+            }}
+          >
             {t('compare.not_found_eyebrow', locale)}
           </div>
-          <h1 style={{
-            fontFamily: serif,
-            fontSize: 30,
-            fontWeight: 500,
-            margin: '0 0 14px',
-            letterSpacing: '-0.5px',
-            lineHeight: 1.15,
-          }}>
+          <h1
+            style={{
+              fontFamily: serif,
+              fontSize: 30,
+              fontWeight: 500,
+              margin: '0 0 14px',
+              letterSpacing: '-0.5px',
+              lineHeight: 1.15,
+            }}
+          >
             {t('compare.not_found_title', locale, { missing })}
           </h1>
-          <p style={{
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 16,
-            color: 'var(--color-ink-soft)',
-            margin: '0 0 28px',
-            lineHeight: 1.55,
-          }}>
+          <p
+            style={{
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: 16,
+              color: 'var(--color-ink-soft)',
+              margin: '0 0 28px',
+              lineHeight: 1.55,
+            }}
+          >
             {t('compare.not_found_body', locale)}
           </p>
           <Link
@@ -205,8 +210,7 @@ export default async function ComparePage({
         className="flex items-center gap-3 text-[10px] tracking-[0.22em] text-acc-deep"
         style={{ fontFamily: 'var(--font-pixel-display)' }}
       >
-        <span aria-hidden className="inline-block h-2 w-2 bg-acc" />
-        ▶ {t('compare.eyebrow', locale)}
+        <span aria-hidden className="inline-block h-2 w-2 bg-acc" />▶ {t('compare.eyebrow', locale)}
       </div>
       <h1
         className="mt-5 pr-2 text-[24px] leading-[1.45] tracking-[0.04em] text-ink sm:text-[32px] md:text-[40px]"
@@ -225,75 +229,100 @@ export default async function ComparePage({
       <div className="mb-8" />
 
       {/* Side-by-side hero cards */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-        gap: 16,
-        marginBottom: 36,
-      }}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gap: 16,
+          marginBottom: 36,
+        }}
+      >
         <UserHeroCard
           name={youName}
           handle={you.profile.handle}
-          archetype={you.profile.show_archetype ? you.archetype?.archetype ?? null : null}
-          flavor={you.profile.show_archetype ? you.archetype?.flavor ?? null : null}
+          archetype={you.profile.show_archetype ? (you.archetype?.archetype ?? null) : null}
+          flavor={you.profile.show_archetype ? (you.archetype?.flavor ?? null) : null}
           slug={you.profile.show_archetype ? youSlug : null}
           locale={locale}
         />
         <UserHeroCard
           name={themName}
           handle={them.profile.handle}
-          archetype={them.profile.show_archetype ? them.archetype?.archetype ?? null : null}
-          flavor={them.profile.show_archetype ? them.archetype?.flavor ?? null : null}
+          archetype={them.profile.show_archetype ? (them.archetype?.archetype ?? null) : null}
+          flavor={them.profile.show_archetype ? (them.archetype?.flavor ?? null) : null}
           slug={them.profile.show_archetype ? themSlug : null}
           locale={locale}
         />
       </div>
 
       {/* Top divergences in plain language */}
-      <section style={{
-        marginBottom: 36,
-        padding: '24px 26px',
-        background: '#FFFCF4',
-        border: '4px solid var(--color-ink)',
-        boxShadow: '5px 5px 0 0 var(--color-acc)',
-        borderRadius: 0,
-      }}>
-        <div style={{ ...eyebrow, color: 'var(--color-acc)' }}>▸ {t('compare.diverge_most', locale)}</div>
+      <section
+        style={{
+          marginBottom: 36,
+          padding: '24px 26px',
+          background: '#FFFCF4',
+          border: '4px solid var(--color-ink)',
+          boxShadow: '5px 5px 0 0 var(--color-acc)',
+          borderRadius: 0,
+        }}
+      >
+        <div style={{ ...eyebrow, color: 'var(--color-acc)' }}>
+          ▸ {t('compare.diverge_most', locale)}
+        </div>
         <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 16 }}>
           {divergences.length === 0 ? (
             <li style={{ fontFamily: serif, fontStyle: 'italic', color: 'var(--color-acc-deep)' }}>
               {t('compare.no_data', locale)}
             </li>
-          ) : divergences.map((d, i) => (
-            <li key={d.key}>
-              <div style={{
-                fontFamily: 'var(--font-pixel-display)', fontSize: 11,
-                color: 'var(--color-acc-deep)', textTransform: 'uppercase',
-                letterSpacing: '0.18em', marginBottom: 8,
-              }}>
-                {(i === 0 ? t('compare.biggest_divergence', locale) : `#${i + 1}`).toUpperCase()} · {d.label}
-                {d.poleFlip && (
-                  <span style={{
-                    marginLeft: 10,
-                    padding: '2px 6px',
-                    color: 'var(--color-cream)',
-                    background: '#7A2E2E',
-                    border: '2px solid var(--color-ink)',
-                    fontSize: 9,
+          ) : (
+            divergences.map((d, i) => (
+              <li key={d.key}>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-pixel-display)',
+                    fontSize: 11,
+                    color: 'var(--color-acc-deep)',
+                    textTransform: 'uppercase',
                     letterSpacing: '0.18em',
-                  }}>↔ {t('compare.opposite_poles', locale)}</span>
-                )}
-              </div>
-              <p style={{
-                fontFamily: serif, fontSize: 16, color: 'var(--color-ink)',
-                margin: 0, lineHeight: 1.55,
-              }}>
-                <strong style={{ fontWeight: 500 }}>{youName}</strong> {d.aText}{period}
-                <br />
-                <strong style={{ fontWeight: 500 }}>{themName}</strong> {d.bText}{period}
-              </p>
-            </li>
-          ))}
+                    marginBottom: 8,
+                  }}
+                >
+                  {(i === 0 ? t('compare.biggest_divergence', locale) : `#${i + 1}`).toUpperCase()}{' '}
+                  · {d.label}
+                  {d.poleFlip && (
+                    <span
+                      style={{
+                        marginLeft: 10,
+                        padding: '2px 6px',
+                        color: 'var(--color-cream)',
+                        background: '#7A2E2E',
+                        border: '2px solid var(--color-ink)',
+                        fontSize: 9,
+                        letterSpacing: '0.18em',
+                      }}
+                    >
+                      ↔ {t('compare.opposite_poles', locale)}
+                    </span>
+                  )}
+                </div>
+                <p
+                  style={{
+                    fontFamily: serif,
+                    fontSize: 16,
+                    color: 'var(--color-ink)',
+                    margin: 0,
+                    lineHeight: 1.55,
+                  }}
+                >
+                  <strong style={{ fontWeight: 500 }}>{youName}</strong> {d.aText}
+                  {period}
+                  <br />
+                  <strong style={{ fontWeight: 500 }}>{themName}</strong> {d.bText}
+                  {period}
+                </p>
+              </li>
+            ))
+          )}
         </ul>
       </section>
 
@@ -302,32 +331,47 @@ export default async function ComparePage({
           land on the same side; pure 0/0 ties (shared lack of
           opinion) are filtered out by topConvergences(). */}
       {convergences.length > 0 && (
-        <section style={{
-          marginBottom: 36,
-          padding: '24px 26px',
-          background: '#FFFCF4',
-          border: '4px solid var(--color-ink)',
-          boxShadow: '5px 5px 0 0 #2F5D5C',
-          borderRadius: 0,
-        }}>
+        <section
+          style={{
+            marginBottom: 36,
+            padding: '24px 26px',
+            background: '#FFFCF4',
+            border: '4px solid var(--color-ink)',
+            boxShadow: '5px 5px 0 0 #2F5D5C',
+            borderRadius: 0,
+          }}
+        >
           <div style={{ ...eyebrow, color: '#2F5D5C' }}>▸ {t('compare.converge_most', locale)}</div>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 16 }}>
             {convergences.map((c, i) => (
               <li key={c.key}>
-                <div style={{
-                  fontFamily: 'var(--font-pixel-display)', fontSize: 11,
-                  color: '#2F5D5C', textTransform: 'uppercase',
-                  letterSpacing: '0.18em', marginBottom: 8,
-                }}>
-                  {(i === 0 ? t('compare.strongest_agreement', locale) : `#${i + 1}`).toUpperCase()} · {c.label}
+                <div
+                  style={{
+                    fontFamily: 'var(--font-pixel-display)',
+                    fontSize: 11,
+                    color: '#2F5D5C',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.18em',
+                    marginBottom: 8,
+                  }}
+                >
+                  {(i === 0 ? t('compare.strongest_agreement', locale) : `#${i + 1}`).toUpperCase()}{' '}
+                  · {c.label}
                 </div>
-                <p style={{
-                  fontFamily: serif, fontSize: 16, color: 'var(--color-ink)',
-                  margin: 0, lineHeight: 1.55,
-                }}>
-                  <strong style={{ fontWeight: 500 }}>{youName}</strong> {c.aText}{period}
+                <p
+                  style={{
+                    fontFamily: serif,
+                    fontSize: 16,
+                    color: 'var(--color-ink)',
+                    margin: 0,
+                    lineHeight: 1.55,
+                  }}
+                >
+                  <strong style={{ fontWeight: 500 }}>{youName}</strong> {c.aText}
+                  {period}
                   <br />
-                  <strong style={{ fontWeight: 500 }}>{themName}</strong> {c.bText}{period}
+                  <strong style={{ fontWeight: 500 }}>{themName}</strong> {c.bText}
+                  {period}
                 </p>
               </li>
             ))}
@@ -338,50 +382,76 @@ export default async function ComparePage({
       {/* Full 16-dim side-by-side table */}
       <section style={{ marginBottom: 36 }}>
         <div style={eyebrow}>▸ {t('compare.all_dimensions', locale)}</div>
-        <div style={{
-          background: '#FFFCF4',
-          border: '4px solid var(--color-ink)',
-          boxShadow: '5px 5px 0 0 var(--color-acc-deep)',
-          borderRadius: 0,
-          overflow: 'hidden',
-        }}>
+        <div
+          style={{
+            background: '#FFFCF4',
+            border: '4px solid var(--color-ink)',
+            boxShadow: '5px 5px 0 0 var(--color-acc-deep)',
+            borderRadius: 0,
+            overflow: 'hidden',
+          }}
+        >
           {DIM_KEYS.map((k, i) => {
             const va = you.position[i] ?? 0;
             const vb = them.position[i] ?? 0;
             const showA = you.profile.show_dimensions;
             const showB = them.profile.show_dimensions;
             return (
-              <div key={k} style={{
-                display: 'grid',
-                gridTemplateColumns: '1.4fr 1fr 1fr',
-                gap: 12,
-                padding: '12px 16px',
-                borderTop: i === 0 ? 'none' : '2px dashed var(--color-line)',
-                fontFamily: serif, fontSize: 15,
-                color: 'var(--color-ink)',
-                alignItems: 'center',
-              }}>
-                <div style={{ fontWeight: 500 }}>{t(`dim.${k}.name`, locale) || DIM_NAMES[k as keyof typeof DIM_NAMES]}</div>
+              <div
+                key={k}
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1.4fr 1fr 1fr',
+                  gap: 12,
+                  padding: '12px 16px',
+                  borderTop: i === 0 ? 'none' : '2px dashed var(--color-line)',
+                  fontFamily: serif,
+                  fontSize: 15,
+                  color: 'var(--color-ink)',
+                  alignItems: 'center',
+                }}
+              >
+                <div style={{ fontWeight: 500 }}>
+                  {t(`dim.${k}.name`, locale) || DIM_NAMES[k as keyof typeof DIM_NAMES]}
+                </div>
                 <DimBar value={showA ? va : null} locale={locale} />
                 <DimBar value={showB ? vb : null} locale={locale} />
               </div>
             );
           })}
         </div>
-        <p style={{
-          fontFamily: sans, fontSize: 12, color: 'var(--color-acc-deep)',
-          margin: '10px 4px 0', opacity: 0.85, lineHeight: 1.55,
-        }}>
+        <p
+          style={{
+            fontFamily: sans,
+            fontSize: 12,
+            color: 'var(--color-acc-deep)',
+            margin: '10px 4px 0',
+            opacity: 0.85,
+            lineHeight: 1.55,
+          }}
+        >
           {t('compare.bars_caption', locale)}
         </p>
       </section>
 
       {/* Footer with try-another link */}
-      <p style={{
-        marginTop: 28, textAlign: 'center',
-        fontFamily: sans, fontSize: 13, color: 'var(--color-acc-deep)',
-      }}>
-        <Link href="/compare" style={{ color: 'var(--color-acc-deep)', textDecoration: 'underline', textUnderlineOffset: 3 }}>
+      <p
+        style={{
+          marginTop: 28,
+          textAlign: 'center',
+          fontFamily: sans,
+          fontSize: 13,
+          color: 'var(--color-acc-deep)',
+        }}
+      >
+        <Link
+          href="/compare"
+          style={{
+            color: 'var(--color-acc-deep)',
+            textDecoration: 'underline',
+            textUnderlineOffset: 3,
+          }}
+        >
           {t('compare.try_different', locale)}
         </Link>
       </p>
@@ -392,11 +462,16 @@ export default async function ComparePage({
 function archetypeKey(name?: string | null): string | null {
   if (!name) return null;
   const cleaned = name.replace(/^The\s+/i, '').toLowerCase();
-  return ARCHETYPES.find(a => a.key === cleaned)?.key ?? null;
+  return ARCHETYPES.find((a) => a.key === cleaned)?.key ?? null;
 }
 
 function UserHeroCard({
-  name, handle, archetype, flavor, slug, locale,
+  name,
+  handle,
+  archetype,
+  flavor,
+  slug,
+  locale,
 }: {
   name: string;
   handle: string;
@@ -407,55 +482,99 @@ function UserHeroCard({
 }) {
   const figure = slug ? FIGURES[slug] || '' : '';
   return (
-    <div style={{
-      padding: '20px 22px',
-      background: '#FFFCF4',
-      border: '4px solid var(--color-ink)',
-      boxShadow: '4px 4px 0 0 var(--color-acc)',
-      borderRadius: 0,
-    }}>
-      <div style={{
-        display: 'flex', gap: 14, alignItems: 'center', marginBottom: 12,
-      }}>
+    <div
+      style={{
+        padding: '20px 22px',
+        background: '#FFFCF4',
+        border: '4px solid var(--color-ink)',
+        boxShadow: '4px 4px 0 0 var(--color-acc)',
+        borderRadius: 0,
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          gap: 14,
+          alignItems: 'center',
+          marginBottom: 12,
+        }}
+      >
         {figure && (
-          <Link href={slug ? `/archetype/${slug}` : '#'} className="pixel-press pixel-crisp" style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            width: 64, height: 64, flexShrink: 0,
-            background: 'var(--color-acc-soft)', borderRadius: 0,
-            border: '3px solid var(--color-ink)',
-            boxShadow: '3px 3px 0 0 var(--color-acc-deep)',
-            padding: 6,
-            textDecoration: 'none',
-            transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
-          }}>
-            <span aria-hidden style={{ width: '100%', height: '100%' }}
-              dangerouslySetInnerHTML={{ __html: figure }} />
+          <Link
+            href={slug ? `/archetype/${slug}` : '#'}
+            className="pixel-press pixel-crisp"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 64,
+              height: 64,
+              flexShrink: 0,
+              background: 'var(--color-acc-soft)',
+              borderRadius: 0,
+              border: '3px solid var(--color-ink)',
+              boxShadow: '3px 3px 0 0 var(--color-acc-deep)',
+              padding: 6,
+              textDecoration: 'none',
+              transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+            }}
+          >
+            <span
+              aria-hidden
+              style={{ width: '100%', height: '100%' }}
+              dangerouslySetInnerHTML={{ __html: figure }}
+            />
           </Link>
         )}
         <div style={{ minWidth: 0, flex: 1 }}>
-          <Link href={`/u/${handle}`} style={{
-            fontFamily: serif, fontSize: 22, fontWeight: 500,
-            color: 'var(--color-ink)', textDecoration: 'none',
-            display: 'block', lineHeight: 1.2,
-          }}>{name}</Link>
-          <span style={{
-            fontFamily: sans, fontSize: 12,
-            color: 'var(--color-acc-deep)', letterSpacing: 0.2,
-          }}>@{handle}</span>
+          <Link
+            href={`/u/${handle}`}
+            style={{
+              fontFamily: serif,
+              fontSize: 22,
+              fontWeight: 500,
+              color: 'var(--color-ink)',
+              textDecoration: 'none',
+              display: 'block',
+              lineHeight: 1.2,
+            }}
+          >
+            {name}
+          </Link>
+          <span
+            style={{
+              fontFamily: sans,
+              fontSize: 12,
+              color: 'var(--color-acc-deep)',
+              letterSpacing: 0.2,
+            }}
+          >
+            @{handle}
+          </span>
         </div>
       </div>
       {archetype ? (
-        <div style={{
-          fontFamily: serif, fontStyle: 'italic',
-          fontSize: 15, color: 'var(--color-ink-soft)', lineHeight: 1.4,
-        }}>
-          {flavor ? `${flavor} ` : ''}{archetype.replace(/^The\s+/i, '')}
+        <div
+          style={{
+            fontFamily: serif,
+            fontStyle: 'italic',
+            fontSize: 15,
+            color: 'var(--color-ink-soft)',
+            lineHeight: 1.4,
+          }}
+        >
+          {flavor ? `${flavor} ` : ''}
+          {archetype.replace(/^The\s+/i, '')}
         </div>
       ) : (
-        <div style={{
-          fontFamily: sans, fontSize: 12.5,
-          color: 'var(--color-acc-deep)', fontStyle: 'italic',
-        }}>
+        <div
+          style={{
+            fontFamily: sans,
+            fontSize: 12.5,
+            color: 'var(--color-acc-deep)',
+            fontStyle: 'italic',
+          }}
+        >
           {t('compare.archetype_hidden', locale)}
         </div>
       )}
@@ -466,10 +585,15 @@ function UserHeroCard({
 function DimBar({ value, locale }: { value: number | null; locale: Locale }) {
   if (value == null) {
     return (
-      <span style={{
-        fontFamily: sans, fontSize: 11, fontStyle: 'italic',
-        color: 'var(--color-acc-deep)', opacity: 0.6,
-      }}>
+      <span
+        style={{
+          fontFamily: sans,
+          fontSize: 11,
+          fontStyle: 'italic',
+          color: 'var(--color-acc-deep)',
+          opacity: 0.6,
+        }}
+      >
         {t('compare.dim_hidden', locale)}
       </span>
     );
@@ -477,37 +601,61 @@ function DimBar({ value, locale }: { value: number | null; locale: Locale }) {
   const pct = Math.max(0, Math.min(100, (value / 12) * 100));
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-      <div style={{
-        flex: 1, height: 6, background: '#EBE3CA', borderRadius: 3, overflow: 'hidden',
-      }}>
-        <div style={{
-          height: '100%', width: `${pct}%`, background: 'var(--color-acc)',
-        }} />
+      <div
+        style={{
+          flex: 1,
+          height: 6,
+          background: '#EBE3CA',
+          borderRadius: 3,
+          overflow: 'hidden',
+        }}
+      >
+        <div
+          style={{
+            height: '100%',
+            width: `${pct}%`,
+            background: 'var(--color-acc)',
+          }}
+        />
       </div>
-      <span style={{
-        fontVariantNumeric: 'tabular-nums', color: 'var(--color-acc-deep)', minWidth: 32, textAlign: 'right',
-      }}>
+      <span
+        style={{
+          fontVariantNumeric: 'tabular-nums',
+          color: 'var(--color-acc-deep)',
+          minWidth: 32,
+          textAlign: 'right',
+        }}
+      >
         {value.toFixed(1)}
       </span>
     </div>
   );
 }
 
-function ComparePicker({ initialYou, initialThem, locale }: { initialYou: string; initialThem: string; locale: Locale }) {
+function ComparePicker({
+  initialYou,
+  initialThem,
+  locale,
+}: {
+  initialYou: string;
+  initialThem: string;
+  locale: Locale;
+}) {
   return (
     <main className="mx-auto max-w-[640px] px-6 pb-32 pt-10 sm:px-10">
       <div
         className="flex items-center gap-3 text-[10px] tracking-[0.22em] text-acc-deep"
         style={{ fontFamily: 'var(--font-pixel-display)' }}
       >
-        <span aria-hidden className="inline-block h-2 w-2 bg-acc" />
-        ▶ {t('compare.eyebrow', locale)}
+        <span aria-hidden className="inline-block h-2 w-2 bg-acc" />▶ {t('compare.eyebrow', locale)}
       </div>
       <h1
         className="mt-5 pr-2 text-[26px] leading-[1.45] tracking-[0.04em] text-ink sm:text-[34px]"
         style={{ fontFamily: 'var(--font-pixel-display)' }}
       >
-        <span style={{ textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))' }}>{t('compare.picker_title', locale)}</span>
+        <span style={{ textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))' }}>
+          {t('compare.picker_title', locale)}
+        </span>
       </h1>
       <p
         className="mt-5 text-[16px] italic leading-[1.55] text-ink-soft"
@@ -571,14 +719,21 @@ function ComparePicker({ initialYou, initialThem, locale }: { initialYou: string
 }
 
 const eyebrow: React.CSSProperties = {
-  fontFamily: 'var(--font-pixel-display)', fontSize: 12,
-  color: 'var(--color-acc-deep)', textTransform: 'uppercase',
-  letterSpacing: '0.18em', marginBottom: 16,
+  fontFamily: 'var(--font-pixel-display)',
+  fontSize: 12,
+  color: 'var(--color-acc-deep)',
+  textTransform: 'uppercase',
+  letterSpacing: '0.18em',
+  marginBottom: 16,
 };
 const fieldLabel: React.CSSProperties = { display: 'flex', flexDirection: 'column', gap: 4 };
 const fieldText: React.CSSProperties = {
-  fontFamily: sans, fontSize: 12, color: 'var(--color-acc-deep)',
-  textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 600,
+  fontFamily: sans,
+  fontSize: 12,
+  color: 'var(--color-acc-deep)',
+  textTransform: 'uppercase',
+  letterSpacing: '0.14em',
+  fontWeight: 600,
 };
 const inputStyle: React.CSSProperties = {
   fontFamily: 'Inter, sans-serif',

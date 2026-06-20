@@ -43,13 +43,16 @@ type Payload = {
 
 export async function POST(req: Request) {
   let body: Payload;
-  try { body = await req.json(); }
-  catch { return NextResponse.json({ error: 'Invalid JSON.' }, { status: 400 }); }
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON.' }, { status: 400 });
+  }
 
   if (!Array.isArray(body.vector) || body.vector.length !== 16) {
     return NextResponse.json({ error: 'Invalid vector shape.' }, { status: 400 });
   }
-  const vector = body.vector.map(v => {
+  const vector = body.vector.map((v) => {
     const n = Number(v);
     return Number.isFinite(n) ? n : 0;
   });
@@ -57,9 +60,7 @@ export async function POST(req: Request) {
   const archetype = typeof body.archetype === 'string' ? body.archetype.trim() : '';
   if (!archetype) return NextResponse.json({ error: 'Missing archetype.' }, { status: 400 });
 
-  const flavor = typeof body.flavor === 'string' && body.flavor.trim()
-    ? body.flavor.trim()
-    : null;
+  const flavor = typeof body.flavor === 'string' && body.flavor.trim() ? body.flavor.trim() : null;
 
   const alignmentPctRaw = Number(body.alignment_pct);
   const alignment_pct = Number.isFinite(alignmentPctRaw)
@@ -69,7 +70,9 @@ export async function POST(req: Request) {
   const mode = body.mode === 'detailed' ? 'detailed' : 'quick';
 
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Not signed in.' }, { status: 401 });
 
   // Sync the now-signed-in user's consent with whatever they chose as a

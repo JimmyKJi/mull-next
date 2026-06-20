@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 import { t, type Locale } from '@/lib/translations';
 import EmptyStateSprite from '@/components/empty-state-sprite';
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 
 type Result = {
@@ -53,12 +53,20 @@ export default function RetrospectivePanel({ locale = 'en' }: { locale?: Locale 
 
   return (
     <div className="pixel-form">
-      <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', marginBottom: 24 }}>
+      <div
+        style={{
+          display: 'flex',
+          gap: 12,
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          marginBottom: 24,
+        }}
+      >
         <label style={{ fontFamily: sans, fontSize: 13, color: 'var(--color-ink-soft)' }}>
           {t('retro.year_label', locale)}{' '}
           <select
             value={year}
-            onChange={e => setYear(parseInt(e.target.value, 10))}
+            onChange={(e) => setYear(parseInt(e.target.value, 10))}
             style={{
               fontFamily: sans,
               fontSize: 14,
@@ -70,7 +78,11 @@ export default function RetrospectivePanel({ locale = 'en' }: { locale?: Locale 
             }}
             aria-label={t('a11y.select_year', locale)}
           >
-            {years.map(y => <option key={y} value={y}>{y}</option>)}
+            {years.map((y) => (
+              <option key={y} value={y}>
+                {y}
+              </option>
+            ))}
           </select>
         </label>
         <button
@@ -105,112 +117,139 @@ export default function RetrospectivePanel({ locale = 'en' }: { locale?: Locale 
           generated. Sells the "AI is thinking" beat far better than a
           static "Generating…" button. Renders only when `loading` is
           true and we don't have a result yet. */}
-      {loading && (
-        <RetrospectiveTypewriter year={year} />
-      )}
+      {loading && <RetrospectiveTypewriter year={year} />}
 
-      {result && (() => {
-        // Detect a "no activity for this year" result so we render an
-        // empty-state sprite instead of four "0" stat cards and a
-        // failed-essay paragraph. The API returns counts: { quizzes:
-        // 0, dilemmas: 0, … } when the user has nothing for the year.
-        const noActivity =
-          result.periodSummary.counts.quizzes === 0 &&
-          result.periodSummary.counts.dilemmas === 0 &&
-          result.periodSummary.counts.diaries === 0 &&
-          (result.periodSummary.counts.reflections ?? 0) === 0;
-        if (noActivity) {
+      {result &&
+        (() => {
+          // Detect a "no activity for this year" result so we render an
+          // empty-state sprite instead of four "0" stat cards and a
+          // failed-essay paragraph. The API returns counts: { quizzes:
+          // 0, dilemmas: 0, … } when the user has nothing for the year.
+          const noActivity =
+            result.periodSummary.counts.quizzes === 0 &&
+            result.periodSummary.counts.dilemmas === 0 &&
+            result.periodSummary.counts.diaries === 0 &&
+            (result.periodSummary.counts.reflections ?? 0) === 0;
+          if (noActivity) {
+            return (
+              <div
+                style={{
+                  padding: '20px 18px',
+                  background: '#FFFCF4',
+                  border: '3px dashed var(--color-acc-deep)',
+                  borderRadius: 0,
+                }}
+              >
+                <EmptyStateSprite
+                  variant="book"
+                  caption={`Nothing to look back on for ${result.year} yet — you haven't taken a quiz, answered a dilemma, written a diary entry, or saved an exercise reflection in that period.`}
+                />
+              </div>
+            );
+          }
           return (
-            <div style={{
-              padding: '20px 18px',
-              background: '#FFFCF4',
-              border: '3px dashed var(--color-acc-deep)',
-              borderRadius: 0,
-            }}>
-              <EmptyStateSprite
-                variant="book"
-                caption={`Nothing to look back on for ${result.year} yet — you haven't taken a quiz, answered a dilemma, written a diary entry, or saved an exercise reflection in that period.`}
-              />
+            <div>
+              {/* Numbers strip */}
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+                  gap: 10,
+                  marginBottom: 28,
+                }}
+              >
+                <Stat
+                  label={t('retro.label_quizzes', locale)}
+                  value={result.periodSummary.counts.quizzes}
+                />
+                <Stat
+                  label={t('retro.label_dilemmas', locale)}
+                  value={result.periodSummary.counts.dilemmas}
+                />
+                <Stat
+                  label={t('retro.label_diary', locale)}
+                  value={result.periodSummary.counts.diaries}
+                />
+                <Stat
+                  label={t('retro.label_reflections', locale)}
+                  value={result.periodSummary.counts.reflections ?? 0}
+                />
+              </div>
+
+              {/* Top shifts */}
+              {result.periodSummary.topShifts.length > 0 && (
+                <div style={{ marginBottom: 32 }}>
+                  <div
+                    style={{
+                      fontFamily: sans,
+                      fontSize: 11,
+                      fontWeight: 600,
+                      color: 'var(--color-acc-deep)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.16em',
+                      marginBottom: 10,
+                    }}
+                  >
+                    {t('retro.top_shifts', locale)}
+                  </div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14 }}>
+                    {result.periodSummary.topShifts.map((s) => (
+                      <span
+                        key={s.key}
+                        style={{
+                          fontFamily: sans,
+                          fontSize: 14,
+                          color: s.delta > 0 ? '#2F5D5C' : '#7A2E2E',
+                        }}
+                      >
+                        <strong style={{ fontVariantNumeric: 'tabular-nums' }}>
+                          {s.delta > 0 ? '+' : ''}
+                          {s.delta.toFixed(1)}
+                        </strong>{' '}
+                        <span style={{ color: 'var(--color-ink-soft)' }}>{s.name}</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Essay */}
+              {result.essay ? (
+                <article
+                  style={{
+                    padding: '32px 36px',
+                    background: '#FFFCF4',
+                    border: '4px solid var(--color-ink)',
+                    boxShadow: '5px 5px 0 0 var(--color-acc)',
+                    borderRadius: 0,
+                    fontFamily: serif,
+                    fontSize: 17.5,
+                    color: 'var(--color-ink)',
+                    lineHeight: 1.7,
+                  }}
+                >
+                  {result.essay.split(/\n\n+/).map((para, i) => (
+                    <p key={i} style={{ margin: i === 0 ? '0 0 16px' : '0 0 16px' }}>
+                      {para}
+                    </p>
+                  ))}
+                </article>
+              ) : (
+                <p
+                  style={{
+                    fontFamily: serif,
+                    fontStyle: 'italic',
+                    fontSize: 16,
+                    color: 'var(--color-acc-deep)',
+                    opacity: 0.85,
+                  }}
+                >
+                  {t('retro.essay_failed', locale)}
+                </p>
+              )}
             </div>
           );
-        }
-        return (
-        <div>
-          {/* Numbers strip */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
-            gap: 10,
-            marginBottom: 28,
-          }}>
-            <Stat label={t('retro.label_quizzes', locale)} value={result.periodSummary.counts.quizzes} />
-            <Stat label={t('retro.label_dilemmas', locale)} value={result.periodSummary.counts.dilemmas} />
-            <Stat label={t('retro.label_diary', locale)} value={result.periodSummary.counts.diaries} />
-            <Stat label={t('retro.label_reflections', locale)} value={result.periodSummary.counts.reflections ?? 0} />
-          </div>
-
-          {/* Top shifts */}
-          {result.periodSummary.topShifts.length > 0 && (
-            <div style={{ marginBottom: 32 }}>
-              <div style={{
-                fontFamily: sans,
-                fontSize: 11,
-                fontWeight: 600,
-                color: 'var(--color-acc-deep)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.16em',
-                marginBottom: 10,
-              }}>
-                {t('retro.top_shifts', locale)}
-              </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14 }}>
-                {result.periodSummary.topShifts.map(s => (
-                  <span key={s.key} style={{
-                    fontFamily: sans,
-                    fontSize: 14,
-                    color: s.delta > 0 ? '#2F5D5C' : '#7A2E2E',
-                  }}>
-                    <strong style={{ fontVariantNumeric: 'tabular-nums' }}>
-                      {s.delta > 0 ? '+' : ''}{s.delta.toFixed(1)}
-                    </strong>{' '}
-                    <span style={{ color: 'var(--color-ink-soft)' }}>{s.name}</span>
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Essay */}
-          {result.essay ? (
-            <article style={{
-              padding: '32px 36px',
-              background: '#FFFCF4',
-              border: '4px solid var(--color-ink)',
-              boxShadow: '5px 5px 0 0 var(--color-acc)',
-              borderRadius: 0,
-              fontFamily: serif,
-              fontSize: 17.5,
-              color: 'var(--color-ink)',
-              lineHeight: 1.7,
-            }}>
-              {result.essay.split(/\n\n+/).map((para, i) => (
-                <p key={i} style={{ margin: i === 0 ? '0 0 16px' : '0 0 16px' }}>{para}</p>
-              ))}
-            </article>
-          ) : (
-            <p style={{
-              fontFamily: serif,
-              fontStyle: 'italic',
-              fontSize: 16,
-              color: 'var(--color-acc-deep)',
-              opacity: 0.85,
-            }}>
-              {t('retro.essay_failed', locale)}
-            </p>
-          )}
-        </div>
-        );
-      })()}
+        })()}
     </div>
   );
 }
@@ -262,52 +301,58 @@ function RetrospectiveTypewriter({ year }: { year: number }) {
   }, [chars, lineIdx, reduced]);
 
   return (
-    <div style={{
-      padding: '24px 28px',
-      background: '#FFFCF4',
-      border: '4px solid var(--color-ink)',
-      boxShadow: '5px 5px 0 0 var(--color-acc)',
-      borderRadius: 0,
-      marginBottom: 24,
-      minHeight: 110,
-    }}>
-      <div style={{
-        fontFamily: 'var(--font-pixel-display)',
-        fontSize: 11,
-        color: 'var(--color-acc-deep)',
-        textTransform: 'uppercase',
-        letterSpacing: '0.18em',
-        marginBottom: 12,
-      }}>
+    <div
+      style={{
+        padding: '24px 28px',
+        background: '#FFFCF4',
+        border: '4px solid var(--color-ink)',
+        boxShadow: '5px 5px 0 0 var(--color-acc)',
+        borderRadius: 0,
+        marginBottom: 24,
+        minHeight: 110,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: 'var(--font-pixel-display)',
+          fontSize: 11,
+          color: 'var(--color-acc-deep)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.18em',
+          marginBottom: 12,
+        }}
+      >
         ▸ DRAFTING YOUR RETROSPECTIVE
       </div>
-      <p style={{
-        fontFamily: serif,
-        fontStyle: 'italic',
-        fontSize: 17,
-        color: 'var(--color-ink)',
-        margin: 0,
-        lineHeight: 1.55,
-      }}>
-        {reduced
-          ? placeholders.join(' ')
-          : (
-            <>
-              {placeholders[lineIdx].slice(0, chars)}
-              <span
-                aria-hidden
-                style={{
-                  display: 'inline-block',
-                  width: 9,
-                  height: 16,
-                  marginLeft: 2,
-                  background: 'var(--color-acc)',
-                  verticalAlign: '-2px',
-                }}
-                className="pixel-blink"
-              />
-            </>
-          )}
+      <p
+        style={{
+          fontFamily: serif,
+          fontStyle: 'italic',
+          fontSize: 17,
+          color: 'var(--color-ink)',
+          margin: 0,
+          lineHeight: 1.55,
+        }}
+      >
+        {reduced ? (
+          placeholders.join(' ')
+        ) : (
+          <>
+            {placeholders[lineIdx].slice(0, chars)}
+            <span
+              aria-hidden
+              style={{
+                display: 'inline-block',
+                width: 9,
+                height: 16,
+                marginLeft: 2,
+                background: 'var(--color-acc)',
+                verticalAlign: '-2px',
+              }}
+              className="pixel-blink"
+            />
+          </>
+        )}
       </p>
     </div>
   );
@@ -315,30 +360,36 @@ function RetrospectiveTypewriter({ year }: { year: number }) {
 
 function Stat({ label, value }: { label: string; value: number }) {
   return (
-    <div style={{
-      padding: '14px 16px',
-      background: '#FFFCF4',
-      border: '3px solid var(--color-ink)',
-      boxShadow: '3px 3px 0 0 var(--color-acc-deep)',
-      borderRadius: 0,
-    }}>
-      <div style={{
-        fontFamily: serif,
-        fontSize: 28,
-        fontWeight: 500,
-        color: 'var(--color-ink)',
-        lineHeight: 1,
-      }}>
+    <div
+      style={{
+        padding: '14px 16px',
+        background: '#FFFCF4',
+        border: '3px solid var(--color-ink)',
+        boxShadow: '3px 3px 0 0 var(--color-acc-deep)',
+        borderRadius: 0,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: serif,
+          fontSize: 28,
+          fontWeight: 500,
+          color: 'var(--color-ink)',
+          lineHeight: 1,
+        }}
+      >
         {value}
       </div>
-      <div style={{
-        fontFamily: sans,
-        fontSize: 11,
-        color: 'var(--color-acc-deep)',
-        textTransform: 'uppercase',
-        letterSpacing: '0.16em',
-        marginTop: 6,
-      }}>
+      <div
+        style={{
+          fontFamily: sans,
+          fontSize: 11,
+          color: 'var(--color-acc-deep)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.16em',
+          marginTop: 6,
+        }}
+      >
         {label}
       </div>
     </div>

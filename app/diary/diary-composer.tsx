@@ -7,19 +7,46 @@ import { t, type Locale } from '@/lib/translations';
 import DiagnosisCard from '@/components/diagnosis-card';
 import type { Kinship } from '@/lib/kinship';
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 
 const DRAFT_KEY = 'mull.diary.draft';
 
-const DIM_KEYS = ['TV','VA','WP','TR','TE','RT','MR','SR','CE','SS','PO','TD','AT','ES','UI','SI'];
+const DIM_KEYS = [
+  'TV',
+  'VA',
+  'WP',
+  'TR',
+  'TE',
+  'RT',
+  'MR',
+  'SR',
+  'CE',
+  'SS',
+  'PO',
+  'TD',
+  'AT',
+  'ES',
+  'UI',
+  'SI',
+];
 const DIM_NAMES: Record<string, string> = {
-  TV: 'Tragic Vision', VA: 'Vital Affirmation', WP: 'Will to Power',
-  TR: 'Trust in Reason', TE: 'Trust in Experience', RT: 'Reverence for Tradition',
-  MR: 'Mystical Receptivity', SR: 'Skeptical Reflex', CE: 'Communal Embeddedness',
-  SS: 'Sovereign Self', PO: 'Practical Orientation', TD: 'Theoretical Drive',
-  AT: 'Ascetic Tendency', ES: 'Embodied Sensibility', UI: 'Universalist Impulse',
-  SI: 'Self as Illusion'
+  TV: 'Tragic Vision',
+  VA: 'Vital Affirmation',
+  WP: 'Will to Power',
+  TR: 'Trust in Reason',
+  TE: 'Trust in Experience',
+  RT: 'Reverence for Tradition',
+  MR: 'Mystical Receptivity',
+  SR: 'Skeptical Reflex',
+  CE: 'Communal Embeddedness',
+  SS: 'Sovereign Self',
+  PO: 'Practical Orientation',
+  TD: 'Theoretical Drive',
+  AT: 'Ascetic Tendency',
+  ES: 'Embodied Sensibility',
+  UI: 'Universalist Impulse',
+  SI: 'Self as Illusion',
 };
 
 type SubmitResult = {
@@ -37,7 +64,7 @@ function deltaToShifts(delta: number[] | null) {
   if (!Array.isArray(delta)) return [];
   return delta
     .map((d, i) => ({ key: DIM_KEYS[i], name: DIM_NAMES[DIM_KEYS[i]], delta: +d.toFixed(2) }))
-    .filter(s => Math.abs(s.delta) >= 0.3)
+    .filter((s) => Math.abs(s.delta) >= 0.3)
     .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta))
     .slice(0, 4);
 }
@@ -102,7 +129,7 @@ export default function DiaryComposer({ locale = 'en' }: { locale?: Locale }) {
       const res = await fetch('/api/diary/save', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, content, is_public: makePublic })
+        body: JSON.stringify({ title, content, is_public: makePublic }),
       });
       const json = await res.json();
       if (!res.ok) {
@@ -112,7 +139,9 @@ export default function DiaryComposer({ locale = 'en' }: { locale?: Locale }) {
       }
       setResult(json as SubmitResult);
       // Clear draft now that it's saved to DB
-      try { localStorage.removeItem(DRAFT_KEY); } catch {}
+      try {
+        localStorage.removeItem(DRAFT_KEY);
+      } catch {}
       setDraftSavedAt(null);
       router.refresh();
     } catch (err) {
@@ -134,68 +163,82 @@ export default function DiaryComposer({ locale = 'en' }: { locale?: Locale }) {
     if (!window.confirm(t('diary.discard_draft', locale))) return;
     setTitle('');
     setContent('');
-    try { localStorage.removeItem(DRAFT_KEY); } catch {}
+    try {
+      localStorage.removeItem(DRAFT_KEY);
+    } catch {}
     setDraftSavedAt(null);
   }
 
   if (result) {
     const shifts = deltaToShifts(result.vector_delta);
     return (
-      <div style={{
-        padding: '28px 32px',
-        background: '#FFFCF4',
-        border: '4px solid var(--color-ink)',
-        boxShadow: '5px 5px 0 0 #2F5D5C',
-        borderRadius: 0,
-      }}>
-        <div style={{
-          fontFamily: 'var(--font-pixel-display)',
-          fontSize: 12,
-          color: '#2F5D5C',
-          textTransform: 'uppercase',
-          letterSpacing: '0.18em',
-          marginBottom: 14,
-        }}>
+      <div
+        style={{
+          padding: '28px 32px',
+          background: '#FFFCF4',
+          border: '4px solid var(--color-ink)',
+          boxShadow: '5px 5px 0 0 #2F5D5C',
+          borderRadius: 0,
+        }}
+      >
+        <div
+          style={{
+            fontFamily: 'var(--font-pixel-display)',
+            fontSize: 12,
+            color: '#2F5D5C',
+            textTransform: 'uppercase',
+            letterSpacing: '0.18em',
+            marginBottom: 14,
+          }}
+        >
           ✓ {t('diary.saved_label', locale).toUpperCase()}
         </div>
         {result.analysis ? (
-          <div style={{
-            padding: '14px 16px',
-            background: 'var(--color-acc-soft)',
-            border: '3px solid var(--color-ink)',
-            boxShadow: '3px 3px 0 0 var(--color-acc)',
-            borderRadius: 0,
-            marginBottom: 16,
-          }}>
-            <div style={{
-              fontFamily: 'var(--font-pixel-display)',
-              fontSize: 10,
-              color: 'var(--color-acc-deep)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.18em',
-              marginBottom: 8,
-            }}>
+          <div
+            style={{
+              padding: '14px 16px',
+              background: 'var(--color-acc-soft)',
+              border: '3px solid var(--color-ink)',
+              boxShadow: '3px 3px 0 0 var(--color-acc)',
+              borderRadius: 0,
+              marginBottom: 16,
+            }}
+          >
+            <div
+              style={{
+                fontFamily: 'var(--font-pixel-display)',
+                fontSize: 10,
+                color: 'var(--color-acc-deep)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.18em',
+                marginBottom: 8,
+              }}
+            >
               {t('dilemma.what_revealed', locale).toUpperCase()}
             </div>
-            <p style={{
-              fontFamily: serif,
-              fontStyle: 'italic',
-              fontSize: 16,
-              color: 'var(--color-ink)',
-              margin: 0,
-              lineHeight: 1.55,
-            }}>
+            <p
+              style={{
+                fontFamily: serif,
+                fontStyle: 'italic',
+                fontSize: 16,
+                color: 'var(--color-ink)',
+                margin: 0,
+                lineHeight: 1.55,
+              }}
+            >
               {result.analysis}
             </p>
           </div>
         ) : !result.analyzed ? (
-          <p style={{
-            fontFamily: sans,
-            fontSize: 13,
-            color: 'var(--color-acc-deep)',
-            marginBottom: 16,
-            fontStyle: 'italic',
-          }}>
+          <p
+            style={{
+              fontFamily: sans,
+              fontSize: 13,
+              color: 'var(--color-acc-deep)',
+              marginBottom: 16,
+              fontStyle: 'italic',
+            }}
+          >
             Saved. The AI analyzer didn't run on this entry — it'll be available when the
             integration is healthy. Your entry is intact.
           </p>
@@ -213,26 +256,32 @@ export default function DiaryComposer({ locale = 'en' }: { locale?: Locale }) {
 
         {shifts.length > 0 && (
           <div style={{ marginBottom: 16 }}>
-            <div style={{
-              fontFamily: sans,
-              fontSize: 10,
-              fontWeight: 600,
-              color: 'var(--color-acc-deep)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.16em',
-              marginBottom: 8,
-            }}>
+            <div
+              style={{
+                fontFamily: sans,
+                fontSize: 10,
+                fontWeight: 600,
+                color: 'var(--color-acc-deep)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.16em',
+                marginBottom: 8,
+              }}
+            >
               {t('dilemma.shift_added', locale)}
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14 }}>
-              {shifts.map(s => (
-                <span key={s.key} style={{
-                  fontFamily: sans,
-                  fontSize: 14,
-                  color: s.delta > 0 ? '#2F5D5C' : '#7A2E2E',
-                }}>
+              {shifts.map((s) => (
+                <span
+                  key={s.key}
+                  style={{
+                    fontFamily: sans,
+                    fontSize: 14,
+                    color: s.delta > 0 ? '#2F5D5C' : '#7A2E2E',
+                  }}
+                >
                   <strong style={{ fontVariantNumeric: 'tabular-nums' }}>
-                    {s.delta > 0 ? '+' : ''}{s.delta.toFixed(1)}
+                    {s.delta > 0 ? '+' : ''}
+                    {s.delta.toFixed(1)}
                   </strong>{' '}
                   <span style={{ color: 'var(--color-ink-soft)' }}>{s.name}</span>
                 </span>
@@ -241,13 +290,15 @@ export default function DiaryComposer({ locale = 'en' }: { locale?: Locale }) {
           </div>
         )}
 
-        <div style={{
-          paddingTop: 18,
-          borderTop: '1px solid #EBE3CA',
-          display: 'flex',
-          gap: 12,
-          flexWrap: 'wrap',
-        }}>
+        <div
+          style={{
+            paddingTop: 18,
+            borderTop: '1px solid #EBE3CA',
+            display: 'flex',
+            gap: 12,
+            flexWrap: 'wrap',
+          }}
+        >
           <button
             onClick={startNew}
             style={{
@@ -264,15 +315,18 @@ export default function DiaryComposer({ locale = 'en' }: { locale?: Locale }) {
           >
             {t('diary.write_another', locale)}
           </button>
-          <Link href="/account" style={{
-            padding: '10px 20px',
-            border: '1px solid var(--color-ink)',
-            borderRadius: 6,
-            color: 'var(--color-ink)',
-            textDecoration: 'none',
-            fontFamily: sans,
-            fontSize: 14,
-          }}>
+          <Link
+            href="/account"
+            style={{
+              padding: '10px 20px',
+              border: '1px solid var(--color-ink)',
+              borderRadius: 6,
+              color: 'var(--color-ink)',
+              textDecoration: 'none',
+              fontFamily: sans,
+              fontSize: 14,
+            }}
+          >
             {t('dilemma.see_trajectory', locale)}
           </Link>
         </div>
@@ -281,11 +335,15 @@ export default function DiaryComposer({ locale = 'en' }: { locale?: Locale }) {
   }
 
   return (
-    <form onSubmit={onSubmit} className="pixel-form" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+    <form
+      onSubmit={onSubmit}
+      className="pixel-form"
+      style={{ display: 'flex', flexDirection: 'column', gap: 12 }}
+    >
       <input
         type="text"
         value={title}
-        onChange={e => setTitle(e.target.value)}
+        onChange={(e) => setTitle(e.target.value)}
         placeholder={t('diary.title_placeholder', locale)}
         maxLength={200}
         style={{
@@ -303,7 +361,7 @@ export default function DiaryComposer({ locale = 'en' }: { locale?: Locale }) {
       />
       <textarea
         value={content}
-        onChange={e => setContent(e.target.value)}
+        onChange={(e) => setContent(e.target.value)}
         placeholder={t('diary.body_placeholder', locale)}
         rows={16}
         maxLength={12000}
@@ -327,46 +385,55 @@ export default function DiaryComposer({ locale = 'en' }: { locale?: Locale }) {
           }
         }}
       />
-      <div style={{
-        height: 3,
-        background: '#EBE3CA',
-        borderRadius: 2,
-        overflow: 'hidden',
-      }}>
-        <div style={{
-          height: '100%',
-          width: `${Math.min(100, (charCount / 12000) * 100)}%`,
-          background: charCount < 30 ? 'var(--color-line)'
-                    : charCount > 11000 ? '#C7522A'
-                    : '#2F5D5C',
-          transition: 'width 0.18s ease, background 0.2s ease',
-        }} />
+      <div
+        style={{
+          height: 3,
+          background: '#EBE3CA',
+          borderRadius: 2,
+          overflow: 'hidden',
+        }}
+      >
+        <div
+          style={{
+            height: '100%',
+            width: `${Math.min(100, (charCount / 12000) * 100)}%`,
+            background:
+              charCount < 30 ? 'var(--color-line)' : charCount > 11000 ? '#C7522A' : '#2F5D5C',
+            transition: 'width 0.18s ease, background 0.2s ease',
+          }}
+        />
       </div>
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        gap: 12,
-        flexWrap: 'wrap',
-      }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: 12,
+          flexWrap: 'wrap',
+        }}
+      >
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-          <span style={{
-            fontFamily: sans,
-            fontSize: 12,
-            color: tooShort ? '#7A2E2E' : 'var(--color-acc-deep)',
-            letterSpacing: 0.3,
-          }}>
+          <span
+            style={{
+              fontFamily: sans,
+              fontSize: 12,
+              color: tooShort ? '#7A2E2E' : 'var(--color-acc-deep)',
+              letterSpacing: 0.3,
+            }}
+          >
             {t('diary.entry_words', locale, { n: wordCount })} · {charCount}/12000
             {tooShort ? ' · ' + t('diary.too_short_hint', locale) : ''}
           </span>
           {draftSavedAt && (
-            <span style={{
-              fontFamily: sans,
-              fontSize: 12,
-              color: 'var(--color-acc-deep)',
-              opacity: 0.7,
-              fontStyle: 'italic',
-            }}>
+            <span
+              style={{
+                fontFamily: sans,
+                fontSize: 12,
+                color: 'var(--color-acc-deep)',
+                opacity: 0.7,
+                fontStyle: 'italic',
+              }}
+            >
               {t('diary.draft_saved', locale)}
             </span>
           )}
@@ -411,60 +478,80 @@ export default function DiaryComposer({ locale = 'en' }: { locale?: Locale }) {
         </button>
       </div>
       {error && (
-        <div style={{
-          fontFamily: sans,
-          fontSize: 13,
-          color: '#7A2E2E',
-          background: 'rgba(122, 46, 46, 0.08)',
-          border: '1px solid rgba(122, 46, 46, 0.2)',
-          padding: '10px 14px',
-          borderRadius: 6,
-        }}>
+        <div
+          style={{
+            fontFamily: sans,
+            fontSize: 13,
+            color: '#7A2E2E',
+            background: 'rgba(122, 46, 46, 0.08)',
+            border: '1px solid rgba(122, 46, 46, 0.2)',
+            padding: '10px 14px',
+            borderRadius: 6,
+          }}
+        >
           {error}
         </div>
       )}
-      <label style={{
-        display: 'flex',
-        alignItems: 'flex-start',
-        gap: 10,
-        padding: '10px 14px',
-        background: makePublic ? 'var(--color-acc-soft)' : '#FFFCF4',
-        border: '2px solid var(--color-ink)',
-        borderRadius: 0,
-        cursor: 'pointer',
-        fontFamily: sans,
-        fontSize: 13,
-        color: 'var(--color-ink-soft)',
-        lineHeight: 1.5,
-      }}>
+      <label
+        style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          gap: 10,
+          padding: '10px 14px',
+          background: makePublic ? 'var(--color-acc-soft)' : '#FFFCF4',
+          border: '2px solid var(--color-ink)',
+          borderRadius: 0,
+          cursor: 'pointer',
+          fontFamily: sans,
+          fontSize: 13,
+          color: 'var(--color-ink-soft)',
+          lineHeight: 1.5,
+        }}
+      >
         <input
           type="checkbox"
           checked={makePublic}
-          onChange={e => setMakePublic(e.target.checked)}
+          onChange={(e) => setMakePublic(e.target.checked)}
           style={{ marginTop: 2, accentColor: 'var(--color-acc)', flexShrink: 0 }}
         />
         <span>
           <strong style={{ color: 'var(--color-ink)' }}>{t('diary.show_on_public', locale)}</strong>{' '}
           <span style={{ fontStyle: locale === 'en' ? 'normal' : 'italic' }}>
-            Your most recent 5 public diary entries appear at <code className="pixel-kbd" style={{ fontSize: 11 }}>mull.world/u/&lt;your-handle&gt;</code> if you've set one up. Private by default.
+            Your most recent 5 public diary entries appear at{' '}
+            <code className="pixel-kbd" style={{ fontSize: 11 }}>
+              mull.world/u/&lt;your-handle&gt;
+            </code>{' '}
+            if you've set one up. Private by default.
           </span>
           {locale !== 'en' && (
-            <span style={{ display: 'block', marginTop: 4, fontSize: 11.5, opacity: 0.7, fontStyle: 'italic' }}>
+            <span
+              style={{
+                display: 'block',
+                marginTop: 4,
+                fontSize: 11.5,
+                opacity: 0.7,
+                fontStyle: 'italic',
+              }}
+            >
               {t('i18n.untranslated_short', locale)}
             </span>
           )}
         </span>
       </label>
-      <p style={{
-        fontFamily: sans,
-        fontSize: 12,
-        color: 'var(--color-acc-deep)',
-        margin: '4px 0 0',
-        opacity: 0.75,
-        lineHeight: 1.55,
-      }}>
+      <p
+        style={{
+          fontFamily: sans,
+          fontSize: 12,
+          color: 'var(--color-acc-deep)',
+          margin: '4px 0 0',
+          opacity: 0.75,
+          lineHeight: 1.55,
+        }}
+      >
         <span style={{ fontStyle: locale === 'en' ? 'normal' : 'italic' }}>
-          Drafts autosave to your browser. Submitted entries save to your account and Claude analyzes the prose into a small map shift. Press <kbd className="pixel-kbd">⌘</kbd> + <kbd className="pixel-kbd">↵</kbd> to save.
+          Drafts autosave to your browser. Submitted entries save to your account and Claude
+          analyzes the prose into a small map shift. Press <kbd className="pixel-kbd">⌘</kbd> +{' '}
+          <kbd className="pixel-kbd">↵</kbd> to save.
         </span>
         {locale !== 'en' && (
           <span style={{ display: 'block', marginTop: 4, opacity: 0.85, fontStyle: 'italic' }}>

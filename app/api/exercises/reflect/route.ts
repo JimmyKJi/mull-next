@@ -18,18 +18,15 @@ import { createClient } from '@/utils/supabase/server';
 import { DIM_KEYS, DIM_NAMES, DIM_DESCRIPTIONS } from '@/lib/dimensions';
 import { findExercise } from '@/lib/exercises';
 import { aiGate } from '@/lib/rate-limit';
-import {
-  buildKinshipPromptFragment,
-  parseAndValidateDiagnosis,
-  type Kinship,
-} from '@/lib/kinship';
+import { buildKinshipPromptFragment, parseAndValidateDiagnosis, type Kinship } from '@/lib/kinship';
 
 function buildSystemPrompt(): string {
-  const dimList = DIM_KEYS.map(k =>
-    `- ${k} (${DIM_NAMES[k]}): ${DIM_DESCRIPTIONS[k]}`
-  ).join('\n');
+  const dimList = DIM_KEYS.map((k) => `- ${k} (${DIM_NAMES[k]}): ${DIM_DESCRIPTIONS[k]}`).join(
+    '\n',
+  );
 
-  return `You are an analyst for Mull, a philosophy mapping tool. The user has just completed a structured philosophical exercise — a contemplative practice, a logic drill, or an argument-formation exercise — and written a short reflection on what came out of it. Your job is to read that reflection and produce a small vector delta indicating which philosophical dimensions their thinking momentarily leans toward, plus a deeper diagnosis of the shape of the thinking, the closest historical kin, the traditions it echoes, and a judgement of whether the reflection says something genuinely novel.
+  return (
+    `You are an analyst for Mull, a philosophy mapping tool. The user has just completed a structured philosophical exercise — a contemplative practice, a logic drill, or an argument-formation exercise — and written a short reflection on what came out of it. Your job is to read that reflection and produce a small vector delta indicating which philosophical dimensions their thinking momentarily leans toward, plus a deeper diagnosis of the shape of the thinking, the closest historical kin, the traditions it echoes, and a judgement of whether the reflection says something genuinely novel.
 
 THE 16 DIMENSIONS (in fixed order):
 ${dimList}
@@ -45,8 +42,9 @@ Each value is a small signed number, typically in [-1.5, +1.5]. The values repre
 
 The analysis is one sentence describing what the reflection revealed about how the person is currently thinking. Plain prose, no formatting.
 
-Do not over-attribute. Do not flatter. Reflections done well often surface contradictions or shifts — name those when you see them.`
-+ buildKinshipPromptFragment();
+Do not over-attribute. Do not flatter. Reflections done well often surface contradictions or shifts — name those when you see them.` +
+    buildKinshipPromptFragment()
+  );
 }
 
 type ClaudeResponse = {
@@ -65,7 +63,7 @@ type ExerciseClaudeResult = {
 async function callClaude(
   exerciseContext: string,
   reflection: string,
-  apiKey: string
+  apiKey: string,
 ): Promise<ExerciseClaudeResult | null> {
   const userMessage = `Exercise context:\n${exerciseContext}\n\nThe person's reflection:\n${reflection.trim()}`;
 
@@ -74,7 +72,7 @@ async function callClaude(
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01'
+      'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
       // Haiku in free-mode for cost control — exercise reflection is
@@ -83,8 +81,8 @@ async function callClaude(
       model: 'claude-haiku-4-6',
       max_tokens: 1400,
       system: buildSystemPrompt(),
-      messages: [{ role: 'user', content: userMessage }]
-    })
+      messages: [{ role: 'user', content: userMessage }],
+    }),
   });
 
   if (!res.ok) {
@@ -100,8 +98,8 @@ async function callClaude(
   }
 
   const text = (data.content ?? [])
-    .filter(b => b.type === 'text')
-    .map(b => b.text || '')
+    .filter((b) => b.type === 'text')
+    .map((b) => b.text || '')
     .join('')
     .trim();
 
@@ -112,8 +110,11 @@ async function callClaude(
     return null;
   }
   let parsed: {
-    vector_delta?: unknown; analysis?: unknown;
-    diagnosis?: unknown; kinship?: unknown; is_novel?: unknown;
+    vector_delta?: unknown;
+    analysis?: unknown;
+    diagnosis?: unknown;
+    kinship?: unknown;
+    is_novel?: unknown;
   };
   try {
     parsed = JSON.parse(text.slice(start, end + 1));
@@ -125,7 +126,7 @@ async function callClaude(
     console.error('[exercises/reflect] invalid vector_delta shape');
     return null;
   }
-  const vec = (parsed.vector_delta as unknown[]).map(v => {
+  const vec = (parsed.vector_delta as unknown[]).map((v) => {
     const n = Number(v);
     return Number.isFinite(n) ? +n.toFixed(3) : 0;
   });
@@ -146,16 +147,25 @@ export async function POST(req: Request) {
     if (!exercise) return NextResponse.json({ error: 'Unknown exercise.' }, { status: 404 });
 
     if (content.length < 30) {
-      return NextResponse.json({
-        error: 'Reflection is too short — write at least a couple of sentences for the analysis to be meaningful.',
-      }, { status: 400 });
+      return NextResponse.json(
+        {
+          error:
+            'Reflection is too short — write at least a couple of sentences for the analysis to be meaningful.',
+        },
+        { status: 400 },
+      );
     }
     if (content.length > 8000) {
-      return NextResponse.json({ error: 'Reflection is too long (max 8000 characters).' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Reflection is too long (max 8000 characters).' },
+        { status: 400 },
+      );
     }
 
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Sign in to save reflections.' }, { status: 401 });
 
     // AI rate limit + spend gate.

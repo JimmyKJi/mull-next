@@ -42,7 +42,7 @@ export const MILESTONES: Milestone[] = [
     name: 'First reflection',
     description: 'Wrote your first daily dilemma response.',
     target: 1,
-    metric: s => s.dilemmaCount,
+    metric: (s) => s.dilemmaCount,
   },
   {
     key: 'ten_dilemmas',
@@ -50,15 +50,16 @@ export const MILESTONES: Milestone[] = [
     name: 'Ten dilemmas in',
     description: 'Wrote ten daily dilemma responses.',
     target: 10,
-    metric: s => s.dilemmaCount,
+    metric: (s) => s.dilemmaCount,
   },
   {
     key: 'fifty_dilemmas',
     track: 'reflection',
     name: 'Fifty dilemmas',
-    description: 'Wrote fifty daily dilemma responses. The shape of how you think is becoming visible.',
+    description:
+      'Wrote fifty daily dilemma responses. The shape of how you think is becoming visible.',
     target: 50,
-    metric: s => s.dilemmaCount,
+    metric: (s) => s.dilemmaCount,
   },
   {
     key: 'hundred_dilemmas',
@@ -66,7 +67,7 @@ export const MILESTONES: Milestone[] = [
     name: 'A hundred written',
     description: 'A hundred daily dilemma responses. A real practice now.',
     target: 100,
-    metric: s => s.dilemmaCount,
+    metric: (s) => s.dilemmaCount,
   },
 
   // ─── Practice (exercises) ────────────────────────────────────────
@@ -76,7 +77,7 @@ export const MILESTONES: Milestone[] = [
     name: 'First exercise reflection',
     description: 'Tried one of the philosophical exercises and wrote about it after.',
     target: 1,
-    metric: s => s.exerciseCount,
+    metric: (s) => s.exerciseCount,
   },
   {
     key: 'three_exercises',
@@ -84,15 +85,16 @@ export const MILESTONES: Milestone[] = [
     name: 'Three different exercises',
     description: 'Reflected on three distinct exercises. Variety is starting to show.',
     target: 3,
-    metric: s => s.uniqueExerciseSlugs,
+    metric: (s) => s.uniqueExerciseSlugs,
   },
   {
     key: 'eight_exercises',
     track: 'practice',
     name: 'Half the catalog',
-    description: 'Tried eight of the sixteen exercises with reflection. You\'re sampling the breadth.',
+    description:
+      "Tried eight of the sixteen exercises with reflection. You're sampling the breadth.",
     target: 8,
-    metric: s => s.uniqueExerciseSlugs,
+    metric: (s) => s.uniqueExerciseSlugs,
   },
   {
     key: 'all_exercises',
@@ -100,7 +102,7 @@ export const MILESTONES: Milestone[] = [
     name: 'All sixteen exercises',
     description: 'Reflected on every exercise in the catalog. A serious sweep.',
     target: 16,
-    metric: s => s.uniqueExerciseSlugs,
+    metric: (s) => s.uniqueExerciseSlugs,
   },
 
   // ─── Diary ───────────────────────────────────────────────────────
@@ -110,7 +112,7 @@ export const MILESTONES: Milestone[] = [
     name: 'First diary entry',
     description: 'Opened the diary and wrote.',
     target: 1,
-    metric: s => s.diaryCount,
+    metric: (s) => s.diaryCount,
   },
   {
     key: 'ten_diary',
@@ -118,7 +120,7 @@ export const MILESTONES: Milestone[] = [
     name: 'Ten diary entries',
     description: 'Ten entries in the diary. The thread is forming.',
     target: 10,
-    metric: s => s.diaryCount,
+    metric: (s) => s.diaryCount,
   },
   {
     key: 'fifty_diary',
@@ -126,7 +128,7 @@ export const MILESTONES: Milestone[] = [
     name: 'Fifty diary entries',
     description: 'Fifty entries. The diary is starting to know things about you.',
     target: 50,
-    metric: s => s.diaryCount,
+    metric: (s) => s.diaryCount,
   },
 
   // ─── Constellation (philosopher proximity, debates) ─────────────
@@ -136,7 +138,7 @@ export const MILESTONES: Milestone[] = [
     name: 'Found your first position',
     description: 'Took the quiz and landed somewhere on the map.',
     target: 1,
-    metric: s => s.quizAttempts,
+    metric: (s) => s.quizAttempts,
   },
   {
     key: 'quiz_taken_three',
@@ -144,7 +146,7 @@ export const MILESTONES: Milestone[] = [
     name: 'Retook the quiz',
     description: 'Took the quiz three times. Watching the map shift over time.',
     target: 3,
-    metric: s => s.quizAttempts,
+    metric: (s) => s.quizAttempts,
   },
   {
     key: 'first_debate',
@@ -152,7 +154,7 @@ export const MILESTONES: Milestone[] = [
     name: 'First simulated debate',
     description: 'Generated your first conversation between two thinkers.',
     target: 1,
-    metric: s => s.debateCount,
+    metric: (s) => s.debateCount,
   },
   {
     key: 'five_debates',
@@ -160,7 +162,7 @@ export const MILESTONES: Milestone[] = [
     name: 'Five debates',
     description: 'Convened five conversations between different thinkers.',
     target: 5,
-    metric: s => s.debateCount,
+    metric: (s) => s.debateCount,
   },
 
   // ─── Consistency (streaks + total) ──────────────────────────────
@@ -170,7 +172,7 @@ export const MILESTONES: Milestone[] = [
     name: 'Three-day streak',
     description: 'Three consecutive days of dilemma responses.',
     target: 3,
-    metric: s => s.streak,
+    metric: (s) => s.streak,
   },
   {
     key: 'streak_7',
@@ -178,7 +180,7 @@ export const MILESTONES: Milestone[] = [
     name: 'Week-long streak',
     description: 'Seven consecutive days. Real habit forming.',
     target: 7,
-    metric: s => s.streak,
+    metric: (s) => s.streak,
   },
   {
     key: 'streak_30',
@@ -186,7 +188,7 @@ export const MILESTONES: Milestone[] = [
     name: 'Month-long streak',
     description: 'Thirty consecutive days. Through the dip — the practice is yours now.',
     target: 30,
-    metric: s => s.streak,
+    metric: (s) => s.streak,
   },
   {
     key: 'streak_100',
@@ -194,7 +196,7 @@ export const MILESTONES: Milestone[] = [
     name: 'Hundred-day streak',
     description: 'A hundred consecutive days. Vanishingly rare.',
     target: 100,
-    metric: s => s.streak,
+    metric: (s) => s.streak,
   },
   {
     key: 'total_200',
@@ -202,11 +204,14 @@ export const MILESTONES: Milestone[] = [
     name: 'Two hundred entries total',
     description: 'Two hundred entries across dilemmas, diary, and exercises combined.',
     target: 200,
-    metric: s => s.totalEntries,
+    metric: (s) => s.totalEntries,
   },
 ];
 
-export const MILESTONE_TRACK_META: Record<MilestoneTrack, { label: string; blurb: string; accent: string }> = {
+export const MILESTONE_TRACK_META: Record<
+  MilestoneTrack,
+  { label: string; blurb: string; accent: string }
+> = {
   reflection: {
     label: 'Reflection',
     blurb: 'The daily dilemma — written prose, one prompt a day.',
@@ -219,7 +224,7 @@ export const MILESTONE_TRACK_META: Record<MilestoneTrack, { label: string; blurb
   },
   diary: {
     label: 'Diary',
-    blurb: 'Free-form entries — whatever\'s on your mind, however often.',
+    blurb: "Free-form entries — whatever's on your mind, however often.",
     accent: '#7A2E2E',
   },
   constellation: {

@@ -7,11 +7,11 @@
 // list isn't wired yet); users land here, get the pitch, and the
 // honest "later this year" cadence.
 
-import Link from "next/link";
-import { t, type Locale } from "@/lib/translations";
+import Link from 'next/link';
+import { t, type Locale } from '@/lib/translations';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "var(--font-editorial), Georgia, serif";
+const serif = 'var(--font-editorial), Georgia, serif';
 
 type Props = {
   eyebrow: string;
@@ -36,7 +36,7 @@ export default function ComingSoonCard({
   when,
   accent,
   meantime,
-  locale = "en",
+  locale = 'en',
 }: Props) {
   return (
     <div className="space-y-5">
@@ -53,8 +53,8 @@ export default function ComingSoonCard({
             fontFamily: pixel,
             fontSize: 10,
             color: accent.deep,
-            letterSpacing: "0.22em",
-            textTransform: "uppercase",
+            letterSpacing: '0.22em',
+            textTransform: 'uppercase',
             marginBottom: 14,
           }}
         >
@@ -62,33 +62,34 @@ export default function ComingSoonCard({
         </div>
         <h2
           className="text-[28px] leading-tight"
-          style={{ fontFamily: pixel, color: "var(--color-ink)", textShadow: `3px 3px 0 var(--pixel-shadow, ${accent.primary})` }}
+          style={{
+            fontFamily: pixel,
+            color: 'var(--color-ink)',
+            textShadow: `3px 3px 0 var(--pixel-shadow, ${accent.primary})`,
+          }}
         >
           {title.toUpperCase()}
         </h2>
-        <p
-          className="mt-4 text-[16px] leading-[1.65] text-ink"
-          style={{ fontFamily: serif }}
-        >
+        <p className="mt-4 text-[16px] leading-[1.65] text-ink" style={{ fontFamily: serif }}>
           {pitch}
         </p>
       </div>
 
       <div
         className="border-[3px] border-ink bg-[#FFFCF4] p-5"
-        style={{ boxShadow: "3px 3px 0 0 var(--color-acc)" }}
+        style={{ boxShadow: '3px 3px 0 0 var(--color-acc)' }}
       >
         <div
           style={{
             fontFamily: pixel,
             fontSize: 10,
-            color: "var(--color-acc-deep)",
-            letterSpacing: "0.22em",
-            textTransform: "uppercase",
+            color: 'var(--color-acc-deep)',
+            letterSpacing: '0.22em',
+            textTransform: 'uppercase',
             marginBottom: 12,
           }}
         >
-          ▶ {t("csc.doing", locale)}
+          ▶ {t('csc.doing', locale)}
         </div>
         <ul className="space-y-2">
           {doing.map((d, i) => (
@@ -98,7 +99,7 @@ export default function ComingSoonCard({
               style={{
                 fontFamily: serif,
                 borderColor: accent.primary,
-                background: "#FBF6E8",
+                background: '#FBF6E8',
               }}
             >
               {d}
@@ -115,13 +116,13 @@ export default function ComingSoonCard({
           style={{
             fontFamily: pixel,
             fontSize: 10,
-            color: "#F8C75E",
-            letterSpacing: "0.22em",
-            textTransform: "uppercase",
+            color: '#F8C75E',
+            letterSpacing: '0.22em',
+            textTransform: 'uppercase',
             marginBottom: 6,
           }}
         >
-          ▶ {t("csc.when", locale)}
+          ▶ {t('csc.when', locale)}
         </div>
         {when}
       </div>
@@ -129,9 +130,9 @@ export default function ComingSoonCard({
       {meantime && (
         <div
           className="border-2 border-acc-deep bg-[#F5EFDC] px-4 py-3"
-          style={{ fontFamily: serif, fontSize: 14, color: "var(--color-ink)" }}
+          style={{ fontFamily: serif, fontSize: 14, color: 'var(--color-ink)' }}
         >
-          <strong>{t("csc.meantime", locale)}</strong>{" "}
+          <strong>{t('csc.meantime', locale)}</strong>{' '}
           <Link
             href={meantime.href}
             className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"

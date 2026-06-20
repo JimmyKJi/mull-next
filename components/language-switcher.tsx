@@ -62,7 +62,7 @@ export default function LanguageSwitcher({ initial = 'en' }: { initial?: Locale 
           cursor: 'pointer',
         }}
       >
-        {LOCALES.map(loc => (
+        {LOCALES.map((loc) => (
           <option key={loc} value={loc}>
             {LOCALE_LABELS[loc].native}
           </option>

@@ -21,7 +21,7 @@
 import { useEffect, useState } from 'react';
 import { t, type Locale, isLocale } from '@/lib/translations';
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
@@ -75,7 +75,9 @@ export default function ReflectionCard() {
         if (!cancelled) setLoading(false);
       }
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   async function submit() {
@@ -106,10 +108,16 @@ export default function ReflectionCard() {
     return (
       <section style={cardStyle}>
         <div style={eyebrow}>▸ {t('crd.reflection_saved_eyebrow', locale)}</div>
-        <p style={{
-          fontFamily: serif, fontStyle: 'italic',
-          fontSize: 17, color: 'var(--color-ink)', margin: 0, lineHeight: 1.55,
-        }}>
+        <p
+          style={{
+            fontFamily: serif,
+            fontStyle: 'italic',
+            fontSize: 17,
+            color: 'var(--color-ink)',
+            margin: 0,
+            lineHeight: 1.55,
+          }}
+        >
           {t('crd.reflection_saved_body', locale)}
         </p>
       </section>
@@ -119,64 +127,87 @@ export default function ReflectionCard() {
   return (
     <section className="pixel-form" style={cardStyle}>
       <div style={eyebrow}>▸ {t('crd.reflection_eyebrow', locale)}</div>
-      <p style={{
-        fontFamily: serif, fontStyle: 'italic', fontSize: 16,
-        color: 'var(--color-ink-soft)', margin: '0 0 18px', lineHeight: 1.55,
-      }}>
+      <p
+        style={{
+          fontFamily: serif,
+          fontStyle: 'italic',
+          fontSize: 16,
+          color: 'var(--color-ink-soft)',
+          margin: '0 0 18px',
+          lineHeight: 1.55,
+        }}
+      >
         {t('crd.reflection_intro', locale, { when: relativeWeeks(candidate.created_at, locale) })}
       </p>
 
       {/* Original prompt */}
-      <div style={{
-        padding: '14px 16px',
-        background: 'var(--color-acc-soft)',
-        border: '3px solid var(--color-ink)',
-        boxShadow: '3px 3px 0 0 var(--color-acc)',
-        borderRadius: 0,
-        marginBottom: 14,
-      }}>
-        <div style={subEyebrow}>
-          {t('crd.reflection_the_dilemma', locale)}
-        </div>
-        <p style={{
-          fontFamily: serif, fontStyle: 'italic',
-          fontSize: 16, color: 'var(--color-ink)', margin: 0, lineHeight: 1.5,
-        }}>
+      <div
+        style={{
+          padding: '14px 16px',
+          background: 'var(--color-acc-soft)',
+          border: '3px solid var(--color-ink)',
+          boxShadow: '3px 3px 0 0 var(--color-acc)',
+          borderRadius: 0,
+          marginBottom: 14,
+        }}
+      >
+        <div style={subEyebrow}>{t('crd.reflection_the_dilemma', locale)}</div>
+        <p
+          style={{
+            fontFamily: serif,
+            fontStyle: 'italic',
+            fontSize: 16,
+            color: 'var(--color-ink)',
+            margin: 0,
+            lineHeight: 1.5,
+          }}
+        >
           {candidate.question_text}
         </p>
       </div>
 
       {/* Original response */}
-      <div style={{
-        padding: '14px 16px',
-        background: '#FFFCF4',
-        border: '3px solid var(--color-ink)',
-        boxShadow: '3px 3px 0 0 #2F5D5C',
-        borderRadius: 0,
-        marginBottom: 20,
-      }}>
-        <div style={subEyebrow}>
-          {t('crd.reflection_what_you_wrote', locale)}
-        </div>
-        <p style={{
-          fontFamily: serif, fontSize: 15.5, color: 'var(--color-ink)',
-          margin: 0, lineHeight: 1.6, whiteSpace: 'pre-wrap',
-        }}>
+      <div
+        style={{
+          padding: '14px 16px',
+          background: '#FFFCF4',
+          border: '3px solid var(--color-ink)',
+          boxShadow: '3px 3px 0 0 #2F5D5C',
+          borderRadius: 0,
+          marginBottom: 20,
+        }}
+      >
+        <div style={subEyebrow}>{t('crd.reflection_what_you_wrote', locale)}</div>
+        <p
+          style={{
+            fontFamily: serif,
+            fontSize: 15.5,
+            color: 'var(--color-ink)',
+            margin: 0,
+            lineHeight: 1.6,
+            whiteSpace: 'pre-wrap',
+          }}
+        >
           {candidate.response_text}
         </p>
       </div>
 
       {/* Followup input */}
-      <div style={{
-        fontFamily: pixel, fontSize: 11,
-        color: '#2F5D5C', textTransform: 'uppercase',
-        letterSpacing: '0.18em', marginBottom: 8,
-      }}>
+      <div
+        style={{
+          fontFamily: pixel,
+          fontSize: 11,
+          color: '#2F5D5C',
+          textTransform: 'uppercase',
+          letterSpacing: '0.18em',
+          marginBottom: 8,
+        }}
+      >
         ▸ {t('crd.reflection_what_now', locale)}
       </div>
       <textarea
         value={text}
-        onChange={e => setText(e.target.value)}
+        onChange={(e) => setText(e.target.value)}
         rows={6}
         placeholder={t('crd.reflection_placeholder', locale)}
         maxLength={4000}
@@ -187,36 +218,44 @@ export default function ReflectionCard() {
           boxSizing: 'border-box',
         }}
       />
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginTop: 12,
-        flexWrap: 'wrap',
-        gap: 12,
-      }}>
-        <span style={{
-          fontFamily: pixel, fontSize: 11,
-          color: text.trim().length < 10 ? '#7A2E2E' : 'var(--color-acc-deep)',
-          letterSpacing: 0.4,
-        }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginTop: 12,
+          flexWrap: 'wrap',
+          gap: 12,
+        }}
+      >
+        <span
+          style={{
+            fontFamily: pixel,
+            fontSize: 11,
+            color: text.trim().length < 10 ? '#7A2E2E' : 'var(--color-acc-deep)',
+            letterSpacing: 0.4,
+          }}
+        >
           {t('crd.reflection_counter', locale, { n: text.length })}
           {text.trim().length < 10 && text.length > 0 && t('crd.reflection_a_little_more', locale)}
         </span>
-        <button
-          type="submit"
-          onClick={submit}
-          disabled={text.trim().length < 10 || busy}
-        >
+        <button type="submit" onClick={submit} disabled={text.trim().length < 10 || busy}>
           {busy ? t('crd.reflection_saving', locale) : t('crd.reflection_save', locale)}
         </button>
       </div>
       {error && (
-        <p style={{
-          marginTop: 12, fontFamily: sans, fontSize: 13, color: '#7A2E2E',
-          background: 'rgba(122, 46, 46, 0.08)', padding: '8px 12px',
-          border: '2px solid #7A2E2E', borderRadius: 0,
-        }}>
+        <p
+          style={{
+            marginTop: 12,
+            fontFamily: sans,
+            fontSize: 13,
+            color: '#7A2E2E',
+            background: 'rgba(122, 46, 46, 0.08)',
+            padding: '8px 12px',
+            border: '2px solid #7A2E2E',
+            borderRadius: 0,
+          }}
+        >
           {error}
         </p>
       )}
@@ -234,13 +273,19 @@ const cardStyle: React.CSSProperties = {
 };
 
 const eyebrow: React.CSSProperties = {
-  fontFamily: pixel, fontSize: 12,
-  color: '#2F5D5C', textTransform: 'uppercase',
-  letterSpacing: '0.18em', marginBottom: 12,
+  fontFamily: pixel,
+  fontSize: 12,
+  color: '#2F5D5C',
+  textTransform: 'uppercase',
+  letterSpacing: '0.18em',
+  marginBottom: 12,
 };
 
 const subEyebrow: React.CSSProperties = {
-  fontFamily: pixel, fontSize: 10,
-  color: 'var(--color-acc-deep)', textTransform: 'uppercase',
-  letterSpacing: '0.18em', marginBottom: 6,
+  fontFamily: pixel,
+  fontSize: 10,
+  color: 'var(--color-acc-deep)',
+  textTransform: 'uppercase',
+  letterSpacing: '0.18em',
+  marginBottom: 6,
 };

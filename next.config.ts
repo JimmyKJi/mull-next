@@ -1,5 +1,5 @@
-import type { NextConfig } from "next";
-import path from "node:path";
+import type { NextConfig } from 'next';
+import path from 'node:path';
 
 const nextConfig: NextConfig = {
   // Pin Turbopack's workspace root to this directory. Without this,
@@ -42,14 +42,14 @@ const nextConfig: NextConfig = {
   // X-Frame-Options: SAMEORIGIN could not express that exception (the header
   // has no "allow these embeds" value), which is why it's dropped entirely.
   async headers() {
-    const isDev = process.env.NODE_ENV !== "production";
+    const isDev = process.env.NODE_ENV !== 'production';
 
     // Supabase origin: REST + auth over https, realtime over wss. Derived
     // from the public URL so connect-src follows whatever project is wired
     // (and degrades to 'self'-only if the env var is missing).
     const supabaseConnect: string[] = [];
     try {
-      const u = new URL(process.env.NEXT_PUBLIC_SUPABASE_URL || "");
+      const u = new URL(process.env.NEXT_PUBLIC_SUPABASE_URL || '');
       supabaseConnect.push(u.origin, `wss://${u.host}`);
     } catch {
       // unset / malformed — leave it out; data calls would already be broken.
@@ -58,12 +58,12 @@ const nextConfig: NextConfig = {
     const connectSrc = [
       "'self'",
       ...supabaseConnect,
-      "https://vitals.vercel-insights.com", // Vercel Speed Insights beacon
+      'https://vitals.vercel-insights.com', // Vercel Speed Insights beacon
       // Turbopack HMR socket + the Vercel analytics debug script's host,
       // both dev-only. In production Vercel serves analytics/speed-insights
       // from same-origin /_vercel/* paths (covered by 'self'), so this host
       // is deliberately NOT in the production policy.
-      ...(isDev ? ["ws:", "wss:", "https://va.vercel-scripts.com"] : []),
+      ...(isDev ? ['ws:', 'wss:', 'https://va.vercel-scripts.com'] : []),
     ];
 
     // The CSP differs by exactly one directive — frame-ancestors — so build
@@ -78,11 +78,11 @@ const nextConfig: NextConfig = {
         // va.vercel-scripts.com is also dev-only — it's where @vercel/analytics
         // and speed-insights fetch their *debug* script; production loads them
         // from same-origin /_vercel/* (so 'self' covers prod, host omitted there).
-        `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval' https://va.vercel-scripts.com" : ""}`,
+        `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval' https://va.vercel-scripts.com" : ''}`,
         "style-src 'self' 'unsafe-inline'",
         "img-src 'self' data: blob:",
         "font-src 'self' data:",
-        `connect-src ${connectSrc.join(" ")}`,
+        `connect-src ${connectSrc.join(' ')}`,
         "worker-src 'self' blob:",
         "media-src 'self'",
         "frame-src 'self'",
@@ -90,8 +90,8 @@ const nextConfig: NextConfig = {
         // Public embeds are framable anywhere; every other route only by us.
         ...(embeddable ? [] : ["frame-ancestors 'self'"]),
         // Force http→https, prod only (would break plain http://localhost).
-        ...(isDev ? [] : ["upgrade-insecure-requests"]),
-      ].join("; ");
+        ...(isDev ? [] : ['upgrade-insecure-requests']),
+      ].join('; ');
 
     const baseline = [
       // Force HTTPS for two years. Vercel already serves HTTPS-only; this
@@ -99,43 +99,40 @@ const nextConfig: NextConfig = {
       // downgrade). No `preload` — that's a permanent public-list commitment
       // we don't need.
       {
-        key: "Strict-Transport-Security",
-        value: "max-age=63072000; includeSubDomains",
+        key: 'Strict-Transport-Security',
+        value: 'max-age=63072000; includeSubDomains',
       },
       // Stop browsers MIME-sniffing a response into a different content type
       // (a classic XSS vector for user-supplied files).
-      { key: "X-Content-Type-Options", value: "nosniff" },
+      { key: 'X-Content-Type-Options', value: 'nosniff' },
       // Send only the origin (not the full path/query) on cross-origin
       // navigations — never leak a user's in-app URL to third parties.
-      { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+      { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
       // Drop access to powerful features the app never uses, and opt out of
       // the Topics advertising API.
       {
-        key: "Permissions-Policy",
-        value: "camera=(), microphone=(), geolocation=(), browsing-topics=()",
+        key: 'Permissions-Policy',
+        value: 'camera=(), microphone=(), geolocation=(), browsing-topics=()',
       },
     ];
 
     return [
       // Every route: baseline hardening + the locked-down CSP.
       {
-        source: "/(.*)",
-        headers: [
-          ...baseline,
-          { key: "Content-Security-Policy", value: csp(false) },
-        ],
+        source: '/(.*)',
+        headers: [...baseline, { key: 'Content-Security-Policy', value: csp(false) }],
       },
       // Public embed routes, listed AFTER the broad rule so their CSP key
       // overrides it (see "Header Overriding Behavior" in Next's headers
       // doc — last match for a given key wins). Same policy, minus the
       // frame-ancestors lock, so they can be iframed on any site.
       {
-        source: "/badge/:path*",
-        headers: [{ key: "Content-Security-Policy", value: csp(true) }],
+        source: '/badge/:path*',
+        headers: [{ key: 'Content-Security-Policy', value: csp(true) }],
       },
       {
-        source: "/embed/:path*",
-        headers: [{ key: "Content-Security-Policy", value: csp(true) }],
+        source: '/embed/:path*',
+        headers: [{ key: 'Content-Security-Policy', value: csp(true) }],
       },
     ];
   },

@@ -44,9 +44,12 @@ function escapeHtml(s: string) {
 // before the first break (i.e. the streak the user just broke). The
 // grace policy mirrors the SQL function: one missed day is forgiven,
 // two consecutive misses break.
-function lastBrokenStreakInfo(dates: Set<string>, today: Date): {
+function lastBrokenStreakInfo(
+  dates: Set<string>,
+  today: Date,
+): {
   brokenStreak: number;
-  missDate: string | null;  // ISO date of the SECOND missed day
+  missDate: string | null; // ISO date of the SECOND missed day
 } {
   let cursor = new Date(today);
   cursor.setUTCDate(cursor.getUTCDate());
@@ -117,12 +120,15 @@ export async function GET(req: Request) {
     return NextResponse.json({ ok: true, dryRun: true, candidateCount: 0 });
   }
 
-  const { data: { users }, error: listErr } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 });
+  const {
+    data: { users },
+    error: listErr,
+  } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 });
   if (listErr) {
     console.error('[cron/streak-break] listUsers failed', listErr);
     return NextResponse.json({ error: 'Could not list users.' }, { status: 500 });
   }
-  const emailById = new Map(users.map(u => [u.id, u.email]));
+  const emailById = new Map(users.map((u) => [u.id, u.email]));
 
   const today = new Date();
   const since = new Date(today.getTime() - 30 * 86400_000).toISOString();
@@ -140,8 +146,11 @@ export async function GET(req: Request) {
       .eq('user_id', pref.user_id)
       .gte('created_at', since)
       .returns<ResponseDateRow[]>();
-    const dates = new Set((rows ?? []).map(r => r.dilemma_date));
-    if (dates.size === 0) { skipped.push('no recent activity'); continue; }
+    const dates = new Set((rows ?? []).map((r) => r.dilemma_date));
+    if (dates.size === 0) {
+      skipped.push('no recent activity');
+      continue;
+    }
 
     const info = lastBrokenStreakInfo(dates, today);
     if (info.brokenStreak < 3 || !info.missDate) {
@@ -156,7 +165,10 @@ export async function GET(req: Request) {
       .eq('user_id', pref.user_id)
       .eq('miss_date', info.missDate)
       .maybeSingle();
-    if (existing) { skipped.push('already sent'); continue; }
+    if (existing) {
+      skipped.push('already sent');
+      continue;
+    }
 
     const body = composeStreakBreak({ email, brokenStreak: info.brokenStreak });
     const result = await sendEmail({
@@ -194,12 +206,10 @@ export async function GET(req: Request) {
   });
 }
 
-function composeStreakBreak({
-  email, brokenStreak,
-}: {
-  email: string;
-  brokenStreak: number;
-}): { html: string; text: string } {
+function composeStreakBreak({ email, brokenStreak }: { email: string; brokenStreak: number }): {
+  html: string;
+  text: string;
+} {
   const url = 'https://mull.world/dilemma';
   const text = [
     `${brokenStreak} days. That's worth something.`,

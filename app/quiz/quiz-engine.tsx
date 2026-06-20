@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 // QuizEngine — v3 pixel-game world.
 //
@@ -13,62 +13,59 @@
 //   - System sans body for prompts/answers (NO VT323 at body size).
 //   - Pixel buttons for skip/back/continue.
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import type { Question } from "@/lib/quiz-questions";
-import { add, scale, zeros } from "@/lib/vectors";
-import {
-  getLocalizedQuickQuestion,
-  type SupportedQuizLocale,
-} from "@/lib/quiz-i18n";
-import { getLocalizedDetailedQuestion } from "@/lib/quiz-detailed-i18n";
-import type { Locale } from "@/lib/translations";
-import { t } from "@/lib/translations";
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import type { Question } from '@/lib/quiz-questions';
+import { add, scale, zeros } from '@/lib/vectors';
+import { getLocalizedQuickQuestion, type SupportedQuizLocale } from '@/lib/quiz-i18n';
+import { getLocalizedDetailedQuestion } from '@/lib/quiz-detailed-i18n';
+import type { Locale } from '@/lib/translations';
+import { t } from '@/lib/translations';
 
 type Props = {
   questions: Question[];
-  mode: "quick" | "detailed";
+  mode: 'quick' | 'detailed';
   locale: Locale;
 };
 
 type AnswerHistoryEntry =
-  | { kind: "single"; index: number }
-  | { kind: "multi"; indices: number[] }
-  | { kind: "skip" };
+  | { kind: 'single'; index: number }
+  | { kind: 'multi'; indices: number[] }
+  | { kind: 'skip' };
 
 type PersistedState = {
   idx: number;
   answers: AnswerHistoryEntry[];
   vector: number[];
-  mode: "quick" | "detailed";
+  mode: 'quick' | 'detailed';
 };
 
-const STORAGE_PREFIX = "mull.quiz.progress.";
+const STORAGE_PREFIX = 'mull.quiz.progress.';
 
 // Per-question answer trail, handed to <ResultSave> after the quiz so it
 // can be persisted to research_quiz_responses (for opted-in users only).
 // Written at finish(); read + cleared on the /result page. Short-lived —
 // it carries the just-finished attempt across the route hop, nothing more.
-const RESEARCH_ANSWERS_KEY = "mull.quiz.research_answers";
+const RESEARCH_ANSWERS_KEY = 'mull.quiz.research_answers';
 
 // Normalize the in-engine answer history into the compact, position-keyed
 // shape research_quiz_responses stores: one element per question, with the
 // answer index(es) or a skip marker. See the migration for the schema.
 type ResearchAnswer =
-  | { q: number; kind: "single"; a: number }
-  | { q: number; kind: "multi"; indices: number[] }
-  | { q: number; kind: "skip" };
+  | { q: number; kind: 'single'; a: number }
+  | { q: number; kind: 'multi'; indices: number[] }
+  | { q: number; kind: 'skip' };
 
 function stashResearchAnswers(
-  mode: "quick" | "detailed",
+  mode: 'quick' | 'detailed',
   questionCount: number,
   history: AnswerHistoryEntry[],
 ) {
   try {
     const answers: ResearchAnswer[] = history.map((entry, q) => {
-      if (entry.kind === "single") return { q, kind: "single", a: entry.index };
-      if (entry.kind === "multi") return { q, kind: "multi", indices: entry.indices };
-      return { q, kind: "skip" };
+      if (entry.kind === 'single') return { q, kind: 'single', a: entry.index };
+      if (entry.kind === 'multi') return { q, kind: 'multi', indices: entry.indices };
+      return { q, kind: 'skip' };
     });
     window.localStorage.setItem(
       RESEARCH_ANSWERS_KEY,
@@ -86,30 +83,30 @@ function stashResearchAnswers(
 // — the goal is rhythm, not curriculum.
 
 const CHAPTER_TITLES = [
-  "OF ENDINGS",
-  "OF KNOWING",
-  "OF POWER",
-  "OF THE SELF",
-  "OF MEANING",
-  "OF BEAUTY",
-  "OF JUSTICE",
-  "OF LOVE",
-  "OF TIME",
-  "OF SILENCE",
+  'OF ENDINGS',
+  'OF KNOWING',
+  'OF POWER',
+  'OF THE SELF',
+  'OF MEANING',
+  'OF BEAUTY',
+  'OF JUSTICE',
+  'OF LOVE',
+  'OF TIME',
+  'OF SILENCE',
 ] as const;
 
-const CHAPTER_GLYPHS = ["✦", "◆", "▲", "◐", "✶", "❋", "▣", "◉", "✧", "◇"] as const;
+const CHAPTER_GLYPHS = ['✦', '◆', '▲', '◐', '✶', '❋', '▣', '◉', '✧', '◇'] as const;
 
 const CHAPTER_LINES = [
-  "Five questions about what we do with finitude.",
-  "Five questions about how we come to trust what we believe.",
-  "Five questions about authority, freedom, and force.",
-  "Five questions about the person you take yourself to be.",
-  "Five questions about what life is supposed to be for.",
-  "Five questions about taste, art, and what catches you.",
-  "Five questions about fairness, harm, and what we owe.",
-  "Five questions about attention, attachment, and care.",
-  "Five questions about memory, change, and the long arc.",
+  'Five questions about what we do with finitude.',
+  'Five questions about how we come to trust what we believe.',
+  'Five questions about authority, freedom, and force.',
+  'Five questions about the person you take yourself to be.',
+  'Five questions about what life is supposed to be for.',
+  'Five questions about taste, art, and what catches you.',
+  'Five questions about fairness, harm, and what we owe.',
+  'Five questions about attention, attachment, and care.',
+  'Five questions about memory, change, and the long arc.',
   "Five questions about what can't be said.",
 ] as const;
 
@@ -129,8 +126,26 @@ function isChapterBoundary(idx: number): boolean {
 // each question a slightly different visual flavor without us
 // having to hand-author 20-50 illustrations.
 const QUESTION_GLYPHS = [
-  "✦", "❋", "◆", "✧", "◉", "◇", "✶", "▲", "△", "▤",
-  "◐", "◑", "◒", "◓", "□", "▣", "▢", "◈", "✺", "✹",
+  '✦',
+  '❋',
+  '◆',
+  '✧',
+  '◉',
+  '◇',
+  '✶',
+  '▲',
+  '△',
+  '▤',
+  '◐',
+  '◑',
+  '◒',
+  '◓',
+  '□',
+  '▣',
+  '▢',
+  '◈',
+  '✺',
+  '✹',
 ];
 
 export function QuizEngine({ questions, mode, locale }: Props) {
@@ -181,7 +196,7 @@ export function QuizEngine({ questions, mode, locale }: Props) {
         parsed.idx < questions.length &&
         Array.isArray(parsed.vector) &&
         parsed.vector.length === 16 &&
-        parsed.idx > 0   // Only show "resumed" if they're past Q1
+        parsed.idx > 0 // Only show "resumed" if they're past Q1
       ) {
         setIdx(parsed.idx);
         setVector(parsed.vector);
@@ -198,10 +213,7 @@ export function QuizEngine({ questions, mode, locale }: Props) {
     if (!resumed) return;
     try {
       const payload: PersistedState = { idx, answers, vector, mode };
-      window.sessionStorage.setItem(
-        STORAGE_PREFIX + mode,
-        JSON.stringify(payload),
-      );
+      window.sessionStorage.setItem(STORAGE_PREFIX + mode, JSON.stringify(payload));
     } catch {
       /* storage disabled, fine */
     }
@@ -217,14 +229,14 @@ export function QuizEngine({ questions, mode, locale }: Props) {
   // entries (untranslated locale/question) return undefined → English
   // source shows through.
   const localized = useMemo(() => {
-    if (locale === "en") return null;
-    if (mode === "detailed") {
+    if (locale === 'en') return null;
+    if (mode === 'detailed') {
       return getLocalizedDetailedQuestion(idx, locale);
     }
     return getLocalizedQuickQuestion(idx, locale as SupportedQuizLocale);
   }, [idx, locale, mode]);
 
-  const prompt = localized?.p ?? question?.p ?? "";
+  const prompt = localized?.p ?? question?.p ?? '';
   const answerTexts = useMemo(() => {
     if (!question) return [];
     return question.a.map((ans, i) => localized?.a[i] ?? ans.t);
@@ -252,10 +264,7 @@ export function QuizEngine({ questions, mode, locale }: Props) {
     setLockedSingle(answerIdx);
     const delta = question.a[answerIdx]?.v ?? zeros();
     window.setTimeout(() => {
-      advance(add(vector, delta), [
-        ...answers,
-        { kind: "single", index: answerIdx },
-      ]);
+      advance(add(vector, delta), [...answers, { kind: 'single', index: answerIdx }]);
     }, 180);
   }
   function toggleMulti(answerIdx: number) {
@@ -267,18 +276,12 @@ export function QuizEngine({ questions, mode, locale }: Props) {
   }
   function submitMulti() {
     if (!question || multiPicks.length === 0) return;
-    const summed = multiPicks.reduce(
-      (acc, i) => add(acc, question.a[i].v),
-      zeros(),
-    );
+    const summed = multiPicks.reduce((acc, i) => add(acc, question.a[i].v), zeros());
     const delta = scale(summed, 1 / multiPicks.length);
-    advance(add(vector, delta), [
-      ...answers,
-      { kind: "multi", indices: multiPicks },
-    ]);
+    advance(add(vector, delta), [...answers, { kind: 'multi', indices: multiPicks }]);
   }
   function skip() {
-    advance(vector, [...answers, { kind: "skip" }]);
+    advance(vector, [...answers, { kind: 'skip' }]);
   }
   function advance(newVector: number[], newAnswers: AnswerHistoryEntry[]) {
     if (idx + 1 >= questions.length) {
@@ -302,13 +305,10 @@ export function QuizEngine({ questions, mode, locale }: Props) {
       const a = prevAnswers[i];
       const q = questions[i];
       if (!q) break;
-      if (a.kind === "single") {
+      if (a.kind === 'single') {
         prevVec = add(prevVec, q.a[a.index]?.v ?? zeros());
-      } else if (a.kind === "multi") {
-        const summed = a.indices.reduce(
-          (acc, idx) => add(acc, q.a[idx]?.v ?? zeros()),
-          zeros(),
-        );
+      } else if (a.kind === 'multi') {
+        const summed = a.indices.reduce((acc, idx) => add(acc, q.a[idx]?.v ?? zeros()), zeros());
         prevVec = add(prevVec, scale(summed, 1 / a.indices.length));
       }
     }
@@ -360,9 +360,7 @@ export function QuizEngine({ questions, mode, locale }: Props) {
     const title = CHAPTER_TITLES[chapter % CHAPTER_TITLES.length];
     const glyph = CHAPTER_GLYPHS[chapter % CHAPTER_GLYPHS.length];
     const line = CHAPTER_LINES[chapter % CHAPTER_LINES.length];
-    const totalChapters = Math.ceil(
-      questions.length / QUESTIONS_PER_CHAPTER,
-    );
+    const totalChapters = Math.ceil(questions.length / QUESTIONS_PER_CHAPTER);
     return (
       <ChapterTransition
         title={title}
@@ -390,7 +388,7 @@ export function QuizEngine({ questions, mode, locale }: Props) {
           aria-live="polite"
           className="mb-4 inline-flex items-center gap-2 border-[3px] border-ink bg-acc-soft px-3 py-1.5 text-[10px] tracking-[0.16em] text-ink"
           style={{
-            fontFamily: "var(--font-pixel-display)",
+            fontFamily: 'var(--font-pixel-display)',
             boxShadow: '3px 3px 0 0 #2F5D5C',
           }}
         >
@@ -402,7 +400,7 @@ export function QuizEngine({ questions, mode, locale }: Props) {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div
           className="text-[10px] tracking-[0.24em] text-acc-deep"
-          style={{ fontFamily: "var(--font-pixel-display)" }}
+          style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
           CHAPTER {chapter + 1} / {totalChapters} ·
           <span className="ml-2 text-acc">
@@ -417,9 +415,11 @@ export function QuizEngine({ questions, mode, locale }: Props) {
         {/* Title bar */}
         <div
           className="flex items-center justify-between border-b-4 border-ink bg-ink px-4 py-2 text-[10px] tracking-[0.22em] text-acc-soft"
-          style={{ fontFamily: "var(--font-pixel-display)" }}
+          style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
-          <span>QUESTION {String(idx + 1).padStart(2, "0")} / {questions.length}</span>
+          <span>
+            QUESTION {String(idx + 1).padStart(2, '0')} / {questions.length}
+          </span>
           {isMulti ? (
             <span className="text-acc">PICK UP TO {maxPicks}</span>
           ) : (
@@ -446,7 +446,7 @@ export function QuizEngine({ questions, mode, locale }: Props) {
           {isMulti && (
             <p
               className="mt-6 text-[12.5px] tracking-[0.04em] text-acc-deep sm:text-[13px]"
-              style={{ fontFamily: "var(--font-pixel-display)" }}
+              style={{ fontFamily: 'var(--font-pixel-display)' }}
             >
               ▸ TAP UP TO {maxPicks} · THEN CONTINUE →
             </p>
@@ -459,36 +459,32 @@ export function QuizEngine({ questions, mode, locale }: Props) {
               // multiPicks. For single-pick: card is "locked-in" if
               // it's the one we just clicked (the 180ms feedback
               // beat before advance fires).
-              const selected = isMulti
-                ? multiPicks.includes(i)
-                : lockedSingle === i;
+              const selected = isMulti ? multiPicks.includes(i) : lockedSingle === i;
               const otherLocked = !isMulti && lockedSingle !== null && lockedSingle !== i;
               return (
                 <li key={i}>
                   <button
                     type="button"
-                    onClick={() =>
-                      isMulti ? toggleMulti(i) : selectSingle(i)
-                    }
+                    onClick={() => (isMulti ? toggleMulti(i) : selectSingle(i))}
                     disabled={otherLocked}
                     className={
                       // Pixel-border answer card. No rounded corners,
                       // 3-px border, hard amber shadow on hover.
-                      "group flex w-full items-start gap-4 border-[3px] bg-[#FFFCF4] px-5 py-4 text-left transition-all duration-150 " +
-                      "hover:translate-x-[-2px] hover:translate-y-[-2px] hover:bg-[#FFF9E8] hover:shadow-[4px_4px_0_0_var(--color-acc-deep)] " +
+                      'group flex w-full items-start gap-4 border-[3px] bg-[#FFFCF4] px-5 py-4 text-left transition-all duration-150 ' +
+                      'hover:translate-x-[-2px] hover:translate-y-[-2px] hover:bg-[#FFF9E8] hover:shadow-[4px_4px_0_0_var(--color-acc-deep)] ' +
                       (selected
-                        ? "border-acc-deep bg-acc-soft shadow-[4px_4px_0_0_var(--color-ink)]"
+                        ? 'border-acc-deep bg-acc-soft shadow-[4px_4px_0_0_var(--color-ink)]'
                         : otherLocked
-                          ? "border-line opacity-40"
-                          : "border-line")
+                          ? 'border-line opacity-40'
+                          : 'border-line')
                     }
                   >
                     <span
                       className={
-                        "mt-1.5 inline-block h-3 w-3 shrink-0 border-2 transition-colors " +
+                        'mt-1.5 inline-block h-3 w-3 shrink-0 border-2 transition-colors ' +
                         (selected
-                          ? "border-acc-deep bg-acc-deep"
-                          : "border-line group-hover:border-acc-deep")
+                          ? 'border-acc-deep bg-acc-deep'
+                          : 'border-line group-hover:border-acc-deep')
                       }
                       aria-hidden
                     />
@@ -511,15 +507,15 @@ export function QuizEngine({ questions, mode, locale }: Props) {
           disabled={idx === 0}
           className="border-2 border-ink bg-[#FFFCF4] px-4 py-2 text-[13px] font-medium leading-none text-ink hover:bg-acc-soft disabled:cursor-not-allowed disabled:border-line disabled:text-acc-deep/40"
         >
-          ← {t("quiz.back", locale)}
+          ← {t('quiz.back', locale)}
         </button>
         <button
           type="button"
           onClick={skip}
           className="border-2 border-ink/40 bg-transparent px-3 py-2 text-[12px] tracking-[0.06em] text-acc-deep hover:border-ink hover:bg-acc-soft hover:text-ink"
-          style={{ fontFamily: "var(--font-pixel-display)" }}
+          style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
-          {t("quiz.skip", locale).toUpperCase()}
+          {t('quiz.skip', locale).toUpperCase()}
         </button>
         {isMulti ? (
           <button
@@ -527,13 +523,13 @@ export function QuizEngine({ questions, mode, locale }: Props) {
             onClick={submitMulti}
             disabled={multiPicks.length === 0}
             className={
-              "border-2 px-5 py-2 text-[13px] font-medium leading-none transition-all " +
+              'border-2 px-5 py-2 text-[13px] font-medium leading-none transition-all ' +
               (multiPicks.length === 0
-                ? "cursor-not-allowed border-line bg-[#EBE3CA] text-acc-deep/50"
-                : "border-ink bg-ink text-cream shadow-[3px_3px_0_0_var(--color-acc-deep)] hover:bg-acc-deep hover:shadow-[3px_3px_0_0_var(--color-ink)]")
+                ? 'cursor-not-allowed border-line bg-[#EBE3CA] text-acc-deep/50'
+                : 'border-ink bg-ink text-cream shadow-[3px_3px_0_0_var(--color-acc-deep)] hover:bg-acc-deep hover:shadow-[3px_3px_0_0_var(--color-ink)]')
             }
           >
-            {t("quiz.continue", locale)} →
+            {t('quiz.continue', locale)} →
           </button>
         ) : (
           <div className="w-[88px]" aria-hidden />
@@ -566,10 +562,7 @@ function ComputingScreen() {
   const [stage, setStage] = useState(0);
 
   useEffect(() => {
-    const id = window.setInterval(
-      () => setStage((s) => (s + 1) % COMPUTING_STAGES.length),
-      450,
-    );
+    const id = window.setInterval(() => setStage((s) => (s + 1) % COMPUTING_STAGES.length), 450);
     return () => window.clearInterval(id);
   }, []);
 
@@ -578,22 +571,19 @@ function ComputingScreen() {
       <div className="pixel-panel pixel-panel--ink w-full max-w-[520px]">
         <div
           className="border-b-4 border-ink bg-ink px-4 py-2 text-[10px] tracking-[0.24em] text-acc-soft"
-          style={{ fontFamily: "var(--font-pixel-display)" }}
+          style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
           <span className="pixel-blink">▶</span> MAPPING_YOUR_PLACE.EXE
         </div>
         <div className="px-8 py-12">
-          <div
-            className="text-[64px] leading-none text-acc pixel-float"
-            aria-hidden
-          >
+          <div className="text-[64px] leading-none text-acc pixel-float" aria-hidden>
             ✦
           </div>
           <h1
             className="mt-6 text-[20px] leading-[1.45] tracking-[0.04em] text-acc-soft sm:text-[24px]"
-            style={{ fontFamily: "var(--font-pixel-display)" }}
+            style={{ fontFamily: 'var(--font-pixel-display)' }}
           >
-            <span style={{ textShadow: "3px 3px 0 var(--pixel-shadow, var(--color-acc))" }}>
+            <span style={{ textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))' }}>
               COMPUTING YOUR RESULT
             </span>
           </h1>
@@ -604,7 +594,7 @@ function ComputingScreen() {
             aria-live="polite"
             aria-atomic="true"
             className="mt-7 min-h-[2.5em] text-[12px] leading-[1.6] tracking-[0.18em] text-acc-soft/85"
-            style={{ fontFamily: "var(--font-pixel-display)" }}
+            style={{ fontFamily: 'var(--font-pixel-display)' }}
           >
             {COMPUTING_STAGES[stage]}
           </p>
@@ -682,7 +672,7 @@ function ChapterTransition({
       if (paused) {
         elapsed = elapsedAtPauseRef.current;
       } else {
-        elapsed = (now - startedAtRef.current) + elapsedAtPauseRef.current;
+        elapsed = now - startedAtRef.current + elapsedAtPauseRef.current;
       }
       const ratio = Math.min(1, elapsed / total);
       setProgress(ratio);
@@ -698,8 +688,8 @@ function ChapterTransition({
       raf = requestAnimationFrame(step);
     } else {
       // Capture elapsed at pause so resume picks up where we left off.
-      elapsedAtPauseRef.current = elapsedAtPauseRef.current +
-        (performance.now() - startedAtRef.current);
+      elapsedAtPauseRef.current =
+        elapsedAtPauseRef.current + (performance.now() - startedAtRef.current);
     }
     return () => {
       if (raf) cancelAnimationFrame(raf);
@@ -717,22 +707,19 @@ function ChapterTransition({
       >
         <div
           className="border-b-4 border-ink bg-ink px-4 py-2 text-[10px] tracking-[0.24em] text-acc-soft"
-          style={{ fontFamily: "var(--font-pixel-display)" }}
+          style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
           CHAPTER {chapter} / {totalChapters}
         </div>
         <div className="px-8 py-12">
-          <div
-            className="text-[64px] leading-none text-acc"
-            aria-hidden
-          >
+          <div className="text-[64px] leading-none text-acc" aria-hidden>
             {glyph}
           </div>
           <h1
             className="mt-6 px-2 text-[26px] leading-[1.45] tracking-[0.04em] text-acc-soft sm:text-[36px]"
-            style={{ fontFamily: "var(--font-pixel-display)" }}
+            style={{ fontFamily: 'var(--font-pixel-display)' }}
           >
-            <span style={{ textShadow: "3px 3px 0 var(--pixel-shadow, var(--color-acc))" }}>
+            <span style={{ textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))' }}>
               {title}
             </span>
           </h1>
@@ -755,11 +742,7 @@ function ChapterTransition({
         {/* Pixel countdown bar — fills across the bottom as the
             auto-advance timer ticks down. Reduced-motion: no
             transition, just step jumps. */}
-        <div
-          aria-hidden
-          className="border-t-4 border-ink bg-[#0E0B07]"
-          style={{ height: 6 }}
-        >
+        <div aria-hidden className="border-t-4 border-ink bg-[#0E0B07]" style={{ height: 6 }}>
           <div
             style={{
               height: '100%',
@@ -772,9 +755,11 @@ function ChapterTransition({
       </div>
       <p
         className="mt-4 text-[10px] tracking-[0.2em] text-acc-deep"
-        style={{ fontFamily: "var(--font-pixel-display)" }}
+        style={{ fontFamily: 'var(--font-pixel-display)' }}
       >
-        {paused ? '▸ HOVERED — TIMER PAUSED' : `▸ AUTO-ADVANCE IN ${Math.ceil((1 - progress) * (totalMsRef.current / 1000))}s`}
+        {paused
+          ? '▸ HOVERED — TIMER PAUSED'
+          : `▸ AUTO-ADVANCE IN ${Math.ceil((1 - progress) * (totalMsRef.current / 1000))}s`}
       </p>
     </div>
   );
@@ -785,13 +770,7 @@ function ChapterTransition({
 // filled; current = bigger filled; upcoming = hollow. Limited to
 // 20 visible dots on long sets.
 // ────────────────────────────────────────────────────────────────
-function ProgressDots({
-  total,
-  current,
-}: {
-  total: number;
-  current: number;
-}) {
+function ProgressDots({ total, current }: { total: number; current: number }) {
   const visible = Math.min(total, 20);
   const ratio = total === 1 ? 1 : current / (total - 1);
   const visibleCurrent = Math.round(ratio * (visible - 1));
@@ -805,12 +784,8 @@ function ProgressDots({
           <span
             key={i}
             className={
-              "inline-block transition-all " +
-              (here
-                ? "h-2.5 w-2.5 bg-acc-deep"
-                : filled
-                  ? "h-2 w-2 bg-acc/60"
-                  : "h-2 w-2 bg-line")
+              'inline-block transition-all ' +
+              (here ? 'h-2.5 w-2.5 bg-acc-deep' : filled ? 'h-2 w-2 bg-acc/60' : 'h-2 w-2 bg-line')
             }
           />
         );

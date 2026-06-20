@@ -24,7 +24,9 @@ export async function POST(req: Request) {
   if (!code) return NextResponse.json({ error: 'Missing code.' }, { status: 400 });
 
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) {
     // Anonymous can't be deduped. Skip silently.
     return NextResponse.json({ ok: true, skipped: 'not signed in' });

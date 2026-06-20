@@ -17,14 +17,16 @@ export default async function Loading() {
   const locale = await getServerLocale();
   return (
     <main style={{ maxWidth: 760, margin: '60px auto', padding: '0 24px' }}>
-      <header style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 36,
-        flexWrap: 'wrap',
-        gap: 12,
-      }}>
+      <header
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: 36,
+          flexWrap: 'wrap',
+          gap: 12,
+        }}
+      >
         <MullWordmark as="div" />
         <div className="pixel-shimmer" style={{ width: 110, height: 28 }} />
       </header>
@@ -37,21 +39,23 @@ export default async function Loading() {
 
       <div className="pixel-shimmer" style={{ width: 180, height: 18, marginBottom: 18 }} />
       <div style={{ display: 'grid', gap: 10 }}>
-        {[0, 1, 2, 3, 4].map(i => (
+        {[0, 1, 2, 3, 4].map((i) => (
           <div key={i} className="pixel-shimmer" style={{ height: 16, width: `${90 - i * 8}%` }} />
         ))}
       </div>
 
-      <p style={{
-        textAlign: 'center',
-        marginTop: 60,
-        fontFamily: pixel,
-        fontSize: 11,
-        color: 'var(--color-acc-deep)',
-        opacity: 0.85,
-        letterSpacing: 0.4,
-        textTransform: 'uppercase',
-      }}>
+      <p
+        style={{
+          textAlign: 'center',
+          marginTop: 60,
+          fontFamily: pixel,
+          fontSize: 11,
+          color: 'var(--color-acc-deep)',
+          opacity: 0.85,
+          letterSpacing: 0.4,
+          textTransform: 'uppercase',
+        }}
+      >
         ▸ {t('ldg.loading', locale).toUpperCase()}
       </p>
     </main>

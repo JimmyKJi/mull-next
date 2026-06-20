@@ -115,7 +115,7 @@ export default function EmptyStateSprite({
       {caption && (
         <p
           style={{
-            fontFamily: "var(--font-prose)",
+            fontFamily: 'var(--font-prose)',
             fontStyle: 'italic',
             fontSize: 15,
             color: 'var(--color-acc-deep)',

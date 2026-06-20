@@ -42,7 +42,24 @@ const QUIET = process.argv.includes('--quiet');
 
 // ─── 16-D model ─────────────────────────────────────────────────────
 
-const DIM_KEYS = ['TV', 'VA', 'WP', 'TR', 'TE', 'RT', 'MR', 'SR', 'CE', 'SS', 'PO', 'TD', 'AT', 'ES', 'UI', 'SI'];
+const DIM_KEYS = [
+  'TV',
+  'VA',
+  'WP',
+  'TR',
+  'TE',
+  'RT',
+  'MR',
+  'SR',
+  'CE',
+  'SS',
+  'PO',
+  'TD',
+  'AT',
+  'ES',
+  'UI',
+  'SI',
+];
 
 function vectorFromShortHand(obj) {
   const v = new Array(DIM_KEYS.length).fill(0);
@@ -99,18 +116,29 @@ function parseQuiz(filename, exportName) {
     let escape = false;
     while (i < body.length) {
       const ch = body[i];
-      if (escape) { escape = false; i++; continue; }
+      if (escape) {
+        escape = false;
+        i++;
+        continue;
+      }
       if (inStr) {
         if (ch === '\\') escape = true;
         else if (ch === inStr) inStr = null;
         i++;
         continue;
       }
-      if (ch === '"' || ch === "'" || ch === '`') { inStr = ch; i++; continue; }
+      if (ch === '"' || ch === "'" || ch === '`') {
+        inStr = ch;
+        i++;
+        continue;
+      }
       if (ch === '{') depth++;
       else if (ch === '}') {
         depth--;
-        if (depth === 0) { i++; break; }
+        if (depth === 0) {
+          i++;
+          break;
+        }
       }
       i++;
     }
@@ -132,7 +160,7 @@ function parseQuiz(filename, exportName) {
       // Parse "TR:3,WP:2" shorthand.
       const obj = {};
       for (const part of shorthand.split(',')) {
-        const [k, val] = part.split(':').map(s => s.trim());
+        const [k, val] = part.split(':').map((s) => s.trim());
         if (k && val) obj[k] = Number(val);
       }
       answers.push({ text, vector: vectorFromShortHand(obj), shorthand });
@@ -147,9 +175,9 @@ function parseQuiz(filename, exportName) {
 
 // ─── Analysis ───────────────────────────────────────────────────────
 
-const CLUSTER_THRESHOLD = 0.90; // cosine similarity above this = answers indistinguishable
-const DOMINANCE_RATIO = 1.8;    // strongest answer / average = bigger than this is unbalanced
-const NARROW_DIM_COUNT = 3;     // a question touching fewer than this many dims is single-axis
+const CLUSTER_THRESHOLD = 0.9; // cosine similarity above this = answers indistinguishable
+const DOMINANCE_RATIO = 1.8; // strongest answer / average = bigger than this is unbalanced
+const NARROW_DIM_COUNT = 3; // a question touching fewer than this many dims is single-axis
 
 function analyseQuiz(quizName, questions) {
   const issues = [];
@@ -181,7 +209,7 @@ function analyseQuiz(quizName, questions) {
     }
 
     // 2. Dominance — one answer's magnitude is much larger than the others.
-    const mags = q.answers.map(a => magnitude(a.vector));
+    const mags = q.answers.map((a) => magnitude(a.vector));
     const maxMag = Math.max(...mags);
     const avgMag = mags.reduce((s, x) => s + x, 0) / mags.length;
     if (avgMag > 0 && maxMag / avgMag > DOMINANCE_RATIO) {
@@ -227,7 +255,7 @@ function analyseQuiz(quizName, questions) {
 // self-identity.
 
 function dimensionCoverage(questions) {
-  const counts = Object.fromEntries(DIM_KEYS.map(k => [k, 0]));
+  const counts = Object.fromEntries(DIM_KEYS.map((k) => [k, 0]));
   for (const q of questions) {
     const touched = new Set();
     for (const a of q.answers) {
@@ -258,14 +286,20 @@ function renderReport() {
   lines.push('');
   lines.push(`Generated: ${new Date().toISOString()}.`);
   lines.push('');
-  lines.push('This report flags quiz questions whose answers either cluster (so picking between them changes nothing in the user\'s placement), dominate (one answer carries disproportionate vector weight), or span too narrow a slice of the 16-D model (touching ≤2 dimensions adds limited information).');
+  lines.push(
+    "This report flags quiz questions whose answers either cluster (so picking between them changes nothing in the user's placement), dominate (one answer carries disproportionate vector weight), or span too narrow a slice of the 16-D model (touching ≤2 dimensions adds limited information).",
+  );
   lines.push('');
   lines.push('Thresholds:');
   lines.push(`- **Cluster:** cosine similarity between two answer vectors ≥ ${CLUSTER_THRESHOLD}`);
-  lines.push(`- **Dominance:** one answer\'s magnitude > ${DOMINANCE_RATIO}× the average across the question`);
+  lines.push(
+    `- **Dominance:** one answer\'s magnitude > ${DOMINANCE_RATIO}× the average across the question`,
+  );
   lines.push(`- **Narrow:** union of dimensions touched < ${NARROW_DIM_COUNT}`);
   lines.push('');
-  lines.push('A question can trip more than one. None of these are necessarily bugs — sometimes a question is *supposed* to be a single-axis probe, or a dominant answer reflects a genuinely sharper position. Review each flagged entry and decide.');
+  lines.push(
+    'A question can trip more than one. None of these are necessarily bugs — sometimes a question is *supposed* to be a single-axis probe, or a dominant answer reflects a genuinely sharper position. Review each flagged entry and decide.',
+  );
   lines.push('');
 
   for (const result of [quickResult, detailedResult]) {
@@ -279,7 +313,9 @@ function renderReport() {
     lines.push('');
 
     if (result.issues.length === 0) {
-      lines.push('*No flagged questions — every answer is distinguishable, balanced, and dimensionally broad enough.*');
+      lines.push(
+        '*No flagged questions — every answer is distinguishable, balanced, and dimensionally broad enough.*',
+      );
       lines.push('');
     } else {
       lines.push(`### Flagged questions (${result.issues.length} / ${result.stats.questionCount})`);
@@ -297,7 +333,9 @@ function renderReport() {
 
   lines.push('## Per-dimension coverage');
   lines.push('');
-  lines.push('How many questions touch each dimension at least once. If a dimension is touched in ≤2 questions of the 20-question quiz (≤5 in the detailed), that dimension is under-probed and the user\'s score on it is noisy.');
+  lines.push(
+    "How many questions touch each dimension at least once. If a dimension is touched in ≤2 questions of the 20-question quiz (≤5 in the detailed), that dimension is under-probed and the user's score on it is noisy.",
+  );
   lines.push('');
   lines.push('| Dim | Quick (of 20) | Detailed (of 50) |');
   lines.push('|---|---|---|');
@@ -316,6 +354,10 @@ if (!QUIET) {
   console.log(report);
 } else {
   console.log(`Wrote ${OUT}`);
-  console.log(`Quick:    ${quickResult.stats.questionCount}q, ${quickResult.issues.length} flagged`);
-  console.log(`Detailed: ${detailedResult.stats.questionCount}q, ${detailedResult.issues.length} flagged`);
+  console.log(
+    `Quick:    ${quickResult.stats.questionCount}q, ${quickResult.issues.length} flagged`,
+  );
+  console.log(
+    `Detailed: ${detailedResult.stats.questionCount}q, ${detailedResult.issues.length} flagged`,
+  );
 }

@@ -7,14 +7,14 @@
 // link is a real one — update to your actual Ko-fi when you set up
 // the account.
 
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import { TIPPING_ENABLED } from "@/lib/feature-flags";
-import { t, type Locale, isLocale } from "@/lib/translations";
+import React, { useEffect, useState } from 'react';
+import { TIPPING_ENABLED } from '@/lib/feature-flags';
+import { t, type Locale, isLocale } from '@/lib/translations';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 
 type Props = {
   /** Optional override for the lead line — defaults to a generic
@@ -26,12 +26,8 @@ type Props = {
   accent?: string;
 };
 
-export function SupportMullPrompt({
-  lead,
-  detail,
-  accent = "var(--color-acc)",
-}: Props) {
-  const [locale, setLocale] = useState<Locale>("en");
+export function SupportMullPrompt({ lead, detail, accent = 'var(--color-acc)' }: Props) {
+  const [locale, setLocale] = useState<Locale>('en');
 
   useEffect(() => {
     const m = document.cookie.match(/(?:^|; )mull_locale=([^;]+)/);
@@ -39,8 +35,8 @@ export function SupportMullPrompt({
     if (v && isLocale(v)) setLocale(v);
   }, []);
 
-  const leadText = lead ?? t("uic.support_lead_default", locale);
-  const detailText = detail ?? t("uic.support_detail_default", locale);
+  const leadText = lead ?? t('uic.support_lead_default', locale);
+  const detailText = detail ?? t('uic.support_detail_default', locale);
   // Tip jar temporarily hidden pending a legal constraint on accepting
   // tips/donations — see TIPPING_ENABLED in lib/feature-flags.ts. While
   // off, this renders nothing on all three surfaces (quiz-journey reveal
@@ -51,8 +47,8 @@ export function SupportMullPrompt({
     <aside
       style={{
         marginTop: 24,
-        padding: "16px 20px",
-        background: "#FFFCF4",
+        padding: '16px 20px',
+        background: '#FFFCF4',
         border: `3px solid ${accent}`,
         boxShadow: `4px 4px 0 0 ${accent}`,
       }}
@@ -62,19 +58,19 @@ export function SupportMullPrompt({
           fontFamily: pixel,
           fontSize: 10,
           color: accent,
-          letterSpacing: "0.22em",
-          textTransform: "uppercase",
+          letterSpacing: '0.22em',
+          textTransform: 'uppercase',
           marginBottom: 8,
         }}
       >
-        ▸ {t("uic.support_eyebrow", locale)}
+        ▸ {t('uic.support_eyebrow', locale)}
       </div>
       <p
         style={{
           fontFamily: serif,
           fontSize: 15.5,
-          color: "var(--color-ink)",
-          margin: "0 0 6px",
+          color: 'var(--color-ink)',
+          margin: '0 0 6px',
           lineHeight: 1.55,
         }}
       >
@@ -83,10 +79,10 @@ export function SupportMullPrompt({
       <p
         style={{
           fontFamily: serif,
-          fontStyle: "italic",
+          fontStyle: 'italic',
           fontSize: 13.5,
-          color: "var(--color-ink-soft)",
-          margin: "0 0 14px",
+          color: 'var(--color-ink-soft)',
+          margin: '0 0 14px',
           lineHeight: 1.55,
         }}
       >
@@ -97,33 +93,33 @@ export function SupportMullPrompt({
         target="_blank"
         rel="noopener"
         style={{
-          display: "inline-block",
-          padding: "10px 16px",
-          background: "#F8C75E",
-          color: "#1A1820",
-          border: "2px solid var(--color-ink)",
-          boxShadow: "3px 3px 0 0 #2F5D5C",
+          display: 'inline-block',
+          padding: '10px 16px',
+          background: '#F8C75E',
+          color: '#1A1820',
+          border: '2px solid var(--color-ink)',
+          boxShadow: '3px 3px 0 0 #2F5D5C',
           fontFamily: pixel,
           fontSize: 11,
-          letterSpacing: "0.18em",
-          textTransform: "uppercase",
-          textDecoration: "none",
+          letterSpacing: '0.18em',
+          textTransform: 'uppercase',
+          textDecoration: 'none',
         }}
       >
-        ▶ {t("uic.support_tip_cta", locale)}
+        ▶ {t('uic.support_tip_cta', locale)}
       </a>
       <p
         style={{
           marginTop: 10,
           fontFamily: pixel,
           fontSize: 9,
-          color: "var(--color-acc-deep)",
+          color: 'var(--color-acc-deep)',
           letterSpacing: 0.4,
-          textTransform: "uppercase",
-          margin: "10px 0 0",
+          textTransform: 'uppercase',
+          margin: '10px 0 0',
         }}
       >
-        {t("uic.support_footer", locale)}
+        {t('uic.support_footer', locale)}
       </p>
     </aside>
   );

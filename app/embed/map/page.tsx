@@ -17,16 +17,16 @@
 //       at the time of writing. Parsed and ignored for forward-
 //       compatibility; once a trail prop lands, wire it through.)
 
-import type { Metadata, Viewport } from "next";
-import { ConstellationMount } from "@/components/constellation-mount";
+import type { Metadata, Viewport } from 'next';
+import { ConstellationMount } from '@/components/constellation-mount';
 
 export const metadata: Metadata = {
-  title: "Your map · Mull",
+  title: 'Your map · Mull',
   robots: { index: false, follow: false },
 };
 
 export const viewport: Viewport = {
-  width: "device-width",
+  width: 'device-width',
   initialScale: 1,
 };
 
@@ -46,11 +46,7 @@ function decodeVector(raw: string | undefined): number[] | undefined {
   }
 }
 
-export default async function EmbedMapPage({
-  searchParams,
-}: {
-  searchParams: SearchParams;
-}) {
+export default async function EmbedMapPage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams;
   const userVector = decodeVector(params.v);
   // Trail decode kept for forward-compatibility — see comment at top.
@@ -66,9 +62,9 @@ export default async function EmbedMapPage({
         // (otherwise it falls back to the default <canvas> 300x150).
         margin: 0,
         padding: 0,
-        minHeight: "100svh",
-        width: "100%",
-        background: "#FFFCF4",
+        minHeight: '100svh',
+        width: '100%',
+        background: '#FFFCF4',
       }}
     >
       <ConstellationMount

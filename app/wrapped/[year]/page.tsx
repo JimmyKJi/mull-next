@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 };
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 
 type Attempt = {
   archetype: string;
@@ -64,11 +64,7 @@ function archBareName(name: string, locale: Locale): string {
   return m ? m[2] : full;
 }
 
-export default async function WrappedPage({
-  params,
-}: {
-  params: Promise<{ year: string }>;
-}) {
+export default async function WrappedPage({ params }: { params: Promise<{ year: string }> }) {
   const { year: yearStr } = await params;
   const year = parseInt(yearStr, 10);
   if (!Number.isInteger(year) || year < 2024 || year > 2100) notFound();
@@ -76,7 +72,9 @@ export default async function WrappedPage({
   const locale = await getServerLocale();
 
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) redirect(`/login?next=/wrapped/${year}`);
 
   const start = `${year}-01-01T00:00:00Z`;
@@ -157,8 +155,7 @@ export default async function WrappedPage({
   const movedArchetypes =
     firstArchetype && lastArchetype && firstArchetype.archetype !== lastArchetype.archetype;
 
-  const totalEntries =
-    dilemmas.length + diaries.length + reflections.length;
+  const totalEntries = dilemmas.length + diaries.length + reflections.length;
 
   // Empty-year fallback. Show a quiet card instead of a wall of zeros.
   if (totalEntries === 0 && attempts.length === 0) {
@@ -168,15 +165,17 @@ export default async function WrappedPage({
   const finalSlug = lastArchetype ? archetypeSlug(lastArchetype.archetype) : null;
 
   return (
-    <main style={{
-      minHeight: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'flex-start',
-      padding: '32px 16px',
-      background: 'var(--color-cream)',
-    }}>
+    <main
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        padding: '32px 16px',
+        background: 'var(--color-cream)',
+      }}
+    >
       {/* Screenshot-target card. 9:16-ish aspect (~380×720) so phone
           screenshots crop perfectly to IG stories + TikTok shares. */}
       <article
@@ -200,92 +199,120 @@ export default async function WrappedPage({
         }}
       >
         {/* Title-bar amber strip */}
-        <div style={{
-          position: 'absolute',
-          top: 0, left: 0, right: 0,
-          height: 8,
-          background: 'var(--color-acc)',
-          borderBottom: '2px solid var(--color-ink)',
-        }} />
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 8,
+            background: 'var(--color-acc)',
+            borderBottom: '2px solid var(--color-ink)',
+          }}
+        />
 
         {/* Top row: Mull wordmark + YEAR badge */}
-        <div style={{
-          width: '100%',
-          display: 'flex',
-          alignItems: 'baseline',
-          justifyContent: 'space-between',
-          marginTop: 14,
-          marginBottom: 24,
-        }}>
+        <div
+          style={{
+            width: '100%',
+            display: 'flex',
+            alignItems: 'baseline',
+            justifyContent: 'space-between',
+            marginTop: 14,
+            marginBottom: 24,
+          }}
+        >
           <MullWordmark as="div" />
-          <div style={{
-            fontFamily: pixel,
-            fontSize: 10,
-            color: 'var(--color-acc-deep)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.18em',
-          }}>
+          <div
+            style={{
+              fontFamily: pixel,
+              fontSize: 10,
+              color: 'var(--color-acc-deep)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.18em',
+            }}
+          >
             ▸ {t('wr.badge', locale, { year })}
           </div>
         </div>
 
         {/* Headline */}
-        <h1 style={{
-          fontFamily: pixel,
-          fontSize: 22,
-          margin: '0 0 18px',
-          color: 'var(--color-ink)',
-          letterSpacing: '0.04em',
-          textTransform: 'uppercase',
-          lineHeight: 1.15,
-          textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))',
-        }}>
-          {t('wr.headline_l1', locale)}<br />{t('wr.headline_l2', locale)}
+        <h1
+          style={{
+            fontFamily: pixel,
+            fontSize: 22,
+            margin: '0 0 18px',
+            color: 'var(--color-ink)',
+            letterSpacing: '0.04em',
+            textTransform: 'uppercase',
+            lineHeight: 1.15,
+            textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))',
+          }}
+        >
+          {t('wr.headline_l1', locale)}
+          <br />
+          {t('wr.headline_l2', locale)}
         </h1>
 
         {/* Big-number stat grid — the most screenshotable element.
             Each cell is a chunky pixel tile with the count + label. */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: 10,
-          width: '100%',
-          marginBottom: 24,
-        }}>
-          <StatTile value={dilemmas.length} label={t('wr.stat_dilemmas', locale)} accent="#3D7DA8" />
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: 10,
+            width: '100%',
+            marginBottom: 24,
+          }}
+        >
+          <StatTile
+            value={dilemmas.length}
+            label={t('wr.stat_dilemmas', locale)}
+            accent="#3D7DA8"
+          />
           <StatTile value={diaries.length} label={t('wr.stat_diary', locale)} accent="#2F5D5C" />
-          <StatTile value={reflections.length} label={t('wr.stat_reflections', locale)} accent="#7A4A2E" />
+          <StatTile
+            value={reflections.length}
+            label={t('wr.stat_reflections', locale)}
+            accent="#7A4A2E"
+          />
           <StatTile value={attempts.length} label={t('wr.stat_quiz', locale)} accent="#B8862F" />
         </div>
 
         {/* Archetype shift narrative — first → last when changed. */}
         {movedArchetypes && firstArchetype && lastArchetype && (
-          <div style={{
-            width: '100%',
-            padding: '14px 14px',
-            background: 'var(--color-acc-soft)',
-            border: '3px solid var(--color-ink)',
-            boxShadow: '3px 3px 0 0 var(--color-acc)',
-            borderRadius: 0,
-            marginBottom: 24,
-          }}>
-            <div style={{
-              fontFamily: pixel,
-              fontSize: 9,
-              color: 'var(--color-acc-deep)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.18em',
-              marginBottom: 8,
-            }}>
+          <div
+            style={{
+              width: '100%',
+              padding: '14px 14px',
+              background: 'var(--color-acc-soft)',
+              border: '3px solid var(--color-ink)',
+              boxShadow: '3px 3px 0 0 var(--color-acc)',
+              borderRadius: 0,
+              marginBottom: 24,
+            }}
+          >
+            <div
+              style={{
+                fontFamily: pixel,
+                fontSize: 9,
+                color: 'var(--color-acc-deep)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.18em',
+                marginBottom: 8,
+              }}
+            >
               ▸ {t('wr.how_you_moved', locale)}
             </div>
-            <div style={{
-              fontFamily: serif,
-              fontStyle: 'italic',
-              fontSize: 16,
-              lineHeight: 1.45,
-              color: 'var(--color-ink)',
-            }}>
+            <div
+              style={{
+                fontFamily: serif,
+                fontStyle: 'italic',
+                fontSize: 16,
+                lineHeight: 1.45,
+                color: 'var(--color-ink)',
+              }}
+            >
               {t('wr.moved_a', locale)}
               <strong style={{ fontStyle: 'normal' }}>
                 {archBareName(firstArchetype.archetype, locale)}
@@ -301,12 +328,14 @@ export default async function WrappedPage({
 
         {/* Final archetype sprite + name (always present if any quiz). */}
         {lastArchetype && finalSlug && (
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            marginBottom: 22,
-          }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              marginBottom: 22,
+            }}
+          >
             <div
               className="pixel-crisp"
               style={{
@@ -322,46 +351,56 @@ export default async function WrappedPage({
             >
               <ArchetypeSprite archetypeKey={finalSlug} size={72} />
             </div>
-            <div style={{
-              fontFamily: serif,
-              fontStyle: 'italic',
-              fontSize: 13,
-              color: 'var(--color-acc-deep)',
-              marginBottom: 2,
-            }}>
+            <div
+              style={{
+                fontFamily: serif,
+                fontStyle: 'italic',
+                fontSize: 13,
+                color: 'var(--color-acc-deep)',
+                marginBottom: 2,
+              }}
+            >
               {t('wr.ended_as', locale)}
             </div>
-            <div style={{
-              fontFamily: serif,
-              fontSize: 22,
-              fontWeight: 500,
-              color: 'var(--color-ink)',
-              lineHeight: 1.1,
-            }}>
-              {locale === 'zh' ? '' : 'The '}{lastArchetype.flavor ? `${lastArchetype.flavor} ` : ''}{archBareName(lastArchetype.archetype, locale)}
+            <div
+              style={{
+                fontFamily: serif,
+                fontSize: 22,
+                fontWeight: 500,
+                color: 'var(--color-ink)',
+                lineHeight: 1.1,
+              }}
+            >
+              {locale === 'zh' ? '' : 'The '}
+              {lastArchetype.flavor ? `${lastArchetype.flavor} ` : ''}
+              {archBareName(lastArchetype.archetype, locale)}
             </div>
           </div>
         )}
 
         {/* Top dimensional shifts — green for positive, brick for negative. */}
         {top3Shifts.length > 0 && (
-          <div style={{
-            width: '100%',
-            marginBottom: 22,
-          }}>
-            <div style={{
-              fontFamily: pixel,
-              fontSize: 9,
-              color: 'var(--color-acc-deep)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.18em',
-              marginBottom: 10,
-              textAlign: 'left',
-            }}>
+          <div
+            style={{
+              width: '100%',
+              marginBottom: 22,
+            }}
+          >
+            <div
+              style={{
+                fontFamily: pixel,
+                fontSize: 9,
+                color: 'var(--color-acc-deep)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.18em',
+                marginBottom: 10,
+                textAlign: 'left',
+              }}
+            >
               ▸ {t('wr.top_shifts', locale)}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {top3Shifts.map(s => (
+              {top3Shifts.map((s) => (
                 <div
                   key={s.key}
                   style={{
@@ -377,16 +416,21 @@ export default async function WrappedPage({
                   }}
                 >
                   <span style={{ color: 'var(--color-ink)' }}>
-                    {t(`dim.${s.key}.name`, locale) || DIM_NAMES[s.key as keyof typeof DIM_NAMES] || s.key}
+                    {t(`dim.${s.key}.name`, locale) ||
+                      DIM_NAMES[s.key as keyof typeof DIM_NAMES] ||
+                      s.key}
                   </span>
-                  <span style={{
-                    fontFamily: pixel,
-                    fontSize: 12,
-                    color: s.delta > 0 ? '#2F5D5C' : '#7A2E2E',
-                    letterSpacing: 0.4,
-                    fontVariantNumeric: 'tabular-nums',
-                  }}>
-                    {s.delta > 0 ? '+' : ''}{s.delta.toFixed(1)}
+                  <span
+                    style={{
+                      fontFamily: pixel,
+                      fontSize: 12,
+                      color: s.delta > 0 ? '#2F5D5C' : '#7A2E2E',
+                      letterSpacing: 0.4,
+                      fontVariantNumeric: 'tabular-nums',
+                    }}
+                  >
+                    {s.delta > 0 ? '+' : ''}
+                    {s.delta.toFixed(1)}
                   </span>
                 </div>
               ))}
@@ -395,60 +439,73 @@ export default async function WrappedPage({
         )}
 
         {/* Bottom CTA — signature line. */}
-        <div style={{
-          marginTop: 'auto',
-          paddingTop: 18,
-          fontFamily: pixel,
-          fontSize: 10,
-          color: 'var(--color-acc-deep)',
-          letterSpacing: '0.18em',
-          textTransform: 'uppercase',
-        }}>
+        <div
+          style={{
+            marginTop: 'auto',
+            paddingTop: 18,
+            fontFamily: pixel,
+            fontSize: 10,
+            color: 'var(--color-acc-deep)',
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+          }}
+        >
           ▸ {t('wr.find_yours', locale)}
         </div>
       </article>
 
       {/* Screenshot instructions — outside the card so they don't
           get captured. */}
-      <div style={{
-        marginTop: 28,
-        maxWidth: 380,
-        width: '100%',
-        textAlign: 'center',
-      }}>
-        <div style={{
-          padding: '12px 16px',
-          background: '#E5F0EE',
-          border: '3px solid #2F5D5C',
-          boxShadow: '3px 3px 0 0 #2F5D5C',
-          color: '#173533',
-          fontFamily: serif,
-          fontSize: 14,
-          lineHeight: 1.5,
-          marginBottom: 16,
-        }}>
-          📸 {t('wr.share_a', locale)}<strong>@mull</strong>{t('wr.share_b', locale)}
+      <div
+        style={{
+          marginTop: 28,
+          maxWidth: 380,
+          width: '100%',
+          textAlign: 'center',
+        }}
+      >
+        <div
+          style={{
+            padding: '12px 16px',
+            background: '#E5F0EE',
+            border: '3px solid #2F5D5C',
+            boxShadow: '3px 3px 0 0 #2F5D5C',
+            color: '#173533',
+            fontFamily: serif,
+            fontSize: 14,
+            lineHeight: 1.5,
+            marginBottom: 16,
+          }}
+        >
+          📸 {t('wr.share_a', locale)}
+          <strong>@mull</strong>
+          {t('wr.share_b', locale)}
         </div>
-        <p style={{
-          fontFamily: serif,
-          fontStyle: 'italic',
-          fontSize: 13,
-          color: 'var(--color-acc-deep)',
-          margin: '0 0 18px',
-          lineHeight: 1.55,
-        }}>
+        <p
+          style={{
+            fontFamily: serif,
+            fontStyle: 'italic',
+            fontSize: 13,
+            color: 'var(--color-acc-deep)',
+            margin: '0 0 18px',
+            lineHeight: 1.55,
+          }}
+        >
           {t('wr.long_press', locale)}
         </p>
-        <Link href="/account" style={{
-          fontFamily: pixel,
-          fontSize: 11,
-          color: 'var(--color-acc-deep)',
-          textDecoration: 'none',
-          letterSpacing: 0.4,
-          textTransform: 'uppercase',
-          borderBottom: '2px solid var(--color-acc-deep)',
-          paddingBottom: 1,
-        }}>
+        <Link
+          href="/account"
+          style={{
+            fontFamily: pixel,
+            fontSize: 11,
+            color: 'var(--color-acc-deep)',
+            textDecoration: 'none',
+            letterSpacing: 0.4,
+            textTransform: 'uppercase',
+            borderBottom: '2px solid var(--color-acc-deep)',
+            paddingBottom: 1,
+          }}
+        >
           ◂ {t('wr.back_account', locale)}
         </Link>
       </div>
@@ -458,30 +515,36 @@ export default async function WrappedPage({
 
 function StatTile({ value, label, accent }: { value: number; label: string; accent: string }) {
   return (
-    <div style={{
-      padding: '12px 8px',
-      background: '#FFFCF4',
-      border: '3px solid var(--color-ink)',
-      boxShadow: `3px 3px 0 0 ${accent}`,
-      borderRadius: 0,
-    }}>
-      <div style={{
-        fontFamily: pixel,
-        fontSize: 28,
-        color: 'var(--color-ink)',
-        lineHeight: 1,
-        letterSpacing: 0.4,
-      }}>
+    <div
+      style={{
+        padding: '12px 8px',
+        background: '#FFFCF4',
+        border: '3px solid var(--color-ink)',
+        boxShadow: `3px 3px 0 0 ${accent}`,
+        borderRadius: 0,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: pixel,
+          fontSize: 28,
+          color: 'var(--color-ink)',
+          lineHeight: 1,
+          letterSpacing: 0.4,
+        }}
+      >
         {value}
       </div>
-      <div style={{
-        fontFamily: pixel,
-        fontSize: 8,
-        color: accent,
-        textTransform: 'uppercase',
-        letterSpacing: '0.18em',
-        marginTop: 6,
-      }}>
+      <div
+        style={{
+          fontFamily: pixel,
+          fontSize: 8,
+          color: accent,
+          textTransform: 'uppercase',
+          letterSpacing: '0.18em',
+          marginTop: 6,
+        }}
+      >
         {label}
       </div>
     </div>
@@ -491,42 +554,50 @@ function StatTile({ value, label, accent }: { value: number; label: string; acce
 function EmptyYear({ year, locale }: { year: number; locale: Locale }) {
   return (
     <main style={{ maxWidth: 480, margin: '0 auto', padding: '80px 24px' }}>
-      <div style={{
-        padding: '32px 30px',
-        background: '#FFFCF4',
-        border: '4px solid var(--color-ink)',
-        boxShadow: '6px 6px 0 0 var(--color-acc)',
-        borderRadius: 0,
-        textAlign: 'center',
-      }}>
-        <div style={{
-          fontFamily: pixel,
-          fontSize: 12,
-          color: 'var(--color-acc-deep)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.18em',
-          marginBottom: 14,
-        }}>
+      <div
+        style={{
+          padding: '32px 30px',
+          background: '#FFFCF4',
+          border: '4px solid var(--color-ink)',
+          boxShadow: '6px 6px 0 0 var(--color-acc)',
+          borderRadius: 0,
+          textAlign: 'center',
+        }}
+      >
+        <div
+          style={{
+            fontFamily: pixel,
+            fontSize: 12,
+            color: 'var(--color-acc-deep)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.18em',
+            marginBottom: 14,
+          }}
+        >
           ▸ {t('wr.badge', locale, { year })}
         </div>
-        <h1 style={{
-          fontFamily: serif,
-          fontSize: 30,
-          fontWeight: 500,
-          margin: '0 0 14px',
-          letterSpacing: '-0.5px',
-          lineHeight: 1.15,
-        }}>
+        <h1
+          style={{
+            fontFamily: serif,
+            fontSize: 30,
+            fontWeight: 500,
+            margin: '0 0 14px',
+            letterSpacing: '-0.5px',
+            lineHeight: 1.15,
+          }}
+        >
           {t('wr.empty_title', locale)}
         </h1>
-        <p style={{
-          fontFamily: serif,
-          fontStyle: 'italic',
-          fontSize: 16,
-          color: 'var(--color-ink-soft)',
-          margin: '0 0 28px',
-          lineHeight: 1.55,
-        }}>
+        <p
+          style={{
+            fontFamily: serif,
+            fontStyle: 'italic',
+            fontSize: 16,
+            color: 'var(--color-ink-soft)',
+            margin: '0 0 28px',
+            lineHeight: 1.55,
+          }}
+        >
           {t('wr.empty_body', locale, { year })}
         </p>
         <Link

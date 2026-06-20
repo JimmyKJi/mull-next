@@ -47,10 +47,7 @@ export default async function ProfileSettingsPage() {
   return (
     <main className="mx-auto max-w-[760px] px-6 pb-32 pt-10 sm:px-10">
       <div className="mb-6 flex items-center justify-between gap-4">
-        <Link
-          href="/account"
-          className="text-[13px] text-ink-soft hover:text-ink hover:underline"
-        >
+        <Link href="/account" className="text-[13px] text-ink-soft hover:text-ink hover:underline">
           ← {t('nav.account', locale)}
         </Link>
       </div>

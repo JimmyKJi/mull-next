@@ -20,9 +20,7 @@ type Props = {
 
 export function ObfuscatedEmail({ user, domain, className }: Props) {
   const [revealed, setRevealed] = useState(false);
-  const visible = revealed
-    ? `${user}@${domain}`
-    : `${user} [at] ${domain}`;
+  const visible = revealed ? `${user}@${domain}` : `${user} [at] ${domain}`;
   return (
     <a
       href={revealed ? `mailto:${user}@${domain}` : '#'}

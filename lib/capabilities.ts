@@ -40,23 +40,17 @@
 // Steep enough that early gains feel quick; flattens enough that
 // late levels demand real commitment.
 
-import type { DimKey } from "./dimensions";
+import type { DimKey } from './dimensions';
 
-export type Skill =
-  | "RIGOR"
-  | "DEPTH"
-  | "CONSISTENCY"
-  | "RANGE"
-  | "SELF_AWARE"
-  | "SYNTHESIS";
+export type Skill = 'RIGOR' | 'DEPTH' | 'CONSISTENCY' | 'RANGE' | 'SELF_AWARE' | 'SYNTHESIS';
 
 export const SKILLS: Skill[] = [
-  "RIGOR",
-  "DEPTH",
-  "CONSISTENCY",
-  "RANGE",
-  "SELF_AWARE",
-  "SYNTHESIS",
+  'RIGOR',
+  'DEPTH',
+  'CONSISTENCY',
+  'RANGE',
+  'SELF_AWARE',
+  'SYNTHESIS',
 ];
 
 /** Display metadata for each skill — used on /atlas + status badges. */
@@ -65,58 +59,58 @@ export const SKILL_META: Record<
   { name: string; description: string; color: string; verb: string }
 > = {
   RIGOR: {
-    name: "Rigor",
-    description: "How tight is your reasoning?",
-    color: "#1E3A5F", // navy — cartographer-ish
-    verb: "tightening",
+    name: 'Rigor',
+    description: 'How tight is your reasoning?',
+    color: '#1E3A5F', // navy — cartographer-ish
+    verb: 'tightening',
   },
   DEPTH: {
-    name: "Depth",
-    description: "How far in are you willing to go?",
-    color: "#5D5777", // purple-gray — threshold-ish
-    verb: "deepening",
+    name: 'Depth',
+    description: 'How far in are you willing to go?',
+    color: '#5D5777', // purple-gray — threshold-ish
+    verb: 'deepening',
   },
   CONSISTENCY: {
-    name: "Consistency",
-    description: "How often are you actually showing up?",
-    color: "#8C6520", // amber — keel-ish
-    verb: "showing up",
+    name: 'Consistency',
+    description: 'How often are you actually showing up?',
+    color: '#8C6520', // amber — keel-ish
+    verb: 'showing up',
   },
   RANGE: {
-    name: "Range",
-    description: "How wide does your reading travel?",
-    color: "#7A8B43", // olive — garden-ish
-    verb: "widening",
+    name: 'Range',
+    description: 'How wide does your reading travel?',
+    color: '#7A8B43', // olive — garden-ish
+    verb: 'widening',
   },
   SELF_AWARE: {
-    name: "Self-Awareness",
-    description: "How honestly do you see yourself?",
-    color: "#8C3717", // burnt orange — forge-ish
-    verb: "noticing",
+    name: 'Self-Awareness',
+    description: 'How honestly do you see yourself?',
+    color: '#8C3717', // burnt orange — forge-ish
+    verb: 'noticing',
   },
   SYNTHESIS: {
-    name: "Synthesis",
-    description: "Can you pull threads into a picture?",
-    color: "#2F5D5C", // teal — touchstone-ish
-    verb: "pulling together",
+    name: 'Synthesis',
+    description: 'Can you pull threads into a picture?',
+    color: '#2F5D5C', // teal — touchstone-ish
+    verb: 'pulling together',
   },
 };
 
 /** Source — which feature fired the event. Open union so new
  *  features can add without touching this file. */
 export type EventSource =
-  | "dilemma"
-  | "diary"
-  | "exercise"
-  | "spar"
-  | "arena"
-  | "pilgrimage"
-  | "crucible"
-  | "anthology"
-  | "wandering"
-  | "argument_diary"
-  | "reading_hour"
-  | "long_letter";
+  | 'dilemma'
+  | 'diary'
+  | 'exercise'
+  | 'spar'
+  | 'arena'
+  | 'pilgrimage'
+  | 'crucible'
+  | 'anthology'
+  | 'wandering'
+  | 'argument_diary'
+  | 'reading_hour'
+  | 'long_letter';
 
 export type CapabilityEvent = {
   /** Unix ms. */
@@ -181,22 +175,19 @@ export function aggregateXp(events: CapabilityEvent[]): Record<Skill, number> {
 
 // ─── LocalStorage hooks ────────────────────────────────────────────
 
-const STORAGE_KEY = "mull.capability_events";
+const STORAGE_KEY = 'mull.capability_events';
 const MAX_EVENTS = 1000; // compaction threshold
 
 /** Read events from localStorage. Returns [] in non-browser env. */
 export function readEvents(): CapabilityEvent[] {
-  if (typeof window === "undefined") return [];
+  if (typeof window === 'undefined') return [];
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
     return parsed.filter(
-      (e) =>
-        typeof e?.ts === "number" &&
-        typeof e?.skill === "string" &&
-        typeof e?.xp === "number",
+      (e) => typeof e?.ts === 'number' && typeof e?.skill === 'string' && typeof e?.xp === 'number',
     ) as CapabilityEvent[];
   } catch {
     return [];
@@ -205,27 +196,24 @@ export function readEvents(): CapabilityEvent[] {
 
 /** Append events; trim to MAX_EVENTS if oversized. */
 export function appendEvents(toAdd: CapabilityEvent[]): CapabilityEvent[] {
-  if (typeof window === "undefined") return toAdd;
+  if (typeof window === 'undefined') return toAdd;
   const current = readEvents();
   const next = [...current, ...toAdd];
-  const trimmed =
-    next.length > MAX_EVENTS
-      ? next.slice(next.length - MAX_EVENTS)
-      : next;
+  const trimmed = next.length > MAX_EVENTS ? next.slice(next.length - MAX_EVENTS) : next;
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(trimmed));
   } catch {
     // ignore storage quota errors
   }
   // Notify other tabs / components that the Atlas changed.
-  if (typeof window !== "undefined") {
-    window.dispatchEvent(new CustomEvent("mull:capability-event"));
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('mull:capability-event'));
   }
   return trimmed;
 }
 
 /** Single-event convenience. */
-export function recordEvent(e: Omit<CapabilityEvent, "ts">): void {
+export function recordEvent(e: Omit<CapabilityEvent, 'ts'>): void {
   appendEvents([{ ...e, ts: Date.now() }]);
 }
 
@@ -235,18 +223,18 @@ export function recordEvent(e: Omit<CapabilityEvent, "ts">): void {
  *  feature-side handlers to fire the right events without each
  *  caller hard-coding mappings. */
 export const SOURCE_BUILDS: Record<EventSource, Skill[]> = {
-  dilemma: ["CONSISTENCY", "SELF_AWARE"],
-  diary: ["SELF_AWARE", "DEPTH"],
-  exercise: ["SELF_AWARE", "RIGOR"],
-  spar: ["RIGOR", "CONSISTENCY"],
-  arena: ["RIGOR", "DEPTH"],
-  pilgrimage: ["DEPTH", "CONSISTENCY"],
-  crucible: ["CONSISTENCY", "SELF_AWARE"],
-  anthology: ["RANGE", "SYNTHESIS"],
-  wandering: ["DEPTH", "SYNTHESIS"],
-  argument_diary: ["RIGOR", "SELF_AWARE"],
-  reading_hour: ["DEPTH", "RANGE"],
-  long_letter: ["DEPTH", "SELF_AWARE"],
+  dilemma: ['CONSISTENCY', 'SELF_AWARE'],
+  diary: ['SELF_AWARE', 'DEPTH'],
+  exercise: ['SELF_AWARE', 'RIGOR'],
+  spar: ['RIGOR', 'CONSISTENCY'],
+  arena: ['RIGOR', 'DEPTH'],
+  pilgrimage: ['DEPTH', 'CONSISTENCY'],
+  crucible: ['CONSISTENCY', 'SELF_AWARE'],
+  anthology: ['RANGE', 'SYNTHESIS'],
+  wandering: ['DEPTH', 'SYNTHESIS'],
+  argument_diary: ['RIGOR', 'SELF_AWARE'],
+  reading_hour: ['DEPTH', 'RANGE'],
+  long_letter: ['DEPTH', 'SELF_AWARE'],
 };
 
 /** Fire a standard event from a feature: builds the primary skill

@@ -14,7 +14,7 @@ const sans = "'Inter', system-ui, sans-serif";
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
 const PLAN_KEYS = ['plus_monthly', 'plus_yearly', 'founding_lifetime'] as const;
-const PLAN_LABEL_KEYS: Record<typeof PLAN_KEYS[number], string> = {
+const PLAN_LABEL_KEYS: Record<(typeof PLAN_KEYS)[number], string> = {
   plus_monthly: 'billing.choose_monthly',
   plus_yearly: 'billing.choose_yearly',
   founding_lifetime: 'billing.choose_lifetime',
@@ -60,7 +60,7 @@ export default function PlanPicker({ locale = 'en' }: { locale?: Locale }) {
   return (
     <div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-        {PLAN_KEYS.map(key => {
+        {PLAN_KEYS.map((key) => {
           const isPrimary = key === 'plus_yearly';
           return (
             <button
@@ -79,29 +79,37 @@ export default function PlanPicker({ locale = 'en' }: { locale?: Locale }) {
                 color: isPrimary ? '#1A1612' : 'var(--color-cream)',
                 border: '4px solid var(--color-ink)',
                 borderRadius: 0,
-                boxShadow: isPrimary ? '4px 4px 0 0 var(--color-ink)' : '4px 4px 0 0 var(--color-acc)',
+                boxShadow: isPrimary
+                  ? '4px 4px 0 0 var(--color-ink)'
+                  : '4px 4px 0 0 var(--color-acc)',
                 cursor: loading ? 'wait' : 'pointer',
-                opacity: loading && loading !== key ? 0.5 : (loading === key ? 0.85 : 1),
+                opacity: loading && loading !== key ? 0.5 : loading === key ? 0.85 : 1,
                 textAlign: 'left',
                 transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
               }}
             >
-              ▸ {(loading === key ? t('billing.starting', locale) : t(PLAN_LABEL_KEYS[key], locale)).toUpperCase()}
+              ▸{' '}
+              {(loading === key
+                ? t('billing.starting', locale)
+                : t(PLAN_LABEL_KEYS[key], locale)
+              ).toUpperCase()}
             </button>
           );
         })}
       </div>
       {error && (
-        <div style={{
-          marginTop: 14,
-          padding: '10px 14px',
-          background: 'rgba(122, 46, 46, 0.08)',
-          border: '2px solid #7A2E2E',
-          borderRadius: 0,
-          fontFamily: sans,
-          fontSize: 13,
-          color: '#7A2E2E',
-        }}>
+        <div
+          style={{
+            marginTop: 14,
+            padding: '10px 14px',
+            background: 'rgba(122, 46, 46, 0.08)',
+            border: '2px solid #7A2E2E',
+            borderRadius: 0,
+            fontFamily: sans,
+            fontSize: 13,
+            color: '#7A2E2E',
+          }}
+        >
           {error}
         </div>
       )}

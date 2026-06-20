@@ -1,17 +1,17 @@
 // /anthology — your commonplace book.
 
-import type { Metadata } from "next";
-import Link from "next/link";
-import { PixelPageHeader } from "@/components/pixel-window";
-import { getServerLocale } from "@/lib/locale-server";
-import { t } from "@/lib/translations";
-import AnthologyView from "./anthology-view";
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { PixelPageHeader } from '@/components/pixel-window';
+import { getServerLocale } from '@/lib/locale-server';
+import { t } from '@/lib/translations';
+import AnthologyView from './anthology-view';
 
 export const metadata: Metadata = {
-  title: "Personal Anthology · Mull",
+  title: 'Personal Anthology · Mull',
   description:
-    "Your saved passages, quotes, and exchanges. A commonplace book that fills as you use Mull.",
-  alternates: { canonical: "https://mull.world/anthology" },
+    'Your saved passages, quotes, and exchanges. A commonplace book that fills as you use Mull.',
+  alternates: { canonical: 'https://mull.world/anthology' },
 };
 
 export default async function AnthologyPage() {
@@ -19,14 +19,11 @@ export default async function AnthologyPage() {
   return (
     <main className="mx-auto max-w-[860px] px-6 pb-32 pt-12 sm:px-10 sm:pt-16">
       <PixelPageHeader
-        eyebrow={t("anthology.eyebrow", locale)}
-        title={t("anthology.title", locale)}
+        eyebrow={t('anthology.eyebrow', locale)}
+        title={t('anthology.title', locale)}
         subtitle={
-          <p
-            className="text-[16px] italic"
-            style={{ fontFamily: "var(--font-editorial)" }}
-          >
-            {t("anthology.subtitle", locale)}
+          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-editorial)' }}>
+            {t('anthology.subtitle', locale)}
           </p>
         }
       />
@@ -36,7 +33,7 @@ export default async function AnthologyPage() {
           href="/"
           className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
-          {t("pilgrimage.back_mull", locale)}
+          {t('pilgrimage.back_mull', locale)}
         </Link>
       </p>
     </main>

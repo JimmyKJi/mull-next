@@ -64,10 +64,7 @@ export async function GET(req: Request) {
 
   if (e1 || e2) {
     console.error('[cron/rate-limit-cleanup] delete failed', e1, e2);
-    return NextResponse.json(
-      { error: (e1 ?? e2)?.message ?? 'cleanup failed' },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: (e1 ?? e2)?.message ?? 'cleanup failed' }, { status: 500 });
   }
 
   return NextResponse.json({

@@ -6,7 +6,7 @@ import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import { PixelPageHeader } from '@/components/pixel-window';
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 
 type SavedDebate = {
@@ -26,13 +26,17 @@ type SavedDebate = {
 export default async function DebatePage() {
   const supabase = await createClient();
   const locale = await getServerLocale();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   let savedDebates: SavedDebate[] = [];
   if (user) {
     const { data } = await supabase
       .from('debate_history')
-      .select('id, a_name, a_dates, a_archetype_key, b_name, b_dates, b_archetype_key, topic, setup, exchanges, created_at')
+      .select(
+        'id, a_name, a_dates, a_archetype_key, b_name, b_dates, b_archetype_key, topic, setup, exchanges, created_at',
+      )
       .order('created_at', { ascending: false })
       .limit(3)
       .returns<SavedDebate[]>();
@@ -42,16 +46,10 @@ export default async function DebatePage() {
   return (
     <main className="mx-auto max-w-[860px] px-6 pb-32 pt-10 sm:px-10">
       <div className="mb-6 flex items-center justify-end gap-4">
-        <Link
-          href="/dilemma"
-          className="text-[13px] text-ink-soft hover:text-ink hover:underline"
-        >
+        <Link href="/dilemma" className="text-[13px] text-ink-soft hover:text-ink hover:underline">
           {t('nav.dilemma_arrow', locale)}
         </Link>
-        <Link
-          href="/account"
-          className="text-[13px] text-ink-soft hover:text-ink hover:underline"
-        >
+        <Link href="/account" className="text-[13px] text-ink-soft hover:text-ink hover:underline">
           {t('nav.account_arrow', locale)}
         </Link>
       </div>
@@ -65,67 +63,80 @@ export default async function DebatePage() {
           </p>
         }
       />
-      <p style={{
-        fontFamily: sans,
-        fontSize: 12.5,
-        color: 'var(--color-acc-deep)',
-        marginBottom: 18,
-        opacity: 0.85,
-        lineHeight: 1.55,
-      }}>
+      <p
+        style={{
+          fontFamily: sans,
+          fontSize: 12.5,
+          color: 'var(--color-acc-deep)',
+          marginBottom: 18,
+          opacity: 0.85,
+          lineHeight: 1.55,
+        }}
+      >
         {t('debate.disclaimer', locale)}
       </p>
 
-      <div style={{
-        marginBottom: 36,
-        padding: '14px 18px',
-        background: '#F5EFDC',
-        borderLeft: '3px solid #7A2E2E',
-        borderRadius: 6,
-        display: 'flex',
-        alignItems: 'center',
-        gap: 14,
-        flexWrap: 'wrap',
-        justifyContent: 'space-between',
-      }}>
-        <div style={{
-          fontFamily: sans,
-          fontSize: 13,
-          color: 'var(--color-ink-soft)',
-          lineHeight: 1.55,
-        }}>
-          <strong style={{ color: 'var(--color-ink)' }}>{t('debate.you_in_debate', locale)}</strong>{' '}
-          {t('debate.you_in_debate_body', locale)}
-          {' '}<span style={{ color: 'var(--color-acc-deep)', fontStyle: 'italic' }}>{t('debate.mull_plus', locale)}</span>
-        </div>
-        <Link href="/debate/me" style={{
-          fontFamily: sans,
-          fontSize: 13,
-          fontWeight: 500,
-          padding: '8px 14px',
-          background: '#7A2E2E',
-          color: 'var(--color-cream)',
+      <div
+        style={{
+          marginBottom: 36,
+          padding: '14px 18px',
+          background: '#F5EFDC',
+          borderLeft: '3px solid #7A2E2E',
           borderRadius: 6,
-          textDecoration: 'none',
-          letterSpacing: 0.3,
-          flexShrink: 0,
-        }}>
+          display: 'flex',
+          alignItems: 'center',
+          gap: 14,
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+        }}
+      >
+        <div
+          style={{
+            fontFamily: sans,
+            fontSize: 13,
+            color: 'var(--color-ink-soft)',
+            lineHeight: 1.55,
+          }}
+        >
+          <strong style={{ color: 'var(--color-ink)' }}>{t('debate.you_in_debate', locale)}</strong>{' '}
+          {t('debate.you_in_debate_body', locale)}{' '}
+          <span style={{ color: 'var(--color-acc-deep)', fontStyle: 'italic' }}>
+            {t('debate.mull_plus', locale)}
+          </span>
+        </div>
+        <Link
+          href="/debate/me"
+          style={{
+            fontFamily: sans,
+            fontSize: 13,
+            fontWeight: 500,
+            padding: '8px 14px',
+            background: '#7A2E2E',
+            color: 'var(--color-cream)',
+            borderRadius: 6,
+            textDecoration: 'none',
+            letterSpacing: 0.3,
+            flexShrink: 0,
+          }}
+        >
           {t('debate.debate_yourself', locale)}
         </Link>
       </div>
 
       <DebateForm philosophers={PHILOSOPHERS} savedDebates={savedDebates} locale={locale} />
 
-      <p style={{
-        fontFamily: sans,
-        fontSize: 12,
-        color: 'var(--color-acc-deep)',
-        marginTop: 48,
-        opacity: 0.75,
-        textAlign: 'center',
-        letterSpacing: 0.3,
-        lineHeight: 1.55,
-      }}>
+      <p
+        style={{
+          fontFamily: sans,
+          fontSize: 12,
+          color: 'var(--color-acc-deep)',
+          marginTop: 48,
+          opacity: 0.75,
+          textAlign: 'center',
+          letterSpacing: 0.3,
+          lineHeight: 1.55,
+        }}
+      >
         {t('debate.footer_note', locale)}
       </p>
     </main>

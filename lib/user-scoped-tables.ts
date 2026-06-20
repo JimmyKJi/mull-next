@@ -200,7 +200,7 @@ export const USER_SCOPED_TABLES: readonly UserScopedTable[] = [
     name: 'feedback',
     deleteStrategy: 'fk_set_null',
     inExport: true,
-    note: 'Feedback text body. Body kept as the maintainer\'s research record after deletion; the user_id disappears via FK ON DELETE SET NULL.',
+    note: "Feedback text body. Body kept as the maintainer's research record after deletion; the user_id disappears via FK ON DELETE SET NULL.",
   },
 
   // ── Ops tables that aren't meaningful to export ───────────────────
@@ -239,7 +239,7 @@ export const USER_SCOPED_TABLES: readonly UserScopedTable[] = [
     name: 'class_assignment_submissions',
     deleteStrategy: 'wipe',
     inExport: true,
-    note: 'Student responses to class assignments. One per (assignment, student). Wipe removes the user\'s submissions on delete.',
+    note: "Student responses to class assignments. One per (assignment, student). Wipe removes the user's submissions on delete.",
   },
   {
     name: 'friend_challenges',
@@ -257,7 +257,7 @@ export const USER_SCOPED_TABLES: readonly UserScopedTable[] = [
     name: 'arena_sessions',
     deleteStrategy: 'wipe',
     inExport: true,
-    note: 'Arena debate sessions (calibration / pve / pvp). One row per session. Wipe removes all the user\'s sessions, cascading to arena_turns via FK.',
+    note: "Arena debate sessions (calibration / pve / pvp). One row per session. Wipe removes all the user's sessions, cascading to arena_turns via FK.",
   },
   {
     name: 'arena_turns',
@@ -301,13 +301,14 @@ export const USER_SCOPED_TABLES: readonly UserScopedTable[] = [
 // preserved so the delete loop is deterministic.
 
 /** Tables we explicitly DELETE in the account-delete route. */
-export const TABLES_TO_WIPE: readonly string[] = USER_SCOPED_TABLES
-  .filter(t => t.deleteStrategy === 'wipe')
-  .map(t => t.name);
+export const TABLES_TO_WIPE: readonly string[] = USER_SCOPED_TABLES.filter(
+  (t) => t.deleteStrategy === 'wipe',
+).map((t) => t.name);
 
 /** Tables we SELECT from in the account-export route. */
-export const TABLES_TO_EXPORT: readonly UserScopedTable[] = USER_SCOPED_TABLES
-  .filter(t => t.inExport);
+export const TABLES_TO_EXPORT: readonly UserScopedTable[] = USER_SCOPED_TABLES.filter(
+  (t) => t.inExport,
+);
 
 /**
  * Sanity check called at module load — duplicate detection + note presence.

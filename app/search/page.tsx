@@ -31,10 +31,7 @@ export default async function SearchPage({
   return (
     <main className="mx-auto max-w-[860px] px-6 pb-32 pt-10 sm:px-10">
       <div className="mb-6 flex items-center justify-end gap-4">
-        <Link
-          href="/account"
-          className="text-[13px] text-ink-soft hover:text-ink hover:underline"
-        >
+        <Link href="/account" className="text-[13px] text-ink-soft hover:text-ink hover:underline">
           {t('nav.account_arrow', locale)}
         </Link>
       </div>
@@ -59,8 +56,7 @@ export default async function SearchPage({
           className="flex items-center gap-3 text-[10px] tracking-[0.22em] text-acc-deep"
           style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
-          <span aria-hidden className="inline-block h-2 w-2 bg-acc" />
-          ▶ FIND SOMEONE
+          <span aria-hidden className="inline-block h-2 w-2 bg-acc" />▶ FIND SOMEONE
         </div>
         <h2
           className="mt-4 text-[22px] leading-[1.45] tracking-[0.04em] text-ink sm:text-[28px]"

@@ -8,7 +8,7 @@ import MullWordmark from '@/components/mull-wordmark';
 import ScrollToTop from '@/components/scroll-to-top';
 import type { Metadata } from 'next';
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
@@ -57,25 +57,37 @@ function vecAdd(a: number[], b: number[]): number[] {
 // Generate per-profile share-preview metadata. Renders nicely on Twitter,
 // Slack, iMessage, etc. Falls back to generic Mull description when the
 // profile is missing or has chosen a low-disclosure setup.
-export async function generateMetadata({ params }: { params: Promise<{ handle: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ handle: string }>;
+}): Promise<Metadata> {
   const { handle } = await params;
   const supabase = await createClient();
   const { data: profile } = await supabase
     .from('public_profiles')
     .select('user_id, handle, display_name, bio, show_archetype')
     .eq('handle', handle.toLowerCase())
-    .maybeSingle<{ user_id: string; handle: string; display_name: string | null; bio: string | null; show_archetype: boolean }>();
+    .maybeSingle<{
+      user_id: string;
+      handle: string;
+      display_name: string | null;
+      bio: string | null;
+      show_archetype: boolean;
+    }>();
   if (!profile) {
     return { title: 'Not found', description: 'No public profile at this handle.' };
   }
   const name = profile.display_name || profile.handle;
   let description = profile.bio || '';
   if (!description && profile.show_archetype) {
-    const { data: latest } = await supabase
-      .rpc('get_public_latest_archetype', { p_user_id: profile.user_id });
-    const arch = (latest?.[0]?.archetype as string | undefined);
-    const flavor = (latest?.[0]?.flavor as string | undefined);
-    if (arch) description = `${flavor ? flavor + ' ' : ''}${arch} on Mull — find your place on the map of how you think.`;
+    const { data: latest } = await supabase.rpc('get_public_latest_archetype', {
+      p_user_id: profile.user_id,
+    });
+    const arch = latest?.[0]?.archetype as string | undefined;
+    const flavor = latest?.[0]?.flavor as string | undefined;
+    if (arch)
+      description = `${flavor ? flavor + ' ' : ''}${arch} on Mull — find your place on the map of how you think.`;
   }
   if (!description) description = `${name} on Mull — find your place on the map of how you think.`;
   const title = `${name} on Mull`;
@@ -104,14 +116,20 @@ export async function generateMetadata({ params }: { params: Promise<{ handle: s
   };
 }
 
-export default async function PublicProfilePage({ params }: { params: Promise<{ handle: string }> }) {
+export default async function PublicProfilePage({
+  params,
+}: {
+  params: Promise<{ handle: string }>;
+}) {
   const { handle } = await params;
   const supabase = await createClient();
   const locale = await getServerLocale();
 
   const { data: profile } = await supabase
     .from('public_profiles')
-    .select('user_id, handle, display_name, bio, show_archetype, show_dimensions, show_map, show_streak')
+    .select(
+      'user_id, handle, display_name, bio, show_archetype, show_dimensions, show_map, show_streak',
+    )
     .eq('handle', handle.toLowerCase())
     .maybeSingle<ProfileRow>();
 
@@ -142,20 +160,28 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
       .returns<DiaryRow[]>(),
   ]);
 
-  type TrajRow = { kind: 'q' | 'd' | 'j' | 'e'; ts: string; dilemma_date: string | null; vec: number[] | null; delta: number[] | null };
+  type TrajRow = {
+    kind: 'q' | 'd' | 'j' | 'e';
+    ts: string;
+    dilemma_date: string | null;
+    vec: number[] | null;
+    delta: number[] | null;
+  };
   const trajRows = (trajRes.data ?? []) as TrajRow[];
   const latestArch = (latestArchRes.data?.[0] ?? null) as Attempt | null;
   const publicDilemmas = publicDilemmasRes.data ?? [];
   const publicDiaries = publicDiariesRes.data ?? [];
 
   // Build chronological event list (oldest → newest) for trajectory
-  const events = trajRows.map(r => ({
-    kind: r.kind,
-    ts: new Date(r.ts).getTime(),
-    vec: r.vec,
-    delta: r.delta,
-    dilemma_date: r.dilemma_date,
-  })).sort((a, b) => a.ts - b.ts);
+  const events = trajRows
+    .map((r) => ({
+      kind: r.kind,
+      ts: new Date(r.ts).getTime(),
+      vec: r.vec,
+      delta: r.delta,
+      dilemma_date: r.dilemma_date,
+    }))
+    .sort((a, b) => a.ts - b.ts);
 
   // Walk events, accumulating position; collect positions for trail
   const trailPositions: number[][] = [];
@@ -174,7 +200,8 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   function computeStreak(dates: string[]): number {
     if (!dates.length) return 0;
     const set = new Set(dates);
-    const today = new Date(); today.setUTCHours(0, 0, 0, 0);
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
     const cursor = new Date(today);
     if (!set.has(cursor.toISOString().slice(0, 10))) {
       cursor.setUTCDate(cursor.getUTCDate() - 1);
@@ -195,45 +222,59 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
     }
     return streak;
   }
-  const dilemmaDates = events.filter(e => e.kind === 'd' && e.dilemma_date).map(e => e.dilemma_date as string);
+  const dilemmaDates = events
+    .filter((e) => e.kind === 'd' && e.dilemma_date)
+    .map((e) => e.dilemma_date as string);
   const streak = computeStreak(dilemmaDates);
   const latest = latestArch;
 
   const topDims = position
-    .map((v, i) => ({ key: DIM_KEYS[i], name: t(`dim.${DIM_KEYS[i]}.name`, locale) || DIM_NAMES[DIM_KEYS[i]], v }))
+    .map((v, i) => ({
+      key: DIM_KEYS[i],
+      name: t(`dim.${DIM_KEYS[i]}.name`, locale) || DIM_NAMES[DIM_KEYS[i]],
+      v,
+    }))
     .sort((a, b) => b.v - a.v)
     .slice(0, 5);
 
-  const hasMapData = profile.show_map && position.some(v => v !== 0);
+  const hasMapData = profile.show_map && position.some((v) => v !== 0);
   const encodedVec = hasMapData
     ? encodeURIComponent(Buffer.from(JSON.stringify(position)).toString('base64'))
     : null;
-  const encodedHist = hasMapData && trailVectors.length > 1
-    ? encodeURIComponent(Buffer.from(JSON.stringify(trailVectors)).toString('base64'))
-    : null;
+  const encodedHist =
+    hasMapData && trailVectors.length > 1
+      ? encodeURIComponent(Buffer.from(JSON.stringify(trailVectors)).toString('base64'))
+      : null;
   const iframeSrc = encodedVec
     ? `/embed/map?v=${encodedVec}${encodedHist ? `&h=${encodedHist}` : ''}`
     : null;
 
-  const headline = profile.show_archetype && latest
-    ? `${latest.flavor ? latest.flavor + ' ' : ''}${latest.archetype.replace(/^The /, '')}`
-    : t('pub.anonymous_mind', locale);
+  const headline =
+    profile.show_archetype && latest
+      ? `${latest.flavor ? latest.flavor + ' ' : ''}${latest.archetype.replace(/^The /, '')}`
+      : t('pub.anonymous_mind', locale);
 
   const displayName = profile.display_name || profile.handle;
 
   const fmtDate = (s: string) =>
-    new Date(s).toLocaleDateString(locale === 'en' ? 'en-GB' : locale, { day: 'numeric', month: 'short', year: 'numeric' });
+    new Date(s).toLocaleDateString(locale === 'en' ? 'en-GB' : locale, {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    });
 
   return (
     <main style={{ maxWidth: 760, margin: '0 auto', padding: '60px 24px 100px' }}>
-      <header style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'baseline',
-        marginBottom: 36,
-        gap: 16,
-        flexWrap: 'wrap',
-      }}>
+      <header
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'baseline',
+          marginBottom: 36,
+          gap: 16,
+          flexWrap: 'wrap',
+        }}
+      >
         <MullWordmark />
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
           {/* Compare CTA — chunky amber pixel chip. The single most
@@ -260,11 +301,17 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           >
             ▸ COMPARE WITH ME
           </Link>
-          <Link href="/" style={{
-            fontFamily: pixel, fontSize: 11, color: 'var(--color-ink-soft)',
-            textDecoration: 'none', letterSpacing: 0.4,
-            textTransform: 'uppercase',
-          }}>
+          <Link
+            href="/"
+            style={{
+              fontFamily: pixel,
+              fontSize: 11,
+              color: 'var(--color-ink-soft)',
+              textDecoration: 'none',
+              letterSpacing: 0.4,
+              textTransform: 'uppercase',
+            }}
+          >
             {t('nav.find_your_place', locale).toUpperCase()}
           </Link>
         </div>
@@ -272,59 +319,70 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
 
       {/* Pixel handle eyebrow → big serif display name. Two layers of
           chrome: the eyebrow caret + the name itself. */}
-      <div style={{
-        fontFamily: pixel,
-        fontSize: 12,
-        color: 'var(--color-acc-deep)',
-        textTransform: 'uppercase',
-        letterSpacing: '0.18em',
-        marginBottom: 14,
-      }}>
+      <div
+        style={{
+          fontFamily: pixel,
+          fontSize: 12,
+          color: 'var(--color-acc-deep)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.18em',
+          marginBottom: 14,
+        }}
+      >
         ▸ @{profile.handle}
       </div>
 
-      <h1 style={{
-        fontFamily: serif,
-        fontSize: 44,
-        fontWeight: 500,
-        margin: '0 0 8px',
-        letterSpacing: '-0.01em',
-        lineHeight: 1.1,
-      }}>
+      <h1
+        style={{
+          fontFamily: serif,
+          fontSize: 44,
+          fontWeight: 500,
+          margin: '0 0 8px',
+          letterSpacing: '-0.01em',
+          lineHeight: 1.1,
+        }}
+      >
         {displayName}
       </h1>
 
       {profile.show_archetype && latest && (
-        <p style={{
-          fontFamily: serif,
-          fontStyle: 'italic',
-          fontSize: 22,
-          color: 'var(--color-acc-deep)',
-          margin: '0 0 18px',
-        }}>
+        <p
+          style={{
+            fontFamily: serif,
+            fontStyle: 'italic',
+            fontSize: 22,
+            color: 'var(--color-acc-deep)',
+            margin: '0 0 18px',
+          }}
+        >
           {headline}
           {' · '}
-          <span style={{
-            fontFamily: pixel,
-            fontStyle: 'normal',
-            fontSize: 13,
-            color: 'var(--color-acc-deep)',
-            letterSpacing: 0.4,
-          }}>
-            {latest.alignment_pct}{t('account.percent_alignment', locale).toUpperCase()}
+          <span
+            style={{
+              fontFamily: pixel,
+              fontStyle: 'normal',
+              fontSize: 13,
+              color: 'var(--color-acc-deep)',
+              letterSpacing: 0.4,
+            }}
+          >
+            {latest.alignment_pct}
+            {t('account.percent_alignment', locale).toUpperCase()}
           </span>
         </p>
       )}
 
       {profile.bio && (
-        <p style={{
-          fontFamily: serif,
-          fontSize: 18,
-          color: 'var(--color-ink)',
-          margin: '0 0 32px',
-          lineHeight: 1.55,
-          maxWidth: 560,
-        }}>
+        <p
+          style={{
+            fontFamily: serif,
+            fontSize: 18,
+            color: 'var(--color-ink)',
+            margin: '0 0 32px',
+            lineHeight: 1.55,
+            maxWidth: 560,
+          }}
+        >
           {profile.bio}
         </p>
       )}
@@ -333,78 +391,122 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           Promotes the streak from a tiny chip into a proper "this
           person actually does this" signal. Three columns when full;
           collapses to whichever cards have signal. */}
-      {((profile.show_streak && streak > 0) || publicDilemmas.length > 0 || publicDiaries.length > 0) && (
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-          gap: 14,
-          marginBottom: 36,
-        }}>
+      {((profile.show_streak && streak > 0) ||
+        publicDilemmas.length > 0 ||
+        publicDiaries.length > 0) && (
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+            gap: 14,
+            marginBottom: 36,
+          }}
+        >
           {profile.show_streak && streak > 0 && (
-            <div style={{
-              padding: '16px 20px',
-              background: 'var(--color-ink)',
-              border: '4px solid var(--color-ink)',
-              boxShadow: '4px 4px 0 0 var(--color-acc)',
-              borderRadius: 0,
-              color: 'var(--color-cream)',
-            }}>
-              <div style={{
-                fontFamily: pixel, fontSize: 28,
-                color: 'var(--color-acc-soft)', lineHeight: 1, letterSpacing: 0.4,
-              }}>
+            <div
+              style={{
+                padding: '16px 20px',
+                background: 'var(--color-ink)',
+                border: '4px solid var(--color-ink)',
+                boxShadow: '4px 4px 0 0 var(--color-acc)',
+                borderRadius: 0,
+                color: 'var(--color-cream)',
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: pixel,
+                  fontSize: 28,
+                  color: 'var(--color-acc-soft)',
+                  lineHeight: 1,
+                  letterSpacing: 0.4,
+                }}
+              >
                 {streak >= 30 ? '30+' : streak}
                 <span style={{ fontSize: 13, opacity: 0.7, marginLeft: 6 }}>
                   {streak === 1 ? 'DAY' : 'DAYS'}
                 </span>
               </div>
-              <div style={{
-                fontFamily: pixel, fontSize: 10,
-                color: '#F1C76A', textTransform: 'uppercase',
-                letterSpacing: '0.18em', marginTop: 8,
-              }}>
+              <div
+                style={{
+                  fontFamily: pixel,
+                  fontSize: 10,
+                  color: '#F1C76A',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.18em',
+                  marginTop: 8,
+                }}
+              >
                 STREAK{streak >= 30 ? ` · ${streak} DAYS` : ''}
               </div>
             </div>
           )}
           {publicDilemmas.length > 0 && (
-            <div style={{
-              padding: '16px 20px',
-              background: '#FFFCF4',
-              border: '4px solid var(--color-ink)',
-              boxShadow: '4px 4px 0 0 #3D7DA8',
-              borderRadius: 0,
-            }}>
-              <div style={{
-                fontFamily: pixel, fontSize: 28,
-                color: 'var(--color-ink)', lineHeight: 1, letterSpacing: 0.4,
-              }}>{publicDilemmas.length}</div>
-              <div style={{
-                fontFamily: pixel, fontSize: 10,
-                color: '#3D7DA8', textTransform: 'uppercase',
-                letterSpacing: '0.18em', marginTop: 8,
-              }}>
+            <div
+              style={{
+                padding: '16px 20px',
+                background: '#FFFCF4',
+                border: '4px solid var(--color-ink)',
+                boxShadow: '4px 4px 0 0 #3D7DA8',
+                borderRadius: 0,
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: pixel,
+                  fontSize: 28,
+                  color: 'var(--color-ink)',
+                  lineHeight: 1,
+                  letterSpacing: 0.4,
+                }}
+              >
+                {publicDilemmas.length}
+              </div>
+              <div
+                style={{
+                  fontFamily: pixel,
+                  fontSize: 10,
+                  color: '#3D7DA8',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.18em',
+                  marginTop: 8,
+                }}
+              >
                 {publicDilemmas.length === 1 ? 'PUBLIC DILEMMA' : 'PUBLIC DILEMMAS'}
               </div>
             </div>
           )}
           {publicDiaries.length > 0 && (
-            <div style={{
-              padding: '16px 20px',
-              background: '#FFFCF4',
-              border: '4px solid var(--color-ink)',
-              boxShadow: '4px 4px 0 0 #2F5D5C',
-              borderRadius: 0,
-            }}>
-              <div style={{
-                fontFamily: pixel, fontSize: 28,
-                color: 'var(--color-ink)', lineHeight: 1, letterSpacing: 0.4,
-              }}>{publicDiaries.length}</div>
-              <div style={{
-                fontFamily: pixel, fontSize: 10,
-                color: '#2F5D5C', textTransform: 'uppercase',
-                letterSpacing: '0.18em', marginTop: 8,
-              }}>
+            <div
+              style={{
+                padding: '16px 20px',
+                background: '#FFFCF4',
+                border: '4px solid var(--color-ink)',
+                boxShadow: '4px 4px 0 0 #2F5D5C',
+                borderRadius: 0,
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: pixel,
+                  fontSize: 28,
+                  color: 'var(--color-ink)',
+                  lineHeight: 1,
+                  letterSpacing: 0.4,
+                }}
+              >
+                {publicDiaries.length}
+              </div>
+              <div
+                style={{
+                  fontFamily: pixel,
+                  fontSize: 10,
+                  color: '#2F5D5C',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.18em',
+                  marginTop: 8,
+                }}
+              >
                 {publicDiaries.length === 1 ? 'PUBLIC DIARY' : 'PUBLIC DIARIES'}
               </div>
             </div>
@@ -414,16 +516,16 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
 
       {iframeSrc && (
         <section style={{ marginBottom: 44 }}>
-          <h2 style={pixelSectionH2('#2F5D5C')}>
-            ▸ {t('pub.their_place', locale).toUpperCase()}
-          </h2>
-          <div style={{
-            border: '4px solid var(--color-ink)',
-            boxShadow: '5px 5px 0 0 #2F5D5C',
-            borderRadius: 0,
-            overflow: 'hidden',
-            background: '#FFFCF4',
-          }}>
+          <h2 style={pixelSectionH2('#2F5D5C')}>▸ {t('pub.their_place', locale).toUpperCase()}</h2>
+          <div
+            style={{
+              border: '4px solid var(--color-ink)',
+              boxShadow: '5px 5px 0 0 #2F5D5C',
+              borderRadius: 0,
+              overflow: 'hidden',
+              background: '#FFFCF4',
+            }}
+          >
             <iframe
               src={iframeSrc}
               style={{
@@ -437,68 +539,88 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
             />
           </div>
           {trailVectors.length > 1 && (
-            <p style={{
-              fontFamily: pixel,
-              fontSize: 11,
-              color: 'var(--color-acc-deep)',
-              marginTop: 12,
-              opacity: 0.85,
-              letterSpacing: 0.4,
-              textTransform: 'uppercase',
-            }}>
+            <p
+              style={{
+                fontFamily: pixel,
+                fontSize: 11,
+                color: 'var(--color-acc-deep)',
+                marginTop: 12,
+                opacity: 0.85,
+                letterSpacing: 0.4,
+                textTransform: 'uppercase',
+              }}
+            >
               {t('pub.trail_caption', locale, { count: trailVectors.length }).toUpperCase()}
             </p>
           )}
         </section>
       )}
 
-      {profile.show_dimensions && topDims.some(d => d.v > 0) && (
+      {profile.show_dimensions && topDims.some((d) => d.v > 0) && (
         <section style={{ marginBottom: 44 }}>
           <h2 style={pixelSectionH2('var(--color-acc)')}>
             ▸ {t('pub.strongest_tendencies', locale).toUpperCase()}
           </h2>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {topDims.map(d => (
+          <ul
+            style={{
+              listStyle: 'none',
+              padding: 0,
+              margin: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 12,
+            }}
+          >
+            {topDims.map((d) => (
               // Switched from a fixed 180px / 1fr / 50px grid to a
               // flex-wrap layout: on wide screens the name + bar +
               // value sit on one row; on phones (~320px viewport)
               // the name wraps to its own line above a full-width
               // bar, instead of being crushed into a 30px-wide bar.
-              <li key={d.key} style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: 14,
-                alignItems: 'center',
-                fontFamily: serif,
-                fontSize: 15,
-                color: 'var(--color-ink)',
-              }}>
+              <li
+                key={d.key}
+                style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: 14,
+                  alignItems: 'center',
+                  fontFamily: serif,
+                  fontSize: 15,
+                  color: 'var(--color-ink)',
+                }}
+              >
                 <span style={{ minWidth: 140 }}>{d.name}</span>
-                <div style={{
-                  height: 10,
-                  background: 'var(--color-cream)',
-                  border: '2px solid var(--color-ink)',
-                  borderRadius: 0,
-                  overflow: 'hidden',
-                  flex: 1,
-                  minWidth: 120,
-                }}>
-                  <div style={{
-                    height: '100%',
-                    width: `${Math.max(0, Math.min(100, (d.v / 12) * 100))}%`,
-                    background: 'var(--color-acc)',
-                    transition: 'width 0.4s steps(8, end)',
-                  }} />
+                <div
+                  style={{
+                    height: 10,
+                    background: 'var(--color-cream)',
+                    border: '2px solid var(--color-ink)',
+                    borderRadius: 0,
+                    overflow: 'hidden',
+                    flex: 1,
+                    minWidth: 120,
+                  }}
+                >
+                  <div
+                    style={{
+                      height: '100%',
+                      width: `${Math.max(0, Math.min(100, (d.v / 12) * 100))}%`,
+                      background: 'var(--color-acc)',
+                      transition: 'width 0.4s steps(8, end)',
+                    }}
+                  />
                 </div>
-                <span style={{
-                  fontFamily: pixel,
-                  fontSize: 13,
-                  fontVariantNumeric: 'tabular-nums',
-                  color: 'var(--color-acc-deep)',
-                  textAlign: 'right',
-                  minWidth: 50,
-                  letterSpacing: 0.4,
-                }}>
+                <span
+                  style={{
+                    fontFamily: pixel,
+                    fontSize: 13,
+                    fontVariantNumeric: 'tabular-nums',
+                    color: 'var(--color-acc-deep)',
+                    textAlign: 'right',
+                    minWidth: 50,
+                    letterSpacing: 0.4,
+                  }}
+                >
                   {d.v.toFixed(1)}
                 </span>
               </li>
@@ -512,44 +634,54 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           <h2 style={pixelSectionH2('#3D7DA8')}>
             ▸ RECENT DILEMMA RESPONSES · LAST {publicDilemmas.length}
           </h2>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 14 }}>
-            {publicDilemmas.map(d => {
+          <ul
+            style={{
+              listStyle: 'none',
+              padding: 0,
+              margin: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 14,
+            }}
+          >
+            {publicDilemmas.map((d) => {
               const shifts = topShifts(d.vector_delta || [], 0.3, 3);
               return (
                 <li key={d.id} style={publicEntryCard('#3D7DA8')}>
                   <div style={publicEventEyebrow('#3D7DA8')}>
                     DAILY DILEMMA · {fmtDate(d.created_at).toUpperCase()}
                   </div>
-                  <p style={{
-                    fontFamily: serif,
-                    fontStyle: 'italic',
-                    fontSize: 16,
-                    color: 'var(--color-ink-soft)',
-                    margin: '0 0 8px',
-                  }}>
+                  <p
+                    style={{
+                      fontFamily: serif,
+                      fontStyle: 'italic',
+                      fontSize: 16,
+                      color: 'var(--color-ink-soft)',
+                      margin: '0 0 8px',
+                    }}
+                  >
                     &ldquo;{d.question_text}&rdquo;
                   </p>
-                  <p style={{
-                    fontFamily: serif,
-                    fontSize: 16,
-                    color: 'var(--color-ink)',
-                    margin: '0 0 8px',
-                    lineHeight: 1.55,
-                    whiteSpace: 'pre-wrap',
-                  }}>
+                  <p
+                    style={{
+                      fontFamily: serif,
+                      fontSize: 16,
+                      color: 'var(--color-ink)',
+                      margin: '0 0 8px',
+                      lineHeight: 1.55,
+                      whiteSpace: 'pre-wrap',
+                    }}
+                  >
                     {d.response_text}
                   </p>
-                  {d.analysis && (
-                    <p style={publicEventAnalysis}>
-                      {d.analysis}
-                    </p>
-                  )}
+                  {d.analysis && <p style={publicEventAnalysis}>{d.analysis}</p>}
                   {shifts.length > 0 && (
                     <div style={publicShiftsRow}>
-                      {shifts.map(s => (
+                      {shifts.map((s) => (
                         <span key={s.key} style={publicShiftChip(s.delta > 0)}>
                           <strong style={{ fontVariantNumeric: 'tabular-nums' }}>
-                            {s.delta > 0 ? '+' : ''}{s.delta.toFixed(1)}
+                            {s.delta > 0 ? '+' : ''}
+                            {s.delta.toFixed(1)}
                           </strong>{' '}
                           {s.name}
                         </span>
@@ -568,8 +700,17 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           <h2 style={pixelSectionH2('#2F5D5C')}>
             ▸ RECENT DIARY ENTRIES · LAST {publicDiaries.length}
           </h2>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 14 }}>
-            {publicDiaries.map(d => {
+          <ul
+            style={{
+              listStyle: 'none',
+              padding: 0,
+              margin: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 14,
+            }}
+          >
+            {publicDiaries.map((d) => {
               const shifts = topShifts(d.vector_delta || [], 0.3, 3);
               const preview = d.content.length > 320 ? d.content.slice(0, 320) + '…' : d.content;
               return (
@@ -578,37 +719,38 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                     DIARY ENTRY · {fmtDate(d.created_at).toUpperCase()}
                   </div>
                   {d.title && (
-                    <div style={{
-                      fontFamily: serif,
-                      fontSize: 19,
-                      fontWeight: 500,
-                      color: 'var(--color-ink)',
-                      marginBottom: 6,
-                    }}>
+                    <div
+                      style={{
+                        fontFamily: serif,
+                        fontSize: 19,
+                        fontWeight: 500,
+                        color: 'var(--color-ink)',
+                        marginBottom: 6,
+                      }}
+                    >
                       {d.title}
                     </div>
                   )}
-                  <p style={{
-                    fontFamily: serif,
-                    fontSize: 16,
-                    color: 'var(--color-ink)',
-                    margin: '0 0 8px',
-                    lineHeight: 1.55,
-                    whiteSpace: 'pre-wrap',
-                  }}>
+                  <p
+                    style={{
+                      fontFamily: serif,
+                      fontSize: 16,
+                      color: 'var(--color-ink)',
+                      margin: '0 0 8px',
+                      lineHeight: 1.55,
+                      whiteSpace: 'pre-wrap',
+                    }}
+                  >
                     {preview}
                   </p>
-                  {d.analysis && (
-                    <p style={publicEventAnalysis}>
-                      {d.analysis}
-                    </p>
-                  )}
+                  {d.analysis && <p style={publicEventAnalysis}>{d.analysis}</p>}
                   {shifts.length > 0 && (
                     <div style={publicShiftsRow}>
-                      {shifts.map(s => (
+                      {shifts.map((s) => (
                         <span key={s.key} style={publicShiftChip(s.delta > 0)}>
                           <strong style={{ fontVariantNumeric: 'tabular-nums' }}>
-                            {s.delta > 0 ? '+' : ''}{s.delta.toFixed(1)}
+                            {s.delta > 0 ? '+' : ''}
+                            {s.delta.toFixed(1)}
                           </strong>{' '}
                           {s.name}
                         </span>
@@ -645,29 +787,33 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
         }}
       >
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 16,
-          flexWrap: 'wrap',
-        }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 16,
+            flexWrap: 'wrap',
+          }}
+        >
           <span>
             <strong style={{ color: 'var(--color-ink)' }}>{t('pub.cta_title', locale)}</strong>{' '}
             {t('pub.cta_body', locale)}
           </span>
-          <span style={{
-            color: '#1A1612',
-            background: 'var(--color-acc)',
-            padding: '8px 14px',
-            border: '3px solid var(--color-ink)',
-            boxShadow: '3px 3px 0 0 var(--color-ink)',
-            fontFamily: pixel,
-            fontSize: 11,
-            letterSpacing: 0.4,
-            textTransform: 'uppercase',
-            flexShrink: 0,
-          }}>
+          <span
+            style={{
+              color: '#1A1612',
+              background: 'var(--color-acc)',
+              padding: '8px 14px',
+              border: '3px solid var(--color-ink)',
+              boxShadow: '3px 3px 0 0 var(--color-ink)',
+              fontFamily: pixel,
+              fontSize: 11,
+              letterSpacing: 0.4,
+              textTransform: 'uppercase',
+              flexShrink: 0,
+            }}
+          >
             ▸ {t('pub.cta_link', locale).toUpperCase()}
           </span>
         </div>

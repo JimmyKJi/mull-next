@@ -99,10 +99,7 @@ export const CURATED_VS_PAIRS: readonly [string, string][] = [
 
 /** Canonicalises a pair by sorting alphabetically by slug. Returns the
  *  ordered tuple of slugs and a "matched both" flag. */
-export function toCanonicalPair(
-  nameA: string,
-  nameB: string,
-): { a: string; b: string } {
+export function toCanonicalPair(nameA: string, nameB: string): { a: string; b: string } {
   const sa = philosopherSlug(nameA);
   const sb = philosopherSlug(nameB);
   return sa < sb ? { a: sa, b: sb } : { a: sb, b: sa };
@@ -180,7 +177,7 @@ export const VS_CATEGORIES: {
       ['Nietzsche', 'Kant'],
       ['Sartre', 'Camus'],
       ['Hume', 'Kant'],
-          ['Kierkegaard', 'Nietzsche'],
+      ['Kierkegaard', 'Nietzsche'],
       ['Schopenhauer', 'Nietzsche'],
       ['Nietzsche', 'Plato'],
       ['Descartes', 'Spinoza'],
@@ -284,7 +281,7 @@ export function vsPairsByCategory(
   locale: Locale = 'en',
 ): VsBucket[] {
   const seen = new Set<string>();
-  const buckets: VsBucket[] = VS_CATEGORIES.map(cat => {
+  const buckets: VsBucket[] = VS_CATEGORIES.map((cat) => {
     const pairs: { name1: string; name2: string; href: string }[] = [];
     for (const [n1, n2] of cat.pairs) {
       const p1 = resolveName(n1);
@@ -349,10 +346,7 @@ export type DimComparison = {
 /** Build a full 16-dim comparison between two philosophers, returned
  *  pre-sorted by absolute delta descending. Top of the list = biggest
  *  disagreement; bottom = closest agreement. */
-export function compareDimensions(
-  vectorA: number[],
-  vectorB: number[],
-): DimComparison[] {
+export function compareDimensions(vectorA: number[], vectorB: number[]): DimComparison[] {
   return DIM_KEYS.map((key, i): DimComparison => {
     const a = vectorA[i] ?? 0;
     const b = vectorB[i] ?? 0;
@@ -396,10 +390,7 @@ export function agreementPhrase(c: DimComparison, locale: Locale = 'en'): string
   const avg = (c.valueA + c.valueB) / 2;
   // Dimension name: lowercased English reads naturally mid-sentence;
   // for other locales pull the localized dimension name verbatim.
-  const dim =
-    locale === 'en'
-      ? c.name.toLowerCase()
-      : t(`dim.${c.key}.name`, locale);
+  const dim = locale === 'en' ? c.name.toLowerCase() : t(`dim.${c.key}.name`, locale);
   const tierKey = avg >= 7 ? 'strong' : avg >= 5 ? 'moderate' : avg >= 3 ? 'muted' : 'little';
   return t(`vs.agree.${tierKey}`, locale, { dim });
 }

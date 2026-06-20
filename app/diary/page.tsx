@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false, nocache: true },
 };
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 
 type DiaryEntry = {
@@ -30,7 +30,9 @@ type DiaryEntry = {
 export default async function DiaryPage() {
   const supabase = await createClient();
   const locale = await getServerLocale();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   let entries: DiaryEntry[] = [];
   if (user) {
@@ -44,11 +46,16 @@ export default async function DiaryPage() {
   }
 
   const fmtDate = (s: string) =>
-    new Date(s).toLocaleDateString(locale === 'en' ? 'en-GB' : locale, { day: 'numeric', month: 'short', year: 'numeric' });
+    new Date(s).toLocaleDateString(locale === 'en' ? 'en-GB' : locale, {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    });
   const fmtRel = (s: string) => {
     const diff = Date.now() - new Date(s).getTime();
     const mins = Math.floor(diff / 60000);
-    if (mins < 60) return mins <= 1 ? t('time.just_now', locale) : t('time.min_ago', locale, { n: mins });
+    if (mins < 60)
+      return mins <= 1 ? t('time.just_now', locale) : t('time.min_ago', locale, { n: mins });
     const hours = Math.floor(mins / 60);
     if (hours < 24) return t(hours === 1 ? 'time.hr_ago' : 'time.hrs_ago', locale, { n: hours });
     const days = Math.floor(hours / 24);
@@ -59,16 +66,10 @@ export default async function DiaryPage() {
   return (
     <main className="mx-auto max-w-[860px] px-6 pb-32 pt-10 sm:px-10">
       <div className="mb-6 flex items-center justify-end gap-4">
-        <Link
-          href="/dilemma"
-          className="text-[13px] text-ink-soft hover:text-ink hover:underline"
-        >
+        <Link href="/dilemma" className="text-[13px] text-ink-soft hover:text-ink hover:underline">
           {t('nav.dilemma_arrow', locale)}
         </Link>
-        <Link
-          href="/account"
-          className="text-[13px] text-ink-soft hover:text-ink hover:underline"
-        >
+        <Link href="/account" className="text-[13px] text-ink-soft hover:text-ink hover:underline">
           {t('nav.account_arrow', locale)}
         </Link>
       </div>
@@ -84,44 +85,54 @@ export default async function DiaryPage() {
       />
 
       {!user ? (
-        <div style={{
-          padding: '28px 32px',
-          background: '#FFFCF4',
-          border: '1px dashed var(--color-line)',
-          borderRadius: 12,
-          textAlign: 'center',
-        }}>
-          <p style={{
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 18,
-            color: 'var(--color-ink-soft)',
-            margin: '0 0 16px',
-          }}>
+        <div
+          style={{
+            padding: '28px 32px',
+            background: '#FFFCF4',
+            border: '1px dashed var(--color-line)',
+            borderRadius: 12,
+            textAlign: 'center',
+          }}
+        >
+          <p
+            style={{
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: 18,
+              color: 'var(--color-ink-soft)',
+              margin: '0 0 16px',
+            }}
+          >
             {t('diary.account_required', locale)}
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/signup" style={{
-              padding: '10px 20px',
-              background: 'var(--color-ink)',
-              color: 'var(--color-cream)',
-              borderRadius: 6,
-              textDecoration: 'none',
-              fontFamily: sans,
-              fontSize: 14,
-              fontWeight: 500,
-            }}>
+            <Link
+              href="/signup"
+              style={{
+                padding: '10px 20px',
+                background: 'var(--color-ink)',
+                color: 'var(--color-cream)',
+                borderRadius: 6,
+                textDecoration: 'none',
+                fontFamily: sans,
+                fontSize: 14,
+                fontWeight: 500,
+              }}
+            >
               {t('dilemma.create_account', locale)}
             </Link>
-            <Link href="/login" style={{
-              padding: '10px 20px',
-              border: '1px solid var(--color-ink)',
-              color: 'var(--color-ink)',
-              borderRadius: 6,
-              textDecoration: 'none',
-              fontFamily: sans,
-              fontSize: 14,
-            }}>
+            <Link
+              href="/login"
+              style={{
+                padding: '10px 20px',
+                border: '1px solid var(--color-ink)',
+                color: 'var(--color-ink)',
+                borderRadius: 6,
+                textDecoration: 'none',
+                fontFamily: sans,
+                fontSize: 14,
+              }}
+            >
               {t('dilemma.sign_in', locale)}
             </Link>
           </div>
@@ -132,12 +143,14 @@ export default async function DiaryPage() {
 
       {user && entries.length === 0 && (
         <section style={{ marginTop: 48 }}>
-          <div style={{
-            padding: '20px 18px',
-            background: '#FFFCF4',
-            border: '3px dashed #2F5D5C',
-            borderRadius: 0,
-          }}>
+          <div
+            style={{
+              padding: '20px 18px',
+              background: '#FFFCF4',
+              border: '3px dashed #2F5D5C',
+              borderRadius: 0,
+            }}
+          >
             <EmptyStateSprite
               variant="book"
               caption="Once you've saved your first diary entry, your earlier writing will surface here — alongside Claude's read of the small shift each entry adds to your map."
@@ -148,91 +161,120 @@ export default async function DiaryPage() {
 
       {user && entries.length > 0 && (
         <section style={{ marginTop: 56 }}>
-          <h2 style={{
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 24,
-            fontWeight: 500,
-            color: 'var(--color-ink-soft)',
-            margin: '0 0 18px',
-          }}>
+          <h2
+            style={{
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: 24,
+              fontWeight: 500,
+              color: 'var(--color-ink-soft)',
+              margin: '0 0 18px',
+            }}
+          >
             {t('diary.earlier_entries', locale)}
           </h2>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {entries.map(e => {
+          <ul
+            style={{
+              listStyle: 'none',
+              padding: 0,
+              margin: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 12,
+            }}
+          >
+            {entries.map((e) => {
               const shifts = topShifts(e.vector_delta || [], 0.3, 3);
               const preview = e.content.length > 280 ? e.content.slice(0, 280) + '…' : e.content;
               return (
                 <li key={e.id}>
-                  <Link href={`/diary/${e.id}`} className="pixel-press" style={{
-                    display: 'block',
-                    padding: '20px 22px',
-                    background: '#FFFCF4',
-                    border: '4px solid var(--color-ink)',
-                    boxShadow: '4px 4px 0 0 #2F5D5C',
-                    borderRadius: 0,
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
-                  }}>
-                    <div style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'baseline',
-                      gap: 8,
-                      flexWrap: 'wrap',
-                      marginBottom: 8,
-                    }}>
-                      <span style={{
-                        fontFamily: sans,
-                        fontSize: 11,
-                        fontWeight: 600,
-                        color: '#2F5D5C',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.14em',
-                      }}>
+                  <Link
+                    href={`/diary/${e.id}`}
+                    className="pixel-press"
+                    style={{
+                      display: 'block',
+                      padding: '20px 22px',
+                      background: '#FFFCF4',
+                      border: '4px solid var(--color-ink)',
+                      boxShadow: '4px 4px 0 0 #2F5D5C',
+                      borderRadius: 0,
+                      textDecoration: 'none',
+                      color: 'inherit',
+                      transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'baseline',
+                        gap: 8,
+                        flexWrap: 'wrap',
+                        marginBottom: 8,
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontFamily: sans,
+                          fontSize: 11,
+                          fontWeight: 600,
+                          color: '#2F5D5C',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.14em',
+                        }}
+                      >
                         {t('diary.entry_eyebrow', locale)} · {fmtRel(e.created_at)}
                       </span>
-                      <span style={{
-                        fontFamily: sans,
-                        fontSize: 12,
-                        color: 'var(--color-acc-deep)',
-                        opacity: 0.75,
-                      }}>
+                      <span
+                        style={{
+                          fontFamily: sans,
+                          fontSize: 12,
+                          color: 'var(--color-acc-deep)',
+                          opacity: 0.75,
+                        }}
+                      >
                         {t('diary.entry_words', locale, { n: e.word_count || 0 })}
                       </span>
                     </div>
                     {e.title && (
-                      <div style={{
-                        fontFamily: serif,
-                        fontSize: 22,
-                        fontWeight: 500,
-                        color: 'var(--color-ink)',
-                        marginBottom: 6,
-                      }}>
+                      <div
+                        style={{
+                          fontFamily: serif,
+                          fontSize: 22,
+                          fontWeight: 500,
+                          color: 'var(--color-ink)',
+                          marginBottom: 6,
+                        }}
+                      >
                         {e.title}
                       </div>
                     )}
-                    <p style={{
-                      fontFamily: serif,
-                      fontSize: 16,
-                      color: 'var(--color-ink)',
-                      margin: 0,
-                      lineHeight: 1.55,
-                      whiteSpace: 'pre-wrap',
-                    }}>
+                    <p
+                      style={{
+                        fontFamily: serif,
+                        fontSize: 16,
+                        color: 'var(--color-ink)',
+                        margin: 0,
+                        lineHeight: 1.55,
+                        whiteSpace: 'pre-wrap',
+                      }}
+                    >
                       {preview}
                     </p>
                     {shifts.length > 0 && (
                       <div style={{ marginTop: 10, display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-                        {shifts.map(s => (
-                          <span key={s.key} style={{
-                            fontFamily: sans,
-                            fontSize: 12.5,
-                            color: s.delta > 0 ? '#2F5D5C' : '#7A2E2E',
-                          }}>
+                        {shifts.map((s) => (
+                          <span
+                            key={s.key}
+                            style={{
+                              fontFamily: sans,
+                              fontSize: 12.5,
+                              color: s.delta > 0 ? '#2F5D5C' : '#7A2E2E',
+                            }}
+                          >
                             <strong style={{ fontVariantNumeric: 'tabular-nums' }}>
-                              {s.delta > 0 ? '+' : ''}{s.delta.toFixed(1)}
+                              {s.delta > 0 ? '+' : ''}
+                              {s.delta.toFixed(1)}
                             </strong>{' '}
                             <span style={{ color: 'var(--color-ink-soft)' }}>{s.name}</span>
                           </span>
@@ -247,16 +289,18 @@ export default async function DiaryPage() {
         </section>
       )}
 
-      <p style={{
-        fontFamily: sans,
-        fontSize: 12,
-        color: 'var(--color-acc-deep)',
-        marginTop: 56,
-        opacity: 0.7,
-        textAlign: 'center',
-        letterSpacing: 0.3,
-        lineHeight: 1.55,
-      }}>
+      <p
+        style={{
+          fontFamily: sans,
+          fontSize: 12,
+          color: 'var(--color-acc-deep)',
+          marginTop: 56,
+          opacity: 0.7,
+          textAlign: 'center',
+          letterSpacing: 0.3,
+          lineHeight: 1.55,
+        }}
+      >
         {t('diary.footer_note', locale)}
       </p>
     </main>

@@ -15,24 +15,29 @@ const SITE = 'https://mull.world';
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
   return [
-    { url: `${SITE}/`,         lastModified: now, changeFrequency: 'weekly',  priority: 1.0 },
-    { url: `${SITE}/about`,    lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
-    { url: `${SITE}/install`,  lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${SITE}/`, lastModified: now, changeFrequency: 'weekly', priority: 1.0 },
+    { url: `${SITE}/about`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${SITE}/install`, lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${SITE}/methodology`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
-    { url: `${SITE}/privacy`,  lastModified: now, changeFrequency: 'yearly',  priority: 0.4 },
-    { url: `${SITE}/terms`,    lastModified: now, changeFrequency: 'yearly',  priority: 0.4 },
-    { url: `${SITE}/billing`,  lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${SITE}/search`,   lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${SITE}/login`,    lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
-    { url: `${SITE}/signup`,   lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
-    { url: `${SITE}/dilemma`,  lastModified: now, changeFrequency: 'daily',   priority: 0.8 },
-    { url: `${SITE}/arena`,    lastModified: now, changeFrequency: 'weekly',  priority: 0.7 },
-    { url: `${SITE}/arena/leaderboard`, lastModified: now, changeFrequency: 'daily', priority: 0.5 },
-    { url: `${SITE}/diary`,    lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${SITE}/debate`,   lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${SITE}/privacy`, lastModified: now, changeFrequency: 'yearly', priority: 0.4 },
+    { url: `${SITE}/terms`, lastModified: now, changeFrequency: 'yearly', priority: 0.4 },
+    { url: `${SITE}/billing`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${SITE}/search`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${SITE}/login`, lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${SITE}/signup`, lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${SITE}/dilemma`, lastModified: now, changeFrequency: 'daily', priority: 0.8 },
+    { url: `${SITE}/arena`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
+    {
+      url: `${SITE}/arena/leaderboard`,
+      lastModified: now,
+      changeFrequency: 'daily',
+      priority: 0.5,
+    },
+    { url: `${SITE}/diary`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${SITE}/debate`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${SITE}/exercises`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
-    { url: `${SITE}/compare`,   lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-    ...EXERCISES.map(ex => ({
+    { url: `${SITE}/compare`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    ...EXERCISES.map((ex) => ({
       url: `${SITE}/exercises/${ex.slug}`,
       lastModified: now,
       changeFrequency: 'monthly' as const,
@@ -40,13 +45,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
     { url: `${SITE}/archetype`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     ...[
-      'cartographer','keel','threshold','pilgrim','touchstone',
-      'hearth','forge','hammer','garden','lighthouse',
-    ].map(slug => ({ url: `${SITE}/archetype/${slug}`, lastModified: now, changeFrequency: 'monthly' as const, priority: 0.6 })),
+      'cartographer',
+      'keel',
+      'threshold',
+      'pilgrim',
+      'touchstone',
+      'hearth',
+      'forge',
+      'hammer',
+      'garden',
+      'lighthouse',
+    ].map((slug) => ({
+      url: `${SITE}/archetype/${slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    })),
     // Philosopher index page (the hub) + 166 detail pages — the bulk
     // of the SEO surface.
     { url: `${SITE}/philosopher`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
-    ...philosopherSlugs().map(slug => ({
+    ...philosopherSlugs().map((slug) => ({
       url: `${SITE}/philosopher/${slug}`,
       lastModified: now,
       changeFrequency: 'monthly' as const,
@@ -54,7 +72,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
     // Topic explainer pages — evergreen organic-search landings.
     { url: `${SITE}/topic`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
-    ...TOPICS.map(t => ({
+    ...TOPICS.map((t) => ({
       url: `${SITE}/topic/${t.slug}`,
       lastModified: now,
       changeFrequency: 'monthly' as const,
@@ -64,7 +82,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Only curated pairs go in the sitemap (the route handles any
     // arbitrary pair on demand, but most have no search demand).
     { url: `${SITE}/vs`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
-    ...curatedPairSlugs().map(p => ({
+    ...curatedPairSlugs().map((p) => ({
       url: `${SITE}/vs/${p.a}/${p.b}`,
       lastModified: now,
       changeFrequency: 'monthly' as const,

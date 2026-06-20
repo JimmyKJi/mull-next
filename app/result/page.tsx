@@ -4,36 +4,26 @@
 // then hands everything to the client component for the animated
 // reveal (figure landing + alignment count-up + radar draw).
 
-import type { Metadata, Viewport } from "next";
-import { ARCHETYPES } from "@/lib/archetypes";
-import {
-  ARCHETYPE_TARGETS,
-  expandArchetypeVector,
-} from "@/lib/archetype-targets";
-import { getArchetypeColor } from "@/lib/archetype-colors";
-import { DIM_KEYS, DIM_NAMES, type DimKey } from "@/lib/dimensions";
-import { getServerLocale } from "@/lib/locale-server";
-import { t, type Locale } from "@/lib/translations";
-import { PHILOSOPHERS } from "@/lib/philosophers";
-import {
-  cos,
-  displayPct,
-  computeFlavor,
-  zeros,
-  magnitude,
-} from "@/lib/vectors";
-import { createClient } from "@/utils/supabase/server";
-import { ResultClient } from "./result-client";
+import type { Metadata, Viewport } from 'next';
+import { ARCHETYPES } from '@/lib/archetypes';
+import { ARCHETYPE_TARGETS, expandArchetypeVector } from '@/lib/archetype-targets';
+import { getArchetypeColor } from '@/lib/archetype-colors';
+import { DIM_KEYS, DIM_NAMES, type DimKey } from '@/lib/dimensions';
+import { getServerLocale } from '@/lib/locale-server';
+import { t, type Locale } from '@/lib/translations';
+import { PHILOSOPHERS } from '@/lib/philosophers';
+import { cos, displayPct, computeFlavor, zeros, magnitude } from '@/lib/vectors';
+import { createClient } from '@/utils/supabase/server';
+import { ResultClient } from './result-client';
 
 export const metadata: Metadata = {
-  title: "Your result · Mull",
-  description:
-    "Where your worldview sits — and which thinkers across history have stood near you.",
+  title: 'Your result · Mull',
+  description: 'Where your worldview sits — and which thinkers across history have stood near you.',
   robots: { index: false, follow: false },
 };
 
 export const viewport: Viewport = {
-  width: "device-width",
+  width: 'device-width',
   initialScale: 1,
 };
 
@@ -53,14 +43,10 @@ function decodeVector(raw: string | undefined): number[] {
   }
 }
 
-export default async function ResultPage({
-  searchParams,
-}: {
-  searchParams: SearchParams;
-}) {
+export default async function ResultPage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams;
   const vector = decodeVector(params.v);
-  const mode = params.m === "detailed" ? "detailed" : "quick";
+  const mode = params.m === 'detailed' ? 'detailed' : 'quick';
 
   // Per-request locale — needed both for the sparse fallback below and
   // for the dimension names that flow into the client reveal (radar
@@ -77,7 +63,9 @@ export default async function ResultPage({
   // Anonymous users are the conversion population; signed-in users
   // already saved.
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   const isSignedIn = !!user;
 
   // If the user arrived via a friend-challenge link, resolve the
@@ -122,7 +110,10 @@ export default async function ResultPage({
     dates: p.dates,
     keyIdea: p.keyIdea,
     archetypeKey: p.archetypeKey,
-    slug: p.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""),
+    slug: p.name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, ''),
     sim: cos(vector, p.vector),
   }))
     .sort((a, b) => b.sim - a.sim)
@@ -159,7 +150,10 @@ export default async function ResultPage({
       runnerUpPct={runnerUpPct}
       closest={closest}
       dimRadar={dimRadar}
-      userTop3={userTop3.map((d) => ({ key: d.key, name: t(`dim.${d.key}.name`, locale) || DIM_NAMES[d.key] }))}
+      userTop3={userTop3.map((d) => ({
+        key: d.key,
+        name: t(`dim.${d.key}.name`, locale) || DIM_NAMES[d.key],
+      }))}
       isSignedIn={isSignedIn}
       challengerHandle={challengerHandle}
       challengerName={challengerName}
@@ -168,7 +162,7 @@ export default async function ResultPage({
   );
 }
 
-import Link from "next/link";
+import Link from 'next/link';
 
 function SparseFallback({ locale }: { locale: Locale }) {
   return (
@@ -176,30 +170,30 @@ function SparseFallback({ locale }: { locale: Locale }) {
       <div className="mx-auto max-w-[640px] text-center">
         <div
           className="text-[11px] uppercase tracking-[0.24em] text-acc-deep"
-          style={{ fontFamily: "var(--font-pixel-display)" }}
+          style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
-          {t("res.sparse_eyebrow", locale)}
+          {t('res.sparse_eyebrow', locale)}
         </div>
         <h1
           className="mt-6 text-[36px] leading-none tracking-[0.04em] text-ink sm:text-[56px]"
-          style={{ fontFamily: "var(--font-pixel-display)" }}
+          style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
-          <span style={{ textShadow: "4px 4px 0 var(--pixel-shadow, var(--color-acc))" }}>
-            {t("res.sparse_title", locale)}
+          <span style={{ textShadow: '4px 4px 0 var(--pixel-shadow, var(--color-acc))' }}>
+            {t('res.sparse_title', locale)}
           </span>
         </h1>
         <p className="mx-auto mt-8 max-w-[480px] text-[16px] leading-[1.65] text-ink-soft sm:text-[17px]">
-          {t("res.sparse_body", locale)}
+          {t('res.sparse_body', locale)}
         </p>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-5">
           <Link href="/quiz?mode=quick" className="pixel-button pixel-button--amber">
-            <span>{t("res.sparse_retake", locale)}</span>
+            <span>{t('res.sparse_retake', locale)}</span>
           </Link>
           <Link
             href="/archetype"
             className="inline-block py-2 text-[14px] text-ink-soft underline decoration-line decoration-2 underline-offset-4 hover:text-ink hover:decoration-acc-deep"
           >
-            {t("res.sparse_browse", locale)}
+            {t('res.sparse_browse', locale)}
           </Link>
         </div>
       </div>

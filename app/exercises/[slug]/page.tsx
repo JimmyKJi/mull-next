@@ -17,7 +17,7 @@ import { pathwayForExercise } from '@/lib/pathway';
 import ReflectionForm from './reflection-form';
 import type { Metadata } from 'next';
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 
 // Locales whose CORE exercise content (summary, about, steps, reflection)
@@ -29,10 +29,14 @@ const CORE_TRANSLATED: Locale[] = ['zh'];
 const EXTRAS_TRANSLATED: Locale[] = ['zh'];
 
 export async function generateStaticParams() {
-  return EXERCISES.map(e => ({ slug: e.slug }));
+  return EXERCISES.map((e) => ({ slug: e.slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const { slug } = await params;
   const ex = findExercise(slug);
   if (!ex) return { title: 'Exercise not found' };
@@ -57,7 +61,9 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
   const locale = await getServerLocale();
   const ex = localizeExercise(original, locale);
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   const isAuthed = !!user;
 
   return (
@@ -103,48 +109,62 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
 
       <Section title={t('exercises.about', locale)}>
         {locale !== 'en' && ex.about === original.about && (
-          <p style={{
-            fontSize: 12.5,
-            color: 'var(--color-acc-deep)',
-            fontStyle: 'italic',
-            opacity: 0.85,
-            marginBottom: 14,
-          }}>
+          <p
+            style={{
+              fontSize: 12.5,
+              color: 'var(--color-acc-deep)',
+              fontStyle: 'italic',
+              opacity: 0.85,
+              marginBottom: 14,
+            }}
+          >
             {t('i18n.untranslated_short', locale)}
           </p>
         )}
-        {ex.about.split('\n').filter(Boolean).map((p, i) => (
-          <p key={i} style={{ margin: '0 0 14px' }}>{p}</p>
-        ))}
+        {ex.about
+          .split('\n')
+          .filter(Boolean)
+          .map((p, i) => (
+            <p key={i} style={{ margin: '0 0 14px' }}>
+              {p}
+            </p>
+          ))}
       </Section>
 
       <Section title={t('exercises.steps', locale)}>
-        <ol style={{
-          margin: 0,
-          padding: 0,
-          listStyle: 'none',
-          counterReset: 'step',
-        }}>
+        <ol
+          style={{
+            margin: 0,
+            padding: 0,
+            listStyle: 'none',
+            counterReset: 'step',
+          }}
+        >
           {ex.steps.map((s, i) => (
-            <li key={i} style={{
-              padding: '14px 0 14px 50px',
-              borderBottom: i === ex.steps.length - 1 ? 'none' : '1px solid #EBE3CA',
-              position: 'relative',
-              fontFamily: sans,
-              fontSize: 15,
-              color: 'var(--color-ink)',
-              lineHeight: 1.6,
-            }}>
-              <span style={{
-                position: 'absolute',
-                left: 0,
-                top: 14,
-                fontFamily: serif,
-                fontSize: 22,
-                fontWeight: 500,
-                color: 'var(--color-acc-deep)',
-                lineHeight: 1,
-              }}>
+            <li
+              key={i}
+              style={{
+                padding: '14px 0 14px 50px',
+                borderBottom: i === ex.steps.length - 1 ? 'none' : '1px solid #EBE3CA',
+                position: 'relative',
+                fontFamily: sans,
+                fontSize: 15,
+                color: 'var(--color-ink)',
+                lineHeight: 1.6,
+              }}
+            >
+              <span
+                style={{
+                  position: 'absolute',
+                  left: 0,
+                  top: 14,
+                  fontFamily: serif,
+                  fontSize: 22,
+                  fontWeight: 500,
+                  color: 'var(--color-acc-deep)',
+                  lineHeight: 1,
+                }}
+              >
                 {i + 1}.
               </span>
               {s}
@@ -153,42 +173,50 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
         </ol>
       </Section>
 
-      <div style={{
-        marginTop: 36,
-        padding: '22px 26px',
-        background: 'var(--color-acc-soft)',
-        border: '4px solid var(--color-ink)',
-        boxShadow: '5px 5px 0 0 var(--color-acc)',
-        borderRadius: 0,
-      }}>
-        <div style={{
-          fontFamily: 'var(--font-pixel-display)',
-          fontSize: 11,
-          color: 'var(--color-acc-deep)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.18em',
-          marginBottom: 12,
-        }}>
+      <div
+        style={{
+          marginTop: 36,
+          padding: '22px 26px',
+          background: 'var(--color-acc-soft)',
+          border: '4px solid var(--color-ink)',
+          boxShadow: '5px 5px 0 0 var(--color-acc)',
+          borderRadius: 0,
+        }}
+      >
+        <div
+          style={{
+            fontFamily: 'var(--font-pixel-display)',
+            fontSize: 11,
+            color: 'var(--color-acc-deep)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.18em',
+            marginBottom: 12,
+          }}
+        >
           ▸ {t('exercises.after', locale).toUpperCase()}
         </div>
-        <p style={{
-          margin: 0,
-          fontFamily: serif,
-          fontStyle: 'italic',
-          fontSize: 18,
-          color: 'var(--color-ink)',
-          lineHeight: 1.55,
-        }}>
+        <p
+          style={{
+            margin: 0,
+            fontFamily: serif,
+            fontStyle: 'italic',
+            fontSize: 18,
+            color: 'var(--color-ink)',
+            lineHeight: 1.55,
+          }}
+        >
           {ex.reflection}
         </p>
-        <p style={{
-          marginTop: 14,
-          fontFamily: sans,
-          fontSize: 12.5,
-          color: 'var(--color-acc-deep)',
-          opacity: 0.8,
-          lineHeight: 1.55,
-        }}>
+        <p
+          style={{
+            marginTop: 14,
+            fontFamily: sans,
+            fontSize: 12.5,
+            color: 'var(--color-acc-deep)',
+            opacity: 0.8,
+            lineHeight: 1.55,
+          }}
+        >
           {t('exercises.diary_note', locale)}
         </p>
       </div>
@@ -199,7 +227,11 @@ export default async function ExercisePage({ params }: { params: Promise<{ slug:
           Localized via localizeExtras (zh complete; other locales fall back
           per field to English, flagged by the extras-section notice). */}
       {EXERCISE_EXTRAS[slug] && (
-        <ExerciseExtrasSection slug={slug} extras={localizeExtras(slug, EXERCISE_EXTRAS[slug], locale)} locale={locale} />
+        <ExerciseExtrasSection
+          slug={slug}
+          extras={localizeExtras(slug, EXERCISE_EXTRAS[slug], locale)}
+          locale={locale}
+        />
       )}
 
       {/* Pathway — three illustrated stations.
@@ -276,25 +308,35 @@ import type { ExerciseExtras } from '@/lib/exercises-extras';
 import type { Locale } from '@/lib/translations';
 
 function ExerciseExtrasSection({
-  slug, extras, locale,
+  slug,
+  extras,
+  locale,
 }: {
   slug: string;
   extras: ExerciseExtras;
   locale: Locale;
 }) {
   const sibs = (extras.relatedExercises || [])
-    .map(s => EXERCISES.find(e => e.slug === s))
+    .map((s) => EXERCISES.find((e) => e.slug === s))
     .filter((x): x is NonNullable<typeof x> => !!x);
 
   return (
     <div style={{ marginTop: 48 }}>
       {locale !== 'en' && !EXTRAS_TRANSLATED.includes(locale) && (
-        <p style={{
-          fontFamily: sans, fontSize: 12.5, color: 'var(--color-acc-deep)',
-          fontStyle: 'italic', opacity: 0.85, marginBottom: 18,
-          padding: '10px 14px', background: '#F5EFDC',
-          borderLeft: '3px solid var(--color-acc)', borderRadius: 6,
-        }}>
+        <p
+          style={{
+            fontFamily: sans,
+            fontSize: 12.5,
+            color: 'var(--color-acc-deep)',
+            fontStyle: 'italic',
+            opacity: 0.85,
+            marginBottom: 18,
+            padding: '10px 14px',
+            background: '#F5EFDC',
+            borderLeft: '3px solid var(--color-acc)',
+            borderRadius: 6,
+          }}
+        >
           {t('i18n.untranslated_short', locale)}
         </p>
       )}
@@ -302,7 +344,9 @@ function ExerciseExtrasSection({
       {extras.longerAbout && (
         <Section title={t('exercises.deeper', locale)}>
           {extras.longerAbout.split('\n\n').map((p, i) => (
-            <p key={i} style={{ margin: '0 0 14px' }}>{p}</p>
+            <p key={i} style={{ margin: '0 0 14px' }}>
+              {p}
+            </p>
           ))}
         </Section>
       )}
@@ -311,7 +355,9 @@ function ExerciseExtrasSection({
         <Section title={t('exercises.pitfalls', locale)}>
           <ul style={{ margin: 0, padding: '0 0 0 20px', display: 'grid', gap: 10 }}>
             {extras.commonPitfalls.map((p, i) => (
-              <li key={i} style={{ lineHeight: 1.6 }}>{p}</li>
+              <li key={i} style={{ lineHeight: 1.6 }}>
+                {p}
+              </li>
             ))}
           </ul>
         </Section>
@@ -319,12 +365,17 @@ function ExerciseExtrasSection({
 
       {extras.workedExample && (
         <Section title={t('exercises.example', locale)}>
-          <p style={{
-            margin: 0, fontStyle: 'italic',
-            padding: '14px 18px', background: '#FBFAF2',
-            borderLeft: '3px solid #2F5D5C', borderRadius: 6,
-            lineHeight: 1.7,
-          }}>
+          <p
+            style={{
+              margin: 0,
+              fontStyle: 'italic',
+              padding: '14px 18px',
+              background: '#FBFAF2',
+              borderLeft: '3px solid #2F5D5C',
+              borderRadius: 6,
+              lineHeight: 1.7,
+            }}
+          >
             {extras.workedExample}
           </p>
         </Section>
@@ -334,10 +385,15 @@ function ExerciseExtrasSection({
         <Section title={t('exercises.thinkers', locale)}>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 10 }}>
             {extras.relatedThinkers.map((thinker, i) => (
-              <li key={i} style={{
-                padding: '10px 14px', background: '#FFFCF4',
-                border: '2px solid var(--color-ink)', borderRadius: 0,
-              }}>
+              <li
+                key={i}
+                style={{
+                  padding: '10px 14px',
+                  background: '#FFFCF4',
+                  border: '2px solid var(--color-ink)',
+                  borderRadius: 0,
+                }}
+              >
                 <strong style={{ color: 'var(--color-ink)' }}>{thinker.name}</strong>
                 <span style={{ color: 'var(--color-ink-soft)' }}> — {thinker.note}</span>
               </li>
@@ -350,25 +406,49 @@ function ExerciseExtrasSection({
         <Section title={t('exercises.further_reading', locale)}>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 12 }}>
             {extras.furtherReading.map((book, i) => (
-              <li key={i} style={{
-                padding: '12px 16px', background: '#FFFCF4',
-                border: '3px solid var(--color-ink)',
-                boxShadow: '3px 3px 0 0 var(--color-acc)',
-                borderRadius: 0,
-              }}>
-                <div style={{
-                  fontFamily: serif, fontSize: 17, color: 'var(--color-ink)',
-                  marginBottom: 2, lineHeight: 1.3,
-                }}>
+              <li
+                key={i}
+                style={{
+                  padding: '12px 16px',
+                  background: '#FFFCF4',
+                  border: '3px solid var(--color-ink)',
+                  boxShadow: '3px 3px 0 0 var(--color-acc)',
+                  borderRadius: 0,
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: serif,
+                    fontSize: 17,
+                    color: 'var(--color-ink)',
+                    marginBottom: 2,
+                    lineHeight: 1.3,
+                  }}
+                >
                   {book.title}
                 </div>
-                <div style={{
-                  fontFamily: sans, fontSize: 12,
-                  color: 'var(--color-acc-deep)', marginBottom: 6, letterSpacing: 0.2,
-                }}>
-                  {book.author}{book.year ? ` · ${book.year}` : ''}
+                <div
+                  style={{
+                    fontFamily: sans,
+                    fontSize: 12,
+                    color: 'var(--color-acc-deep)',
+                    marginBottom: 6,
+                    letterSpacing: 0.2,
+                  }}
+                >
+                  {book.author}
+                  {book.year ? ` · ${book.year}` : ''}
                 </div>
-                <p style={{ margin: 0, fontSize: 14, color: 'var(--color-ink-soft)', lineHeight: 1.55 }}>{book.note}</p>
+                <p
+                  style={{
+                    margin: 0,
+                    fontSize: 14,
+                    color: 'var(--color-ink-soft)',
+                    lineHeight: 1.55,
+                  }}
+                >
+                  {book.note}
+                </p>
               </li>
             ))}
           </ul>
@@ -378,24 +458,29 @@ function ExerciseExtrasSection({
       {sibs.length > 0 && (
         <Section title={t('exercises.related', locale)}>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 10 }}>
-            {sibs.map(rex => (
+            {sibs.map((rex) => (
               <li key={rex.slug}>
                 <Link
                   href={`/exercises/${rex.slug}`}
                   className="pixel-press"
                   style={{
-                    display: 'block', padding: '12px 16px',
+                    display: 'block',
+                    padding: '12px 16px',
                     background: '#FFFCF4',
                     border: '3px solid var(--color-ink)',
                     boxShadow: '3px 3px 0 0 #2F5D5C',
-                    borderRadius: 0, textDecoration: 'none', color: 'inherit',
+                    borderRadius: 0,
+                    textDecoration: 'none',
+                    color: 'inherit',
                     transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
                   }}
                 >
                   <div style={{ fontFamily: serif, fontSize: 17, color: 'var(--color-ink)' }}>
                     {rex.name} →
                   </div>
-                  <p style={{ margin: '2px 0 0', fontSize: 13.5, color: 'var(--color-ink-soft)' }}>{rex.summary}</p>
+                  <p style={{ margin: '2px 0 0', fontSize: 13.5, color: 'var(--color-ink-soft)' }}>
+                    {rex.summary}
+                  </p>
                 </Link>
               </li>
             ))}
@@ -422,27 +507,33 @@ function ExerciseExtrasSection({
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section style={{
-      marginBottom: 36,
-      paddingTop: 24,
-      borderTop: '1px solid #EBE3CA',
-    }}>
-      <h2 style={{
-        fontFamily: serif,
-        fontSize: 22,
-        fontWeight: 500,
-        margin: '0 0 14px',
-        letterSpacing: '-0.2px',
-        color: 'var(--color-ink)',
-      }}>
+    <section
+      style={{
+        marginBottom: 36,
+        paddingTop: 24,
+        borderTop: '1px solid #EBE3CA',
+      }}
+    >
+      <h2
+        style={{
+          fontFamily: serif,
+          fontSize: 22,
+          fontWeight: 500,
+          margin: '0 0 14px',
+          letterSpacing: '-0.2px',
+          color: 'var(--color-ink)',
+        }}
+      >
         {title}
       </h2>
-      <div style={{
-        fontFamily: sans,
-        fontSize: 15.5,
-        color: 'var(--color-ink-soft)',
-        lineHeight: 1.65,
-      }}>
+      <div
+        style={{
+          fontFamily: sans,
+          fontSize: 15.5,
+          color: 'var(--color-ink-soft)',
+          lineHeight: 1.65,
+        }}
+      >
         {children}
       </div>
     </section>

@@ -4,47 +4,47 @@
 // Elo delta, kindred philosopher. Click through to re-read the full
 // transcript + verdict.
 
-import Link from "next/link";
-import type { Metadata } from "next";
-import { redirect } from "next/navigation";
-import { createClient } from "@/utils/supabase/server";
-import { getArenaTopic, localizeArenaPhilosopherName } from "@/lib/arena/data";
-import { localizeArenaTopic } from "@/lib/arena/topics-i18n";
-import { totalScore, type JudgeOutput } from "@/lib/arena/judge";
-import { getServerLocale } from "@/lib/locale-server";
-import { t, type Locale } from "@/lib/translations";
+import Link from 'next/link';
+import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
+import { createClient } from '@/utils/supabase/server';
+import { getArenaTopic, localizeArenaPhilosopherName } from '@/lib/arena/data';
+import { localizeArenaTopic } from '@/lib/arena/topics-i18n';
+import { totalScore, type JudgeOutput } from '@/lib/arena/judge';
+import { getServerLocale } from '@/lib/locale-server';
+import { t, type Locale } from '@/lib/translations';
 
 const BCP47: Record<Locale, string> = {
-  en: "en-US",
-  es: "es-ES",
-  fr: "fr-FR",
-  pt: "pt-BR",
-  ru: "ru-RU",
-  zh: "zh-CN",
-  ja: "ja-JP",
-  ko: "ko-KR",
+  en: 'en-US',
+  es: 'es-ES',
+  fr: 'fr-FR',
+  pt: 'pt-BR',
+  ru: 'ru-RU',
+  zh: 'zh-CN',
+  ja: 'ja-JP',
+  ko: 'ko-KR',
 };
 
 export const metadata: Metadata = {
-  title: "Arena · History · Mull",
+  title: 'Arena · History · Mull',
   robots: { index: false, follow: false },
 };
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 
 type Session = {
   id: string;
-  kind: "calibration" | "pve" | "pvp";
+  kind: 'calibration' | 'pve' | 'pvp';
   topic_slug: string;
   opponent: string;
   user_id: string;
   opponent_user_id: string | null;
   user_elo_at_start: number;
   opponent_elo_at_start: number;
-  verdict: "user" | "opponent" | "draw";
+  verdict: 'user' | 'opponent' | 'draw';
   judge_json: JudgeOutput;
   elo_delta: number;
   judged_at: string;
@@ -56,17 +56,17 @@ export default async function ArenaHistoryPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login?next=/arena/history");
+  if (!user) redirect('/login?next=/arena/history');
 
   // Load all judged sessions where the user participated.
   // RLS already scopes via either user_id or opponent_user_id.
   const { data } = await supabase
-    .from("arena_sessions")
+    .from('arena_sessions')
     .select(
-      "id, kind, topic_slug, opponent, user_id, opponent_user_id, user_elo_at_start, opponent_elo_at_start, verdict, judge_json, elo_delta, judged_at",
+      'id, kind, topic_slug, opponent, user_id, opponent_user_id, user_elo_at_start, opponent_elo_at_start, verdict, judge_json, elo_delta, judged_at',
     )
-    .eq("status", "judged")
-    .order("judged_at", { ascending: false })
+    .eq('status', 'judged')
+    .order('judged_at', { ascending: false })
     .limit(100);
 
   const sessions = (data as Session[] | null) ?? [];
@@ -79,13 +79,13 @@ export default async function ArenaHistoryPage() {
           style={{
             fontFamily: pixel,
             fontSize: 11,
-            color: "var(--color-ink-soft)",
-            textDecoration: "none",
+            color: 'var(--color-ink-soft)',
+            textDecoration: 'none',
             letterSpacing: 0.4,
-            textTransform: "uppercase",
+            textTransform: 'uppercase',
           }}
         >
-          {t("arena.back", locale)}
+          {t('arena.back', locale)}
         </Link>
       </div>
 
@@ -93,54 +93,58 @@ export default async function ArenaHistoryPage() {
         style={{
           fontFamily: pixel,
           fontSize: 24,
-          color: "var(--color-ink)",
-          letterSpacing: "0.04em",
-          textTransform: "uppercase",
-          textShadow: "3px 3px 0 var(--pixel-shadow, var(--color-acc))",
+          color: 'var(--color-ink)',
+          letterSpacing: '0.04em',
+          textTransform: 'uppercase',
+          textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))',
           marginBottom: 8,
         }}
       >
-        {t("arena.hist_page_title", locale)}
+        {t('arena.hist_page_title', locale)}
       </h1>
       <p
         style={{
           fontFamily: serif,
-          fontStyle: "italic",
+          fontStyle: 'italic',
           fontSize: 15,
-          color: "var(--color-ink-soft)",
-          margin: "0 0 28px",
+          color: 'var(--color-ink-soft)',
+          margin: '0 0 28px',
           lineHeight: 1.55,
         }}
       >
-        {t("arena.hist_subtitle", locale)}
+        {t('arena.hist_subtitle', locale)}
       </p>
 
       {sessions.length === 0 ? (
         <div
           style={{
-            padding: "24px 22px",
-            background: "#FFFCF4",
-            border: "3px dashed var(--color-acc-deep)",
+            padding: '24px 22px',
+            background: '#FFFCF4',
+            border: '3px dashed var(--color-acc-deep)',
             fontFamily: serif,
-            fontStyle: "italic",
+            fontStyle: 'italic',
             fontSize: 15,
-            color: "var(--color-acc-deep)",
-            textAlign: "center",
+            color: 'var(--color-acc-deep)',
+            textAlign: 'center',
           }}
         >
-          {t("arena.hist_empty_1", locale)}
-          <Link href="/arena/pve" style={{ color: "var(--color-ink)" }}>{t("arena.hist_empty_face", locale)}</Link>
-          {t("arena.hist_empty_or", locale)}
-          <Link href="/arena/pvp" style={{ color: "var(--color-ink)" }}>{t("arena.hist_empty_pvp", locale)}</Link>
-          {t("arena.hist_empty_2", locale)}
+          {t('arena.hist_empty_1', locale)}
+          <Link href="/arena/pve" style={{ color: 'var(--color-ink)' }}>
+            {t('arena.hist_empty_face', locale)}
+          </Link>
+          {t('arena.hist_empty_or', locale)}
+          <Link href="/arena/pvp" style={{ color: 'var(--color-ink)' }}>
+            {t('arena.hist_empty_pvp', locale)}
+          </Link>
+          {t('arena.hist_empty_2', locale)}
         </div>
       ) : (
         <ul
           style={{
-            listStyle: "none",
+            listStyle: 'none',
             padding: 0,
             margin: 0,
-            display: "grid",
+            display: 'grid',
             gap: 8,
           }}
         >
@@ -163,31 +167,29 @@ function HistoryRow({
   locale: Locale;
 }) {
   const topic = getArenaTopic(session.topic_slug);
-  const localizedTopicTitle = topic
-    ? localizeArenaTopic(topic, locale).title
-    : session.topic_slug;
+  const localizedTopicTitle = topic ? localizeArenaTopic(topic, locale).title : session.topic_slug;
   const viewerIsChallenger = session.user_id === viewerId;
 
   // Figure out who the viewer was up against.
   const opponentDisplay =
-    session.kind === "pve"
+    session.kind === 'pve'
       ? localizeArenaPhilosopherName(session.opponent, locale)
       : viewerIsChallenger
-        ? t("arena.opp_generic", locale)
-        : t("arena.challenger", locale);
+        ? t('arena.opp_generic', locale)
+        : t('arena.challenger', locale);
 
   // Map verdict → "did the viewer win".
   const viewerWon =
-    (session.verdict === "user" && viewerIsChallenger) ||
-    (session.verdict === "opponent" && !viewerIsChallenger);
-  const wasDraw = session.verdict === "draw";
+    (session.verdict === 'user' && viewerIsChallenger) ||
+    (session.verdict === 'opponent' && !viewerIsChallenger);
+  const wasDraw = session.verdict === 'draw';
 
   const verdictLabel = wasDraw
-    ? t("arena.result.draw", locale)
+    ? t('arena.result.draw', locale)
     : viewerWon
-      ? t("arena.result.win", locale)
-      : t("arena.result.loss", locale);
-  const verdictColor = wasDraw ? "var(--color-acc-deep)" : viewerWon ? "#2F5D5C" : "#7A2E2E";
+      ? t('arena.result.win', locale)
+      : t('arena.result.loss', locale);
+  const verdictColor = wasDraw ? 'var(--color-acc-deep)' : viewerWon ? '#2F5D5C' : '#7A2E2E';
 
   // Score breakdown (mine vs opp).
   const userTotal = totalScore(session.judge_json.user_scores);
@@ -196,30 +198,28 @@ function HistoryRow({
   const theirScore = viewerIsChallenger ? oppTotal : userTotal;
 
   const detailHref =
-    session.kind === "pvp"
-      ? `/arena/pvp/${session.id}`
-      : `/arena/pve/${session.id}`;
+    session.kind === 'pvp' ? `/arena/pvp/${session.id}` : `/arena/pve/${session.id}`;
 
   return (
     <li>
       <Link
         href={detailHref}
         style={{
-          display: "block",
-          padding: "14px 16px",
-          background: "#FFFCF4",
-          border: "3px solid var(--color-ink)",
+          display: 'block',
+          padding: '14px 16px',
+          background: '#FFFCF4',
+          border: '3px solid var(--color-ink)',
           boxShadow: `3px 3px 0 0 ${verdictColor}`,
-          textDecoration: "none",
-          color: "inherit",
+          textDecoration: 'none',
+          color: 'inherit',
         }}
       >
         <div
           style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "baseline",
-            flexWrap: "wrap",
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'baseline',
+            flexWrap: 'wrap',
             gap: 8,
             marginBottom: 6,
           }}
@@ -229,8 +229,8 @@ function HistoryRow({
               fontFamily: pixel,
               fontSize: 10,
               color: verdictColor,
-              letterSpacing: "0.22em",
-              textTransform: "uppercase",
+              letterSpacing: '0.22em',
+              textTransform: 'uppercase',
             }}
           >
             ▸ {t(`arena.kind.${session.kind}`, locale)} · {verdictLabel}
@@ -239,15 +239,15 @@ function HistoryRow({
             style={{
               fontFamily: pixel,
               fontSize: 9,
-              color: "var(--color-acc-deep)",
+              color: 'var(--color-acc-deep)',
               letterSpacing: 0.4,
-              textTransform: "uppercase",
+              textTransform: 'uppercase',
             }}
           >
             {new Date(session.judged_at).toLocaleDateString(BCP47[locale], {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric',
             })}
           </div>
         </div>
@@ -256,28 +256,30 @@ function HistoryRow({
             fontFamily: serif,
             fontSize: 17,
             fontWeight: 500,
-            color: "var(--color-ink)",
+            color: 'var(--color-ink)',
             marginBottom: 4,
           }}
         >
-          {localizedTopicTitle} <span style={{ color: "var(--color-acc-deep)" }}>{t("arena.hist_vs", locale)}</span> {opponentDisplay}
+          {localizedTopicTitle}{' '}
+          <span style={{ color: 'var(--color-acc-deep)' }}>{t('arena.hist_vs', locale)}</span>{' '}
+          {opponentDisplay}
         </div>
         <div
           style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "baseline",
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'baseline',
             gap: 8,
-            flexWrap: "wrap",
+            flexWrap: 'wrap',
             fontFamily: pixel,
             fontSize: 10,
-            color: "var(--color-ink-soft)",
+            color: 'var(--color-ink-soft)',
             letterSpacing: 0.4,
-            textTransform: "uppercase",
+            textTransform: 'uppercase',
           }}
         >
           <span>
-            {t("arena.hist_scoreline", locale, {
+            {t('arena.hist_scoreline', locale, {
               my: myScore,
               opp: opponentDisplay,
               their: theirScore,
@@ -285,10 +287,10 @@ function HistoryRow({
           </span>
           <span
             style={{
-              color: session.elo_delta >= 0 ? "#2F5D5C" : "#7A2E2E",
+              color: session.elo_delta >= 0 ? '#2F5D5C' : '#7A2E2E',
             }}
           >
-            ELO {session.elo_delta >= 0 ? "+" : ""}
+            ELO {session.elo_delta >= 0 ? '+' : ''}
             {session.elo_delta}
           </span>
         </div>
@@ -297,12 +299,12 @@ function HistoryRow({
             style={{
               marginTop: 6,
               fontFamily: serif,
-              fontStyle: "italic",
+              fontStyle: 'italic',
               fontSize: 13,
-              color: "var(--color-acc-deep)",
+              color: 'var(--color-acc-deep)',
             }}
           >
-            {t("arena.argued_like", locale, {
+            {t('arena.argued_like', locale, {
               name: session.judge_json.user_kindred_philosopher,
             })}
           </div>

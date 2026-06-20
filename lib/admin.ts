@@ -12,7 +12,7 @@
 
 const ADMIN_IDS = (process.env.ADMIN_USER_IDS ?? '')
   .split(',')
-  .map(s => s.trim())
+  .map((s) => s.trim())
   .filter(Boolean);
 
 export function isAdminUserId(userId: string | null | undefined): boolean {

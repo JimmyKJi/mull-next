@@ -45,7 +45,10 @@ function buildVsIndex(): Map<string, VsLink[]> {
 
     // For each name in the pair, the "partner" is the other one.
     // De-dupe per philosopher (in case the curated list has overlaps).
-    for (const [self, partner] of [[s1, n2], [s2, n1]] as const) {
+    for (const [self, partner] of [
+      [s1, n2],
+      [s2, n1],
+    ] as const) {
       const seen = seenHref.get(self) ?? new Set();
       if (seen.has(href)) continue;
       seen.add(href);

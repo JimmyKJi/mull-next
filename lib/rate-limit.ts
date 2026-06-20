@@ -52,14 +52,12 @@ type Bucket =
 
 type Options = {
   bucket: Bucket;
-  max: number;        // attempts allowed
-  windowSec: number;  // window length in seconds
+  max: number; // attempts allowed
+  windowSec: number; // window length in seconds
   userId?: string | null;
 };
 
-type Result =
-  | { ok: true; remaining: number }
-  | { ok: false; message: string };
+type Result = { ok: true; remaining: number } | { ok: false; message: string };
 
 function clientIp(req: Request): string {
   // Vercel sets x-forwarded-for to the real client IP; the first
@@ -122,21 +120,21 @@ export async function rateLimit(req: Request, opts: Options): Promise<Result> {
 // the point is to keep aggregate cost bounded.
 
 const BUCKET_COST_CENTS: Record<Bucket, number> = {
-  feedback: 0,        // no AI
-  welcome: 0,         // no AI
-  profile_search: 0,  // no AI — DB query only; rate-limited for load, not cost
-  dilemma_submit: 1,  // ~$0.005 Haiku — round up
+  feedback: 0, // no AI
+  welcome: 0, // no AI
+  profile_search: 0, // no AI — DB query only; rate-limited for load, not cost
+  dilemma_submit: 1, // ~$0.005 Haiku — round up
   dilemma_archive: 1, // single Haiku call (Mull+ archive reflection)
   reflection: 1,
   diary: 1,
   exercise: 1,
-  argument_diary: 1,  // single Haiku call
-  spar_play: 8,       // 1 Haiku turn + 1 Sonnet judge, ~$0.05–0.08
-  arena_turn: 1,      // 1 Haiku turn alone
-  arena_judge: 15,    // Sonnet judge on full transcript, ~$0.15
+  argument_diary: 1, // single Haiku call
+  spar_play: 8, // 1 Haiku turn + 1 Sonnet judge, ~$0.05–0.08
+  arena_turn: 1, // 1 Haiku turn alone
+  arena_judge: 15, // Sonnet judge on full transcript, ~$0.15
   debate_generate: 8, // Sonnet, up to 4000 tok, ×2 retry — anonymous-facing
-  debate_me: 8,       // Sonnet, up to 3500 tok, ×2 retry (you-vs-philosopher)
-  retrospective: 6,   // Sonnet essay, up to 2400 tok (Mull+ retrospective)
+  debate_me: 8, // Sonnet, up to 3500 tok, ×2 retry (you-vs-philosopher)
+  retrospective: 6, // Sonnet essay, up to 2400 tok (Mull+ retrospective)
 };
 
 // Daily ceiling — defaults to $17/day. Budget math: Jimmy's
@@ -144,17 +142,11 @@ const BUCKET_COST_CENTS: Record<Bucket, number> = {
 // on top of the listed API price, so $1 of cap = $1.20 of cash.
 // $17/day × 30 = $510/mo of API → ~$612 cash after VAT. Sits just
 // inside £500 GBP at current FX.
-const DAILY_SPEND_CAP_CENTS = parseInt(
-  process.env.MULL_DAILY_SPEND_CAP_CENTS || '1700',
-  10,
-);
+const DAILY_SPEND_CAP_CENTS = parseInt(process.env.MULL_DAILY_SPEND_CAP_CENTS || '1700', 10);
 // Monthly ceiling — defaults to $500/mo of API (~$600 cash with
 // VAT). Hard stop even if daily cap never trips on a given day —
 // catches the slow-grind scenario.
-const MONTHLY_SPEND_CAP_CENTS = parseInt(
-  process.env.MULL_MONTHLY_SPEND_CAP_CENTS || '50000',
-  10,
-);
+const MONTHLY_SPEND_CAP_CENTS = parseInt(process.env.MULL_MONTHLY_SPEND_CAP_CENTS || '50000', 10);
 
 // Admin override (set MULL_KILL_SWITCH=on to force-pause all AI even
 // when under the cap; set MULL_KILL_SWITCH=off to disable the cap
@@ -246,15 +238,15 @@ export async function readAiSpend(): Promise<SpendStatus> {
 // generous enough that engaged users don't hit them in practice,
 // strict enough that one bad actor can't run a $50 bill alone.
 const PER_USER_DAILY_CAPS: Partial<Record<Bucket, number>> = {
-  spar_play: 3,        // 3 Spars/day ≈ $0.24/day max per user
-  arena_turn: 32,      // ~4 full debates of 8 turns
-  arena_judge: 4,      // 4 verdicts/day → $0.60 cap per user
-  argument_diary: 3,   // 3 analyses/day → $0.03 cap per user
+  spar_play: 3, // 3 Spars/day ≈ $0.24/day max per user
+  arena_turn: 32, // ~4 full debates of 8 turns
+  arena_judge: 4, // 4 verdicts/day → $0.60 cap per user
+  argument_diary: 3, // 3 analyses/day → $0.03 cap per user
   // debate_generate is tiered at the call site (2/IP anon, 6/IP signed-in)
   // via the perUserDaily override; this is just the fallback default.
   debate_generate: 6,
-  debate_me: 8,        // generous; the 3/user/day history limit binds first
-  retrospective: 4,    // 4 Mull+ retrospectives/day → ~$0.24 cap
+  debate_me: 8, // generous; the 3/user/day history limit binds first
+  retrospective: 4, // 4 Mull+ retrospectives/day → ~$0.24 cap
   // Cheap ones get higher caps since they don't move the budget much:
   dilemma_submit: 5,
   dilemma_archive: 10,
@@ -279,10 +271,7 @@ type GateResult =
  *    1. Site-wide daily/monthly spend ceiling (kill switch)
  *    2. Per-user daily cap for the bucket
  *  Returns 503 for kill-switch, 429 for per-user limit. */
-export async function aiGate(
-  req: Request,
-  opts: GateOptions,
-): Promise<GateResult> {
+export async function aiGate(req: Request, opts: GateOptions): Promise<GateResult> {
   // 1. Global spend ceiling first — if we're paused, no one's
   //    request matters.
   const spend = await readAiSpend();
@@ -291,8 +280,7 @@ export async function aiGate(
       ok: false,
       status: 503,
       message:
-        spend.reason ??
-        'Mull is paused for the day — AI cost cap reached. Try again tomorrow.',
+        spend.reason ?? 'Mull is paused for the day — AI cost cap reached. Try again tomorrow.',
     };
   }
 

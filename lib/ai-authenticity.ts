@@ -27,12 +27,12 @@
 // phrases — false positives are possible").
 
 export type AuthFlagKind =
-  | 'phrase'           // a well-known AI phrase (e.g. "delve into")
+  | 'phrase' // a well-known AI phrase (e.g. "delve into")
   | 'uniform_sentence' // sentence lengths are unusually uniform
-  | 'hedging_density'  // too many "it's important to consider" hedges
-  | 'list_density'     // too many bullet/numbered structures
-  | 'meta_language'    // first-person scaffolding ("In this response, I will...")
-  | 'lexical_polish';  // too many "comprehensive, nuanced, intricate"
+  | 'hedging_density' // too many "it's important to consider" hedges
+  | 'list_density' // too many bullet/numbered structures
+  | 'meta_language' // first-person scaffolding ("In this response, I will...")
+  | 'lexical_polish'; // too many "comprehensive, nuanced, intricate"
 
 export type AuthFlag = {
   kind: AuthFlagKind;
@@ -179,11 +179,11 @@ function countDistinctMatches(text: string, phrases: string[]): number {
 function sentenceUniformityFlag(text: string): AuthFlag | null {
   const sentences = text
     .split(/[.!?]+/)
-    .map(s => s.trim())
-    .filter(s => s.length > 5);
+    .map((s) => s.trim())
+    .filter((s) => s.length > 5);
   if (sentences.length < 5) return null;
 
-  const lengths = sentences.map(s => s.split(/\s+/).length);
+  const lengths = sentences.map((s) => s.split(/\s+/).length);
   const mean = lengths.reduce((a, b) => a + b, 0) / lengths.length;
   if (mean < 4) return null; // texts of single-word sentences are weird; skip
   const variance = lengths.reduce((acc, l) => acc + (l - mean) ** 2, 0) / lengths.length;
@@ -195,7 +195,9 @@ function sentenceUniformityFlag(text: string): AuthFlag | null {
       kind: 'uniform_sentence',
       label: `Sentences are unusually uniform in length (CV ${cv.toFixed(2)})`,
       weight: 14,
-      evidence: [`${sentences.length} sentences averaging ${mean.toFixed(0)} words, stddev ${stddev.toFixed(1)}`],
+      evidence: [
+        `${sentences.length} sentences averaging ${mean.toFixed(0)} words, stddev ${stddev.toFixed(1)}`,
+      ],
     };
   }
   if (cv < 0.35) {
@@ -203,7 +205,9 @@ function sentenceUniformityFlag(text: string): AuthFlag | null {
       kind: 'uniform_sentence',
       label: `Sentence lengths are fairly uniform (CV ${cv.toFixed(2)})`,
       weight: 7,
-      evidence: [`${sentences.length} sentences averaging ${mean.toFixed(0)} words, stddev ${stddev.toFixed(1)}`],
+      evidence: [
+        `${sentences.length} sentences averaging ${mean.toFixed(0)} words, stddev ${stddev.toFixed(1)}`,
+      ],
     };
   }
   return null;
@@ -235,7 +239,7 @@ function listDensityFlag(text: string): AuthFlag | null {
 /** Main scorer. Pure function — no DB, no async. */
 export function scoreAuthenticity(rawText: string): AuthResult {
   const text = (rawText ?? '').trim();
-  const words = text.split(/\s+/).filter(w => w.length > 0);
+  const words = text.split(/\s+/).filter((w) => w.length > 0);
   const wordCount = words.length;
 
   const flags: AuthFlag[] = [];
@@ -245,9 +249,10 @@ export function scoreAuthenticity(rawText: string): AuthResult {
   if (phraseHits > 0) {
     flags.push({
       kind: 'phrase',
-      label: phraseHits === 1
-        ? '1 commonly AI-overused phrase'
-        : `${phraseHits} commonly AI-overused phrases`,
+      label:
+        phraseHits === 1
+          ? '1 commonly AI-overused phrase'
+          : `${phraseHits} commonly AI-overused phrases`,
       weight: Math.min(24, phraseHits * 4),
       evidence: findEvidence(text, AI_PHRASES),
     });
@@ -280,9 +285,10 @@ export function scoreAuthenticity(rawText: string): AuthResult {
   if (metaHits > 0) {
     flags.push({
       kind: 'meta_language',
-      label: metaHits === 1
-        ? 'Essay-meta scaffolding ("in this response...")'
-        : `${metaHits} essay-meta scaffolding phrases`,
+      label:
+        metaHits === 1
+          ? 'Essay-meta scaffolding ("in this response...")'
+          : `${metaHits} essay-meta scaffolding phrases`,
       weight: Math.min(12, metaHits * 5),
       evidence: findEvidence(text, META_PHRASES),
     });

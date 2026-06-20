@@ -22,8 +22,8 @@
 // outside the bounds clip — that's fine, it preserves the map's
 // established frame.
 
-import { DIM_KEYS, type DimKey } from "./dimensions";
-import { PHILOSOPHERS } from "./philosophers";
+import { DIM_KEYS, type DimKey } from './dimensions';
+import { PHILOSOPHERS } from './philosophers';
 
 // Map a DimKey → its index in DIM_KEYS for fast lookups.
 const DIM_INDEX: Record<DimKey, number> = DIM_KEYS.reduce(
@@ -45,15 +45,14 @@ function dim(vec: number[], k: DimKey): number {
  */
 export function projectRaw(vector: number[]): [number, number] {
   const x =
-    dim(vector, "TR") +
-    dim(vector, "TD") +
-    dim(vector, "UI") -
-    dim(vector, "TE") -
-    dim(vector, "ES") -
-    dim(vector, "PO");
+    dim(vector, 'TR') +
+    dim(vector, 'TD') +
+    dim(vector, 'UI') -
+    dim(vector, 'TE') -
+    dim(vector, 'ES') -
+    dim(vector, 'PO');
 
-  const y =
-    dim(vector, "SS") + dim(vector, "WP") - dim(vector, "CE") - dim(vector, "RT");
+  const y = dim(vector, 'SS') + dim(vector, 'WP') - dim(vector, 'CE') - dim(vector, 'RT');
 
   return [x, y];
 }
@@ -68,7 +67,7 @@ export function projectRaw(vector: number[]): [number, number] {
  */
 export function projectRaw3D(vector: number[]): [number, number, number] {
   const [x, y] = projectRaw(vector);
-  const z = dim(vector, "SR") - dim(vector, "MR");
+  const z = dim(vector, 'SR') - dim(vector, 'MR');
   return [x, y, z];
 }
 
@@ -129,9 +128,7 @@ export function projectTo2D(vector: number[]): [number, number] {
  * Normalize a raw 3-D projection into the [-1, 1] cube using cloud
  * bounds for all three axes.
  */
-export function normalizeProjection3D(
-  raw: [number, number, number],
-): [number, number, number] {
+export function normalizeProjection3D(raw: [number, number, number]): [number, number, number] {
   const [x, y, z] = raw;
   const nx = ((x - BOUNDS.xMin) / (BOUNDS.xMax - BOUNDS.xMin)) * 2 - 1;
   const ny = ((y - BOUNDS.yMin) / (BOUNDS.yMax - BOUNDS.yMin)) * 2 - 1;
@@ -161,7 +158,10 @@ export const PHILOSOPHER_POSITIONS: ReadonlyArray<{
     dates: p.dates,
     keyIdea: p.keyIdea,
     archetypeKey: p.archetypeKey,
-    slug: p.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""),
+    slug: p.name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, ''),
     x,
     y,
   };
@@ -185,7 +185,10 @@ export const PHILOSOPHER_POSITIONS_3D: ReadonlyArray<{
     dates: p.dates,
     keyIdea: p.keyIdea,
     archetypeKey: p.archetypeKey,
-    slug: p.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""),
+    slug: p.name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, ''),
     x,
     y,
     z,

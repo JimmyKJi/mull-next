@@ -22,7 +22,7 @@ import {
   ARENA_TOPICS,
   type ArenaPhilosopher,
   type ArenaTopic,
-} from "./arena/data";
+} from './arena/data';
 
 export type DailySpar = {
   philosopher: ArenaPhilosopher;
@@ -45,8 +45,8 @@ export function getDailySpar(now: Date = new Date()): DailySpar {
 
   // Heavy tier (Nietzsche, Hegel) every 7th day. Sharp tier on
   // half of remaining days; friendly tier on the other half.
-  const nonHeavy = ARENA_PHILOSOPHERS.filter((p) => p.tier !== "heavy");
-  const heavy = ARENA_PHILOSOPHERS.filter((p) => p.tier === "heavy");
+  const nonHeavy = ARENA_PHILOSOPHERS.filter((p) => p.tier !== 'heavy');
+  const heavy = ARENA_PHILOSOPHERS.filter((p) => p.tier === 'heavy');
   const philosopher =
     doy % 7 === 0 && heavy.length > 0
       ? heavy[Math.floor(doy / 7) % heavy.length]
@@ -55,9 +55,7 @@ export function getDailySpar(now: Date = new Date()): DailySpar {
   // Topic: respect category constraint when set, offset by 5 so
   // consecutive days don't share an obvious pattern.
   const allowed = philosopher.topicCategories
-    ? ARENA_TOPICS.filter((t) =>
-        philosopher.topicCategories!.includes(t.category),
-      )
+    ? ARENA_TOPICS.filter((t) => philosopher.topicCategories!.includes(t.category))
     : ARENA_TOPICS;
   const topic = allowed[(doy + 5) % allowed.length];
 
@@ -66,7 +64,7 @@ export function getDailySpar(now: Date = new Date()): DailySpar {
 }
 
 /** Localstorage key for daily spar limit tracking (v1 — client only). */
-export const SPAR_LIMIT_KEY = "mull.spar_plays";
+export const SPAR_LIMIT_KEY = 'mull.spar_plays';
 export const SPAR_DAILY_LIMIT = 3;
 
 /** Word-count cap on a single spar turn (rough, by string length). */

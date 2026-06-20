@@ -30,7 +30,12 @@
 import { getArchetypeByKey } from './archetypes';
 import { findTopic } from './topics';
 import { EXERCISES } from './exercises';
-import { PHILOSOPHERS, philosopherSlug, getPhilosopherBySlug, nearestPhilosophers } from './philosophers';
+import {
+  PHILOSOPHERS,
+  philosopherSlug,
+  getPhilosopherBySlug,
+  nearestPhilosophers,
+} from './philosophers';
 import { nearestPhilosophersToVector } from './recommendations';
 import { getArchetypeColor } from './archetype-colors';
 import { t, type Locale } from './translations';
@@ -156,7 +161,9 @@ function stationPilgrimage(archetypeKey: string, locale: Locale): PathwayStation
   const color = getArchetypeColor(archetypeKey);
   return {
     visual: { kind: 'archetype', archetypeKey },
-    title: t('pathway.pilgrimage_title', locale, { arch: archetypeDisplayName(archetypeKey, locale) }),
+    title: t('pathway.pilgrimage_title', locale, {
+      arch: archetypeDisplayName(archetypeKey, locale),
+    }),
     blurb: t('pathway.pilgrimage_blurb', locale),
     href: '/pilgrimage',
     accent: color.deep,
@@ -210,17 +217,12 @@ function stationVs(nameA: string, nameB: string, blurb: string, locale: Locale):
 }
 
 function stationExercise(slug: string, locale: Locale, blurb?: string): PathwayStation | null {
-  const ex = EXERCISES.find(e => e.slug === slug);
+  const ex = EXERCISES.find((e) => e.slug === slug);
   if (!ex) return null;
   const lex = localizeExercise(ex, locale);
-  const glyph =
-    ex.category === 'contemplative' ? '☷' :
-    ex.category === 'logic' ? '⊕' :
-    '◍';
+  const glyph = ex.category === 'contemplative' ? '☷' : ex.category === 'logic' ? '⊕' : '◍';
   const accent =
-    ex.category === 'contemplative' ? '#2F5D5C' :
-    ex.category === 'logic' ? '#1E3A5F' :
-    '#7A2E2E';
+    ex.category === 'contemplative' ? '#2F5D5C' : ex.category === 'logic' ? '#1E3A5F' : '#7A2E2E';
   return {
     visual: { kind: 'glyph', glyph },
     title: lex.name,
@@ -240,7 +242,9 @@ function stationArena(locale: Locale, opponentName?: string): PathwayStation {
   }
   return {
     visual: { kind: 'glyph', glyph: '⚔' },
-    title: disp ? t('pathway.arena_argue', locale, { name: disp }) : t('pathway.arena_title', locale),
+    title: disp
+      ? t('pathway.arena_argue', locale, { name: disp })
+      : t('pathway.arena_title', locale),
     blurb: disp
       ? t('pathway.arena_blurb_opp', locale, { name: disp })
       : t('pathway.arena_blurb', locale),
@@ -266,7 +270,9 @@ export function pathwayForTopic(topicSlug: string, locale: Locale = 'en'): Pathw
 
   // Middle: a flagship philosopher from this topic.
   if (top && top.philosopherNames.length > 0) {
-    cold.push(stationPhilosopher(top.philosopherNames[0], t('pathway.topic.philosopher', locale), locale));
+    cold.push(
+      stationPhilosopher(top.philosopherNames[0], t('pathway.topic.philosopher', locale), locale),
+    );
   }
 
   // Tail: daily ritual.
@@ -278,10 +284,18 @@ export function pathwayForTopic(topicSlug: string, locale: Locale = 'en'): Pathw
   // Stations below are a generic warm fallback if archetype unknown.
   const warm: PathwayStation[] = [];
   if (top && top.relatedArchetypes.length > 0) {
-    warm.push(stationArchetype(top.relatedArchetypes[0], locale, t('pathway.topic.warm_archetype', locale)));
+    warm.push(
+      stationArchetype(top.relatedArchetypes[0], locale, t('pathway.topic.warm_archetype', locale)),
+    );
   }
   if (top && top.philosopherNames.length > 0) {
-    warm.push(stationPhilosopher(top.philosopherNames[0], t('pathway.topic.warm_philosopher', locale), locale));
+    warm.push(
+      stationPhilosopher(
+        top.philosopherNames[0],
+        t('pathway.topic.warm_philosopher', locale),
+        locale,
+      ),
+    );
   }
   warm.push(stationSpar(locale));
 
@@ -306,12 +320,14 @@ export function pathwayForPhilosopher(slug: string, locale: Locale = 'en'): Path
   if (nearest.length > 0) {
     const partner = nearest[0];
     const partnerName = localizePhilosopher(partner, philosopherSlug(partner.name), locale).name;
-    cold.push(stationVs(
-      p.name,
-      partner.name,
-      t('pathway.philosopher.vs', locale, { name: partnerName }),
-      locale,
-    ));
+    cold.push(
+      stationVs(
+        p.name,
+        partner.name,
+        t('pathway.philosopher.vs', locale, { name: partnerName }),
+        locale,
+      ),
+    );
   }
 
   // Tail: daily ritual.
@@ -321,8 +337,19 @@ export function pathwayForPhilosopher(slug: string, locale: Locale = 'en'): Path
   const warm: PathwayStation[] = [];
   warm.push(stationArena(locale, p.name));
   if (nearest.length > 0) {
-    const partnerName = localizePhilosopher(nearest[0], philosopherSlug(nearest[0].name), locale).name;
-    warm.push(stationVs(p.name, nearest[0].name, t('pathway.philosopher.warm_vs', locale, { a: pName, b: partnerName }), locale));
+    const partnerName = localizePhilosopher(
+      nearest[0],
+      philosopherSlug(nearest[0].name),
+      locale,
+    ).name;
+    warm.push(
+      stationVs(
+        p.name,
+        nearest[0].name,
+        t('pathway.philosopher.warm_vs', locale, { a: pName, b: partnerName }),
+        locale,
+      ),
+    );
   }
   warm.push(stationSpar(locale));
 
@@ -334,16 +361,20 @@ export function pathwayForArchetype(archetypeKey: string, locale: Locale = 'en')
   if (!a) return { cold: [stationQuiz(locale), stationSpar(locale), stationDilemma(locale)] };
 
   // Find a flagship philosopher of this archetype.
-  const flagship = PHILOSOPHERS.find(p => p.archetypeKey === archetypeKey);
+  const flagship = PHILOSOPHERS.find((p) => p.archetypeKey === archetypeKey);
 
   const cold: PathwayStation[] = [];
 
   cold.push({
     ...stationQuiz(locale),
-    blurb: t('pathway.archetype.quiz', locale, { arch: archetypeDisplayName(archetypeKey, locale) }),
+    blurb: t('pathway.archetype.quiz', locale, {
+      arch: archetypeDisplayName(archetypeKey, locale),
+    }),
   });
   if (flagship) {
-    cold.push(stationPhilosopher(flagship.name, t('pathway.archetype.philosopher', locale), locale));
+    cold.push(
+      stationPhilosopher(flagship.name, t('pathway.archetype.philosopher', locale), locale),
+    );
   }
   // Tail: an exercise tied to this archetype.
   const exSlug = a.suggestedExercises?.[0];
@@ -371,7 +402,8 @@ export function pathwayForArchetype(archetypeKey: string, locale: Locale = 'en')
 export function pathwayForVs(slugA: string, slugB: string, locale: Locale = 'en'): Pathway {
   const pa = getPhilosopherBySlug(slugA);
   const pb = getPhilosopherBySlug(slugB);
-  if (!pa || !pb) return { cold: [stationQuiz(locale), stationSpar(locale), stationDilemma(locale)] };
+  if (!pa || !pb)
+    return { cold: [stationQuiz(locale), stationSpar(locale), stationDilemma(locale)] };
 
   const cold: PathwayStation[] = [];
   cold.push({
@@ -379,13 +411,9 @@ export function pathwayForVs(slugA: string, slugB: string, locale: Locale = 'en'
     blurb: t('pathway.vs.quiz', locale),
   });
   // Pick a bridging philosopher (nearest to pa that isn't pb).
-  const bridges = nearestPhilosophers(pa, 5).filter(p => p.name !== pb.name);
+  const bridges = nearestPhilosophers(pa, 5).filter((p) => p.name !== pb.name);
   if (bridges.length > 0) {
-    cold.push(stationPhilosopher(
-      bridges[0].name,
-      t('pathway.vs.philosopher', locale),
-      locale,
-    ));
+    cold.push(stationPhilosopher(bridges[0].name, t('pathway.vs.philosopher', locale), locale));
   }
   cold.push(stationArena(locale, pa.name));
 
@@ -398,7 +426,7 @@ export function pathwayForVs(slugA: string, slugB: string, locale: Locale = 'en'
 }
 
 export function pathwayForExercise(exerciseSlug: string, locale: Locale = 'en'): Pathway {
-  const ex = EXERCISES.find(e => e.slug === exerciseSlug);
+  const ex = EXERCISES.find((e) => e.slug === exerciseSlug);
 
   const cold: PathwayStation[] = [];
   cold.push({
@@ -407,15 +435,23 @@ export function pathwayForExercise(exerciseSlug: string, locale: Locale = 'en'):
   });
   // Surface another exercise in the same category.
   if (ex) {
-    const sibling = EXERCISES.find(e => e.category === ex.category && e.slug !== ex.slug);
+    const sibling = EXERCISES.find((e) => e.category === ex.category && e.slug !== ex.slug);
     if (sibling) {
       const lsib = localizeExercise(sibling, locale);
       cold.push({
-        visual: { kind: 'glyph', glyph: ex.category === 'contemplative' ? '☷' : ex.category === 'logic' ? '⊕' : '◍' },
+        visual: {
+          kind: 'glyph',
+          glyph: ex.category === 'contemplative' ? '☷' : ex.category === 'logic' ? '⊕' : '◍',
+        },
         title: lsib.name,
         blurb: lsib.summary,
         href: `/exercises/${sibling.slug}`,
-        accent: ex.category === 'contemplative' ? '#2F5D5C' : ex.category === 'logic' ? '#1E3A5F' : '#7A2E2E',
+        accent:
+          ex.category === 'contemplative'
+            ? '#2F5D5C'
+            : ex.category === 'logic'
+              ? '#1E3A5F'
+              : '#7A2E2E',
         tag: t('pathway.tag.next_exercise', locale),
       });
     }
@@ -486,9 +522,5 @@ export function personalizeWarmTrail(
   // Archetype-only fallback.
   const exSlug = a.suggestedExercises?.[0];
   const ex = exSlug ? stationExercise(exSlug, locale) : null;
-  return [
-    stationPilgrimage(archetypeKey, locale),
-    stationSpar(locale),
-    ex ?? stationDiary(locale),
-  ];
+  return [stationPilgrimage(archetypeKey, locale), stationSpar(locale), ex ?? stationDiary(locale)];
 }

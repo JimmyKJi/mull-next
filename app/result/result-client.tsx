@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 // ResultClient — v3 pixel-game result screen.
 //
@@ -13,14 +13,14 @@
 //      library-book-inside-the-game beat)
 //   6. Pixel chunky next-step buttons
 
-import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import { getArchetypeColor } from "@/lib/archetype-colors";
-import { ArchetypeSprite } from "@/components/archetype-sprite";
-import { ConstellationMount } from "@/components/constellation-mount";
-import { PhilosopherSprite } from "@/components/philosopher-sprite";
-import { ResultSave } from "./result-save";
-import { t, type Locale } from "@/lib/translations";
+import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+import { getArchetypeColor } from '@/lib/archetype-colors';
+import { ArchetypeSprite } from '@/components/archetype-sprite';
+import { ConstellationMount } from '@/components/constellation-mount';
+import { PhilosopherSprite } from '@/components/philosopher-sprite';
+import { ResultSave } from './result-save';
+import { t, type Locale } from '@/lib/translations';
 
 type DimRadarPoint = {
   key: string;
@@ -40,7 +40,7 @@ type ClosestPhilosopher = {
 type Props = {
   vector: number[];
   locale: Locale;
-  mode: "quick" | "detailed";
+  mode: 'quick' | 'detailed';
   topKey: string;
   topName: string;
   spirit: string;
@@ -110,10 +110,10 @@ export function ResultClient({
       className="min-h-[100svh] bg-cream text-ink"
       style={
         {
-          ["--acc" as string]: color.primary,
-          ["--acc-deep" as string]: color.deep,
-          ["--acc-soft" as string]: color.soft,
-          ["--acc-accent" as string]: color.accent,
+          ['--acc' as string]: color.primary,
+          ['--acc-deep' as string]: color.deep,
+          ['--acc-soft' as string]: color.soft,
+          ['--acc-accent' as string]: color.accent,
         } as React.CSSProperties
       }
     >
@@ -152,10 +152,12 @@ export function ResultClient({
               borderColor: color.deep,
               backgroundColor: color.deep,
               color: color.soft,
-              fontFamily: "var(--font-pixel-display)",
+              fontFamily: 'var(--font-pixel-display)',
             }}
           >
-            <span><span className="pixel-blink">▶</span> {t("res.quest_complete", locale)}</span>
+            <span>
+              <span className="pixel-blink">▶</span> {t('res.quest_complete', locale)}
+            </span>
             <span className="text-acc">RESULT_ARCHETYPE.LOG</span>
           </div>
 
@@ -166,29 +168,25 @@ export function ResultClient({
                 className="border-4 p-4"
                 style={{
                   borderColor: color.deep,
-                  background: "#FFFCF4",
+                  background: '#FFFCF4',
                   boxShadow: `6px 6px 0 0 ${color.deep}`,
                 }}
               >
-                <ArchetypeSprite
-                  archetypeKey={topKey}
-                  size={176}
-                  floating
-                />
+                <ArchetypeSprite archetypeKey={topKey} size={176} floating />
               </div>
             </div>
 
             <div className="text-center md:text-left">
               <div
                 className="text-[11px] tracking-[0.26em]"
-                style={{ color: color.deep, fontFamily: "var(--font-pixel-display)" }}
+                style={{ color: color.deep, fontFamily: 'var(--font-pixel-display)' }}
               >
-                {t("res.you_are", locale)}
+                {t('res.you_are', locale)}
               </div>
               {flavor ? (
                 <div
                   className="mt-2 text-[14px] tracking-[0.2em]"
-                  style={{ color: color.deep, fontFamily: "var(--font-pixel-display)" }}
+                  style={{ color: color.deep, fontFamily: 'var(--font-pixel-display)' }}
                 >
                   {flavor.toUpperCase()}
                 </div>
@@ -204,7 +202,7 @@ export function ResultClient({
                 className="mt-3 pr-2 leading-[0.95] tracking-[0.04em] sm:pr-3"
                 style={{
                   color: color.deep,
-                  fontFamily: "var(--font-pixel-display)",
+                  fontFamily: 'var(--font-pixel-display)',
                 }}
               >
                 {(() => {
@@ -220,7 +218,7 @@ export function ResultClient({
                         </div>
                       ) : null}
                       <div
-                        className={`${parts.article ? "mt-2 " : ""}text-[34px] sm:text-[52px] md:text-[64px]`}
+                        className={`${parts.article ? 'mt-2 ' : ''}text-[34px] sm:text-[52px] md:text-[64px]`}
                         style={{ textShadow: `3px 3px 0 var(--pixel-shadow, ${color.primary})` }}
                       >
                         {parts.main.toUpperCase()}
@@ -232,7 +230,7 @@ export function ResultClient({
 
               <p
                 className="mt-7 max-w-[520px] text-[18px] leading-[1.45] text-ink sm:text-[20px]"
-                style={{ fontFamily: "var(--font-prose)" }}
+                style={{ fontFamily: 'var(--font-prose)' }}
               >
                 <em>&ldquo;{spirit}&rdquo;</em>
               </p>
@@ -243,12 +241,12 @@ export function ResultClient({
                 <div className="text-[13px] text-ink-soft">
                   <div
                     className="text-[10px] tracking-[0.22em]"
-                    style={{ color: color.deep, fontFamily: "var(--font-pixel-display)" }}
+                    style={{ color: color.deep, fontFamily: 'var(--font-pixel-display)' }}
                   >
-                    {t("res.runner_up", locale)}
+                    {t('res.runner_up', locale)}
                   </div>
                   <div className="mt-1">
-                    {archFull(runnerUpKey)} ·{" "}
+                    {archFull(runnerUpKey)} ·{' '}
                     <span style={{ color: color.deep }}>{runnerUpPct}%</span>
                   </div>
                 </div>
@@ -267,8 +265,8 @@ export function ResultClient({
           href="/pilgrimage"
           className="block border-[4px] p-5 transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5 sm:p-6"
           style={{
-            background: "#1A1612",
-            color: "var(--color-acc-soft)",
+            background: '#1A1612',
+            color: 'var(--color-acc-soft)',
             borderColor: color.deep,
             boxShadow: `6px 6px 0 0 ${color.deep}`,
           }}
@@ -277,36 +275,41 @@ export function ResultClient({
             className="text-[10px] tracking-[0.22em]"
             style={{
               color: color.primary,
-              fontFamily: "var(--font-pixel-display)",
-              textTransform: "uppercase",
+              fontFamily: 'var(--font-pixel-display)',
+              textTransform: 'uppercase',
             }}
           >
-            {t("res.arc_ready", locale)}
+            {t('res.arc_ready', locale)}
           </div>
           <div
             className="mt-3 text-[22px] leading-tight sm:text-[26px]"
-            style={{ fontFamily: "var(--font-editorial)" }}
+            style={{ fontFamily: 'var(--font-editorial)' }}
           >
-            {t("res.pilg_a", locale)}{flavor ? <em>{flavor.toLowerCase()}</em> : null}{" "}
-            <strong>{archBare(topKey)}{t("res.pilg_plural", locale)}</strong>{t("res.pilg_b", locale)}
+            {t('res.pilg_a', locale)}
+            {flavor ? <em>{flavor.toLowerCase()}</em> : null}{' '}
+            <strong>
+              {archBare(topKey)}
+              {t('res.pilg_plural', locale)}
+            </strong>
+            {t('res.pilg_b', locale)}
           </div>
           <p
             className="mt-3 max-w-[680px] text-[15.5px] leading-[1.55]"
-            style={{ fontFamily: "var(--font-editorial)", color: "#E5DCC0" }}
+            style={{ fontFamily: 'var(--font-editorial)', color: '#E5DCC0' }}
           >
-            {t("res.pilg_body", locale)}
+            {t('res.pilg_body', locale)}
           </p>
           <div
             className="mt-4 inline-block px-3 py-1 text-[10px] tracking-[0.18em]"
             style={{
-              fontFamily: "var(--font-pixel-display)",
-              textTransform: "uppercase",
-              background: "#F8C75E",
-              color: "#1A1820",
-              border: "2px solid var(--color-ink)",
+              fontFamily: 'var(--font-pixel-display)',
+              textTransform: 'uppercase',
+              background: '#F8C75E',
+              color: '#1A1820',
+              border: '2px solid var(--color-ink)',
             }}
           >
-            {t("res.begin_day1", locale)}
+            {t('res.begin_day1', locale)}
           </div>
         </Link>
       </section>
@@ -318,9 +321,9 @@ export function ResultClient({
           <div className="pixel-panel">
             <div
               className="flex items-center justify-between border-b-4 border-ink bg-ink px-4 py-2 text-[10px] tracking-[0.22em] text-acc-soft"
-              style={{ fontFamily: "var(--font-pixel-display)" }}
+              style={{ fontFamily: 'var(--font-pixel-display)' }}
             >
-              <span>{t("res.fingerprint", locale)}</span>
+              <span>{t('res.fingerprint', locale)}</span>
               <span className="text-acc">RADAR.SYS</span>
             </div>
             <div className="grid grid-cols-1 gap-6 px-5 py-6 sm:px-8 sm:py-8 md:grid-cols-[1fr_300px]">
@@ -330,10 +333,10 @@ export function ResultClient({
                   className="text-[10px] tracking-[0.22em]"
                   style={{
                     color: color.deep,
-                    fontFamily: "var(--font-pixel-display)",
+                    fontFamily: 'var(--font-pixel-display)',
                   }}
                 >
-                  {t("res.strongest_tendencies", locale)}
+                  {t('res.strongest_tendencies', locale)}
                 </div>
                 <ul className="mt-4 space-y-2">
                   {userTop3.map((d) => (
@@ -350,7 +353,7 @@ export function ResultClient({
                         className="text-[10px] tracking-wider"
                         style={{
                           color: color.deep,
-                          fontFamily: "var(--font-pixel-display)",
+                          fontFamily: 'var(--font-pixel-display)',
                         }}
                       >
                         {d.key}
@@ -360,7 +363,7 @@ export function ResultClient({
                   ))}
                 </ul>
                 <p className="mt-6 text-[13px] leading-[1.55] text-ink-soft">
-                  {t("res.radar_note", locale)}
+                  {t('res.radar_note', locale)}
                 </p>
               </div>
             </div>
@@ -377,17 +380,17 @@ export function ResultClient({
             className="text-[10px] tracking-[0.26em]"
             style={{
               color: color.deep,
-              fontFamily: "var(--font-pixel-display)",
+              fontFamily: 'var(--font-pixel-display)',
             }}
           >
-            {t("res.stood_near", locale)}
+            {t('res.stood_near', locale)}
           </div>
           <h2
             className="mt-4 pr-2 text-[24px] leading-[1.45] tracking-[0.04em] text-ink sm:text-[32px] md:text-[40px]"
-            style={{ fontFamily: "var(--font-pixel-display)" }}
+            style={{ fontFamily: 'var(--font-pixel-display)' }}
           >
-            <span style={{ textShadow: "3px 3px 0 var(--pixel-shadow, var(--color-acc))" }}>
-              {t("res.nearest_three", locale)}
+            <span style={{ textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))' }}>
+              {t('res.nearest_three', locale)}
             </span>
           </h2>
 
@@ -417,7 +420,7 @@ export function ResultClient({
                           borderColor: pc.deep,
                           background: pc.deep,
                           color: pc.soft,
-                          fontFamily: "var(--font-pixel-display)",
+                          fontFamily: 'var(--font-pixel-display)',
                         }}
                       >
                         <span>{archFull(p.archetypeKey).toUpperCase()}</span>
@@ -430,15 +433,11 @@ export function ResultClient({
                           size={96}
                           floating
                         />
-                        <div className="mt-4 text-[18px] font-medium text-ink">
-                          {p.name}
-                        </div>
-                        <div className="mt-1 text-[12px] text-acc-deep">
-                          {p.dates}
-                        </div>
+                        <div className="mt-4 text-[18px] font-medium text-ink">{p.name}</div>
+                        <div className="mt-1 text-[12px] text-acc-deep">{p.dates}</div>
                         <p
                           className="mt-4 text-[14px] leading-[1.5] text-ink-soft"
-                          style={{ fontFamily: "var(--font-editorial)" }}
+                          style={{ fontFamily: 'var(--font-editorial)' }}
                         >
                           <em>&ldquo;{p.keyIdea}&rdquo;</em>
                         </p>
@@ -460,37 +459,33 @@ export function ResultClient({
               className="text-[10px] tracking-[0.26em]"
               style={{
                 color: color.deep,
-                fontFamily: "var(--font-pixel-display)",
+                fontFamily: 'var(--font-pixel-display)',
               }}
             >
-              {t("res.where_you_sit", locale)}
+              {t('res.where_you_sit', locale)}
             </div>
             <h2
               className="mt-4 pr-2 text-[24px] leading-[1.45] tracking-[0.04em] text-ink sm:text-[32px] md:text-[40px]"
-              style={{ fontFamily: "var(--font-pixel-display)" }}
+              style={{ fontFamily: 'var(--font-pixel-display)' }}
             >
-              <span style={{ textShadow: "3px 3px 0 var(--pixel-shadow, var(--color-acc))" }}>
-                {t("res.you_on_map", locale)}
+              <span style={{ textShadow: '3px 3px 0 var(--pixel-shadow, var(--color-acc))' }}>
+                {t('res.you_on_map', locale)}
               </span>
             </h2>
             <p className="mt-5 max-w-[640px] text-[16px] leading-[1.6] text-ink-soft">
-              {t("res.map_note", locale)}
+              {t('res.map_note', locale)}
             </p>
           </div>
 
           <div className="mt-10 border-4 border-ink bg-[#0E1419] shadow-[8px_8px_0_0_var(--color-acc-deep)]">
             <div
               className="flex items-center justify-between border-b-4 border-ink bg-ink px-4 py-2 text-[10px] tracking-[0.18em] text-acc-soft"
-              style={{ fontFamily: "var(--font-pixel-display)" }}
+              style={{ fontFamily: 'var(--font-pixel-display)' }}
             >
-              <span>{t("res.map_position", locale)}</span>
-              <span className="text-acc">{t("res.drag_zoom_hover", locale)}</span>
+              <span>{t('res.map_position', locale)}</span>
+              <span className="text-acc">{t('res.drag_zoom_hover', locale)}</span>
             </div>
-            <ConstellationMount
-              userVector={vector}
-              height={640}
-              variant="interactive"
-            />
+            <ConstellationMount userVector={vector} height={640} variant="interactive" />
           </div>
         </div>
       </section>
@@ -500,15 +495,15 @@ export function ResultClient({
         <div className="pixel-panel">
           <div
             className="flex items-center justify-between border-b-4 border-ink bg-ink px-4 py-2 text-[10px] tracking-[0.22em] text-acc-soft"
-            style={{ fontFamily: "var(--font-pixel-display)" }}
+            style={{ fontFamily: 'var(--font-pixel-display)' }}
           >
-            <span>{t("res.orientation_sees", locale)}</span>
+            <span>{t('res.orientation_sees', locale)}</span>
             <span className="text-acc">LIBRARY_ENTRY</span>
           </div>
           <div className="px-6 py-8 sm:px-10 sm:py-10">
             <p
               className="text-[18px] leading-[1.55] text-ink sm:text-[20px]"
-              style={{ fontFamily: "var(--font-prose)" }}
+              style={{ fontFamily: 'var(--font-prose)' }}
             >
               {whatItGetsRight}
             </p>
@@ -516,14 +511,14 @@ export function ResultClient({
               className="mt-10 text-[10px] tracking-[0.24em]"
               style={{
                 color: color.deep,
-                fontFamily: "var(--font-pixel-display)",
+                fontFamily: 'var(--font-pixel-display)',
               }}
             >
-              {t("res.where_falters", locale)}
+              {t('res.where_falters', locale)}
             </div>
             <p
               className="mt-4 text-[16px] leading-[1.55] text-ink-soft sm:text-[18px]"
-              style={{ fontFamily: "var(--font-prose)" }}
+              style={{ fontFamily: 'var(--font-prose)' }}
             >
               {whereItFalters}
             </p>
@@ -553,30 +548,30 @@ export function ResultClient({
           >
             <div
               className="border-b-4 border-ink bg-ink px-5 py-2.5 text-[11px] tracking-[0.22em] text-acc"
-              style={{ fontFamily: "var(--font-pixel-display)" }}
+              style={{ fontFamily: 'var(--font-pixel-display)' }}
             >
-              <span className="pixel-blink">▶</span> {t("res.save_result", locale)}
+              <span className="pixel-blink">▶</span> {t('res.save_result', locale)}
             </div>
             <div className="grid gap-4 px-6 py-7 md:grid-cols-[1fr_auto] md:items-center sm:px-8">
               <div>
                 <div className="text-[22px] font-medium text-ink sm:text-[24px]">
-                  {t("res.disappears", locale)}
+                  {t('res.disappears', locale)}
                 </div>
                 <p className="mt-3 text-[14px] leading-[1.55] text-ink-soft sm:text-[15px]">
-                  {t("res.save_body", locale)}
+                  {t('res.save_body', locale)}
                 </p>
               </div>
               <span
                 className="inline-block px-5 py-3 text-[12px] tracking-[0.08em] text-[#1A1612]"
                 style={{
-                  fontFamily: "var(--font-pixel-display)",
+                  fontFamily: 'var(--font-pixel-display)',
                   background: 'var(--color-acc)',
                   border: '4px solid var(--color-ink)',
                   boxShadow: '4px 4px 0 0 var(--color-ink)',
                   textTransform: 'uppercase',
                 }}
               >
-                {t("res.create_account", locale)}
+                {t('res.create_account', locale)}
               </span>
             </div>
           </Link>
@@ -602,24 +597,27 @@ export function ResultClient({
               borderColor: color.deep,
               background: color.deep,
               color: color.soft,
-              fontFamily: "var(--font-pixel-display)",
+              fontFamily: 'var(--font-pixel-display)',
             }}
           >
-            {t("res.read_on", locale)}
+            {t('res.read_on', locale)}
           </div>
           <div className="grid gap-4 px-6 py-7 md:grid-cols-[1fr_auto] md:items-center sm:px-8">
             <div>
               <div className="text-[22px] font-medium sm:text-[24px]" style={{ color: color.deep }}>
-                {t("res.read_essay", locale, { archetype: archBare(topKey) })}
+                {t('res.read_essay', locale, { archetype: archBare(topKey) })}
               </div>
-              <p className="mt-3 text-[14px] leading-[1.55] sm:text-[15px]" style={{ color: 'var(--color-ink-soft)' }}>
-                {t("res.essay_body", locale)}
+              <p
+                className="mt-3 text-[14px] leading-[1.55] sm:text-[15px]"
+                style={{ color: 'var(--color-ink-soft)' }}
+              >
+                {t('res.essay_body', locale)}
               </p>
             </div>
             <span
               className="inline-block px-5 py-3 text-[12px] tracking-[0.08em]"
               style={{
-                fontFamily: "var(--font-pixel-display)",
+                fontFamily: 'var(--font-pixel-display)',
                 color: color.soft,
                 background: color.deep,
                 border: '4px solid var(--color-ink)',
@@ -627,7 +625,7 @@ export function ResultClient({
                 textTransform: 'uppercase',
               }}
             >
-              {t("res.open_essay", locale)}
+              {t('res.open_essay', locale)}
             </span>
           </div>
         </Link>
@@ -648,16 +646,14 @@ export function ResultClient({
           >
             <div
               className="border-b-4 border-ink bg-ink px-4 py-2 text-[10px] tracking-[0.22em] text-acc-soft"
-              style={{ fontFamily: "var(--font-pixel-display)" }}
+              style={{ fontFamily: 'var(--font-pixel-display)' }}
             >
-              {t("res.arena_eyebrow", locale)}
+              {t('res.arena_eyebrow', locale)}
             </div>
             <div className="px-5 py-5">
-              <div className="text-[18px] font-medium text-ink">
-                {t("res.arena_title", locale)}
-              </div>
+              <div className="text-[18px] font-medium text-ink">{t('res.arena_title', locale)}</div>
               <p className="mt-3 text-[13px] leading-[1.5] text-ink-soft">
-                {t("res.arena_body", locale)}
+                {t('res.arena_body', locale)}
               </p>
             </div>
           </Link>
@@ -668,16 +664,16 @@ export function ResultClient({
           >
             <div
               className="border-b-4 border-ink bg-ink px-4 py-2 text-[10px] tracking-[0.22em] text-acc-soft"
-              style={{ fontFamily: "var(--font-pixel-display)" }}
+              style={{ fontFamily: 'var(--font-pixel-display)' }}
             >
-              {t("res.inheritor_eyebrow", locale)}
+              {t('res.inheritor_eyebrow', locale)}
             </div>
             <div className="px-5 py-5">
               <div className="text-[18px] font-medium text-ink">
-                {t("res.inheritor_title", locale)}
+                {t('res.inheritor_title', locale)}
               </div>
               <p className="mt-3 text-[13px] leading-[1.5] text-ink-soft">
-                {t("res.inheritor_body", locale)}
+                {t('res.inheritor_body', locale)}
               </p>
             </div>
           </Link>
@@ -688,18 +684,24 @@ export function ResultClient({
         <div className="mt-6 flex flex-wrap items-center gap-4 text-[13px] text-acc-deep">
           <span
             className="text-[10px] tracking-[0.22em]"
-            style={{ fontFamily: "var(--font-pixel-display)" }}
+            style={{ fontFamily: 'var(--font-pixel-display)' }}
           >
-            {t("res.also", locale)}
+            {t('res.also', locale)}
           </span>
-          <Link href="/quiz?mode=quick" className="py-1.5 hover:text-ink underline decoration-line underline-offset-3 hover:decoration-acc-deep">
-            {t("res.retake_classic", locale)}
+          <Link
+            href="/quiz?mode=quick"
+            className="py-1.5 hover:text-ink underline decoration-line underline-offset-3 hover:decoration-acc-deep"
+          >
+            {t('res.retake_classic', locale)}
           </Link>
           {isSignedIn && (
             <>
               <span>·</span>
-              <Link href="/account" className="py-1.5 hover:text-ink underline decoration-line underline-offset-3 hover:decoration-acc-deep">
-                {t("res.see_trajectory", locale)}
+              <Link
+                href="/account"
+                className="py-1.5 hover:text-ink underline decoration-line underline-offset-3 hover:decoration-acc-deep"
+              >
+                {t('res.see_trajectory', locale)}
               </Link>
             </>
           )}
@@ -744,14 +746,20 @@ function AlignmentCounter({
       if (reduced) return target;
       const seen = window.sessionStorage.getItem(SEEN_RESULT_KEY);
       if (seen && Number(seen) === target) return target;
-    } catch {/* sessionStorage / matchMedia disabled — fall through to animation */}
+    } catch {
+      /* sessionStorage / matchMedia disabled — fall through to animation */
+    }
     return 0;
   });
 
   useEffect(() => {
     // If we already started at the final value, no animation needed.
     if (display === target) {
-      try { window.sessionStorage.setItem(SEEN_RESULT_KEY, String(target)); } catch { /* ignore */ }
+      try {
+        window.sessionStorage.setItem(SEEN_RESULT_KEY, String(target));
+      } catch {
+        /* ignore */
+      }
       return;
     }
     const duration = 900; // ms
@@ -765,7 +773,11 @@ function AlignmentCounter({
       if (t < 1) {
         raf = requestAnimationFrame(step);
       } else {
-        try { window.sessionStorage.setItem(SEEN_RESULT_KEY, String(target)); } catch { /* ignore */ }
+        try {
+          window.sessionStorage.setItem(SEEN_RESULT_KEY, String(target));
+        } catch {
+          /* ignore */
+        }
       }
     }
     raf = requestAnimationFrame(step);
@@ -779,9 +791,9 @@ function AlignmentCounter({
     <div>
       <div
         className="text-[10px] tracking-[0.22em]"
-        style={{ color, fontFamily: "var(--font-pixel-display)" }}
+        style={{ color, fontFamily: 'var(--font-pixel-display)' }}
       >
-        {t("res.alignment", locale)}
+        {t('res.alignment', locale)}
       </div>
       {/* Cap the digit size to 36px so the `%` glyph + 2-px hard
           shadow stay within the parent column. Display digits
@@ -791,8 +803,8 @@ function AlignmentCounter({
           className="text-[36px] leading-none tracking-[0.04em]"
           style={{
             color,
-            fontFamily: "var(--font-pixel-display)",
-            textShadow: "2px 2px 0 var(--pixel-shadow, var(--color-acc))",
+            fontFamily: 'var(--font-pixel-display)',
+            textShadow: '2px 2px 0 var(--pixel-shadow, var(--color-acc))',
           }}
         >
           {display}
@@ -801,8 +813,8 @@ function AlignmentCounter({
           className="text-[20px] leading-none"
           style={{
             color,
-            fontFamily: "var(--font-pixel-display)",
-            textShadow: "2px 2px 0 var(--pixel-shadow, var(--color-acc))",
+            fontFamily: 'var(--font-pixel-display)',
+            textShadow: '2px 2px 0 var(--pixel-shadow, var(--color-acc))',
           }}
         >
           %
@@ -849,7 +861,7 @@ function RadarChart({
         const v = vertex(i * angleStep, level);
         return `${v.x},${v.y}`;
       })
-      .join(" ");
+      .join(' ');
     return { level, pts };
   });
 
@@ -859,7 +871,7 @@ function RadarChart({
       const v = vertex(i * angleStep, p.value);
       return `${v.x},${v.y}`;
     })
-    .join(" ");
+    .join(' ');
 
   // Polygon vertices for placing labels around the outside
   const labels = points.map((p, i) => {
@@ -872,11 +884,7 @@ function RadarChart({
 
   return (
     <div className="mx-auto w-full max-w-[440px]">
-      <svg
-        viewBox={`0 0 ${SIZE} ${SIZE}`}
-        shapeRendering="crispEdges"
-        className="block w-full"
-      >
+      <svg viewBox={`0 0 ${SIZE} ${SIZE}`} shapeRendering="crispEdges" className="block w-full">
         {/* Concentric grid rings */}
         {rings.map(({ level, pts }) => (
           <polygon
@@ -885,7 +893,7 @@ function RadarChart({
             fill="none"
             stroke="#D6CDB6"
             strokeWidth={1}
-            strokeDasharray={level === 1 ? undefined : "3 3"}
+            strokeDasharray={level === 1 ? undefined : '3 3'}
           />
         ))}
         {/* Spokes */}
@@ -915,16 +923,7 @@ function RadarChart({
         {/* Dim vertices as pixel squares */}
         {points.map((p, i) => {
           const v = vertex(i * angleStep, p.value);
-          return (
-            <rect
-              key={p.key}
-              x={v.x - 3}
-              y={v.y - 3}
-              width={6}
-              height={6}
-              fill={color}
-            />
-          );
+          return <rect key={p.key} x={v.x - 3} y={v.y - 3} width={6} height={6} fill={color} />;
         })}
         {/* Labels */}
         {labels.map((l, i) => (
@@ -1020,15 +1019,15 @@ function ChallengerBanner({
                 marginBottom: 6,
               }}
             >
-              {t("res.challenged_you", locale, { name: challengerName.toUpperCase() })}
+              {t('res.challenged_you', locale, { name: challengerName.toUpperCase() })}
             </span>
             <span
               style={{
-                fontFamily: "var(--font-prose)",
+                fontFamily: 'var(--font-prose)',
                 fontSize: 18,
               }}
             >
-              {t("res.challenge_body", locale)}
+              {t('res.challenge_body', locale)}
             </span>
           </span>
           <span
@@ -1045,7 +1044,7 @@ function ChallengerBanner({
               flexShrink: 0,
             }}
           >
-            {t("res.compare_now", locale)}
+            {t('res.compare_now', locale)}
           </span>
         </div>
       </Link>

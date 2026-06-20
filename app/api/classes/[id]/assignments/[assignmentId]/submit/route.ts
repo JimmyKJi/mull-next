@@ -33,20 +33,20 @@ export async function POST(
   }
 
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Sign in.' }, { status: 401 });
 
-  const { error } = await supabase
-    .from('class_assignment_submissions')
-    .upsert(
-      {
-        assignment_id: assignmentId,
-        student_user_id: user.id,
-        response_text: text,
-        reviewed_at: null, // re-submit clears review state
-      },
-      { onConflict: 'assignment_id,student_user_id' },
-    );
+  const { error } = await supabase.from('class_assignment_submissions').upsert(
+    {
+      assignment_id: assignmentId,
+      student_user_id: user.id,
+      response_text: text,
+      reviewed_at: null, // re-submit clears review state
+    },
+    { onConflict: 'assignment_id,student_user_id' },
+  );
 
   if (error) {
     if (error.code === '42501') {

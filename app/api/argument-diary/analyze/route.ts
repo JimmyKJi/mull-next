@@ -9,12 +9,12 @@
 //
 // Reuses the Anthropic API key + Haiku model the rest of Mull uses.
 
-import { NextResponse } from "next/server";
-import { aiGate } from "@/lib/rate-limit";
-import { createClient } from "@/utils/supabase/server";
-import { LOCALE_FOR_PROMPT, type Locale } from "@/lib/translations";
+import { NextResponse } from 'next/server';
+import { aiGate } from '@/lib/rate-limit';
+import { createClient } from '@/utils/supabase/server';
+import { LOCALE_FOR_PROMPT, type Locale } from '@/lib/translations';
 
-const HAIKU_MODEL = "claude-haiku-4-5";
+const HAIKU_MODEL = 'claude-haiku-4-5';
 
 type Body = {
   account: string;
@@ -25,29 +25,25 @@ type Body = {
 export async function POST(req: Request) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
-    return NextResponse.json(
-      { error: "AI not configured." },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: 'AI not configured.' }, { status: 500 });
   }
 
   const body = (await req.json().catch(() => null)) as Body | null;
   const account = body?.account?.trim();
   const context = body?.context?.trim();
   if (!account) {
-    return NextResponse.json({ error: "Missing account." }, { status: 400 });
+    return NextResponse.json({ error: 'Missing account.' }, { status: 400 });
   }
   if (account.length > 4000) {
-    return NextResponse.json(
-      { error: "Account too long (4000 char max)." },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: 'Account too long (4000 char max).' }, { status: 400 });
   }
 
   // Per-user + global spend gate before the Haiku call.
   const supabaseForUser = await createClient();
-  const { data: { user } } = await supabaseForUser.auth.getUser();
-  const gate = await aiGate(req, { bucket: "argument_diary", userId: user?.id });
+  const {
+    data: { user },
+  } = await supabaseForUser.auth.getUser();
+  const gate = await aiGate(req, { bucket: 'argument_diary', userId: user?.id });
   if (!gate.ok) {
     return NextResponse.json({ error: gate.message }, { status: gate.status });
   }
@@ -76,7 +72,7 @@ Rules:
 - Return ONLY the JSON. No prose before or after.`;
 
   const userMessage = `Here is my account of an argument I had recently:\n\n${account}${
-    context ? `\n\nContext: ${context}` : ""
+    context ? `\n\nContext: ${context}` : ''
   }`;
 
   // When the user is on a non-English locale, ask for the analysis in
@@ -84,32 +80,29 @@ Rules:
   // keys must stay English so parsing below still works.
   const locale = body?.locale;
   const languageDirective =
-    locale && locale !== "en" && LOCALE_FOR_PROMPT[locale]
+    locale && locale !== 'en' && LOCALE_FOR_PROMPT[locale]
       ? `\n\nIMPORTANT: Write every string value in the JSON — the steelman, each fallacy name and explanation, and each kindred take — in ${LOCALE_FOR_PROMPT[locale]}. Render philosopher names in their standard form in that language. The JSON keys themselves must stay exactly as shown, in English.`
-      : "";
+      : '';
 
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
       model: HAIKU_MODEL,
       max_tokens: 1500,
       system: system + languageDirective,
-      messages: [{ role: "user", content: userMessage }],
+      messages: [{ role: 'user', content: userMessage }],
     }),
   });
 
   if (!res.ok) {
     const errText = await res.text();
-    console.error("[argument-diary] Haiku error", res.status, errText);
-    return NextResponse.json(
-      { error: "AI call failed. Try again." },
-      { status: 502 },
-    );
+    console.error('[argument-diary] Haiku error', res.status, errText);
+    return NextResponse.json({ error: 'AI call failed. Try again.' }, { status: 502 });
   }
 
   const data = (await res.json()) as {
@@ -117,30 +110,21 @@ Rules:
     error?: { message?: string };
   };
   if (data.error) {
-    return NextResponse.json(
-      { error: "AI errored." },
-      { status: 502 },
-    );
+    return NextResponse.json({ error: 'AI errored.' }, { status: 502 });
   }
 
-  const rawText = data.content?.find((c) => c.type === "text")?.text ?? "";
+  const rawText = data.content?.find((c) => c.type === 'text')?.text ?? '';
   // Try to extract the JSON block (Haiku sometimes prefaces).
-  const start = rawText.indexOf("{");
-  const end = rawText.lastIndexOf("}");
+  const start = rawText.indexOf('{');
+  const end = rawText.lastIndexOf('}');
   if (start < 0 || end <= start) {
-    return NextResponse.json(
-      { error: "Couldn't parse AI output. Try again." },
-      { status: 502 },
-    );
+    return NextResponse.json({ error: "Couldn't parse AI output. Try again." }, { status: 502 });
   }
   let parsed: unknown;
   try {
     parsed = JSON.parse(rawText.slice(start, end + 1));
   } catch {
-    return NextResponse.json(
-      { error: "Malformed AI output. Try again." },
-      { status: 502 },
-    );
+    return NextResponse.json({ error: 'Malformed AI output. Try again.' }, { status: 502 });
   }
   return NextResponse.json({ analysis: parsed });
 }

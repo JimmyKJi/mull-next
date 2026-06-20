@@ -21,7 +21,7 @@ type SavedDebate = {
   created_at: string;
 };
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 const VECTOR_KEY = 'mull.vector';
 
@@ -38,7 +38,7 @@ type DebateResult = {
 export default function DebateForm({
   philosophers,
   savedDebates = [],
-  locale = 'en'
+  locale = 'en',
 }: {
   philosophers: PhilosopherEntry[];
   savedDebates?: SavedDebate[];
@@ -62,25 +62,31 @@ export default function DebateForm({
     try {
       const raw = window.localStorage.getItem(VECTOR_KEY);
       if (raw) setUserVec(coerceVector16(JSON.parse(raw)));
-    } catch { /* storage disabled or malformed — keep canonical order */ }
+    } catch {
+      /* storage disabled or malformed — keep canonical order */
+    }
   }, []);
 
   const suggestedTopics = useMemo(() => {
-    const ranked = rankByDimensionFocus(userVec, SUGGESTED_DEBATE_TOPICS, s => s.relevantDimensions);
-    return ranked.length ? ranked.map(r => r.item) : SUGGESTED_DEBATE_TOPICS;
+    const ranked = rankByDimensionFocus(
+      userVec,
+      SUGGESTED_DEBATE_TOPICS,
+      (s) => s.relevantDimensions,
+    );
+    return ranked.length ? ranked.map((r) => r.item) : SUGGESTED_DEBATE_TOPICS;
   }, [userVec]);
 
   const filteredA = useMemo(
-    () => philosophers.filter(p => matchesPhilosopherSearch(p, aSearch)),
-    [aSearch, philosophers]
+    () => philosophers.filter((p) => matchesPhilosopherSearch(p, aSearch)),
+    [aSearch, philosophers],
   );
   const filteredB = useMemo(
-    () => philosophers.filter(p => matchesPhilosopherSearch(p, bSearch)),
-    [bSearch, philosophers]
+    () => philosophers.filter((p) => matchesPhilosopherSearch(p, bSearch)),
+    [bSearch, philosophers],
   );
 
-  const aPhil = philosophers.find(p => p.name === aName);
-  const bPhil = philosophers.find(p => p.name === bName);
+  const aPhil = philosophers.find((p) => p.name === aName);
+  const bPhil = philosophers.find((p) => p.name === bName);
 
   const ready = aName && bName && aName !== bName && topic.trim().length >= 4;
 
@@ -94,7 +100,7 @@ export default function DebateForm({
       const res = await fetch('/api/debate/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ a_name: aName, b_name: bName, topic: topic.trim() })
+        body: JSON.stringify({ a_name: aName, b_name: bName, topic: topic.trim() }),
       });
       const json = await res.json();
       if (!res.ok) {
@@ -123,7 +129,11 @@ export default function DebateForm({
   function loadSaved(d: SavedDebate) {
     setResult({
       ok: true,
-      a: { name: d.a_name, dates: d.a_dates ?? '', archetypeKey: d.a_archetype_key ?? 'cartographer' },
+      a: {
+        name: d.a_name,
+        dates: d.a_dates ?? '',
+        archetypeKey: d.a_archetype_key ?? 'cartographer',
+      },
       b: { name: d.b_name, dates: d.b_dates ?? '', archetypeKey: d.b_archetype_key ?? 'hammer' },
       topic: d.topic,
       setup: d.setup ?? '',
@@ -137,25 +147,29 @@ export default function DebateForm({
   if (result) {
     return (
       <div>
-        <div style={{
-          fontFamily: 'var(--font-pixel-display)',
-          fontSize: 12,
-          color: 'var(--color-acc-deep)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.18em',
-          marginBottom: 14,
-        }}>
+        <div
+          style={{
+            fontFamily: 'var(--font-pixel-display)',
+            fontSize: 12,
+            color: 'var(--color-acc-deep)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.18em',
+            marginBottom: 14,
+          }}
+        >
           ▸ {t('debate.exchange_on', locale, { topic: result.topic }).toUpperCase()}
         </div>
         {result.setup && (
-          <p style={{
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 17,
-            color: 'var(--color-ink-soft)',
-            margin: '0 0 32px',
-            lineHeight: 1.55,
-          }}>
+          <p
+            style={{
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: 17,
+              color: 'var(--color-ink-soft)',
+              margin: '0 0 32px',
+              lineHeight: 1.55,
+            }}
+          >
             {result.setup}
           </p>
         )}
@@ -204,14 +218,20 @@ export default function DebateForm({
   }
 
   return (
-    <form onSubmit={onSubmit} className="pixel-form" style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
-      <div style={{
-        display: 'grid',
-        // Two pickers (philosopher A vs B) — collapse to one column
-        // on phones so each picker has comfortable width.
-        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-        gap: 20,
-      }}>
+    <form
+      onSubmit={onSubmit}
+      className="pixel-form"
+      style={{ display: 'flex', flexDirection: 'column', gap: 28 }}
+    >
+      <div
+        style={{
+          display: 'grid',
+          // Two pickers (philosopher A vs B) — collapse to one column
+          // on phones so each picker has comfortable width.
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gap: 20,
+        }}
+      >
         <PhilosopherPicker
           letter="A"
           accent="#1E3A5F"
@@ -237,22 +257,24 @@ export default function DebateForm({
       </div>
 
       <div>
-        <label style={{
-          fontFamily: sans,
-          fontSize: 11,
-          fontWeight: 600,
-          color: 'var(--color-acc-deep)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.18em',
-          display: 'block',
-          marginBottom: 10,
-        }}>
+        <label
+          style={{
+            fontFamily: sans,
+            fontSize: 11,
+            fontWeight: 600,
+            color: 'var(--color-acc-deep)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.18em',
+            display: 'block',
+            marginBottom: 10,
+          }}
+        >
           {t('debate.topic_label', locale)}
         </label>
         <input
           type="text"
           value={topic}
-          onChange={e => setTopic(e.target.value)}
+          onChange={(e) => setTopic(e.target.value)}
           placeholder={t('debate.topic_placeholder', locale)}
           maxLength={240}
           style={{
@@ -269,7 +291,7 @@ export default function DebateForm({
           }}
         />
         <div style={{ marginTop: 10, display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-          {suggestedTopics.map(suggestion => (
+          {suggestedTopics.map((suggestion) => (
             <button
               key={suggestion.text}
               type="button"
@@ -313,23 +335,30 @@ export default function DebateForm({
         </button>
         {!ready && (aName || bName) && (
           <span style={{ fontFamily: sans, fontSize: 12.5, color: 'var(--color-acc-deep)' }}>
-            {!aName ? t('debate.pick_a', locale) :
-             !bName ? t('debate.pick_b', locale) :
-             aName === bName ? t('debate.pick_two_diff', locale) :
-             topic.trim().length < 4 ? t('debate.choose_topic', locale) : ''}
+            {!aName
+              ? t('debate.pick_a', locale)
+              : !bName
+                ? t('debate.pick_b', locale)
+                : aName === bName
+                  ? t('debate.pick_two_diff', locale)
+                  : topic.trim().length < 4
+                    ? t('debate.choose_topic', locale)
+                    : ''}
           </span>
         )}
       </div>
       {error && (
-        <div style={{
-          fontFamily: sans,
-          fontSize: 13,
-          color: '#7A2E2E',
-          background: 'rgba(122, 46, 46, 0.08)',
-          border: '1px solid rgba(122, 46, 46, 0.2)',
-          padding: '10px 14px',
-          borderRadius: 6,
-        }}>
+        <div
+          style={{
+            fontFamily: sans,
+            fontSize: 13,
+            color: '#7A2E2E',
+            background: 'rgba(122, 46, 46, 0.08)',
+            border: '1px solid rgba(122, 46, 46, 0.2)',
+            padding: '10px 14px',
+            borderRadius: 6,
+          }}
+        >
           {error}
         </div>
       )}
@@ -341,10 +370,21 @@ export default function DebateForm({
   );
 }
 
-const LOCALE_DATE: Record<string, string> = { en: 'en-GB', es: 'es-ES', fr: 'fr-FR', pt: 'pt-BR', ru: 'ru-RU', zh: 'zh-CN', ja: 'ja-JP', ko: 'ko-KR' };
+const LOCALE_DATE: Record<string, string> = {
+  en: 'en-GB',
+  es: 'es-ES',
+  fr: 'fr-FR',
+  pt: 'pt-BR',
+  ru: 'ru-RU',
+  zh: 'zh-CN',
+  ja: 'ja-JP',
+  ko: 'ko-KR',
+};
 
 function SavedDebatesList({
-  debates, onPick, locale
+  debates,
+  onPick,
+  locale,
 }: {
   debates: SavedDebate[];
   onPick: (d: SavedDebate) => void;
@@ -353,33 +393,41 @@ function SavedDebatesList({
   const fmtRel = (s: string) => {
     const diff = Date.now() - new Date(s).getTime();
     const mins = Math.floor(diff / 60000);
-    if (mins < 60) return mins <= 1 ? t('time.just_now', locale) : t('time.min_ago', locale, { n: mins });
+    if (mins < 60)
+      return mins <= 1 ? t('time.just_now', locale) : t('time.min_ago', locale, { n: mins });
     const hours = Math.floor(mins / 60);
     if (hours < 24) return t(hours === 1 ? 'time.hr_ago' : 'time.hrs_ago', locale, { n: hours });
     const days = Math.floor(hours / 24);
     if (days < 7) return t(days === 1 ? 'time.day_ago' : 'time.days_ago', locale, { n: days });
-    return new Date(s).toLocaleDateString(LOCALE_DATE[locale] || 'en-GB', { day: 'numeric', month: 'short' });
+    return new Date(s).toLocaleDateString(LOCALE_DATE[locale] || 'en-GB', {
+      day: 'numeric',
+      month: 'short',
+    });
   };
 
   return (
-    <div style={{
-      marginTop: 28,
-      paddingTop: 28,
-      borderTop: '1px solid #EBE3CA',
-    }}>
-      <div style={{
-        fontFamily: sans,
-        fontSize: 11,
-        fontWeight: 600,
-        color: 'var(--color-acc-deep)',
-        textTransform: 'uppercase',
-        letterSpacing: '0.18em',
-        marginBottom: 14,
-      }}>
+    <div
+      style={{
+        marginTop: 28,
+        paddingTop: 28,
+        borderTop: '1px solid #EBE3CA',
+      }}
+    >
+      <div
+        style={{
+          fontFamily: sans,
+          fontSize: 11,
+          fontWeight: 600,
+          color: 'var(--color-acc-deep)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.18em',
+          marginBottom: 14,
+        }}
+      >
         {t('debate.recent_debates', locale, { n: debates.length })}
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {debates.map(d => (
+        {debates.map((d) => (
           <button
             key={d.id}
             type="button"
@@ -398,40 +446,52 @@ function SavedDebatesList({
               width: '100%',
             }}
           >
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'baseline',
-              flexWrap: 'wrap',
-              gap: 8,
-              marginBottom: 4,
-            }}>
-              <span style={{
-                fontFamily: serif,
-                fontSize: 17,
-                fontWeight: 500,
-                color: 'var(--color-ink)',
-              }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'baseline',
+                flexWrap: 'wrap',
+                gap: 8,
+                marginBottom: 4,
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: serif,
+                  fontSize: 17,
+                  fontWeight: 500,
+                  color: 'var(--color-ink)',
+                }}
+              >
                 <em style={{ fontStyle: 'italic' }}>{d.a_name}</em>
-                <span style={{ color: 'var(--color-acc-deep)', margin: '0 8px', fontStyle: 'normal' }}>×</span>
+                <span
+                  style={{ color: 'var(--color-acc-deep)', margin: '0 8px', fontStyle: 'normal' }}
+                >
+                  ×
+                </span>
                 <em style={{ fontStyle: 'italic' }}>{d.b_name}</em>
               </span>
-              <span style={{
-                fontFamily: sans,
-                fontSize: 11,
-                color: 'var(--color-acc-deep)',
-                letterSpacing: 0.3,
-              }}>
+              <span
+                style={{
+                  fontFamily: sans,
+                  fontSize: 11,
+                  color: 'var(--color-acc-deep)',
+                  letterSpacing: 0.3,
+                }}
+              >
                 {fmtRel(d.created_at)}
               </span>
             </div>
-            <div style={{
-              fontFamily: serif,
-              fontStyle: 'italic',
-              fontSize: 14.5,
-              color: 'var(--color-ink-soft)',
-              lineHeight: 1.4,
-            }}>
+            <div
+              style={{
+                fontFamily: serif,
+                fontStyle: 'italic',
+                fontSize: 14.5,
+                color: 'var(--color-ink-soft)',
+                lineHeight: 1.4,
+              }}
+            >
               on {d.topic}
             </div>
           </button>
@@ -442,7 +502,11 @@ function SavedDebatesList({
 }
 
 function SpeechBubble({
-  speakerName, speakerDates, archetypeKey, text, side
+  speakerName,
+  speakerDates,
+  archetypeKey,
+  text,
+  side,
 }: {
   speakerName: string;
   speakerDates: string;
@@ -454,18 +518,20 @@ function SpeechBubble({
   const isLeft = side === 'left';
 
   const portrait = (
-    <div style={{
-      width: 80,
-      height: 80,
-      borderRadius: '50%',
-      background: '#FFFCF4',
-      border: '2px solid var(--color-line)',
-      flexShrink: 0,
-      overflow: 'hidden',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    }}>
+    <div
+      style={{
+        width: 80,
+        height: 80,
+        borderRadius: '50%',
+        background: '#FFFCF4',
+        border: '2px solid var(--color-line)',
+        flexShrink: 0,
+        overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
       <div
         style={{ width: '100%', height: '100%' }}
         dangerouslySetInnerHTML={{ __html: figureSvg }}
@@ -475,43 +541,49 @@ function SpeechBubble({
 
   const nameLabel = (
     <div style={{ flexShrink: 0, textAlign: isLeft ? 'left' : 'right', minWidth: 0 }}>
-      <div style={{
-        fontFamily: serif,
-        fontSize: 16,
-        fontWeight: 500,
-        fontStyle: 'italic',
-        color: 'var(--color-ink)',
-        lineHeight: 1.1,
-      }}>
+      <div
+        style={{
+          fontFamily: serif,
+          fontSize: 16,
+          fontWeight: 500,
+          fontStyle: 'italic',
+          color: 'var(--color-ink)',
+          lineHeight: 1.1,
+        }}
+      >
         {speakerName}
       </div>
-      <div style={{
-        fontFamily: sans,
-        fontSize: 11,
-        color: 'var(--color-acc-deep)',
-        letterSpacing: 0.3,
-        marginTop: 2,
-      }}>
+      <div
+        style={{
+          fontFamily: sans,
+          fontSize: 11,
+          color: 'var(--color-acc-deep)',
+          letterSpacing: 0.3,
+          marginTop: 2,
+        }}
+      >
         {speakerDates}
       </div>
     </div>
   );
 
   const bubble = (
-    <div style={{
-      flex: 1,
-      minWidth: 0,
-      position: 'relative',
-      background: '#FFFCF4',
-      border: '1px solid var(--color-line)',
-      borderRadius: 18,
-      padding: '18px 22px',
-      fontFamily: serif,
-      fontSize: 17,
-      color: 'var(--color-ink)',
-      lineHeight: 1.6,
-      boxShadow: '0 2px 8px rgba(34, 30, 24, 0.04)',
-    }}>
+    <div
+      style={{
+        flex: 1,
+        minWidth: 0,
+        position: 'relative',
+        background: '#FFFCF4',
+        border: '1px solid var(--color-line)',
+        borderRadius: 18,
+        padding: '18px 22px',
+        fontFamily: serif,
+        fontSize: 17,
+        color: 'var(--color-ink)',
+        lineHeight: 1.6,
+        boxShadow: '0 2px 8px rgba(34, 30, 24, 0.04)',
+      }}
+    >
       {/* Speech-bubble tail */}
       <span
         aria-hidden="true"
@@ -535,12 +607,14 @@ function SpeechBubble({
   );
 
   return (
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: isLeft ? '90px 1fr' : '1fr 90px',
-      gap: 18,
-      alignItems: 'flex-start',
-    }}>
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: isLeft ? '90px 1fr' : '1fr 90px',
+        gap: 18,
+        alignItems: 'flex-start',
+      }}
+    >
       {isLeft ? (
         <>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
@@ -563,7 +637,15 @@ function SpeechBubble({
 }
 
 function PhilosopherPicker({
-  letter, accent, search, setSearch, selected, setSelected, options, excludeName, locale
+  letter,
+  accent,
+  search,
+  setSearch,
+  selected,
+  setSelected,
+  options,
+  excludeName,
+  locale,
 }: {
   letter: string;
   accent: string;
@@ -575,25 +657,27 @@ function PhilosopherPicker({
   excludeName: string;
   locale: Locale;
 }) {
-  const filtered = options.filter(p => p.name !== excludeName);
+  const filtered = options.filter((p) => p.name !== excludeName);
   return (
     <div>
-      <label style={{
-        fontFamily: sans,
-        fontSize: 11,
-        fontWeight: 600,
-        color: accent,
-        textTransform: 'uppercase',
-        letterSpacing: '0.18em',
-        display: 'block',
-        marginBottom: 10,
-      }}>
+      <label
+        style={{
+          fontFamily: sans,
+          fontSize: 11,
+          fontWeight: 600,
+          color: accent,
+          textTransform: 'uppercase',
+          letterSpacing: '0.18em',
+          display: 'block',
+          marginBottom: 10,
+        }}
+      >
         {letter === 'A' ? t('debate.speaker_a', locale) : t('debate.speaker_b', locale)}
       </label>
       <input
         type="text"
         value={search}
-        onChange={e => setSearch(e.target.value)}
+        onChange={(e) => setSearch(e.target.value)}
         placeholder={t('debate.search_placeholder', locale)}
         style={{
           fontFamily: sans,
@@ -609,38 +693,45 @@ function PhilosopherPicker({
           marginBottom: 8,
         }}
       />
-      <div style={{
-        fontFamily: sans,
-        fontSize: 11,
-        color: 'var(--color-acc-deep)',
-        marginBottom: 6,
-        letterSpacing: 0.3,
-      }}>
-        {filtered.length} thinker{filtered.length === 1 ? '' : 's'}{search ? ` matching "${search}"` : ''}
+      <div
+        style={{
+          fontFamily: sans,
+          fontSize: 11,
+          color: 'var(--color-acc-deep)',
+          marginBottom: 6,
+          letterSpacing: 0.3,
+        }}
+      >
+        {filtered.length} thinker{filtered.length === 1 ? '' : 's'}
+        {search ? ` matching "${search}"` : ''}
       </div>
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 4,
-        maxHeight: 360,
-        overflowY: 'auto',
-        background: '#FFFCF4',
-        border: '1px solid #EBE3CA',
-        borderRadius: 8,
-        padding: 6,
-      }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 4,
+          maxHeight: 360,
+          overflowY: 'auto',
+          background: '#FFFCF4',
+          border: '1px solid #EBE3CA',
+          borderRadius: 8,
+          padding: 6,
+        }}
+      >
         {filtered.length === 0 && (
-          <div style={{
-            padding: '12px',
-            fontFamily: sans,
-            fontSize: 13,
-            color: 'var(--color-acc-deep)',
-            fontStyle: 'italic',
-          }}>
+          <div
+            style={{
+              padding: '12px',
+              fontFamily: sans,
+              fontSize: 13,
+              color: 'var(--color-acc-deep)',
+              fontStyle: 'italic',
+            }}
+          >
             No matches.
           </div>
         )}
-        {filtered.map(p => {
+        {filtered.map((p) => {
           const isSelected = selected === p.name;
           return (
             <button
@@ -660,19 +751,23 @@ function PhilosopherPicker({
                 transition: 'background 0.12s ease',
               }}
             >
-              <div style={{
-                fontFamily: serif,
-                fontSize: 16,
-                fontWeight: 500,
-                lineHeight: 1.15,
-              }}>
+              <div
+                style={{
+                  fontFamily: serif,
+                  fontSize: 16,
+                  fontWeight: 500,
+                  lineHeight: 1.15,
+                }}
+              >
                 {p.name}
               </div>
-              <div style={{
-                fontSize: 11,
-                opacity: isSelected ? 0.85 : 0.6,
-                marginTop: 2,
-              }}>
+              <div
+                style={{
+                  fontSize: 11,
+                  opacity: isSelected ? 0.85 : 0.6,
+                  marginTop: 2,
+                }}
+              >
                 {p.dates}
               </div>
             </button>

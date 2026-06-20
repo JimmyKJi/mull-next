@@ -22,12 +22,16 @@ export const runtime = 'nodejs';
 function mintCode(): string {
   // crypto.randomUUID is available everywhere we run. Slice + convert.
   const buf = crypto.getRandomValues(new Uint8Array(6));
-  return Array.from(buf, b => b.toString(36).padStart(2, '0')).join('').slice(0, 8);
+  return Array.from(buf, (b) => b.toString(36).padStart(2, '0'))
+    .join('')
+    .slice(0, 8);
 }
 
 export async function POST() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Not signed in.' }, { status: 401 });
 
   // Retry up to 3x on UNIQUE collision (vanishingly rare at 2.8e12

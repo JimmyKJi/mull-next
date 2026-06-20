@@ -73,7 +73,7 @@ const aliasByName = new Map();
   while ((m = entryPattern.exec(body))) {
     const name = m[1];
     const aliasesRaw = m[2];
-    const aliases = Array.from(aliasesRaw.matchAll(/"([^"]+)"/g)).map(a => a[1]);
+    const aliases = Array.from(aliasesRaw.matchAll(/"([^"]+)"/g)).map((a) => a[1]);
     aliasByName.set(name, aliases);
   }
 }
@@ -188,7 +188,9 @@ if (patchedHtml.includes(oldFilter) && !patchedHtml.includes('s.philosopher.alia
 } else if (patchedHtml.includes('s.philosopher.aliases')) {
   console.log('Search filter already includes aliases. Skipping.');
 } else {
-  console.warn('WARNING: could not locate the search filter to patch. Aliases will be in the data but the search box may not use them. Check public/mull.html around line 9228.');
+  console.warn(
+    'WARNING: could not locate the search filter to patch. Aliases will be in the data but the search box may not use them. Check public/mull.html around line 9228.',
+  );
 }
 
 writeFileSync(TARGET_HTML, patchedHtml);

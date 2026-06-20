@@ -6,7 +6,7 @@
 // so the quote renders in the initial HTML (good for SEO, instant
 // paint, no flash).
 
-import { PHILOSOPHERS, type PhilosopherEntry } from "./philosophers";
+import { PHILOSOPHERS, type PhilosopherEntry } from './philosophers';
 
 export type DailyWisdom = {
   philosopher: PhilosopherEntry;
@@ -17,8 +17,8 @@ export type DailyWisdom = {
 
 export function getDailyWisdom(date: Date = new Date()): DailyWisdom {
   const yyyy = date.getUTCFullYear();
-  const mm = String(date.getUTCMonth() + 1).padStart(2, "0");
-  const dd = String(date.getUTCDate()).padStart(2, "0");
+  const mm = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const dd = String(date.getUTCDate()).padStart(2, '0');
   const dateKey = `${yyyy}-${mm}-${dd}`;
 
   // Day-of-year — Jan 1 is day 0.

@@ -54,10 +54,15 @@ const force = args.includes('--force');
 const onlyLocale = argVal('--locale');
 const prefixArg = argVal('--prefix');
 if (!prefixArg) {
-  console.error('Required: --prefix a,b,c  (comma-separated key prefixes, e.g. wndr,pilgrimage,res)');
+  console.error(
+    'Required: --prefix a,b,c  (comma-separated key prefixes, e.g. wndr,pilgrimage,res)',
+  );
   process.exit(1);
 }
-const PREFIXES = prefixArg.split(',').map(s => s.trim()).filter(Boolean);
+const PREFIXES = prefixArg
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
 const LOCALES = onlyLocale ? [onlyLocale] : TRANSLATABLE;
 
 // ── env ───────────────────────────────────────────────────────────────
@@ -73,7 +78,10 @@ function loadEnv() {
 let API_KEY = null;
 if (!dryRun) {
   API_KEY = loadEnv().ANTHROPIC_API_KEY;
-  if (!API_KEY) { console.error('ANTHROPIC_API_KEY missing from .env.local'); process.exit(1); }
+  if (!API_KEY) {
+    console.error('ANTHROPIC_API_KEY missing from .env.local');
+    process.exit(1);
+  }
 }
 
 // Walk from an opening-brace index to its matching close. String-aware
@@ -82,20 +90,45 @@ if (!dryRun) {
 // for a string open. (The original translate-i18n.js lacks this and
 // currently fails to parse the file for exactly that reason.)
 function findCloseBrace(src, openIdx) {
-  let depth = 0, inStr = null, escape = false;
+  let depth = 0,
+    inStr = null,
+    escape = false;
   for (let i = openIdx; i < src.length; i++) {
-    const ch = src[i], next = src[i + 1];
+    const ch = src[i],
+      next = src[i + 1];
     if (inStr) {
-      if (escape) { escape = false; continue; }
-      if (ch === '\\') { escape = true; continue; }
+      if (escape) {
+        escape = false;
+        continue;
+      }
+      if (ch === '\\') {
+        escape = true;
+        continue;
+      }
       if (ch === inStr) inStr = null;
       continue;
     }
-    if (ch === '/' && next === '/') { const nl = src.indexOf('\n', i); if (nl < 0) return -1; i = nl; continue; }
-    if (ch === '/' && next === '*') { const c = src.indexOf('*/', i + 2); if (c < 0) return -1; i = c + 1; continue; }
-    if (ch === "'" || ch === '"' || ch === '`') { inStr = ch; continue; }
+    if (ch === '/' && next === '/') {
+      const nl = src.indexOf('\n', i);
+      if (nl < 0) return -1;
+      i = nl;
+      continue;
+    }
+    if (ch === '/' && next === '*') {
+      const c = src.indexOf('*/', i + 2);
+      if (c < 0) return -1;
+      i = c + 1;
+      continue;
+    }
+    if (ch === "'" || ch === '"' || ch === '`') {
+      inStr = ch;
+      continue;
+    }
     if (ch === '{') depth++;
-    else if (ch === '}') { depth--; if (depth === 0) return i; }
+    else if (ch === '}') {
+      depth--;
+      if (depth === 0) return i;
+    }
   }
   return -1;
 }
@@ -127,8 +160,12 @@ function findEntries(src) {
     const key = JSON.parse('"' + m[3] + '"');
     const objText = src.slice(braceIdx, close + 1);
     let map;
-    try { map = new Function('return ' + objText)(); }
-    catch { re.lastIndex = close + 1; continue; }
+    try {
+      map = new Function('return ' + objText)();
+    } catch {
+      re.lastIndex = close + 1;
+      continue;
+    }
     entries.push({ key, valStart: braceIdx, valEnd: close, map });
     re.lastIndex = close + 1;
   }
@@ -139,7 +176,8 @@ function findEntries(src) {
 function serializeMap(map) {
   const ordered = [];
   for (const loc of CANONICAL_ORDER) if (loc in map) ordered.push([loc, map[loc]]);
-  for (const loc of Object.keys(map)) if (!CANONICAL_ORDER.includes(loc)) ordered.push([loc, map[loc]]);
+  for (const loc of Object.keys(map))
+    if (!CANONICAL_ORDER.includes(loc)) ordered.push([loc, map[loc]]);
   const inner = ordered.map(([loc, v]) => `${loc}: ${JSON.stringify(v)}`).join(', ');
   return `{ ${inner} }`;
 }
@@ -170,30 +208,51 @@ ${JSON.stringify(batch, null, 2)}`;
 
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, 'anthropic-version': '2023-06-01' },
-    body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 8000, system, messages: [{ role: 'user', content: user }] }),
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': API_KEY,
+      'anthropic-version': '2023-06-01',
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 8000,
+      system,
+      messages: [{ role: 'user', content: user }],
+    }),
   });
   if (!res.ok) throw new Error(`API ${res.status}: ${await res.text()}`);
   const data = await res.json();
-  const text = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('').trim();
+  const text = (data.content || [])
+    .filter((b) => b.type === 'text')
+    .map((b) => b.text)
+    .join('')
+    .trim();
   const cleaned = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '');
-  const start = cleaned.indexOf('{'), end = cleaned.lastIndexOf('}');
+  const start = cleaned.indexOf('{'),
+    end = cleaned.lastIndexOf('}');
   if (start < 0 || end < 0) throw new Error('No JSON in response: ' + text.slice(0, 400));
   const slice = cleaned.slice(start, end + 1);
-  try { return JSON.parse(slice); }
-  catch (e) {
+  try {
+    return JSON.parse(slice);
+  } catch (e) {
     const recovered = {};
     const re = /"((?:[^"\\]|\\.)*)"\s*:\s*"((?:[^"\\]|\\.)*)"/g;
     let mm;
     while ((mm = re.exec(slice)) !== null) {
-      try { recovered[JSON.parse('"' + mm[1] + '"')] = JSON.parse('"' + mm[2] + '"'); } catch {}
+      try {
+        recovered[JSON.parse('"' + mm[1] + '"')] = JSON.parse('"' + mm[2] + '"');
+      } catch {}
     }
-    if (Object.keys(recovered).length) { console.warn(`\n      recovered ${Object.keys(recovered).length} entries by regex`); return recovered; }
+    if (Object.keys(recovered).length) {
+      console.warn(`\n      recovered ${Object.keys(recovered).length} entries by regex`);
+      return recovered;
+    }
     throw new Error('JSON parse failed: ' + e.message + '\n' + slice.slice(0, 1200));
   }
 }
 function chunk(obj, n) {
-  const e = Object.entries(obj), out = [];
+  const e = Object.entries(obj),
+    out = [];
   for (let i = 0; i < e.length; i += n) out.push(Object.fromEntries(e.slice(i, i + n)));
   return out;
 }
@@ -202,8 +261,10 @@ function chunk(obj, n) {
 (async () => {
   let src = fs.readFileSync(TRANSLATIONS_FILE, 'utf8');
   const all = findEntries(src);
-  const targets = all.filter(e => PREFIXES.some(p => e.key === p || e.key.startsWith(p + '.')));
-  console.log(`Scope: prefixes [${PREFIXES.join(', ')}] -> ${targets.length} keys (of ${all.length} total).`);
+  const targets = all.filter((e) => PREFIXES.some((p) => e.key === p || e.key.startsWith(p + '.')));
+  console.log(
+    `Scope: prefixes [${PREFIXES.join(', ')}] -> ${targets.length} keys (of ${all.length} total).`,
+  );
 
   // Pending work per locale.
   const pendingByLocale = {};
@@ -220,18 +281,35 @@ function chunk(obj, n) {
   if (dryRun) {
     console.log('\n--- DRY RUN (no network) ---');
     let total = 0;
-    for (const loc of LOCALES) { const n = Object.keys(pendingByLocale[loc]).length; total += n; console.log(`  ${loc}: ${n} strings to translate`); }
+    for (const loc of LOCALES) {
+      const n = Object.keys(pendingByLocale[loc]).length;
+      total += n;
+      console.log(`  ${loc}: ${n} strings to translate`);
+    }
     console.log(`  TOTAL: ${total} strings across ${LOCALES.length} locales`);
     // Writer safety self-check: re-emit every target with EXISTING data only.
-    const noop = applyReplacements(src, targets.map(e => ({ valStart: e.valStart, valEnd: e.valEnd, newText: serializeMap(e.map) })));
+    const noop = applyReplacements(
+      src,
+      targets.map((e) => ({
+        valStart: e.valStart,
+        valEnd: e.valEnd,
+        newText: serializeMap(e.map),
+      })),
+    );
     if (noop === src) {
-      console.log('  ✓ writer self-check PASSED: no-op re-serialization is byte-identical (comments + untouched keys safe).');
+      console.log(
+        '  ✓ writer self-check PASSED: no-op re-serialization is byte-identical (comments + untouched keys safe).',
+      );
     } else {
-      console.log('  ⚠ writer self-check: re-serialization differs from source. Diff is limited to target-key lines (likely locale-order normalization). Inspect before a real run.');
+      console.log(
+        '  ⚠ writer self-check: re-serialization differs from source. Diff is limited to target-key lines (likely locale-order normalization). Inspect before a real run.',
+      );
       // Show which keys differ
-      const before = src.split('\n'), after = noop.split('\n');
+      const before = src.split('\n'),
+        after = noop.split('\n');
       for (let i = 0; i < Math.max(before.length, after.length); i++) {
-        if (before[i] !== after[i]) console.log(`    L${i + 1}\n      - ${before[i]}\n      + ${after[i]}`);
+        if (before[i] !== after[i])
+          console.log(`    L${i + 1}\n      - ${before[i]}\n      + ${after[i]}`);
       }
     }
     console.log('\nNo files written.');
@@ -243,7 +321,10 @@ function chunk(obj, n) {
   for (const loc of LOCALES) {
     const pending = pendingByLocale[loc];
     const keys = Object.keys(pending);
-    if (!keys.length) { console.log(`  ${loc}: nothing to translate`); continue; }
+    if (!keys.length) {
+      console.log(`  ${loc}: nothing to translate`);
+      continue;
+    }
     console.log(`  ${loc}: translating ${keys.length} strings…`);
     const batches = chunk(pending, 60);
     const merged = {};
@@ -251,11 +332,21 @@ function chunk(obj, n) {
       process.stdout.write(`    batch ${i + 1}/${batches.length}…`);
       let attempt = 0;
       while (attempt < 3) {
-        try { Object.assign(merged, await translateBatch(loc, batches[i])); process.stdout.write(' ✓\n'); break; }
-        catch (e) { attempt++; process.stdout.write(` retry ${attempt}…`); if (attempt >= 3) throw e; await new Promise(r => setTimeout(r, 2000)); }
+        try {
+          Object.assign(merged, await translateBatch(loc, batches[i]));
+          process.stdout.write(' ✓\n');
+          break;
+        } catch (e) {
+          attempt++;
+          process.stdout.write(` retry ${attempt}…`);
+          if (attempt >= 3) throw e;
+          await new Promise((r) => setTimeout(r, 2000));
+        }
       }
     }
-    for (const [k, v] of Object.entries(merged)) { (byKeyNew[k] = byKeyNew[k] || {})[loc] = v; }
+    for (const [k, v] of Object.entries(merged)) {
+      (byKeyNew[k] = byKeyNew[k] || {})[loc] = v;
+    }
 
     // Persist after each locale: re-read fresh, merge, surgical write.
     src = fs.readFileSync(TRANSLATIONS_FILE, 'utf8');
@@ -273,4 +364,7 @@ function chunk(obj, n) {
     console.log(`  ✓ ${loc} written (${Object.keys(merged).length} keys)`);
   }
   console.log('✓ Done.');
-})().catch(e => { console.error(e); process.exit(1); });
+})().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

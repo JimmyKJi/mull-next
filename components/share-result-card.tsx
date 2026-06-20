@@ -89,8 +89,7 @@ export default function ShareResultCard({
     }
   }
 
-  const hasNativeShare =
-    typeof window !== 'undefined' && typeof navigator.share === 'function';
+  const hasNativeShare = typeof window !== 'undefined' && typeof navigator.share === 'function';
 
   // ── Friend-challenge invite ──────────────────────────────────────
   // Click → POST /api/challenge/create → copy the returned URL to
@@ -121,7 +120,9 @@ export default function ShareResultCard({
       setChallengeUrl(full);
       try {
         await navigator.clipboard.writeText(full);
-      } catch {/* clipboard denied — the URL is still visible below */}
+      } catch {
+        /* clipboard denied — the URL is still visible below */
+      }
     } catch {
       setError(t('crd.challenge_err_network', locale));
     } finally {
@@ -130,16 +131,23 @@ export default function ShareResultCard({
   }
 
   return (
-    <div style={{
-      marginTop: 22,
-      paddingTop: 22,
-      borderTop: '4px solid var(--color-ink)',
-    }}>
-      <div style={{
-        fontFamily: pixel, fontSize: 11,
-        color: 'var(--color-acc-deep)', textTransform: 'uppercase',
-        letterSpacing: '0.18em', marginBottom: 12,
-      }}>
+    <div
+      style={{
+        marginTop: 22,
+        paddingTop: 22,
+        borderTop: '4px solid var(--color-ink)',
+      }}
+    >
+      <div
+        style={{
+          fontFamily: pixel,
+          fontSize: 11,
+          color: 'var(--color-acc-deep)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.18em',
+          marginBottom: 12,
+        }}
+      >
         ▸ {t('crd.share_eyebrow', locale)}
       </div>
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
@@ -150,7 +158,9 @@ export default function ShareResultCard({
           className="pixel-press"
           style={{ ...pixelShareButton, textDecoration: 'none' }}
         >
-          <span aria-hidden style={{ marginRight: 8 }}>𝕏</span>
+          <span aria-hidden style={{ marginRight: 8 }}>
+            𝕏
+          </span>
           <span>{t('crd.share_post_x', locale)}</span>
         </a>
         <a
@@ -161,7 +171,9 @@ export default function ShareResultCard({
           style={{ ...pixelShareButton, textDecoration: 'none' }}
           title={t('crd.share_instagram_title', locale)}
         >
-          <span aria-hidden style={{ marginRight: 8 }}>◎</span>
+          <span aria-hidden style={{ marginRight: 8 }}>
+            ◎
+          </span>
           <span>INSTAGRAM</span>
         </a>
         <a
@@ -172,7 +184,9 @@ export default function ShareResultCard({
           style={{ ...pixelShareButton, textDecoration: 'none' }}
           title={t('crd.share_tiktok_title', locale)}
         >
-          <span aria-hidden style={{ marginRight: 8 }}>♪</span>
+          <span aria-hidden style={{ marginRight: 8 }}>
+            ♪
+          </span>
           <span>TIKTOK</span>
         </a>
         <button
@@ -185,12 +199,21 @@ export default function ShareResultCard({
             cursor: 'pointer',
           }}
         >
-          <span aria-hidden style={{ marginRight: 8 }}>↗</span>
+          <span aria-hidden style={{ marginRight: 8 }}>
+            ↗
+          </span>
           <span>{copied ? t('crd.share_copied', locale) : t('crd.share_copy_link', locale)}</span>
         </button>
         {hasNativeShare && (
-          <button type="button" onClick={nativeShare} className="pixel-press" style={{ ...pixelShareButton, cursor: 'pointer' }}>
-            <span aria-hidden style={{ marginRight: 8 }}>↗</span>
+          <button
+            type="button"
+            onClick={nativeShare}
+            className="pixel-press"
+            style={{ ...pixelShareButton, cursor: 'pointer' }}
+          >
+            <span aria-hidden style={{ marginRight: 8 }}>
+              ↗
+            </span>
             <span>{t('crd.share_native', locale)}</span>
           </button>
         )}
@@ -212,27 +235,35 @@ export default function ShareResultCard({
             cursor: challengeBusy ? 'wait' : 'pointer',
           }}
         >
-          <span aria-hidden style={{ marginRight: 8 }}>⚔</span>
-          <span>{challengeBusy ? t('crd.challenge_minting', locale) : t('crd.challenge_friend', locale)}</span>
+          <span aria-hidden style={{ marginRight: 8 }}>
+            ⚔
+          </span>
+          <span>
+            {challengeBusy ? t('crd.challenge_minting', locale) : t('crd.challenge_friend', locale)}
+          </span>
         </button>
       </div>
       {challengeUrl && (
-        <div style={{
-          marginTop: 14,
-          padding: '12px 14px',
-          background: 'var(--color-acc-soft)',
-          border: '3px solid var(--color-ink)',
-          boxShadow: '3px 3px 0 0 var(--color-acc)',
-          borderRadius: 0,
-        }}>
-          <div style={{
-            fontFamily: pixel,
-            fontSize: 10,
-            color: 'var(--color-acc-deep)',
-            letterSpacing: 0.4,
-            textTransform: 'uppercase',
-            marginBottom: 8,
-          }}>
+        <div
+          style={{
+            marginTop: 14,
+            padding: '12px 14px',
+            background: 'var(--color-acc-soft)',
+            border: '3px solid var(--color-ink)',
+            boxShadow: '3px 3px 0 0 var(--color-acc)',
+            borderRadius: 0,
+          }}
+        >
+          <div
+            style={{
+              fontFamily: pixel,
+              fontSize: 10,
+              color: 'var(--color-acc-deep)',
+              letterSpacing: 0.4,
+              textTransform: 'uppercase',
+              marginBottom: 8,
+            }}
+          >
             ▸ {t('crd.invite_copied_banner', locale)}
           </div>
           <code
@@ -248,9 +279,14 @@ export default function ShareResultCard({
         </div>
       )}
       {error && (
-        <p style={{
-          marginTop: 12, fontFamily: sans, fontSize: 12, color: '#7A2E2E',
-        }}>
+        <p
+          style={{
+            marginTop: 12,
+            fontFamily: sans,
+            fontSize: 12,
+            color: '#7A2E2E',
+          }}
+        >
           {error}
         </p>
       )}
@@ -271,7 +307,8 @@ const pixelShareButton: React.CSSProperties = {
   letterSpacing: 0.4,
   textTransform: 'uppercase',
   boxShadow: '3px 3px 0 0 var(--color-acc)',
-  transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end), background 80ms steps(2, end)',
+  transition:
+    'transform 80ms steps(2, end), box-shadow 80ms steps(2, end), background 80ms steps(2, end)',
 };
 
 const copiedStyle: React.CSSProperties = {

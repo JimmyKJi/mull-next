@@ -48,7 +48,9 @@ function escapeHtml(s: string) {
 
 // Pick the dilemma with the largest |delta| as "biggest shift" — we
 // surface it in the digest so the user has a tangible takeaway.
-function pickBiggestShift(rows: DilemmaRow[]): { row: DilemmaRow; topDim: string; signed: number } | null {
+function pickBiggestShift(
+  rows: DilemmaRow[],
+): { row: DilemmaRow; topDim: string; signed: number } | null {
   let best: { row: DilemmaRow; topDim: string; signed: number } | null = null;
   for (const r of rows) {
     if (!r.vector_delta || r.vector_delta.length !== DIM_KEYS.length) continue;
@@ -91,12 +93,15 @@ export async function GET(req: Request) {
   }
 
   // Resolve emails for those users.
-  const { data: { users }, error: listErr } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 });
+  const {
+    data: { users },
+    error: listErr,
+  } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 });
   if (listErr) {
     console.error('[cron/weekly-digest] listUsers failed', listErr);
     return NextResponse.json({ error: 'Could not list users.' }, { status: 500 });
   }
-  const emailById = new Map(users.map(u => [u.id, u.email]));
+  const emailById = new Map(users.map((u) => [u.id, u.email]));
 
   const sevenDaysAgo = new Date(Date.now() - 7 * 86400_000).toISOString();
   const sent: string[] = [];
@@ -168,7 +173,9 @@ export async function GET(req: Request) {
 }
 
 function composeDigest({
-  email, count, biggest,
+  email,
+  count,
+  biggest,
 }: {
   email: string;
   count: number;
@@ -181,9 +188,10 @@ function composeDigest({
 }): { html: string; text: string } {
   const url = 'https://mull.world/account';
   const direction = biggest ? (biggest.signed > 0 ? 'toward' : 'away from') : '';
-  const respPreview = biggest && biggest.response.length > 220
-    ? biggest.response.slice(0, 217) + '…'
-    : biggest?.response;
+  const respPreview =
+    biggest && biggest.response.length > 220
+      ? biggest.response.slice(0, 217) + '…'
+      : biggest?.response;
 
   const text = [
     `Your week on Mull.`,
@@ -203,9 +211,12 @@ function composeDigest({
     `— Mull`,
     ``,
     `(You can turn off email any time from your account settings.)`,
-  ].filter(Boolean).join('\n');
+  ]
+    .filter(Boolean)
+    .join('\n');
 
-  const biggestBlock = biggest ? `
+  const biggestBlock = biggest
+    ? `
     <div style="padding: 18px 20px; background: #FFFCF4; border: 1px solid #EBE3CA; border-left: 3px solid #B8862F; border-radius: 8px; margin-bottom: 18px;">
       <div style="font-family: Inter, sans-serif; font-size: 11px; font-weight: 600; color: #8C6520; text-transform: uppercase; letter-spacing: 0.18em; margin-bottom: 8px;">
         Biggest shift · ${escapeHtml(direction)} ${escapeHtml(biggest.dimName)}
@@ -217,7 +228,8 @@ function composeDigest({
         ${escapeHtml(respPreview || '')}
       </p>
     </div>
-  ` : '';
+  `
+    : '';
 
   const html = `
     <div style="font-family: Georgia, serif; max-width: 560px; margin: 0 auto; padding: 36px 28px; color: #221E18; background: #FAF6EC;">

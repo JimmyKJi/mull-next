@@ -9,19 +9,16 @@ import {
 import { getUserOrientation } from '@/lib/user-orientation';
 import { rateLimit, readAiSpend } from '@/lib/rate-limit';
 import { logError } from '@/lib/error-log';
-import {
-  buildKinshipPromptFragment,
-  parseAndValidateDiagnosis,
-  type Kinship,
-} from '@/lib/kinship';
+import { buildKinshipPromptFragment, parseAndValidateDiagnosis, type Kinship } from '@/lib/kinship';
 
 // Build the system prompt from the dimension table — one place to edit.
 function buildSystemPrompt(): string {
-  const dimList = DIM_KEYS.map(k =>
-    `- ${k} (${DIM_NAMES[k]}): ${DIM_DESCRIPTIONS[k]}`
-  ).join('\n');
+  const dimList = DIM_KEYS.map((k) => `- ${k} (${DIM_NAMES[k]}): ${DIM_DESCRIPTIONS[k]}`).join(
+    '\n',
+  );
 
-  return `You are an analyst for Mull, a philosophy mapping tool. You will read a person's brief written response to a daily reflective question, and produce a small vector delta indicating which philosophical dimensions their thinking momentarily leans toward in this specific response — plus a deeper diagnosis of the shape of the thinking, the closest historical kin, the traditions it echoes, and a judgement of whether the response says something genuinely novel.
+  return (
+    `You are an analyst for Mull, a philosophy mapping tool. You will read a person's brief written response to a daily reflective question, and produce a small vector delta indicating which philosophical dimensions their thinking momentarily leans toward in this specific response — plus a deeper diagnosis of the shape of the thinking, the closest historical kin, the traditions it echoes, and a judgement of whether the response says something genuinely novel.
 
 THE 16 DIMENSIONS (in fixed order):
 ${dimList}
@@ -37,8 +34,9 @@ The vector_delta array must contain exactly 16 numbers in the order ${DIM_KEYS.j
 
 The analysis is one sentence describing what the response revealed about how the person is thinking right now. Plain prose, no formatting.
 
-Do not over-attribute. Do not flatter. If the response is empty or evasive, return all zeros and say so in the analysis. In that case kinship.philosophers and traditions should be empty and is_novel should be false.`
-+ buildKinshipPromptFragment();
+Do not over-attribute. Do not flatter. If the response is empty or evasive, return all zeros and say so in the analysis. In that case kinship.philosophers and traditions should be empty and is_novel should be false.` +
+    buildKinshipPromptFragment()
+  );
 }
 
 type ClaudeResponse = {
@@ -57,7 +55,7 @@ type DilemmaClaudeResult = {
 async function callClaude(
   question: string,
   response: string,
-  apiKey: string
+  apiKey: string,
 ): Promise<DilemmaClaudeResult | null> {
   const userMessage = `Question of the day: "${question}"\n\nThe person's response:\n${response.trim()}`;
 
@@ -66,7 +64,7 @@ async function callClaude(
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01'
+      'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
       // Bumped max_tokens for the extended diagnosis payload.
@@ -76,8 +74,8 @@ async function callClaude(
       model: 'claude-haiku-4-6',
       max_tokens: 1400,
       system: buildSystemPrompt(),
-      messages: [{ role: 'user', content: userMessage }]
-    })
+      messages: [{ role: 'user', content: userMessage }],
+    }),
   });
 
   if (!res.ok) {
@@ -93,8 +91,8 @@ async function callClaude(
   }
 
   const text = (data.content ?? [])
-    .filter(b => b.type === 'text')
-    .map(b => b.text || '')
+    .filter((b) => b.type === 'text')
+    .map((b) => b.text || '')
     .join('')
     .trim();
 
@@ -105,8 +103,11 @@ async function callClaude(
     return null;
   }
   let parsed: {
-    vector_delta?: unknown; analysis?: unknown;
-    diagnosis?: unknown; kinship?: unknown; is_novel?: unknown;
+    vector_delta?: unknown;
+    analysis?: unknown;
+    diagnosis?: unknown;
+    kinship?: unknown;
+    is_novel?: unknown;
   };
   try {
     parsed = JSON.parse(text.slice(start, end + 1));
@@ -119,7 +120,7 @@ async function callClaude(
     console.error('[dilemma] invalid vector_delta shape', parsed.vector_delta);
     return null;
   }
-  const delta = parsed.vector_delta.map(n => {
+  const delta = parsed.vector_delta.map((n) => {
     const v = typeof n === 'number' ? n : 0;
     return Math.max(-2, Math.min(2, v));
   });
@@ -137,11 +138,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Response is too short.' }, { status: 400 });
     }
     if (responseText.length > 4000) {
-      return NextResponse.json({ error: 'Response is too long (max 4000 chars).' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Response is too long (max 4000 chars).' },
+        { status: 400 },
+      );
     }
 
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) {
       return NextResponse.json({ error: 'Not signed in.' }, { status: 401 });
     }
@@ -167,7 +173,10 @@ export async function POST(req: Request) {
     const spend = await readAiSpend();
     if (spend.paused) {
       return NextResponse.json(
-        { error: spend.reason ?? 'Mull is paused for the day — AI cost cap reached. Try again tomorrow.' },
+        {
+          error:
+            spend.reason ?? 'Mull is paused for the day — AI cost cap reached. Try again tomorrow.',
+        },
         { status: 503 },
       );
     }
@@ -183,9 +192,7 @@ export async function POST(req: Request) {
     const dateKey = dilemmaDateKey();
     const ref = body?.dilemmaRef;
     const refDilemma =
-      ref &&
-      typeof ref.poolKey === 'string' &&
-      Number.isInteger(ref.index)
+      ref && typeof ref.poolKey === 'string' && Number.isInteger(ref.index)
         ? getDeepDilemmaByRef(ref.poolKey, ref.index)
         : null;
 
@@ -211,8 +218,8 @@ export async function POST(req: Request) {
 
     if (existing) {
       return NextResponse.json(
-        { error: 'You have already responded to today\'s dilemma.' },
-        { status: 409 }
+        { error: "You have already responded to today's dilemma." },
+        { status: 409 },
       );
     }
 
@@ -250,7 +257,7 @@ export async function POST(req: Request) {
         diagnosis,
         kinship: kinship as unknown as object | null,
         is_novel,
-        is_public: isPublic
+        is_public: isPublic,
       })
       .select('id, vector_delta, analysis, diagnosis, kinship, is_novel')
       .single();
@@ -268,7 +275,7 @@ export async function POST(req: Request) {
       diagnosis: inserted.diagnosis,
       kinship: inserted.kinship,
       is_novel: inserted.is_novel,
-      analyzed: !!apiKey && !!vector_delta
+      analyzed: !!apiKey && !!vector_delta,
     });
   } catch (e) {
     console.error('[dilemma] unexpected error', e);

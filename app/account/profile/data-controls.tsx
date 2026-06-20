@@ -62,20 +62,25 @@ export default function DataControls({ locale = 'en' }: { locale?: Locale }) {
   }
 
   return (
-    <section className="pixel-form" style={{
-      marginTop: 56,
-      paddingTop: 28,
-      borderTop: '4px solid var(--color-ink)',
-    }}>
-      <div style={{
-        fontFamily: sans,
-        fontSize: 11,
-        fontWeight: 600,
-        color: 'var(--color-acc-deep)',
-        textTransform: 'uppercase',
-        letterSpacing: '0.18em',
-        marginBottom: 14,
-      }}>
+    <section
+      className="pixel-form"
+      style={{
+        marginTop: 56,
+        paddingTop: 28,
+        borderTop: '4px solid var(--color-ink)',
+      }}
+    >
+      <div
+        style={{
+          fontFamily: sans,
+          fontSize: 11,
+          fontWeight: 600,
+          color: 'var(--color-acc-deep)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.18em',
+          marginBottom: 14,
+        }}
+      >
         {t('data.eyebrow', locale)}
       </div>
 
@@ -99,14 +104,16 @@ export default function DataControls({ locale = 'en' }: { locale?: Locale }) {
         >
           {exporting ? t('data.exporting', locale) : t('data.export_button', locale)}
         </button>
-        <p style={{
-          fontFamily: sans,
-          fontSize: 12,
-          color: 'var(--color-acc-deep)',
-          margin: 0,
-          opacity: 0.75,
-          lineHeight: 1.55,
-        }}>
+        <p
+          style={{
+            fontFamily: sans,
+            fontSize: 12,
+            color: 'var(--color-acc-deep)',
+            margin: 0,
+            opacity: 0.75,
+            lineHeight: 1.55,
+          }}
+        >
           {t('data.export_help', locale)}
         </p>
       </div>
@@ -131,44 +138,52 @@ export default function DataControls({ locale = 'en' }: { locale?: Locale }) {
           {t('data.danger_show', locale)}
         </button>
       ) : (
-        <div style={{
-          marginTop: 28,
-          padding: '18px 20px',
-          border: '1px solid #C7522A',
-          borderRadius: 8,
-          background: 'rgba(199, 82, 42, 0.04)',
-        }}>
-          <div style={{
-            fontFamily: sans,
-            fontSize: 13.5,
-            fontWeight: 600,
-            color: '#7A2E2E',
-            marginBottom: 8,
-          }}>
+        <div
+          style={{
+            marginTop: 28,
+            padding: '18px 20px',
+            border: '1px solid #C7522A',
+            borderRadius: 8,
+            background: 'rgba(199, 82, 42, 0.04)',
+          }}
+        >
+          <div
+            style={{
+              fontFamily: sans,
+              fontSize: 13.5,
+              fontWeight: 600,
+              color: '#7A2E2E',
+              marginBottom: 8,
+            }}
+          >
             {t('data.danger_title', locale)}
           </div>
-          <p style={{
-            fontFamily: sans,
-            fontSize: 13,
-            color: 'var(--color-ink-soft)',
-            margin: '0 0 14px',
-            lineHeight: 1.55,
-          }}>
+          <p
+            style={{
+              fontFamily: sans,
+              fontSize: 13,
+              color: 'var(--color-ink-soft)',
+              margin: '0 0 14px',
+              lineHeight: 1.55,
+            }}
+          >
             {t('data.danger_body', locale)}
           </p>
-          <label style={{
-            fontFamily: sans,
-            fontSize: 12,
-            color: 'var(--color-ink-soft)',
-            display: 'block',
-            marginBottom: 8,
-          }}>
+          <label
+            style={{
+              fontFamily: sans,
+              fontSize: 12,
+              color: 'var(--color-ink-soft)',
+              display: 'block',
+              marginBottom: 8,
+            }}
+          >
             {t('data.confirm_label', locale, { phrase: CONFIRM_PHRASE })}
           </label>
           <input
             type="text"
             value={confirmText}
-            onChange={e => setConfirmText(e.target.value)}
+            onChange={(e) => setConfirmText(e.target.value)}
             placeholder={CONFIRM_PHRASE}
             style={{
               fontFamily: sans,
@@ -205,7 +220,11 @@ export default function DataControls({ locale = 'en' }: { locale?: Locale }) {
             </button>
             <button
               type="button"
-              onClick={() => { setShowDangerZone(false); setConfirmText(''); setError(null); }}
+              onClick={() => {
+                setShowDangerZone(false);
+                setConfirmText('');
+                setError(null);
+              }}
               disabled={deleting}
               style={{
                 fontFamily: sans,
@@ -222,16 +241,18 @@ export default function DataControls({ locale = 'en' }: { locale?: Locale }) {
             </button>
           </div>
           {error && (
-            <div style={{
-              marginTop: 12,
-              fontFamily: sans,
-              fontSize: 13,
-              color: '#7A2E2E',
-              background: 'rgba(122, 46, 46, 0.08)',
-              border: '1px solid rgba(122, 46, 46, 0.2)',
-              padding: '10px 14px',
-              borderRadius: 6,
-            }}>
+            <div
+              style={{
+                marginTop: 12,
+                fontFamily: sans,
+                fontSize: 13,
+                color: '#7A2E2E',
+                background: 'rgba(122, 46, 46, 0.08)',
+                border: '1px solid rgba(122, 46, 46, 0.2)',
+                padding: '10px 14px',
+                borderRadius: 6,
+              }}
+            >
               {error}
             </div>
           )}

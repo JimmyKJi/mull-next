@@ -53,20 +53,26 @@ export default function ClassCreateForm({ locale }: { locale: Locale }) {
         <input
           type="text"
           value={name}
-          onChange={e => setName(e.target.value)}
+          onChange={(e) => setName(e.target.value)}
           placeholder={t('cls.field_class_name_ph', locale)}
           maxLength={120}
           required
         />
       </label>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 14 }}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+          gap: 14,
+        }}
+      >
         <label style={{ display: 'grid', gap: 6 }}>
           <span>{t('cls.field_term', locale)}</span>
           <input
             type="text"
             value={term}
-            onChange={e => setTerm(e.target.value)}
+            onChange={(e) => setTerm(e.target.value)}
             placeholder={t('cls.field_term_ph', locale)}
             maxLength={48}
           />
@@ -76,7 +82,7 @@ export default function ClassCreateForm({ locale }: { locale: Locale }) {
           <input
             type="text"
             value={schoolName}
-            onChange={e => setSchoolName(e.target.value)}
+            onChange={(e) => setSchoolName(e.target.value)}
             placeholder={t('cls.field_school_ph', locale)}
             maxLength={120}
           />
@@ -88,7 +94,7 @@ export default function ClassCreateForm({ locale }: { locale: Locale }) {
         <textarea
           rows={3}
           value={description}
-          onChange={e => setDescription(e.target.value)}
+          onChange={(e) => setDescription(e.target.value)}
           placeholder={t('cls.field_description_ph', locale)}
           maxLength={600}
           style={{ resize: 'vertical' }}
@@ -96,7 +102,9 @@ export default function ClassCreateForm({ locale }: { locale: Locale }) {
       </label>
 
       {error && (
-        <p className="pixel-alert pixel-alert--error" role="alert">{error}</p>
+        <p className="pixel-alert pixel-alert--error" role="alert">
+          {error}
+        </p>
       )}
 
       <button type="submit" disabled={submitting || !name.trim()}>

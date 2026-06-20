@@ -21,7 +21,7 @@ export type TabKey = 'activity' | 'picks' | 'original';
 
 const TABS: Array<{ key: TabKey; labelKey: string }> = [
   { key: 'activity', labelKey: 'srch2.tab_activity' },
-  { key: 'picks',    labelKey: 'srch2.tab_picks' },
+  { key: 'picks', labelKey: 'srch2.tab_picks' },
   { key: 'original', labelKey: 'srch2.tab_original' },
 ];
 

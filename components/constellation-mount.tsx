@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 // ConstellationMount — wraps the 3D constellation in a Next.js dynamic
 // import (ssr:false) so the heavy three.js bundle only ships to the
@@ -19,47 +19,40 @@
 //     with the constellation at 100vh and a pixel close button.
 //   - ESC closes fullscreen.
 
-import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
-import { Constellation } from "./constellation";
-import FocusTrap from "./focus-trap";
-import { t, type Locale, isLocale } from "@/lib/translations";
+import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
+import { Constellation } from './constellation';
+import FocusTrap from './focus-trap';
+import { t, type Locale, isLocale } from '@/lib/translations';
 
 // Read the locale cookie on the client. Guarded for SSR (returns 'en'
 // during server render + first hydration pass; the component re-reads
 // in a useEffect so hydration stays consistent).
 function clientLocale(): Locale {
-  if (typeof document === "undefined") return "en";
+  if (typeof document === 'undefined') return 'en';
   const m = document.cookie.match(/(?:^|; )mull_locale=([^;]+)/);
   const v = m?.[1];
-  return v && isLocale(v) ? v : "en";
+  return v && isLocale(v) ? v : 'en';
 }
 
-const Constellation3D = dynamic(
-  () => import("./constellation-3d").then((m) => m.Constellation3D),
-  {
-    ssr: false,
-    // The 2D version is what visitors see during the ~1s the 3D
-    // bundle is loading. It's also the fallback for users on
-    // browsers without WebGL (the 3D component would error out
-    // during init; this catches it gracefully).
-    loading: () => {
-      const loc = clientLocale();
-      return (
-        <div className="relative w-full overflow-hidden rounded-2xl border border-line bg-[#FFFCF4]">
-          <Constellation
-            variant="interactive"
-            clickable={false}
-            locale={loc}
-          />
-          <div className="pointer-events-none absolute inset-x-0 bottom-3 text-center text-[11px] uppercase tracking-[0.22em] text-acc-deep opacity-70">
-            {t("cnst.loading_3d", loc)}
-          </div>
+const Constellation3D = dynamic(() => import('./constellation-3d').then((m) => m.Constellation3D), {
+  ssr: false,
+  // The 2D version is what visitors see during the ~1s the 3D
+  // bundle is loading. It's also the fallback for users on
+  // browsers without WebGL (the 3D component would error out
+  // during init; this catches it gracefully).
+  loading: () => {
+    const loc = clientLocale();
+    return (
+      <div className="relative w-full overflow-hidden rounded-2xl border border-line bg-[#FFFCF4]">
+        <Constellation variant="interactive" clickable={false} locale={loc} />
+        <div className="pointer-events-none absolute inset-x-0 bottom-3 text-center text-[11px] uppercase tracking-[0.22em] text-acc-deep opacity-70">
+          {t('cnst.loading_3d', loc)}
         </div>
-      );
-    },
+      </div>
+    );
   },
-);
+});
 
 type Props = {
   userVector?: number[];
@@ -69,22 +62,24 @@ type Props = {
       enough that the constellation doesn't eat the viewport, with a
       "▶ FULLSCREEN" button to expand it on demand. */
   mobileHeight?: number;
-  variant?: "interactive" | "ambient";
+  variant?: 'interactive' | 'ambient';
 };
 
 export function ConstellationMount({
   userVector,
   height = 540,
   mobileHeight = 360,
-  variant = "interactive",
+  variant = 'interactive',
 }: Props) {
   const [isTouch, setIsTouch] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
-  const [locale, setLocale] = useState<Locale>("en");
+  const [locale, setLocale] = useState<Locale>('en');
 
   // Read the locale cookie after mount (keeps SSR + first hydration
   // render at 'en', then localizes).
-  useEffect(() => { setLocale(clientLocale()); }, []);
+  useEffect(() => {
+    setLocale(clientLocale());
+  }, []);
 
   // Detect touch devices once on mount. We use this to shrink the
   // inline height + reveal the FULLSCREEN button. We deliberately
@@ -104,7 +99,9 @@ export function ConstellationMount({
     if (!fullscreen) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = prev; };
+    return () => {
+      document.body.style.overflow = prev;
+    };
   }, [fullscreen]);
 
   const inlineHeight = isTouch ? mobileHeight : height;
@@ -129,7 +126,7 @@ export function ConstellationMount({
           <button
             type="button"
             onClick={() => setFullscreen(true)}
-            aria-label={t("cnst.open_fullscreen", locale)}
+            aria-label={t('cnst.open_fullscreen', locale)}
             className="pixel-press"
             style={{
               position: 'absolute',
@@ -150,7 +147,7 @@ export function ConstellationMount({
               transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
             }}
           >
-            ▶ {t("cnst.fullscreen_btn", locale)}
+            ▶ {t('cnst.fullscreen_btn', locale)}
           </button>
         )}
       </div>
@@ -159,7 +156,7 @@ export function ConstellationMount({
         <div
           role="dialog"
           aria-modal="true"
-          aria-label={t("cnst.fullscreen_view", locale)}
+          aria-label={t('cnst.fullscreen_view', locale)}
           style={{
             position: 'fixed',
             inset: 0,
@@ -171,28 +168,32 @@ export function ConstellationMount({
         >
           <FocusTrap onEscape={() => setFullscreen(false)}>
             {/* Top bar — pixel chrome, close button on the right. */}
-            <div style={{
-              flexShrink: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '10px 14px',
-              borderBottom: '4px solid var(--color-ink)',
-              background: 'var(--color-ink)',
-            }}>
-              <span style={{
-                fontFamily: "var(--font-pixel-display, 'Courier New', monospace)",
-                fontSize: 11,
-                color: 'var(--color-acc-soft)',
-                letterSpacing: '0.18em',
-                textTransform: 'uppercase',
-              }}>
-                ▶ {t("cnst.fullscreen_title", locale)}
+            <div
+              style={{
+                flexShrink: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '10px 14px',
+                borderBottom: '4px solid var(--color-ink)',
+                background: 'var(--color-ink)',
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: "var(--font-pixel-display, 'Courier New', monospace)",
+                  fontSize: 11,
+                  color: 'var(--color-acc-soft)',
+                  letterSpacing: '0.18em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                ▶ {t('cnst.fullscreen_title', locale)}
               </span>
               <button
                 type="button"
                 onClick={() => setFullscreen(false)}
-                aria-label={t("cnst.close_fullscreen", locale)}
+                aria-label={t('cnst.close_fullscreen', locale)}
                 className="pixel-press"
                 style={{
                   padding: '6px 12px',
@@ -209,7 +210,7 @@ export function ConstellationMount({
                   transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
                 }}
               >
-                ✕ {t("cnst.close", locale)}
+                ✕ {t('cnst.close', locale)}
               </button>
             </div>
             {/* Constellation fills remaining viewport height. */}

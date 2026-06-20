@@ -842,8 +842,7 @@ export function getPersonalizedDilemma(
   archetypeKey: string | null,
   date: Date = new Date(),
 ): PersonalizedDilemma {
-  const poolKey =
-    archetypeKey && ARCHETYPE_DILEMMAS[archetypeKey] ? archetypeKey : 'universal';
+  const poolKey = archetypeKey && ARCHETYPE_DILEMMAS[archetypeKey] ? archetypeKey : 'universal';
   const pool = poolKey === 'universal' ? UNIVERSAL_DEEP : ARCHETYPE_DILEMMAS[poolKey];
 
   const yyyy = date.getUTCFullYear();

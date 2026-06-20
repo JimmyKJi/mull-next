@@ -7,9 +7,9 @@
 // Returns: { verdict, judge_output, user_elo_before, user_elo_after,
 //            elo_delta, opponent_elo, opponent_name }
 
-import { NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
-import { getArenaPhilosopher, getArenaTopic } from "@/lib/arena/data";
+import { NextResponse } from 'next/server';
+import { createClient } from '@/utils/supabase/server';
+import { getArenaPhilosopher, getArenaTopic } from '@/lib/arena/data';
 import {
   judgeSystemPrompt,
   judgeUserPrompt,
@@ -19,13 +19,13 @@ import {
   judgmentToElo,
   totalScore,
   type JudgeOutput,
-} from "@/lib/arena/judge";
-import { newElo, kFactorForGames } from "@/lib/arena/elo";
-import { notifyVerdict } from "@/lib/arena/notifications";
-import { aiGate } from "@/lib/rate-limit";
-import { getServerLocale } from "@/lib/locale-server";
+} from '@/lib/arena/judge';
+import { newElo, kFactorForGames } from '@/lib/arena/elo';
+import { notifyVerdict } from '@/lib/arena/notifications';
+import { aiGate } from '@/lib/rate-limit';
+import { getServerLocale } from '@/lib/locale-server';
 
-const SONNET_MODEL = "claude-sonnet-4-6";
+const SONNET_MODEL = 'claude-sonnet-4-6';
 const MIN_EXCHANGES_BEFORE_JUDGE = 2; // 2 user turns + 2 opponent turns
 
 export async function POST(req: Request) {
@@ -34,37 +34,37 @@ export async function POST(req: Request) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    return NextResponse.json({ error: "Sign in required." }, { status: 401 });
+    return NextResponse.json({ error: 'Sign in required.' }, { status: 401 });
   }
 
   const body = await req.json().catch(() => null);
   const sessionId = body?.session_id as string | undefined;
   if (!sessionId) {
-    return NextResponse.json({ error: "Missing session_id." }, { status: 400 });
+    return NextResponse.json({ error: 'Missing session_id.' }, { status: 400 });
   }
 
   // AI rate limit + spend gate. Bucket: arena_judge (per-user daily
   // cap of 4 verdicts). The judge is the expensive Sonnet call —
   // tighter cap than arena_turn.
-  const gate = await aiGate(req, { bucket: "arena_judge", userId: user.id });
+  const gate = await aiGate(req, { bucket: 'arena_judge', userId: user.id });
   if (!gate.ok) {
     return NextResponse.json({ error: gate.message }, { status: gate.status });
   }
 
   // Load session.
   const { data: session } = await supabase
-    .from("arena_sessions")
-    .select("*")
-    .eq("id", sessionId)
+    .from('arena_sessions')
+    .select('*')
+    .eq('id', sessionId)
     .maybeSingle();
   if (!session) {
-    return NextResponse.json({ error: "Session not found." }, { status: 404 });
+    return NextResponse.json({ error: 'Session not found.' }, { status: 404 });
   }
-  if (session.status === "judged") {
+  if (session.status === 'judged') {
     return NextResponse.json(
       {
-        error: "Already judged.",
-        code: "already_judged",
+        error: 'Already judged.',
+        code: 'already_judged',
         judge_output: session.judge_json,
         elo_delta: session.elo_delta,
         verdict: session.verdict,
@@ -72,22 +72,22 @@ export async function POST(req: Request) {
       { status: 400 },
     );
   }
-  if (session.status !== "active") {
-    return NextResponse.json({ error: "Session not active." }, { status: 400 });
+  if (session.status !== 'active') {
+    return NextResponse.json({ error: 'Session not active.' }, { status: 400 });
   }
 
   // Load transcript.
   const { data: turns } = await supabase
-    .from("arena_turns")
-    .select("turn_order, speaker, content")
-    .eq("session_id", sessionId)
-    .order("turn_order", { ascending: true });
+    .from('arena_turns')
+    .select('turn_order, speaker, content')
+    .eq('session_id', sessionId)
+    .order('turn_order', { ascending: true });
 
   if (!turns) {
-    return NextResponse.json({ error: "Could not load turns." }, { status: 500 });
+    return NextResponse.json({ error: 'Could not load turns.' }, { status: 500 });
   }
 
-  const userTurns = turns.filter((t) => t.speaker === "user").length;
+  const userTurns = turns.filter((t) => t.speaker === 'user').length;
   if (userTurns < MIN_EXCHANGES_BEFORE_JUDGE) {
     return NextResponse.json(
       {
@@ -99,49 +99,44 @@ export async function POST(req: Request) {
 
   const topic = getArenaTopic(session.topic_slug);
   if (!topic) {
-    return NextResponse.json({ error: "Session topic invalid." }, { status: 500 });
+    return NextResponse.json({ error: 'Session topic invalid.' }, { status: 500 });
   }
   // PvE has a philosopher; PvP has a human opponent.
-  const philosopher =
-    session.kind === "pve" ? getArenaPhilosopher(session.opponent) : null;
-  if (session.kind === "pve" && !philosopher) {
-    return NextResponse.json(
-      { error: "Session philosopher invalid." },
-      { status: 500 },
-    );
+  const philosopher = session.kind === 'pve' ? getArenaPhilosopher(session.opponent) : null;
+  if (session.kind === 'pve' && !philosopher) {
+    return NextResponse.json({ error: 'Session philosopher invalid.' }, { status: 500 });
   }
-  const opponentLabel =
-    session.kind === "pvp" ? "Opponent" : philosopher!.name;
+  const opponentLabel = session.kind === 'pvp' ? 'Opponent' : philosopher!.name;
 
   // Call the judge.
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
-    return NextResponse.json({ error: "Judge unavailable." }, { status: 500 });
+    return NextResponse.json({ error: 'Judge unavailable.' }, { status: 500 });
   }
 
   const locale = await getServerLocale();
 
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
       model: SONNET_MODEL,
       max_tokens: 2500,
       tools: [JUDGE_TOOL],
-      tool_choice: { type: "tool", name: JUDGE_TOOL_NAME },
+      tool_choice: { type: 'tool', name: JUDGE_TOOL_NAME },
       system: judgeSystemPrompt(locale),
       messages: [
         {
-          role: "user",
+          role: 'user',
           content: judgeUserPrompt({
             topicPrompt: topic.prompt,
             opponentName: opponentLabel,
             transcript: turns.map((t) => ({
-              speaker: t.speaker as "user" | "opponent",
+              speaker: t.speaker as 'user' | 'opponent',
               content: t.content,
             })),
           }),
@@ -152,11 +147,8 @@ export async function POST(req: Request) {
 
   if (!res.ok) {
     const errText = await res.text();
-    console.error("[arena/judge] Sonnet error", res.status, errText);
-    return NextResponse.json(
-      { error: "Judge call failed. Try again." },
-      { status: 502 },
-    );
+    console.error('[arena/judge] Sonnet error', res.status, errText);
+    return NextResponse.json({ error: 'Judge call failed. Try again.' }, { status: 502 });
   }
 
   const data = (await res.json()) as {
@@ -164,54 +156,47 @@ export async function POST(req: Request) {
     error?: { message?: string };
   };
   if (data.error) {
-    console.error("[arena/judge] Sonnet returned error", data.error);
-    return NextResponse.json({ error: "Judge errored." }, { status: 502 });
+    console.error('[arena/judge] Sonnet returned error', data.error);
+    return NextResponse.json({ error: 'Judge errored.' }, { status: 502 });
   }
 
   const parsed = parseJudgeResponse(data);
   if (!parsed) {
-    console.error("[arena/judge] could not parse:", JSON.stringify(data.content)?.slice(0, 500));
+    console.error('[arena/judge] could not parse:', JSON.stringify(data.content)?.slice(0, 500));
     return NextResponse.json(
-      { error: "Judge returned malformed output. Try again." },
+      { error: 'Judge returned malformed output. Try again.' },
       { status: 502 },
     );
   }
 
   // Update Elo.
-  const { rating, eloDelta, userEloAfter } = await applyElo(
-    supabase,
-    user.id,
-    session,
-    parsed,
-  );
+  const { rating, eloDelta, userEloAfter } = await applyElo(supabase, user.id, session, parsed);
 
   // Persist judgment to session.
   await supabase
-    .from("arena_sessions")
+    .from('arena_sessions')
     .update({
-      status: "judged",
+      status: 'judged',
       verdict: parsed.verdict,
       judge_json: parsed,
       elo_delta: eloDelta,
       judged_at: new Date().toISOString(),
     })
-    .eq("id", sessionId);
+    .eq('id', sessionId);
 
   // PvP: fire-and-forget notify the OTHER player that the verdict
   // is in. (The caller already sees it inline.)
   const callerIsChallenger = user.id === session.user_id;
-  if (session.kind === "pvp" && session.opponent_user_id) {
-    const otherUserId = callerIsChallenger
-      ? session.opponent_user_id
-      : session.user_id;
+  if (session.kind === 'pvp' && session.opponent_user_id) {
+    const otherUserId = callerIsChallenger ? session.opponent_user_id : session.user_id;
     const { data: callerProfile } = await supabase
-      .from("public_profiles")
-      .select("display_name, handle")
-      .eq("user_id", user.id)
+      .from('public_profiles')
+      .select('display_name, handle')
+      .eq('user_id', user.id)
       .maybeSingle();
     const callerLabel =
       callerProfile?.display_name ||
-      (callerProfile?.handle ? `@${callerProfile.handle}` : "Your opponent");
+      (callerProfile?.handle ? `@${callerProfile.handle}` : 'Your opponent');
     // Verdict from the OTHER user's perspective. We know our score
     // and our verdict; flip for them.
     const userTotal = totalScore(parsed.user_scores);
@@ -223,9 +208,9 @@ export async function POST(req: Request) {
     const recipientScore = otherIsChallenger ? userTotal : oppTotal;
     const senderScore = otherIsChallenger ? oppTotal : userTotal;
     const recipientWon =
-      (parsed.verdict === "user" && otherIsChallenger) ||
-      (parsed.verdict === "opponent" && !otherIsChallenger);
-    const isDraw = parsed.verdict === "draw";
+      (parsed.verdict === 'user' && otherIsChallenger) ||
+      (parsed.verdict === 'opponent' && !otherIsChallenger);
+    const isDraw = parsed.verdict === 'draw';
     const verdictLine = isDraw
       ? `Draw — you ${recipientScore}, ${callerLabel} ${senderScore}`
       : recipientWon
@@ -237,20 +222,20 @@ export async function POST(req: Request) {
       topicTitle: topic.title,
       sessionId,
       verdictLine,
-    }).catch((e) => console.error("[arena/judge] notify failed:", e));
+    }).catch((e) => console.error('[arena/judge] notify failed:', e));
   }
 
   // For PvE: user_elo_before is always session.user_elo_at_start.
   // For PvP: depends on who called — challenger or opponent.
   // (callerIsChallenger declared above for the verdict notification.)
   const callerEloBefore =
-    session.kind === "pvp"
+    session.kind === 'pvp'
       ? callerIsChallenger
         ? session.user_elo_at_start
         : session.opponent_elo_at_start
       : session.user_elo_at_start;
   const otherEloBefore =
-    session.kind === "pvp"
+    session.kind === 'pvp'
       ? callerIsChallenger
         ? session.opponent_elo_at_start
         : session.user_elo_at_start
@@ -294,12 +279,9 @@ async function applyElo(
   eloDelta: number;
   userEloAfter: number;
 }> {
-  const { userScore } = judgmentToElo(
-    judgment.user_scores,
-    judgment.opponent_scores,
-  );
+  const { userScore } = judgmentToElo(judgment.user_scores, judgment.opponent_scores);
 
-  if (session.kind === "pvp" && session.opponent_user_id) {
+  if (session.kind === 'pvp' && session.opponent_user_id) {
     return applyPvpElo(supabase, callerId, session, userScore);
   }
 
@@ -318,28 +300,23 @@ async function applyPveElo(
   userScore: number,
 ) {
   const { data: rating } = await supabase
-    .from("arena_user_ratings")
-    .select("*")
-    .eq("user_id", userId)
+    .from('arena_user_ratings')
+    .select('*')
+    .eq('user_id', userId)
     .single();
-  if (!rating) throw new Error("Rating row missing");
+  if (!rating) throw new Error('Rating row missing');
   const k = kFactorForGames(rating.pve_debates_count);
-  const updated = newElo(
-    rating.pve_elo,
-    session.opponent_elo_at_start,
-    userScore,
-    k,
-  );
+  const updated = newElo(rating.pve_elo, session.opponent_elo_at_start, userScore, k);
   const delta = updated - rating.pve_elo;
   await supabase
-    .from("arena_user_ratings")
+    .from('arena_user_ratings')
     .update({
       pve_elo: updated,
       pve_debates_count: rating.pve_debates_count + 1,
       pve_k_factor: kFactorForGames(rating.pve_debates_count + 1),
       updated_at: new Date().toISOString(),
     })
-    .eq("user_id", userId);
+    .eq('user_id', userId);
   return {
     rating: { pve_debates_count: rating.pve_debates_count + 1 },
     eloDelta: delta,
@@ -360,19 +337,19 @@ async function applyPvpElo(
   },
   userScoreFromChallengerPerspective: number,
 ) {
-  if (!session.opponent_user_id) throw new Error("PvP session missing opponent");
+  if (!session.opponent_user_id) throw new Error('PvP session missing opponent');
 
   const { data: challengerRating } = await supabase
-    .from("arena_user_ratings")
-    .select("*")
-    .eq("user_id", session.user_id)
+    .from('arena_user_ratings')
+    .select('*')
+    .eq('user_id', session.user_id)
     .single();
   const { data: opponentRating } = await supabase
-    .from("arena_user_ratings")
-    .select("*")
-    .eq("user_id", session.opponent_user_id)
+    .from('arena_user_ratings')
+    .select('*')
+    .eq('user_id', session.opponent_user_id)
     .single();
-  if (!challengerRating || !opponentRating) throw new Error("Rating row missing");
+  if (!challengerRating || !opponentRating) throw new Error('Rating row missing');
 
   const challengerK = kFactorForGames(challengerRating.pvp_debates_count);
   const opponentK = kFactorForGames(opponentRating.pvp_debates_count);
@@ -391,23 +368,23 @@ async function applyPvpElo(
   );
 
   await supabase
-    .from("arena_user_ratings")
+    .from('arena_user_ratings')
     .update({
       pvp_elo: challengerUpdated,
       pvp_debates_count: challengerRating.pvp_debates_count + 1,
       pvp_k_factor: kFactorForGames(challengerRating.pvp_debates_count + 1),
       updated_at: new Date().toISOString(),
     })
-    .eq("user_id", session.user_id);
+    .eq('user_id', session.user_id);
   await supabase
-    .from("arena_user_ratings")
+    .from('arena_user_ratings')
     .update({
       pvp_elo: opponentUpdated,
       pvp_debates_count: opponentRating.pvp_debates_count + 1,
       pvp_k_factor: kFactorForGames(opponentRating.pvp_debates_count + 1),
       updated_at: new Date().toISOString(),
     })
-    .eq("user_id", session.opponent_user_id);
+    .eq('user_id', session.opponent_user_id);
 
   // Return the delta + after-Elo for the calling user.
   const callerIsChallenger = callerId === session.user_id;

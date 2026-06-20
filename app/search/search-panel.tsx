@@ -11,7 +11,7 @@ import Link from 'next/link';
 import { t, type Locale } from '@/lib/translations';
 import EmptyStateSprite from '@/components/empty-state-sprite';
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 
 type Result = {
@@ -66,7 +66,9 @@ export default function SearchPanel({ locale = 'en' }: { locale?: Locale }) {
         }
       }
     }, 300);
-    return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
   }, [q]);
 
   return (
@@ -75,7 +77,7 @@ export default function SearchPanel({ locale = 'en' }: { locale?: Locale }) {
         <input
           type="text"
           value={q}
-          onChange={e => setQ(e.target.value)}
+          onChange={(e) => setQ(e.target.value)}
           autoFocus
           placeholder={t('search.placeholder', locale)}
           aria-label={t('search.title', locale)}
@@ -95,17 +97,19 @@ export default function SearchPanel({ locale = 'en' }: { locale?: Locale }) {
           }}
         />
         {searching && (
-          <span style={{
-            position: 'absolute',
-            right: 18,
-            top: '50%',
-            transform: 'translateY(-50%)',
-            fontFamily: sans,
-            fontSize: 12,
-            color: 'var(--color-acc-deep)',
-            opacity: 0.7,
-            letterSpacing: 0.3,
-          }}>
+          <span
+            style={{
+              position: 'absolute',
+              right: 18,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              fontFamily: sans,
+              fontSize: 12,
+              color: 'var(--color-acc-deep)',
+              opacity: 0.7,
+              letterSpacing: 0.3,
+            }}
+          >
             {t('search.searching', locale)}
           </span>
         )}
@@ -119,67 +123,78 @@ export default function SearchPanel({ locale = 'en' }: { locale?: Locale }) {
 
       {q.trim() && hasSearched && !searching && results.length === 0 && !error && (
         <div style={{ marginTop: 24 }}>
-          <EmptyStateSprite
-            variant="explorer"
-            caption={t('search.no_match', locale, { q })}
-          />
+          <EmptyStateSprite variant="explorer" caption={t('search.no_match', locale, { q })} />
         </div>
       )}
 
       {results.length > 0 && (
-        <ul style={{
-          marginTop: 24,
-          listStyle: 'none',
-          padding: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 8,
-        }}>
-          {results.map(r => (
+        <ul
+          style={{
+            marginTop: 24,
+            listStyle: 'none',
+            padding: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 8,
+          }}
+        >
+          {results.map((r) => (
             <li key={r.handle}>
-              <Link href={r.url} className="pixel-press" style={{
-                display: 'block',
-                padding: '14px 18px',
-                background: '#FFFCF4',
-                border: '3px solid var(--color-ink)',
-                boxShadow: '3px 3px 0 0 var(--color-acc)',
-                borderRadius: 0,
-                textDecoration: 'none',
-                color: 'inherit',
-                transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
-              }}>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'baseline',
-                  justifyContent: 'space-between',
-                  gap: 12,
-                  flexWrap: 'wrap',
-                }}>
-                  <span style={{
-                    fontFamily: serif,
-                    fontSize: 19,
-                    fontWeight: 500,
-                    color: 'var(--color-ink)',
-                  }}>
+              <Link
+                href={r.url}
+                className="pixel-press"
+                style={{
+                  display: 'block',
+                  padding: '14px 18px',
+                  background: '#FFFCF4',
+                  border: '3px solid var(--color-ink)',
+                  boxShadow: '3px 3px 0 0 var(--color-acc)',
+                  borderRadius: 0,
+                  textDecoration: 'none',
+                  color: 'inherit',
+                  transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'baseline',
+                    justifyContent: 'space-between',
+                    gap: 12,
+                    flexWrap: 'wrap',
+                  }}
+                >
+                  <span
+                    style={{
+                      fontFamily: serif,
+                      fontSize: 19,
+                      fontWeight: 500,
+                      color: 'var(--color-ink)',
+                    }}
+                  >
                     {r.display_name || r.handle}
                   </span>
-                  <span style={{
-                    fontFamily: sans,
-                    fontSize: 12.5,
-                    color: 'var(--color-acc-deep)',
-                  }}>
+                  <span
+                    style={{
+                      fontFamily: sans,
+                      fontSize: 12.5,
+                      color: 'var(--color-acc-deep)',
+                    }}
+                  >
                     @{r.handle}
                   </span>
                 </div>
                 {r.bio && (
-                  <p style={{
-                    margin: '6px 0 0',
-                    fontFamily: serif,
-                    fontStyle: 'italic',
-                    fontSize: 14,
-                    color: 'var(--color-ink-soft)',
-                    lineHeight: 1.5,
-                  }}>
+                  <p
+                    style={{
+                      margin: '6px 0 0',
+                      fontFamily: serif,
+                      fontStyle: 'italic',
+                      fontSize: 14,
+                      color: 'var(--color-ink-soft)',
+                      lineHeight: 1.5,
+                    }}
+                  >
                     {r.bio.length > 140 ? r.bio.slice(0, 140) + '…' : r.bio}
                   </p>
                 )}
@@ -190,15 +205,17 @@ export default function SearchPanel({ locale = 'en' }: { locale?: Locale }) {
       )}
 
       {!q.trim() && (
-        <p style={{
-          marginTop: 32,
-          fontFamily: sans,
-          fontSize: 13,
-          color: 'var(--color-acc-deep)',
-          textAlign: 'center',
-          opacity: 0.7,
-          lineHeight: 1.6,
-        }}>
+        <p
+          style={{
+            marginTop: 32,
+            fontFamily: sans,
+            fontSize: 13,
+            color: 'var(--color-acc-deep)',
+            textAlign: 'center',
+            opacity: 0.7,
+            lineHeight: 1.6,
+          }}
+        >
           {t('search.empty_help', locale)}
         </p>
       )}

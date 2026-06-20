@@ -20,12 +20,13 @@ import { getUserOrientation } from '@/lib/user-orientation';
 import { rankByDimensionFocus } from '@/lib/recommendations';
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 
 export const metadata: Metadata = {
   title: 'Topics in philosophy',
-  description: 'Short, readable primers on 34 philosophical concepts — free will, stoicism, Buddhism, the trolley problem, and more. Each ends with where you sit on the map.',
+  description:
+    'Short, readable primers on 34 philosophical concepts — free will, stoicism, Buddhism, the trolley problem, and more. Each ends with where you sit on the map.',
   alternates: { canonical: 'https://mull.world/topic' },
 };
 
@@ -34,16 +35,25 @@ export const metadata: Metadata = {
  *  well as the headline introduction. */
 function pickFeaturedTopic() {
   const featuredSlugs = [
-    'free-will', 'stoicism', 'meaning-of-life', 'absurdism',
-    'buddhism', 'authenticity', 'consciousness', 'virtue-ethics',
-    'daoism', 'existentialism', 'trolley-problem', 'eudaimonia',
+    'free-will',
+    'stoicism',
+    'meaning-of-life',
+    'absurdism',
+    'buddhism',
+    'authenticity',
+    'consciousness',
+    'virtue-ethics',
+    'daoism',
+    'existentialism',
+    'trolley-problem',
+    'eudaimonia',
   ];
   const now = new Date();
   const dayOfYear = Math.floor(
-    (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86_400_000
+    (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86_400_000,
   );
   const idx = dayOfYear % featuredSlugs.length;
-  return TOPICS.find(t => t.slug === featuredSlugs[idx]) ?? TOPICS[0];
+  return TOPICS.find((t) => t.slug === featuredSlugs[idx]) ?? TOPICS[0];
 }
 
 export default async function TopicIndexPage() {
@@ -58,7 +68,9 @@ export default async function TopicIndexPage() {
   // This page already reads cookies via getServerLocale, so the auth read
   // adds no caching penalty.
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   const orientation = await getUserOrientation(supabase, user?.id ?? null);
   const focusRanked = rankByDimensionFocus(
     orientation.vector,
@@ -78,7 +90,15 @@ export default async function TopicIndexPage() {
         eyebrow={`▶ ${t('topic.idx_eyebrow', locale)}`}
         title={t('topic.title', locale)}
         subtitle={
-          <p style={{ fontFamily: serif, fontStyle: 'italic', fontSize: 16, color: 'var(--color-ink-soft)', lineHeight: 1.55 }}>
+          <p
+            style={{
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: 16,
+              color: 'var(--color-ink-soft)',
+              lineHeight: 1.55,
+            }}
+          >
             {t('topic.subtitle', locale, { count: TOPICS.length })}
           </p>
         }
@@ -86,15 +106,18 @@ export default async function TopicIndexPage() {
 
       {/* ─── Featured topic card ───────────────────────────────── */}
       <section style={{ marginBottom: 36 }}>
-        <div style={{
-          fontFamily: pixel,
-          fontSize: 10,
-          color: 'var(--color-acc-deep)',
-          letterSpacing: 0.6,
-          textTransform: 'uppercase',
-          marginBottom: 8,
-        }}>
-          ◇ {featuredPersonalized
+        <div
+          style={{
+            fontFamily: pixel,
+            fontSize: 10,
+            color: 'var(--color-acc-deep)',
+            letterSpacing: 0.6,
+            textTransform: 'uppercase',
+            marginBottom: 8,
+          }}
+        >
+          ◇{' '}
+          {featuredPersonalized
             ? t('topic.featured_for_you', locale)
             : t('topic.featured_today', locale)}
         </div>
@@ -113,61 +136,71 @@ export default async function TopicIndexPage() {
             transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
           }}
         >
-          <h2 style={{
-            fontFamily: serif,
-            fontSize: 30,
-            fontWeight: 500,
-            margin: '0 0 10px',
-            letterSpacing: '-0.4px',
-            color: 'var(--color-ink)',
-            lineHeight: 1.15,
-          }}>
+          <h2
+            style={{
+              fontFamily: serif,
+              fontSize: 30,
+              fontWeight: 500,
+              margin: '0 0 10px',
+              letterSpacing: '-0.4px',
+              color: 'var(--color-ink)',
+              lineHeight: 1.15,
+            }}
+          >
             {featured.title}
           </h2>
-          <p style={{
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 17,
-            color: 'var(--color-ink-soft)',
-            margin: '0 0 12px',
-            lineHeight: 1.5,
-          }}>
+          <p
+            style={{
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: 17,
+              color: 'var(--color-ink-soft)',
+              margin: '0 0 12px',
+              lineHeight: 1.5,
+            }}
+          >
             {featured.summary}
           </p>
           {featuredPersonalized && (
-            <p style={{
-              fontFamily: serif,
-              fontStyle: 'italic',
-              fontSize: 14.5,
-              color: '#6B7F4F',
-              margin: '0 0 12px',
-              lineHeight: 1.5,
-            }}>
+            <p
+              style={{
+                fontFamily: serif,
+                fontStyle: 'italic',
+                fontSize: 14.5,
+                color: '#6B7F4F',
+                margin: '0 0 12px',
+                lineHeight: 1.5,
+              }}
+            >
               {t('topic.featured_for_you_note', locale)}
             </p>
           )}
-          <span style={{
-            fontFamily: pixel,
-            fontSize: 10,
-            color: 'var(--color-acc-deep)',
-            letterSpacing: 0.6,
-            textTransform: 'uppercase',
-          }}>
+          <span
+            style={{
+              fontFamily: pixel,
+              fontSize: 10,
+              color: 'var(--color-acc-deep)',
+              letterSpacing: 0.6,
+              textTransform: 'uppercase',
+            }}
+          >
             {t('topic.read', locale)} ▶
           </span>
         </Link>
       </section>
 
       {/* ─── Quick jump nav ────────────────────────────────────── */}
-      <nav style={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: 6,
-        marginBottom: 28,
-        paddingBottom: 16,
-        borderBottom: '2px dashed #C2A062',
-      }}>
-        {groups.map(g => (
+      <nav
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 6,
+          marginBottom: 28,
+          paddingBottom: 16,
+          borderBottom: '2px dashed #C2A062',
+        }}
+      >
+        {groups.map((g) => (
           <a
             key={g.key}
             href={`#${g.key}`}
@@ -190,61 +223,73 @@ export default async function TopicIndexPage() {
       </nav>
 
       {/* ─── Sections ──────────────────────────────────────────── */}
-      {groups.map(g => (
+      {groups.map((g) => (
         <section key={g.key} id={g.key} style={{ marginBottom: 44, scrollMarginTop: 24 }}>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 10,
-            marginBottom: 6,
-          }}>
-            <span style={{
-              fontFamily: pixel,
-              fontSize: 18,
-              color: g.accent,
-              lineHeight: 1,
-            }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+              marginBottom: 6,
+            }}
+          >
+            <span
+              style={{
+                fontFamily: pixel,
+                fontSize: 18,
+                color: g.accent,
+                lineHeight: 1,
+              }}
+            >
               {g.icon}
             </span>
-            <h2 style={{
-              fontFamily: serif,
-              fontSize: 25,
-              fontWeight: 500,
-              margin: 0,
-              letterSpacing: '-0.3px',
-              color: 'var(--color-ink)',
-            }}>
+            <h2
+              style={{
+                fontFamily: serif,
+                fontSize: 25,
+                fontWeight: 500,
+                margin: 0,
+                letterSpacing: '-0.3px',
+                color: 'var(--color-ink)',
+              }}
+            >
               {t(`topic.cat.${g.key}.label`, locale) || g.label}
             </h2>
-            <span style={{
-              fontFamily: sans,
-              fontSize: 11,
-              color: 'var(--color-acc-deep)',
-              opacity: 0.7,
-              marginLeft: 'auto',
-            }}>
+            <span
+              style={{
+                fontFamily: sans,
+                fontSize: 11,
+                color: 'var(--color-acc-deep)',
+                opacity: 0.7,
+                marginLeft: 'auto',
+              }}
+            >
               {g.topics.length}
             </span>
           </div>
-          <p style={{
-            fontFamily: serif,
-            fontStyle: 'italic',
-            fontSize: 14.5,
-            color: 'var(--color-ink-soft)',
-            margin: '0 0 16px',
-            lineHeight: 1.55,
-          }}>
+          <p
+            style={{
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: 14.5,
+              color: 'var(--color-ink-soft)',
+              margin: '0 0 16px',
+              lineHeight: 1.55,
+            }}
+          >
             {t(`topic.cat.${g.key}.blurb`, locale) || g.blurb}
           </p>
-          <ul style={{
-            listStyle: 'none',
-            padding: 0,
-            margin: 0,
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-            gap: 10,
-          }}>
-            {g.topics.map(t => (
+          <ul
+            style={{
+              listStyle: 'none',
+              padding: 0,
+              margin: 0,
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+              gap: 10,
+            }}
+          >
+            {g.topics.map((t) => (
               <li key={t.slug}>
                 <Link
                   href={`/topic/${t.slug}`}
@@ -262,25 +307,29 @@ export default async function TopicIndexPage() {
                     transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
                   }}
                 >
-                  <h3 style={{
-                    fontFamily: serif,
-                    fontSize: 18,
-                    fontWeight: 500,
-                    margin: '0 0 6px',
-                    letterSpacing: '-0.2px',
-                    color: 'var(--color-ink)',
-                    lineHeight: 1.2,
-                  }}>
+                  <h3
+                    style={{
+                      fontFamily: serif,
+                      fontSize: 18,
+                      fontWeight: 500,
+                      margin: '0 0 6px',
+                      letterSpacing: '-0.2px',
+                      color: 'var(--color-ink)',
+                      lineHeight: 1.2,
+                    }}
+                  >
                     {localizeTopic(t, locale).title}
                   </h3>
-                  <p style={{
-                    fontFamily: serif,
-                    fontStyle: 'italic',
-                    fontSize: 14,
-                    color: 'var(--color-ink-soft)',
-                    margin: 0,
-                    lineHeight: 1.45,
-                  }}>
+                  <p
+                    style={{
+                      fontFamily: serif,
+                      fontStyle: 'italic',
+                      fontSize: 14,
+                      color: 'var(--color-ink-soft)',
+                      margin: 0,
+                      lineHeight: 1.45,
+                    }}
+                  >
                     {localizeTopic(t, locale).summary}
                   </p>
                 </Link>
@@ -291,20 +340,24 @@ export default async function TopicIndexPage() {
       ))}
 
       {/* ─── CTA footer ────────────────────────────────────────── */}
-      <div style={{
-        marginTop: 36,
-        padding: '20px 22px',
-        background: '#FFFCF4',
-        border: '3px solid var(--color-ink)',
-        boxShadow: '4px 4px 0 0 #6B7F4F',
-      }}>
-        <p style={{
-          fontFamily: serif,
-          fontSize: 16,
-          color: 'var(--color-ink)',
-          margin: '0 0 12px',
-          lineHeight: 1.5,
-        }}>
+      <div
+        style={{
+          marginTop: 36,
+          padding: '20px 22px',
+          background: '#FFFCF4',
+          border: '3px solid var(--color-ink)',
+          boxShadow: '4px 4px 0 0 #6B7F4F',
+        }}
+      >
+        <p
+          style={{
+            fontFamily: serif,
+            fontSize: 16,
+            color: 'var(--color-ink)',
+            margin: '0 0 12px',
+            lineHeight: 1.5,
+          }}
+        >
           {t('topic.cta_body', locale)}
         </p>
         <Link

@@ -13,20 +13,20 @@
 // result; it never throws into the caller, because the operational quiz
 // save must succeed regardless of whether research capture does.
 
-import type { SupabaseClient } from "@supabase/supabase-js";
-import { isLocale } from "./translations";
+import type { SupabaseClient } from '@supabase/supabase-js';
+import { isLocale } from './translations';
 
-export type Consent = "yes" | "no";
+export type Consent = 'yes' | 'no';
 
 /** The compact per-question shape stored in research_quiz_responses.answers. */
 export type ResearchAnswer =
-  | { q: number; kind: "single"; a: number }
-  | { q: number; kind: "multi"; indices: number[] }
-  | { q: number; kind: "skip" };
+  | { q: number; kind: 'single'; a: number }
+  | { q: number; kind: 'multi'; indices: number[] }
+  | { q: number; kind: 'skip' };
 
 /** Normalize an untrusted consent value to "yes" | "no" | undefined. */
 function normalizeConsent(raw: unknown): Consent | undefined {
-  return raw === "yes" || raw === "no" ? raw : undefined;
+  return raw === 'yes' || raw === 'no' ? raw : undefined;
 }
 
 /**
@@ -47,25 +47,25 @@ export async function syncConsent(
   const choice = normalizeConsent(rawConsent);
   try {
     if (choice) {
-      await supabase.from("research_consent").upsert(
+      await supabase.from('research_consent').upsert(
         {
           user_id: userId,
           consent: choice,
           updated_at: new Date().toISOString(),
         },
-        { onConflict: "user_id" },
+        { onConflict: 'user_id' },
       );
       return choice;
     }
     const { data } = await supabase
-      .from("research_consent")
-      .select("consent")
-      .eq("user_id", userId)
+      .from('research_consent')
+      .select('consent')
+      .eq('user_id', userId)
       .maybeSingle();
     const stored = data?.consent;
-    return stored === "yes" || stored === "no" ? stored : null;
+    return stored === 'yes' || stored === 'no' ? stored : null;
   } catch (e) {
-    console.warn("[research] syncConsent failed", e);
+    console.warn('[research] syncConsent failed', e);
     // Fall back to the client's stated choice if we couldn't reach the DB.
     return choice ?? null;
   }
@@ -86,23 +86,23 @@ function sanitizeAnswers(raw: unknown): ResearchAnswer[] | null {
   }
   const out: ResearchAnswer[] = [];
   for (const el of raw) {
-    if (!el || typeof el !== "object") continue;
+    if (!el || typeof el !== 'object') continue;
     const e = el as Record<string, unknown>;
     const q = Number(e.q);
     if (!Number.isInteger(q) || q < 0 || q > MAX_ANSWERS) continue;
-    if (e.kind === "single") {
+    if (e.kind === 'single') {
       const a = Number(e.a);
       if (!Number.isInteger(a) || a < 0 || a > 50) continue;
-      out.push({ q, kind: "single", a });
-    } else if (e.kind === "multi") {
+      out.push({ q, kind: 'single', a });
+    } else if (e.kind === 'multi') {
       if (!Array.isArray(e.indices)) continue;
       const indices = e.indices
         .map((i) => Number(i))
         .filter((i) => Number.isInteger(i) && i >= 0 && i <= 50);
       if (indices.length === 0) continue;
-      out.push({ q, kind: "multi", indices });
-    } else if (e.kind === "skip") {
-      out.push({ q, kind: "skip" });
+      out.push({ q, kind: 'multi', indices });
+    } else if (e.kind === 'skip') {
+      out.push({ q, kind: 'skip' });
     }
   }
   return out.length > 0 ? out : null;
@@ -112,7 +112,7 @@ export type CaptureArgs = {
   userId: string;
   attemptId: string | null;
   consent: Consent | null;
-  mode: "quick" | "detailed";
+  mode: 'quick' | 'detailed';
   answers: unknown;
   questionCount: unknown;
   vector: number[];
@@ -132,9 +132,7 @@ function isMissingLocaleColumn(error: { code?: string; message?: string }): bool
   // 42703 = Postgres undefined_column; PGRST204 = PostgREST schema-cache
   // miss on a column. Belt-and-suspenders with a message check.
   return (
-    error?.code === "42703" ||
-    error?.code === "PGRST204" ||
-    /locale/i.test(error?.message ?? "")
+    error?.code === '42703' || error?.code === 'PGRST204' || /locale/i.test(error?.message ?? '')
   );
 }
 
@@ -150,14 +148,13 @@ export async function captureResearchResponse(
   supabase: SupabaseClient,
   args: CaptureArgs,
 ): Promise<boolean> {
-  if (args.consent !== "yes") return false;
+  if (args.consent !== 'yes') return false;
 
   const answers = sanitizeAnswers(args.answers);
   if (!answers) return false;
 
   const qcRaw = Number(args.questionCount);
-  const question_count =
-    Number.isInteger(qcRaw) && qcRaw > 0 ? qcRaw : answers.length;
+  const question_count = Number.isInteger(qcRaw) && qcRaw > 0 ? qcRaw : answers.length;
 
   // Only persist a locale we actually recognize; an unknown/missing value
   // becomes NULL ("Unknown" region in the admin view) rather than noise.
@@ -186,25 +183,23 @@ export async function captureResearchResponse(
     // PostgREST at runtime — a cast strips nothing.
     const withLocale = { ...baseRow, locale } as typeof baseRow;
     let { error } = await supabase
-      .from("research_quiz_responses")
+      .from('research_quiz_responses')
       .insert(locale ? withLocale : baseRow);
 
     if (error && locale && isMissingLocaleColumn(error)) {
       console.warn(
-        "[research] locale column missing — run 20260602_research_locale; inserting without it",
+        '[research] locale column missing — run 20260602_research_locale; inserting without it',
       );
-      ({ error } = await supabase
-        .from("research_quiz_responses")
-        .insert(baseRow));
+      ({ error } = await supabase.from('research_quiz_responses').insert(baseRow));
     }
 
     if (error) {
-      console.warn("[research] capture insert failed", error.message);
+      console.warn('[research] capture insert failed', error.message);
       return false;
     }
     return true;
   } catch (e) {
-    console.warn("[research] capture threw", e);
+    console.warn('[research] capture threw', e);
     return false;
   }
 }

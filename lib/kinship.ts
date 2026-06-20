@@ -28,7 +28,7 @@ export const NOVELTY_SIM_THRESHOLD = 0.78;
 export type KinshipPhilosopher = {
   slug: string;
   name: string;
-  similarity: number;   // 0..1, computed server-side
+  similarity: number; // 0..1, computed server-side
   why: string;
 };
 
@@ -64,7 +64,7 @@ export type DiagnosisResult = {
  *   - the calibration guidance for each field
  */
 export function buildKinshipPromptFragment(): string {
-  const philList = PHILOSOPHERS.map(p => p.name).join(', ');
+  const philList = PHILOSOPHERS.map((p) => p.name).join(', ');
 
   return `
 
@@ -145,7 +145,11 @@ export function parseAndValidateDiagnosis(
   // against the canonical PHILOSOPHERS table, dropping unknowns,
   // dedup'ing within and (for echoes) against the closest list.
   const seen = new Set<string>();
-  const normalize = (raw: unknown, cap: number, excludeFromClosest = false): KinshipPhilosopher[] => {
+  const normalize = (
+    raw: unknown,
+    cap: number,
+    excludeFromClosest = false,
+  ): KinshipPhilosopher[] => {
     if (!Array.isArray(raw)) return [];
     const out: KinshipPhilosopher[] = [];
     for (const item of raw) {
@@ -154,10 +158,10 @@ export function parseAndValidateDiagnosis(
       const name = typeof rec.name === 'string' ? rec.name.trim() : '';
       const why = typeof rec.why === 'string' ? rec.why.trim() : '';
       if (!name) continue;
-      const phil = PHILOSOPHERS.find(p => p.name.toLowerCase() === name.toLowerCase());
+      const phil = PHILOSOPHERS.find((p) => p.name.toLowerCase() === name.toLowerCase());
       if (!phil) continue;
       if (excludeFromClosest && seen.has(phil.name)) continue;
-      if (out.find(o => o.name === phil.name)) continue;
+      if (out.find((o) => o.name === phil.name)) continue;
       seen.add(phil.name);
       out.push({
         slug: philosopherSlug(phil.name),
@@ -177,7 +181,7 @@ export function parseAndValidateDiagnosis(
     if (Array.isArray(k.traditions)) {
       kinship.traditions = k.traditions
         .filter((t: unknown): t is string => typeof t === 'string')
-        .map(t => t.trim())
+        .map((t) => t.trim())
         .filter(Boolean)
         .slice(0, 3);
     }
@@ -190,7 +194,7 @@ export function parseAndValidateDiagnosis(
   const userMag = magnitude(vector_delta);
   const scoreAndSort = (list: KinshipPhilosopher[]): KinshipPhilosopher[] => {
     for (const kp of list) {
-      const phil = PHILOSOPHERS.find(p => p.name === kp.name);
+      const phil = PHILOSOPHERS.find((p) => p.name === kp.name);
       if (!phil) continue;
       kp.similarity = userMag > 0 ? cosineSim(vector_delta, phil.vector) : 0;
     }
@@ -207,7 +211,8 @@ export function parseAndValidateDiagnosis(
   const claudeIsNovel = parsed.is_novel === true;
   const topClosest = kinship.philosophers[0]?.similarity ?? 0;
   const topEcho = (kinship.echoes && kinship.echoes[0]?.similarity) ?? 0;
-  const is_novel = claudeIsNovel && topClosest < NOVELTY_SIM_THRESHOLD && topEcho < NOVELTY_SIM_THRESHOLD;
+  const is_novel =
+    claudeIsNovel && topClosest < NOVELTY_SIM_THRESHOLD && topEcho < NOVELTY_SIM_THRESHOLD;
 
   return { diagnosis, kinship, is_novel };
 }
@@ -219,7 +224,9 @@ function magnitude(a: number[]): number {
 }
 
 function cosineSim(a: number[], b: number[]): number {
-  let dot = 0, na = 0, nb = 0;
+  let dot = 0,
+    na = 0,
+    nb = 0;
   const len = Math.min(a.length, b.length);
   for (let i = 0; i < len; i++) {
     dot += a[i] * b[i];

@@ -40,7 +40,7 @@ export const viewport: Viewport = {
 };
 
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 
 type ProfileRow = {
   user_id: string;
@@ -63,11 +63,7 @@ function archetypeSlug(name: string): string {
     .replace(/^-+|-+$/g, '');
 }
 
-export default async function BadgePage({
-  params,
-}: {
-  params: Promise<{ handle: string }>;
-}) {
+export default async function BadgePage({ params }: { params: Promise<{ handle: string }> }) {
   const { handle } = await params;
   const supabase = await createClient();
   const locale = await getServerLocale();
@@ -146,13 +142,18 @@ export default async function BadgePage({
           ) : (
             // Fallback: pixel "M" monogram for users without a public
             // archetype.
-            <div style={{
-              width: '100%', height: '100%',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontFamily: pixel,
-              fontSize: 22,
-              color: 'var(--color-acc-deep)',
-            }}>
+            <div
+              style={{
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontFamily: pixel,
+                fontSize: 22,
+                color: 'var(--color-acc-deep)',
+              }}
+            >
               M
             </div>
           )}
@@ -160,68 +161,79 @@ export default async function BadgePage({
 
         {/* Name + archetype */}
         <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
-          <div style={{
-            fontFamily: pixel,
-            fontSize: 9,
-            color: 'var(--color-acc-deep)',
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
-            marginBottom: 4,
-          }}>
+          <div
+            style={{
+              fontFamily: pixel,
+              fontSize: 9,
+              color: 'var(--color-acc-deep)',
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              marginBottom: 4,
+            }}
+          >
             {t('bdg.on_mull', locale)}
           </div>
-          <div style={{
-            fontFamily: serif,
-            fontSize: 17,
-            fontWeight: 500,
-            color: 'var(--color-ink)',
-            lineHeight: 1.1,
-            marginBottom: 4,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-          }}>
-            {displayName}
-          </div>
-          {archName ? (
-            <div style={{
+          <div
+            style={{
               fontFamily: serif,
-              fontStyle: 'italic',
-              fontSize: 13,
-              color: 'var(--color-acc-deep)',
-              lineHeight: 1.2,
+              fontSize: 17,
+              fontWeight: 500,
+              color: 'var(--color-ink)',
+              lineHeight: 1.1,
+              marginBottom: 4,
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
-            }}>
-              {latest?.flavor ? `${latest.flavor} ` : 'The '}{archName}
+            }}
+          >
+            {displayName}
+          </div>
+          {archName ? (
+            <div
+              style={{
+                fontFamily: serif,
+                fontStyle: 'italic',
+                fontSize: 13,
+                color: 'var(--color-acc-deep)',
+                lineHeight: 1.2,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {latest?.flavor ? `${latest.flavor} ` : 'The '}
+              {archName}
               {' · '}
               <span style={{ fontFamily: pixel, fontSize: 10, fontStyle: 'normal' }}>
                 {latest?.alignment_pct}%
               </span>
             </div>
           ) : (
-            <div style={{
-              fontFamily: serif,
-              fontStyle: 'italic',
-              fontSize: 13,
-              color: 'var(--color-acc-deep)',
-              lineHeight: 1.2,
-            }}>
+            <div
+              style={{
+                fontFamily: serif,
+                fontStyle: 'italic',
+                fontSize: 13,
+                color: 'var(--color-acc-deep)',
+                lineHeight: 1.2,
+              }}
+            >
               {t('bdg.anonymous_mind', locale)}
             </div>
           )}
         </div>
 
         {/* mull. wordmark anchor */}
-        <div style={{
-          fontFamily: serif,
-          fontSize: 13,
-          fontWeight: 600,
-          color: 'var(--color-ink)',
-          letterSpacing: '-0.3px',
-          flexShrink: 0,
-        }}>
+        <div
+          style={{
+            fontFamily: serif,
+            fontSize: 13,
+            fontWeight: 600,
+            color: 'var(--color-ink)',
+            letterSpacing: '-0.3px',
+            flexShrink: 0,
+          }}
+        >
           mull<span style={{ color: 'var(--color-acc)' }}>.</span>
         </div>
       </a>

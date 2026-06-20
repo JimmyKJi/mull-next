@@ -5,21 +5,21 @@
 // quiz. This page is for the user who wants to read the full thing,
 // or who wants to revisit their decision later.
 
-import type { Metadata } from "next";
-import Link from "next/link";
-import { PixelWindow, PixelPageHeader } from "@/components/pixel-window";
-import { t, type Locale } from "@/lib/translations";
-import { getServerLocale } from "@/lib/locale-server";
-import { createClient } from "@/utils/supabase/server";
-import { DEMOGRAPHIC_FIELDS, type DemographicValues } from "@/lib/demographics";
-import ConsentToggle from "./consent-toggle";
-import DemographicsForm from "@/components/demographics-form";
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { PixelWindow, PixelPageHeader } from '@/components/pixel-window';
+import { t, type Locale } from '@/lib/translations';
+import { getServerLocale } from '@/lib/locale-server';
+import { createClient } from '@/utils/supabase/server';
+import { DEMOGRAPHIC_FIELDS, type DemographicValues } from '@/lib/demographics';
+import ConsentToggle from './consent-toggle';
+import DemographicsForm from '@/components/demographics-form';
 
 export const metadata: Metadata = {
-  title: "Research consent · Mull",
+  title: 'Research consent · Mull',
   description:
-    "What Mull does with your quiz data: academic research only, never sold, opt-in by choice, change your mind any time.",
-  alternates: { canonical: "https://mull.world/consent" },
+    'What Mull does with your quiz data: academic research only, never sold, opt-in by choice, change your mind any time.',
+  alternates: { canonical: 'https://mull.world/consent' },
 };
 
 export default async function ConsentPage() {
@@ -36,15 +36,15 @@ export default async function ConsentPage() {
   let demographics: DemographicValues | null = null;
   if (user) {
     const { data: consentRow } = await supabase
-      .from("research_consent")
-      .select("consent")
-      .eq("user_id", user.id)
+      .from('research_consent')
+      .select('consent')
+      .eq('user_id', user.id)
       .maybeSingle();
-    if (consentRow?.consent === "yes") {
+    if (consentRow?.consent === 'yes') {
       const { data: demoRow } = await supabase
-        .from("research_demographics")
-        .select(DEMOGRAPHIC_FIELDS.join(","))
-        .eq("user_id", user.id)
+        .from('research_demographics')
+        .select(DEMOGRAPHIC_FIELDS.join(','))
+        .eq('user_id', user.id)
         .maybeSingle();
       demographics = (demoRow ?? {}) as DemographicValues;
     }
@@ -53,14 +53,11 @@ export default async function ConsentPage() {
   return (
     <main className="mx-auto max-w-[760px] px-6 pb-32 pt-12 sm:px-10 sm:pt-16">
       <PixelPageHeader
-        eyebrow={t("consent.eyebrow", locale)}
-        title={t("consent.title", locale)}
+        eyebrow={t('consent.eyebrow', locale)}
+        title={t('consent.title', locale)}
         subtitle={
-          <p
-            className="text-[16px] italic"
-            style={{ fontFamily: "var(--font-editorial)" }}
-          >
-            {t("consent.subtitle", locale)}
+          <p className="text-[16px] italic" style={{ fontFamily: 'var(--font-editorial)' }}>
+            {t('consent.subtitle', locale)}
           </p>
         }
       />
@@ -69,123 +66,116 @@ export default async function ConsentPage() {
         {/* Live toggle — pulled out into a client component so the
             page can stay server-rendered around it. */}
         <PixelWindow
-          title={t("consent.win_choice_title", locale)}
-          badge={t("consent.win_choice_badge", locale)}
+          title={t('consent.win_choice_title', locale)}
+          badge={t('consent.win_choice_badge', locale)}
         >
           <ConsentToggle locale={locale} />
         </PixelWindow>
 
         {demographics && (
-          <PixelWindow
-            title={t("demo.win_title", locale)}
-            badge={t("demo.win_badge", locale)}
-          >
+          <PixelWindow title={t('demo.win_title', locale)} badge={t('demo.win_badge', locale)}>
             <Prose>
-              <p>{t("demo.section_intro", locale)}</p>
+              <p>{t('demo.section_intro', locale)}</p>
             </Prose>
             <div className="mt-4">
-              <DemographicsForm
-                locale={locale}
-                initial={demographics}
-                variant="page"
-              />
+              <DemographicsForm locale={locale} initial={demographics} variant="page" />
             </div>
           </PixelWindow>
         )}
 
         <PixelWindow
-          title={t("consent.win_short_title", locale)}
-          badge={t("consent.win_short_badge", locale)}
+          title={t('consent.win_short_title', locale)}
+          badge={t('consent.win_short_badge', locale)}
         >
           <Prose>
-            <p>{t("consent.short_body", locale)}</p>
+            <p>{t('consent.short_body', locale)}</p>
           </Prose>
         </PixelWindow>
 
         <PixelWindow
-          title={t("consent.win_data_title", locale)}
-          badge={t("consent.win_data_badge", locale)}
+          title={t('consent.win_data_title', locale)}
+          badge={t('consent.win_data_badge', locale)}
         >
           <Prose>
-            <p>{t("consent.data_intro", locale)}</p>
+            <p>{t('consent.data_intro', locale)}</p>
           </Prose>
           <ul className="mt-3 space-y-2.5">
-            <Bullet>{emph(t("consent.data_b1", locale))}</Bullet>
-            <Bullet>{emph(t("consent.data_b2", locale))}</Bullet>
-            <Bullet>{emph(t("consent.data_b3", locale))}</Bullet>
-            <Bullet>{emph(t("consent.data_b4", locale))}</Bullet>
+            <Bullet>{emph(t('consent.data_b1', locale))}</Bullet>
+            <Bullet>{emph(t('consent.data_b2', locale))}</Bullet>
+            <Bullet>{emph(t('consent.data_b3', locale))}</Bullet>
+            <Bullet>{emph(t('consent.data_b4', locale))}</Bullet>
           </ul>
           <Prose className="mt-4">
-            <p>{emph(t("consent.data_never_intro", locale))}</p>
+            <p>{emph(t('consent.data_never_intro', locale))}</p>
           </Prose>
           <ul className="mt-3 space-y-2.5">
-            <Bullet>{emph(t("consent.data_n1", locale))}</Bullet>
-            <Bullet>{emph(t("consent.data_n2", locale))}</Bullet>
-            <Bullet>{emph(t("consent.data_n3", locale))}</Bullet>
+            <Bullet>{emph(t('consent.data_n1', locale))}</Bullet>
+            <Bullet>{emph(t('consent.data_n2', locale))}</Bullet>
+            <Bullet>{emph(t('consent.data_n3', locale))}</Bullet>
           </ul>
         </PixelWindow>
 
         <PixelWindow
-          title={t("consent.win_who_title", locale)}
-          badge={t("consent.win_who_badge", locale)}
+          title={t('consent.win_who_title', locale)}
+          badge={t('consent.win_who_badge', locale)}
         >
           <Prose>
             <p>
-              {emph(t("consent.who_p1_a", locale))}
+              {emph(t('consent.who_p1_a', locale))}
               <a
                 href="mailto:jimmy.kaian.ji@gmail.com"
                 className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
               >
                 jimmy.kaian.ji@gmail.com
               </a>
-              {emph(t("consent.who_p1_b", locale))}
+              {emph(t('consent.who_p1_b', locale))}
             </p>
-            <p>{t("consent.who_p2", locale)}</p>
+            <p>{t('consent.who_p2', locale)}</p>
           </Prose>
         </PixelWindow>
 
         <PixelWindow
-          title={t("consent.win_never_title", locale)}
-          badge={t("consent.win_never_badge", locale)}
+          title={t('consent.win_never_title', locale)}
+          badge={t('consent.win_never_badge', locale)}
         >
           <ul className="space-y-3">
-            <Bullet>{emph(t("consent.never_b1", locale))}</Bullet>
-            <Bullet>{emph(t("consent.never_b2", locale))}</Bullet>
-            <Bullet>{emph(t("consent.never_b3", locale))}</Bullet>
-            <Bullet>{emph(t("consent.never_b4", locale))}</Bullet>
-            <Bullet>{emph(t("consent.never_b5", locale))}</Bullet>
+            <Bullet>{emph(t('consent.never_b1', locale))}</Bullet>
+            <Bullet>{emph(t('consent.never_b2', locale))}</Bullet>
+            <Bullet>{emph(t('consent.never_b3', locale))}</Bullet>
+            <Bullet>{emph(t('consent.never_b4', locale))}</Bullet>
+            <Bullet>{emph(t('consent.never_b5', locale))}</Bullet>
           </ul>
         </PixelWindow>
 
         <PixelWindow
-          title={t("consent.win_owns_title", locale)}
-          badge={t("consent.win_owns_badge", locale)}
+          title={t('consent.win_owns_title', locale)}
+          badge={t('consent.win_owns_badge', locale)}
         >
           <Prose>
             <p>
-              {emph(t("consent.owns_p1_a", locale))}
+              {emph(t('consent.owns_p1_a', locale))}
               <Link
                 href="/account/profile"
                 className="text-acc-deep underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
               >
-                {t("consent.owns_p1_link", locale)}
+                {t('consent.owns_p1_link', locale)}
               </Link>
-              {emph(t("consent.owns_p1_b", locale))}
+              {emph(t('consent.owns_p1_b', locale))}
             </p>
-            <p>{emph(t("consent.owns_p2", locale))}</p>
+            <p>{emph(t('consent.owns_p2', locale))}</p>
           </Prose>
         </PixelWindow>
       </div>
 
       <p className="mt-12 text-[13px] leading-[1.6] text-acc-deep opacity-80">
-        {t("consent.footer_a", locale)}
+        {t('consent.footer_a', locale)}
         <a
           href="mailto:jimmy.kaian.ji@gmail.com"
           className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
           jimmy.kaian.ji@gmail.com
         </a>
-        {t("consent.footer_b", locale)}
+        {t('consent.footer_b', locale)}
       </p>
 
       <p className="mt-10 text-center text-[13px] text-acc-deep">
@@ -193,7 +183,7 @@ export default async function ConsentPage() {
           href="/"
           className="underline decoration-acc/40 underline-offset-3 hover:decoration-acc-deep"
         >
-          {t("consent.back_to_mull", locale)}
+          {t('consent.back_to_mull', locale)}
         </Link>
       </p>
     </main>
@@ -204,30 +194,24 @@ export default async function ConsentPage() {
 // localized prose carry inline emphasis without per-fragment keys.
 function emph(text: string): React.ReactNode[] {
   return text.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g).map((seg, i) => {
-    if (seg.startsWith("**") && seg.endsWith("**")) {
+    if (seg.startsWith('**') && seg.endsWith('**')) {
       return <strong key={i}>{seg.slice(2, -2)}</strong>;
     }
-    if (seg.startsWith("*") && seg.endsWith("*")) {
+    if (seg.startsWith('*') && seg.endsWith('*')) {
       return <em key={i}>{seg.slice(1, -1)}</em>;
     }
     return seg;
   });
 }
 
-function Prose({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
+function Prose({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
     <div
       className={
-        "space-y-4 text-[15.5px] leading-[1.65] text-ink-soft [&_strong]:text-ink " +
-        (className ?? "")
+        'space-y-4 text-[15.5px] leading-[1.65] text-ink-soft [&_strong]:text-ink ' +
+        (className ?? '')
       }
-      style={{ fontFamily: "var(--font-editorial)" }}
+      style={{ fontFamily: 'var(--font-editorial)' }}
     >
       {children}
     </div>
@@ -239,9 +223,9 @@ function Bullet({ children }: { children: React.ReactNode }) {
     <li
       className="border-l-4 px-4 py-2.5 text-[14.5px] leading-[1.6] text-ink-soft"
       style={{
-        borderColor: "var(--color-acc)",
-        background: "#FFFCF4",
-        fontFamily: "var(--font-editorial)",
+        borderColor: 'var(--color-acc)',
+        background: '#FFFCF4',
+        fontFamily: 'var(--font-editorial)',
       }}
     >
       {children}

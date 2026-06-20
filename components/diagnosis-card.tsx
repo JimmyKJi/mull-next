@@ -16,7 +16,7 @@ import Link from 'next/link';
 import type { Kinship } from '@/lib/kinship';
 import { t, type Locale } from '@/lib/translations';
 
-const serif = "var(--font-prose)";
+const serif = 'var(--font-prose)';
 const sans = "'Inter', system-ui, sans-serif";
 const pixel = "var(--font-pixel-display, 'Courier New', monospace)";
 
@@ -27,7 +27,12 @@ export type DiagnosisCardProps = {
   locale?: Locale;
 };
 
-export default function DiagnosisCard({ diagnosis, kinship, is_novel, locale = 'en' }: DiagnosisCardProps) {
+export default function DiagnosisCard({
+  diagnosis,
+  kinship,
+  is_novel,
+  locale = 'en',
+}: DiagnosisCardProps) {
   const hasPhilosophers = !!kinship && kinship.philosophers.length > 0;
   const hasEchoes = !!kinship && Array.isArray(kinship.echoes) && kinship.echoes.length > 0;
   const hasTraditions = !!kinship && kinship.traditions.length > 0;
@@ -39,68 +44,88 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel, locale = '
   const accentSoft = is_novel ? '#F0E6F5' : '#E5F0EE';
 
   return (
-    <div style={{
-      marginTop: 24,
-      padding: '20px 24px',
-      background: '#FFFCF4',
-      border: '4px solid var(--color-ink)',
-      boxShadow: `5px 5px 0 0 ${accent}`,
-      borderRadius: 0,
-    }}>
-      <div style={{
-        fontFamily: pixel,
-        fontSize: 11,
-        color: accent,
-        textTransform: 'uppercase',
-        letterSpacing: '0.18em',
-        marginBottom: 12,
-        display: 'flex',
-        gap: 10,
-        alignItems: 'center',
-        flexWrap: 'wrap',
-      }}>
+    <div
+      style={{
+        marginTop: 24,
+        padding: '20px 24px',
+        background: '#FFFCF4',
+        border: '4px solid var(--color-ink)',
+        boxShadow: `5px 5px 0 0 ${accent}`,
+        borderRadius: 0,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: pixel,
+          fontSize: 11,
+          color: accent,
+          textTransform: 'uppercase',
+          letterSpacing: '0.18em',
+          marginBottom: 12,
+          display: 'flex',
+          gap: 10,
+          alignItems: 'center',
+          flexWrap: 'wrap',
+        }}
+      >
         <span>▸ {t('crd.diag_eyebrow', locale)}</span>
         {is_novel && (
-          <span style={{
-            padding: '3px 8px',
-            background: '#6B3E8C',
-            color: 'var(--color-cream)',
-            border: '2px solid var(--color-ink)',
-            fontFamily: pixel,
-            fontSize: 10,
-            letterSpacing: '0.18em',
-          }}>
+          <span
+            style={{
+              padding: '3px 8px',
+              background: '#6B3E8C',
+              color: 'var(--color-cream)',
+              border: '2px solid var(--color-ink)',
+              fontFamily: pixel,
+              fontSize: 10,
+              letterSpacing: '0.18em',
+            }}
+          >
             ✦ {t('crd.diag_original_thinking', locale)}
           </span>
         )}
       </div>
 
       {diagnosis && (
-        <p style={{
-          fontFamily: serif,
-          fontSize: 16.5,
-          color: 'var(--color-ink)',
-          margin: '0 0 14px',
-          lineHeight: 1.6,
-        }}>
+        <p
+          style={{
+            fontFamily: serif,
+            fontSize: 16.5,
+            color: 'var(--color-ink)',
+            margin: '0 0 14px',
+            lineHeight: 1.6,
+          }}
+        >
           {diagnosis}
         </p>
       )}
 
       {hasPhilosophers && kinship && (
         <>
-          <div style={{
-            fontFamily: pixel, fontSize: 10.5,
-            color: 'var(--color-acc-deep)', textTransform: 'uppercase',
-            letterSpacing: '0.18em', marginBottom: 10, marginTop: 16,
-          }}>
+          <div
+            style={{
+              fontFamily: pixel,
+              fontSize: 10.5,
+              color: 'var(--color-acc-deep)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.18em',
+              marginBottom: 10,
+              marginTop: 16,
+            }}
+          >
             {t('crd.diag_kindred_thinkers', locale)}
           </div>
-          <ul style={{
-            listStyle: 'none', padding: 0, margin: 0,
-            display: 'flex', flexDirection: 'column', gap: 10,
-          }}>
-            {kinship.philosophers.map(kp => (
+          <ul
+            style={{
+              listStyle: 'none',
+              padding: 0,
+              margin: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 10,
+            }}
+          >
+            {kinship.philosophers.map((kp) => (
               <li key={kp.slug}>
                 <Link
                   href={`/philosopher/${kp.slug}`}
@@ -117,32 +142,50 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel, locale = '
                   }}
                   className="pixel-press"
                 >
-                  <div style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'baseline',
-                    gap: 10,
-                    marginBottom: 4,
-                  }}>
-                    <span style={{
-                      fontFamily: serif, fontSize: 17, fontWeight: 500,
-                      color: 'var(--color-ink)',
-                    }}>{kp.name}</span>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'baseline',
+                      gap: 10,
+                      marginBottom: 4,
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: serif,
+                        fontSize: 17,
+                        fontWeight: 500,
+                        color: 'var(--color-ink)',
+                      }}
+                    >
+                      {kp.name}
+                    </span>
                     {kp.similarity > 0 && (
-                      <span style={{
-                        fontFamily: pixel, fontSize: 11, color: 'var(--color-acc-deep)',
-                        fontVariantNumeric: 'tabular-nums', letterSpacing: 0.4,
-                      }}>
+                      <span
+                        style={{
+                          fontFamily: pixel,
+                          fontSize: 11,
+                          color: 'var(--color-acc-deep)',
+                          fontVariantNumeric: 'tabular-nums',
+                          letterSpacing: 0.4,
+                        }}
+                      >
                         {t('crd.diag_pct_kin', locale, { pct: Math.round(kp.similarity * 100) })}
                       </span>
                     )}
                   </div>
                   {kp.why && (
-                    <p style={{
-                      fontFamily: serif, fontStyle: 'italic',
-                      fontSize: 14.5, color: 'var(--color-ink-soft)',
-                      margin: 0, lineHeight: 1.5,
-                    }}>
+                    <p
+                      style={{
+                        fontFamily: serif,
+                        fontStyle: 'italic',
+                        fontSize: 14.5,
+                        color: 'var(--color-ink-soft)',
+                        margin: 0,
+                        lineHeight: 1.5,
+                      }}
+                    >
                       {kp.why}
                     </p>
                   )}
@@ -155,18 +198,30 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel, locale = '
 
       {hasEchoes && kinship && kinship.echoes && (
         <>
-          <div style={{
-            fontFamily: pixel, fontSize: 10.5,
-            color: 'var(--color-acc-deep)', textTransform: 'uppercase',
-            letterSpacing: '0.18em', marginBottom: 10, marginTop: 16,
-          }}>
+          <div
+            style={{
+              fontFamily: pixel,
+              fontSize: 10.5,
+              color: 'var(--color-acc-deep)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.18em',
+              marginBottom: 10,
+              marginTop: 16,
+            }}
+          >
             {t('crd.diag_also_echoes', locale)}
           </div>
-          <ul style={{
-            listStyle: 'none', padding: 0, margin: 0,
-            display: 'flex', flexDirection: 'column', gap: 8,
-          }}>
-            {kinship.echoes.map(kp => (
+          <ul
+            style={{
+              listStyle: 'none',
+              padding: 0,
+              margin: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 8,
+            }}
+          >
+            {kinship.echoes.map((kp) => (
               <li key={kp.slug}>
                 <Link
                   href={`/philosopher/${kp.slug}`}
@@ -180,33 +235,51 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel, locale = '
                     borderRadius: 0,
                   }}
                 >
-                  <div style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'baseline',
-                    gap: 10,
-                    marginBottom: 2,
-                  }}>
-                    <span style={{
-                      fontFamily: serif, fontSize: 15, fontWeight: 500,
-                      color: 'var(--color-ink)',
-                    }}>{kp.name}</span>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'baseline',
+                      gap: 10,
+                      marginBottom: 2,
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: serif,
+                        fontSize: 15,
+                        fontWeight: 500,
+                        color: 'var(--color-ink)',
+                      }}
+                    >
+                      {kp.name}
+                    </span>
                     {kp.similarity > 0 && (
-                      <span style={{
-                        fontFamily: pixel, fontSize: 10.5, color: 'var(--color-acc-deep)',
-                        fontVariantNumeric: 'tabular-nums', letterSpacing: 0.4,
-                        opacity: 0.85,
-                      }}>
+                      <span
+                        style={{
+                          fontFamily: pixel,
+                          fontSize: 10.5,
+                          color: 'var(--color-acc-deep)',
+                          fontVariantNumeric: 'tabular-nums',
+                          letterSpacing: 0.4,
+                          opacity: 0.85,
+                        }}
+                      >
                         {Math.round(kp.similarity * 100)}%
                       </span>
                     )}
                   </div>
                   {kp.why && (
-                    <p style={{
-                      fontFamily: serif, fontStyle: 'italic',
-                      fontSize: 13.5, color: 'var(--color-ink-soft)',
-                      margin: 0, lineHeight: 1.45,
-                    }}>
+                    <p
+                      style={{
+                        fontFamily: serif,
+                        fontStyle: 'italic',
+                        fontSize: 13.5,
+                        color: 'var(--color-ink-soft)',
+                        margin: 0,
+                        lineHeight: 1.45,
+                      }}
+                    >
                       {kp.why}
                     </p>
                   )}
@@ -219,23 +292,35 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel, locale = '
 
       {hasTraditions && kinship && (
         <>
-          <div style={{
-            fontFamily: pixel, fontSize: 10.5,
-            color: 'var(--color-acc-deep)', textTransform: 'uppercase',
-            letterSpacing: '0.18em', marginBottom: 10, marginTop: 16,
-          }}>
+          <div
+            style={{
+              fontFamily: pixel,
+              fontSize: 10.5,
+              color: 'var(--color-acc-deep)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.18em',
+              marginBottom: 10,
+              marginTop: 16,
+            }}
+          >
             {t('crd.diag_traditions', locale)}
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-            {kinship.traditions.map(tr => (
-              <span key={tr} style={{
-                padding: '5px 12px',
-                background: accentSoft,
-                border: `2px solid ${accent}`,
-                borderRadius: 0,
-                fontFamily: pixel, fontSize: 11, color: accent,
-                letterSpacing: 0.4, textTransform: 'uppercase',
-              }}>
+            {kinship.traditions.map((tr) => (
+              <span
+                key={tr}
+                style={{
+                  padding: '5px 12px',
+                  background: accentSoft,
+                  border: `2px solid ${accent}`,
+                  borderRadius: 0,
+                  fontFamily: pixel,
+                  fontSize: 11,
+                  color: accent,
+                  letterSpacing: 0.4,
+                  textTransform: 'uppercase',
+                }}
+              >
                 {tr}
               </span>
             ))}
@@ -244,11 +329,16 @@ export default function DiagnosisCard({ diagnosis, kinship, is_novel, locale = '
       )}
 
       {is_novel && !hasPhilosophers && !hasEchoes && (
-        <p style={{
-          fontFamily: serif, fontStyle: 'italic',
-          fontSize: 15, color: '#6B3E8C',
-          margin: '14px 0 0', lineHeight: 1.55,
-        }}>
+        <p
+          style={{
+            fontFamily: serif,
+            fontStyle: 'italic',
+            fontSize: 15,
+            color: '#6B3E8C',
+            margin: '14px 0 0',
+            lineHeight: 1.55,
+          }}
+        >
           {t('crd.diag_novel_note', locale)}
         </p>
       )}

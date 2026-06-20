@@ -17,11 +17,11 @@
 //   +200 for a win, 0 for a draw, -200 for a loss. Clamped to
 //   [400, 2400].
 
-export type Verdict = "user" | "opponent" | "draw";
+export type Verdict = 'user' | 'opponent' | 'draw';
 
 /** User's score for Elo math. */
 export function verdictToScore(v: Verdict): number {
-  return v === "user" ? 1.0 : v === "draw" ? 0.5 : 0.0;
+  return v === 'user' ? 1.0 : v === 'draw' ? 0.5 : 0.0;
 }
 
 /** Expected score for player A vs B given their Elos. */
@@ -57,10 +57,7 @@ export type CalibrationMatch = {
 export function calibrationStartElo(matches: CalibrationMatch[]): number {
   if (matches.length === 0) return 1000;
   const bias = { user: 200, draw: 0, opponent: -200 } as const;
-  const total = matches.reduce(
-    (acc, m) => acc + m.opponentElo + bias[m.verdict],
-    0,
-  );
+  const total = matches.reduce((acc, m) => acc + m.opponentElo + bias[m.verdict], 0);
   const mean = total / matches.length;
   return clampElo(Math.round(mean));
 }

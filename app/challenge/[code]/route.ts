@@ -15,10 +15,7 @@ import { createAdminClient } from '@/utils/supabase/admin';
 
 export const runtime = 'nodejs';
 
-export async function GET(
-  _req: Request,
-  { params }: { params: Promise<{ code: string }> },
-) {
+export async function GET(_req: Request, { params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;
   if (!code) return NextResponse.redirect(new URL('/', 'https://mull.world'));
 
@@ -29,7 +26,9 @@ export async function GET(
     admin = createAdminClient();
   } catch {
     // Admin client unavailable — still redirect, just skip telemetry.
-    return NextResponse.redirect(new URL(`/quiz?challenger=${encodeURIComponent(code)}`, 'https://mull.world'));
+    return NextResponse.redirect(
+      new URL(`/quiz?challenger=${encodeURIComponent(code)}`, 'https://mull.world'),
+    );
   }
 
   // Verify the code exists before we bump telemetry, so a bot hitting

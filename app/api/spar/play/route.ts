@@ -14,13 +14,10 @@
 // Body: { philosopherName, topicSlug, userTurn }
 // Returns: { philosopherTurn, judge: JudgeOutput }
 
-import { NextResponse } from "next/server";
-import {
-  ARENA_PHILOSOPHERS,
-  ARENA_TOPICS,
-} from "@/lib/arena/data";
-import { SPAR_MAX_USER_CHARS } from "@/lib/spar";
-import { generatePhilosopherTurn } from "@/lib/arena/philosopher-voice";
+import { NextResponse } from 'next/server';
+import { ARENA_PHILOSOPHERS, ARENA_TOPICS } from '@/lib/arena/data';
+import { SPAR_MAX_USER_CHARS } from '@/lib/spar';
+import { generatePhilosopherTurn } from '@/lib/arena/philosopher-voice';
 import {
   judgeSystemPrompt,
   judgeUserPrompt,
@@ -28,18 +25,18 @@ import {
   JUDGE_TOOL,
   JUDGE_TOOL_NAME,
   type JudgeOutput,
-} from "@/lib/arena/judge";
-import { aiGate } from "@/lib/rate-limit";
-import { createClient } from "@/utils/supabase/server";
-import { type Locale } from "@/lib/translations";
+} from '@/lib/arena/judge';
+import { aiGate } from '@/lib/rate-limit';
+import { createClient } from '@/utils/supabase/server';
+import { type Locale } from '@/lib/translations';
 
-const SONNET_MODEL = "claude-sonnet-4-6";
+const SONNET_MODEL = 'claude-sonnet-4-6';
 
 export async function POST(req: Request) {
   const body = await req.json().catch(() => null);
   const philosopherName = body?.philosopherName as string | undefined;
   const topicSlug = body?.topicSlug as string | undefined;
-  const userTurn = (body?.userTurn as string | undefined)?.trim() ?? "";
+  const userTurn = (body?.userTurn as string | undefined)?.trim() ?? '';
   // Optional UI locale. When set (and non-English) the philosopher turn +
   // verdict come back in that language; the topic prompt sent to the model
   // stays English (the canonical source). Invalid values fall back to English
@@ -48,7 +45,7 @@ export async function POST(req: Request) {
 
   if (!philosopherName || !topicSlug || !userTurn) {
     return NextResponse.json(
-      { error: "Missing philosopherName, topicSlug, or userTurn." },
+      { error: 'Missing philosopherName, topicSlug, or userTurn.' },
       { status: 400 },
     );
   }
@@ -73,8 +70,10 @@ export async function POST(req: Request) {
   // completes — a worst-case rapid-fire abuser hits the per-user cap
   // (3/day) before the second request even returns.
   const supabaseForUser = await createClient();
-  const { data: { user } } = await supabaseForUser.auth.getUser();
-  const gate = await aiGate(req, { bucket: "spar_play", userId: user?.id });
+  const {
+    data: { user },
+  } = await supabaseForUser.auth.getUser();
+  const gate = await aiGate(req, { bucket: 'spar_play', userId: user?.id });
   if (!gate.ok) {
     return NextResponse.json({ error: gate.message }, { status: gate.status });
   }
@@ -82,7 +81,7 @@ export async function POST(req: Request) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
-      { error: "Spar unavailable: AI key not configured." },
+      { error: 'Spar unavailable: AI key not configured.' },
       { status: 500 },
     );
   }
@@ -91,7 +90,7 @@ export async function POST(req: Request) {
   const philosopherTurn = await generatePhilosopherTurn({
     philosopher,
     topicPrompt: topic.prompt,
-    transcript: [{ speaker: "user", content: userTurn }],
+    transcript: [{ speaker: 'user', content: userTurn }],
     // Spar turns are tighter than Arena turns — keep cost low.
     maxChars: 900,
     locale,
@@ -104,28 +103,28 @@ export async function POST(req: Request) {
   }
 
   // 2) Call the judge on the two-turn exchange.
-  const judgeRes = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
+  const judgeRes = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
       model: SONNET_MODEL,
       max_tokens: 2200,
       tools: [JUDGE_TOOL],
-      tool_choice: { type: "tool", name: JUDGE_TOOL_NAME },
+      tool_choice: { type: 'tool', name: JUDGE_TOOL_NAME },
       system: judgeSystemPrompt(locale),
       messages: [
         {
-          role: "user",
+          role: 'user',
           content: judgeUserPrompt({
             topicPrompt: topic.prompt,
             opponentName: philosopher.name,
             transcript: [
-              { speaker: "user", content: userTurn },
-              { speaker: "opponent", content: philosopherTurn },
+              { speaker: 'user', content: userTurn },
+              { speaker: 'opponent', content: philosopherTurn },
             ],
           }),
         },
@@ -135,13 +134,13 @@ export async function POST(req: Request) {
 
   if (!judgeRes.ok) {
     const errText = await judgeRes.text();
-    console.error("[spar/judge] Sonnet error", judgeRes.status, errText);
+    console.error('[spar/judge] Sonnet error', judgeRes.status, errText);
     // Return the philosopher turn even if judge fails — the user can
     // see the exchange. Mark the judge as unavailable.
     return NextResponse.json({
       philosopherTurn,
       judge: null,
-      judgeError: "Judge call failed. The exchange is shown above.",
+      judgeError: 'Judge call failed. The exchange is shown above.',
     });
   }
   const data = (await judgeRes.json()) as {
@@ -150,11 +149,11 @@ export async function POST(req: Request) {
   };
   const judge: JudgeOutput | null = parseJudgeResponse(data);
   if (!judge) {
-    console.error("[spar/judge] could not parse:", JSON.stringify(data.content)?.slice(0, 500));
+    console.error('[spar/judge] could not parse:', JSON.stringify(data.content)?.slice(0, 500));
     return NextResponse.json({
       philosopherTurn,
       judge: null,
-      judgeError: "Judge returned malformed output. Exchange is shown.",
+      judgeError: 'Judge returned malformed output. Exchange is shown.',
     });
   }
 
