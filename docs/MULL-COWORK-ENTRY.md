@@ -10,7 +10,7 @@ worktree access).
 ## What Mull is, in one sentence
 
 A philosophical mapping app — take a quiz, get placed in a
-16-dimensional space among 560 philosophers, then explore
+16-dimensional space among 551 philosophers, then explore
 yourself through 15+ practice surfaces (debate, daily action,
 weekly question, 30-day archetype-personalized course, etc.).
 Built solo by Jimmy Ji, philosophy student at King's College
@@ -73,9 +73,9 @@ Optional deeper reading:
   get Haiku-powered analysis.
 
 ### Tier 4 — explore
-- **The Map** (`/map`), **560 philosophers** (`/philosopher`),
+- **The Map** (`/map`), **551 philosophers** (`/philosopher`),
   **10 archetypes** (`/archetype`), **topic explainers**
-  (`/topic`), **30 vs matchups** (`/vs`).
+  (`/topic`), **54 vs matchups** (`/vs`).
 
 ### Tier 5 — coming soon (scaffolded)
 - `/read` (Reading Hour), `/letters` (Letters Between Inheritors),
@@ -106,7 +106,9 @@ Optional deeper reading:
   + Mull Open when built.
 
 **Don't sell paid tier in any campaign.** Stripe is dormant.
-The honest ask is Ko-fi tips. The full economics table is on
+The Ko-fi tip jar is currently switched off (legal hold on
+accepting tips), so there is no active ask right now. The full
+economics table is on
 the live `/about` page if cowork wants to reference it.
 
 ---
@@ -126,7 +128,7 @@ the live `/about` page if cowork wants to reference it.
 - **Honest about AI.** Mull uses AI in 5 bounded places
   (Arena/Spar judging, prose→vector for dilemma/diary/exercise,
   philosopher voices, Argument Diary analysis, yearly
-  retrospective). The model itself — 16-D, archetypes, 560
+  retrospective). The model itself — 16-D, archetypes, 551
   philosopher positions, the quiz — is hand-designed.
 
 ---
@@ -168,4 +170,5 @@ decision.
 
 *Maintained by Jimmy Ji
 (<a href="mailto:jimmy.kaian.ji@gmail.com">jimmy.kaian.ji@gmail.com</a>).
-Last updated 2026-05-25.*
+Last updated 2026-05-25; corrected 2026-06-20 (corpus is 551; Ko-fi
+tipping currently paused pending a legal question).*

@@ -46,7 +46,7 @@ keeping all data, copy, and infrastructure.)
   well to 8-bit (think Game Boy + warm-tones).
 - **Per-archetype accents** (10 hues from `lib/archetype-colors.ts`)
   remain — used as palette swaps for sprites.
-- **Product**: 16-D model, 10 archetypes, 560 philosophers.
+- **Product**: 16-D model, 10 archetypes, 551 philosophers.
 - **Copy**: every line in mull.html (hero, lede, archetype prose,
   quiz questions, dilemmas, daily wisdom) stays.
 - **Infrastructure**: Supabase tables, RLS, auth, OG generation,
@@ -162,7 +162,7 @@ margin. Below: a 2D pixel "philosophical realm" overworld
 sprite cards. CTA: a chunky pixel button "▶ BEGIN THE QUIZ".
 
 ### 2. Constellation (the philosophical realm)
-2D pixel overworld. 560 philosophers as small colored sprites
+2D pixel overworld. 551 philosophers as small colored sprites
 scattered on a pixel grid. The plane represents abstract↔embodied
 × sovereign↔communal. Drag to pan, scroll to zoom. Hover any
 sprite → pixel-bordered tooltip with name, dates, key idea, and

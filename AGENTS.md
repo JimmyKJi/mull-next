@@ -33,7 +33,7 @@ Both are privacy-promise violations.
 
 ## Wave 2 philosopher corpus: generator-owned
 
-The 394 Wave 2 philosopher entries live between
+The 385 Wave 2 philosopher entries live between
 `// ─── BEGIN gen-philosophers Wave 2 ───` and
 `// ─── END gen-philosophers Wave 2 ───` markers in both
 `lib/philosophers.ts` and `public/mull.html`. Don't hand-edit

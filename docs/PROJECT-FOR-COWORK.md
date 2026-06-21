@@ -10,12 +10,12 @@ context to plan content.
 ## One-line pitch
 
 **Mull is a philosophical mapping app.** You take a quiz; it places
-you in a 16-dimensional space among 560 philosophers from across
+you in a 16-dimensional space among 551 philosophers from across
 history. From there you can read about the kind of mind you turned
 out to be, browse the philosophers nearest you, debate them with
 AI judging your argument rigor, or write through daily moral
 dilemmas. Built solo as a passion project. Free to use; ad-free;
-no data sold; runs on tips.
+no data sold; costs come out of pocket.
 
 **URL:** https://mull.world
 
@@ -61,7 +61,7 @@ locked until you climb.
 
 ### Tier 2 — explore
 
-**The Map** (`/map`) — interactive 2D constellation of all 560
+**The Map** (`/map`) — interactive 2D constellation of all 551
 philosophers, plotted in the same 16-D space. Pan, zoom, hover any
 point to see name + dates + key idea. After taking the quiz, your
 own point appears with a pulsing halo so you can see kindred minds.
@@ -81,7 +81,7 @@ small dimensional shift on your map. Daily ritual.
 
 **Topic explainers + Vs matchups** (`/topic`, `/vs`) — 32 short
 SEO-targeted topic essays (free will, stoicism, the trolley problem,
-phenomenology, buddhism, daoism, problem of evil, etc.) and 53
+phenomenology, buddhism, daoism, problem of evil, etc.) and 54
 unique head-to-head philosopher comparison pages (Plato vs Aristotle,
 Nietzsche vs Kant, Confucius vs Mencius, Foucault vs Habermas,
 Buddha vs Nagarjuna, bell hooks vs Audre Lorde). Each comparison
@@ -234,7 +234,7 @@ itself. Doesn't perform warmth.
    political compass collapses to 4 quadrants. Mull is the only
    tool that lets you say "I'm a Touchstone with a heavy Tragic
    Vision lean and unusual Ascetic strength" and have that mean
-   something specific against 560 historical thinkers.
+   something specific against 551 historical thinkers.
 
 2. **The Arena is "chess.com for philosophy" and nobody else built it.**
    Kialo does structured debate but no scoring, no opponent, no
@@ -261,7 +261,7 @@ itself. Doesn't perform warmth.
 4. **Free + not VC-funded + not an AI app.**
    Mull uses AI in specific bounded places (Arena judging, daily
    dilemma analysis, retrospectives) but the model (16-D, 10
-   archetypes, 560 philosophers, every quiz question, every
+   archetypes, 551 philosophers, every quiz question, every
    archetype essay) is hand-designed by humans who care about
    getting philosophy right. The brand is explicitly the opposite
    of "AI does it all."
@@ -269,8 +269,9 @@ itself. Doesn't perform warmth.
 5. **Built solo, in public, by a philosophy student.**
    Jimmy Ji, philosophy student at King's College London. Mull is
    a passion project. Stripe wiring exists but is dormant — no
-   subscription tier exposed; the site runs on tips via Ko-fi.
-   Costs come out of Jimmy's pocket. This is the honest version
+   subscription tier exposed. A Ko-fi tip jar is built but currently
+   switched off (a legal question about accepting tips is being
+   resolved), so for now costs come out of Jimmy's pocket. This is the honest version
    of "indie tech" — no growth quotas, no funding runway, no
    "Series A," just a real product made deliberately.
 
@@ -336,7 +337,7 @@ discard the rest. Not all of these need to be made.
 
 ### Value-shape hooks (sustained interest)
 
-- **The Map of 560 philosophers.** Show the constellation with
+- **The Map of 551 philosophers.** Show the constellation with
   the user's point appearing. "You can finally see where you sit
   among the people you've been reading."
 
@@ -345,7 +346,7 @@ discard the rest. Not all of these need to be made.
   thread. Recurring content.
 
 - **"Today in philosophy" / philosopher spotlights.** Pull a
-  philosopher from the 560 corpus and post their key idea, key
+  philosopher from the 551 corpus and post their key idea, key
   dates, kindred minds. Daily/weekly.
 
 - **Behind-the-scenes "passion project economics."** Jimmy posts
@@ -369,10 +370,11 @@ discard the rest. Not all of these need to be made.
   Lean on "16D model designed by a philosophy student" not "AI-
   powered philosophy."
 - **Don't sell paid tier in the campaign.** Stripe is dormant;
-  Mull is free. The ask if any is Ko-fi tips.
+  Mull is free, and the Ko-fi tip jar is currently switched off
+  (legal hold on accepting tips), so there is no active ask right now.
 - **Avoid the "personality test" frame solo** — it's correct but
   reductive. Pair "find your archetype" framing with the deeper
-  "16-D map among 560 thinkers" angle so people see this isn't
+  "16-D map among 551 thinkers" angle so people see this isn't
   just BuzzFeed.
 
 ---
@@ -442,12 +444,14 @@ ceilings live in `lib/rate-limit.ts`. Defaults:
 - Site-wide daily AI-spend ceiling — auto-pauses inference if
   exceeded. Safety net, not retention squeeze.
 
-### Cost-relevant guardrails missing today
+### Cost-relevant guardrails (now server-side)
 
-The above caps are currently **client-side only** (localStorage)
-on the new surfaces. Server-side rate-limit middleware is the next
-infra build. Until then, casual abuse is possible; campaign
-traffic spikes should be watched carefully.
+As of 2026-06-19 every AI endpoint is gated server-side: each
+route calls an `aiGate` (per-IP / per-user daily caps) backed by
+the global daily/monthly spend ceiling + kill-switch in
+`lib/rate-limit.ts`. This closed the earlier gap where the newer
+surfaces' caps were client-side (localStorage) only — casual AI
+abuse is now bounded on the server, not just in the browser.
 
 ---
 
@@ -501,7 +505,10 @@ campaign strategy:)
 
 ---
 
-*Last updated 2026-05-25 (after the Capability Atlas + retention
+*Corrected 2026-06-20: the corpus is 551 philosophers; the Ko-fi
+tip jar is currently switched off (legal hold on accepting tips);
+and server-side AI gating is now live. Original note (2026-05-25,
+after the Capability Atlas + retention
 build shipped: Crucible / Wandering / Anthology / Year-in-View /
 Argument Diary / Atlas all live on mull.world; Reading Hour /
 Letters Between Inheritors / Mull Open / Long Letter scaffolded

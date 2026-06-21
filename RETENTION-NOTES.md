@@ -2,7 +2,7 @@
 
 *Written 2026-05-25, after the Inheritor murder-mystery reshape + map
 fix + polish sweep landed. The product is now hook-rich: Inheritor,
-Arena, the constellation, archetype essays, 560-philosopher corpus.
+Arena, the constellation, archetype essays, 551-philosopher corpus.
 Distribution is the harder problem now — but assuming the campaign
 brings people in, the next-hardest problem is bringing them BACK.
 This is a deliberation on what features would actually move
@@ -356,7 +356,7 @@ get:
 - A generated name (in a tradition that matches your archetype)
 - A pixel portrait that evolves as you do
 - A growing one-page manifesto written from your accumulated answers
-- A position on the 560-philosopher map, plotted with the others
+- A position on the 551-philosopher map, plotted with the others
 
 At the end of each season (quarter), Mull writes a 400-word "what
 your philosopher became this season" essay. Shareable as a card.

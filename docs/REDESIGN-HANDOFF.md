@@ -11,7 +11,7 @@ the previous conversation log.
 
 Migrating Mull's UI/UX from a "feels-like-2010s" baseline to a modern,
 animated, mobile-first experience. The product itself (the 16-D
-philosophical model, ten archetypes, 560 philosopher corpus, quiz +
+philosophical model, ten archetypes, 551 philosopher corpus, quiz +
 result + dilemma + diary + exercise + debate surfaces) stays the same.
 What changes is everything visual: motion, transitions, custom figure
 animations, page navigation feel, the way the quiz result emerges, the
@@ -216,7 +216,7 @@ existing route is touched.
 
 ```
 public/mull.html               9000-line static homepage (gets rewritten to /)
-lib/philosophers.ts            560 typed PhilosopherEntry records
+lib/philosophers.ts            551 typed PhilosopherEntry records
 lib/kinship.ts                 Shared diagnosis/kinship logic
 lib/dimensions.ts              16-D model definitions
 lib/archetype-targets.ts       10 archetype target vectors (NEW)

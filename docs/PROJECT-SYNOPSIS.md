@@ -18,7 +18,7 @@ The product is built around four ideas:
 
 3. **A daily dilemma** — one new philosophical question each morning. The user writes a free-text response; Claude analyzes it into a small dimensional shift, which moves the user's vector over time. The trail of shifts is visible on /account.
 
-4. **A constellation of ~500 philosophers** with hand-tuned 16-D positions, browsable on /philosopher and visible as nearby stars on the user's map.
+4. **A constellation of ~550 philosophers** with hand-tuned 16-D positions, browsable on /philosopher and visible as nearby stars on the user's map.
 
 Other surfaces: diary (long-form journaling that also shifts the vector), exercises (Stoic / Socratic / Buddhist practices like premortem, steelmanning, view-from-above), debate (simulated philosopher debates via Claude), compare (side-by-side maps of two users), share (screenshot-friendly result card), leaderboard (public profiles ranked by activity).
 
