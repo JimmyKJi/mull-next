@@ -13,6 +13,7 @@ import { getArenaTopic } from '@/lib/arena/data';
 import { localizeArenaTopic } from '@/lib/arena/topics-i18n';
 import { getServerLocale } from '@/lib/locale-server';
 import { t, type Locale } from '@/lib/translations';
+import { JudgingNotice } from '@/components/judging-notice';
 
 export const metadata: Metadata = {
   title: 'Arena · PvP · Mull',
@@ -132,6 +133,8 @@ export default async function ArenaPvpPage() {
           {t('arena.pvp_sub_b', locale, { n: ratingRes.data?.pvp_debates_count ?? 0 })}
         </p>
       </header>
+
+      <JudgingNotice locale={locale} style={{ marginBottom: 28 }} />
 
       {/* Section: your turn */}
       {myTurnMatches.length > 0 && (

@@ -13,6 +13,7 @@ import { localizeArenaTopic } from '@/lib/arena/topics-i18n';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import PveStarter from './pve-starter';
+import { JudgingNotice } from '@/components/judging-notice';
 
 // Force dynamic — user's rating is loaded per-request.
 export const dynamic = 'force-dynamic';
@@ -71,6 +72,7 @@ export default async function ArenaPvePage() {
       >
         {t('arena.pve_choose_title', locale)}
       </h1>
+      <JudgingNotice locale={locale} style={{ marginBottom: 20 }} />
       <PveStarter
         philosophers={ARENA_PHILOSOPHERS.map((p) => ({
           name: p.name,

@@ -16,6 +16,7 @@ import {
 import { localizeArenaTopic } from '@/lib/arena/topics-i18n';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
+import { JudgingNotice } from '@/components/judging-notice';
 
 export const metadata: Metadata = {
   title: 'Arena · Mull',
@@ -194,6 +195,8 @@ export default async function ArenaPage() {
           />
         </div>
       )}
+
+      <JudgingNotice locale={locale} style={{ marginBottom: 28 }} />
 
       {/* Three doors */}
       <ul

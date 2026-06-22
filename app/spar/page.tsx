@@ -18,6 +18,7 @@ import { localizeArenaTopic } from '@/lib/arena/topics-i18n';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
 import SparClient from './spar-client';
+import { JudgingNotice } from '@/components/judging-notice';
 
 export const metadata: Metadata = {
   title: 'Daily Spar · Mull',
@@ -127,6 +128,8 @@ export default async function SparPage() {
           {topic.prompt}
         </p>
       </div>
+
+      <JudgingNotice locale={locale} style={{ marginBottom: 24 }} />
 
       <SparClient
         philosopherName={philosopherName}

@@ -5476,6 +5476,50 @@ export const TRANSLATIONS: TranslationMap = {
   'spar.your_score': { en: 'Your argument: {score} / 25', zh: '你的论证：{score} / 25' },
   'spar.common_ground_header': { en: '▶ COMMON GROUND', zh: '▶ 共识所在' },
 
+  // ─── Judging notice — shared "how you're judged" disclosure shown
+  //     on every debate landing (Daily Spar, Arena hub, PvE, PvP).
+  //     Mirrors the 2026-06 no-winner / no-jargon / non-zero-sum
+  //     reframe in lib/arena/judge.ts. ───
+  'judging.title': { en: "How you're judged", zh: '评判方式' },
+  'judging.teaser': {
+    en: 'The same standard applies to the Daily Spar and the Arena. Tap to read it.',
+    zh: '每日交锋与竞技场适用同一套标准。点击展开。',
+  },
+  'judging.lede': {
+    en: 'The judge reads the quality of your reasoning — never which side you took. Six things shape every verdict:',
+    zh: '裁判评判的是你说理的质量——而非你站在哪一边。每一次裁决都由以下六点决定：',
+  },
+  'judging.no_winner_h': { en: 'No winner is crowned.', zh: '不分胜负。' },
+  'judging.no_winner_b': {
+    en: 'Each side is scored on its own merits. The judge names what kind of exchange it was — common ground, distinct positions, or talking past each other — but never declares who won.',
+    zh: '每一方都按自身表现评分。裁判会指出这是哪一种交锋——达成共识、各执己见，或各说各话——但绝不宣布谁获胜。',
+  },
+  'judging.common_ground_h': { en: 'Common ground counts.', zh: '达成共识算数。' },
+  'judging.common_ground_b': {
+    en: 'Converging on a shared view is one of the best possible outcomes, not a draw or a cop-out. The judge actively looks for the ground you share.',
+    zh: '走向共同的看法是最好的结果之一，而非平局或回避。裁判会主动寻找你们的共同点。',
+  },
+  'judging.plain_language_h': { en: 'Plain words beat jargon.', zh: '朴实的话语胜过术语。' },
+  'judging.plain_language_b': {
+    en: '“If everyone did that, the whole thing falls apart” scores exactly as high as naming the technical principle behind it. You earn points for reasoning, never for vocabulary.',
+    zh: '“要是人人都这么做，一切都会崩塌”与说出背后的专业术语得分完全相同。你因说理得分，绝不因用词得分。',
+  },
+  'judging.criteria_h': { en: 'Five criteria, 1–5 each.', zh: '五项标准，每项 1–5 分。' },
+  'judging.criteria_b': {
+    en: 'Logical validity, premise quality, philosophical rigor, structural elegance, and engagement. Each side totals 5–25.',
+    zh: '逻辑有效性、前提质量、哲学严谨度、结构清晰度，以及回应程度。每一方合计 5–25 分。',
+  },
+  'judging.last_word_h': { en: 'The last word is accounted for.', zh: '最后的发言已被纳入考量。' },
+  'judging.last_word_b': {
+    en: "Whoever speaks last can raise points the other had no turn to answer. You're judged only on what was on the table when you spoke — never penalised for the format. (In the Daily Spar, the closing turn is always yours.)",
+    zh: '最后发言的一方可能提出对方没有机会回应的观点。你只就你发言时摆在桌面上的内容被评判——绝不因赛制吃亏。（在每日交锋中，收尾回合永远属于你。）',
+  },
+  'judging.elo_h': { en: 'Your rating moves on your own merit.', zh: '你的评分取决于你自己的表现。' },
+  'judging.elo_b': {
+    en: 'Elo follows how well you argued against what was expected of you — so both players can climb, or both can slip. It is no longer one up, one down.',
+    zh: 'Elo 取决于你的论证相对于对你的预期表现如何——因此双方可能同时上升，也可能同时下降。不再是此消彼长。',
+  },
+
   // ─── Arena — hub + browse surfaces (leaderboard, history, open) ───
   'arena.back': { en: '◂ ARENA', zh: '◂ 竞技场' },
   'arena.eyebrow': { en: '▶ ARENA', zh: '▶ 竞技场' },
