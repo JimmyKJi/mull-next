@@ -83,7 +83,6 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
         initialJudge={session.judge_json}
         initialEloDelta={session.elo_delta}
         initialStatus={session.status as 'active' | 'judged' | 'abandoned'}
-        initialVerdict={session.verdict as 'user' | 'opponent' | 'draw' | null}
       />
     </main>
   );

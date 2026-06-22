@@ -5460,6 +5460,21 @@ export const TRANSLATIONS: TranslationMap = {
     en: 'Your argumentative style most resembled {name} in this spar.',
     zh: '在这场交锋中，你的论辩风格最接近 {name}。',
   },
+  // Two-phase spar: the philosopher replies, then you get a closing turn.
+  'spar.thinking': { en: '◷ {name} IS THINKING…', zh: '◷ {name} 正在思考…' },
+  'spar.rebuttal_intro': {
+    en: 'They’ve replied. Read it, then write your closing turn below — you get the last word.',
+    zh: '对方已回应。读完后在下方写下你的收尾回合——你拥有最后的发言权。',
+  },
+  'spar.closing_label': { en: '▶ YOUR CLOSING · {n} CHARS MAX', zh: '▶ 你的收尾 · 最多 {n} 字' },
+  'spar.closing_placeholder': {
+    en: 'Answer their rebuttal and land your strongest final point. This is your last word; the judge reads the full exchange next — on argumentative quality, not who "won".',
+    zh: '回应对方的反驳，打出你最有力的收尾。这是你的最后一句话；裁判随后会通读整场交锋——评判论证质量，而非看谁“获胜”。',
+  },
+  'spar.closing_btn': { en: '▶ CLOSE & BE JUDGED', zh: '▶ 收尾并接受裁决' },
+  'spar.outcome_header': { en: '▶ OUTCOME', zh: '▶ 结果' },
+  'spar.your_score': { en: 'Your argument: {score} / 25', zh: '你的论证：{score} / 25' },
+  'spar.common_ground_header': { en: '▶ COMMON GROUND', zh: '▶ 共识所在' },
 
   // ─── Arena — hub + browse surfaces (leaderboard, history, open) ───
   'arena.back': { en: '◂ ARENA', zh: '◂ 竞技场' },
@@ -5659,6 +5674,16 @@ export const TRANSLATIONS: TranslationMap = {
     zh: '你 {my} · {opp} {their}（满分 25）',
   },
   'arena.match_reasoning': { en: "▸ JUDGE'S REASONING", zh: '▸ 裁判的评理' },
+  // No-winner reframe: the judge reports the SHAPE of the exchange and
+  // scores each side on its own merits (see lib/arena/judge.ts).
+  'arena.outcome_header': { en: '▶ OUTCOME', zh: '▶ 结果' },
+  'arena.outcome.common_ground': { en: 'COMMON GROUND', zh: '达成共识' },
+  'arena.outcome.distinct': { en: 'DISTINCT POSITIONS', zh: '立场各异' },
+  'arena.outcome.talked_past': { en: 'TALKED PAST EACH OTHER', zh: '各说各话' },
+  'arena.assessment_header': { en: "▸ JUDGE'S ASSESSMENT", zh: '▸ 裁判的评析' },
+  'arena.common_ground_header': { en: '▸ COMMON GROUND', zh: '▸ 共识所在' },
+  'arena.your_score_line': { en: 'Your argument: {score} / 25', zh: '你的论证：{score} / 25' },
+  'arena.opp_score_line': { en: '{name}: {score} / 25', zh: '{name}：{score} / 25' },
   'arena.crit.validity': { en: 'Validity', zh: '有效性' },
   'arena.crit.premises': { en: 'Premises', zh: '前提' },
   'arena.crit.rigor': { en: 'Rigor', zh: '严谨' },

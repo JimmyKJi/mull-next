@@ -41,6 +41,40 @@ export function newElo(
   return Math.round(currentElo + delta);
 }
 
+// ─── Performance-based (non-zero-sum) Elo ───────────────────────────
+//
+// The Arena no longer crowns a winner (a debate can end in common
+// ground), so Elo can't be a winner-takes-the-points transfer. Instead
+// each player's rating moves on how WELL THEY ARGUED — their own
+// argument quality (the judge's 5–25 total) mapped to a 0–1
+// performance, compared against what their rating predicted they'd
+// manage against this opponent. The two updates are independent: both
+// players can rise (both argued above expectation), both can fall
+// (both phoned it in), or move in opposite directions. There is no
+// coupling that forces one up and the other down.
+
+/** Map a judge side-total (5–25) to a 0–1 performance fraction.
+ *  5/25 → 0.0, 15/25 → 0.5, 25/25 → 1.0. Clamped. */
+export function scoreToPerformance(total: number): number {
+  return Math.max(0, Math.min(1, (total - 5) / 20));
+}
+
+/** Non-zero-sum Elo update. A player's rating moves by k × (their own
+ *  performance − the score their rating expected against this
+ *  opponent). Independent of how the opponent did — pass each side its
+ *  own performance and both can rise or fall on their own merits. */
+export function performanceElo(args: {
+  currentElo: number;
+  opponentElo: number;
+  /** This player's own performance this debate, 0..1. */
+  performance: number;
+  kFactor: number;
+}): number {
+  const expected = expectedScore(args.currentElo, args.opponentElo);
+  const delta = args.kFactor * (args.performance - expected);
+  return clampElo(Math.round(args.currentElo + delta));
+}
+
 /** K-factor decay schedule. */
 export function kFactorForGames(gamesPlayed: number): number {
   if (gamesPlayed < 20) return 60;

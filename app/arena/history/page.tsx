@@ -10,7 +10,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/utils/supabase/server';
 import { getArenaTopic, localizeArenaPhilosopherName } from '@/lib/arena/data';
 import { localizeArenaTopic } from '@/lib/arena/topics-i18n';
-import { totalScore, type JudgeOutput } from '@/lib/arena/judge';
+import { totalScore, resolveOutcome, type JudgeOutput } from '@/lib/arena/judge';
 import { getServerLocale } from '@/lib/locale-server';
 import { t, type Locale } from '@/lib/translations';
 
@@ -44,7 +44,9 @@ type Session = {
   opponent_user_id: string | null;
   user_elo_at_start: number;
   opponent_elo_at_start: number;
-  verdict: 'user' | 'opponent' | 'draw';
+  // Null on rows judged after the no-winner reframe; the outcome now
+  // lives in judge_json. Old rows still carry a verdict.
+  verdict: 'user' | 'opponent' | 'draw' | null;
   judge_json: JudgeOutput;
   elo_delta: number;
   judged_at: string;
@@ -178,18 +180,17 @@ function HistoryRow({
         ? t('arena.opp_generic', locale)
         : t('arena.challenger', locale);
 
-  // Map verdict → "did the viewer win".
-  const viewerWon =
-    (session.verdict === 'user' && viewerIsChallenger) ||
-    (session.verdict === 'opponent' && !viewerIsChallenger);
-  const wasDraw = session.verdict === 'draw';
-
-  const verdictLabel = wasDraw
-    ? t('arena.result.draw', locale)
-    : viewerWon
-      ? t('arena.result.win', locale)
-      : t('arena.result.loss', locale);
-  const verdictColor = wasDraw ? 'var(--color-acc-deep)' : viewerWon ? '#2F5D5C' : '#7A2E2E';
+  // No winner — show what KIND of exchange this was. The row's accent
+  // colour now tracks the Elo move (up/down), not a win/loss, since a
+  // debate can end in common ground and still move either rating.
+  const outcome = resolveOutcome(session.judge_json);
+  const outcomeLabel =
+    outcome === 'common_ground'
+      ? t('arena.outcome.common_ground', locale)
+      : outcome === 'talked_past'
+        ? t('arena.outcome.talked_past', locale)
+        : t('arena.outcome.distinct', locale);
+  const accentColor = session.elo_delta >= 0 ? '#2F5D5C' : '#7A2E2E';
 
   // Score breakdown (mine vs opp).
   const userTotal = totalScore(session.judge_json.user_scores);
@@ -209,7 +210,7 @@ function HistoryRow({
           padding: '14px 16px',
           background: '#FFFCF4',
           border: '3px solid var(--color-ink)',
-          boxShadow: `3px 3px 0 0 ${verdictColor}`,
+          boxShadow: `3px 3px 0 0 ${accentColor}`,
           textDecoration: 'none',
           color: 'inherit',
         }}
@@ -228,12 +229,12 @@ function HistoryRow({
             style={{
               fontFamily: pixel,
               fontSize: 10,
-              color: verdictColor,
+              color: accentColor,
               letterSpacing: '0.22em',
               textTransform: 'uppercase',
             }}
           >
-            ▸ {t(`arena.kind.${session.kind}`, locale)} · {verdictLabel}
+            ▸ {t(`arena.kind.${session.kind}`, locale)} · {outcomeLabel}
           </div>
           <div
             style={{

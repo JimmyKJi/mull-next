@@ -43,6 +43,7 @@ type Bucket =
   | 'diary'
   | 'exercise'
   | 'spar_play'
+  | 'spar_judge'
   | 'arena_turn'
   | 'arena_judge'
   | 'argument_diary'
@@ -129,7 +130,8 @@ const BUCKET_COST_CENTS: Record<Bucket, number> = {
   diary: 1,
   exercise: 1,
   argument_diary: 1, // single Haiku call
-  spar_play: 8, // 1 Haiku turn + 1 Sonnet judge, ~$0.05–0.08
+  spar_play: 1, // spar opening: 1 Haiku rebuttal turn (~$0.005)
+  spar_judge: 7, // spar closing: 1 Sonnet judge on the 3-turn exchange (~$0.05)
   arena_turn: 1, // 1 Haiku turn alone
   arena_judge: 15, // Sonnet judge on full transcript, ~$0.15
   debate_generate: 8, // Sonnet, up to 4000 tok, ×2 retry — anonymous-facing
@@ -238,7 +240,10 @@ export async function readAiSpend(): Promise<SpendStatus> {
 // generous enough that engaged users don't hit them in practice,
 // strict enough that one bad actor can't run a $50 bill alone.
 const PER_USER_DAILY_CAPS: Partial<Record<Bucket, number>> = {
-  spar_play: 3, // 3 Spars/day ≈ $0.24/day max per user
+  // A complete spar = one opening (spar_play) + one closing/judge
+  // (spar_judge), so both caps at 3 bind a user to 3 full spars/day.
+  spar_play: 3,
+  spar_judge: 3, // ≈ $0.21/day of Sonnet max per user
   arena_turn: 32, // ~4 full debates of 8 turns
   arena_judge: 4, // 4 verdicts/day → $0.60 cap per user
   argument_diary: 3, // 3 analyses/day → $0.03 cap per user
@@ -308,6 +313,7 @@ export async function aiGate(req: Request, opts: GateOptions): Promise<GateResul
 function friendlyPerUserMessage(bucket: Bucket, cap: number): string {
   switch (bucket) {
     case 'spar_play':
+    case 'spar_judge':
       return `You've used your ${cap} Spars for today. The next one rotates in tomorrow.`;
     case 'arena_judge':
       return `You've called for ${cap} Arena verdicts today. Take a breath — back tomorrow.`;

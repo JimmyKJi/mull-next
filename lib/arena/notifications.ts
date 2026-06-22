@@ -160,7 +160,9 @@ export async function notifyVerdict(args: {
   opponentLabel: string;
   topicTitle: string;
   sessionId: string;
-  /** "You won 22-18" / "You lost 17-23" / "Draw 20-20". Pre-formatted. */
+  /** Winner-free, pre-formatted summary, e.g. "You found common ground.
+   *  Your argument scored 22/25, Maya 18/25." There is no winner — each
+   *  side is reported on its own merits. */
   verdictLine: string;
 }): Promise<void> {
   const email = await lookupEmail(args.recipientUserId);

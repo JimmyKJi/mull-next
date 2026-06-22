@@ -13,7 +13,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import type { JudgeOutput } from '@/lib/arena/judge';
+import { resolveOutcome, resolveAssessment, type JudgeOutput } from '@/lib/arena/judge';
 import { SupportMullPrompt } from '@/components/support-mull-prompt';
 import { t, type Locale } from '@/lib/translations';
 
@@ -34,7 +34,6 @@ type Props = {
   initialJudge: JudgeOutput | null;
   initialEloDelta: number | null;
   initialStatus: 'active' | 'judged' | 'abandoned';
-  initialVerdict: 'user' | 'opponent' | 'draw' | null;
   locale: Locale;
 };
 
@@ -390,28 +389,32 @@ function VerdictPanel({
     judge.opponent_scores.elegance +
     judge.opponent_scores.engagement;
 
-  const verdictColor =
-    judge.verdict === 'user'
+  // No winner. Report the SHAPE of the exchange (common ground /
+  // distinct positions / talked past) and each side's own score.
+  const outcome = resolveOutcome(judge);
+  const assessment = resolveAssessment(judge);
+  const outcomeColor =
+    outcome === 'common_ground'
       ? '#2F5D5C'
-      : judge.verdict === 'opponent'
+      : outcome === 'talked_past'
         ? '#7A2E2E'
         : 'var(--color-acc-deep)';
-  const verdictLabel =
-    judge.verdict === 'user'
-      ? t('arena.match_you_won', locale)
-      : judge.verdict === 'opponent'
-        ? t('arena.match_opp_won', locale, { name: opponentName.toUpperCase() })
-        : t('arena.match_draw', locale);
+  const outcomeLabel =
+    outcome === 'common_ground'
+      ? t('arena.outcome.common_ground', locale)
+      : outcome === 'talked_past'
+        ? t('arena.outcome.talked_past', locale)
+        : t('arena.outcome.distinct', locale);
 
   return (
     <div style={{ marginTop: 28 }}>
-      {/* Verdict banner */}
+      {/* Outcome banner — no winner */}
       <div
         style={{
           padding: '20px 24px',
           background: '#FFFCF4',
-          border: `5px solid ${verdictColor}`,
-          boxShadow: `6px 6px 0 0 ${verdictColor}`,
+          border: `5px solid ${outcomeColor}`,
+          boxShadow: `6px 6px 0 0 ${outcomeColor}`,
           marginBottom: 18,
           textAlign: 'center',
         }}
@@ -426,19 +429,19 @@ function VerdictPanel({
             marginBottom: 6,
           }}
         >
-          {t('spar.verdict', locale)}
+          {t('arena.outcome_header', locale)}
         </div>
         <div
           style={{
             fontFamily: pixel,
             fontSize: 22,
-            color: verdictColor,
+            color: outcomeColor,
             letterSpacing: '0.06em',
             marginBottom: 8,
             textShadow: '2px 2px 0 rgba(0,0,0,0.08)',
           }}
         >
-          {verdictLabel}
+          {outcomeLabel}
         </div>
         <div
           style={{
@@ -448,11 +451,7 @@ function VerdictPanel({
             marginBottom: 12,
           }}
         >
-          {t('arena.match_scoreline', locale, {
-            my: userTotal,
-            opp: opponentName,
-            their: oppTotal,
-          })}
+          {t('arena.your_score_line', locale, { score: userTotal })}
         </div>
         <div
           style={{
@@ -467,7 +466,7 @@ function VerdictPanel({
         </div>
       </div>
 
-      {/* Verdict reasoning */}
+      {/* Judge's assessment — winner-free read of how each side reasoned */}
       <div
         style={{
           padding: '16px 20px',
@@ -486,7 +485,7 @@ function VerdictPanel({
             marginBottom: 8,
           }}
         >
-          {t('arena.match_reasoning', locale)}
+          {t('arena.assessment_header', locale)}
         </div>
         <p
           style={{
@@ -497,9 +496,45 @@ function VerdictPanel({
             lineHeight: 1.65,
           }}
         >
-          {judge.verdict_reasoning}
+          {assessment}
         </p>
       </div>
+
+      {/* Common ground — the view the two sides share or could share */}
+      {judge.common_ground && (
+        <div
+          style={{
+            padding: '16px 20px',
+            background: '#E5F0EE',
+            border: '3px solid #2F5D5C',
+            marginBottom: 18,
+          }}
+        >
+          <div
+            style={{
+              fontFamily: pixel,
+              fontSize: 10,
+              color: '#2F5D5C',
+              letterSpacing: 0.4,
+              textTransform: 'uppercase',
+              marginBottom: 8,
+            }}
+          >
+            {t('arena.common_ground_header', locale)}
+          </div>
+          <p
+            style={{
+              fontFamily: serif,
+              fontSize: 16,
+              color: 'var(--color-ink)',
+              margin: 0,
+              lineHeight: 1.65,
+            }}
+          >
+            {judge.common_ground}
+          </p>
+        </div>
+      )}
 
       {/* Per-criterion breakdown */}
       <div

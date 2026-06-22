@@ -1,10 +1,11 @@
 // POST /api/arena/judge
 //
-// Calls the judge (Sonnet) on a session's transcript, updates the
-// user's Elo, marks the session 'judged', returns the verdict.
+// Calls the judge (Sonnet) on a session's transcript, updates each
+// player's Elo independently (performance-based, non-zero-sum), marks
+// the session 'judged', and returns the outcome.
 //
 // Body: { session_id }
-// Returns: { verdict, judge_output, user_elo_before, user_elo_after,
+// Returns: { outcome, judge_output, user_elo_before, user_elo_after,
 //            elo_delta, opponent_elo, opponent_name }
 
 import { NextResponse } from 'next/server';
@@ -16,11 +17,10 @@ import {
   parseJudgeResponse,
   JUDGE_TOOL,
   JUDGE_TOOL_NAME,
-  judgmentToElo,
   totalScore,
   type JudgeOutput,
 } from '@/lib/arena/judge';
-import { newElo, kFactorForGames } from '@/lib/arena/elo';
+import { performanceElo, scoreToPerformance, kFactorForGames } from '@/lib/arena/elo';
 import { notifyVerdict } from '@/lib/arena/notifications';
 import { aiGate } from '@/lib/rate-limit';
 import { getServerLocale } from '@/lib/locale-server';
@@ -67,7 +67,7 @@ export async function POST(req: Request) {
         code: 'already_judged',
         judge_output: session.judge_json,
         elo_delta: session.elo_delta,
-        verdict: session.verdict,
+        outcome: session.judge_json?.outcome ?? null,
       },
       { status: 400 },
     );
@@ -177,7 +177,11 @@ export async function POST(req: Request) {
     .from('arena_sessions')
     .update({
       status: 'judged',
-      verdict: parsed.verdict,
+      // The `verdict` column has a CHECK constraint (user/opponent/draw)
+      // and we can't migrate from here. New non-zero-sum semantics
+      // (outcome/assessment/common_ground) live in judge_json instead;
+      // write null to the legacy column.
+      verdict: null,
       judge_json: parsed,
       elo_delta: eloDelta,
       judged_at: new Date().toISOString(),
@@ -197,8 +201,10 @@ export async function POST(req: Request) {
     const callerLabel =
       callerProfile?.display_name ||
       (callerProfile?.handle ? `@${callerProfile.handle}` : 'Your opponent');
-    // Verdict from the OTHER user's perspective. We know our score
-    // and our verdict; flip for them.
+    // Winner-free summary for the OTHER user. There is no "you won" —
+    // each side is judged on its own argument quality, so we report the
+    // outcome (common ground / distinct positions / talked past) plus
+    // both /25 scores from the recipient's perspective.
     const userTotal = totalScore(parsed.user_scores);
     const oppTotal = totalScore(parsed.opponent_scores);
     // For the OTHER user (the recipient):
@@ -207,15 +213,13 @@ export async function POST(req: Request) {
     const otherIsChallenger = !callerIsChallenger;
     const recipientScore = otherIsChallenger ? userTotal : oppTotal;
     const senderScore = otherIsChallenger ? oppTotal : userTotal;
-    const recipientWon =
-      (parsed.verdict === 'user' && otherIsChallenger) ||
-      (parsed.verdict === 'opponent' && !otherIsChallenger);
-    const isDraw = parsed.verdict === 'draw';
-    const verdictLine = isDraw
-      ? `Draw — you ${recipientScore}, ${callerLabel} ${senderScore}`
-      : recipientWon
-        ? `You won — ${recipientScore}, ${callerLabel} ${senderScore}`
-        : `You lost — ${recipientScore}, ${callerLabel} ${senderScore}`;
+    const outcomeText =
+      parsed.outcome === 'common_ground'
+        ? 'You found common ground'
+        : parsed.outcome === 'talked_past'
+          ? 'You talked past each other'
+          : 'You held distinct positions';
+    const verdictLine = `${outcomeText}. Your argument scored ${recipientScore}/25, ${callerLabel} ${senderScore}/25.`;
     notifyVerdict({
       recipientUserId: otherUserId,
       opponentLabel: callerLabel,
@@ -242,7 +246,7 @@ export async function POST(req: Request) {
       : session.opponent_elo_at_start;
 
   return NextResponse.json({
-    verdict: parsed.verdict,
+    outcome: parsed.outcome,
     judge_output: parsed,
     user_score: totalScore(parsed.user_scores),
     opponent_score: totalScore(parsed.opponent_scores),
@@ -255,13 +259,16 @@ export async function POST(req: Request) {
   });
 }
 
-/** Apply the verdict to player Elo(s).
+/** Apply the judgment to player Elo(s) — performance-based, non-zero-sum.
+ *
+ *  Each player's rating moves on how well THEY argued (their own 5–25
+ *  side-total mapped to a 0–1 performance), compared to what their
+ *  rating predicted against this opponent. The two updates are
+ *  independent: both can rise, both can fall, or they can diverge.
+ *  There is no winner-takes-the-points transfer.
  *
  *  - PvE / calibration: updates the calling user's pve_elo only.
- *  - PvP: updates BOTH players' pvp_elo symmetrically (the
- *    challenger and the opponent_user_id). The judge's `verdict`
- *    means "user wins" / "opponent wins" from the challenger's
- *    perspective regardless of who called the verdict.
+ *  - PvP: updates BOTH players' pvp_elo, each on its own performance.
  */
 async function applyElo(
   supabase: Awaited<ReturnType<typeof createClient>>,
@@ -279,17 +286,21 @@ async function applyElo(
   eloDelta: number;
   userEloAfter: number;
 }> {
-  const { userScore } = judgmentToElo(judgment.user_scores, judgment.opponent_scores);
+  // "user_scores" is always the challenger's side; "opponent_scores"
+  // the opponent's. Each maps to its own 0–1 performance.
+  const userPerf = scoreToPerformance(totalScore(judgment.user_scores));
+  const opponentPerf = scoreToPerformance(totalScore(judgment.opponent_scores));
 
   if (session.kind === 'pvp' && session.opponent_user_id) {
-    return applyPvpElo(supabase, callerId, session, userScore);
+    return applyPvpElo(supabase, callerId, session, userPerf, opponentPerf);
   }
 
-  // PvE / calibration — single player update.
-  return applyPveElo(supabase, callerId, session, userScore);
+  // PvE / calibration — single player update on their own performance.
+  return applyPveElo(supabase, callerId, session, userPerf);
 }
 
-/** PvE Elo update — single user's pve_elo bumped. */
+/** PvE Elo update — single user's pve_elo bumped on their own
+ *  performance (0–1), independent of how the philosopher scored. */
 async function applyPveElo(
   supabase: Awaited<ReturnType<typeof createClient>>,
   userId: string,
@@ -297,7 +308,7 @@ async function applyPveElo(
     user_elo_at_start: number;
     opponent_elo_at_start: number;
   },
-  userScore: number,
+  userPerf: number,
 ) {
   const { data: rating } = await supabase
     .from('arena_user_ratings')
@@ -306,7 +317,12 @@ async function applyPveElo(
     .single();
   if (!rating) throw new Error('Rating row missing');
   const k = kFactorForGames(rating.pve_debates_count);
-  const updated = newElo(rating.pve_elo, session.opponent_elo_at_start, userScore, k);
+  const updated = performanceElo({
+    currentElo: rating.pve_elo,
+    opponentElo: session.opponent_elo_at_start,
+    performance: userPerf,
+    kFactor: k,
+  });
   const delta = updated - rating.pve_elo;
   await supabase
     .from('arena_user_ratings')
@@ -324,8 +340,10 @@ async function applyPveElo(
   };
 }
 
-/** PvP Elo update — both players' pvp_elo bumped symmetrically.
- *  Returns the delta + after-Elo for the CALLING user. */
+/** PvP Elo update — both players' pvp_elo bumped on their OWN
+ *  performance (non-zero-sum). No coupling: both can rise, both can
+ *  fall, or they diverge. Returns the delta + after-Elo for the
+ *  CALLING user. */
 async function applyPvpElo(
   supabase: Awaited<ReturnType<typeof createClient>>,
   callerId: string,
@@ -335,7 +353,8 @@ async function applyPvpElo(
     user_elo_at_start: number;
     opponent_elo_at_start: number;
   },
-  userScoreFromChallengerPerspective: number,
+  challengerPerf: number,
+  opponentPerf: number,
 ) {
   if (!session.opponent_user_id) throw new Error('PvP session missing opponent');
 
@@ -354,18 +373,20 @@ async function applyPvpElo(
   const challengerK = kFactorForGames(challengerRating.pvp_debates_count);
   const opponentK = kFactorForGames(opponentRating.pvp_debates_count);
 
-  const challengerUpdated = newElo(
-    challengerRating.pvp_elo,
-    opponentRating.pvp_elo,
-    userScoreFromChallengerPerspective,
-    challengerK,
-  );
-  const opponentUpdated = newElo(
-    opponentRating.pvp_elo,
-    challengerRating.pvp_elo,
-    1 - userScoreFromChallengerPerspective,
-    opponentK,
-  );
+  // Each side moves on its own performance vs the expectation its
+  // rating set against this opponent. Independent updates.
+  const challengerUpdated = performanceElo({
+    currentElo: challengerRating.pvp_elo,
+    opponentElo: opponentRating.pvp_elo,
+    performance: challengerPerf,
+    kFactor: challengerK,
+  });
+  const opponentUpdated = performanceElo({
+    currentElo: opponentRating.pvp_elo,
+    opponentElo: challengerRating.pvp_elo,
+    performance: opponentPerf,
+    kFactor: opponentK,
+  });
 
   await supabase
     .from('arena_user_ratings')

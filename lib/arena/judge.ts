@@ -5,34 +5,49 @@
 // must be quality. Haiku is too sycophantic and shallow for this job.
 //
 // Rubric (per Jimmy's design):
-//   The judgment is NOT based on which side either took. Both sides
-//   may have valid arguments; the user can be "right" and still lose
-//   on argumentative quality, or "wrong" and win.
+//   The judgment is NOT based on which side either took, and — since
+//   the 2026-06 reframe — it does NOT crown a winner. A debate can end
+//   in common ground (both sides converged on a shared view), in
+//   distinct-but-respectable positions, or in the two sides talking
+//   past each other. The judge names which of those happened and
+//   scores each side's argument quality on its own merits.
 //
 //   Five criteria, each scored 1-5:
 //     1. LOGICAL VALIDITY  — do conclusions follow from premises?
 //     2. PREMISE QUALITY   — are premises plausible + steelmanned?
 //     3. PHILOSOPHICAL RIGOR — appeal to principles (sufficient
 //        reason, parsimony, minimal divergence, charity), avoidance
-//        of fallacies
+//        of fallacies. NB: rigor is about the REASONING, not the
+//        vocabulary — plain-language statements of a principle count
+//        exactly as much as the technical term for it.
 //     4. STRUCTURAL ELEGANCE — clarity, parsimony, organization
-//     5. ENGAGEMENT — did they actually address the opponent's
-//        points, or just repeat their own?
+//     5. ENGAGEMENT — did they actually address the points that were
+//        on the table when they spoke (not the ones raised after
+//        their last turn, which they had no chance to answer)?
 //
-//   Each side totals 5-25. Winner is whoever scores higher; draw if
-//   within 2 points.
+//   Each side totals 5-25, read independently. There is no winner and
+//   no "X beat Y by N points".
 //
 // Sycophancy guard:
 //   Default Claude wants to give both sides high marks. The system
 //   prompt explicitly demands toughness — most arguments ARE flawed,
 //   and identifying the flaws is the job. Without this, the verdicts
-//   are mush.
+//   are mush. (Toughness is NOT the same as adversarial framing:
+//   converging on common ground is a strong outcome, not a cop-out.)
 
 import { LOCALE_FOR_PROMPT, type Locale } from '../translations';
 
 export type JudgeCriterion = 'validity' | 'premises' | 'rigor' | 'elegance' | 'engagement';
 
 export type JudgeSideScores = Record<JudgeCriterion, number>;
+
+/** The shape of the exchange — NOT a winner.
+ *   - common_ground: the two sides converged on a shared or
+ *     reconcilable view (a good outcome).
+ *   - distinct_positions: both held coherent, genuinely different
+ *     positions; no convergence, but a real exchange.
+ *   - talked_past: the two never actually engaged the same question. */
+export type JudgeOutcome = 'common_ground' | 'distinct_positions' | 'talked_past';
 
 export type JudgeOutput = {
   user_scores: JudgeSideScores;
@@ -42,11 +57,37 @@ export type JudgeOutput = {
   user_kindred_philosopher: string;
   opponent_scores: JudgeSideScores;
   opponent_justifications: Record<JudgeCriterion, string>;
-  verdict: 'user' | 'opponent' | 'draw';
-  /** One-paragraph explanation of the verdict — references specific
-   *  moves either side made. */
-  verdict_reasoning: string;
+  /** What kind of exchange this was — replaces the old winner verdict. */
+  outcome: JudgeOutcome;
+  /** One-paragraph, winner-free assessment of how each side reasoned,
+   *  referencing specific moves. */
+  assessment: string;
+  /** The common ground the judge found, or how the two positions could
+   *  be reconciled. Empty only if the sides genuinely share none. */
+  common_ground: string;
+  // ── Back-compat: present ONLY on rows judged before the no-winner
+  //    reframe. New code never writes these; readers fall back to them
+  //    via resolveOutcome / resolveAssessment below. ──
+  /** @deprecated pre-reframe rows only — superseded by `outcome`. */
+  verdict?: 'user' | 'opponent' | 'draw';
+  /** @deprecated pre-reframe rows only — superseded by `assessment`. */
+  verdict_reasoning?: string;
 };
+
+/** Resolve the display outcome for a judged row, old or new. New rows
+ *  carry `outcome`; pre-reframe rows are mapped from their old verdict
+ *  (a draw ≈ they met in the middle; anything decisive ≈ distinct). */
+export function resolveOutcome(j: Pick<JudgeOutput, 'outcome' | 'verdict'>): JudgeOutcome {
+  if (j.outcome === 'common_ground' || j.outcome === 'distinct_positions' || j.outcome === 'talked_past') {
+    return j.outcome;
+  }
+  return j.verdict === 'draw' ? 'common_ground' : 'distinct_positions';
+}
+
+/** Resolve the assessment prose for a judged row, old or new. */
+export function resolveAssessment(j: Pick<JudgeOutput, 'assessment' | 'verdict_reasoning'>): string {
+  return j.assessment ?? j.verdict_reasoning ?? '';
+}
 
 const CRITERIA: JudgeCriterion[] = ['validity', 'premises', 'rigor', 'elegance', 'engagement'];
 
@@ -81,16 +122,30 @@ function buildJudgeToolSchema() {
     }
   }
   properties.user_kindred_philosopher = { type: 'string' };
-  properties.verdict = { type: 'string', enum: ['user', 'opponent', 'draw'] };
-  properties.verdict_reasoning = { type: 'string' };
-  required.push('user_kindred_philosopher', 'verdict', 'verdict_reasoning');
+  properties.outcome = {
+    type: 'string',
+    enum: ['common_ground', 'distinct_positions', 'talked_past'],
+    description:
+      'The SHAPE of the exchange, not a winner. common_ground = the two sides converged on a shared or reconcilable view. distinct_positions = both held coherent but genuinely different positions. talked_past = they never engaged the same question.',
+  };
+  properties.assessment = {
+    type: 'string',
+    description:
+      "A one-paragraph, winner-free read of how each side reasoned, naming specific moves. Do NOT declare a winner or say one side 'beat' the other or compute who scored higher.",
+  };
+  properties.common_ground = {
+    type: 'string',
+    description:
+      'The shared ground the two sides reached or could reach — the view they actually agree on, or how their positions could be reconciled. If they genuinely share none, say so in one sentence.',
+  };
+  required.push('user_kindred_philosopher', 'outcome', 'assessment', 'common_ground');
   return { type: 'object', properties, required };
 }
 
 export const JUDGE_TOOL = {
   name: JUDGE_TOOL_NAME,
   description:
-    'Submit the structured verdict for the philosophical debate. Call exactly once with every field filled. Each score and each justification is its own separate top-level field (e.g. user_validity_score, user_validity_justification) — do NOT nest scores or justifications into sub-objects, and do NOT pass a justification as a stringified JSON blob.',
+    'Submit the structured assessment of the philosophical exchange. Call exactly once with every field filled. Each score and each justification is its own separate top-level field (e.g. user_validity_score, user_validity_justification) — do NOT nest scores or justifications into sub-objects, and do NOT pass a justification as a stringified JSON blob. Do NOT crown a winner: report the outcome (common_ground / distinct_positions / talked_past) and score each side on its own merits.',
   input_schema: buildJudgeToolSchema(),
 };
 
@@ -113,14 +168,11 @@ function flatToolInputToJudgeOutput(input: Record<string, unknown>): JudgeOutput
   const user = buildSide('user');
   const opponent = buildSide('opponent');
   if (!user || !opponent) return null;
-  const verdict = input.verdict;
-  if (verdict !== 'user' && verdict !== 'opponent' && verdict !== 'draw') {
+  const outcome = input.outcome;
+  if (outcome !== 'common_ground' && outcome !== 'distinct_positions' && outcome !== 'talked_past') {
     return null;
   }
-  if (
-    typeof input.user_kindred_philosopher !== 'string' ||
-    typeof input.verdict_reasoning !== 'string'
-  ) {
+  if (typeof input.user_kindred_philosopher !== 'string' || typeof input.assessment !== 'string') {
     return null;
   }
   return {
@@ -129,21 +181,24 @@ function flatToolInputToJudgeOutput(input: Record<string, unknown>): JudgeOutput
     user_kindred_philosopher: input.user_kindred_philosopher,
     opponent_scores: opponent.scores,
     opponent_justifications: opponent.justifications,
-    verdict,
-    verdict_reasoning: input.verdict_reasoning,
+    outcome,
+    assessment: input.assessment,
+    // common_ground is soft — the schema asks for it, but a missing one
+    // shouldn't sink an otherwise-valid verdict.
+    common_ground: typeof input.common_ground === 'string' ? input.common_ground : '',
   };
 }
 
 /** Fallback recovery for when the model ignores the flat schema and emits
- *  the OLD nested shape into the tool input: `user_scores`/`opponent_scores`
+ *  the nested shape into the tool input: `user_scores`/`opponent_scores`
  *  objects plus `user_justifications`/`opponent_justifications` that arrive
  *  either as a clean object or — the failure mode that motivated the flat
  *  schema — as a stringified JSON blob whose CJK text contains unescaped
  *  quotes (so it won't re-parse). We recover the load-bearing fields
- *  (scores, verdict, reasoning, kindred), which always serialize cleanly,
- *  and best-effort the justifications, degrading to empty strings rather
- *  than failing the whole verdict. Returns null only if the structural
- *  fields are absent. */
+ *  (scores, outcome, assessment, kindred), which always serialize cleanly,
+ *  and best-effort the justifications + common_ground, degrading to empty
+ *  strings rather than failing the whole verdict. Returns null only if the
+ *  structural fields are absent. */
 function nestedToolInputToJudgeOutput(input: Record<string, unknown>): JudgeOutput | null {
   const readScores = (v: unknown): JudgeSideScores | null => {
     if (!v || typeof v !== 'object') return null;
@@ -159,14 +214,11 @@ function nestedToolInputToJudgeOutput(input: Record<string, unknown>): JudgeOutp
   const userScores = readScores(input.user_scores);
   const opponentScores = readScores(input.opponent_scores);
   if (!userScores || !opponentScores) return null;
-  const verdict = input.verdict;
-  if (verdict !== 'user' && verdict !== 'opponent' && verdict !== 'draw') {
+  const outcome = input.outcome;
+  if (outcome !== 'common_ground' && outcome !== 'distinct_positions' && outcome !== 'talked_past') {
     return null;
   }
-  if (
-    typeof input.user_kindred_philosopher !== 'string' ||
-    typeof input.verdict_reasoning !== 'string'
-  ) {
+  if (typeof input.user_kindred_philosopher !== 'string' || typeof input.assessment !== 'string') {
     return null;
   }
   return {
@@ -175,8 +227,9 @@ function nestedToolInputToJudgeOutput(input: Record<string, unknown>): JudgeOutp
     user_kindred_philosopher: input.user_kindred_philosopher,
     opponent_scores: opponentScores,
     opponent_justifications: coerceJustifications(input.opponent_justifications),
-    verdict,
-    verdict_reasoning: input.verdict_reasoning,
+    outcome,
+    assessment: input.assessment,
+    common_ground: typeof input.common_ground === 'string' ? input.common_ground : '',
   };
 }
 
@@ -211,13 +264,21 @@ function coerceJustifications(value: unknown): Record<JudgeCriterion, string> {
 export function judgeSystemPrompt(locale: Locale = 'en'): string {
   const languageDirective =
     locale !== 'en' && LOCALE_FOR_PROMPT[locale]
-      ? `\n\nLANGUAGE: Write every human-readable value you pass to the tool — all justifications, the verdict_reasoning, and the user_kindred_philosopher name — in ${LOCALE_FOR_PROMPT[locale]}. Render the chosen philosopher's name in its standard form in that language. The "verdict" value must remain exactly "user", "opponent", or "draw" in English.`
+      ? `\n\nLANGUAGE: Write every human-readable value you pass to the tool — all justifications, the assessment, the common_ground, and the user_kindred_philosopher name — in ${LOCALE_FOR_PROMPT[locale]}. Render the chosen philosopher's name in its standard form in that language. The "outcome" value must remain exactly "common_ground", "distinct_positions", or "talked_past" in English.`
       : '';
-  return `You are the Arena judge — an impartial, rigorous evaluator of philosophical argument.
+  return `You are the Arena judge — an impartial, rigorous reader of philosophical argument.
 
-CRITICAL PRINCIPLE: You are NOT judging which side is "right" in their conclusion. Both sides may hold defensible positions. Your job is to evaluate ARGUMENTATIVE QUALITY only — how well each side reasoned, not which position you find more sympathetic.
+CRITICAL PRINCIPLES — read all four before scoring:
 
-You must be a TOUGH but FAIR critic. Most arguments contain real flaws — unsupported premises, equivocations, missed engagement, structural sprawl. Identifying these flaws specifically is your job. Sycophantic generosity ("both sides made interesting points") is a failure mode you must avoid. If an argument was weak, say where and why.
+1. NO WINNER. You are NOT judging which side is "right", and you do NOT crown a winner. Both sides may hold defensible positions; either may reason well or badly. Evaluate ARGUMENTATIVE QUALITY only, and score each side on its OWN merits — one side scoring high does not require the other to score low.
+
+2. COMMON GROUND IS A SUCCESS, NOT A COP-OUT. If the two sides converged on a shared view, or their positions can be reconciled, say so plainly and credit it. Do not manufacture a disagreement the exchange actually resolved. A debate that ends in genuine agreement is one of the best possible outcomes — never treat reaching it as a failure to fight.
+
+3. NO CREDIT FOR JARGON. Mull is for the general public, not the academy. Reward the REASONING, never the vocabulary. A plain-language statement of a principle ("if everyone did that, the whole thing falls apart") counts EXACTLY as much as the technical name for it ("that fails the universalizability test"). Actively translate everyday phrasing into the principle it expresses, and score it as if the principle had been named outright. Never hand out a point because someone dropped a Latin tag, a school's name, or a piece of terminology. If anything, jargon used IN PLACE OF reasoning — name-dropping a principle without doing the work — is a weakness; mark it down, don't reward it.
+
+4. FINAL-TURN FAIRNESS. Each side gets a fixed number of turns, and whoever speaks last raises points the other side never had a chance to answer. Do NOT lower any score — engagement above all — because a side "failed" to rebut something said AFTER its own last turn. Judge each side's engagement only against what was already on the table when it actually spoke. When the turn count is uneven (a one-exchange spar, or a PvP match where one player got the last word), this is decisive: the side that didn't get the last word is not penalised for a silence the FORMAT imposed, not their reasoning.
+
+You must still be a TOUGH but FAIR critic. Most arguments contain real flaws — unsupported premises, equivocations, missed engagement, structural sprawl. Identifying these specifically is your job. Sycophantic generosity ("both sides made interesting points") is a failure mode you must avoid. If an argument was weak, say where and why. (Toughness is about the reasoning — it is NOT a reason to force a disagreement where the sides found agreement.)
 
 Score each side on five criteria, each on a 1-5 integer scale:
 
@@ -235,43 +296,63 @@ Score each side on five criteria, each on a 1-5 integer scale:
    steelmanned, robust.
 
 3. PHILOSOPHICAL RIGOR (1-5)
-   Did the side appeal to substantive principles where they applied —
-   the principle of sufficient reason, parsimony, charity, minimal
-   divergence, autonomy of the will, etc.? Did they avoid common
+   Did the side reason from substantive principles where they applied
+   — sufficient reason, parsimony, charity, minimal divergence,
+   consistency, autonomy, and the like? It does NOT matter whether
+   they named these principles or stated them in plain everyday words;
+   credit the reasoning identically either way. Did they avoid common
    fallacies (appeal to consequences, ad hominem, false dichotomy,
-   moving the goalposts, equivocation)? Did they engage with the
-   actual philosophical tradition relevant to the question?
-   1 = naive or fallacy-ridden. 5 = sophisticated, principle-aware.
+   moving the goalposts, equivocation)? 1 = naive or fallacy-ridden.
+   5 = principled and consistent — whether or not a single technical
+   term appears. Do NOT raise this score for terminology alone.
 
 4. STRUCTURAL ELEGANCE (1-5)
    Is the argument well-organized and clear? Is it parsimonious (no
    wasted moves) or sprawling? Could a careful reader follow the
-   structure and reproduce the conclusion from the premises?
+   structure and reproduce the conclusion from the premises? Clear
+   plain prose scores HIGHER than dense jargon, not lower.
    1 = chaotic, unclear. 5 = clean, elegant, easy to follow.
 
 5. ENGAGEMENT (1-5)
-   Did the side actually engage with the opponent's specific moves,
-   or did they retreat into restating their own position? Did they
-   address the strongest objection to their view?
-   1 = never engaged. 5 = met every key move directly.
+   Did the side actually engage with the opponent's specific moves
+   that were available to it, or retreat into restating its own
+   position? Credit engagement with what was on the table when the
+   side spoke. Do NOT penalise a side for not answering points raised
+   only in a later turn it never had the chance to respond to (see
+   FINAL-TURN FAIRNESS). 1 = ignored available objections. 5 = met
+   every key move that was open to it.
 
 For each criterion on each side, give a 1-2 sentence justification
 that names a specific move from the transcript. Do not hedge. Do not
 say "both sides were good"; that's not a justification, it's an
 evasion. Quote or paraphrase specific lines if it helps.
 
-Then give a VERDICT:
-  - "user" if user total > opponent total by 3+
-  - "opponent" if opponent total > user total by 3+
-  - "draw" if within 2 points
+Then set OUTCOME — what KIND of exchange this was (never who won):
+  - "common_ground" if the two sides converged on a shared or
+    reconcilable view
+  - "distinct_positions" if both held coherent but genuinely different
+    positions
+  - "talked_past" if they never actually engaged the same question
 
-Then write a one-paragraph VERDICT_REASONING that:
-  - Says who won and by how many points
-  - Names the single most decisive criterion (e.g. "engagement was
-    the gap — the user repeatedly addressed Nietzsche's points
-    directly while Nietzsche restated his own")
-  - Acknowledges what the loser did well
+Then write a one-paragraph ASSESSMENT that:
+  - Reads how each side reasoned and names the most telling criterion
+    for each (e.g. "the user's strength was engagement — they kept
+    answering the actual objection; the strain showed in premise
+    support")
+  - Acknowledges the strongest move each side made
+  - DOES NOT declare a winner, compute a margin, or say one side
+    "beat" the other
   - DOES NOT take a stance on which side was philosophically "right"
+
+Then write COMMON_GROUND — the view the two sides actually share or
+could be brought to share, in plain language:
+  - If outcome is common_ground, this is the agreement they reached.
+  - If distinct_positions, this is the bridge that exists even across
+    the disagreement — the premise or value they both rely on.
+  - If talked_past, name the single question they should both have
+    been answering.
+  - Only if they genuinely share nothing, say so in one sentence — but
+    look hard before concluding that.
 
 Finally identify USER_KINDRED_PHILOSOPHER — pick ONE name from this
 list of well-known philosophers whose argumentative style the user
@@ -284,7 +365,7 @@ Heidegger, Sartre, Beauvoir, Camus, Arendt, Rawls, Nozick, Foucault,
 Williams, Singer, Parfit, Confucius, Mencius, Zhuangzi, Nagarjuna,
 Buddha, Laozi, Marcus Aurelius, Epictetus, Spinoza, Leibniz.
 
-Submit your evaluation by calling the ${JUDGE_TOOL_NAME} tool. Fill every field: all five scores for each side, a justification for each score, the user_kindred_philosopher, the verdict, and the verdict_reasoning. Do not write any prose outside the tool call.${languageDirective}`;
+Submit your evaluation by calling the ${JUDGE_TOOL_NAME} tool. Fill every field: all five scores for each side, a justification for each score, the user_kindred_philosopher, the outcome, the assessment, and the common_ground. Do not write any prose outside the tool call.${languageDirective}`;
 }
 
 export function judgeUserPrompt(args: {
@@ -323,8 +404,8 @@ export function validateJudgeOutput(raw: unknown): JudgeOutput | null {
     !validateJustifications(o.user_justifications) ||
     !validateJustifications(o.opponent_justifications) ||
     typeof o.user_kindred_philosopher !== 'string' ||
-    !['user', 'opponent', 'draw'].includes(o.verdict as string) ||
-    typeof o.verdict_reasoning !== 'string'
+    !['common_ground', 'distinct_positions', 'talked_past'].includes(o.outcome as string) ||
+    typeof o.assessment !== 'string'
   ) {
     return null;
   }
@@ -379,17 +460,4 @@ export function parseJudgeResponse(data: {
   }
   const text = data.content?.find((c) => c.type === 'text')?.text ?? '';
   return text ? parseJudgeJson(text) : null;
-}
-
-/** Compute the verdict-driven Elo delta. */
-export function judgmentToElo(
-  user: JudgeSideScores,
-  opponent: JudgeSideScores,
-): { verdict: JudgeOutput['verdict']; userScore: number } {
-  const u = totalScore(user);
-  const o = totalScore(opponent);
-  const diff = u - o;
-  if (diff >= 3) return { verdict: 'user', userScore: 1.0 };
-  if (diff <= -3) return { verdict: 'opponent', userScore: 0.0 };
-  return { verdict: 'draw', userScore: 0.5 };
 }

@@ -14,7 +14,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import type { JudgeOutput } from '@/lib/arena/judge';
+import { resolveOutcome, resolveAssessment, type JudgeOutput } from '@/lib/arena/judge';
 import { SupportMullPrompt } from '@/components/support-mull-prompt';
 import { t, type Locale } from '@/lib/translations';
 
@@ -475,11 +475,12 @@ function VerdictPanel({
   opponentLabel: string;
   locale: Locale;
 }) {
-  // The judge verdict is from the challenger's perspective ("user wins"
-  // means challenger wins). Map that to whether the calling viewer won.
-  const iWon =
-    (judge.verdict === 'user' && iAmChallenger) || (judge.verdict === 'opponent' && !iAmChallenger);
-  const isDraw = judge.verdict === 'draw';
+  // No winner. The judge reports the SHAPE of the exchange; each player
+  // is scored on their OWN argument. "user_scores" is always the
+  // challenger's side — flip for an opponent viewer so "my score" is
+  // really theirs.
+  const outcome = resolveOutcome(judge);
+  const assessment = resolveAssessment(judge);
 
   const userTotal =
     judge.user_scores.validity +
@@ -494,14 +495,20 @@ function VerdictPanel({
     judge.opponent_scores.elegance +
     judge.opponent_scores.engagement;
 
-  const verdictColor = iWon ? '#2F5D5C' : isDraw ? 'var(--color-acc-deep)' : '#7A2E2E';
-  const verdictLabel = iWon
-    ? t('arena.match_you_won', locale)
-    : isDraw
-      ? t('arena.match_draw', locale)
-      : t('arena.match_opp_won', locale, { name: opponentLabel.toUpperCase() });
+  const outcomeColor =
+    outcome === 'common_ground'
+      ? '#2F5D5C'
+      : outcome === 'talked_past'
+        ? '#7A2E2E'
+        : 'var(--color-acc-deep)';
+  const outcomeLabel =
+    outcome === 'common_ground'
+      ? t('arena.outcome.common_ground', locale)
+      : outcome === 'talked_past'
+        ? t('arena.outcome.talked_past', locale)
+        : t('arena.outcome.distinct', locale);
 
-  // Display "my score" vs "their score" — for the OPPONENT viewer,
+  // Display "my score" and "their score" — for the OPPONENT viewer,
   // the judge's "user_scores" is the CHALLENGER's, so we flip labels.
   const myScore = iAmChallenger ? userTotal : oppTotal;
   const theirScore = iAmChallenger ? oppTotal : userTotal;
@@ -512,8 +519,8 @@ function VerdictPanel({
         style={{
           padding: '20px 24px',
           background: '#FFFCF4',
-          border: `5px solid ${verdictColor}`,
-          boxShadow: `6px 6px 0 0 ${verdictColor}`,
+          border: `5px solid ${outcomeColor}`,
+          boxShadow: `6px 6px 0 0 ${outcomeColor}`,
           marginBottom: 18,
           textAlign: 'center',
         }}
@@ -528,33 +535,39 @@ function VerdictPanel({
             marginBottom: 6,
           }}
         >
-          {t('spar.verdict', locale)}
+          {t('arena.outcome_header', locale)}
         </div>
         <div
           style={{
             fontFamily: pixel,
             fontSize: 22,
-            color: verdictColor,
+            color: outcomeColor,
             letterSpacing: '0.06em',
             marginBottom: 8,
             textShadow: '2px 2px 0 rgba(0,0,0,0.08)',
           }}
         >
-          {verdictLabel}
+          {outcomeLabel}
         </div>
         <div
           style={{
             fontFamily: serif,
             fontSize: 15,
             color: 'var(--color-ink)',
+            marginBottom: 4,
+          }}
+        >
+          {t('arena.your_score_line', locale, { score: myScore })}
+        </div>
+        <div
+          style={{
+            fontFamily: serif,
+            fontSize: 13,
+            color: 'var(--color-ink-soft)',
             marginBottom: 12,
           }}
         >
-          {t('arena.match_scoreline', locale, {
-            my: myScore,
-            opp: opponentLabel,
-            their: theirScore,
-          })}
+          {t('arena.opp_score_line', locale, { name: opponentLabel, score: theirScore })}
         </div>
         {userEloAfter !== null && (
           <div
@@ -592,7 +605,7 @@ function VerdictPanel({
             marginBottom: 8,
           }}
         >
-          {t('arena.match_reasoning', locale)}
+          {t('arena.assessment_header', locale)}
         </div>
         <p
           style={{
@@ -603,9 +616,44 @@ function VerdictPanel({
             lineHeight: 1.65,
           }}
         >
-          {judge.verdict_reasoning}
+          {assessment}
         </p>
       </div>
+
+      {judge.common_ground && (
+        <div
+          style={{
+            padding: '16px 20px',
+            background: '#E5F0EE',
+            border: '3px solid #2F5D5C',
+            marginBottom: 18,
+          }}
+        >
+          <div
+            style={{
+              fontFamily: pixel,
+              fontSize: 10,
+              color: '#2F5D5C',
+              letterSpacing: 0.4,
+              textTransform: 'uppercase',
+              marginBottom: 8,
+            }}
+          >
+            {t('arena.common_ground_header', locale)}
+          </div>
+          <p
+            style={{
+              fontFamily: serif,
+              fontSize: 16,
+              color: 'var(--color-ink)',
+              margin: 0,
+              lineHeight: 1.65,
+            }}
+          >
+            {judge.common_ground}
+          </p>
+        </div>
+      )}
 
       <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
         <Link
