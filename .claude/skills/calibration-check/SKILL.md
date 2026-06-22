@@ -22,7 +22,7 @@ description: |
 # Mull philosopher calibration check
 
 This skill audits `lib/philosophers.ts`. It exists because the Wave 2
-corpus (394 entries) was generated from tradition baselines plus
+corpus (385 entries) was generated from tradition baselines plus
 per-entry overrides — a process that's authentically positioning,
 not default-5, but not individually stress-tested. Future Wave 3+
 additions will use the same workflow and need the same audit.
