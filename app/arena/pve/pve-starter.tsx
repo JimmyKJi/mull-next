@@ -8,7 +8,7 @@
 //     "needs Elo X" — gives users a goal, not a confusing rejection
 //   - Topics grouped by category (Philosophical / Everyday)
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { t, type Locale } from '@/lib/translations';
 
@@ -29,6 +29,9 @@ type Topic = {
 };
 
 const MAX_ELO_GAP = 300;
+// Mirrors of the server-side caps in lib/arena/data.ts.
+const MAX_CUSTOM_TOPIC_CHARS = 240;
+const MIN_CUSTOM_TOPIC_CHARS = 12;
 
 export default function PveStarter({
   philosophers,
@@ -44,22 +47,31 @@ export default function PveStarter({
   const router = useRouter();
   const [opponent, setOpponent] = useState<string | null>(null);
   const [topicSlug, setTopicSlug] = useState<string | null>(null);
+  const [customMode, setCustomMode] = useState(false);
+  const [customPrompt, setCustomPrompt] = useState('');
   const [starting, setStarting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const customRef = useRef<HTMLTextAreaElement>(null);
+
+  // A topic is chosen either by picking a seeded card or by writing a
+  // valid custom prompt — the two modes are mutually exclusive.
+  const topicChosen = customMode
+    ? customPrompt.trim().length >= MIN_CUSTOM_TOPIC_CHARS
+    : !!topicSlug;
 
   async function start() {
-    if (!opponent || !topicSlug || starting) return;
+    if (!opponent || !topicChosen || starting) return;
     setStarting(true);
     setError(null);
     try {
       const res = await fetch('/api/arena/start', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          kind: 'pve',
-          opponent,
-          topic_slug: topicSlug,
-        }),
+        body: JSON.stringify(
+          customMode
+            ? { kind: 'pve', opponent, custom_prompt: customPrompt }
+            : { kind: 'pve', opponent, topic_slug: topicSlug },
+        ),
       });
       const json = await res.json();
       if (!res.ok) {
@@ -234,6 +246,7 @@ export default function PveStarter({
             onClick={() => {
               const pick = topics[Math.floor(Math.random() * topics.length)];
               if (pick) {
+                setCustomMode(false);
                 setTopicSlug(pick.slug);
                 // Smooth-scroll the picked card into view.
                 setTimeout(() => {
@@ -259,6 +272,115 @@ export default function PveStarter({
             {t('arena.pve_shuffle', locale)}
           </button>
         </div>
+
+        {/* Write-your-own topic — mutually exclusive with the seeded cards. */}
+        <div style={{ marginBottom: 18 }}>
+          <button
+            type="button"
+            onClick={() => {
+              setCustomMode(true);
+              setTopicSlug(null);
+              setTimeout(() => customRef.current?.focus(), 60);
+            }}
+            style={{
+              display: 'block',
+              width: '100%',
+              textAlign: 'left',
+              padding: '12px 14px',
+              background: customMode ? '#F8C75E' : '#FFFCF4',
+              border: '3px solid var(--color-ink)',
+              boxShadow: customMode ? '4px 4px 0 0 #2F5D5C' : '3px 3px 0 0 var(--color-acc)',
+              cursor: 'pointer',
+              fontFamily: serif,
+            }}
+          >
+            <div
+              style={{
+                fontSize: 15.5,
+                fontWeight: 500,
+                color: 'var(--color-ink)',
+                lineHeight: 1.25,
+              }}
+            >
+              {t('arena.pve_custom_toggle', locale)}
+            </div>
+            <div
+              style={{
+                fontSize: 13.5,
+                fontStyle: 'italic',
+                color: customMode ? '#1A1820' : 'var(--color-ink-soft)',
+                marginTop: 4,
+                lineHeight: 1.45,
+              }}
+            >
+              {t('arena.pve_custom_sub', locale)}
+            </div>
+          </button>
+
+          {customMode && (
+            <div style={{ marginTop: 10 }}>
+              <textarea
+                ref={customRef}
+                value={customPrompt}
+                onChange={(e) => setCustomPrompt(e.target.value.slice(0, MAX_CUSTOM_TOPIC_CHARS))}
+                maxLength={MAX_CUSTOM_TOPIC_CHARS}
+                rows={3}
+                placeholder={t('arena.pve_custom_placeholder', locale)}
+                style={{
+                  width: '100%',
+                  padding: '12px 14px',
+                  background: '#FFFCF4',
+                  border: '3px solid var(--color-ink)',
+                  boxShadow: '3px 3px 0 0 var(--color-acc)',
+                  fontFamily: serif,
+                  fontSize: 15,
+                  color: 'var(--color-ink)',
+                  lineHeight: 1.5,
+                  resize: 'vertical',
+                  boxSizing: 'border-box',
+                }}
+              />
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginTop: 6,
+                  gap: 10,
+                  flexWrap: 'wrap',
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: serif,
+                    fontStyle: 'italic',
+                    fontSize: 12.5,
+                    color: 'var(--color-ink-soft)',
+                    lineHeight: 1.4,
+                  }}
+                >
+                  {customPrompt.trim().length < MIN_CUSTOM_TOPIC_CHARS
+                    ? t('arena.pve_custom_min', locale, { min: MIN_CUSTOM_TOPIC_CHARS })
+                    : t('arena.pve_custom_hint', locale)}
+                </span>
+                <span
+                  style={{
+                    fontFamily: pixel,
+                    fontSize: 10,
+                    letterSpacing: 0.4,
+                    color:
+                      customPrompt.length >= MAX_CUSTOM_TOPIC_CHARS
+                        ? '#7A2E2E'
+                        : 'var(--color-acc-deep)',
+                  }}
+                >
+                  {customPrompt.length}/{MAX_CUSTOM_TOPIC_CHARS}
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
+
         {(['philosophical', 'everyday'] as const).map((cat) => {
           const list = topicsGrouped[cat];
           if (list.length === 0) return null;
@@ -299,7 +421,10 @@ export default function PveStarter({
                     <li key={t.slug} id={`topic-${t.slug}`}>
                       <button
                         type="button"
-                        onClick={() => setTopicSlug(t.slug)}
+                        onClick={() => {
+                          setTopicSlug(t.slug);
+                          setCustomMode(false);
+                        }}
                         style={{
                           display: 'block',
                           width: '100%',
@@ -351,15 +476,15 @@ export default function PveStarter({
         <button
           type="button"
           onClick={start}
-          disabled={!opponent || !topicSlug || starting}
+          disabled={!opponent || !topicChosen || starting}
           style={{
             width: '100%',
             padding: '16px 22px',
-            background: !opponent || !topicSlug ? 'var(--color-line)' : '#F8C75E',
+            background: !opponent || !topicChosen ? 'var(--color-line)' : '#F8C75E',
             color: '#1A1820',
             border: '3px solid var(--color-ink)',
             boxShadow: '4px 4px 0 0 #2F5D5C',
-            cursor: !opponent || !topicSlug ? 'not-allowed' : 'pointer',
+            cursor: !opponent || !topicChosen ? 'not-allowed' : 'pointer',
             fontFamily: pixel,
             fontSize: 13,
             letterSpacing: '0.18em',
@@ -368,7 +493,7 @@ export default function PveStarter({
         >
           {starting
             ? t('arena.pve_starting', locale)
-            : opponent && topicSlug
+            : opponent && topicChosen
               ? t('arena.pve_face', locale, {
                   name: (
                     philosophers.find((p) => p.name === opponent)?.displayName ?? opponent

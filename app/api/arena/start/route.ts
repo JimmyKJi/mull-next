@@ -1,6 +1,8 @@
 // POST /api/arena/start
 //
-// Creates a new debate session. Body: { kind, opponent, topic_slug }.
+// Creates a new debate session. Body: { kind, opponent, topic_slug }
+// OR { kind: 'pve', opponent, custom_prompt } when the user authors
+// their own topic instead of picking a seeded one.
 // Returns: { session_id, opening_turn } — opening_turn is the
 // philosopher's first move (since they go first in the prototype).
 //
@@ -9,7 +11,17 @@
 
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
-import { getArenaPhilosopher, getArenaTopic, canFace, MAX_ELO_GAP } from '@/lib/arena/data';
+import {
+  getArenaPhilosopher,
+  getArenaTopic,
+  canFace,
+  MAX_ELO_GAP,
+  normalizeCustomTopicText,
+  makeCustomTopicSlug,
+  customTopicFromSlug,
+  MIN_CUSTOM_TOPIC_CHARS,
+  type ArenaTopic,
+} from '@/lib/arena/data';
 import { generatePhilosopherTurn } from '@/lib/arena/philosopher-voice';
 
 const DAILY_CAP = 3;
@@ -31,18 +43,54 @@ export async function POST(req: Request) {
   const kind = body.kind as string | undefined;
   const opponent = body.opponent as string | undefined;
   const topicSlug = body.topic_slug as string | undefined;
+  const customPrompt = body.custom_prompt as string | undefined;
 
   if (!kind || !['calibration', 'pve'].includes(kind)) {
     return NextResponse.json({ error: 'Invalid kind.' }, { status: 400 });
   }
-  if (!opponent || !topicSlug) {
-    return NextResponse.json({ error: 'Missing opponent or topic_slug.' }, { status: 400 });
+  if (!opponent) {
+    return NextResponse.json({ error: 'Missing opponent.' }, { status: 400 });
   }
 
   const philosopher = getArenaPhilosopher(opponent);
-  const topic = getArenaTopic(topicSlug);
-  if (!philosopher || !topic) {
-    return NextResponse.json({ error: 'Unknown opponent/topic.' }, { status: 400 });
+  if (!philosopher) {
+    return NextResponse.json({ error: 'Unknown opponent.' }, { status: 400 });
+  }
+
+  // Resolve the topic: either a user-authored custom prompt (pve only)
+  // or a seeded slug. Custom topics are stored as the slug itself behind
+  // a `custom:` prefix — no schema change, re-resolved everywhere else.
+  let topic: ArenaTopic;
+  let resolvedSlug: string;
+  const wantsCustom = typeof customPrompt === 'string' && customPrompt.trim().length > 0;
+  if (wantsCustom) {
+    if (kind !== 'pve') {
+      return NextResponse.json(
+        { error: 'Custom topics are only available in practice debates.' },
+        { status: 400 },
+      );
+    }
+    const clean = normalizeCustomTopicText(customPrompt as string);
+    if (clean.length < MIN_CUSTOM_TOPIC_CHARS) {
+      return NextResponse.json(
+        {
+          error: `Your topic is too short — add a bit more (at least ${MIN_CUSTOM_TOPIC_CHARS} characters).`,
+        },
+        { status: 400 },
+      );
+    }
+    resolvedSlug = makeCustomTopicSlug(clean);
+    topic = customTopicFromSlug(resolvedSlug);
+  } else {
+    if (!topicSlug) {
+      return NextResponse.json({ error: 'Missing opponent or topic_slug.' }, { status: 400 });
+    }
+    const seeded = getArenaTopic(topicSlug);
+    if (!seeded) {
+      return NextResponse.json({ error: 'Unknown opponent/topic.' }, { status: 400 });
+    }
+    topic = seeded;
+    resolvedSlug = topicSlug;
   }
 
   // Load (or create) the user's arena rating + enforce daily cap.
@@ -98,7 +146,7 @@ export async function POST(req: Request) {
     .insert({
       user_id: user.id,
       kind,
-      topic_slug: topicSlug,
+      topic_slug: resolvedSlug,
       opponent,
       opponent_elo_at_start: philosopher.baseElo,
       user_elo_at_start: rating.pve_elo,

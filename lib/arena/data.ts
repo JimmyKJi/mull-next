@@ -563,6 +563,61 @@ export function getArenaTopic(slug: string): ArenaTopic | undefined {
   return ARENA_TOPICS.find((t) => t.slug === slug);
 }
 
+// ─── Custom (user-authored) topics ───────────────────────────────
+//
+// A user can bring their own debate topic instead of picking a seeded
+// one. To avoid a schema change, we encode the prompt directly in the
+// existing `arena_sessions.topic_slug` column behind a `custom:` prefix.
+// Seeded slugs are kebab-case and never contain a colon, so the prefix
+// is an unambiguous discriminator. The slug is re-resolved into a full
+// ArenaTopic at every read site via `resolveTopicFromSlug`.
+
+export const CUSTOM_TOPIC_PREFIX = 'custom:';
+export const MAX_CUSTOM_TOPIC_CHARS = 240;
+export const MIN_CUSTOM_TOPIC_CHARS = 12;
+
+export function isCustomTopicSlug(slug: string): boolean {
+  return slug.startsWith(CUSTOM_TOPIC_PREFIX);
+}
+
+/** Normalize free text: collapse whitespace, trim, hard-cap length. */
+export function normalizeCustomTopicText(prompt: string): string {
+  return prompt.replace(/\s+/g, ' ').trim().slice(0, MAX_CUSTOM_TOPIC_CHARS);
+}
+
+/** Build the `custom:`-prefixed slug we persist for a user-authored topic. */
+export function makeCustomTopicSlug(prompt: string): string {
+  return CUSTOM_TOPIC_PREFIX + normalizeCustomTopicText(prompt);
+}
+
+/** Short, display-friendly title derived from the prompt body. */
+function deriveCustomTitle(prompt: string): string {
+  const clean = prompt.replace(/\s+/g, ' ').trim();
+  return clean.length <= 70 ? clean : clean.slice(0, 67).trimEnd() + '…';
+}
+
+/** Reconstruct a full ArenaTopic from a `custom:`-prefixed slug. */
+export function customTopicFromSlug(slug: string): ArenaTopic {
+  const prompt = slug.slice(CUSTOM_TOPIC_PREFIX.length).trim();
+  return {
+    slug,
+    category: 'everyday',
+    title: deriveCustomTitle(prompt),
+    prompt,
+    primer: '',
+  };
+}
+
+/**
+ * Resolve any topic_slug — seeded or user-authored — into a full
+ * ArenaTopic. Returns undefined only for an unknown *seeded* slug
+ * (custom slugs always resolve).
+ */
+export function resolveTopicFromSlug(slug: string): ArenaTopic | undefined {
+  if (isCustomTopicSlug(slug)) return customTopicFromSlug(slug);
+  return getArenaTopic(slug);
+}
+
 /** Group topics by category for the UI. */
 export function topicsByCategory(): {
   philosophical: ArenaTopic[];

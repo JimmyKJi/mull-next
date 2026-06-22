@@ -7,7 +7,11 @@ import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { createClient } from '@/utils/supabase/server';
-import { getArenaPhilosopher, getArenaTopic, localizeArenaPhilosopherName } from '@/lib/arena/data';
+import {
+  getArenaPhilosopher,
+  resolveTopicFromSlug,
+  localizeArenaPhilosopherName,
+} from '@/lib/arena/data';
 import { localizeArenaTopic } from '@/lib/arena/topics-i18n';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
@@ -43,7 +47,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
     .order('turn_order', { ascending: true });
 
   const philosopher = getArenaPhilosopher(session.opponent);
-  const topic = getArenaTopic(session.topic_slug);
+  const topic = resolveTopicFromSlug(session.topic_slug);
   if (!philosopher || !topic) notFound();
 
   const lzTopic = localizeArenaTopic(topic, locale);

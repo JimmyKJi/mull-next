@@ -10,7 +10,7 @@
 
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
-import { getArenaPhilosopher, getArenaTopic } from '@/lib/arena/data';
+import { getArenaPhilosopher, resolveTopicFromSlug } from '@/lib/arena/data';
 import {
   judgeSystemPrompt,
   judgeUserPrompt,
@@ -97,7 +97,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const topic = getArenaTopic(session.topic_slug);
+  const topic = resolveTopicFromSlug(session.topic_slug);
   if (!topic) {
     return NextResponse.json({ error: 'Session topic invalid.' }, { status: 500 });
   }

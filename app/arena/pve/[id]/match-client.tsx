@@ -162,31 +162,33 @@ export default function MatchClient(props: Props) {
         >
           {props.topicPrompt}
         </p>
-        <details>
-          <summary
-            style={{
-              fontFamily: pixel,
-              fontSize: 10,
-              color: 'var(--color-acc-deep)',
-              letterSpacing: 0.4,
-              textTransform: 'uppercase',
-              cursor: 'pointer',
-            }}
-          >
-            {t('arena.match_context', props.locale)}
-          </summary>
-          <p
-            style={{
-              fontFamily: serif,
-              fontSize: 14,
-              color: 'var(--color-ink-soft)',
-              margin: '10px 0 0',
-              lineHeight: 1.6,
-            }}
-          >
-            {props.topicPrimer}
-          </p>
-        </details>
+        {props.topicPrimer && (
+          <details>
+            <summary
+              style={{
+                fontFamily: pixel,
+                fontSize: 10,
+                color: 'var(--color-acc-deep)',
+                letterSpacing: 0.4,
+                textTransform: 'uppercase',
+                cursor: 'pointer',
+              }}
+            >
+              {t('arena.match_context', props.locale)}
+            </summary>
+            <p
+              style={{
+                fontFamily: serif,
+                fontSize: 14,
+                color: 'var(--color-ink-soft)',
+                margin: '10px 0 0',
+                lineHeight: 1.6,
+              }}
+            >
+              {props.topicPrimer}
+            </p>
+          </details>
+        )}
       </header>
 
       {/* Transcript */}

@@ -8,7 +8,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/utils/supabase/server';
-import { getArenaTopic, localizeArenaPhilosopherName } from '@/lib/arena/data';
+import { resolveTopicFromSlug, localizeArenaPhilosopherName } from '@/lib/arena/data';
 import { localizeArenaTopic } from '@/lib/arena/topics-i18n';
 import { totalScore, resolveOutcome, type JudgeOutput } from '@/lib/arena/judge';
 import { getServerLocale } from '@/lib/locale-server';
@@ -168,7 +168,7 @@ function HistoryRow({
   viewerId: string;
   locale: Locale;
 }) {
-  const topic = getArenaTopic(session.topic_slug);
+  const topic = resolveTopicFromSlug(session.topic_slug);
   const localizedTopicTitle = topic ? localizeArenaTopic(topic, locale).title : session.topic_slug;
   const viewerIsChallenger = session.user_id === viewerId;
 

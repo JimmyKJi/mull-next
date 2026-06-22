@@ -9,7 +9,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/utils/supabase/server';
-import { getArenaTopic } from '@/lib/arena/data';
+import { resolveTopicFromSlug } from '@/lib/arena/data';
 import { localizeArenaTopic } from '@/lib/arena/topics-i18n';
 import { getServerLocale } from '@/lib/locale-server';
 import { t, type Locale } from '@/lib/translations';
@@ -297,7 +297,7 @@ function MatchRow({
   flavour: 'your-turn' | 'waiting';
   locale: Locale;
 }) {
-  const baseTopic = getArenaTopic(match.topic_slug);
+  const baseTopic = resolveTopicFromSlug(match.topic_slug);
   const topic = baseTopic ? localizeArenaTopic(baseTopic, locale) : null;
   const accent = flavour === 'your-turn' ? '#7A2E2E' : 'var(--color-acc-deep)';
   return (
@@ -346,7 +346,7 @@ function OpenChallengeRow({
   locale: Locale;
   mine?: boolean;
 }) {
-  const baseTopic = getArenaTopic(challenge.topic_slug);
+  const baseTopic = resolveTopicFromSlug(challenge.topic_slug);
   const topic = baseTopic ? localizeArenaTopic(baseTopic, locale) : null;
   const challengerLabel =
     challenge.challenger_display_name ||

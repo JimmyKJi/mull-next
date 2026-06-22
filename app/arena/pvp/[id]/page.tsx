@@ -13,7 +13,7 @@ import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { createClient } from '@/utils/supabase/server';
-import { getArenaTopic } from '@/lib/arena/data';
+import { resolveTopicFromSlug } from '@/lib/arena/data';
 import { localizeArenaTopic } from '@/lib/arena/topics-i18n';
 import { getServerLocale } from '@/lib/locale-server';
 import { t } from '@/lib/translations';
@@ -51,7 +51,7 @@ export default async function PvpMatchPage({ params }: { params: Promise<{ id: s
     .eq('session_id', id)
     .order('turn_order', { ascending: true });
 
-  const topic = getArenaTopic(session.topic_slug);
+  const topic = resolveTopicFromSlug(session.topic_slug);
   if (!topic) notFound();
   const lzTopic = localizeArenaTopic(topic, locale);
 

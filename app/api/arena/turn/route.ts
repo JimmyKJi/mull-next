@@ -11,7 +11,7 @@
 
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
-import { getArenaPhilosopher, getArenaTopic } from '@/lib/arena/data';
+import { getArenaPhilosopher, resolveTopicFromSlug } from '@/lib/arena/data';
 import { generatePhilosopherTurn } from '@/lib/arena/philosopher-voice';
 import { notifyYourTurn } from '@/lib/arena/notifications';
 import { aiGate } from '@/lib/rate-limit';
@@ -137,7 +137,7 @@ async function handlePveTurn(args: {
 
   // Generate Haiku rebuttal.
   const philosopher = getArenaPhilosopher(session.opponent);
-  const topic = getArenaTopic(session.topic_slug);
+  const topic = resolveTopicFromSlug(session.topic_slug);
   if (!philosopher || !topic) {
     return NextResponse.json({ error: 'Session metadata invalid.' }, { status: 500 });
   }
@@ -216,7 +216,7 @@ async function handlePvpTurn(args: {
 
   // Fire-and-forget: notify the other player it's their turn now.
   const recipientUserId = isChallenger ? session.opponent_user_id : session.user_id;
-  const topic = getArenaTopic(session.topic_slug);
+  const topic = resolveTopicFromSlug(session.topic_slug);
   if (recipientUserId && topic) {
     const { data: senderProfile } = await supabase
       .from('public_profiles')

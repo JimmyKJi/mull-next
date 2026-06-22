@@ -5514,7 +5514,10 @@ export const TRANSLATIONS: TranslationMap = {
     en: "Whoever speaks last can raise points the other had no turn to answer. You're judged only on what was on the table when you spoke — never penalised for the format. (In the Daily Spar, the closing turn is always yours.)",
     zh: '最后发言的一方可能提出对方没有机会回应的观点。你只就你发言时摆在桌面上的内容被评判——绝不因赛制吃亏。（在每日交锋中，收尾回合永远属于你。）',
   },
-  'judging.elo_h': { en: 'Your rating moves on your own merit.', zh: '你的评分取决于你自己的表现。' },
+  'judging.elo_h': {
+    en: 'Your rating moves on your own merit.',
+    zh: '你的评分取决于你自己的表现。',
+  },
   'judging.elo_b': {
     en: 'Elo follows how well you argued against what was expected of you — so both players can climb, or both can slip. It is no longer one up, one down.',
     zh: 'Elo 取决于你的论证相对于对你的预期表现如何——因此双方可能同时上升，也可能同时下降。不再是此消彼长。',
@@ -5690,6 +5693,23 @@ export const TRANSLATIONS: TranslationMap = {
   'arena.pve_starting': { en: '▸ STARTING…', zh: '▸ 开始中…' },
   'arena.pve_face': { en: '▶ FACE {name}', zh: '▶ 面对 {name}' },
   'arena.pve_pick_prompt': { en: 'PICK A PHILOSOPHER + TOPIC', zh: '请选择哲学家与主题' },
+  'arena.pve_custom_toggle': { en: '✎ Write your own topic', zh: '✎ 自拟辩题' },
+  'arena.pve_custom_sub': {
+    en: 'Debate anything on your mind — your own question, in your own words.',
+    zh: '想辩什么都行——用你自己的话，提出你自己的问题。',
+  },
+  'arena.pve_custom_placeholder': {
+    en: 'e.g. Should I tell a friend their startup idea is bad?',
+    zh: '例如：朋友的创业点子很糟，我该不该直说？',
+  },
+  'arena.pve_custom_hint': {
+    en: 'Your opponent opens on this. It counts toward your Elo like any debate.',
+    zh: '对手将就此开场。与任何辩论一样，计入你的 Elo。',
+  },
+  'arena.pve_custom_min': {
+    en: 'Add a little more — at least {min} characters.',
+    zh: '再多写一点——至少 {min} 个字符。',
+  },
   'arena.err_start': { en: 'Could not start. Try again.', zh: '无法开始，请重试。' },
   'arena.err_network': { en: 'Network error.', zh: '网络错误。' },
   'arena.err_submit': { en: 'Could not submit.', zh: '无法提交。' },
