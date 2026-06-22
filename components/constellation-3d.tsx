@@ -22,6 +22,7 @@
 
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Text } from '@react-three/drei';
+import { configureTextBuilder } from 'troika-three-text';
 import { useState, useRef, useMemo, Suspense, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import * as THREE from 'three';
@@ -31,6 +32,25 @@ import { CANONICAL_PHILOSOPHER_NAMES } from '@/lib/canonical-philosophers';
 import { PHILOSOPHER_POSITIONS_3D, projectTo3D } from '@/lib/projection';
 import { PhilosopherSprite } from './philosopher-sprite';
 import { t, type Locale } from '@/lib/translations';
+
+// Force troika-three-text (drei's <Text>, used for the axis labels
+// below) to typeset on the main thread instead of spawning a web
+// worker.
+//
+// troika ships its worker by stringifying the module's `init` and
+// eval'ing that source inside the Worker. Turbopack's transformed
+// output doesn't survive the round-trip, so the worker's `init`
+// returns a non-callable and troika throws "Worker module function
+// was called but `init` did not return a callable function" — which
+// Turbopack surfaces as a dev-only full-screen unhandledRejection
+// overlay (harmless to prod, but it blocks local visual review).
+// Main-thread typesetting is trivially cheap for our handful of
+// static axis labels and behaves identically in dev and prod. Must
+// run before the first <Text> mounts — troika ignores this config
+// after the first font request — and module scope in this ssr:false
+// chunk guarantees that ordering (the module evaluates before React
+// renders the scene).
+configureTextBuilder({ useWorker: false });
 
 type Hovered = (typeof PHILOSOPHER_POSITIONS_3D)[number] | null;
 
