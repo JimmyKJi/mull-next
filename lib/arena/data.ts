@@ -304,6 +304,259 @@ export const ARENA_TOPICS: ArenaTopic[] = [
     primer:
       "The cultural pendulum on this swings: 'blood is thicker than water' meets 'protect your peace.' The serious version isn't either extreme. The question is what the relationship has actually been, what it's likely to become, and what your continued presence is costing you and them.",
   },
+  // Everyday — 2026 expansion: dinner-table dilemmas anyone can argue
+  {
+    slug: 'reclining-seat',
+    category: 'everyday',
+    title: 'Reclining the seat',
+    prompt:
+      'On a cramped flight, the person ahead reclines fully into your knees — were they within their rights, or should they have asked first?',
+    primer:
+      'The ticket arguably buys the recline; the few inches behind the seat are a contested commons nobody actually owns. One side reads asking-first as basic courtesy, the other as surrendering a right you paid for. The fight is rarely about the inches.',
+  },
+  {
+    slug: 'phone-at-dinner',
+    category: 'everyday',
+    title: 'Phones at the dinner table',
+    prompt:
+      'A friend checks their phone every few minutes through dinner — is it your place to say something, or do you let it go?',
+    primer:
+      "Attention is the currency of company, and a glowing screen quietly spends it elsewhere. One view holds that naming it polices a habit that isn't yours to police; another holds that silence just trains everyone to expect less of each other. The discomfort of saying it is part of what's being weighed.",
+  },
+  {
+    slug: 'snooping-partner',
+    category: 'everyday',
+    title: "Reading a partner's phone",
+    prompt:
+      'You suspect your partner is hiding something and their unlocked phone is right there — is looking ever justified?',
+    primer:
+      "Trust and evidence pull in opposite directions: the thing that would settle your fear is the same act that betrays the relationship you're trying to protect. One side says a suspicion bad enough to justify snooping is bad enough to justify a conversation instead; the other says some truths only surface when no one knows you're looking.",
+  },
+  {
+    slug: 'tipping-culture',
+    category: 'everyday',
+    title: 'Tipping out of obligation',
+    prompt:
+      'A screen spins around asking for 20% on a coffee you picked up yourself — do you owe it, or is the guilt being manufactured?',
+    primer:
+      "Tipping started as a thank-you and hardened into a wage subsidy customers are quietly drafted to pay. One side says the worker in front of you didn't design the system and shouldn't absorb your protest of it; the other says every reflexive tap entrenches the very arrangement everyone claims to dislike.",
+  },
+  {
+    slug: 'friends-with-ex',
+    category: 'everyday',
+    title: 'Staying friends with an ex',
+    prompt:
+      'Your new partner is uneasy that you stay close with an ex — whose comfort should give way?',
+    primer:
+      'A friendship that predates the relationship can be both genuinely innocent and genuinely threatening to someone watching from outside it. One side says trust means not having to amputate your past to reassure someone; the other says love sometimes means giving up something harmless because it costs the person you chose. Both can be true at once.',
+  },
+  {
+    slug: 'kids-online-photos',
+    category: 'everyday',
+    title: 'Posting photos of your kids',
+    prompt:
+      'Parents fill their feeds with photos of children too young to consent — harmless pride, or a privacy they had no right to spend?',
+    primer:
+      "A child's digital footprint is now often created years before they can object to it. One side sees ordinary family joy and connection with distant relatives; the other sees a permanent public record built by someone else about a person who never agreed. The disagreement is really about who owns a child's image.",
+  },
+  {
+    slug: 'last-minute-cancel',
+    category: 'everyday',
+    title: 'Cancelling at the last minute',
+    prompt:
+      'A friend bails on plans an hour before, again, with a vague excuse — is flaking a minor sin or a real one?',
+    primer:
+      "Every late cancellation trades your comfort for the other person's inconvenience, usually without acknowledging the trade. One view treats it as the small friction of busy lives that doesn't deserve a grudge; another treats reliability as the quiet core of friendship, eroded one 'so sorry, can't make it' at a time.",
+  },
+  {
+    slug: 'regifting',
+    category: 'everyday',
+    title: 'Regifting a present',
+    prompt:
+      "You pass along an unwanted gift to someone who'll love it, never mentioning where it came from — thrifty kindness or quiet deceit?",
+    primer:
+      "A gift's value can be measured by the thought behind it or by the use it finally finds. One side says passing it on rescues something from a closet and matches it to a real want; the other says the silence about its origin turns a kind act into a small staged performance of effort you didn't make.",
+  },
+  {
+    slug: 'santa-lie',
+    category: 'everyday',
+    title: 'The Santa lie',
+    prompt:
+      "Millions of parents spend years convincing children of a man who doesn't exist — cherished magic, or a betrayal of trust dressed as love?",
+    primer:
+      "The myth delivers wonder now and a small disillusionment later, when the child learns the people they trusted most coordinated a fiction. One side calls it a harmless rite that nearly everyone forgives; the other asks why we make an exception to honesty precisely with the people we're teaching how honesty works.",
+  },
+  {
+    slug: 'leaving-on-read',
+    category: 'everyday',
+    title: 'Leaving someone on read',
+    prompt:
+      "You've read the message and chosen not to reply for days — is silence a fair use of your time, or a small cruelty?",
+    primer:
+      'The read receipt turned silence into a visible act, so not-answering now says something it never used to. One side defends the right to answer on your own schedule without owing anyone immediacy; the other notes that the person waiting can see you saw, and that the quiet lands as a message of its own.',
+  },
+  {
+    slug: 'return-worn-clothes',
+    category: 'everyday',
+    title: 'Returning worn clothes',
+    prompt:
+      'Someone buys an outfit, wears it once to an event, then returns it for a full refund — clever or theft?',
+    primer:
+      "The store's policy permits the return; the buyer's intent empties it of the trust the policy assumed. One side says a rule with no fine print against it is fair game and the retailer prices this in; the other says using the letter of a policy to defeat its obvious purpose is just a politer kind of taking.",
+  },
+  {
+    slug: 'undercharged',
+    category: 'everyday',
+    title: 'When the cashier undercharges you',
+    prompt:
+      'You notice the cashier forgot to ring up an item and the total is in your favour — do you say something, or walk?',
+    primer:
+      "Nobody would notice if you stayed quiet, which is exactly what makes it a test rather than a transaction. One side says honesty that depends on being watched isn't honesty, and a small windfall doesn't change that; the other says the error is the store's to catch and you owe no one a correction that costs you money.",
+  },
+  {
+    slug: 'work-email-vacation',
+    category: 'everyday',
+    title: 'Answering work email on holiday',
+    prompt:
+      "A manager emails a 'quick question' while you're on annual leave — does answering keep the peace, or quietly erase the boundary?",
+    primer:
+      'Each reply on holiday is small and reasonable in isolation and corrosive in aggregate, teaching everyone that your time off is negotiable. One side says a two-minute answer is cheaper than the awkwardness of ignoring it; the other says boundaries only exist where someone is willing to let a message sit unanswered.',
+  },
+  {
+    slug: 'quiet-quitting',
+    category: 'everyday',
+    title: 'Doing the job and no more',
+    prompt:
+      'An employee stops going above and beyond and does exactly what the role requires — reasonable boundary, or quietly shortchanging the team?',
+    primer:
+      'The contract defines the floor; culture quietly expects the ceiling, usually without paying for it. One side says refusing unpaid extra effort is just declining to be exploited and the job description is the deal; the other says the discretionary effort is what holds a team together, and withdrawing it lands on colleagues, not the company.',
+  },
+  {
+    slug: 'rent-vs-buy',
+    category: 'everyday',
+    title: 'Renting versus buying a home',
+    prompt:
+      "Is paying rent really 'throwing money away,' or is sinking your savings into a mortgage the bigger trap?",
+    primer:
+      'The folk wisdom that renting is wasted money quietly ignores the interest, maintenance, and immobility that ownership buys alongside the equity. One side sees buying as forced saving and security against landlords; the other sees renting as paying for flexibility and freedom from a debt that ties you to one place and one bet.',
+  },
+  {
+    slug: 'giving-to-beggars',
+    category: 'everyday',
+    title: 'Giving cash to someone begging',
+    prompt:
+      'Someone asks you for money on the street — does handing over a few coins help, or just make you feel better while changing nothing?',
+    primer:
+      'The gift is certain and immediate; its effect is uncertain and arguable, which is the whole tension. One side says a person in front of you asking for help deserves a response, not a cost-benefit analysis; the other says reflexive giving can soothe the giver more than it serves the receiver, and that real help looks different.',
+  },
+  {
+    slug: 'gift-they-asked-for',
+    category: 'everyday',
+    title: 'Gifts: surprise or the list',
+    prompt:
+      'Is it more thoughtful to buy exactly what someone put on their wish list, or to risk a surprise that shows you really know them?',
+    primer:
+      "A list guarantees usefulness and forfeits the thrill of being understood; a surprise reaches for that thrill and risks a polite, useless smile. One side says the point of a gift is the recipient's actual happiness, so just buy what they want; the other says a gift is a small argument that you see them, which a checklist can't make.",
+  },
+  {
+    slug: 'uninvited-plus-one',
+    category: 'everyday',
+    title: 'Bringing an uninvited guest',
+    prompt:
+      "A friend shows up to your small dinner with an extra person they didn't clear with you — gracious to absorb it, or fair to be annoyed?",
+    primer:
+      "Hospitality asks you to flex; planning asks them to respect the shape of what you built. One side says a generous host makes room and the friendship outweighs a place setting; the other says inviting someone into another person's home without asking quietly overrides a choice that was theirs to make.",
+  },
+  {
+    slug: 'habitually-late',
+    category: 'everyday',
+    title: 'The friend who is always late',
+    prompt:
+      'One friend is reliably twenty minutes late to everything — is chronic lateness a harmless quirk, or a quiet statement about whose time matters?',
+    primer:
+      'Lateness can be a personality trait or a hierarchy, and from the outside the two look identical. One side says some people are just wired this way and the warmth they bring outweighs the wait; the other says making others wait, again and again, is a small recurring claim that your time is worth more than theirs.',
+  },
+  {
+    slug: 'kids-smartphones',
+    category: 'everyday',
+    title: 'When to give a kid a smartphone',
+    prompt:
+      "Your eleven-year-old is the 'only one' in class without a phone — do you hold the line, or is isolating them the real harm?",
+    primer:
+      "The phone hands a child both a lifeline and an open door to everything the internet contains, at once. One side says delaying protects developing attention and sleep, and 'everyone has one' is exactly the pressure to resist; the other says social life now lives on these devices, and excluding a child from it carries its own quiet cost.",
+  },
+  {
+    slug: 'ai-love-note',
+    category: 'everyday',
+    title: 'Letting AI write the love note',
+    prompt:
+      "Someone uses AI to write a heartfelt anniversary message their partner finds beautiful — does the sentiment count if the words aren't theirs?",
+    primer:
+      "The feeling may be entirely real even when the sentences are outsourced, which is what makes this newly hard. One side says the love is genuine and the tool just helps the inarticulate say what they truly mean; the other says a love letter is valued precisely as proof of effort and self, and borrowing the words hollows out the thing it's meant to express.",
+  },
+  {
+    slug: 'cinema-snacks',
+    category: 'everyday',
+    title: 'Sneaking snacks into the cinema',
+    prompt:
+      'The cinema charges triple for popcorn, so you bring your own from the shop — fair pushback on a ripoff, or just breaking the rules you agreed to?',
+    primer:
+      "The inflated snack price is arguably how the cheap ticket gets subsidised, which complicates the easy story of a greedy chain. One side says no one is obliged to accept a deliberate markup and a granola bar in a pocket harms nobody; the other says you accepted the venue's terms at the door, and rewriting them quietly is just a small, comfortable rule-break.",
+  },
+  {
+    slug: 'tell-friend-cheated',
+    category: 'everyday',
+    title: 'When you know a friend is being cheated on',
+    prompt:
+      "You have proof your friend's partner is unfaithful — do you tell them and detonate their world, or stay out of it?",
+    primer:
+      "Knowing makes you a participant whether you speak or not, which is why silence doesn't feel neutral. One side says a real friend owes the truth even when it wounds, and withholding it is its own betrayal; the other says you may be wrong about what you saw, the messenger rarely survives, and the choice to investigate a relationship belongs to the people in it.",
+  },
+  {
+    slug: 'report-coworker-theft',
+    category: 'everyday',
+    title: "Reporting a coworker's small theft",
+    prompt:
+      "You catch a well-liked colleague pocketing petty cash they clearly need — do you report it, or decide it isn't your fight?",
+    primer:
+      "Loyalty to a person and loyalty to a shared rule collide, and need muddies the line that policy draws cleanly. One side says theft is theft and looking away makes you complicit and unfair to everyone who doesn't steal; the other says proportion and mercy matter, snitching can destroy a life over a small sum, and it may simply not be yours to police.",
+  },
+  {
+    slug: 'split-by-income',
+    category: 'everyday',
+    title: 'Splitting the bill by income',
+    prompt:
+      'At a group dinner, should everyone split evenly, or should the higher earners quietly cover more?',
+    primer:
+      'An even split is simple and treats everyone identically; an income-weighted one is fairer in burden and trickier in dignity. One side says equal shares respect everyone as the same kind of guest and avoid turning dinner into an audit; the other says identical numbers can mean very different sacrifices, and pretending otherwise just protects the comfortable.',
+  },
+  {
+    slug: 'quit-social-media',
+    category: 'everyday',
+    title: 'Quitting social media entirely',
+    prompt:
+      'Is deleting your social accounts a clear-eyed reclaiming of your attention, or a retreat that cuts you off from the world as it actually is?',
+    primer:
+      'The platforms cost you focus and peace while also carrying real connection, news, and community — leaving forfeits both at once. One side says the trade favours quitting, that the feeds are engineered to harm and life is better past them; the other says opting out is a privilege that quietly abandons the conversations, and people, that still live there.',
+  },
+  {
+    slug: 'forgive-betrayal',
+    category: 'everyday',
+    title: 'Forgiving a serious betrayal',
+    prompt:
+      'Someone close betrays you badly, then is genuinely sorry — is forgiving them strength, or just handing them permission to do it again?',
+    primer:
+      "Forgiveness can be the thing that frees you or the thing that re-exposes you, and remorse alone can't tell you which. One side says holding the grievance mostly poisons the holder, and releasing it is a gift you give yourself; the other says trust is earned twice as hard the second time, and forgiving too readily can teach people that betrayal is survivable for them.",
+  },
+  {
+    slug: 'wedding-debt',
+    category: 'everyday',
+    title: 'Going into debt for a wedding',
+    prompt:
+      'A couple borrows heavily for one unforgettable wedding day — a worthy investment in a memory, or a predictable mistake?',
+    primer:
+      "The day is singular and the debt is durable, and they're paid in very different currencies. One side says some experiences are worth borrowing for and a wedding marks something money struggles to price; the other says a single day's spectacle is a strange thing to mortgage the early years of a marriage to, and the pressure to do it is largely manufactured.",
+  },
 ];
 
 export function getArenaTopic(slug: string): ArenaTopic | undefined {
