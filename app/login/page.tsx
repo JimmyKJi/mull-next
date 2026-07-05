@@ -2,13 +2,17 @@
 
 // /login — v3 pixel chrome restyle. Pixel form panel, pixel button.
 // All functionality (Supabase signInWithPassword, locale cookie
-// reading, error display, redirect to /account) preserved.
+// reading, error display) preserved. After sign-in, returns the user
+// to the validated `?next=` path they came from (protected pages
+// redirect here as `/login?next=/arena/pve/…`), falling back to
+// /account.
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 import { t, type Locale, isLocale } from '@/lib/translations';
+import { safeNextPath } from '@/lib/safe-next';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -35,7 +39,12 @@ export default function LoginPage() {
       setLoading(false);
       return;
     }
-    router.push('/account');
+    // Return to the protected page that sent us here, if it's a safe
+    // same-origin path; otherwise land on /account as before. Read from
+    // location.search (not useSearchParams) so the page keeps static
+    // prerendering without a Suspense boundary.
+    const next = safeNextPath(new URLSearchParams(window.location.search).get('next'));
+    router.push(next ?? '/account');
     router.refresh();
   }
 

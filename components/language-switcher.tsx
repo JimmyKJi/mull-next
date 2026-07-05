@@ -22,7 +22,10 @@ export default function LanguageSwitcher({ initial = 'en' }: { initial?: Locale 
     if (!isLocale(v)) return;
     setLocale(v);
     const oneYear = 60 * 60 * 24 * 365;
-    document.cookie = `mull_locale=${v}; path=/; max-age=${oneYear}; samesite=lax`;
+    // `secure` everywhere we serve https (i.e. production); omitted on
+    // plain-http localhost so the cookie still sets in local dev.
+    const secure = window.location.protocol === 'https:' ? '; secure' : '';
+    document.cookie = `mull_locale=${v}; path=/; max-age=${oneYear}; samesite=lax${secure}`;
     router.refresh();
   }
 
