@@ -48,7 +48,7 @@ export default function SearchPanel({ locale = 'en' }: { locale?: Locale }) {
         // Guard against out-of-order responses — only apply the latest.
         if (myReqId !== reqIdRef.current) return;
         if (!res.ok) {
-          setError(json?.error || 'Search failed.');
+          setError(json?.error || t('search.err_failed', locale));
           setResults([]);
         } else {
           setResults(json.results || []);
@@ -57,7 +57,7 @@ export default function SearchPanel({ locale = 'en' }: { locale?: Locale }) {
       } catch (e) {
         if (myReqId !== reqIdRef.current) return;
         console.error(e);
-        setError('Network error.');
+        setError(t('err.network', locale));
         setResults([]);
       } finally {
         if (myReqId === reqIdRef.current) {

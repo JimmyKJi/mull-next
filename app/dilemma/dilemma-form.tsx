@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { t, type Locale } from '@/lib/translations';
+import { DIM_KEYS, DIM_NAMES } from '@/lib/dimensions';
 import DiagnosisCard from '@/components/diagnosis-card';
 import type { Kinship } from '@/lib/kinship';
 
@@ -22,47 +23,20 @@ type SubmitResult = {
 
 type ShiftItem = { key: string; name: string; delta: number };
 
-const DIM_KEYS = [
-  'TV',
-  'VA',
-  'WP',
-  'TR',
-  'TE',
-  'RT',
-  'MR',
-  'SR',
-  'CE',
-  'SS',
-  'PO',
-  'TD',
-  'AT',
-  'ES',
-  'UI',
-  'SI',
-];
-const DIM_NAMES: Record<string, string> = {
-  TV: 'Tragic Vision',
-  VA: 'Vital Affirmation',
-  WP: 'Will to Power',
-  TR: 'Trust in Reason',
-  TE: 'Trust in Experience',
-  RT: 'Reverence for Tradition',
-  MR: 'Mystical Receptivity',
-  SR: 'Skeptical Reflex',
-  CE: 'Communal Embeddedness',
-  SS: 'Sovereign Self',
-  PO: 'Practical Orientation',
-  TD: 'Theoretical Drive',
-  AT: 'Ascetic Tendency',
-  ES: 'Embodied Sensibility',
-  UI: 'Universalist Impulse',
-  SI: 'Self as Illusion',
-};
-
-function deltaToShifts(delta: number[] | null): ShiftItem[] {
+// Dimension keys/names come from the shared lib/dimensions module;
+// display names localize via the `dim.${key}.name` translation keys
+// (falling back to the English constants, same pattern as /result).
+function deltaToShifts(delta: number[] | null, locale: Locale): ShiftItem[] {
   if (!Array.isArray(delta)) return [];
   return delta
-    .map((d, i) => ({ key: DIM_KEYS[i], name: DIM_NAMES[DIM_KEYS[i]], delta: +d.toFixed(2) }))
+    .map((d, i) => {
+      const key = DIM_KEYS[i];
+      return {
+        key,
+        name: t(`dim.${key}.name`, locale) || DIM_NAMES[key],
+        delta: +d.toFixed(2),
+      };
+    })
     .filter((s) => Math.abs(s.delta) >= 0.3)
     .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta))
     .slice(0, 4);
@@ -106,7 +80,7 @@ export default function DilemmaForm({
       });
       const json = await res.json();
       if (!res.ok) {
-        setError(json?.error || 'Could not save your response.');
+        setError(json?.error || t('err.could_not_save', locale));
         setSubmitting(false);
         return;
       }
@@ -122,13 +96,13 @@ export default function DilemmaForm({
       router.refresh();
     } catch (err) {
       console.error(err);
-      setError('Network error. Try again.');
+      setError(t('err.network', locale));
       setSubmitting(false);
     }
   }
 
   if (result?.saved) {
-    const shifts = deltaToShifts(result.vector_delta);
+    const shifts = deltaToShifts(result.vector_delta, locale);
     return (
       <div
         style={{

@@ -36,13 +36,13 @@ export default function RetrospectivePanel({ locale = 'en' }: { locale?: Locale 
       const res = await fetch(`/api/account/retrospective?year=${year}`);
       const json = await res.json();
       if (!res.ok) {
-        setError(json?.error || 'Could not generate retrospective.');
+        setError(json?.error || t('retro.err_generate', locale));
       } else {
         setResult(json);
       }
     } catch (e) {
       console.error(e);
-      setError('Network error.');
+      setError(t('err.network', locale));
     } finally {
       setLoading(false);
     }

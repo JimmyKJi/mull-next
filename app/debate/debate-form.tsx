@@ -104,7 +104,7 @@ export default function DebateForm({
       });
       const json = await res.json();
       if (!res.ok) {
-        setError(json?.error || 'Could not generate the debate.');
+        setError(json?.error || t('err.could_not_generate', locale));
         setSubmitting(false);
         return;
       }
@@ -115,7 +115,7 @@ export default function DebateForm({
       });
     } catch (err) {
       console.error(err);
-      setError('Network error. Try again.');
+      setError(t('err.network', locale));
     } finally {
       setSubmitting(false);
     }

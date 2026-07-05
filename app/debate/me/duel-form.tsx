@@ -79,14 +79,14 @@ export default function DuelForm({
       });
       const json = await res.json();
       if (!res.ok) {
-        setError(json?.error || 'Could not generate.');
+        setError(json?.error || t('err.could_not_generate', locale));
         setSubmitting(false);
         return;
       }
       setResult(json);
     } catch (err) {
       console.error(err);
-      setError('Network error.');
+      setError(t('err.network', locale));
     } finally {
       setSubmitting(false);
     }

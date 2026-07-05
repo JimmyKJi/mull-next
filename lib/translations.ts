@@ -253,6 +253,69 @@ export const TRANSLATIONS: TranslationMap = {
     ko: '계속 →',
   },
 
+  // ── Quiz chapter transitions ─────────────────────────────────
+  // Ten rotating chapter themes (title + one-line blurb) shown every
+  // five questions, plus the transition screen chrome. Consumed by
+  // app/quiz/quiz-engine.tsx via `quiz.ch${n}_title` / `_line`.
+  'quiz.chapter_of': { en: 'CHAPTER {n} / {total}', zh: '第 {n} / {total} 章' },
+  'quiz.chapter_continue': { en: 'CONTINUE', zh: '继续' },
+  'quiz.chapter_paused': { en: '▸ HOVERED — TIMER PAUSED', zh: '▸ 已悬停——计时暂停' },
+  'quiz.chapter_auto': { en: '▸ AUTO-ADVANCE IN {s}s', zh: '▸ {s} 秒后自动继续' },
+  'quiz.chrome_question': { en: 'QUESTION {n} / {m}', zh: '问题 {n} / {m}' },
+  'quiz.chrome_pick_one': { en: 'PICK ONE', zh: '单选' },
+  'quiz.chrome_pick_up_to': { en: 'PICK UP TO {max}', zh: '最多选 {max} 项' },
+  'quiz.chrome_resumed': { en: '▸ RESUMED FROM QUESTION {n}', zh: '▸ 已从第 {n} 题继续' },
+  'quiz.ch0_title': { en: 'OF ENDINGS', zh: '论终结' },
+  'quiz.ch1_title': { en: 'OF KNOWING', zh: '论认知' },
+  'quiz.ch2_title': { en: 'OF POWER', zh: '论权力' },
+  'quiz.ch3_title': { en: 'OF THE SELF', zh: '论自我' },
+  'quiz.ch4_title': { en: 'OF MEANING', zh: '论意义' },
+  'quiz.ch5_title': { en: 'OF BEAUTY', zh: '论美' },
+  'quiz.ch6_title': { en: 'OF JUSTICE', zh: '论正义' },
+  'quiz.ch7_title': { en: 'OF LOVE', zh: '论爱' },
+  'quiz.ch8_title': { en: 'OF TIME', zh: '论时间' },
+  'quiz.ch9_title': { en: 'OF SILENCE', zh: '论沉默' },
+  'quiz.ch0_line': {
+    en: 'Five questions about what we do with finitude.',
+    zh: '五个问题，关于我们如何面对有限。',
+  },
+  'quiz.ch1_line': {
+    en: 'Five questions about how we come to trust what we believe.',
+    zh: '五个问题，关于我们如何信任自己所信。',
+  },
+  'quiz.ch2_line': {
+    en: 'Five questions about authority, freedom, and force.',
+    zh: '五个问题，关于权威、自由与强制。',
+  },
+  'quiz.ch3_line': {
+    en: 'Five questions about the person you take yourself to be.',
+    zh: '五个问题，关于你所认定的那个自己。',
+  },
+  'quiz.ch4_line': {
+    en: 'Five questions about what life is supposed to be for.',
+    zh: '五个问题，关于生命究竟为了什么。',
+  },
+  'quiz.ch5_line': {
+    en: 'Five questions about taste, art, and what catches you.',
+    zh: '五个问题，关于品味、艺术与打动你的事物。',
+  },
+  'quiz.ch6_line': {
+    en: 'Five questions about fairness, harm, and what we owe.',
+    zh: '五个问题，关于公平、伤害与彼此亏欠。',
+  },
+  'quiz.ch7_line': {
+    en: 'Five questions about attention, attachment, and care.',
+    zh: '五个问题，关于注意、依恋与关怀。',
+  },
+  'quiz.ch8_line': {
+    en: 'Five questions about memory, change, and the long arc.',
+    zh: '五个问题，关于记忆、变化与漫长的弧线。',
+  },
+  'quiz.ch9_line': {
+    en: "Five questions about what can't be said.",
+    zh: '五个问题，关于无法言说之物。',
+  },
+
   'nav.dilemma': {
     en: "Today's dilemma",
     es: 'Dilema de hoy',
@@ -548,6 +611,7 @@ export const TRANSLATIONS: TranslationMap = {
   'hdr.yearly_retro': { en: 'YEARLY RETROSPECTIVE', zh: '年度回望' },
   'hdr.public_profile': { en: 'PUBLIC PROFILE', zh: '公开资料' },
   // ─── Misc a11y labels / language switcher ───
+  'a11y.skip_to_content': { en: '▸ SKIP TO CONTENT', zh: '▸ 跳到正文' },
   'a11y.continue_elsewhere': { en: 'Continue elsewhere', zh: '继续前往别处' },
   'a11y.select_year': { en: 'Select year for retrospective', zh: '选择回顾年份' },
   'a11y.jump_to_section': { en: 'Jump to section', zh: '跳转到分区' },
@@ -3414,6 +3478,9 @@ export const TRANSLATIONS: TranslationMap = {
     ja: 'ネットワークエラーが発生しました。もう一度お試しください。',
     ko: '네트워크 오류. 다시 시도하세요.',
   },
+  'search.err_failed': { en: 'Search failed.', zh: '搜索失败。' },
+  'retro.err_generate': { en: 'Could not generate retrospective.', zh: '无法生成年度回顾。' },
+  'billing.err_checkout': { en: 'Could not start checkout.', zh: '无法开始结账。' },
   'err.too_short': {
     en: 'Response is too short.',
     es: 'La respuesta es demasiado breve.',

@@ -133,7 +133,7 @@ export default function DiaryComposer({ locale = 'en' }: { locale?: Locale }) {
       });
       const json = await res.json();
       if (!res.ok) {
-        setError(json?.error || 'Could not save your entry.');
+        setError(json?.error || t('err.could_not_save', locale));
         setSubmitting(false);
         return;
       }
@@ -146,7 +146,7 @@ export default function DiaryComposer({ locale = 'en' }: { locale?: Locale }) {
       router.refresh();
     } catch (err) {
       console.error(err);
-      setError('Network error. Try again.');
+      setError(t('err.network', locale));
     } finally {
       setSubmitting(false);
     }

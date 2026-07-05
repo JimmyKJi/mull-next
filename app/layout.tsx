@@ -3,6 +3,7 @@ import { Cormorant_Garamond, Lora, Pixelify_Sans, Press_Start_2P, VT323 } from '
 import './globals.css';
 import { SiteNav } from '@/components/site-nav';
 import { getServerLocale } from '@/lib/locale-server';
+import { t } from '@/lib/translations';
 import CapabilityToast from '@/components/capability-toast';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
@@ -200,7 +201,7 @@ export default async function RootLayout({
             jump past the sticky nav (which has 6+ tabbable links)
             and land directly in the page body. */}
         <a href="#main-content" className="skip-link">
-          ▸ SKIP TO CONTENT
+          {t('a11y.skip_to_content', locale)}
         </a>
         {/* SiteNav is the v2 sticky top bar — wordmark, page links,
             Cmd-K command palette, Account button. Visible on every

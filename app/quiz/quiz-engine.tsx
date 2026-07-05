@@ -82,33 +82,12 @@ function stashResearchAnswers(
 // loose and rotated rather than perfectly mapped to question content
 // — the goal is rhythm, not curriculum.
 
-const CHAPTER_TITLES = [
-  'OF ENDINGS',
-  'OF KNOWING',
-  'OF POWER',
-  'OF THE SELF',
-  'OF MEANING',
-  'OF BEAUTY',
-  'OF JUSTICE',
-  'OF LOVE',
-  'OF TIME',
-  'OF SILENCE',
-] as const;
+// Titles + lines live in lib/translations.ts as `quiz.ch${n}_title` /
+// `quiz.ch${n}_line` so they localize; only the glyphs stay here
+// (glyphs aren't language).
+const CHAPTER_THEME_COUNT = 10;
 
 const CHAPTER_GLYPHS = ['✦', '◆', '▲', '◐', '✶', '❋', '▣', '◉', '✧', '◇'] as const;
-
-const CHAPTER_LINES = [
-  'Five questions about what we do with finitude.',
-  'Five questions about how we come to trust what we believe.',
-  'Five questions about authority, freedom, and force.',
-  'Five questions about the person you take yourself to be.',
-  'Five questions about what life is supposed to be for.',
-  'Five questions about taste, art, and what catches you.',
-  'Five questions about fairness, harm, and what we owe.',
-  'Five questions about attention, attachment, and care.',
-  'Five questions about memory, change, and the long arc.',
-  "Five questions about what can't be said.",
-] as const;
 
 const QUESTIONS_PER_CHAPTER = 5;
 
@@ -357,9 +336,10 @@ export function QuizEngine({ questions, mode, locale }: Props) {
   // ── CHAPTER TRANSITION ───────────────────────────────────────
   if (showingChapter) {
     const chapter = chapterOf(idx);
-    const title = CHAPTER_TITLES[chapter % CHAPTER_TITLES.length];
+    const theme = chapter % CHAPTER_THEME_COUNT;
+    const title = t(`quiz.ch${theme}_title`, locale);
     const glyph = CHAPTER_GLYPHS[chapter % CHAPTER_GLYPHS.length];
-    const line = CHAPTER_LINES[chapter % CHAPTER_LINES.length];
+    const line = t(`quiz.ch${theme}_line`, locale);
     const totalChapters = Math.ceil(questions.length / QUESTIONS_PER_CHAPTER);
     return (
       <ChapterTransition
@@ -368,6 +348,7 @@ export function QuizEngine({ questions, mode, locale }: Props) {
         line={line}
         chapter={chapter + 1}
         totalChapters={totalChapters}
+        locale={locale}
         onContinue={() => setShowingChapter(false)}
       />
     );
@@ -392,7 +373,7 @@ export function QuizEngine({ questions, mode, locale }: Props) {
             boxShadow: '3px 3px 0 0 #2F5D5C',
           }}
         >
-          ▸ RESUMED FROM QUESTION {resumedNotice}
+          {t('quiz.chrome_resumed', locale, { n: resumedNotice })}
         </div>
       )}
 
@@ -402,7 +383,7 @@ export function QuizEngine({ questions, mode, locale }: Props) {
           className="text-[10px] tracking-[0.24em] text-acc-deep"
           style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
-          CHAPTER {chapter + 1} / {totalChapters} ·
+          {t('quiz.chapter_of', locale, { n: chapter + 1, total: totalChapters })} ·
           <span className="ml-2 text-acc">
             {positionInChapter} / {QUESTIONS_PER_CHAPTER}
           </span>
@@ -418,12 +399,17 @@ export function QuizEngine({ questions, mode, locale }: Props) {
           style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
           <span>
-            QUESTION {String(idx + 1).padStart(2, '0')} / {questions.length}
+            {t('quiz.chrome_question', locale, {
+              n: String(idx + 1).padStart(2, '0'),
+              m: questions.length,
+            })}
           </span>
           {isMulti ? (
-            <span className="text-acc">PICK UP TO {maxPicks}</span>
+            <span className="text-acc">
+              {t('quiz.chrome_pick_up_to', locale, { max: maxPicks })}
+            </span>
           ) : (
-            <span className="text-acc">PICK ONE</span>
+            <span className="text-acc">{t('quiz.chrome_pick_one', locale)}</span>
           )}
         </div>
 
@@ -637,6 +623,7 @@ function ChapterTransition({
   line,
   chapter,
   totalChapters,
+  locale,
   onContinue,
 }: {
   title: string;
@@ -644,6 +631,7 @@ function ChapterTransition({
   line: string;
   chapter: number;
   totalChapters: number;
+  locale: Locale;
   onContinue: () => void;
 }) {
   const [paused, setPaused] = useState(false);
@@ -709,7 +697,7 @@ function ChapterTransition({
           className="border-b-4 border-ink bg-ink px-4 py-2 text-[10px] tracking-[0.24em] text-acc-soft"
           style={{ fontFamily: 'var(--font-pixel-display)' }}
         >
-          CHAPTER {chapter} / {totalChapters}
+          {t('quiz.chapter_of', locale, { n: chapter, total: totalChapters })}
         </div>
         <div className="px-8 py-12">
           <div className="text-[64px] leading-none text-acc" aria-hidden>
@@ -735,7 +723,7 @@ function ChapterTransition({
               }}
               className="pixel-button pixel-button--amber"
             >
-              <span>▶ CONTINUE</span>
+              <span>▶ {t('quiz.chapter_continue', locale)}</span>
             </button>
           </div>
         </div>
@@ -758,8 +746,10 @@ function ChapterTransition({
         style={{ fontFamily: 'var(--font-pixel-display)' }}
       >
         {paused
-          ? '▸ HOVERED — TIMER PAUSED'
-          : `▸ AUTO-ADVANCE IN ${Math.ceil((1 - progress) * (totalMsRef.current / 1000))}s`}
+          ? t('quiz.chapter_paused', locale)
+          : t('quiz.chapter_auto', locale, {
+              s: Math.ceil((1 - progress) * (totalMsRef.current / 1000)),
+            })}
       </p>
     </div>
   );

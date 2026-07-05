@@ -40,19 +40,19 @@ export default function PlanPicker({ locale = 'en' }: { locale?: Locale }) {
           window.location.href = `/login?next=${encodeURIComponent('/billing')}`;
           return;
         }
-        setError(json?.error || 'Could not start checkout.');
+        setError(json?.error || t('billing.err_checkout', locale));
         setLoading(null);
         return;
       }
       if (json.checkoutUrl) {
         window.location.href = json.checkoutUrl;
       } else {
-        setError('Checkout URL missing in response.');
+        setError(t('billing.err_checkout', locale));
         setLoading(null);
       }
     } catch (e) {
       console.error(e);
-      setError('Network error.');
+      setError(t('err.network', locale));
       setLoading(null);
     }
   }
