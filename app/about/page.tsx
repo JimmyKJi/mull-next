@@ -17,6 +17,8 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getServerLocale } from '@/lib/locale-server';
 import { PHILOSOPHERS } from '@/lib/philosophers';
+import { TOPICS } from '@/lib/topics';
+import { CURATED_VS_PAIRS } from '@/lib/vs-pairs';
 import { PixelWindow, PixelPageHeader } from '@/components/pixel-window';
 import { ContentLanguageNotice } from '@/components/content-language-notice';
 import { TIPPING_ENABLED } from '@/lib/feature-flags';
@@ -109,7 +111,7 @@ function AboutBodyEn() {
               Arena is Mull&apos;s answer to "what do I do once I know where I sit?"
             </Promise>
             <Promise
-              title={`${PHILOSOPHERS.length} philosophers, 10 archetypes, 12 topics, 30 matchups.`}
+              title={`${PHILOSOPHERS.length} philosophers, 10 archetypes, ${TOPICS.length} topics, ${CURATED_VS_PAIRS.length} matchups.`}
             >
               The constellation is the heart of the site — a 2D map you can wander. Every
               philosopher page is a small editorial essay; the archetype pages go longer. Topic
@@ -511,7 +513,9 @@ function AboutBodyZh() {
               <em>不</em>评判谁胜谁负。Elo 积分、排行榜、与真人对战的
               PvP。当你已经知道自己身处何方，"接下来该做什么？"——竞技场便是 Mull 给出的答案。
             </Promise>
-            <Promise title={`${PHILOSOPHERS.length} 位哲学家、10 种原型、12 个主题、30 场对决。`}>
+            <Promise
+              title={`${PHILOSOPHERS.length} 位哲学家、10 种原型、${TOPICS.length} 个主题、${CURATED_VS_PAIRS.length} 场对决。`}
+            >
               星图是整个网站的核心——一张你可以漫游的二维地图。每一个哲学家页面都是一篇小小的编辑随笔，原型页面则更为详尽。主题解说涵盖了哲学家们反复回到的那些问题（自由意志、电车难题、人生的意义、我们彼此亏欠什么）。对决页面则是跨越十六个维度的正面比较。
             </Promise>
             <Promise title="困境、日记、练习。">

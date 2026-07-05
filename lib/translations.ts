@@ -7572,14 +7572,14 @@ export const TRANSLATIONS: TranslationMap = {
     ko: '퀴즈 풀기',
   },
   'first.q_body': {
-    en: "20 to 50 questions about how you actually think. The map you'll see at the end places you among over 200 thinkers in history.",
-    es: 'De 20 a 50 preguntas sobre cómo piensas realmente. Al final verás un mapa que te sitúa entre más de 200 pensadores de la historia.',
-    fr: "De 20 à 50 questions sur ta façon réelle de penser. À la fin, tu verras une carte qui te situe parmi plus de 200 penseurs de l'histoire.",
-    pt: 'De 20 a 50 perguntas sobre como você realmente pensa. No final, um mapa coloca você entre más de 200 pensadores da história.',
-    ru: 'От 20 до 50 вопросов о том, как вы на самом деле мыслите. В конце увидите карту, помещающую вас среди более 200 мыслителей в истории.',
-    zh: '20 到 50 道关于你真实思考方式的问题。完成后会看到一张地图，把你置于历史上 200 多位思想家之中。',
-    ja: 'あなたの実際の考え方を尋ねる 20〜50 の問い。最後にマップが現れ、歴史上の 200 人余りの思想家のなかでのあなたの位置が示されます。',
-    ko: '당신이 실제로 어떻게 생각하는지에 대한 20~50개의 질문. 끝에서 보게 될 지도가 역사 속 200명이 넘는 사상가들 사이 당신의 위치를 보여줍니다.',
+    en: "20 to 50 questions about how you actually think. The map you'll see at the end places you among over 500 thinkers in history.",
+    es: 'De 20 a 50 preguntas sobre cómo piensas realmente. Al final verás un mapa que te sitúa entre más de 500 pensadores de la historia.',
+    fr: "De 20 à 50 questions sur ta façon réelle de penser. À la fin, tu verras une carte qui te situe parmi plus de 500 penseurs de l'histoire.",
+    pt: 'De 20 a 50 perguntas sobre como você realmente pensa. No final, um mapa coloca você entre mais de 500 pensadores da história.',
+    ru: 'От 20 до 50 вопросов о том, как вы на самом деле мыслите. В конце увидите карту, помещающую вас среди более 500 мыслителей в истории.',
+    zh: '20 到 50 道关于你真实思考方式的问题。完成后会看到一张地图，把你置于历史上 500 多位思想家之中。',
+    ja: 'あなたの実際の考え方を尋ねる 20〜50 の問い。最後にマップが現れ、歴史上の 500 人余りの思想家のなかでのあなたの位置が示されます。',
+    ko: '당신이 실제로 어떻게 생각하는지에 대한 20~50개의 질문. 끝에서 보게 될 지도가 역사 속 500명이 넘는 사상가들 사이 당신의 위치를 보여줍니다.',
   },
   'first.d_title': {
     en: "Try today's dilemma",
@@ -11348,7 +11348,7 @@ export const TRANSLATIONS: TranslationMap = {
   'home.card_thinkers_title': { en: 'THINKERS', zh: '思想家' },
   'home.card_thinkers_body': {
     en: '{count} philosophers are positioned alongside you, drawn from their actual writings. Buddha and Hume both score high on Self as Illusion — but for opposite reasons. The dimensions catch real distinctions.',
-    zh: '五百多位哲学家与你并列其中，皆取自他们的实际著作。佛陀与休谟在「自我即幻象」上都得分很高——却出于相反的理由。这些维度能捕捉到真实的差异。',
+    zh: '{count} 位哲学家与你并列其中，皆取自他们的实际著作。佛陀与休谟在「自我即幻象」上都得分很高——却出于相反的理由。这些维度能捕捉到真实的差异。',
   },
   'home.card_ofyou_title': { en: 'OF YOU', zh: '唯一的你' },
   'home.card_ofyou_body': {

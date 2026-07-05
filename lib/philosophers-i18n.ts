@@ -50,14 +50,14 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "diogenes-of-sinope": {
     "zh": {
       "name": "第欧根尼（锡诺普）",
-      "dates": "约公元前412—323年",
+      "dates": "约公元前412–323年",
       "keyIdea": "居于桶中，自称世界公民。拒绝世俗成规，以顺应自然为生活准则。"
     }
   },
   "epicurus": {
     "zh": {
       "name": "伊壁鸠鲁",
-      "dates": "公元前341—270年",
+      "dates": "公元前341–270年",
       "keyIdea": "幸福的艺术在于消除痛苦。简朴地生活，培育友谊，不惧死亡。"
     }
   },
@@ -253,7 +253,7 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "han-feizi": {
     "zh": {
       "name": "韩非子",
-      "dates": "约公元前280—前233年",
+      "dates": "约公元前280–前233年",
       "keyIdea": "严刑峻法，不信任何人。权势、地位、术数——君主驭世之器。"
     }
   },
@@ -344,13 +344,13 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "vine-deloria-jr": {
     "zh": {
       "name": "瓦恩·德洛里亚（子）",
-      "dates": "1933—2005",
+      "dates": "1933–2005",
       "keyIdea": "上帝是红色的。时间即空间。地方至关重要。原住民知识抵抗西方的抽象化。"
     }
   },
   "carneades": {
     "zh": {
-      "dates": "约公元前214—前129年",
+      "dates": "约公元前214–前129年",
       "keyIdea": "或然性——“可信者”——在确定性缺失时充当行动的向导。",
       "name": "卡尔内阿德斯"
     }
@@ -365,7 +365,7 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "philo-of-alexandria": {
     "zh": {
       "name": "亚历山大里亚的斐洛",
-      "dates": "约公元前20—公元50年",
+      "dates": "约公元前20–公元50年",
       "keyIdea": "寓意诠释；沟通犹太经典与希腊哲学。"
     }
   },
@@ -393,14 +393,14 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "hypatia": {
     "zh": {
       "name": "希帕提娅",
-      "dates": "约360—415",
+      "dates": "约360–415",
       "keyIdea": "亚历山大里亚数学家与新柏拉图主义者；殉道于基督徒之手的异教先贤。"
     }
   },
   "damascius": {
     "zh": {
       "name": "达马斯基乌斯",
-      "dates": "约458—538",
+      "dates": "约458–538",
       "keyIdea": "雅典学园最后一任掌门——那不可言说者超乎太一之上。"
     }
   },
@@ -428,21 +428,21 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "marcus-tullius-varro": {
     "zh": {
       "name": "马库斯·图利乌斯·瓦罗",
-      "dates": "公元前116—27年",
+      "dates": "公元前116–27年",
       "keyIdea": "百科全书式学者——编目三百种神学，而后方下判断。"
     }
   },
   "sextus-empiricus-the-younger": {
     "zh": {
       "name": "小塞克斯都·恩披里克",
-      "dates": "2—3世纪",
+      "dates": "2–3世纪",
       "keyIdea": "《皮浪主义概要》——对怀疑论方法的全面梳理与清点。"
     }
   },
   "origen": {
     "zh": {
       "name": "俄利根",
-      "dates": "约185—254年",
+      "dates": "约185–254年",
       "keyIdea": "寓意释经与万物复原论——就连魔鬼终将得救。"
     }
   },
@@ -848,7 +848,7 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "drucilla-cornell": {
     "zh": {
       "name": "德鲁西拉·科内尔",
-      "dates": "1950—2022",
+      "dates": "1950–2022",
       "keyIdea": "想象领域——平等需要为想象另一种自我留有空间。"
     }
   },
@@ -925,7 +925,7 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "sara-ruddick": {
     "zh": {
       "name": "萨拉·鲁迪克",
-      "dates": "1935—2011",
+      "dates": "1935–2011",
       "keyIdea": "母性思维——母育实践作为认知劳动。"
     }
   },
@@ -1296,7 +1296,7 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "bruno-latour": {
     "zh": {
       "name": "布鲁诺·拉图尔",
-      "dates": "1947—2022",
+      "dates": "1947–2022",
       "keyIdea": "行动者网络理论——人类与非人类相互缠结，共同构成集合体。"
     }
   },
@@ -1352,14 +1352,14 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "charles-hartshorne": {
     "zh": {
       "name": "查尔斯·哈特肖恩",
-      "dates": "1897—2000",
+      "dates": "1897–2000",
       "keyIdea": "过程神学——上帝具有两极性，与受造物共担苦难。"
     }
   },
   "anandamayi-ma": {
     "zh": {
       "name": "阿南达玛依·玛",
-      "dates": "1896—1982",
+      "dates": "1896–1982",
       "keyIdea": "拜拉维圣母——沉默是她最明晰的教导。"
     }
   },
@@ -1478,7 +1478,7 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "lauren-berlant": {
     "zh": {
       "name": "劳伦·柏兰特",
-      "dates": "1957—2021",
+      "dates": "1957–2021",
       "keyIdea": "残忍的乐观主义——对繁荣的依附，恰恰阻碍了繁荣本身。"
     }
   },
@@ -1569,7 +1569,7 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "ilya-prigogine": {
     "zh": {
       "name": "伊利亚·普里戈金",
-      "dates": "1917—2003",
+      "dates": "1917–2003",
       "keyIdea": "耗散结构——秩序生于远离平衡态的流动之中。"
     }
   },
@@ -1618,20 +1618,22 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "buddha": {
     "zh": {
       "name": "佛陀",
-      "dates": "约公元前563—483年",
+      "dates": "约公元前563–483年",
       "keyIdea": "苦乃第一圣谛。受苦之自我，本身即是幻象。行八正道。"
     }
   },
   "mahavira": {
     "zh": {
       "name": "大雄",
-      "dates": "公元前599—527年",
+      "dates": "公元前599–527年",
       "keyIdea": "非暴力（ahimsa）高于一切。实在多面（anekāntavāda）。以苦行求解脱。"
     }
   },
   "nagarjuna": {
     "zh": {
-      "name": "龙树"
+      "name": "龙树",
+      "dates": "约150–250年",
+      "keyIdea": "一切现象皆无自性。二谛：世俗谛与胜义谛。中道。"
     }
   },
   "mozi": {
@@ -1651,7 +1653,8 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "zhuangzi": {
     "zh": {
       "name": "庄子",
-      "dates": "约公元前369–286年"
+      "dates": "约公元前369–286年",
+      "keyIdea": "我究竟是梦为蝴蝶的人，还是梦为人的蝴蝶？心灵的自由游弋。"
     }
   },
   "frantz-fanon": {
@@ -1671,13 +1674,15 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "audre-lorde": {
     "zh": {
       "name": "奥德丽·洛德",
-      "dates": "1934–1992"
+      "dates": "1934–1992",
+      "keyIdea": "主人的工具永远无法拆毁主人的房屋。差异本身即是创造的力量。"
     }
   },
   "john-dewey": {
     "zh": {
       "dates": "1859–1952",
-      "keyIdea": "民主不止于政府。在实践中学习。探究是一切思维的范式。"
+      "keyIdea": "民主不止于政府。在实践中学习。探究是一切思维的范式。",
+      "name": "约翰·杜威"
     }
   },
   "husserl": {
@@ -1711,7 +1716,8 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "hannah-arendt": {
     "zh": {
       "name": "汉娜·阿伦特",
-      "dates": "1906–1975"
+      "dates": "1906–1975",
+      "keyIdea": "恶的平庸性。行动与诞生性。公共领域是显现的空间。"
     }
   },
   "ayn-rand": {
@@ -1731,13 +1737,15 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "pythagoras": {
     "zh": {
       "name": "毕达哥拉斯",
-      "dates": "约公元前570—前495年"
+      "dates": "约公元前570–前495年",
+      "keyIdea": "数乃万物之本质。宇宙是数学的音乐。生命在于以理性净化灵魂。"
     }
   },
   "hildegard-of-bingen": {
     "zh": {
       "dates": "1098–1179",
-      "keyIdea": "上帝活光的异象。维里迪塔斯——万物生发的绿意之力。身与魂乃神圣的统一体。"
+      "keyIdea": "上帝活光的异象。维里迪塔斯——万物生发的绿意之力。身与魂乃神圣的统一体。",
+      "name": "宾根的希尔德加德"
     }
   },
   "catherine-of-siena": {
@@ -1771,13 +1779,15 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "julian-of-norwich": {
     "zh": {
       "name": "诺里奇的朱利安",
-      "dates": "约1342–1416"
+      "dates": "约1342–1416",
+      "keyIdea": "万事终将安好。罪是必然的，爱却胜过一切。上帝如母。"
     }
   },
   "pascal": {
     "zh": {
       "dates": "1623–1662",
-      "keyIdea": "无限空间的永恒沉默令我战栗。心有其理，理性浑然不知。赌注押向上帝。"
+      "keyIdea": "无限空间的永恒沉默令我战栗。心有其理，理性浑然不知。赌注押向上帝。",
+      "name": "帕斯卡"
     }
   },
   "al-kindi": {
@@ -1832,7 +1842,8 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "voltaire": {
     "zh": {
       "dates": "1694–1778",
-      "keyIdea": "消灭卑劣。誓死捍卫言论自由。耕耘自己的园地。"
+      "keyIdea": "消灭卑劣。誓死捍卫言论自由。耕耘自己的园地。",
+      "name": "伏尔泰"
     }
   },
   "rousseau": {
@@ -1851,7 +1862,9 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   },
   "bergson": {
     "zh": {
-      "keyIdea": "绵延，而非时空。生命冲力——生命的创造性驱动。直觉优于分析。"
+      "keyIdea": "绵延，而非时空。生命冲力——生命的创造性驱动。直觉优于分析。",
+      "name": "柏格森",
+      "dates": "1859–1941"
     }
   },
   "whitehead": {
@@ -1906,7 +1919,8 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "hans-georg-gadamer": {
     "zh": {
       "name": "汉斯-格奥尔格·伽达默尔",
-      "dates": "1900–2002"
+      "dates": "1900–2002",
+      "keyIdea": "理解发生于视域的融合之中。传统乃是意义的活的进程。"
     }
   },
   "baudrillard": {
@@ -1926,13 +1940,15 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "marcuse": {
     "zh": {
       "name": "马尔库塞",
-      "dates": "1898–1979"
+      "dates": "1898–1979",
+      "keyIdea": "单向度的人。伟大的拒绝。爱欲对抗压抑。"
     }
   },
   "john-searle": {
     "zh": {
       "dates": "1932–2025",
-      "keyIdea": "中文屋论证。强人工智能不可能实现。言语行为理论。集体意向性构建社会实在。"
+      "keyIdea": "中文屋论证。强人工智能不可能实现。言语行为理论。集体意向性构建社会实在。",
+      "name": "约翰·塞尔"
     }
   },
   "daniel-dennett": {
@@ -1966,13 +1982,15 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "charles-taylor": {
     "zh": {
       "name": "查尔斯·泰勒",
-      "dates": "1931年生"
+      "dates": "1931年生",
+      "keyIdea": "自我的源泉。现代性的隐忧。真实性、承认与缓冲的自我。"
     }
   },
   "peter-singer": {
     "zh": {
       "dates": "生于1946年",
-      "keyIdea": "所有动物一律平等。有效利他主义。以你所有，在力所能及之处拯救生命。"
+      "keyIdea": "所有动物一律平等。有效利他主义。以你所有，在力所能及之处拯救生命。",
+      "name": "彼得·辛格"
     }
   },
   "christine-korsgaard": {
@@ -1985,7 +2003,7 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "harry-frankfurt": {
     "zh": {
       "name": "哈里·法兰克福",
-      "dates": "1929—2023",
+      "dates": "1929–2023",
       "keyIdea": "论扯淡。关怀使我们成其为人。高阶欲望构成自我。"
     }
   },
@@ -2090,14 +2108,14 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "anaximander": {
     "zh": {
       "name": "阿那克西曼德",
-      "dates": "约公元前610—546年",
+      "dates": "约公元前610–546年",
       "keyIdea": "无限者（阿派朗）是万物之源——前苏格拉底时代最初的自然哲学。"
     }
   },
   "anaximenes": {
     "zh": {
       "name": "阿那克西美尼",
-      "dates": "约公元前586—526年",
+      "dates": "约公元前586–526年",
       "keyIdea": "气是万物的本原，通过凝聚与稀散化生一切现象。"
     }
   },
@@ -2132,49 +2150,49 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "democritus": {
     "zh": {
       "name": "德谟克利特",
-      "dates": "约公元前460—370年",
+      "dates": "约公元前460–370年",
       "keyIdea": "原子论与愉悦的宁静；万物不过是原子与虚空。"
     }
   },
   "gorgias": {
     "zh": {
       "name": "高尔吉亚",
-      "dates": "约公元前483—375年",
+      "dates": "约公元前483–375年",
       "keyIdea": "无物存在；即便存在，亦不可知；即便可知，亦不可传达。"
     }
   },
   "antisthenes": {
     "zh": {
       "name": "安提斯泰尼",
-      "dates": "约公元前445—365年",
+      "dates": "约公元前445–365年",
       "keyIdea": "唯有德性足以成就幸福——犬儒学派之先驱，苏格拉底之挚友。"
     }
   },
   "cleanthes": {
     "zh": {
       "name": "克勒安忒斯",
-      "dates": "约公元前330—230年",
+      "dates": "约公元前330–230年",
       "keyIdea": "《宙斯颂》；斯多葛派的神意论与对宇宙秩序的顺从。"
     }
   },
   "chrysippus": {
     "zh": {
       "name": "克吕西波",
-      "dates": "约公元前279—206年",
+      "dates": "约公元前279–206年",
       "keyIdea": "斯多葛主义的第二位奠基人——命题逻辑、命运论与赞同学说。"
     }
   },
   "posidonius": {
     "zh": {
       "name": "波西多尼奥斯",
-      "dates": "约公元前135—51年",
+      "dates": "约公元前135–51年",
       "keyIdea": "中期斯多葛派的综合者——天文学、地理学与宇宙共感论。"
     }
   },
   "musonius-rufus": {
     "zh": {
       "name": "穆索尼乌斯·鲁弗斯",
-      "dates": "约公元25—95年",
+      "dates": "约公元25–95年",
       "keyIdea": "爱比克泰德之师，斯多葛派学者——主张女性同样具备哲学能力。"
     }
   },
@@ -2188,7 +2206,7 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "arcesilaus": {
     "zh": {
       "name": "阿尔克西劳斯",
-      "dates": "约公元前316—前241年",
+      "dates": "约公元前316–前241年",
       "keyIdea": "学园怀疑主义的创始人——主张悬置判断，以或然性指导生活。"
     }
   },
@@ -2216,14 +2234,14 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "rabia-al-adawiyya": {
     "zh": {
       "name": "拉比娅·阿达维亚",
-      "dates": "约717—801",
+      "dates": "约717–801",
       "keyIdea": "苏菲之爱——为神而爱神，既不求天堂，亦不惧地狱。"
     }
   },
   "mansur-al-hallaj": {
     "zh": {
       "name": "曼苏尔·哈拉智",
-      "dates": "约858—922",
+      "dates": "约858–922",
       "keyIdea": "「我即真理」——消融于神；因此语而被处决。"
     }
   },
@@ -2363,21 +2381,21 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "linji-yixuan": {
     "zh": {
       "name": "临济义玄",
-      "dates": "约810—866",
+      "dates": "约810–866",
       "keyIdea": "临济宗禅——路遇佛则杀佛；本无一物可求。"
     }
   },
   "bankei-yotaku": {
     "zh": {
       "name": "盘珪永琢",
-      "dates": "1622—1693",
+      "dates": "1622–1693",
       "keyIdea": "不生——你在一切见解生起之前、一切修行方法之先的本来面目。"
     }
   },
   "ikkyu-sojun": {
     "zh": {
       "name": "一休宗纯",
-      "dates": "1394—1481",
+      "dates": "1394–1481",
       "keyIdea": "狂云禅——清酒、情人，与京都青楼中的顿悟。"
     }
   },
@@ -2867,7 +2885,7 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "aspasia-of-miletus": {
     "zh": {
       "name": "米利都的阿斯帕西娅",
-      "dates": "约公元前470—400年",
+      "dates": "约公元前470–400年",
       "keyIdea": "伯里克利时代雅典的修辞学家；据载曾为苏格拉底之师。"
     }
   },
@@ -2881,7 +2899,7 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "sappho": {
     "zh": {
       "name": "萨福",
-      "dates": "约公元前630—570年",
+      "dates": "约公元前630–570年",
       "keyIdea": "第十位缪斯——欲望作为重新排列宇宙秩序的力量。"
     }
   },
@@ -2944,7 +2962,7 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "david-bohm": {
     "zh": {
       "name": "戴维·玻姆",
-      "dates": "1917—1992",
+      "dates": "1917–1992",
       "keyIdea": "《整体性与隐缠序》——在最深层次上探究物理学与对话。"
     }
   },
@@ -3112,7 +3130,7 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "whitehead-s-pupil-david-ray-griffin": {
     "zh": {
       "name": "怀特海的学生——大卫·雷·格里芬",
-      "dates": "1939—2022",
+      "dates": "1939–2022",
       "keyIdea": "过程神学——上帝与创造力在事件时间中共同演化。"
     }
   },
@@ -3147,7 +3165,7 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "francisco-varela": {
     "zh": {
       "name": "弗朗西斯科·瓦雷拉",
-      "dates": "1946—2001",
+      "dates": "1946–2001",
       "keyIdea": "自创生——作为自我生成循环因果性的生物学。"
     }
   },
@@ -3322,7 +3340,7 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
   "sobonfu-some": {
     "zh": {
       "name": "索邦富·索梅",
-      "dates": "1969—2017",
+      "dates": "1969–2017",
       "keyIdea": "西非达加拉族教师——悲悼仪式与社群的亲密性。"
     }
   },
@@ -3520,6 +3538,370 @@ export const PHILOSOPHERS_I18N: Record<string, Partial<Record<Locale, Philosophe
       "name": "林恩·马古利斯",
       "dates": "1938–2011",
       "keyIdea": "共生起源说——细胞套叠于细胞之中；竞争并非生命的全部故事。"
+    }
+  },
+  "laozi": {
+    "zh": {
+      "name": "老子",
+      "dates": "约公元前六世纪",
+      "keyIdea": "可道之道，非常道。无为——自然而然之行。"
+    }
+  },
+  "confucius": {
+    "zh": {
+      "name": "孔子",
+      "dates": "约公元前551–479年",
+      "keyIdea": "以礼与人伦修养自身。美好的生活，在于井然有序的自我，寓于井然有序的共同体之中。"
+    }
+  },
+  "xunzi": {
+    "zh": {
+      "name": "荀子",
+      "dates": "约公元前310–前235年",
+      "keyIdea": "人性本有缺陷，礼义与教化使人趋于文明。天道运行，自有其常。"
+    }
+  },
+  "dogen": {
+    "zh": {
+      "name": "道元",
+      "dates": "1200–1253",
+      "keyIdea": "修行与证悟本为一体。只管打坐。存在即时间：时间本身即是存在。"
+    }
+  },
+  "nishida-kitaro": {
+    "zh": {
+      "name": "西田几多郎",
+      "dates": "1870–1945",
+      "keyIdea": "纯粹经验先于主客之分。虚无之场所为存在之根基。"
+    }
+  },
+  "anton-wilhelm-amo": {
+    "zh": {
+      "name": "安东·威廉·阿莫",
+      "dates": "1703–1759",
+      "keyIdea": "心灵与身体截然有别。非洲人从事哲学思辨的能力，与任何民族并无二致。"
+    }
+  },
+  "w-e-b-du-bois": {
+    "zh": {
+      "name": "W·E·B·杜波依斯",
+      "dates": "1868–1963",
+      "keyIdea": "双重意识——始终以他人的目光审视自身。肤色界线之问题。"
+    }
+  },
+  "bell-hooks": {
+    "zh": {
+      "name": "贝尔·胡克斯",
+      "dates": "1952–2021",
+      "keyIdea": "爱是一种变革性的实践。投入式教学法。父权制伤害所有人。"
+    }
+  },
+  "hume": {
+    "zh": {
+      "name": "休谟",
+      "dates": "1711–1776",
+      "keyIdea": "理性是激情的奴隶。自我不过是知觉的束聚。对一切超越经验的主张，皆应存疑。"
+    }
+  },
+  "kant": {
+    "zh": {
+      "name": "康德",
+      "dates": "1724–1804",
+      "keyIdea": "将每个人视为目的本身。普遍道德法则可由纯粹理性推导而得。"
+    }
+  },
+  "hegel": {
+    "zh": {
+      "name": "黑格尔",
+      "dates": "1770–1831",
+      "keyIdea": "凡是现实的，都是合乎理性的。精神在历史中逐步展开。正题、反题、合题。"
+    }
+  },
+  "schopenhauer": {
+    "zh": {
+      "name": "叔本华",
+      "dates": "1788–1860",
+      "keyIdea": "世界是意志与表象。生命是苦难，间或以倦怠填充其间。"
+    }
+  },
+  "mill": {
+    "zh": {
+      "name": "密尔",
+      "dates": "1806–1873",
+      "keyIdea": "最大多数人的最大幸福。坚决捍卫自由；以温和而持久的方式革除积弊。"
+    }
+  },
+  "kierkegaard": {
+    "zh": {
+      "name": "克尔凯郭尔",
+      "dates": "1813–1855",
+      "keyIdea": "主观性即真理。信仰的跳跃。三个阶段：审美阶段、伦理阶段、宗教阶段。"
+    }
+  },
+  "marx": {
+    "zh": {
+      "name": "马克思",
+      "dates": "1818–1883",
+      "keyIdea": "物质条件塑造意识。问题不在于解释世界，而在于改变世界。"
+    }
+  },
+  "nietzsche": {
+    "zh": {
+      "name": "尼采",
+      "dates": "1844–1900",
+      "keyIdea": "在悲剧之中肯定生命。成为你所是的人。审视一切继承而来的价值；重估一切价值。"
+    }
+  },
+  "william-james": {
+    "zh": {
+      "name": "威廉·詹姆斯",
+      "dates": "1842–1910",
+      "keyIdea": "真理即是有效之物。宗教经验的种种面向。相信的意志。"
+    }
+  },
+  "levinas": {
+    "zh": {
+      "name": "列维纳斯",
+      "dates": "1906–1995",
+      "keyIdea": "他者的面容打断了你。伦理学是第一哲学，先于存在。"
+    }
+  },
+  "simone-de-beauvoir": {
+    "zh": {
+      "name": "西蒙娜·德·波伏瓦",
+      "dates": "1908–1986",
+      "keyIdea": "与他人同行的存在主义。自由是真实的，却在他人的自由之中、之间得以实现。女人不是天生的，而是后天造就的。"
+    }
+  },
+  "g-e-m-anscombe": {
+    "zh": {
+      "name": "G.E.M. 安斯康姆",
+      "dates": "1919–2001",
+      "keyIdea": "现代道德哲学已然破产。回归德性。意图塑造行为。"
+    }
+  },
+  "john-rawls": {
+    "zh": {
+      "name": "约翰·罗尔斯",
+      "dates": "1921–2002",
+      "keyIdea": "作为公平的正义。在无知之幕后选择原则。最弱势者必须从中获益。"
+    }
+  },
+  "foucault": {
+    "zh": {
+      "name": "福柯",
+      "dates": "1926–1984",
+      "keyIdea": "权力无处不在。知识从非清白无辜。现代主体的谱系学。"
+    }
+  },
+  "parmenides": {
+    "zh": {
+      "name": "巴门尼德",
+      "dates": "约公元前515–450年",
+      "keyIdea": "存在是一，永恒而不变。变化不过是幻象。唯存在者，方存在。"
+    }
+  },
+  "empedocles": {
+    "zh": {
+      "name": "恩培多克勒",
+      "dates": "约公元前494–434年",
+      "keyIdea": "四根：土、气、火、水。爱与争相互交替。存在之球循环运转。"
+    }
+  },
+  "protagoras": {
+    "zh": {
+      "name": "普罗塔戈拉",
+      "dates": "约公元前490–420年",
+      "keyIdea": "人是万物的尺度。真理因感知者而异。"
+    }
+  },
+  "pyrrho": {
+    "zh": {
+      "name": "皮浪",
+      "dates": "约公元前360–270年",
+      "keyIdea": "悬置判断。以接受确定性之不可能来达致内心的宁静。"
+    }
+  },
+  "sextus-empiricus": {
+    "zh": {
+      "name": "塞克斯都·恩披里柯",
+      "dates": "约公元160–210年",
+      "keyIdea": "每一论证皆有与之势均力敌的反论证。依现象而生活，悬置信念。"
+    }
+  },
+  "seneca": {
+    "zh": {
+      "name": "塞涅卡",
+      "dates": "约公元前4年–公元65年",
+      "keyIdea": "时间是最宝贵之物。即便身为奴隶，灵魂亦无分贵贱。承受命运所加，坦然面对死亡。"
+    }
+  },
+  "cicero": {
+    "zh": {
+      "name": "西塞罗",
+      "dates": "公元前106–前43年",
+      "keyIdea": "融汇希腊诸家思想于一炉。自然法是正义政府之根基。个人负有对共同体的责任。"
+    }
+  },
+  "lucretius": {
+    "zh": {
+      "name": "卢克莱修",
+      "dates": "约公元前99–前55年",
+      "keyIdea": "原子自由偏斜，由此创生世界。宗教滋生恐惧。死亡与我们无涉。"
+    }
+  },
+  "anselm": {
+    "zh": {
+      "name": "安瑟伦",
+      "dates": "1033–1109",
+      "keyIdea": "那无法设想有更伟大者的存在，必然实存。信仰寻求理解。"
+    }
+  },
+  "william-of-ockham": {
+    "zh": {
+      "name": "威廉·奥卡姆",
+      "dates": "约1287–1347",
+      "keyIdea": "勿在必要之外增设实体。共相不过是语言上的便利，并非实在。"
+    }
+  },
+  "erasmus": {
+    "zh": {
+      "name": "伊拉斯谟",
+      "dates": "1466–1536",
+      "keyIdea": "愚蠢道出真理。在传统之内寻求改革。对话与学问自有其尊严。"
+    }
+  },
+  "machiavelli": {
+    "zh": {
+      "name": "马基雅维利",
+      "dates": "1469–1527",
+      "keyIdea": "政治需要virtù——实践智慧。与其被人爱戴，不如令人畏惧。以诚实之眼读史。"
+    }
+  },
+  "hobbes": {
+    "zh": {
+      "name": "霍布斯",
+      "dates": "1588–1679",
+      "keyIdea": "自然状态中的生活：险恶、粗野、短暂。利维坦不可或缺。权力即一切。"
+    }
+  },
+  "descartes": {
+    "zh": {
+      "name": "笛卡尔",
+      "dates": "1596–1650",
+      "keyIdea": "我思故我在。怀疑一切，以寻求不可置疑之物。心灵与身体判然有别。"
+    }
+  },
+  "locke": {
+    "zh": {
+      "name": "洛克",
+      "dates": "1632–1704",
+      "keyIdea": "心灵是一块白板。政府建立于同意之上。财产源于劳动。"
+    }
+  },
+  "berkeley": {
+    "zh": {
+      "name": "贝克莱",
+      "dates": "1685–1753",
+      "keyIdea": "存在即被感知。离开心灵便无物质。上帝的感知使世界得以恒存。"
+    }
+  },
+  "leibniz": {
+    "zh": {
+      "name": "莱布尼茨",
+      "dates": "1646–1716",
+      "keyIdea": "此世界乃一切可能世界中最好的。单子没有窗户。前定和谐。"
+    }
+  },
+  "fichte": {
+    "zh": {
+      "name": "费希特",
+      "dates": "1762–1814",
+      "keyIdea": "自我设定自身。非我由自我所设定。道德努力是存在的根基。"
+    }
+  },
+  "schelling": {
+    "zh": {
+      "name": "谢林",
+      "dates": "1775–1854",
+      "keyIdea": "自然与精神同为一体。存在的无意识根基。神话即哲学。"
+    }
+  },
+  "habermas": {
+    "zh": {
+      "name": "哈贝马斯",
+      "dates": "生于1929年",
+      "keyIdea": "交往理性。理想的言谈情境。公共理性作为合法性的根基。"
+    }
+  },
+  "adorno": {
+    "zh": {
+      "name": "阿多诺",
+      "dates": "1903–1969",
+      "keyIdea": "整体即虚妄。否定辩证法。文化工业麻痹了批判意识。"
+    }
+  },
+  "walter-benjamin": {
+    "zh": {
+      "name": "瓦尔特·本雅明",
+      "dates": "1892–1940",
+      "keyIdea": "历史天使逆向飞行。机械复制摧毁灵晕。弥赛亚式的救赎隐现于碎片之中。"
+    }
+  },
+  "deleuze": {
+    "zh": {
+      "name": "德勒兹",
+      "dates": "1925–1995",
+      "keyIdea": "差异与重复。根茎，而非树木。无器官的身体。生成，而非存在。"
+    }
+  },
+  "derrida": {
+    "zh": {
+      "name": "德里达",
+      "dates": "1930–2004",
+      "keyIdea": "延异。文本之外，别无他物。解构揭示那不可言说之物。"
+    }
+  },
+  "bertrand-russell": {
+    "zh": {
+      "name": "伯特兰·罗素",
+      "dates": "1872–1970",
+      "keyIdea": "自由主义、逻辑与数学。世界的问题更多源于愚昧，而非邪恶。"
+    }
+  },
+  "quine": {
+    "zh": {
+      "name": "奎因",
+      "dates": "1908–2000",
+      "keyIdea": "信念之网处处皆可修正。事实与价值之间并无截然区分。自然化认识论。"
+    }
+  },
+  "martha-nussbaum": {
+    "zh": {
+      "name": "玛莎·努斯鲍姆",
+      "dates": "生于1947年",
+      "keyIdea": "能力进路。情感具有智识性。希腊悲剧至今仍启迪我们。"
+    }
+  },
+  "michael-sandel": {
+    "zh": {
+      "name": "迈克尔·桑德尔",
+      "dates": "生于1953年",
+      "keyIdea": "正义不能保持中立。市场腐蚀其所交易的善。公民德性至关重要。"
+    }
+  },
+  "kumarajiva": {
+    "zh": {
+      "name": "鸠摩罗什",
+      "dates": "344–413",
+      "keyIdea": "《法华经》与《金刚经》的译者——中国佛教的脊梁。"
+    }
+  },
+  "david-ray-griffin": {
+    "zh": {
+      "name": "大卫·雷·格里芬",
+      "dates": "1939–2022",
+      "keyIdea": "过程神学——上帝与创造性在事件时间中共同演化。"
     }
   }
 };
