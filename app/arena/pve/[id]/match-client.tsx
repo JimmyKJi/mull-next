@@ -502,6 +502,77 @@ function VerdictPanel({
         </p>
       </div>
 
+      {/* Constructive coaching — the user's best moment + one growth note.
+          Older judged rows predate these fields; render only when present. */}
+      {judge.user_best_moment && (
+        <div
+          style={{
+            padding: '16px 20px',
+            background: '#FFFCF4',
+            border: '3px solid #2F5D5C',
+            marginBottom: 18,
+          }}
+        >
+          <div
+            style={{
+              fontFamily: pixel,
+              fontSize: 10,
+              color: '#2F5D5C',
+              letterSpacing: 0.4,
+              textTransform: 'uppercase',
+              marginBottom: 8,
+            }}
+          >
+            {t('arena.match_best_header', locale)}
+          </div>
+          <p
+            style={{
+              fontFamily: serif,
+              fontSize: 16,
+              color: 'var(--color-ink)',
+              margin: 0,
+              lineHeight: 1.65,
+            }}
+          >
+            {judge.user_best_moment}
+          </p>
+        </div>
+      )}
+      {judge.user_growth && (
+        <div
+          style={{
+            padding: '16px 20px',
+            background: 'var(--color-acc-soft)',
+            border: '3px solid var(--color-acc-deep)',
+            marginBottom: 18,
+          }}
+        >
+          <div
+            style={{
+              fontFamily: pixel,
+              fontSize: 10,
+              color: 'var(--color-acc-deep)',
+              letterSpacing: 0.4,
+              textTransform: 'uppercase',
+              marginBottom: 8,
+            }}
+          >
+            {t('arena.match_growth_header', locale)}
+          </div>
+          <p
+            style={{
+              fontFamily: serif,
+              fontSize: 16,
+              color: 'var(--color-ink)',
+              margin: 0,
+              lineHeight: 1.65,
+            }}
+          >
+            {judge.user_growth}
+          </p>
+        </div>
+      )}
+
       {/* Common ground — the view the two sides share or could share */}
       {judge.common_ground && (
         <div
@@ -662,12 +733,16 @@ function ScoreColumn({
   total: number;
   locale: Locale;
 }) {
-  const rows: { key: keyof typeof scores; labelKey: string }[] = [
-    { key: 'validity', labelKey: 'arena.crit.validity' },
-    { key: 'premises', labelKey: 'arena.crit.premises' },
-    { key: 'rigor', labelKey: 'arena.crit.rigor' },
-    { key: 'elegance', labelKey: 'arena.crit.elegance' },
-    { key: 'engagement', labelKey: 'arena.crit.engagement' },
+  const rows: { key: keyof typeof scores; labelKey: string; hintKey: string }[] = [
+    { key: 'validity', labelKey: 'arena.crit.validity', hintKey: 'arena.crit.validity_hint' },
+    { key: 'premises', labelKey: 'arena.crit.premises', hintKey: 'arena.crit.premises_hint' },
+    { key: 'rigor', labelKey: 'arena.crit.rigor', hintKey: 'arena.crit.rigor_hint' },
+    { key: 'elegance', labelKey: 'arena.crit.elegance', hintKey: 'arena.crit.elegance_hint' },
+    {
+      key: 'engagement',
+      labelKey: 'arena.crit.engagement',
+      hintKey: 'arena.crit.engagement_hint',
+    },
   ];
   return (
     <div
@@ -714,7 +789,9 @@ function ScoreColumn({
                 marginBottom: 3,
               }}
             >
-              <span>{t(r.labelKey, locale)}</span>
+              <span title={t(r.hintKey, locale)} style={{ cursor: 'help' }}>
+                {t(r.labelKey, locale)}
+              </span>
               <span style={{ color }}>{scores[r.key]}/5</span>
             </div>
             <p

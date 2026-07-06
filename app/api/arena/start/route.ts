@@ -23,6 +23,7 @@ import {
   type ArenaTopic,
 } from '@/lib/arena/data';
 import { generatePhilosopherTurn } from '@/lib/arena/philosopher-voice';
+import { getServerLocale } from '@/lib/locale-server';
 
 const DAILY_CAP = 3;
 
@@ -168,14 +169,21 @@ export async function POST(req: Request) {
       .eq('user_id', user.id);
   }
 
-  // Generate opening turn — the philosopher opens.
+  // Generate opening turn — the philosopher opens. Kept deliberately
+  // short (a long opening wall reads as a lecture and scares off
+  // first-time debaters); the locale matters here too — without it a
+  // zh user's debate would OPEN in English and only switch language
+  // from turn two.
+  const locale = await getServerLocale();
   const opening = await generatePhilosopherTurn({
     philosopher,
     topicPrompt: topic.prompt,
+    maxChars: 750,
+    locale,
     transcript: [
       {
         speaker: 'user',
-        content: `(Open the debate with your position on the topic. You speak first.)`,
+        content: `(Open the debate. In a short opening — well under 120 words — take a clear side on the topic in plain language, give one concrete reason or everyday example for it, and end with one direct question that invites me to disagree. You speak first.)`,
       },
     ],
   });

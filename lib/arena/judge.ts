@@ -65,6 +65,17 @@ export type JudgeOutput = {
   /** The common ground the judge found, or how the two positions could
    *  be reconciled. Empty only if the sides genuinely share none. */
   common_ground: string;
+  /** The user's single strongest moment — their own words quoted or
+   *  closely paraphrased, plus why it worked. Optional: rows judged
+   *  before the constructive-feedback pass don't have it. */
+  user_best_moment?: string;
+  /** The ONE most useful concrete change for the user's next debate,
+   *  tied to a specific moment in this transcript. Optional (see above). */
+  user_growth?: string;
+  /** Same pair for the opponent side — only surfaced in PvP, where the
+   *  opponent is also a human who wants feedback. Optional. */
+  opponent_best_moment?: string;
+  opponent_growth?: string;
   // ── Back-compat: present ONLY on rows judged before the no-winner
   //    reframe. New code never writes these; readers fall back to them
   //    via resolveOutcome / resolveAssessment below. ──
@@ -78,14 +89,20 @@ export type JudgeOutput = {
  *  carry `outcome`; pre-reframe rows are mapped from their old verdict
  *  (a draw ≈ they met in the middle; anything decisive ≈ distinct). */
 export function resolveOutcome(j: Pick<JudgeOutput, 'outcome' | 'verdict'>): JudgeOutcome {
-  if (j.outcome === 'common_ground' || j.outcome === 'distinct_positions' || j.outcome === 'talked_past') {
+  if (
+    j.outcome === 'common_ground' ||
+    j.outcome === 'distinct_positions' ||
+    j.outcome === 'talked_past'
+  ) {
     return j.outcome;
   }
   return j.verdict === 'draw' ? 'common_ground' : 'distinct_positions';
 }
 
 /** Resolve the assessment prose for a judged row, old or new. */
-export function resolveAssessment(j: Pick<JudgeOutput, 'assessment' | 'verdict_reasoning'>): string {
+export function resolveAssessment(
+  j: Pick<JudgeOutput, 'assessment' | 'verdict_reasoning'>,
+): string {
   return j.assessment ?? j.verdict_reasoning ?? '';
 }
 
@@ -138,7 +155,36 @@ function buildJudgeToolSchema() {
     description:
       'The shared ground the two sides reached or could reach — the view they actually agree on, or how their positions could be reconciled. If they genuinely share none, say so in one sentence.',
   };
-  required.push('user_kindred_philosopher', 'outcome', 'assessment', 'common_ground');
+  properties.user_best_moment = {
+    type: 'string',
+    description:
+      "The user's single strongest moment: quote (or closely paraphrase) their own words, then one sentence on why that move worked. Their words, not yours.",
+  };
+  properties.user_growth = {
+    type: 'string',
+    description:
+      "The ONE most useful concrete change for the user's next debate, in second person ('Next time, …'), tied to a specific moment from THIS transcript — e.g. show the exact claim they left unsupported and what supporting it would have sounded like. Practical and encouraging, 2-3 sentences, no jargon.",
+  };
+  properties.opponent_best_moment = {
+    type: 'string',
+    description:
+      'Same as user_best_moment but for the opponent side: their single strongest moment, quoted or closely paraphrased, plus one sentence on why it worked.',
+  };
+  properties.opponent_growth = {
+    type: 'string',
+    description:
+      'Same as user_growth but for the opponent side: the one most useful concrete change for their next debate, in second person, tied to this transcript.',
+  };
+  required.push(
+    'user_kindred_philosopher',
+    'outcome',
+    'assessment',
+    'common_ground',
+    'user_best_moment',
+    'user_growth',
+    'opponent_best_moment',
+    'opponent_growth',
+  );
   return { type: 'object', properties, required };
 }
 
@@ -169,7 +215,11 @@ function flatToolInputToJudgeOutput(input: Record<string, unknown>): JudgeOutput
   const opponent = buildSide('opponent');
   if (!user || !opponent) return null;
   const outcome = input.outcome;
-  if (outcome !== 'common_ground' && outcome !== 'distinct_positions' && outcome !== 'talked_past') {
+  if (
+    outcome !== 'common_ground' &&
+    outcome !== 'distinct_positions' &&
+    outcome !== 'talked_past'
+  ) {
     return null;
   }
   if (typeof input.user_kindred_philosopher !== 'string' || typeof input.assessment !== 'string') {
@@ -183,9 +233,14 @@ function flatToolInputToJudgeOutput(input: Record<string, unknown>): JudgeOutput
     opponent_justifications: opponent.justifications,
     outcome,
     assessment: input.assessment,
-    // common_ground is soft — the schema asks for it, but a missing one
-    // shouldn't sink an otherwise-valid verdict.
+    // The prose extras are soft — the schema asks for them, but a
+    // missing one shouldn't sink an otherwise-valid verdict.
     common_ground: typeof input.common_ground === 'string' ? input.common_ground : '',
+    user_best_moment: typeof input.user_best_moment === 'string' ? input.user_best_moment : '',
+    user_growth: typeof input.user_growth === 'string' ? input.user_growth : '',
+    opponent_best_moment:
+      typeof input.opponent_best_moment === 'string' ? input.opponent_best_moment : '',
+    opponent_growth: typeof input.opponent_growth === 'string' ? input.opponent_growth : '',
   };
 }
 
@@ -215,7 +270,11 @@ function nestedToolInputToJudgeOutput(input: Record<string, unknown>): JudgeOutp
   const opponentScores = readScores(input.opponent_scores);
   if (!userScores || !opponentScores) return null;
   const outcome = input.outcome;
-  if (outcome !== 'common_ground' && outcome !== 'distinct_positions' && outcome !== 'talked_past') {
+  if (
+    outcome !== 'common_ground' &&
+    outcome !== 'distinct_positions' &&
+    outcome !== 'talked_past'
+  ) {
     return null;
   }
   if (typeof input.user_kindred_philosopher !== 'string' || typeof input.assessment !== 'string') {
@@ -230,6 +289,11 @@ function nestedToolInputToJudgeOutput(input: Record<string, unknown>): JudgeOutp
     outcome,
     assessment: input.assessment,
     common_ground: typeof input.common_ground === 'string' ? input.common_ground : '',
+    user_best_moment: typeof input.user_best_moment === 'string' ? input.user_best_moment : '',
+    user_growth: typeof input.user_growth === 'string' ? input.user_growth : '',
+    opponent_best_moment:
+      typeof input.opponent_best_moment === 'string' ? input.opponent_best_moment : '',
+    opponent_growth: typeof input.opponent_growth === 'string' ? input.opponent_growth : '',
   };
 }
 
@@ -264,11 +328,11 @@ function coerceJustifications(value: unknown): Record<JudgeCriterion, string> {
 export function judgeSystemPrompt(locale: Locale = 'en'): string {
   const languageDirective =
     locale !== 'en' && LOCALE_FOR_PROMPT[locale]
-      ? `\n\nLANGUAGE: Write every human-readable value you pass to the tool — all justifications, the assessment, the common_ground, and the user_kindred_philosopher name — in ${LOCALE_FOR_PROMPT[locale]}. Render the chosen philosopher's name in its standard form in that language. The "outcome" value must remain exactly "common_ground", "distinct_positions", or "talked_past" in English.`
+      ? `\n\nLANGUAGE: Write every human-readable value you pass to the tool — all justifications, the assessment, the common_ground, both best_moment fields, both growth fields, and the user_kindred_philosopher name — in ${LOCALE_FOR_PROMPT[locale]}. Render the chosen philosopher's name in its standard form in that language. The "outcome" value must remain exactly "common_ground", "distinct_positions", or "talked_past" in English.`
       : '';
   return `You are the Arena judge — an impartial, rigorous reader of philosophical argument.
 
-CRITICAL PRINCIPLES — read all four before scoring:
+CRITICAL PRINCIPLES — read all five before scoring:
 
 1. NO WINNER. You are NOT judging which side is "right", and you do NOT crown a winner. Both sides may hold defensible positions; either may reason well or badly. Evaluate ARGUMENTATIVE QUALITY only, and score each side on its OWN merits — one side scoring high does not require the other to score low.
 
@@ -277,6 +341,8 @@ CRITICAL PRINCIPLES — read all four before scoring:
 3. NO CREDIT FOR JARGON. Mull is for the general public, not the academy. Reward the REASONING, never the vocabulary. A plain-language statement of a principle ("if everyone did that, the whole thing falls apart") counts EXACTLY as much as the technical name for it ("that fails the universalizability test"). Actively translate everyday phrasing into the principle it expresses, and score it as if the principle had been named outright. Never hand out a point because someone dropped a Latin tag, a school's name, or a piece of terminology. If anything, jargon used IN PLACE OF reasoning — name-dropping a principle without doing the work — is a weakness; mark it down, don't reward it.
 
 4. FINAL-TURN FAIRNESS. Each side gets a fixed number of turns, and whoever speaks last raises points the other side never had a chance to answer. Do NOT lower any score — engagement above all — because a side "failed" to rebut something said AFTER its own last turn. Judge each side's engagement only against what was already on the table when it actually spoke. When the turn count is uneven (a one-exchange spar, or a PvP match where one player got the last word), this is decisive: the side that didn't get the last word is not penalised for a silence the FORMAT imposed, not their reasoning.
+
+5. WRITE FOR THE PERSON, NOT THE ACADEMY. Every human-readable string you produce — justifications, assessment, common ground, best moments, growth advice — must read like a sharp, warm coach talking to someone with zero philosophy background. Short sentences. Everyday words. If a technical term is genuinely the clearest option, gloss it in a few plain words in the same breath ("that's a false dichotomy — treating two options as the only two when they aren't"). Quote the debaters' OWN words back to them wherever possible: feedback that cites the exact line it's about feels accurate; feedback about "your premises" in the abstract feels canned. Never grade the feedback prose down to fit the score — explain plainly WHY the score is what it is. Plain text only: your words render exactly as typed, so no markdown — no *asterisks*, no bullet lists, no headings.
 
 You must still be a TOUGH but FAIR critic. Most arguments contain real flaws — unsupported premises, equivocations, missed engagement, structural sprawl. Identifying these specifically is your job. Sycophantic generosity ("both sides made interesting points") is a failure mode you must avoid. If an argument was weak, say where and why. (Toughness is about the reasoning — it is NOT a reason to force a disagreement where the sides found agreement.)
 
@@ -323,9 +389,11 @@ Score each side on five criteria, each on a 1-5 integer scale:
    every key move that was open to it.
 
 For each criterion on each side, give a 1-2 sentence justification
-that names a specific move from the transcript. Do not hedge. Do not
-say "both sides were good"; that's not a justification, it's an
-evasion. Quote or paraphrase specific lines if it helps.
+that names a specific move from the transcript — quote their words
+when you can. Do not hedge. Do not say "both sides were good"; that's
+not a justification, it's an evasion. When a score is below 5, the
+justification should let the debater see the missing step: not just
+"the premise was unsupported" but WHICH claim needed support.
 
 Then set OUTCOME — what KIND of exchange this was (never who won):
   - "common_ground" if the two sides converged on a shared or
@@ -354,6 +422,22 @@ could be brought to share, in plain language:
   - Only if they genuinely share nothing, say so in one sentence — but
     look hard before concluding that.
 
+Then, for EACH side, write two short pieces of direct coaching:
+
+BEST_MOMENT — their single strongest moment in this exchange. Quote
+their own words (or closely paraphrase), then one sentence on why
+that move worked. This must be genuinely their best move, not a
+consolation prize — people improve fastest when they can see what
+working looks like in their own writing.
+
+GROWTH — the ONE most useful concrete change for their next debate.
+Second person, tied to a specific moment from THIS transcript: point
+at the exact claim they left hanging, the objection they let pass,
+or the pile-up that buried their best point — and say what doing it
+better would have sounded like, in one example phrase. One change
+only: a person can act on one note, not five. Encouraging in tone,
+concrete in content, 2-3 sentences, no jargon.
+
 Finally identify USER_KINDRED_PHILOSOPHER — pick ONE name from this
 list of well-known philosophers whose argumentative style the user
 most resembled in THIS debate (not their overall worldview, just
@@ -365,7 +449,7 @@ Heidegger, Sartre, Beauvoir, Camus, Arendt, Rawls, Nozick, Foucault,
 Williams, Singer, Parfit, Confucius, Mencius, Zhuangzi, Nagarjuna,
 Buddha, Laozi, Marcus Aurelius, Epictetus, Spinoza, Leibniz.
 
-Submit your evaluation by calling the ${JUDGE_TOOL_NAME} tool. Fill every field: all five scores for each side, a justification for each score, the user_kindred_philosopher, the outcome, the assessment, and the common_ground. Do not write any prose outside the tool call.${languageDirective}`;
+Submit your evaluation by calling the ${JUDGE_TOOL_NAME} tool. Fill every field: all five scores for each side, a justification for each score, the user_kindred_philosopher, the outcome, the assessment, the common_ground, and both sides' best_moment and growth. Do not write any prose outside the tool call.${languageDirective}`;
 }
 
 export function judgeUserPrompt(args: {

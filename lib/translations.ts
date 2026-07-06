@@ -5789,8 +5789,8 @@ export const TRANSLATIONS: TranslationMap = {
   'arena.match_context': { en: '▸ context (optional)', zh: '▸ 背景（可选）' },
   'arena.match_your_turn': { en: '▸ YOUR TURN', zh: '▸ 你的回合' },
   'arena.match_placeholder': {
-    en: "Your response. Press where they're weak, concede where they're right. Min 20 characters. The judge scores logical rigor, not stance.",
-    zh: '写下你的回应。在对方薄弱处施压，在对方有理处让步。至少 20 字。裁判评判逻辑的严谨，而非立场。',
+    en: 'Say what you think and why — one honest reason beats three fancy ones. Disagree, ask a question, or bring an example from your own life. The judge scores how you reason, not which side you take. (At least 20 characters.)',
+    zh: '说出你的想法和理由——一个真诚的理由胜过三个花哨的。你可以反驳、提问，或举一个亲身的例子。裁判评判的是你如何论证，而非你站哪边。（至少 20 字。）',
   },
   'arena.match_call_verdict': { en: '▶ CALL THE VERDICT', zh: '▶ 请求裁决' },
   'arena.match_judging': { en: '▸ JUDGING…', zh: '▸ 裁决中…' },
@@ -5815,11 +5815,33 @@ export const TRANSLATIONS: TranslationMap = {
   'arena.common_ground_header': { en: '▸ COMMON GROUND', zh: '▸ 共识所在' },
   'arena.your_score_line': { en: 'Your argument: {score} / 25', zh: '你的论证：{score} / 25' },
   'arena.opp_score_line': { en: '{name}: {score} / 25', zh: '{name}：{score} / 25' },
-  'arena.crit.validity': { en: 'Validity', zh: '有效性' },
+  'arena.crit.validity': { en: 'Logic', zh: '逻辑' },
   'arena.crit.premises': { en: 'Premises', zh: '前提' },
   'arena.crit.rigor': { en: 'Rigor', zh: '严谨' },
-  'arena.crit.elegance': { en: 'Elegance', zh: '优雅' },
+  'arena.crit.elegance': { en: 'Clarity', zh: '清晰' },
   'arena.crit.engagement': { en: 'Engagement', zh: '交锋' },
+  'arena.crit.validity_hint': {
+    en: 'Do your conclusions follow from your reasons?',
+    zh: '你的结论能否从你给的理由中得出？',
+  },
+  'arena.crit.premises_hint': {
+    en: 'Are your starting claims believable — and did you back them up?',
+    zh: '你的起点主张可信吗？有没有给出支撑？',
+  },
+  'arena.crit.rigor_hint': {
+    en: 'Principled reasoning, no cheap moves — plain words count as much as technical terms.',
+    zh: '讲原则、不耍花招——大白话与术语同样算数。',
+  },
+  'arena.crit.elegance_hint': {
+    en: 'Could a careful reader follow your argument easily?',
+    zh: '细心的读者能否轻松跟上你的论证？',
+  },
+  'arena.crit.engagement_hint': {
+    en: 'Did you answer what they actually said?',
+    zh: '你是否回应了对方真正说的话？',
+  },
+  'arena.match_best_header': { en: '▸ YOUR BEST MOVE', zh: '▸ 你的最佳一手' },
+  'arena.match_growth_header': { en: '▸ FOR NEXT TIME', zh: '▸ 下次可以试试' },
   'arena.match_kin_header': { en: '▸ YOUR ARGUMENTATIVE KIN', zh: '▸ 你的论辩同道' },
   'arena.match_kin_body': {
     en: 'The judge noted that in this debate, you argued most like {name}.',

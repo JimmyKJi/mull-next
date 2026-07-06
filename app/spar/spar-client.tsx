@@ -728,6 +728,74 @@ function JudgeOutcome({
           </div>
         )}
 
+        {/* Constructive coaching — older verdicts predate these fields. */}
+        {judge.user_best_moment && (
+          <div
+            style={{
+              marginTop: 10,
+              padding: '10px 12px',
+              background: '#22302A',
+              border: '2px solid #7FB7A6',
+            }}
+          >
+            <div
+              style={{
+                fontFamily: pixel,
+                fontSize: 9,
+                letterSpacing: '0.22em',
+                color: '#7FB7A6',
+                textTransform: 'uppercase',
+                marginBottom: 6,
+              }}
+            >
+              {t('arena.match_best_header', locale)}
+            </div>
+            <div
+              style={{
+                fontFamily: serif,
+                fontSize: 15,
+                color: 'var(--color-acc-soft)',
+                lineHeight: 1.6,
+              }}
+            >
+              {judge.user_best_moment}
+            </div>
+          </div>
+        )}
+        {judge.user_growth && (
+          <div
+            style={{
+              marginTop: 10,
+              padding: '10px 12px',
+              background: '#26201A',
+              border: '2px solid var(--color-acc)',
+            }}
+          >
+            <div
+              style={{
+                fontFamily: pixel,
+                fontSize: 9,
+                letterSpacing: '0.22em',
+                color: 'var(--color-acc)',
+                textTransform: 'uppercase',
+                marginBottom: 6,
+              }}
+            >
+              {t('arena.match_growth_header', locale)}
+            </div>
+            <div
+              style={{
+                fontFamily: serif,
+                fontSize: 15,
+                color: 'var(--color-acc-soft)',
+                lineHeight: 1.6,
+              }}
+            >
+              {judge.user_growth}
+            </div>
+          </div>
+        )}
+
         <div
           style={{
             marginTop: 10,

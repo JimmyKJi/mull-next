@@ -620,6 +620,86 @@ function VerdictPanel({
         </p>
       </div>
 
+      {/* Constructive coaching for the VIEWER's side — "user_*" fields are
+          always the challenger's, so flip for an opponent viewer. Older
+          verdicts predate these fields; render only when present. */}
+      {(() => {
+        const myBest = iAmChallenger ? judge.user_best_moment : judge.opponent_best_moment;
+        const myGrowth = iAmChallenger ? judge.user_growth : judge.opponent_growth;
+        return (
+          <>
+            {myBest && (
+              <div
+                style={{
+                  padding: '16px 20px',
+                  background: '#FFFCF4',
+                  border: '3px solid #2F5D5C',
+                  marginBottom: 18,
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: pixel,
+                    fontSize: 10,
+                    color: '#2F5D5C',
+                    letterSpacing: 0.4,
+                    textTransform: 'uppercase',
+                    marginBottom: 8,
+                  }}
+                >
+                  {t('arena.match_best_header', locale)}
+                </div>
+                <p
+                  style={{
+                    fontFamily: serif,
+                    fontSize: 16,
+                    color: 'var(--color-ink)',
+                    margin: 0,
+                    lineHeight: 1.65,
+                  }}
+                >
+                  {myBest}
+                </p>
+              </div>
+            )}
+            {myGrowth && (
+              <div
+                style={{
+                  padding: '16px 20px',
+                  background: 'var(--color-acc-soft)',
+                  border: '3px solid var(--color-acc-deep)',
+                  marginBottom: 18,
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: pixel,
+                    fontSize: 10,
+                    color: 'var(--color-acc-deep)',
+                    letterSpacing: 0.4,
+                    textTransform: 'uppercase',
+                    marginBottom: 8,
+                  }}
+                >
+                  {t('arena.match_growth_header', locale)}
+                </div>
+                <p
+                  style={{
+                    fontFamily: serif,
+                    fontSize: 16,
+                    color: 'var(--color-ink)',
+                    margin: 0,
+                    lineHeight: 1.65,
+                  }}
+                >
+                  {myGrowth}
+                </p>
+              </div>
+            )}
+          </>
+        );
+      })()}
+
       {judge.common_ground && (
         <div
           style={{
