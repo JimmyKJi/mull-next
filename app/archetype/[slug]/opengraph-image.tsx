@@ -31,12 +31,15 @@ export default async function ArchetypeOGImage({ params }: { params: Promise<{ s
 
   const fonts = await loadOGFonts();
 
-  const CREAM = 'var(--color-cream)';
-  const CREAM_2 = 'var(--color-cream-2)';
-  const INK = 'var(--color-ink)';
-  const INK_SOFT = 'var(--color-ink-soft)';
-  const ACC = 'var(--color-acc)';
-  const ACC_DEEP = 'var(--color-acc-deep)';
+  // Hex literals, NOT CSS var() tokens: Satori (next/og) renders with no
+  // stylesheet context, so custom properties fail to parse and the whole
+  // image 500s. Keep in sync with globals.css by hand.
+  const CREAM = '#faf6ec';
+  const CREAM_2 = '#f1ead8';
+  const INK = '#221e18';
+  const INK_SOFT = '#4a4338';
+  const ACC = '#b8862f';
+  const ACC_DEEP = '#8c6520';
 
   return new ImageResponse(
     <div

@@ -31,7 +31,13 @@ export default async function ProfileOGImage({ params }: { params: Promise<{ han
 
   if (!profile) return genericCard(fonts);
 
-  const name = profile.display_name || profile.handle;
+  // Display names are free text and can contain CJK or emoji — but the
+  // bundled OG fonts are Latin-only, so those glyphs render as blanks.
+  // Fall back to the (ASCII) @handle when the display name needs glyphs
+  // we can't draw.
+  const rawName = profile.display_name || profile.handle;
+  const nonLatin = /[^\u0020-\u024F\u1E00-\u1EFF\u2000-\u206F]/;
+  const name = nonLatin.test(rawName) ? `@${profile.handle}` : rawName;
 
   let archetype: string | null = null;
   let flavor: string | null = null;
@@ -51,12 +57,15 @@ export default async function ProfileOGImage({ params }: { params: Promise<{ han
   const figureSvg = archetypeKey ? FIGURES[archetypeKey] : null;
   const figureDataUri = figureSvg ? svgToDataUri(figureSvg) : null;
 
-  const CREAM = 'var(--color-cream)';
-  const CREAM_2 = 'var(--color-cream-2)';
-  const INK = 'var(--color-ink)';
-  const INK_SOFT = 'var(--color-ink-soft)';
-  const ACC = 'var(--color-acc)';
-  const ACC_DEEP = 'var(--color-acc-deep)';
+  // Hex literals, NOT CSS var() tokens: Satori (next/og) renders with no
+  // stylesheet context, so custom properties fail to parse and the whole
+  // image 500s. Keep in sync with globals.css by hand.
+  const CREAM = '#faf6ec';
+  const CREAM_2 = '#f1ead8';
+  const INK = '#221e18';
+  const INK_SOFT = '#4a4338';
+  const ACC = '#b8862f';
+  const ACC_DEEP = '#8c6520';
 
   return new ImageResponse(
     <div
@@ -308,10 +317,10 @@ export default async function ProfileOGImage({ params }: { params: Promise<{ han
 }
 
 function genericCard(fonts: Awaited<ReturnType<typeof loadOGFonts>>) {
-  const CREAM = 'var(--color-cream)';
-  const INK = 'var(--color-ink)';
-  const ACC = 'var(--color-acc)';
-  const INK_SOFT = 'var(--color-ink-soft)';
+  const CREAM = '#faf6ec';
+  const INK = '#221e18';
+  const ACC = '#b8862f';
+  const INK_SOFT = '#4a4338';
   return new ImageResponse(
     <div
       style={{

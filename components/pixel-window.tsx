@@ -104,8 +104,13 @@ export function PixelWindow({
             fontFamily: 'var(--font-pixel-display)',
           }}
         >
+          {/* Title wraps freely; badges are decorative filename chips
+              ("PHILOSOPHER_PROFILE.MD") that must never force the page
+              wider than the viewport — on narrow screens they ellipsize
+              instead (a shrink-0 here once pushed /philosopher/[slug]
+              to 483px on a 375px phone). */}
           <span>{title}</span>
-          {badge ? <span className="shrink-0 text-acc">{badge}</span> : null}
+          {badge ? <span className="min-w-0 truncate text-acc">{badge}</span> : null}
         </div>
       ) : null}
       <div className={(flush ? '' : 'px-5 py-5 sm:px-7 sm:py-6 ') + (bodyClassName ?? '')}>

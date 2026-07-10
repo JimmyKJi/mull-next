@@ -269,7 +269,7 @@ export default async function PhilosopherDetailPage({
                 style={{ fontFamily: 'var(--font-editorial)' }}
               >
                 {bio.split('\n\n').map((para, i) => (
-                  <p key={i}>{para}</p>
+                  <p key={i}>{renderEmphasis(para)}</p>
                 ))}
               </div>
             </PixelWindow>
@@ -604,4 +604,22 @@ export default async function PhilosopherDetailPage({
       </main>
     </>
   );
+}
+
+// Bio prose uses light markdown emphasis (*Critique of Pure Reason*)
+// but renders as plain text nodes — convert *…* spans to <em> so book
+// titles italicize instead of showing literal asterisks. Everything
+// stays a React node (no HTML strings), so escaping is preserved.
+function renderEmphasis(text: string): React.ReactNode[] {
+  const out: React.ReactNode[] = [];
+  const re = /\*([^*\n]+)\*/g;
+  let last = 0;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(text))) {
+    if (m.index > last) out.push(text.slice(last, m.index));
+    out.push(<em key={m.index}>{m[1]}</em>);
+    last = m.index + m[0].length;
+  }
+  if (last < text.length) out.push(text.slice(last));
+  return out;
 }
