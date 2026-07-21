@@ -20,6 +20,7 @@ import {
   makeCustomTopicSlug,
   customTopicFromSlug,
   MIN_CUSTOM_TOPIC_CHARS,
+  MAX_CUSTOM_TOPIC_CHARS,
   type ArenaTopic,
 } from '@/lib/arena/data';
 import { generatePhilosopherTurn } from '@/lib/arena/philosopher-voice';
@@ -70,6 +71,12 @@ export async function POST(req: Request) {
         { error: 'Custom topics are only available in practice debates.' },
         { status: 400 },
       );
+    }
+    // Reject oversized bodies up front. normalizeCustomTopicText would
+    // silently truncate to MAX chars anyway, but bounding the raw input
+    // avoids doing string work on a multi-megabyte payload.
+    if ((customPrompt as string).length > MAX_CUSTOM_TOPIC_CHARS * 8) {
+      return NextResponse.json({ error: 'Topic is too long.' }, { status: 400 });
     }
     const clean = normalizeCustomTopicText(customPrompt as string);
     if (clean.length < MIN_CUSTOM_TOPIC_CHARS) {

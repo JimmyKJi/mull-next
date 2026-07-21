@@ -68,7 +68,8 @@ export type TodayVM = {
   iframeSrc: string | null;
 };
 
-const isVec = (v: unknown): v is number[] => Array.isArray(v) && v.length === 16;
+const isVec = (v: unknown): v is number[] =>
+  Array.isArray(v) && v.length === 16 && v.every((n) => Number.isFinite(n));
 const b64 = (obj: unknown) =>
   encodeURIComponent(Buffer.from(JSON.stringify(obj)).toString('base64'));
 
@@ -159,7 +160,11 @@ export default async function TodayHome({ userId, locale }: { userId: string; lo
         timestamp: Date.parse(d.created_at),
         delta: d.vector_delta as number[],
       })),
-  ].sort((a, b) => a.timestamp - b.timestamp);
+  ]
+    // Drop events whose DB timestamp didn't parse — a NaN timestamp would
+    // sort unpredictably and scramble the trajectory's chronology.
+    .filter((e) => Number.isFinite(e.timestamp))
+    .sort((a, b) => a.timestamp - b.timestamp);
 
   const trajectory = computeTrajectory(events);
   const latestPos = trajectory.length

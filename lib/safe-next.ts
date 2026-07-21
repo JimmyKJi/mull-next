@@ -10,6 +10,10 @@
 
 export function safeNextPath(raw: string | null | undefined): string | null {
   if (!raw) return null;
+  // Reject control characters (CR/LF/NUL/etc). A real path never contains
+  // them; keeping them out means this value can't smuggle a newline into
+  // any redirect header if the helper is ever reused server-side.
+  if (/[\u0000-\u001f\u007f]/.test(raw)) return null;
   if (!raw.startsWith('/')) return null;
   if (raw.startsWith('//') || raw.startsWith('/\\')) return null;
   return raw;

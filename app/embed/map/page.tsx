@@ -39,7 +39,11 @@ function decodeVector(raw: string | undefined): number[] | undefined {
     if (!Array.isArray(arr) || arr.length !== 16) return undefined;
     return arr.map((n) => {
       const x = Number(n);
-      return Number.isFinite(x) ? x : 0;
+      // Clamp to the real 0–10 dimension range. This route is public and
+      // takes ?v= from anyone; clamping keeps a crafted vector from
+      // placing an off-canvas point or skewing the constellation's
+      // auto-scale. Non-finite → 0.
+      return Number.isFinite(x) ? Math.max(0, Math.min(10, x)) : 0;
     });
   } catch {
     return undefined;
