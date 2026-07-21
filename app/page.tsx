@@ -21,6 +21,8 @@ import { ARCHETYPES } from '@/lib/archetypes';
 import { getArchetypeColor } from '@/lib/archetype-colors';
 import { getDailyWisdom } from '@/lib/daily-wisdom';
 import { getServerLocale } from '@/lib/locale-server';
+import { createClient } from '@/utils/supabase/server';
+import TodayHome from '@/components/today-home';
 import { t } from '@/lib/translations';
 import { ConstellationMount } from '@/components/constellation-mount';
 import { HeroSprites } from '@/components/hero-sprites';
@@ -52,7 +54,26 @@ const EYEBROW_TODAY: Record<string, string> = {
   ko: '오늘의 사상가',
 };
 
-export default async function HomeV2() {
+// The home route branches on auth. Anonymous visitors (and every
+// crawler — bots are never logged in, so SEO/OG are unaffected) get the
+// editorial marketing page below. A signed-in user gets the calm
+// "Today" home base instead, so returning means landing on today's
+// question + their streak + pilgrimage — not re-reading the brochure or
+// digging into /account. This is the single highest-leverage retention
+// fix: the front door should know you.
+export default async function Home() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (user) {
+    const locale = await getServerLocale();
+    return <TodayHome userId={user.id} locale={locale} />;
+  }
+  return <MarketingHome />;
+}
+
+async function MarketingHome() {
   const locale = await getServerLocale();
   const { philosopher } = getDailyWisdom();
   const todayLabel = EYEBROW_TODAY[locale] ?? EYEBROW_TODAY.en;

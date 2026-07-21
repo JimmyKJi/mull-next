@@ -316,6 +316,58 @@ export const TRANSLATIONS: TranslationMap = {
     zh: '五个问题，关于无法言说之物。',
   },
 
+  // ── Today home (logged-in front door, components/today-home.tsx) ──
+  // Contemplative register: the daily question is the act; everything
+  // else is quiet continuity. en + zh only; other locales fall back.
+  'today.eyebrow': { en: 'TODAY', zh: '今天' },
+  'today.welcome_line': {
+    en: 'Where your thinking stands today.',
+    zh: '你此刻思考的落点。',
+  },
+  'today.q_eyebrow': { en: "TODAY'S QUESTION", zh: '今日之问' },
+  'today.answered_eyebrow': { en: 'DONE FOR TODAY', zh: '今日已成' },
+  'today.q_for': { en: 'FOR {archetype}', zh: '为「{archetype}」而设' },
+  'today.sit_with_it': { en: '▶ SIT WITH IT', zh: '▶ 坐下来想想' },
+  'today.answered_body': {
+    en: "You sat with today's question. A new one arrives tomorrow.",
+    zh: '你已与今日之问共处。明天会有新的问题。',
+  },
+  'today.shift_today_label': { en: 'Where today moved you', zh: '今天让你移动之处' },
+  'today.reread': { en: 'Re-read what you wrote', zh: '重读你写下的' },
+  'today.trend_eyebrow': { en: 'LATELY', zh: '近来' },
+  'today.trend_line': {
+    en: 'Your mind has been drifting toward {dims}.',
+    zh: '你的思想一直在朝着 {dims} 漂移。',
+  },
+  'today.you_stand': { en: 'You stand as', zh: '你立于' },
+  'today.nearest_mind': { en: 'Nearest mind', zh: '最近的心灵' },
+  'today.practice_eyebrow': { en: 'YOUR PRACTICE', zh: '你的修习' },
+  'today.streak_days': { en: '{n} days of reflection', zh: '连续反思 {n} 天' },
+  'today.streak_none': { en: 'Begin a rhythm', zh: '开始一段节律' },
+  'today.dilemmas_total': { en: '{n} dilemmas answered', zh: '已回应 {n} 个困境' },
+  'today.fuller_eyebrow': { en: 'THE FULLER VIEW', zh: '更完整的视野' },
+  'today.view_trajectory': { en: 'Your trajectory', zh: '你的轨迹' },
+  'today.view_map': { en: 'The constellation', zh: '星图' },
+  'today.view_account': { en: "All you've made", zh: '你留下的一切' },
+  'today.unplaced_title': {
+    en: "You haven't found your position yet.",
+    zh: '你还没有找到自己的位置。',
+  },
+  'today.unplaced_body': {
+    en: 'Take the quiz — it personalizes your daily question, your map, and everyone you stand near.',
+    zh: '做一次测验——它会为你定制每日之问、你的地图，以及与你为邻的所有人。',
+  },
+  'today.unplaced_cta': { en: 'Find your place →', zh: '找到你的位置 →' },
+  'today.share_cta': {
+    en: "Invite a friend to today's question",
+    zh: '邀请朋友一起想今天的问题',
+  },
+  'today.share_copied': { en: 'Link copied', zh: '链接已复制' },
+  'today.share_text': {
+    en: 'Today\'s question on Mull: "{question}" — where do you land?',
+    zh: 'Mull 今日之问：「{question}」——你会怎么选？',
+  },
+
   'nav.dilemma': {
     en: "Today's dilemma",
     es: 'Dilema de hoy',
