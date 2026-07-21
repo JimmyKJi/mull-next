@@ -336,6 +336,7 @@ export const TRANSLATIONS: TranslationMap = {
   'today.reread': { en: 'Re-read what you wrote', zh: '重读你写下的' },
   'today.trend_eyebrow': { en: 'LATELY', zh: '近来' },
   'today.fingerprint_eyebrow': { en: 'THE SHAPE OF YOUR MIND', zh: '你思想的形状' },
+  'today.strongest': { en: 'Strongest in {dims}.', zh: '在 {dims} 上最为突出。' },
   'today.map_eyebrow': { en: 'POSITION AMONG THE THINKERS', zh: '你在群星中的位置' },
   'today.map_sub': {
     en: 'Where you sit on the map. Drag to explore who stands near you.',

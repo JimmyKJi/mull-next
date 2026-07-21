@@ -1,20 +1,17 @@
 // TodayHome — the logged-in front door.
 //
 // Anonymous visitors get the editorial marketing page (app/page.tsx);
-// a signed-in user gets THIS instead: a calm-but-alive "here is today"
-// dashboard. It leads with the daily question (the act), then makes the
-// user's mind VISIBLE — their archetype figure, the shape of their mind,
-// their position among the thinkers, how they've moved, their rhythm —
-// so returning feels like opening a living instrument, not re-reading a
-// brochure or digging into /account.
+// a signed-in user gets THIS: a wide, archetype-themed dashboard that
+// makes their mind VISIBLE. Single column on mobile; on desktop it
+// spreads into a bento grid that actually fills the width (the daily
+// question + identity across the top, then a full-width constellation,
+// movement chart, and rhythm heatmap).
 //
-// Everything is themed to the user's archetype color. Reuses existing
-// visual components (ArchetypeSprite, TrajectoryChart, ActivityHeatmap,
-// the /embed/map constellation) rather than inventing new ones.
-//
-// Split into a data-fetching wrapper (default export) + a pure view
-// (TodayHomeView) so every state renders from a mock in review without
-// an authenticated DB session.
+// Reuses existing visual components (ArchetypeSprite, TrajectoryChart,
+// ActivityHeatmap, the /embed/map constellation) plus two new small
+// ones (DimensionRadar, StreakStrip). Split into a data-fetching
+// wrapper (default export) + a pure view (TodayHomeView) so every state
+// renders from a mock in review without an authenticated DB session.
 
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
@@ -22,7 +19,7 @@ import { getUserOrientation } from '@/lib/user-orientation';
 import { getPersonalizedDilemma, localizeDeepDilemma } from '@/lib/archetype-dilemmas';
 import { computeDilemmaStreak } from '@/lib/streak';
 import { computeTrajectory, type TrajectoryEvent } from '@/lib/trajectory';
-import { topShifts } from '@/lib/dimensions';
+import { topShifts, DIM_KEYS } from '@/lib/dimensions';
 import { nearestPhilosophersToVector } from '@/lib/recommendations';
 import { philosopherSlug } from '@/lib/philosophers';
 import { localizePhilosopher } from '@/lib/philosophers-i18n';
@@ -32,7 +29,8 @@ import PilgrimageStatusCard from '@/components/pilgrimage-status-card';
 import NextActionCard from '@/components/next-action-card';
 import DailyQuestionShare from '@/components/daily-question-share';
 import { ArchetypeSprite } from '@/components/archetype-sprite';
-import { DimensionFingerprint } from '@/components/dimension-fingerprint';
+import { DimensionRadar } from '@/components/dimension-radar';
+import { StreakStrip } from '@/components/streak-strip';
 import { TrajectoryChart } from '@/components/trajectory-chart';
 import { ActivityHeatmap } from '@/components/activity-heatmap';
 
@@ -62,6 +60,9 @@ export type TodayVM = {
   total: number;
   nearestName: string | null;
   fingerprint: number[] | null;
+  strongest: string[];
+  reflectDates: string[];
+  todayKey: string;
   trajectory: { timestamp: number; after: number[] }[];
   timestamps: number[];
   iframeSrc: string | null;
@@ -82,9 +83,6 @@ export default async function TodayHome({ userId, locale }: { userId: string; lo
   const today = getPersonalizedDilemma(orientation.archetypeKey);
   const lz = localizeDeepDilemma(today.dilemma, locale);
 
-  // Everything the dashboard needs: dilemma responses (streak, today's
-  // shift, drift), plus quiz/diary/exercise vectors for the trajectory,
-  // position map, and activity rhythm.
   const [dilemmaRes, quizRes, diaryRes, exRes, { count: dilemmaTotal }] = await Promise.all([
     supabase
       .from('dilemma_responses')
@@ -133,7 +131,6 @@ export default async function TodayHome({ userId, locale }: { userId: string; lo
     name: t(`dim.${s.key}.name`, locale),
   }));
 
-  // Recent drift — the renewable hook.
   const recentDeltas = dilemmas
     .slice(0, 14)
     .map((r) => r.vector_delta)
@@ -147,7 +144,6 @@ export default async function TodayHome({ userId, locale }: { userId: string; lo
         ).map((s) => t(`dim.${s.key}.name`, locale))
       : [];
 
-  // Build the trajectory across every kind of event, oldest → newest.
   const events: TrajectoryEvent[] = [
     ...(quizRes.data ?? [])
       .filter((q) => isVec(q.vector))
@@ -156,21 +152,7 @@ export default async function TodayHome({ userId, locale }: { userId: string; lo
         timestamp: Date.parse(q.taken_at),
         vector: q.vector as number[],
       })),
-    ...dilemmas
-      .filter((d) => isVec(d.vector_delta))
-      .map<TrajectoryEvent>((d) => ({
-        kind: 'delta',
-        timestamp: Date.parse(d.created_at),
-        delta: d.vector_delta as number[],
-      })),
-    ...(diaryRes.data ?? [])
-      .filter((d) => isVec(d.vector_delta))
-      .map<TrajectoryEvent>((d) => ({
-        kind: 'delta',
-        timestamp: Date.parse(d.created_at),
-        delta: d.vector_delta as number[],
-      })),
-    ...(exRes.data ?? [])
+    ...[...dilemmas, ...(diaryRes.data ?? []), ...(exRes.data ?? [])]
       .filter((d) => isVec(d.vector_delta))
       .map<TrajectoryEvent>((d) => ({
         kind: 'delta',
@@ -186,13 +168,20 @@ export default async function TodayHome({ userId, locale }: { userId: string; lo
   const fingerprint = isVec(latestPos) ? latestPos : null;
   const timestamps = events.map((e) => e.timestamp);
 
-  // Position map: current point + last-10 trail.
   const trail = trajectory.slice(-10).map((p) => p.after);
   const iframeSrc = fingerprint
     ? `/embed/map?v=${b64(fingerprint)}${trail.length > 1 ? `&h=${b64(trail)}` : ''}`
     : null;
 
   const nearest = fingerprint ? nearestPhilosophersToVector(fingerprint, 1)[0]?.item : null;
+
+  const strongest = fingerprint
+    ? fingerprint
+        .map((v, i) => ({ i, v }))
+        .sort((a, b) => b.v - a.v)
+        .slice(0, 3)
+        .map((x) => t(`dim.${DIM_KEYS[x.i]}.name`, locale))
+    : [];
 
   const vm: TodayVM = {
     locale,
@@ -214,6 +203,9 @@ export default async function TodayHome({ userId, locale }: { userId: string; lo
       ? localizePhilosopher(nearest, philosopherSlug(nearest.name), locale).name
       : null,
     fingerprint,
+    strongest,
+    reflectDates: dates,
+    todayKey: today.dateKey,
     trajectory,
     timestamps,
     iframeSrc,
@@ -236,8 +228,8 @@ function formatDate(dateKey: string, locale: Locale): string {
 export function TodayHomeView({ vm }: { vm: TodayVM }) {
   const { locale, accent } = vm;
   return (
-    <main className="mx-auto max-w-[760px] px-6 pb-32 pt-10 sm:px-10 sm:pt-14">
-      {/* Masthead — quiet, time-anchored */}
+    <main className="mx-auto max-w-[1180px] px-4 pb-32 pt-10 sm:px-6 sm:pt-12 lg:px-8">
+      {/* Masthead */}
       <div
         style={{
           fontFamily: pixel,
@@ -263,369 +255,96 @@ export function TodayHomeView({ vm }: { vm: TodayVM }) {
           fontSize: 30,
           fontWeight: 500,
           color: 'var(--color-ink)',
-          lineHeight: 1.25,
-          margin: '14px 0 0',
+          lineHeight: 1.2,
+          margin: '12px 0 0',
           letterSpacing: '-0.3px',
         }}
       >
         {t('today.welcome_line', locale)}
       </h1>
 
-      {/* Identity hero — figure + archetype + nearest mind + streak, then
-          the shape-of-your-mind graph. Archetype-themed. */}
-      {vm.placed && vm.archetypeName && vm.fingerprint ? (
-        <section
-          style={{
-            marginTop: 22,
-            border: `4px solid ${accent.deep}`,
-            background: accent.soft,
-            boxShadow: `6px 6px 0 0 ${accent.deep}`,
-            padding: '18px 20px',
-          }}
-        >
-          <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
-            <div style={{ flexShrink: 0 }}>
-              <ArchetypeSprite archetypeKey={vm.archetypeKey!} size={72} framed />
-            </div>
-            <div style={{ minWidth: 0, flex: '1 1 200px' }}>
-              <div
-                style={{
-                  fontFamily: pixel,
-                  fontSize: 9,
-                  color: accent.deep,
-                  letterSpacing: '0.2em',
-                  textTransform: 'uppercase',
-                  marginBottom: 4,
-                }}
-              >
-                {t('today.you_stand', locale)}
-              </div>
-              <div
-                style={{
-                  fontFamily: editorial,
-                  fontSize: 26,
-                  fontWeight: 500,
-                  color: 'var(--color-ink)',
-                  lineHeight: 1.1,
-                }}
-              >
-                {vm.archetypeName}
-              </div>
-              <div
-                style={{
-                  marginTop: 6,
-                  display: 'flex',
-                  gap: 14,
-                  flexWrap: 'wrap',
-                  fontFamily: serif,
-                  fontSize: 13,
-                  color: 'var(--color-ink-soft)',
-                }}
-              >
-                {vm.nearestName && (
-                  <span>
-                    {t('today.nearest_mind', locale)}:{' '}
-                    <strong style={{ color: 'var(--color-ink)' }}>{vm.nearestName}</strong>
-                  </span>
-                )}
-                {vm.streak > 0 && (
-                  <span style={{ color: accent.deep }}>
-                    ● {t('today.streak_days', locale, { n: vm.streak })}
-                  </span>
-                )}
-              </div>
-            </div>
+      {!vm.placed && <UnplacedBanner locale={locale} />}
+
+      {vm.placed ? (
+        <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-start lg:gap-5">
+          {/* Row 1 — the act (left) + who you are (right) */}
+          <div className="lg:col-span-7">
+            <QuestionCard vm={vm} />
           </div>
-          <div style={{ marginTop: 16 }}>
-            <div
-              style={{
-                fontFamily: pixel,
-                fontSize: 9,
-                color: accent.deep,
-                letterSpacing: '0.2em',
-                textTransform: 'uppercase',
-                marginBottom: 10,
-              }}
-            >
-              {t('today.fingerprint_eyebrow', locale)}
-            </div>
-            <DimensionFingerprint vector={vm.fingerprint} locale={locale} accent={accent} n={6} />
+          <div className="lg:col-span-5">
+            <IdentityCard vm={vm} />
           </div>
-        </section>
-      ) : (
-        !vm.placed && (
-          <Link
-            href="/quiz"
-            style={{
-              display: 'block',
-              marginTop: 24,
-              padding: '16px 20px',
-              background: 'var(--color-acc-soft)',
-              border: '3px solid var(--color-ink)',
-              boxShadow: '4px 4px 0 0 var(--color-acc)',
-              textDecoration: 'none',
-              color: 'inherit',
-            }}
-            className="transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
-          >
-            <div
-              style={{
-                fontFamily: serif,
-                fontSize: 17,
-                fontWeight: 500,
-                color: 'var(--color-ink)',
-                marginBottom: 4,
-              }}
-            >
-              {t('today.unplaced_title', locale)}
-            </div>
-            <div
-              style={{
-                fontFamily: serif,
-                fontStyle: 'italic',
-                fontSize: 14.5,
-                color: 'var(--color-ink-soft)',
-                lineHeight: 1.5,
-                marginBottom: 8,
-              }}
-            >
-              {t('today.unplaced_body', locale)}
-            </div>
-            <div
-              style={{
-                fontFamily: pixel,
-                fontSize: 11,
-                color: 'var(--color-acc-deep)',
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase',
-              }}
-            >
-              {t('today.unplaced_cta', locale)}
-            </div>
-          </Link>
-        )
-      )}
 
-      {/* ── Today's question — the daily act ── */}
-      <section
-        style={{
-          marginTop: 22,
-          border: '4px solid var(--color-ink)',
-          background: '#FFFCF4',
-          boxShadow: '6px 6px 0 0 var(--color-ink)',
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: 8,
-            flexWrap: 'wrap',
-            borderBottom: '4px solid var(--color-ink)',
-            background: 'var(--color-ink)',
-            color: 'var(--color-acc-soft)',
-            padding: '8px 16px',
-            fontFamily: pixel,
-            fontSize: 10,
-            letterSpacing: '0.22em',
-            textTransform: 'uppercase',
-          }}
-        >
-          <span>
-            ▶{' '}
-            {vm.respondedToday ? t('today.answered_eyebrow', locale) : t('today.q_eyebrow', locale)}
-          </span>
-          {vm.archetypeName && (
-            <span style={{ color: accent.primary }} className="min-w-0 truncate">
-              {t('today.q_for', locale, { archetype: vm.archetypeName.toUpperCase() })}
-            </span>
-          )}
-        </div>
-
-        <div style={{ padding: '22px 24px 24px' }}>
-          <p
-            style={{
-              fontFamily: editorial,
-              fontSize: 25,
-              fontWeight: 500,
-              color: 'var(--color-ink)',
-              lineHeight: 1.4,
-              margin: 0,
-            }}
-          >
-            {vm.prompt}
-          </p>
-
-          {vm.respondedToday ? (
-            <div style={{ marginTop: 18 }}>
-              <div
-                style={{
-                  fontFamily: serif,
-                  fontStyle: 'italic',
-                  fontSize: 15.5,
-                  color: 'var(--color-ink-soft)',
-                  lineHeight: 1.55,
-                }}
-              >
-                {t('today.answered_body', locale)}
-              </div>
-              {vm.todayShifts.length > 0 && (
-                <div style={{ marginTop: 16 }}>
-                  <div
-                    style={{
-                      fontFamily: pixel,
-                      fontSize: 9,
-                      color: 'var(--color-acc-deep)',
-                      letterSpacing: '0.18em',
-                      textTransform: 'uppercase',
-                      marginBottom: 8,
-                    }}
-                  >
-                    {t('today.shift_today_label', locale)}
-                  </div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14 }}>
-                    {vm.todayShifts.map((s) => (
-                      <span key={s.key} style={{ fontFamily: serif, fontSize: 14 }}>
-                        <strong
-                          style={{
-                            fontVariantNumeric: 'tabular-nums',
-                            color: s.delta > 0 ? '#2F5D5C' : '#7A2E2E',
-                          }}
-                        >
-                          {s.delta > 0 ? '+' : ''}
-                          {s.delta.toFixed(1)}
-                        </strong>{' '}
-                        <span style={{ color: 'var(--color-ink-soft)' }}>{s.name}</span>
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-              <Link
-                href="/dilemma"
-                style={{
-                  display: 'inline-block',
-                  marginTop: 18,
-                  fontFamily: pixel,
-                  fontSize: 11,
-                  color: 'var(--color-acc-deep)',
-                  letterSpacing: '0.14em',
-                  textTransform: 'uppercase',
-                  textDecoration: 'underline',
-                  textUnderlineOffset: 3,
-                }}
-              >
-                {t('today.reread', locale)} →
-              </Link>
-            </div>
-          ) : (
-            <>
-              {vm.hint && (
-                <p
+          {/* Full-width visual showpieces (each hides until it has data) */}
+          {vm.iframeSrc && (
+            <div className="lg:col-span-12">
+              <VisualBlock eyebrow={t('today.map_eyebrow', locale)} accent={accent}>
+                <p style={captionStyle}>{t('today.map_sub', locale)}</p>
+                <div
                   style={{
-                    fontFamily: serif,
-                    fontStyle: 'italic',
-                    fontSize: 14.5,
-                    color: 'var(--color-ink-soft)',
-                    lineHeight: 1.55,
-                    margin: '14px 0 0',
+                    position: 'relative',
+                    height: 460,
+                    border: `2px solid ${accent.deep}`,
+                    background: '#FFFCF4',
+                    boxShadow: `3px 3px 0 0 ${accent.primary}`,
+                    overflow: 'hidden',
                   }}
                 >
-                  {vm.hint}
-                </p>
-              )}
-              <Link
-                href="/dilemma"
-                className="pixel-press"
-                style={{
-                  display: 'inline-block',
-                  marginTop: 20,
-                  padding: '13px 22px',
-                  background: accent.primary,
-                  color: '#1A1820',
-                  border: '3px solid var(--color-ink)',
-                  boxShadow: `4px 4px 0 0 ${accent.deep}`,
-                  fontFamily: pixel,
-                  fontSize: 12,
-                  letterSpacing: '0.14em',
-                  textTransform: 'uppercase',
-                  textDecoration: 'none',
-                  transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
-                }}
-              >
-                {t('today.sit_with_it', locale)}
-              </Link>
-            </>
+                  <iframe
+                    src={vm.iframeSrc}
+                    style={{ width: '100%', height: '100%', border: 0, display: 'block' }}
+                    title={t('a11y.map_position', locale)}
+                    loading="lazy"
+                  />
+                </div>
+              </VisualBlock>
+            </div>
           )}
 
-          <div style={{ marginTop: 20, paddingTop: 14, borderTop: '1px solid var(--color-line)' }}>
-            <DailyQuestionShare question={vm.prompt} locale={locale} />
-          </div>
-        </div>
-      </section>
-
-      {/* Post-completion nudge — only once today's done. */}
-      {vm.respondedToday && (
-        <div style={{ marginTop: 22 }}>
-          <NextActionCard
-            quizCount={vm.placed ? 1 : 0}
-            respondedToday={vm.respondedToday}
-            streak={vm.streak}
-            hasShareable={!!vm.archetypeKey}
-            topArchetypeKey={vm.archetypeKey ?? undefined}
-            locale={locale}
-          />
-        </div>
-      )}
-
-      {/* Position among the thinkers — the constellation, interactive. */}
-      {vm.iframeSrc && (
-        <VisualBlock eyebrow={t('today.map_eyebrow', locale)} accent={accent}>
-          <p style={captionStyle}>{t('today.map_sub', locale)}</p>
-          <div
-            style={{
-              position: 'relative',
-              height: 420,
-              border: `2px solid ${accent.deep}`,
-              background: '#FFFCF4',
-              boxShadow: `3px 3px 0 0 ${accent.primary}`,
-              overflow: 'hidden',
-            }}
-          >
-            <iframe
-              src={vm.iframeSrc}
-              style={{ width: '100%', height: '100%', border: 0, display: 'block' }}
-              title={t('a11y.map_position', locale)}
-              loading="lazy"
-            />
-          </div>
-        </VisualBlock>
-      )}
-
-      {/* How your mind has moved — the trajectory line graph. */}
-      {vm.trajectory.length >= 3 && (
-        <VisualBlock eyebrow={t('today.movement_eyebrow', locale)} accent={accent}>
-          {vm.driftStr && (
-            <p style={captionStyle}>{t('today.trend_line', locale, { dims: vm.driftStr })}</p>
+          {vm.trajectory.length >= 3 && (
+            <div className="lg:col-span-12">
+              <VisualBlock eyebrow={t('today.movement_eyebrow', locale)} accent={accent}>
+                {vm.driftStr && (
+                  <p style={captionStyle}>{t('today.trend_line', locale, { dims: vm.driftStr })}</p>
+                )}
+                <TrajectoryChart trajectory={vm.trajectory} accent={accent} />
+              </VisualBlock>
+            </div>
           )}
-          <TrajectoryChart trajectory={vm.trajectory} accent={accent} />
-        </VisualBlock>
+
+          {vm.timestamps.length > 0 && (
+            <div className="lg:col-span-12">
+              <VisualBlock eyebrow={t('today.rhythm_eyebrow', locale)} accent={accent}>
+                <ActivityHeatmap timestamps={vm.timestamps} accent={accent} locale={locale} />
+              </VisualBlock>
+            </div>
+          )}
+
+          {/* Row — pilgrimage + post-completion nudge */}
+          <div className="lg:col-span-6">
+            <PilgrimageStatusCard />
+          </div>
+          {vm.respondedToday && (
+            <div className="lg:col-span-6">
+              <NextActionCard
+                quizCount={1}
+                respondedToday={vm.respondedToday}
+                streak={vm.streak}
+                hasShareable={!!vm.archetypeKey}
+                topArchetypeKey={vm.archetypeKey ?? undefined}
+                locale={locale}
+              />
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="mt-6 grid max-w-[760px] gap-4">
+          <QuestionCard vm={vm} />
+          <PilgrimageStatusCard />
+        </div>
       )}
 
-      {/* Your rhythm — the activity heatmap. */}
-      {vm.timestamps.length > 0 && (
-        <VisualBlock eyebrow={t('today.rhythm_eyebrow', locale)} accent={accent}>
-          <ActivityHeatmap timestamps={vm.timestamps} accent={accent} locale={locale} />
-        </VisualBlock>
-      )}
-
-      {/* Pilgrimage — structured returning-user hook. Client. */}
-      <div style={{ marginTop: 24 }}>
-        <PilgrimageStatusCard />
-      </div>
-
-      {/* The fuller view. */}
+      {/* The fuller view */}
       <div
         style={{
           marginTop: 30,
@@ -656,6 +375,308 @@ export function TodayHomeView({ vm }: { vm: TodayVM }) {
   );
 }
 
+// ── Identity card — figure + archetype + radar + streak strip ──
+function IdentityCard({ vm }: { vm: TodayVM }) {
+  const { locale, accent } = vm;
+  if (!vm.placed || !vm.archetypeName || !vm.fingerprint) return null;
+  return (
+    <section
+      style={{
+        height: '100%',
+        border: `4px solid ${accent.deep}`,
+        background: accent.soft,
+        boxShadow: `6px 6px 0 0 ${accent.deep}`,
+        padding: '18px 20px',
+      }}
+    >
+      <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
+        <div style={{ flexShrink: 0 }}>
+          <ArchetypeSprite archetypeKey={vm.archetypeKey!} size={64} framed />
+        </div>
+        <div style={{ minWidth: 0 }}>
+          <div
+            style={{
+              fontFamily: pixel,
+              fontSize: 9,
+              color: accent.deep,
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase',
+              marginBottom: 3,
+            }}
+          >
+            {t('today.you_stand', locale)}
+          </div>
+          <div
+            style={{
+              fontFamily: editorial,
+              fontSize: 24,
+              fontWeight: 500,
+              color: 'var(--color-ink)',
+              lineHeight: 1.1,
+            }}
+          >
+            {vm.archetypeName}
+          </div>
+          {vm.nearestName && (
+            <div
+              style={{
+                marginTop: 4,
+                fontFamily: serif,
+                fontSize: 13,
+                color: 'var(--color-ink-soft)',
+              }}
+            >
+              {t('today.nearest_mind', locale)}:{' '}
+              <strong style={{ color: 'var(--color-ink)' }}>{vm.nearestName}</strong>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Streak strip — last 21 days at a glance */}
+      <div style={{ marginTop: 16 }}>
+        <div style={{ ...miniLabel, color: accent.deep }}>
+          {vm.streak > 0
+            ? t('today.streak_days', locale, { n: vm.streak })
+            : t('today.streak_none', locale)}
+        </div>
+        <StreakStrip dates={vm.reflectDates} todayKey={vm.todayKey} accent={accent} days={21} />
+      </div>
+
+      {/* Radar — the shape of your mind */}
+      <div style={{ marginTop: 18 }}>
+        <div style={{ ...miniLabel, color: accent.deep }}>
+          {t('today.fingerprint_eyebrow', locale)}
+        </div>
+        <DimensionRadar vector={vm.fingerprint} accent={accent} />
+        {vm.strongest.length > 0 && (
+          <p
+            style={{
+              marginTop: 6,
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: 13.5,
+              color: 'var(--color-ink-soft)',
+              textAlign: 'center',
+              lineHeight: 1.45,
+            }}
+          >
+            {t('today.strongest', locale, {
+              dims: vm.strongest.join(locale === 'zh' ? '、' : ', '),
+            })}
+          </p>
+        )}
+      </div>
+    </section>
+  );
+}
+
+// ── Today's question card ──
+function QuestionCard({ vm }: { vm: TodayVM }) {
+  const { locale, accent } = vm;
+  return (
+    <section
+      style={{
+        border: '4px solid var(--color-ink)',
+        background: '#FFFCF4',
+        boxShadow: '6px 6px 0 0 var(--color-ink)',
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: 8,
+          flexWrap: 'wrap',
+          borderBottom: '4px solid var(--color-ink)',
+          background: 'var(--color-ink)',
+          color: 'var(--color-acc-soft)',
+          padding: '8px 16px',
+          fontFamily: pixel,
+          fontSize: 10,
+          letterSpacing: '0.22em',
+          textTransform: 'uppercase',
+        }}
+      >
+        <span>
+          ▶ {vm.respondedToday ? t('today.answered_eyebrow', locale) : t('today.q_eyebrow', locale)}
+        </span>
+        {vm.archetypeName && (
+          <span style={{ color: accent.primary }} className="min-w-0 truncate">
+            {t('today.q_for', locale, { archetype: vm.archetypeName.toUpperCase() })}
+          </span>
+        )}
+      </div>
+
+      <div style={{ padding: '22px 24px 24px' }}>
+        <p
+          style={{
+            fontFamily: editorial,
+            fontSize: 25,
+            fontWeight: 500,
+            color: 'var(--color-ink)',
+            lineHeight: 1.4,
+            margin: 0,
+          }}
+        >
+          {vm.prompt}
+        </p>
+
+        {vm.respondedToday ? (
+          <div style={{ marginTop: 18 }}>
+            <div
+              style={{
+                fontFamily: serif,
+                fontStyle: 'italic',
+                fontSize: 15.5,
+                color: 'var(--color-ink-soft)',
+                lineHeight: 1.55,
+              }}
+            >
+              {t('today.answered_body', locale)}
+            </div>
+            {vm.todayShifts.length > 0 && (
+              <div style={{ marginTop: 16 }}>
+                <div style={miniLabel}>{t('today.shift_today_label', locale)}</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14 }}>
+                  {vm.todayShifts.map((s) => (
+                    <span key={s.key} style={{ fontFamily: serif, fontSize: 14 }}>
+                      <strong
+                        style={{
+                          fontVariantNumeric: 'tabular-nums',
+                          color: s.delta > 0 ? '#2F5D5C' : '#7A2E2E',
+                        }}
+                      >
+                        {s.delta > 0 ? '+' : ''}
+                        {s.delta.toFixed(1)}
+                      </strong>{' '}
+                      <span style={{ color: 'var(--color-ink-soft)' }}>{s.name}</span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+            <Link
+              href="/dilemma"
+              style={{
+                display: 'inline-block',
+                marginTop: 18,
+                fontFamily: pixel,
+                fontSize: 11,
+                color: 'var(--color-acc-deep)',
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                textDecoration: 'underline',
+                textUnderlineOffset: 3,
+              }}
+            >
+              {t('today.reread', locale)} →
+            </Link>
+          </div>
+        ) : (
+          <>
+            {vm.hint && (
+              <p
+                style={{
+                  fontFamily: serif,
+                  fontStyle: 'italic',
+                  fontSize: 14.5,
+                  color: 'var(--color-ink-soft)',
+                  lineHeight: 1.55,
+                  margin: '14px 0 0',
+                }}
+              >
+                {vm.hint}
+              </p>
+            )}
+            <Link
+              href="/dilemma"
+              className="pixel-press"
+              style={{
+                display: 'inline-block',
+                marginTop: 20,
+                padding: '13px 22px',
+                background: accent.primary,
+                color: '#1A1820',
+                border: '3px solid var(--color-ink)',
+                boxShadow: `4px 4px 0 0 ${accent.deep}`,
+                fontFamily: pixel,
+                fontSize: 12,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+                transition: 'transform 80ms steps(2, end), box-shadow 80ms steps(2, end)',
+              }}
+            >
+              {t('today.sit_with_it', locale)}
+            </Link>
+          </>
+        )}
+
+        <div style={{ marginTop: 20, paddingTop: 14, borderTop: '1px solid var(--color-line)' }}>
+          <DailyQuestionShare question={vm.prompt} locale={locale} />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function UnplacedBanner({ locale }: { locale: Locale }) {
+  return (
+    <Link
+      href="/quiz"
+      style={{
+        display: 'block',
+        marginTop: 24,
+        maxWidth: 760,
+        padding: '16px 20px',
+        background: 'var(--color-acc-soft)',
+        border: '3px solid var(--color-ink)',
+        boxShadow: '4px 4px 0 0 var(--color-acc)',
+        textDecoration: 'none',
+        color: 'inherit',
+      }}
+      className="transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
+    >
+      <div
+        style={{
+          fontFamily: serif,
+          fontSize: 17,
+          fontWeight: 500,
+          color: 'var(--color-ink)',
+          marginBottom: 4,
+        }}
+      >
+        {t('today.unplaced_title', locale)}
+      </div>
+      <div
+        style={{
+          fontFamily: serif,
+          fontStyle: 'italic',
+          fontSize: 14.5,
+          color: 'var(--color-ink-soft)',
+          lineHeight: 1.5,
+          marginBottom: 8,
+        }}
+      >
+        {t('today.unplaced_body', locale)}
+      </div>
+      <div
+        style={{
+          fontFamily: pixel,
+          fontSize: 11,
+          color: 'var(--color-acc-deep)',
+          letterSpacing: '0.14em',
+          textTransform: 'uppercase',
+        }}
+      >
+        {t('today.unplaced_cta', locale)}
+      </div>
+    </Link>
+  );
+}
+
 // A titled section wrapper for a visual block.
 function VisualBlock({
   eyebrow,
@@ -667,7 +688,7 @@ function VisualBlock({
   children: React.ReactNode;
 }) {
   return (
-    <section style={{ marginTop: 26 }}>
+    <section>
       <div
         style={{
           fontFamily: pixel,
@@ -688,6 +709,15 @@ function VisualBlock({
     </section>
   );
 }
+
+const miniLabel: React.CSSProperties = {
+  fontFamily: pixel,
+  fontSize: 9,
+  color: 'var(--color-acc-deep)',
+  letterSpacing: '0.18em',
+  textTransform: 'uppercase',
+  marginBottom: 8,
+};
 
 const captionStyle: React.CSSProperties = {
   fontFamily: editorial,
