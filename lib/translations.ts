@@ -335,6 +335,14 @@ export const TRANSLATIONS: TranslationMap = {
   'today.shift_today_label': { en: 'Where today moved you', zh: '今天让你移动之处' },
   'today.reread': { en: 'Re-read what you wrote', zh: '重读你写下的' },
   'today.trend_eyebrow': { en: 'LATELY', zh: '近来' },
+  'today.fingerprint_eyebrow': { en: 'THE SHAPE OF YOUR MIND', zh: '你思想的形状' },
+  'today.map_eyebrow': { en: 'POSITION AMONG THE THINKERS', zh: '你在群星中的位置' },
+  'today.map_sub': {
+    en: 'Where you sit on the map. Drag to explore who stands near you.',
+    zh: '你在地图上的位置。拖动，看看谁与你为邻。',
+  },
+  'today.movement_eyebrow': { en: 'HOW YOUR MIND HAS MOVED', zh: '你的思想如何移动' },
+  'today.rhythm_eyebrow': { en: 'YOUR RHYTHM', zh: '你的节律' },
   'today.trend_line': {
     en: 'Your mind has been drifting toward {dims}.',
     zh: '你的思想一直在朝着 {dims} 漂移。',
