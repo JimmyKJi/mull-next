@@ -3,13 +3,199 @@
 This doc hands off enough state for the next session to pick up cold.
 Newest updates first.
 
-**Last session ended:** 2026-06-20 (two CSP-fallout fixes — blank 3D
-map + mobile pixel-heading overlap — then a codebase-wide Prettier
-formatting unification with a per-file equivalence proof). Prior:
-2026-06-19, 2026-06-18, 2026-06-07, 2026-05-27.
+**Last session ended:** 2026-07-22 (one long session: judging reframe →
+Arena topics + custom topics → security/i18n/consistency audits →
+debate-feedback polish → share-image outage fix → the "Today" home
+retention build → security/bug audit). Prior: 2026-06-20, 2026-06-19,
+2026-06-18, 2026-06-07, 2026-05-27.
 **Branch:** `claude/zen-wu-4cd09b`. Ship with
 `git push origin HEAD:redesign-2026` — that auto-deploys to
 `mull.world` via Vercel (see "How to ship" below).
+**Prod is in sync with local HEAD** (`ff5336b`) as of the session end.
+
+---
+
+## Updates from the 2026-07-21/22 session
+
+**Theme: make the Arena honest and welcoming, then fix why people don't
+come back.** One long session, 17 commits, all shipped to
+`redesign-2026`. Briefs from Jimmy, in order:
+
+> "add more topics for debate … closer to life, things that
+> non-academics could be easily interested in"
+> "is it possible to make it an option where the user gets to pick a
+> topic through prompting instead of selecting one of the readied ones?"
+> "overview the whole site and make any worthy adjustments … security,
+> ux, etc."
+> "check for any inconsistency and big translation errors and fix" →
+> "not just translation, but all content, visual and text"
+> "polish the debate and feedback mechanisms … make the philosophers
+> feel real … laymen who do not understand philosophy can easily
+> understand and debate"
+> "make sure the mobile interface is all good … Also check the
+> shareloop and everything there is fine"
+> "what we can do to make the people who come, stay" (re: Lumosity)
+> "richer please, and please use the space on the left and right"
+> "security and bug audit please" → "fix anything major"
+
+| Commit | Title |
+|---|---|
+| `e389411` | Reframe Arena/Spar judging: non-zero-sum Elo, no winner, no jargon bias |
+| `55599b3` | Add a "how you're judged" notice to every debate landing |
+| `96dfd79` | Force troika main-thread typesetting to fix Turbopack worker overlay |
+| `be11cc9` | Add 28 everyday debate topics to the Arena, with zh translations |
+| `55e66c4` | Let users write their own PvE debate topic |
+| `27dee6b` | Security: patch Next.js advisory, honor safe `?next=`, secure locale cookie |
+| `106f786` | i18n/UX: localize quiz chrome + chapter themes, error fallbacks, add global-error |
+| `5fe2e28` | Consistency pass: 59 missing zh philosopher entries, stale counts, Mencius Elo |
+| `1fdaa10` | Debate polish: conversational philosophers, coaching feedback, layman-first language |
+| `7d0a593` | Fix broken share images (prod 500s), mobile overflow, bio markdown |
+| `8e566eb` | Retention: auth-aware "Today" home + renewable return hooks |
+| `9ebd5d1` | Today home: make it visual — archetype figure, mind graph, map, charts |
+| `578a0cc` | Today home: wide bento dashboard + radar fingerprint + streak strip |
+| `56d72d9` | Security/bug audit hardening (Today home + arena + deps) |
+| `ff5336b` | Fix arena daily-cap race: atomic `arena_start` gate |
+
+### The big one: the "Today" home (`8e566eb` → `578a0cc`)
+
+**The problem, in Jimmy's data:** 6 total quiz users, 20 attempts, 3
+arena debates, 0 referrals — against a product with 551 philosophers,
+an Elo arena, and a 704-URL sitemap. Prompted by Lumosity, the finding
+was that Mull **already had** every retention mechanic (streaks with
+tiers, a 20-item milestone system, a 30-day pilgrimage, daily dilemmas,
+vector drift) — but none of it was assembled into a front door.
+`app/page.tsx` had **no auth awareness at all**: a returning user with a
+40-day streak got the same marketing brochure as a stranger, and the
+actual daily ritual lived at `/account` (which reads as *settings*).
+
+**What now exists:**
+- `app/page.tsx` branches on auth. Anonymous → the same editorial
+  marketing page (crawlers are never logged in, so **SEO/OG/JSON-LD are
+  untouched** — verified on prod). Logged-in → `<TodayHome>`.
+- `components/today-home.tsx` — split into a data-fetching wrapper
+  (default export) and a pure `TodayHomeView` **specifically so every
+  state can be rendered from mocks without an authenticated session**.
+  Keep that split; it's the only way to review this component.
+- Desktop = a 12-col bento grid (`max-w-[1180px]`): question card left,
+  identity card right, then full-width map / trajectory chart / heatmap.
+  Mobile = single column. Deliberately different per device.
+- New: `components/dimension-radar.tsx` (16-axis radar + plain-words
+  "Strongest in X, Y, Z" caption for laymen),
+  `components/streak-strip.tsx` (last 21 days as pixel cells),
+  `components/daily-question-share.tsx` (shares the PUBLIC daily
+  question, never the user's answer), `lib/trajectory.ts`,
+  `lib/streak.ts` (streak logic was duplicated inline in the account and
+  dilemma pages; now shared).
+- Renewable return hooks: a cumulative **drift line** ("your mind has
+  been drifting toward X and Y") because self-knowledge saturates but
+  movement doesn't; and the shareable daily as a low-key Wordle loop.
+- **Deferred deliberately:** a reasoning-skill "you're getting sharper"
+  metric from Arena judge scores. Only 3 debates exist across all users,
+  so it would render for nobody and couldn't be verified. Revisit once
+  the Arena has usage.
+
+### Judging + debate feel (`e389411`, `55599b3`, `1fdaa10`)
+
+- Judging is **non-zero-sum and winner-free**: each side is scored on its
+  own 5–25 merits; the verdict names the *shape* of the exchange
+  (`common_ground` / `distinct_positions` / `talked_past`). Elo moves on
+  your own performance, so both sides can rise.
+- The judge now returns two coaching fields per side —
+  `user_best_moment` (your own words quoted back + why it worked) and
+  `user_growth` (the ONE concrete change, with an example phrase).
+  **Old judged rows lack these fields and render unchanged.**
+- Philosopher turns are conversational: quote the user's words, match
+  their length, concede before pressing, end on one question, plain
+  language, **plain text only** (they were emitting literal
+  `*asterisks*`).
+- Fixed a real bug: the start route never passed `locale`, so **zh
+  debates opened in English** and only switched from turn two.
+- Criterion labels de-jargoned (Validity → Logic, Elegance → Clarity)
+  with hover hints.
+
+### Arena topics: 28 everyday + user-authored (`be11cc9`, `55e66c4`)
+
+`ARENA_TOPICS` is now 56. Custom topics need **no schema change**: the
+prompt is encoded in the existing `arena_sessions.topic_slug` behind a
+`custom:` prefix (seeded slugs are kebab-case and never contain a
+colon). One shared `resolveTopicFromSlug()` reconstructs the topic at
+all ~9 read sites. **If you add a new read site, use the resolver, not
+`getArenaTopic`.** PvE-only, 12–240 chars, validated server-side.
+
+### The share-image outage (`7d0a593`) — worth knowing about
+
+**All three OG images (philosopher, archetype, user badge) had been
+500ing in production** since the v3 restyle: the templates used CSS
+`var(--…)` tokens, and Satori renders with no stylesheet context, so
+every social unfurl of a Mull link showed no preview image. Fixed to hex
+literals with a tripwire comment. **Never put `var()` in an
+`opengraph-image.tsx`.** Also added a CJK/emoji → `@handle` fallback
+(the bundled OG fonts are Latin-only).
+
+### Security + audits (`27dee6b`, `56d72d9`, `ff5336b`)
+
+- **Next.js 16.2.5 → 16.2.10** (middleware-bypass advisory + bundled
+  `ws` issues). **sharp pinned to ^0.35.3** via a new `overrides` block
+  (two high libvips CVEs; not attacker-reachable — no untrusted-image
+  path — but clean).
+- **Login now honors `?next=`** — 20+ protected pages were already
+  sending `/login?next=…` and login always dumped users on `/account`.
+  Validated by `lib/safe-next.ts` (same-origin absolute paths only;
+  rejects `//host`, `/\`, schemes, and control chars). Unit-tested.
+- `/embed/map` is **public** and takes `?v=` from anyone — decoded
+  vectors are now clamped to 0–10.
+- **`ff5336b` is the one to understand:** the 3-debates/day cap was a
+  read-then-write on `daily_debates_count`, so concurrent starts could
+  both pass. It's now an **atomic `arena_start` bucket** on the existing
+  `check_rate_limit` RPC — *no migration*, since the bucket is just a new
+  string. Two bonuses: the start route now respects the global AI
+  kill-switch (it previously didn't), and the cap sits after the Elo gate
+  so a locked-opponent pick no longer burns a slot. The
+  `daily_debates_count` column is now **unused and read by nothing**.
+- Audited clean (verified, not assumed): no IDOR on the Today home
+  (every query filters `user_id` — matters because those tables have a
+  "your rows OR public rows" RLS policy), no XSS, share surfaces leak no
+  private data, referral/challenge loops sound.
+
+### Content consistency (`106f786`, `5fe2e28`)
+
+- **59 of 551 philosophers had no zh translation — and they were the
+  famous ones** (Confucius, Laozi, Kant, Hume, Marx). Filled via
+  `scripts/translate-content.mjs --domain philosophers --locale zh`.
+  Coverage is now 551/551.
+- Quiz chapter titles/lines and all quiz chrome now localize; error
+  fallbacks in 8 client forms use `err.*` keys; added
+  `app/global-error.tsx` (self-contained styles — the root layout is
+  gone when it renders).
+- Fixed stale copy: About said "12 topics, 30 matchups" (really 32/55 —
+  now computed from the data), and "over 200 thinkers" (551).
+- **Mencius was friendly-tier at Elo 1350** — above the friendly band and
+  unreachable for new users (start 1000, max gap 300). Now 1200.
+
+### Notes for next session
+
+- **Verify claims before acting on audit-agent output.** Two subagents
+  produced findings this session; several "Critical"/"High" items
+  evaporated on inspection (a claimed prompt-injection was PvE-only and
+  self-affecting; a claimed email leak was impossible since custom
+  topics are PvE-only and verdict emails are PvP-only). The real fixes
+  were the boring ones.
+- **The dev server crashes repeatedly** with a Turbopack
+  `@supabase/ssr` "module has no exports at all" error. `node_modules`
+  is fine — **restart recovers it every time**, and the production build
+  is always clean. Don't `rm -rf .next`.
+- **`preview_screenshot` scroll-sync is unreliable** on long pages
+  (blank captures). DOM inspection via `preview_eval` is the dependable
+  check; screenshots are supplementary.
+- **7 `docs/*.md` files are deleted in the working tree but uncommitted**
+  (GROWTH-PLAN, LAUNCH-RUNBOOK, MIGRATION-PLAN, OVERNIGHT-NOTES,
+  ROADMAP-IDEAS, ROADMAP, SETUP). They predate this session and were
+  left untouched. Ask Jimmy whether to commit the deletion or restore
+  with `git checkout -- docs/`.
+- `npm audit` sits at **2 moderate** `postcss` findings inside Next
+  itself. No upstream fix; `--force` would downgrade to next@9. Leave.
+- Custom topics + the Today home have only ever been exercised with
+  **mock data** — Jimmy is the one with a real logged-in account.
 
 ---
 
@@ -724,15 +910,36 @@ PROJECT-FOR-COWORK.md:
 
 ## What's queued (not started, ranked by priority)
 
-### Lane A — Distribution (highest leverage)
+### Lane A — Distribution (highest leverage — and now agreed)
 
-1. **Run the cowork social media campaign** with PROJECT-FOR-COWORK.md
-   as the brief. This is awaiting Jimmy actioning it, not me building
-   anything.
-2. **Launch post** for HN / r/sideprojects / philosophy Reddit.
-   Mull never had a "v1 ship" moment.
-3. **One real podcast or newsletter mention** — outreach work, not
-   engineering.
+**Status as of 2026-07-22: this is THE next step, and Jimmy agreed.**
+The data made it unarguable — 6 quiz users / 3 arena debates against a
+product this deep. Another feature improves the experience of six
+people; distribution is the only thing with real leverage. Jimmy chose
+to prep the launch kit **in a separate chat** to keep the repo session
+clean, so don't be surprised if it's already underway.
+
+Agreed plan:
+
+1. **Show HN + Product Hunt.** Mull is unusually HN-shaped — a
+   demo-able toy with real depth. Never had a "v1 ship" moment.
+2. **小红书 push.** The site is fully bilingual and `/share/[slug]` is
+   *literally* the native format there (a designed vertical
+   screenshot). An English-only competitor can't follow. Plausibly
+   outperforms the Western launch.
+3. **Two things to do BEFORE launch day (engineering, ~half a day):**
+   - **Instrument the funnel** — land → quiz start → quiz finish →
+     share/challenge → next-day return, via the existing Vercel
+     `track()` helper. Otherwise a traffic spike teaches us nothing.
+   - **Spike sanity-check** — confirm the AI caps degrade *gracefully*
+     under front-page traffic rather than erroring. (Caps: 3
+     debates/day, 32 turns, 4 verdicts, $17/day + $500/mo ceilings.)
+4. **Submit the sitemap to Google Search Console** — 704 URLs of
+   philosopher/topic/matchup content is the compounding channel, but
+   only once indexed.
+5. **Later, once a few hundred consented quiz completions exist:** a
+   dataset writeup. Doubles as content marketing *and* an LSE
+   application portfolio piece.
 
 ### Lane B — Retention experiments (medium leverage)
 
@@ -755,11 +962,17 @@ PROJECT-FOR-COWORK.md:
    - ~4-6 hours work. Substantial content writing for the 5 new
      ending scenes.
 
-5. **Daily streaks on dilemma** — gentle, opt-in, would test
-   daily-return mechanic. Not yet built.
+5. ~~**Daily streaks on dilemma**~~ — **DONE, and was already done
+   when this was written.** Streaks exist with milestone tiers, a
+   one-day grace, a "we missed you" cron
+   (`app/api/cron/streak-break/route.ts`), and 20 milestones in
+   `lib/milestones.ts`. As of 2026-07-22 they're surfaced on the Today
+   home as a 21-day strip (`components/streak-strip.tsx`). Shared logic
+   lives in `lib/streak.ts`.
 
 6. **Email digests** — once a week summarizing your trajectory.
-   Not yet built; would use existing `lib/email.ts`.
+   Partially exists: `app/api/cron/weekly-digest/route.ts` is there.
+   Verify it actually sends before building anything new.
 
 ### Lane C — Polish that compounds (lower urgency)
 
@@ -779,10 +992,12 @@ PROJECT-FOR-COWORK.md:
    - Per-surface consistency vs STYLE-GUIDE.md
    - Mobile QA pass (most session work was desktop)
 
-9. **EN-only banner on 7 long-form pages.** Tracked in NEXT.md
-   §Translations. `i18n.content_notice` key already exists; just
-   needs surfacing on /archetype/[slug], /philosopher/[slug],
-   /topic/[slug], /vs/[a]/[b], /about, /methodology, /exercises/[slug].
+9. **EN-only banner — mostly done.** `ContentLanguageNotice` now ships
+   on /about, /methodology, /exercises/[slug], /vs/[a]/[b], /privacy,
+   /terms. Still missing on **/archetype/[slug], /philosopher/[slug],
+   /topic/[slug]** — though note the philosopher corpus itself is now
+   100% zh-translated (2026-07-22), so the philosopher page needs the
+   notice only for its long-form English bio section.
 
 ### Lane D — Future (logged, not blocking)
 
@@ -809,18 +1024,25 @@ PROJECT-FOR-COWORK.md:
 
 ## Open questions waiting on Jimmy
 
-1. **Sequence for next session** — Lane A first (campaign launch)?
-   Or build branching Inheritor first as a content asset the
-   campaign can lean on? My recommendation: parallel — Jimmy runs
-   cowork campaign while I build branching Inheritor.
+0. **(2026-07-22, most current) How did the Today home look with REAL
+   data?** Everything in it was built and reviewed against mocks —
+   nobody with an actual account has reviewed the radar shape, drift
+   line, or streak strip. Jimmy is the one who can see it. Also: the
+   deleted-but-uncommitted `docs/*.md` files — commit or restore?
+
+1. **Sequence** — largely settled 2026-07-22: **Lane A (launch)
+   first**, with the funnel-events + spike-check prep as the only
+   engineering ahead of it. Branching Inheritor is no longer the
+   default next build.
 
 2. **Branching Inheritor — 5 endings approved?** The 5-stance
-   design above needs Jimmy's read before I commit hours to
-   writing them.
+   design above needs Jimmy's read before committing hours to
+   writing them. Still unanswered, now lower priority than launch.
 
-3. **Map bug on /account** — Jimmy needs to describe what's
-   actually broken (didn't get specifics last session). Screenshot
-   would help.
+3. **Map bug on /account** — still no specifics; a screenshot would
+   help. Weak counter-evidence: the same `/embed/map` iframe was
+   embedded fresh on the Today home this session and renders fine,
+   so the bug may be `/account`-specific or already gone.
 
 4. **Cowork campaign — Jimmy's open questions from PROJECT-FOR-COWORK.md:**
    - Promote Ko-fi tip jar explicitly or stay quiet on funding?
@@ -899,20 +1121,25 @@ node scripts/check-table-invariants.mjs
 
 ## Recommended first 10 minutes of the next session
 
-1. Read this doc (you're already here).
-2. Skim `PROJECT-FOR-COWORK.md` for current product shape.
-3. Glance at `git log --oneline -10` to see the last 10 commits.
-4. Check the live site (mull.world) is still serving the right
-   commit — Vercel sometimes drifts.
-5. Pick a lane (A / B / C from above), tell Jimmy the plan, and
-   start executing.
+1. Read this doc (you're already here) — the newest session section is
+   at the top.
+2. `git log --oneline -15` and confirm prod is in sync:
+   `git fetch origin redesign-2026 && git log --oneline origin/redesign-2026..HEAD`
+   (empty output = prod matches local HEAD).
+3. Ask Jimmy to open **mull.world while logged in** and say whether the
+   Today home looks right with his real data — that's the one review
+   nobody could do from this side.
+4. Resolve the 7 deleted-but-uncommitted `docs/*.md` files (commit the
+   deletion or `git checkout -- docs/`), so the tree is clean.
+5. Pick a lane, state the plan, execute.
 
-If Jimmy hasn't already specified — **default plan: confirm with
-Jimmy whether to start with branching Inheritor (Lane B item #4)
-since that was the last big thing he asked for before the session
-ran out of context.**
+If Jimmy hasn't already specified — **default plan: Lane A. Do the two
+pre-launch engineering items (funnel events + spike sanity-check), then
+hand off to whatever launch prep he's running in the other chat.** Do
+NOT default to building another feature; the product is deep and
+undistributed, and that's now an agreed conclusion, not a hunch.
 
-Good luck. The product is in great shape. Distribution is the
-real work now.
+Good luck. The product is in great shape, the front door finally knows
+who you are, and distribution is the real work now.
 
-— previous session, 2026-05-25
+— previous session, 2026-07-22
