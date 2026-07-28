@@ -25,8 +25,7 @@ import {
 } from '@/lib/arena/data';
 import { generatePhilosopherTurn } from '@/lib/arena/philosopher-voice';
 import { getServerLocale } from '@/lib/locale-server';
-
-const DAILY_CAP = 3;
+import { aiGate } from '@/lib/rate-limit';
 
 export async function POST(req: Request) {
   const supabase = await createClient();
@@ -101,7 +100,7 @@ export async function POST(req: Request) {
     resolvedSlug = topicSlug;
   }
 
-  // Load (or create) the user's arena rating + enforce daily cap.
+  // Load (or create) the user's arena rating.
   let { data: rating } = await supabase
     .from('arena_user_ratings')
     .select('*')
@@ -120,20 +119,6 @@ export async function POST(req: Request) {
     rating = inserted;
   }
 
-  // Daily cap reset.
-  const today = new Date().toISOString().slice(0, 10);
-  const resetDate = rating.daily_debates_reset_at as string | null;
-  const dailyCount = resetDate === today ? (rating.daily_debates_count as number) : 0;
-  if (kind === 'pve' && dailyCount >= DAILY_CAP) {
-    return NextResponse.json(
-      {
-        error: `Daily limit reached (${DAILY_CAP}/day). The cap keeps the Arena affordable to run. Come back tomorrow.`,
-        code: 'daily_cap_reached',
-      },
-      { status: 429 },
-    );
-  }
-
   // Elo gate — can't punch up more than MAX_ELO_GAP. Keeps heavy
   // voices (Nietzsche, Hegel) behind a real climb so newer users
   // don't lose 60 Elo to a thinker they're not ready for, and the
@@ -146,6 +131,24 @@ export async function POST(req: Request) {
       },
       { status: 403 },
     );
+  }
+
+  // Daily debate cap — an ATOMIC per-user gate (arena_start: 3/day) that
+  // also honors the global AI spend ceiling. Replaces the old
+  // read-then-write on daily_debates_count, which could race under
+  // concurrent starts and let a user exceed the cap. Placed AFTER the
+  // Elo gate so a rejected opponent pick doesn't burn a daily slot; it
+  // consumes a slot on success. calibration is exempt (onboarding).
+  let debatesRemaining: number | null = null;
+  if (kind === 'pve') {
+    const gate = await aiGate(req, { bucket: 'arena_start', userId: user.id });
+    if (!gate.ok) {
+      return NextResponse.json(
+        { error: gate.message, code: 'daily_cap_reached' },
+        { status: gate.status },
+      );
+    }
+    debatesRemaining = gate.remaining;
   }
 
   // Create session.
@@ -163,17 +166,6 @@ export async function POST(req: Request) {
     .single();
   if (sessionErr || !session) {
     return NextResponse.json({ error: 'Could not start session.' }, { status: 500 });
-  }
-
-  // Update daily counter (only for pve; calibration counted separately).
-  if (kind === 'pve') {
-    await supabase
-      .from('arena_user_ratings')
-      .update({
-        daily_debates_count: dailyCount + 1,
-        daily_debates_reset_at: today,
-      })
-      .eq('user_id', user.id);
   }
 
   // Generate opening turn — the philosopher opens. Kept deliberately
@@ -220,6 +212,6 @@ export async function POST(req: Request) {
     opponent_name: philosopher.name,
     opponent_elo: philosopher.baseElo,
     user_elo: rating.pve_elo,
-    daily_debates_remaining: DAILY_CAP - dailyCount - 1,
+    daily_debates_remaining: debatesRemaining,
   });
 }

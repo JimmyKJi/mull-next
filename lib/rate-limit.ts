@@ -44,6 +44,7 @@ type Bucket =
   | 'exercise'
   | 'spar_play'
   | 'spar_judge'
+  | 'arena_start'
   | 'arena_turn'
   | 'arena_judge'
   | 'argument_diary'
@@ -132,6 +133,7 @@ const BUCKET_COST_CENTS: Record<Bucket, number> = {
   argument_diary: 1, // single Haiku call
   spar_play: 1, // spar opening: 1 Haiku rebuttal turn (~$0.005)
   spar_judge: 7, // spar closing: 1 Sonnet judge on the 3-turn exchange (~$0.05)
+  arena_start: 1, // debate opening: 1 Haiku turn (~$0.005)
   arena_turn: 1, // 1 Haiku turn alone
   arena_judge: 15, // Sonnet judge on full transcript, ~$0.15
   debate_generate: 8, // Sonnet, up to 4000 tok, ×2 retry — anonymous-facing
@@ -244,6 +246,7 @@ const PER_USER_DAILY_CAPS: Partial<Record<Bucket, number>> = {
   // (spar_judge), so both caps at 3 bind a user to 3 full spars/day.
   spar_play: 3,
   spar_judge: 3, // ≈ $0.21/day of Sonnet max per user
+  arena_start: 3, // 3 debates started/day — the Arena's daily cost cap
   arena_turn: 32, // ~4 full debates of 8 turns
   arena_judge: 4, // 4 verdicts/day → $0.60 cap per user
   argument_diary: 3, // 3 analyses/day → $0.03 cap per user
@@ -317,6 +320,8 @@ function friendlyPerUserMessage(bucket: Bucket, cap: number): string {
       return `You've used your ${cap} Spars for today. The next one rotates in tomorrow.`;
     case 'arena_judge':
       return `You've called for ${cap} Arena verdicts today. Take a breath — back tomorrow.`;
+    case 'arena_start':
+      return `Daily limit reached (${cap}/day). The cap keeps the Arena affordable to run. Come back tomorrow.`;
     case 'arena_turn':
       return `You've played ${cap} Arena turns today. Plenty for one day. Continue tomorrow.`;
     case 'argument_diary':
