@@ -272,13 +272,35 @@ export function TodayHomeView({ vm }: { vm: TodayVM }) {
 
       {vm.placed ? (
         <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-start lg:gap-5">
-          {/* Row 1 — the act (left) + who you are (right) */}
-          <div className="lg:col-span-7">
+          {/* Row 1 — the act (left) + who you are (right).
+              The identity card is tall (figure + streak + radar), so the
+              left column stacks the day's other actionable cards
+              underneath the question to fill the height rather than
+              leaving dead space beside it. */}
+          <div className="grid content-start gap-4 lg:col-span-7">
             <QuestionCard vm={vm} />
+            <PilgrimageStatusCard />
           </div>
           <div className="lg:col-span-5">
             <IdentityCard vm={vm} />
           </div>
+
+          {/* Post-completion nudge — full width. It's ~276px tall, so
+              tucking it into either column throws the top row badly out
+              of balance; as a band it keeps both columns level in both
+              states and reads as the clear "what now" after answering. */}
+          {vm.respondedToday && (
+            <div className="lg:col-span-12">
+              <NextActionCard
+                quizCount={1}
+                respondedToday={vm.respondedToday}
+                streak={vm.streak}
+                hasShareable={!!vm.archetypeKey}
+                topArchetypeKey={vm.archetypeKey ?? undefined}
+                locale={locale}
+              />
+            </div>
+          )}
 
           {/* Full-width visual showpieces (each hides until it has data) */}
           {vm.iframeSrc && (
@@ -322,23 +344,6 @@ export function TodayHomeView({ vm }: { vm: TodayVM }) {
               <VisualBlock eyebrow={t('today.rhythm_eyebrow', locale)} accent={accent}>
                 <ActivityHeatmap timestamps={vm.timestamps} accent={accent} locale={locale} />
               </VisualBlock>
-            </div>
-          )}
-
-          {/* Row — pilgrimage + post-completion nudge */}
-          <div className="lg:col-span-6">
-            <PilgrimageStatusCard />
-          </div>
-          {vm.respondedToday && (
-            <div className="lg:col-span-6">
-              <NextActionCard
-                quizCount={1}
-                respondedToday={vm.respondedToday}
-                streak={vm.streak}
-                hasShareable={!!vm.archetypeKey}
-                topArchetypeKey={vm.archetypeKey ?? undefined}
-                locale={locale}
-              />
             </div>
           )}
         </div>
